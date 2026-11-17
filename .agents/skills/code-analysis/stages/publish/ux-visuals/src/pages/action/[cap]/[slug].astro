@@ -1,0 +1,45 @@
+---
+import Page from "../../../layouts/Page.astro";
+import Rows from "../../../components/Rows.astro";
+import { capabilities, pathOf, screenHref, slugs, system } from "../../../lib/payloads";
+import { copy } from "../../../lib/copy";
+import { startedWords, wordFor } from "../../../lib/words";
+import { where } from "../../../lib/text";
+
+export async function getStaticPaths() {
+    const all = await capabilities();
+    const addresses = await slugs();
+    return all.flatMap((cap) =>
+        cap.layers.flatMap((layer) =>
+            layer.actions.map((action) => ({
+                params: { cap: addresses.capability(cap.capability.id), slug: addresses.action(cap.capability.id, action.id) },
+                props: { cid: cap.capability.id, aid: action.id },
+            })),
+        ),
+    );
+}
+const { cid, aid } = Astro.props;
+const sys = await system();
+const addresses = await slugs();
+const cap = (await capabilities()).find((each) => each.capability.id === cid);
+const owner = cap?.layers.find((layer) => layer.actions.some((action) => action.id === aid));
+const action = owner?.actions.find((each) => each.id === aid);
+if (cap === undefined || action === undefined) throw new Error("no such action");
+const screen = sys.screens.find((each) => each.actionIds.includes(action.id));
+const capSlug = addresses.capability(cid);
+const steps = pathOf(cap, action);
+const byRule = new Map(cap.layers.flatMap((layer) => layer.rules.map((rule) => [rule.id, { rule, layer }] as const)));
+const mine = action.rules.flatMap((rule) => { const found = byRule.get(rule); return found ? [found] : []; });
+const trail = [{ text: copy.site.home, href: "../../index.html" }, { text: cap.capability.name, href: `../../capability/${capSlug}.html` }, ...(screen ? [{ text: screen.name, href: screenHref("../../", screen.key) }] : action.screen !== "" ? [{ text: action.screen }] : [])];
+---
+<Page title={action.purpose} lead={copy.action.startedBy(wordFor(startedWords, action.startedBy), where(action.place))} depth={2} brief={action.context.text} trail={trail}>
+    <h2>{copy.action.passes}</h2>
+    <div class="path">{steps.map((layer, i) => <>{i > 0 && <span class="arrow" aria-hidden="true">→</span>}<a href={`../../layer/${capSlug}/${addresses.layer(cid, layer.id)}.html`}>{layer.name}</a></>)}</div>
+    <p class="note">{copy.action.passesNote}</p>
+    <h2>{copy.action.rules(mine.length)}</h2>
+    {mine.length === 0 && <p class="empty">{copy.action.noRules}</p>}
+    {steps.map((layer) => { const here = mine.filter((entry) => entry.layer.id === layer.id); return here.length > 0 && <Fragment>
+        <div class="group-name">{layer.name}</div>
+        <Rows rows={here.map(({ rule }) => ({ text: rule.says, copy: rule.context.text, meta: rule.gates ? copy.words.changesState : undefined, sub: `${where(rule.place)}${rule.screens.length > 0 ? `  ·  ${copy.words.screensLabel}: ${rule.screens.join(", ")}` : ""}` }))} cap={8} noun="business rules" />
+    </Fragment>; })}
+</Page>

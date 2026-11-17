@@ -1,0 +1,35 @@
+---
+import Page from "../layouts/Page.astro";
+import Figure from "../components/Figure.astro";
+import Landscape from "../components/Landscape.astro";
+import Rows from "../components/Rows.astro";
+import { capabilities, slugs, system } from "../lib/payloads";
+import { landscapeModel, tiersModel, contextModel } from "../lib/model";
+import { applies, diagrams } from "../lib/diagram-config";
+import { knownIds } from "../lib/check";
+import { copy } from "../lib/copy";
+import { firstSentence } from "../lib/text";
+
+const sys = await system();
+const caps = await capabilities();
+const addresses = await slugs();
+const known = knownIds(sys, caps);
+const land = landscapeModel(sys, caps);
+const landVerdict = applies("landscape", land.facts);
+const tiers = tiersModel(sys);
+const context = contextModel(sys);
+const layerRows = (product: boolean) => sys.layers.filter((layer) => layer.product === product).toSorted((one, other) => other.blocks - one.blocks).map((layer) => ({ text: layer.name, sub: firstSentence(layer.purpose) }));
+---
+<Page title={copy.system.title} lead={sys.purpose === "" ? copy.system.noPurpose : sys.purpose} brief={sys.context.text}>
+    <figure class="dg" data-diagram="landscape">
+        <figcaption><h3>{diagrams.landscape.title}</h3><p class="sub">{diagrams.landscape.question}</p></figcaption>
+        {landVerdict.drawn ? <Fragment><Landscape groups={land.groups} root="./" slugs={addresses} /><p class="note">{diagrams.landscape.legend}</p></Fragment> : <p class="note">{copy.notDrawn(landVerdict.reason)}</p>}
+    </figure>
+    <Figure id="context" facts={context.facts} build={(limit) => contextModel(sys, limit).model} known={known} />
+    <Figure id="tiers" facts={tiers.facts} build={(limit) => tiersModel(sys, limit).model} known={known} />
+    <h2>{copy.system.layersHeading}</h2>
+    <Rows rows={layerRows(true)} />
+    {sys.layers.some((layer) => !layer.product) && <Fragment><h3>{copy.system.layersProject}</h3><Rows rows={layerRows(false)} /></Fragment>}
+    <h2>{copy.system.gaps}</h2>
+    <p class="note">{copy.system.gapsText(sys.gaps.unresolvedLinks, sys.gaps.unattributedBlocks)}</p>
+</Page>

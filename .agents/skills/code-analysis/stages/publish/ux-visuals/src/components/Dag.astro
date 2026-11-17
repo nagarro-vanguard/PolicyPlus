@@ -1,0 +1,42 @@
+---
+import type { Laid } from "../lib/layout";
+import { linesOf, nodeHeight, nodeWidth } from "../lib/layout";
+import type { FlowModel } from "../lib/model";
+import { copy } from "../lib/copy";
+export interface Props { model: FlowModel; laid: Laid; title: string; }
+const { model, laid, title } = Astro.props;
+const pad = 10;
+const byId = new Map(model.nodes.map((node) => [node.id, node]));
+const boxOf = new Map(laid.boxes.map((box) => [box.id, box]));
+const description = copy.site.figureDescription(model.nodes.length, model.edges.length);
+const mid = (points: { x: number; y: number }[]) => {
+    let best = { x: 0, y: 0, len: -1 };
+    for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1];
+        const b = points[i];
+        if (a && b) {
+            const len = Math.abs(b.x - a.x) + Math.abs(b.y - a.y);
+            if (len > best.len) best = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, len };
+        }
+    }
+    return best;
+};
+---
+<svg class="dg-svg" viewBox={`${-pad} ${-pad} ${laid.width + 2 * pad} ${laid.height + 2 * pad}`} role="img" aria-label={title} width="100%" style={`max-width:${laid.width + 2 * pad}px`} xmlns="http://www.w3.org/2000/svg">
+    <title>{title}</title><desc>{description}</desc>
+    <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-muted, #6b7280)" /></marker></defs>
+    <style set:html={`.dg-edge{fill:none;stroke:var(--text-muted,#6b7280);stroke-width:1.4}.dg-node rect{fill:var(--surface-raised,#fff);stroke:var(--line-strong,#334155);stroke-width:1.2}.dg-node.store rect{fill:var(--info-surface,#e0f2fe)}.dg-node.outside rect{fill:var(--warn-surface,#fef3c7)}.dg-node.starter rect,.dg-node.system rect{fill:var(--accent-tint,#ede9fe)}.dg-node.more rect{stroke-dasharray:5 3;fill:var(--surface-sunken,#f1f5f9)}.dg-name{font:600 13px var(--font-text,system-ui,sans-serif);fill:var(--text-primary,#111)}.dg-sub{font:11.5px var(--font-text,system-ui,sans-serif);fill:var(--text-secondary,#475569)}.dg-lab{font:11.5px var(--font-text,system-ui,sans-serif);fill:var(--text-primary,#111);paint-order:stroke;stroke:var(--surface-page,#fff);stroke-width:4px;stroke-linejoin:round}`} />
+    {laid.wires.map((wire) => <polyline class="dg-edge" points={wire.points.map((p) => `${p.x},${p.y}`).join(" ")} marker-end="url(#arrow)" />)}
+    {laid.wires.map((wire) => wire.label !== "" && <text class="dg-lab" x={wire.lx + wire.lw / 2} y={wire.ly + 11} text-anchor="middle">{wire.label}</text>)}
+    {laid.boxes.map((box) => {
+        const node = byId.get(box.id);
+        if (!node) return null;
+        const label = linesOf(node.label, model.id);
+        return <g class={`dg-node ${node.kind}`}>
+            <title>{`${node.label}: ${node.sub}`}</title>
+            <rect x={box.x} y={box.y} width={box.w} height={box.h} rx="9" />
+            {label.map((line, i) => <text class="dg-name" x={box.x + 10} y={box.y + 20 + i * 15}>{line}</text>)}
+            <text class="dg-sub" x={box.x + 10} y={box.y + box.h - 9}>{node.sub.length > 34 ? `${node.sub.slice(0, 33)}…` : node.sub}</text>
+        </g>;
+    })}
+</svg>

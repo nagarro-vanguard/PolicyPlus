@@ -259,3 +259,7 @@ plans/
 .DS_Store
 *.sqlite-shm
 *.sqlite-wal
+
+# the code-analysis skill has a stage and a work folder named publish
+!.agents/skills/code-analysis/stages/publish/
+!.code-analysis/work/publish/

@@ -1,0 +1,20 @@
+---
+import type { LandscapeGroup } from "../lib/model";
+import type { Slugs } from "../lib/slugs";
+import { firstSentence } from "../lib/text";
+import { copy } from "../lib/copy";
+export interface Props { groups: LandscapeGroup[]; root: string; slugs: Slugs; }
+const { groups, root, slugs } = Astro.props;
+const cut = (text: string) => { const one = firstSentence(text); return one.length > 140 ? `${one.slice(0, 139)}…` : one; };
+---
+<div class="landscape">
+    {groups.map((group) => <section class={group.project ? "lg project" : "lg"}>
+        <h4>{group.areaId ? <a href={`${root}area/${slugs.area(group.areaId)}.html`}>{group.title}</a> : group.title} <span class="sub">({group.items.length})</span></h4>
+        {group.purpose && <p class="sub">{group.purpose}</p>}
+        <div class="cards">{group.items.map((item) => <a class="card" href={`${root}capability/${slugs.capability(item.id)}.html`}>
+            <strong>{item.name}</strong>
+            <span class="sub">{cut(item.purpose)}</span>
+            <span class="meta">{copy.system.cardCounts(item.screens, item.actions, item.rules)}</span>
+        </a>)}</div>
+    </section>)}
+</div>

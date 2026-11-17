@@ -1,0 +1,50 @@
+---
+import { diagrams, applies } from "../lib/diagram-config";
+import type { DiagramId } from "../lib/diagram-config";
+import { copy } from "../lib/copy";
+import { fitted } from "../lib/fit";
+import { nodeHeight, nodeWidth } from "../lib/layout";
+import type { FlowModel } from "../lib/model";
+import { layoutProblems, modelProblems } from "../lib/check";
+import Dag from "./Dag.astro";
+import Flow from "./Flow";
+import { accessWordsOf } from "../lib/figure-text";
+
+export interface Props {
+    id: DiagramId;
+    facts: Record<string, number>;
+    build: (limit: number) => FlowModel;
+    known: ReadonlySet<string>;
+}
+const { id, facts, build, known } = Astro.props;
+const settings = diagrams[id];
+const verdict = applies(id, facts);
+const problems: string[] = [];
+const fit = verdict.drawn ? await fitted(id, build) : undefined;
+const model = fit ? fit.model : build(0);
+const laid = fit ? fit.laid : undefined;
+if (fit) {
+    problems.push(...modelProblems(fit.model, known), ...layoutProblems(fit.model, fit.laid));
+    if (problems.length > 0) {
+        throw new Error(`The figure "${id}" does not hold:\n${problems.join("\n")}`);
+    }
+}
+const nodeName = new Map(model.nodes.map((node) => [node.id, node.label]));
+const lines = model.edges.map((edge) => accessWordsOf(nodeName.get(edge.from) ?? edge.from, nodeName.get(edge.to) ?? edge.to, edge.label));
+const more = model.nodes.find((node) => node.kind === "more");
+---
+<figure class="dg" data-diagram={id}>
+    <figcaption><h3>{settings.title}</h3><p class="sub">{settings.question}</p></figcaption>
+    {!verdict.drawn && <p class="note">{copy.notDrawn(verdict.reason)}</p>}
+    {verdict.drawn && laid && settings.renderer === "svg" && <Dag model={model} laid={laid} title={settings.title} />}
+    {verdict.drawn && laid && settings.renderer === "flow" && <Flow client:only="react" model={model} laid={laid} title={settings.title} nodeWidth={nodeWidth} nodeHeight={nodeHeight} labelLines={settings.budget ? settings.budget.labelLines : 2} />}
+    {fit && !fit.readable && <p class="note gap">{copy.tooBig}</p>}
+    {verdict.drawn && more && <p class="note">{copy.folded(model.omitted, more.sub)}</p>}
+    {verdict.drawn && model.leftOut.length > 0 && <p class="note">{copy.leftOut([...model.leftOut])}</p>}
+    {verdict.drawn && <p class="note">{settings.legend}</p>}
+    {verdict.drawn && <details class="dg-text"><summary>{copy.site.figureText(model.nodes.length, model.edges.length)}</summary>
+        <ul>{model.nodes.map((node) => <li><strong>{node.label}</strong> <span class="sub">{node.sub}</span>{node.members && node.members.length > 0 && <span class="sub">: {node.members.join(", ")}</span>}</li>)}</ul>
+        <ul>{lines.map((line) => <li>{line}</li>)}</ul>
+    </details>}
+    {verdict.drawn && settings.renderer === "svg" && <button class="copy" data-download-svg><span data-label>{copy.site.download}</span></button>}
+</figure>

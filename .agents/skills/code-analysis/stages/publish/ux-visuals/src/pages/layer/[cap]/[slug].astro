@@ -1,0 +1,37 @@
+---
+import Page from "../../../layouts/Page.astro";
+import Rows from "../../../components/Rows.astro";
+import { capabilities, slugs } from "../../../lib/payloads";
+import { copy } from "../../../lib/copy";
+import { firstSentence, plural, where } from "../../../lib/text";
+
+export async function getStaticPaths() {
+    const all = await capabilities();
+    const addresses = await slugs();
+    return all.flatMap((cap) =>
+        cap.layers.map((layer) => ({
+            params: { cap: addresses.capability(cap.capability.id), slug: addresses.layer(cap.capability.id, layer.id) },
+            props: { cid: cap.capability.id, lid: layer.id },
+        })),
+    );
+}
+const { cid, lid } = Astro.props;
+const addresses = await slugs();
+const cap = (await capabilities()).find((each) => each.capability.id === cid);
+const layer = cap?.layers.find((each) => each.id === lid);
+if (cap === undefined || layer === undefined) throw new Error("no such layer");
+const lead = `${firstSentence(layer.purpose)} ${copy.layer.lead(cap.capability.name, layer.actions.length, layer.rules.length, layer.sharedBlocks > 0)}`;
+const capSlug = addresses.capability(cid);
+const ruleRows = layer.rules.map((rule) => ({ text: rule.says, copy: rule.context.text, meta: rule.gates ? copy.words.changesState : undefined, sub: `${where(rule.place)}${rule.screens.length > 0 ? `  ·  ${copy.words.screensLabel}: ${rule.screens.join(", ")}` : ""}` }));
+---
+<Page title={layer.name} lead={lead} depth={2} brief={layer.context.text} trail={[{ text: copy.site.home, href: "../../index.html" }, { text: cap.capability.name, href: `../../capability/${capSlug}.html` }, { text: layer.name }]}>
+    <h2>{copy.layer.started(layer.actions.length)}</h2>
+    {layer.actions.length === 0 && <p class="empty">{copy.layer.noStarted}</p>}
+    <Rows rows={layer.actions.map((action) => ({ text: action.purpose, href: `../../action/${capSlug}/${addresses.action(cid, action.id)}.html`, meta: action.screen === "" ? undefined : action.screen, sub: where(action.place) }))} cap={12} noun="actions" />
+    <h2>{copy.layer.rules(layer.rules.length)}</h2>
+    {layer.rules.length === 0 && <p class="empty">{copy.layer.noRules}</p>}
+    <Rows rows={ruleRows} cap={12} noun="business rules" />
+    <h2>{copy.layer.shapes(layer.shapes.length)}</h2>
+    {layer.shapes.length === 0 && <p class="empty">{copy.layer.noShapes}</p>}
+    <Rows rows={layer.shapes.map((shape) => ({ text: shape.name, meta: plural(shape.fields.length, "field"), sub: shape.fields.join(", ") }))} cap={12} noun="data structures" />
+</Page>

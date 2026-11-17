@@ -1,0 +1,431 @@
+{
+ "tier": "entries",
+ "topics": [
+  {
+   "key": "parts:part-38111104373939233299\u0000connections",
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "aspect": "connections",
+   "question": "How does its code connect to other parts and external systems?",
+   "facts": [
+    {
+     "id": "fact-34990026109508414944",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "connections",
+     "statement": "Some calls in its Form handler code code are pointed at their target while the system runs, so the code does not show where they go.",
+     "basis": {
+      "assumed": {
+       "why": "These calls are pointed at their target while the system runs, from settings or data no file in scope holds.",
+       "confirmWith": "runningSystem",
+       "ifWrong": "The flows through these calls go on into code the account does not follow, so what each entry point reaches, and the data it changes, may be more than is shown.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/FindResults.vb",
+          "firstLine": 69,
+          "lastLine": 69
+         },
+         "shows": "The search test is a function handed in by the caller as a parameter (Searcher); the code here shows only that it takes a policy and returns whether it matches. The Find By dialogs that build it, or the main window passing it on, would show which test runs."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 642,
+          "lastLine": 642
+         },
+         "shows": "The code reads the constant Version, which version.bat generates into Version.vb; that file is not among the analysed files, so its value is not shown."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-57261291349811906226",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "connections",
+     "statement": "Some calls in this code are pointed at their target while the system runs, so the code does not show where they go.",
+     "basis": {
+      "assumed": {
+       "why": "These calls are pointed at their target while the system runs, from settings or data no file in scope holds.",
+       "confirmWith": "runningSystem",
+       "ifWrong": "The flows through these calls go on into code the account does not follow, so what each entry point reaches, and the data it changes, may be more than is shown.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 9,
+          "lastLine": 9
+         },
+         "shows": "The project names PolicyPlus.My.MyApplication as the startup object; its source in My Project is not among the analysed files, so the form it opens first is not shown here."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "entities:entity-54216265301484356956\u0000life-of-states",
+   "subject": {
+    "registry": "entities",
+    "key": "entity-54216265301484356956"
+   },
+   "aspect": "life-of-states",
+   "question": "Which states does it go through, and what moves it on?",
+   "facts": [
+    {
+     "id": "fact-42752523313272505897",
+     "subject": {
+      "registry": "entities",
+      "key": "entity-54216265301484356956"
+     },
+     "aspect": "life-of-states",
+     "statement": "Saving a policy to a local or user-specific policy file raises the Group Policy version stamp by 1 (machine) or 65536 (user), or writes 65537 when absent or the file is new. This changes no setting state. Saving to a plain POL file, a user registry hive or the live registry leaves the stamp alone.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 173,
+          "lastLine": 207
+         },
+         "shows": "The version line is incremented or created; no setting state is touched."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 117,
+          "lastLine": 147
+         },
+         "shows": "The stamp is written only on local and security-identifier policy saves."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-25590857187065118278",
+     "subject": {
+      "registry": "entities",
+      "key": "entity-54216265301484356956"
+     },
+     "aspect": "life-of-states",
+     "statement": "A save to the local policy file where the machine has no Group Policy service applies queued deletions and key clearances straight to the registry, which holds neither state. Such saves with the service present leave the file's states for the service to apply.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 125,
+          "lastLine": 133
+         },
+         "shows": "Without the infrastructure, the POL difference is applied to the registry at once."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicySource.vb",
+          "firstLine": 150,
+          "lastLine": 175
+         },
+         "shows": "Deletion and clearance entries become registry deletes."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "entities:entity-01494854910295739228\u0000life-of-states",
+   "subject": {
+    "registry": "entities",
+    "key": "entity-01494854910295739228"
+   },
+   "aspect": "life-of-states",
+   "question": "Which states does it go through, and what moves it on?",
+   "facts": [
+    {
+     "id": "fact-58405874899944722965",
+     "subject": {
+      "registry": "entities",
+      "key": "entity-01494854910295739228"
+     },
+     "aspect": "life-of-states",
+     "statement": "We describe the life of the comment table held in memory. A comment reaches the comment file only when the user chooses Save Policies. Errors in that save are ignored, so a comment can silently stay unsaved; a deleted comment leaves the file only then.",
+     "basis": {
+      "assumed": {
+       "why": "The code keeps no flag for saved versus unsaved comments, so the file's state cannot be read from the table.",
+       "confirmWith": "material",
+       "ifWrong": "If comments were also written to disk on each edit, a saved state would need its own transitions.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 614,
+          "lastLine": 624
+         },
+         "shows": "Save Policies writes the comment table; any error is swallowed."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/CmtxFile.vb",
+          "firstLine": 78,
+          "lastLine": 124
+         },
+         "shows": "The save builds the whole file from the table and writes it."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-21136714029189296456",
+     "subject": {
+      "registry": "entities",
+      "key": "entity-01494854910295739228"
+     },
+     "aspect": "life-of-states",
+     "statement": "Importing a policy settings file sets a comment only when the imported comment is non-empty, so an import never clears a comment. It overwrites existing text. A table that is unavailable is left alone.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/SpolFile.vb",
+          "firstLine": 209,
+          "lastLine": 214
+         },
+         "shows": "Comment is stored only if the table exists and the text is non-empty."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-95356749819437768876",
+     "subject": {
+      "registry": "entities",
+      "key": "entity-01494854910295739228"
+     },
+     "aspect": "life-of-states",
+     "statement": "Opening a policy source loads the whole comment table from its file at once. A missing file gives an empty table. A missing path, or a failure while reading the file, makes comments unavailable for that source.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 329,
+          "lastLine": 349
+         },
+         "shows": "Table loaded, empty if file absent, Nothing on no path or exception."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/CmtxFile.vb",
+          "firstLine": 66,
+          "lastLine": 77
+         },
+         "shows": "Conversion to a table can throw on malformed references."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "capabilities:capability-94819467697830882144\u0000rules-it-applies",
+   "subject": {
+    "registry": "capabilities",
+    "key": "capability-94819467697830882144"
+   },
+   "aspect": "rules-it-applies",
+   "question": "Which rules does it apply?",
+   "facts": [
+    {
+     "id": "fact-70808645864706752459",
+     "subject": {
+      "registry": "capabilities",
+      "key": "capability-94819467697830882144"
+     },
+     "aspect": "rules-it-applies",
+     "statement": "When several sibling language folders share the chosen language, such as de-AT and de-CH for de-DE, the one used depends on the order Windows lists folders. The code states no preference among them.",
+     "basis": {
+      "assumed": {
+       "why": "The choice rests on the operating system's folder listing order, which no file in the code fixes.",
+       "confirmWith": "runningSystem",
+       "ifWrong": "People may see definitions in a different regional variant of their language than expected.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/AdmxBundle.vb",
+          "firstLine": 49,
+          "lastLine": 59
+         },
+         "shows": "First matching sibling folder with a usable file is taken, in listing order."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-02050997768862362813",
+     "subject": {
+      "registry": "capabilities",
+      "key": "capability-94819467697830882144"
+     },
+     "aspect": "rules-it-applies",
+     "statement": "When linking stops the load with an error, what the person sees depends on the calling screen, which reports a failed load but whose exact message and the state left in the workspace we did not trace.",
+     "basis": {
+      "assumed": {
+       "why": "The linking code raises unhandled errors; their handling lies in the calling screens, outside these blocks.",
+       "confirmWith": "runningSystem",
+       "ifWrong": "A person might see a different message, or be left with a partly loaded set of definitions.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/AdmxBundle.vb",
+          "firstLine": 26,
+          "lastLine": 26
+         },
+         "shows": "Linking runs after files are staged, outside the per-file error handling."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-47675267457805399375",
+     "subject": {
+      "registry": "capabilities",
+      "key": "capability-94819467697830882144"
+     },
+     "aspect": "rules-it-applies",
+     "statement": "The download assumes Microsoft still serves the fixed Windows 11 26H2 package at its link, with definitions at the expected folder inside it. If not, the download fails with a step message.",
+     "basis": {
+      "assumed": {
+       "why": "The package link and its internal folder layout are on Microsoft's server, outside the code.",
+       "confirmWith": "runningSystem",
+       "ifWrong": "Downloads fail at the download or move step, and the person cannot fetch definitions from within the program.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 3,
+          "lastLine": 4
+         },
+         "shows": "The package link and the folder inside it are fixed constants."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-03457466961724625533",
+     "subject": {
+      "registry": "capabilities",
+      "key": "capability-94819467697830882144"
+     },
+     "aspect": "rules-it-applies",
+     "statement": "Offering the domain definitions folder relies on Windows reporting the computer's domain. When Windows cannot, the choice is silently disabled, so domain-joined machines without reachable controllers cannot pick it.",
+     "basis": {
+      "assumed": {
+       "why": "The domain lookup is a framework call with no source here.",
+       "confirmWith": "runningSystem",
+       "ifWrong": "The domain choice could appear or stay disabled differently than described.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/OpenAdmxFolder.vb",
+          "firstLine": 13,
+          "lastLine": 25
+         },
+         "shows": "Domain lookup failure is ignored and the domain choice disabled."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "capabilities:capability-52723301806026979742\u0000rules-it-applies",
+   "subject": {
+    "registry": "capabilities",
+    "key": "capability-52723301806026979742"
+   },
+   "aspect": "rules-it-applies",
+   "question": "Which rules does it apply?",
+   "facts": [
+    {
+     "id": "fact-54070775459067102720",
+     "subject": {
+      "registry": "capabilities",
+      "key": "capability-52723301806026979742"
+     },
+     "aspect": "rules-it-applies",
+     "statement": "Whether a policy save asks Windows to refresh or the program applies the change itself depends on a fixed list of Windows edition codes. Whether newer editions are on that list is assumed.",
+     "basis": {
+      "assumed": {
+       "why": "The list is a fixed set of numbers; which Windows editions they stand for is outside the code.",
+       "confirmWith": "material",
+       "ifWrong": "On an unlisted edition with Group Policy, saves would apply changes to the registry directly instead of refreshing policy.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/SystemInfo.vb",
+          "firstLine": 3,
+          "lastLine": 11
+         },
+         "shows": "Edition code is tested against a fixed list of codes."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-88147567863218516582",
+     "subject": {
+      "registry": "capabilities",
+      "key": "capability-52723301806026979742"
+     },
+     "aspect": "rules-it-applies",
+     "statement": "Which Windows edition the computer is, and so whether Group Policy tools are offered, comes from a Windows system call. The code holds only a list of accepted edition codes, so new editions are missed until it is updated.",
+     "basis": {
+      "assumed": {
+       "why": "The edition code is returned by the operating system; the list's coverage of current Windows editions is not checkable from the code.",
+       "confirmWith": "runningSystem",
+       "ifWrong": "A supported edition is wrongly reported as lacking Group Policy, or an unsupported one passes.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/SystemInfo.vb",
+          "firstLine": 5,
+          "lastLine": 10
+         },
+         "shows": "Edition code is read from Windows and compared to a fixed list."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": []
+  }
+ ]
+}

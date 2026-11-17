@@ -1,0 +1,42 @@
+---
+export interface RowData {
+    text: string;
+    href?: string;
+    meta?: string;
+    sub?: string;
+    copy?: string;
+    chips?: string[];
+    path?: { name: string; href?: string }[];
+    capability?: string;
+}
+export interface Props {
+    rows: RowData[];
+    cap?: number;
+    noun?: string;
+}
+import { copy } from "../lib/copy";
+const { rows, cap = rows.length, noun = "items" } = Astro.props;
+const shown = rows.slice(0, cap);
+const rest = rows.slice(cap);
+---
+{shown.map((row) => <Fragment><div class="row" data-capability={row.capability}>
+    <div class="main">
+        {row.href ? <a href={row.href}>{row.text}</a> : <span>{row.text}</span>}
+        {row.copy && <button class="copy" data-copy-text={row.copy}><span data-label>Copy</span></button>}
+        {row.sub && <div class="sub">{row.sub}</div>}
+        {row.chips && <div class="sub">{row.chips.map((chip) => <span class="chip">{chip}</span>)}</div>}
+        {row.path && <div class="path">{row.path.map((step, i) => <>{i > 0 && <span class="arrow" aria-hidden="true">→</span>}{step.href ? <a href={step.href}>{step.name}</a> : <span class="chip">{step.name}</span>}</>)}</div>}
+    </div>
+    {row.meta && <div class="meta">{row.meta}</div>}
+</div></Fragment>)}
+{rest.length > 0 && <details class="more"><summary>{copy.site.showAll(cap, rows.length, noun)}</summary>
+    {rest.map((row) => <div class="row" data-capability={row.capability}>
+        <div class="main">
+            {row.href ? <a href={row.href}>{row.text}</a> : <span>{row.text}</span>}
+            {row.copy && <button class="copy" data-copy-text={row.copy}><span data-label>Copy</span></button>}
+            {row.sub && <div class="sub">{row.sub}</div>}
+            {row.path && <div class="path">{row.path.map((step, i) => <>{i > 0 && <span class="arrow" aria-hidden="true">→</span>}{step.href ? <a href={step.href}>{step.name}</a> : <span class="chip">{step.name}</span>}</>)}</div>}
+        </div>
+        {row.meta && <div class="meta">{row.meta}</div>}
+    </div>)}
+</details>}

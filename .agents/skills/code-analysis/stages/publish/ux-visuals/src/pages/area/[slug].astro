@@ -1,0 +1,24 @@
+---
+import Page from "../../layouts/Page.astro";
+import Rows from "../../components/Rows.astro";
+import { capabilities, slugs, system } from "../../lib/payloads";
+import { copy } from "../../lib/copy";
+import { plural } from "../../lib/text";
+
+export async function getStaticPaths() {
+    const sys = await system();
+    const addresses = await slugs();
+    return sys.areas.map((area) => ({ params: { slug: addresses.area(area.id) }, props: { id: area.id } }));
+}
+const { id } = Astro.props;
+const sys = await system();
+const addresses = await slugs();
+const area = sys.areas.find((each) => each.id === id);
+if (area === undefined) throw new Error("no such area");
+const members = area.capabilities.flatMap((member) => sys.capabilities.filter((each) => each.id === member));
+void capabilities;
+---
+<Page title={area.name} lead={area.purpose} depth={1} brief={area.context.text} trail={[{ text: copy.site.home, href: "../index.html" }, { text: area.name }]}>
+    <h2>{copy.area.capabilities}</h2>
+    <Rows rows={members.map((each) => ({ text: each.name, href: `../capability/${addresses.capability(each.id)}.html`, meta: `${plural(each.screens, "screen")} · ${plural(each.actions, "action")} · ${plural(each.rules, "rule")}`, sub: each.purpose }))} />
+</Page>
