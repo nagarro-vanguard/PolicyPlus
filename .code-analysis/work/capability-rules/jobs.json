@@ -1,0 +1,62 @@
+[
+ {
+  "jobId": "job-7177424929707227",
+  "kind": "lifecycle",
+  "definition": "81915a712cf41493da4026be488bd4e2d4abcba1"
+ },
+ {
+  "jobId": "job-6945961052739222",
+  "kind": "lifecycle",
+  "definition": "3f520416a1088757b14c65b60a14cd46c5c7881d"
+ },
+ {
+  "jobId": "job-9942896204737316",
+  "kind": "lifecycle",
+  "definition": "cb9903c7bee094b2e7f6ac60a8bdc002a403dedd"
+ },
+ {
+  "jobId": "job-1340581525686545",
+  "kind": "lifecycle",
+  "definition": "5e5598edf8e930f9b78a71c4c7d054fd510be2b0"
+ },
+ {
+  "jobId": "job-9920335337485142",
+  "kind": "rules",
+  "definition": "41bc822607974c6f10ad5474a4a60cf60e463e46"
+ },
+ {
+  "jobId": "job-4673454851309298",
+  "kind": "rules",
+  "definition": "8c8ac2ec33fafd871ecb5eca2b9a0a948d613b2e"
+ },
+ {
+  "jobId": "job-2904793062372006",
+  "kind": "rules",
+  "definition": "e74c2468c85551812f706f335815c28e2c0bede9"
+ },
+ {
+  "jobId": "job-4351792658477990",
+  "kind": "rules",
+  "definition": "ef41149482a3b1d3b1c9ffbeb1f5589256d489a4"
+ },
+ {
+  "jobId": "job-4434921464156402",
+  "kind": "rules",
+  "definition": "54d2cbd0ea5e5c26b84755176b31c445915fc0ed"
+ },
+ {
+  "jobId": "job-8256451594606636",
+  "kind": "rules",
+  "definition": "3f831a9797bf4426831500e18d19ce0e14103403"
+ },
+ {
+  "jobId": "job-8819654175358664",
+  "kind": "rules",
+  "definition": "8d555ba92868ea417e568cd91b2b4fe0d35db9bb"
+ },
+ {
+  "jobId": "job-4859612343669321",
+  "kind": "rules",
+  "definition": "318c87c6ac4c36091e9fab96da2f2c5df58bb873"
+ }
+]

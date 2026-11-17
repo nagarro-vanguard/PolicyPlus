@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Parses the SPOL text and, if valid, hands it to the main window and closes with OK.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/setting-policies.html">Setting policies</a> › <a href="../../screen/PolicyPlus/ImportSpol.vb.html">ImportSpol.vb</a></div><h1>Parses the SPOL text and, if valid, hands it to the main window and closes with OK.</h1><p class="lead">Started by a person. In the code: PolicyPlus/ImportSpol.vb:19</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the ImportSpol screen of Setting policies: Parses the SPOL text and, if valid, hands it to the main window and closes with OK.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:19
+- PolicyPlus/ImportSpol.vb (only this capability)
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 13
+- A policy-state script (SPOL) that fails to load is reported with the parser's message plus '(Error found on line N.)'. (PolicyPlus/SpolFile.vb:6)
+- Apply reads the text as an SPOL file: valid text is handed back as ready and the dialog closes as accepted; invalid text stays open with &quot;The SPOL text is invalid: &quot; and the reason. (PolicyPlus/ImportSpol.vb:20)
+- A SPOL script is refused unless its first line is 'Policy Plus Semantic Policy', with the message 'Incorrect signature.' (PolicyPlus/SpolFile.vb:50)
+- In a SPOL script a policy header starting with 'U' is a user-section policy; any other first letter is treated as computer section. The rest is the policy ID. (PolicyPlus/SpolFile.vb:53)
+- A SPOL script is refused, with the line number, when a policy header has no space between section and policy ID, or when the header is last in the text, or the state line is missing after it. (PolicyPlus/SpolFile.vb:53)
+- In a SPOL script an optional 'Comment:' line follows the header; '\\' stands for a backslash and '\n' for a line break. A backslash at the end of the comment, or followed by any other character, is refused ('Escape sequence started at end of comment.' / 'Unknown comment escape sequence'). (PolicyPlus/SpolFile.vb:56)
+- A SPOL policy state must be 'Not Configured', 'Enabled' or 'Disabled' (any case); anything else is refused with 'Unknown policy state.' (PolicyPlus/SpolFile.vb:78)
+- Option lines in a SPOL script are read only for Enabled policies, until a blank line. (PolicyPlus/SpolFile.vb:88)
+  ...and 5 more
+Unconfirmed:
+- For the capability: Whether a policy save asks Windows to refresh or the program applies the change itself depends on a fixed list of Windows edition codes. Whether newer editions are on that list is assumed. If wrong: On an unlisted edition with Group Policy, saves would apply changes to the registry directly instead of refreshing policy.
+- For the capability: Which Windows edition the computer is, and so whether Group Policy tools are offered, comes from a Windows system call. The code holds only a list of accepted edition codes, so new editions are missed until it is updated. If wrong: A supported edition is wrongly reported as lacking Group Policy, or an unsupported one passes.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/setting-policies/screens.html">Screens</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/setting-policies/policy-state-logic-and-windows-interop.html">Policy state logic and Windows interop</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (13)</h2><div class="group-name">Screens</div><div class="row"><div class="main"><span>Apply reads the text as an SPOL file: valid text is handed back as ready and the dialog closes as accepted; invalid text stays open with &quot;The SPOL text is invalid: &quot; and the reason.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Apply reads the text as an SPOL file: valid text is handed back as ready and the dialog closes as accepted; invalid text stays open with &quot;The SPOL text is invalid: &quot; and the reason.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:20
+- PolicyPlus/ImportSpol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportSpol.vb:20  ·  Screens: ImportSpol</div></div></div><div class="group-name">Policy state logic and Windows interop</div><div class="row"><div class="main"><span>A SPOL script is refused, with the line number, when the same option name appears twice under one policy.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A SPOL script is refused, with the line number, when the same option name appears twice under one policy.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:121
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:121  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A SPOL script is refused unless its first line is &#39;Policy Plus Semantic Policy&#39;, with the message &#39;Incorrect signature.&#39;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A SPOL script is refused unless its first line is 'Policy Plus Semantic Policy', with the message 'Incorrect signature.'
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:50
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:50  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A SPOL policy state must be &#39;Not Configured&#39;, &#39;Enabled&#39; or &#39;Disabled&#39; (any case); anything else is refused with &#39;Unknown policy state.&#39;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A SPOL policy state must be 'Not Configured', 'Enabled' or 'Disabled' (any case); anything else is refused with 'Unknown policy state.'
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:78
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:78  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A SPOL script is refused, with the line number, when an option list opened with &#39;[&#39; is never closed with &#39;]&#39; before the text ends.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A SPOL script is refused, with the line number, when an option list opened with '[' is never closed with ']' before the text ends.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:105
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:105  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A SPOL script is refused, with the line number, when a policy header has no space between section and policy ID, or when the header is last in the text, or the state line is missing after it.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A SPOL script is refused, with the line number, when a policy header has no space between section and policy ID, or when the header is last in the text, or the state line is missing after it.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:53
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:53  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>In a SPOL script a policy header starting with &#39;U&#39; is a user-section policy; any other first letter is treated as computer section. The rest is the policy ID.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: In a SPOL script a policy header starting with 'U' is a user-section policy; any other first letter is treated as computer section. The rest is the policy ID.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:53
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:53  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A SPOL option value is read as: &#39;#n&#39; signed integer; digits unsigned integer; true/false; &#39;text&#39; in single quotes; &quot;a&quot;, &quot;b&quot; list of strings; None an empty list; &#39;[&#39; block of one string per line (a list) or two (a name and value). An empty block means no list. Anything else is refused with &#39;Unknown option data format.&#39;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A SPOL option value is read as: '#n' signed integer; digits unsigned integer; true/false; 'text' in single quotes; &quot;a&quot;, &quot;b&quot; list of strings; None an empty list; '[' block of one string per line (a list) or two (a name and value). An empty block means no list. Anything else is refused with 'Unknown option data format.'
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:93
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:93  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A SPOL script is refused, with the line number, when a list entry holds no quoted text, or when entries after the first hold fewer strings than the first requires.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A SPOL script is refused, with the line number, when a list entry holds no quoted text, or when entries after the first hold fewer strings than the first requires.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:111
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:111  ·  Screens: ImportSpol</div></div></div><details class="more"><summary>Showing 8 of 12 business rules. Show all 12</summary><div class="row"><div class="main"><span>Option lines in a SPOL script are read only for Enabled policies, until a blank line.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: Option lines in a SPOL script are read only for Enabled policies, until a blank line.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:88
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:88  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A SPOL script is refused, with the line number, when an option line under an Enabled policy has no &#39;: &#39; separator. The message is the system&#39;s own, not a Policy Plus text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A SPOL script is refused, with the line number, when an option line under an Enabled policy has no ': ' separator. The message is the system's own, not a Policy Plus text.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:90
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:90  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A policy-state script (SPOL) that fails to load is reported with the parser&#39;s message plus &#39;(Error found on line N.)&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A policy-state script (SPOL) that fails to load is reported with the parser's message plus '(Error found on line N.)'.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:6
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:6  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>In a SPOL script an optional &#39;Comment:&#39; line follows the header; &#39;\\&#39; stands for a backslash and &#39;\n&#39; for a line break. A backslash at the end of the comment, or followed by any other character, is refused (&#39;Escape sequence started at end of comment.&#39; / &#39;Unknown comment escape sequence&#39;).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: In a SPOL script an optional 'Comment:' line follows the header; '\\' stands for a backslash and '\n' for a line break. A backslash at the end of the comment, or followed by any other character, is refused ('Escape sequence started at end of comment.' / 'Unknown comment escape sequence').
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:56
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:56  ·  Screens: ImportSpol</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

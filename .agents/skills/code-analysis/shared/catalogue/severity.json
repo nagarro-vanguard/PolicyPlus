@@ -1,0 +1,20 @@
+{
+    "version": 1,
+    "severities": [
+        {
+            "id": "high",
+            "words": "high",
+            "means": "Exploitable or harmful in normal use, or decisive for a rebuild: someone can read or change what they should not, data can be lost or corrupted, or a technology the system depends on no longer gets security fixes."
+        },
+        {
+            "id": "medium",
+            "words": "medium",
+            "means": "Harmful under conditions that can occur: a gap that needs a mistake, an unusual input or a failure to bite."
+        },
+        {
+            "id": "low",
+            "words": "low",
+            "means": "Hygiene: worth fixing in a rebuild, harmless on its own."
+        }
+    ]
+}

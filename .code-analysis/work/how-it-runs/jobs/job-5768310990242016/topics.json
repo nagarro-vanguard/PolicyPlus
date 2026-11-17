@@ -1,0 +1,96 @@
+{
+ "technology": ".NET Framework",
+ "registryPath": "/Users/anupvasudeva/me/projects/PolicyPlus/.code-analysis/work/how-it-runs/jobs/job-5768310990242016/registry.jsonl",
+ "topics": [
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "anything-else",
+   "question": "What else here would change a decision?"
+  },
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "blocks-and-containers",
+   "question": "Which named pieces of code run when invoked, and which only group or declare?"
+  },
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "build-time-code",
+   "question": "How does code brought in or chosen at build time change what code exists?"
+  },
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "contract-syntax",
+   "question": "What is the syntax of each contract between layers?"
+  },
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "screen-wiring",
+   "question": "How are what a person sees and the code that reacts to it tied together?"
+  },
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "navigation-and-permissions",
+   "question": "Where are navigation and permissions declared, in code or in data?"
+  },
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "user-state",
+   "question": "What does each user's state hold between requests?"
+  },
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "data-shapes",
+   "question": "Where is each shape of data defined, in every layer?"
+  },
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "integration-config",
+   "question": "Where does the configuration of each external system live?"
+  },
+  {
+   "subject": {
+    "registry": "technologies",
+    "key": "technology-84822039951309122274"
+   },
+   "subjectName": ".NET Framework",
+   "aspect": "code-without-source",
+   "question": "Which code with no source in scope does the system call for its own behaviour, and what does it do?"
+  }
+ ]
+}

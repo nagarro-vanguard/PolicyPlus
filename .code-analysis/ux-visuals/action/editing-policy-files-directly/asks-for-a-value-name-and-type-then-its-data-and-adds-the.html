@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Asks for a value name and type, then its data, and adds the value under the selected key.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/editing-policy-files-directly.html">Editing policy files directly</a> › <a href="../../screen/PolicyPlus/EditPol.vb.html">EditPol.vb</a></div><h1>Asks for a value name and type, then its data, and adds the value under the selected key.</h1><p class="lead">Started by a person. In the code: PolicyPlus/EditPol.vb:154</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the EditPol screen of Editing policy files directly: Asks for a value name and type, then its data, and adds the value under the selected key.
+Where to look first:
+- Starts at PolicyPlus/EditPol.vb:154
+- PolicyPlus/EditPol.vb (only this capability)
+- PolicyPlus/EditPolMultiStringData.vb (only this capability)
+- PolicyPlus/EditPolNumericData.vb (only this capability)
+- PolicyPlus/EditPolStringData.vb (only this capability)
+- PolicyPlus/EditPolValue.vb (only this capability)
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 18
+- Setting a value in a POL file replaces any earlier record of the same value with the new data and kind. An existing deletion marker is not removed; the value record wins when the file is read. (PolicyPlus/PolicySource.vb:105)
+- A number value can be entered up to 4294967295 for a 32-bit DWord and up to 18446744073709551615 for a 64-bit QWord; the box opens showing the current value. (PolicyPlus/EditPolNumericData.vb:4)
+- The raw policy file editor hides any value with an empty name. Keys are listed alphabetically, ignoring case, with sub-keys before the key's own values, nested by depth, and values are listed alphabetically, ignoring case. (PolicyPlus/EditPol.vb:5)
+- A new value starts with an empty name and the type 'String' preselected. (PolicyPlus/EditPolValue.vb:10)
+- When the new-value dialog is confirmed with OK, the value is created with the chosen type: String, Expandable string, List of strings, 32-bit DWord or 64-bit QWord, under the typed name. A cancelled dialog yields no type or name. The dialog itself does not refuse an empty name. (PolicyPlus/EditPolValue.vb:12)
+- Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out. (PolicyPlus/PolicySource.vb:20)
+- The editor shows special value names as deletion markers: &quot;**deletevalues&quot; as &quot;Delete values&quot; with its data as text, a name starting &quot;**del.&quot; as &quot;Delete value&quot; naming the value after it, and a name starting &quot;**delvals&quot; as &quot;Delete all values&quot;. These entries are not editable values. (PolicyPlus/EditPol.vb:42)
+- Other values are shown with their data as text: multi-strings joined by spaces, text and expandable text as-is, whole numbers as digits, and binary data as space-separated hex bytes. (PolicyPlus/EditPol.vb:48)
+  ...and 10 more
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/editing-policy-files-directly/screens.html">Screens</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/editing-policy-files-directly/policy-state-logic-and-windows-interop.html">Policy state logic and Windows interop</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (18)</h2><div class="group-name">Screens</div><div class="row"><div class="main"><span>The editor shows special value names as deletion markers: &quot;**deletevalues&quot; as &quot;Delete values&quot; with its data as text, a name starting &quot;**del.&quot; as &quot;Delete value&quot; naming the value after it, and a name starting &quot;**delvals&quot; as &quot;Delete all values&quot;. These entries are not editable values.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: The editor shows special value names as deletion markers: &quot;**deletevalues&quot; as &quot;Delete values&quot; with its data as text, a name starting &quot;**del.&quot; as &quot;Delete value&quot; naming the value after it, and a name starting &quot;**delvals&quot; as &quot;Delete all values&quot;. These entries are not editable values.
+Where to look first:
+- Starts at PolicyPlus/EditPol.vb:42
+- PolicyPlus/EditPol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditPol.vb:42  ·  Screens: EditPol, Main</div></div></div><div class="row"><div class="main"><span>The raw policy file editor hides any value with an empty name. Keys are listed alphabetically, ignoring case, with sub-keys before the key&#39;s own values, nested by depth, and values are listed alphabetically, ignoring case.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: The raw policy file editor hides any value with an empty name. Keys are listed alphabetically, ignoring case, with sub-keys before the key's own values, nested by depth, and values are listed alphabetically, ignoring case.
+Where to look first:
+- Starts at PolicyPlus/EditPol.vb:5
+- PolicyPlus/EditPol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditPol.vb:5  ·  Screens: EditPol, Main</div></div></div><div class="row"><div class="main"><span>A number value can be entered up to 4294967295 for a 32-bit DWord and up to 18446744073709551615 for a 64-bit QWord; the box opens showing the current value.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: A number value can be entered up to 4294967295 for a 32-bit DWord and up to 18446744073709551615 for a 64-bit QWord; the box opens showing the current value.
+Where to look first:
+- Starts at PolicyPlus/EditPolNumericData.vb:4
+- PolicyPlus/EditPolNumericData.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditPolNumericData.vb:4  ·  Screens: EditPol</div></div></div><div class="row"><div class="main"><span>When adding a value, its starting data is empty text for string kinds, 0 for numeric kinds and an empty list for multi-string; the value is saved to the selected key only if the person confirms both dialogs.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: When adding a value, its starting data is empty text for string kinds, 0 for numeric kinds and an empty list for multi-string; the value is saved to the selected key only if the person confirms both dialogs.
+Where to look first:
+- Starts at PolicyPlus/EditPol.vb:154
+- PolicyPlus/EditPol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditPol.vb:154  ·  Screens: EditPol</div></div></div><div class="row"><div class="main"><span>Value data is requested in a dialog suited to the kind: text for string and expandable string, a number for 32-bit and 64-bit numbers, lines for multi-string. Any other kind is refused with &quot;This value kind is not supported.&quot;. When the person cancels a dialog, or the kind is refused, no data is returned and callers change nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: Value data is requested in a dialog suited to the kind: text for string and expandable string, a number for 32-bit and 64-bit numbers, lines for multi-string. Any other kind is refused with &quot;This value kind is not supported.&quot;. When the person cancels a dialog, or the kind is refused, no data is returned and callers change nothing.
+Where to look first:
+- Starts at PolicyPlus/EditPol.vb:130
+- PolicyPlus/EditPol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditPol.vb:130  ·  Screens: EditPol</div></div></div><div class="row"><div class="main"><span>Other values are shown with their data as text: multi-strings joined by spaces, text and expandable text as-is, whole numbers as digits, and binary data as space-separated hex bytes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: Other values are shown with their data as text: multi-strings joined by spaces, text and expandable text as-is, whole numbers as digits, and binary data as space-separated hex bytes.
+Where to look first:
+- Starts at PolicyPlus/EditPol.vb:48
+- PolicyPlus/EditPol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditPol.vb:48  ·  Screens: EditPol, Main</div></div></div><div class="row"><div class="main"><span>When the new-value dialog is confirmed with OK, the value is created with the chosen type: String, Expandable string, List of strings, 32-bit DWord or 64-bit QWord, under the typed name. A cancelled dialog yields no type or name. The dialog itself does not refuse an empty name.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: When the new-value dialog is confirmed with OK, the value is created with the chosen type: String, Expandable string, List of strings, 32-bit DWord or 64-bit QWord, under the typed name. A cancelled dialog yields no type or name. The dialog itself does not refuse an empty name.
+Where to look first:
+- Starts at PolicyPlus/EditPolValue.vb:12
+- PolicyPlus/EditPolValue.Designer.vb (only this capability)
+- PolicyPlus/EditPolValue.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditPolValue.vb:12  ·  Screens: EditPol</div></div></div><div class="row"><div class="main"><span>A new value starts with an empty name and the type &#39;String&#39; preselected.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: A new value starts with an empty name and the type 'String' preselected.
+Where to look first:
+- Starts at PolicyPlus/EditPolValue.vb:10
+- PolicyPlus/EditPolValue.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditPolValue.vb:10  ·  Screens: EditPol</div></div></div><details class="more"><summary>Showing 8 of 9 business rules. Show all 9</summary><div class="row"><div class="main"><span>After the list is rebuilt, the previous scroll position is restored if the list still has at least that many rows.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: After the list is rebuilt, the previous scroll position is restored if the list still has at least that many rows.
+Where to look first:
+- Starts at PolicyPlus/EditPol.vb:73
+- PolicyPlus/EditPol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditPol.vb:73  ·  Screens: EditPol, Main</div></div></div></details><div class="group-name">Policy state logic and Windows interop</div><div class="row"><div class="main"><span>Asking for the data of a POL file value that is absent or queued for deletion returns nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Asking for the data of a POL file value that is absent or queued for deletion returns nothing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:114
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:114  ·  Screens: EditPol, Main</div></div></div><div class="row"><div class="main"><span>A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:231
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:231  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>Setting a value in a POL file replaces any earlier record of the same value with the new data and kind. An existing deletion marker is not removed; the value record wins when the file is read.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Setting a value in a POL file replaces any earlier record of the same value with the new data and kind. An existing deletion marker is not removed; the value record wins when the file is read.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:105
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:105  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:20
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:20  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>When data is converted to POL storage, text kinds become two-byte characters ended by an empty character, and kinds not otherwise known are kept as raw bytes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When data is converted to POL storage, text kinds become two-byte characters ended by an empty character, and kinds not otherwise known are kept as raw bytes.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:337
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:337  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>A POL file value is queued for deletion when: it has a &#39;**del.&lt;name&gt;&#39; marker; its key has a key-clearing marker; its name is in the key&#39;s &#39;**deletevalues&#39; list (semicolon separated, ignoring case). A later real value record for it cancels this.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A POL file value is queued for deletion when: it has a '**del.<name>' marker; its key has a key-clearing marker; its name is in the key's '**deletevalues' list (semicolon separated, ignoring case). A later real value record for it cancels this.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:118
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:118  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>The sub-keys of a POL file key are listed once each, ignoring case, using the spelling first met; the key itself is never listed, and an empty key name means the root.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: The sub-keys of a POL file key are listed once each, ignoring case, using the spelling first met; the key itself is never listed, and an empty key name means the root.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:196
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:196  ·  Screens: EditPol, Main</div></div></div><div class="row"><div class="main"><span>A value in a POL file is reported as present only if it is not queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A value in a POL file is reported as present only if it is not queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:110
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:110  ·  Screens: EditPol, Main</div></div></div><details class="more"><summary>Showing 8 of 9 business rules. Show all 9</summary><div class="row"><div class="main"><span>Listing the value names of a POL file key leaves out &#39;**&#39; marker names unless the caller asks for them.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Listing the value names of a POL file key leaves out '**' marker names unless the caller asks for them.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:139
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:139  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

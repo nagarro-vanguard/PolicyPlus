@@ -1,0 +1,122 @@
+{
+ "registryPath": "/Users/anupvasudeva/me/projects/PolicyPlus/.code-analysis/work/how-it-runs/jobs/job-5018767200043123/registry.jsonl",
+ "topics": [
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "purpose",
+   "question": "What is it for, and who uses it?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "runs-where",
+   "question": "Where does it run?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "starts-stops",
+   "question": "How does it start and stop?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "build-release",
+   "question": "How is it built, packaged and released, and in which environments?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "work-enters",
+   "question": "How does work enter it, and who or what starts that work?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "unit-of-work",
+   "question": "How is one piece of work carried out, from arrival to response?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "around-work",
+   "question": "What runs around all incoming work, such as checks every request passes?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "scheduled-work",
+   "question": "What work runs on a schedule or in batches, and what starts it?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "who-can-do-what",
+   "question": "Who can do what, and where is that decided?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "customers-apart",
+   "question": "How are customers or organisations kept apart?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "settings",
+   "question": "Where do settings and secrets come from, and which live outside the code?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "failures",
+   "question": "How are failures logged, retried and reported?"
+  },
+  {
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "subjectName": "Policy Plus desktop application",
+   "aspect": "anything-else",
+   "question": "What else here would change a decision?"
+  }
+ ]
+}

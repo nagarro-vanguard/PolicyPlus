@@ -1,0 +1,646 @@
+{
+ "tier": "system",
+ "topics": [
+  {
+   "key": "system\u0000purpose",
+   "subject": "system",
+   "aspect": "purpose",
+   "question": "What is it for, and who uses it?",
+   "facts": [
+    {
+     "id": "fact-90212140781683558090",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "purpose",
+     "statement": "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+     "basis": {
+      "concluded": {
+       "from": [
+        "fact-26199616017668963631",
+        "fact-20566268585521707300"
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable.",
+    "No scheduled or batch work exists. Everything runs when a person acts; the only background threads are the ADMX download and the policy search, each started by a button."
+   ]
+  },
+  {
+   "key": "system\u0000runs-where",
+   "subject": "system",
+   "aspect": "runs-where",
+   "question": "Where does it run?",
+   "facts": [
+    {
+     "id": "fact-72976397899254944423",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "runs-where",
+     "statement": "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+     "basis": {
+      "concluded": {
+       "from": [
+        "fact-34973251341927790158",
+        "fact-79358133505481577576"
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable.",
+    "No scheduled or batch work exists. Everything runs when a person acts; the only background threads are the ADMX download and the policy search, each started by a button."
+   ]
+  },
+  {
+   "key": "system\u0000starts-stops",
+   "subject": "system",
+   "aspect": "starts-stops",
+   "question": "How does it start and stop?",
+   "facts": [
+    {
+     "id": "fact-85876979135941494989",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "starts-stops",
+     "statement": "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 8,
+          "lastLine": 9
+         },
+         "shows": "Windows executable started through the application framework."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 18,
+          "lastLine": 35
+         },
+         "shows": "Load event restores saved definitions and policy sources."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 685,
+          "lastLine": 687
+         },
+         "shows": "Closing the main window cleans up policy sources."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable.",
+    "No scheduled or batch work exists. Everything runs when a person acts; the only background threads are the ADMX download and the policy search, each started by a button."
+   ]
+  },
+  {
+   "key": "system\u0000build-release",
+   "subject": "system",
+   "aspect": "build-release",
+   "question": "How is it built, packaged and released, and in which environments?",
+   "facts": [
+    {
+     "id": "fact-63746140210337715004",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "build-release",
+     "statement": "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+     "basis": {
+      "assumed": {
+       "why": "The build badge names the workflow, but its steps and where it publishes are in a file this answer does not cite.",
+       "confirmWith": "material",
+       "ifWrong": "The automated build may run different steps or publish elsewhere, so how releases reach users would differ.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "README.md",
+          "firstLine": 4,
+          "lastLine": 4
+         },
+         "shows": "Build badge links to the Build Latest GitHub Actions workflow."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 18,
+          "lastLine": 41
+         },
+         "shows": "Debug and Release build configurations."
+        },
+        {
+         "lines": {
+          "file": "version.bat",
+          "firstLine": 1,
+          "lastLine": 8
+         },
+         "shows": "Writes the Git description into the version file before building."
+        },
+        {
+         "lines": {
+          "file": "COMPILE.md",
+          "firstLine": 1,
+          "lastLine": 16
+         },
+         "shows": "Manual build steps in Visual Studio."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-70743366574550210522",
+     "subject": "system",
+     "aspect": "build-release",
+     "statement": "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "COMPILE.md",
+          "firstLine": 10,
+          "lastLine": 15
+         },
+         "shows": "Manual developer build in Visual Studio."
+        },
+        {
+         "lines": {
+          "file": "version.bat",
+          "firstLine": 1,
+          "lastLine": 8
+         },
+         "shows": "Writes the git description into a version source file."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable.",
+    "No scheduled or batch work exists. Everything runs when a person acts; the only background threads are the ADMX download and the policy search, each started by a button.",
+    "The program has no users or roles of its own; Windows decides access. It requests the highest rights the signed-in user has, so changing machine policy needs an administrator. It tests writability and marks sources unmodifiable, and takes folder ownership only when an administrator downloads definitions."
+   ]
+  },
+  {
+   "key": "system\u0000work-enters",
+   "subject": "system",
+   "aspect": "work-enters",
+   "question": "How does work enter it, and who or what starts that work?",
+   "facts": [
+    {
+     "id": "fact-73949570452935185355",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "work-enters",
+     "statement": "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 18,
+          "lastLine": 35
+         },
+         "shows": "Load event runs startup work; later work comes from menu events."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 46,
+          "lastLine": 57
+         },
+         "shows": "First-run prompt offers the ADMX download."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 602,
+          "lastLine": 609
+         },
+         "shows": "Menu click handler opens a dialog and reloads."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable.",
+    "No scheduled or batch work exists. Everything runs when a person acts; the only background threads are the ADMX download and the policy search, each started by a button."
+   ]
+  },
+  {
+   "key": "system\u0000unit-of-work",
+   "subject": "system",
+   "aspect": "unit-of-work",
+   "question": "How is one piece of work carried out, from arrival to response?",
+   "facts": [
+    {
+     "id": "fact-61070311063657510232",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "unit-of-work",
+     "statement": "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 615,
+          "lastLine": 637
+         },
+         "shows": "Save writes comments and writable sources, stores choices, shows a message."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 119,
+          "lastLine": 133
+         },
+         "shows": "Local policy save writes file, refreshes or applies difference."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 134,
+          "lastLine": 142
+         },
+         "shows": "Registry, offline hive, null and policy-file sources do different things."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 143,
+          "lastLine": 147
+         },
+         "shows": "Per-user policy save writes file and refreshes policy."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable.",
+    "No scheduled or batch work exists. Everything runs when a person acts; the only background threads are the ADMX download and the policy search, each started by a button."
+   ]
+  },
+  {
+   "key": "system\u0000around-work",
+   "subject": "system",
+   "aspect": "around-work",
+   "question": "What runs around all incoming work, such as checks every request passes?",
+   "facts": [
+    {
+     "id": "fact-12592040259199448626",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "around-work",
+     "statement": "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 55,
+          "lastLine": 55
+         },
+         "shows": "Application manifest is attached to the project."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 320,
+          "lastLine": 330
+         },
+         "shows": "Reports each source's writability after opening."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 626,
+          "lastLine": 629
+         },
+         "shows": "Save checks writability of each source."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "No scheduled or batch work exists. Everything runs when a person acts; the only background threads are the ADMX download and the policy search, each started by a button."
+   ]
+  },
+  {
+   "key": "system\u0000scheduled-work",
+   "subject": "system",
+   "aspect": "scheduled-work",
+   "question": "What work runs on a schedule or in batches, and what starts it?",
+   "facts": [
+    {
+     "id": "fact-93657963090516459885",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "scheduled-work",
+     "statement": "No scheduled or batch work exists. Everything runs when a person acts; the only background threads are the ADMX download and the policy search, each started by a button.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 76,
+          "lastLine": 76
+         },
+         "shows": "Download runs on a background task started by a button."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/FindResults.vb",
+          "firstLine": 95,
+          "lastLine": 98
+         },
+         "shows": "Search runs on a background task when the results window opens."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable."
+   ]
+  },
+  {
+   "key": "system\u0000who-can-do-what",
+   "subject": "system",
+   "aspect": "who-can-do-what",
+   "question": "Who can do what, and where is that decided?",
+   "facts": [
+    {
+     "id": "fact-23693036801916860027",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "who-can-do-what",
+     "statement": "The program has no users or roles of its own; Windows decides access. It requests the highest rights the signed-in user has, so changing machine policy needs an administrator. It tests writability and marks sources unmodifiable, and takes folder ownership only when an administrator downloads definitions.",
+     "basis": {
+      "concluded": {
+       "from": [
+        "fact-85076331296331959370",
+        "fact-93499364106373511767"
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable."
+   ]
+  },
+  {
+   "key": "system\u0000customers-apart",
+   "subject": "system",
+   "aspect": "customers-apart",
+   "question": "How are customers or organisations kept apart?",
+   "facts": [
+    {
+     "id": "fact-52781519638960786881",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "customers-apart",
+     "statement": "Not applicable: it is a single-user desktop tool with no customers or organisations. It can edit another Windows user's policies only by loading that person's registry file or per-user policy folder by hand.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 85,
+          "lastLine": 90
+         },
+         "shows": "Other users' policy folders or hive files are opened by explicit choice."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable."
+   ]
+  },
+  {
+   "key": "system\u0000settings",
+   "subject": "system",
+   "aspect": "settings",
+   "question": "Where do settings and secrets come from, and which live outside the code?",
+   "facts": [
+    {
+     "id": "fact-83357811608669618801",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "settings",
+     "statement": "The program keeps its few preferences (last definitions folder, last policy sources, first-run flag) in the current user's registry under a Policy Plus key. It holds no secrets and no configuration file beyond the runtime version pin.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 21,
+          "lastLine": 28
+         },
+         "shows": "Reads saved sources from the user's registry key."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/ConfigurationStorage.vb",
+          "firstLine": 4,
+          "lastLine": 10
+         },
+         "shows": "Opens the settings key under the current-user registry."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable."
+   ]
+  },
+  {
+   "key": "system\u0000failures",
+   "subject": "system",
+   "aspect": "failures",
+   "question": "How are failures logged, retried and reported?",
+   "facts": [
+    {
+     "id": "fact-34208828742729853532",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "failures",
+     "statement": "Failures are shown to the person in message boxes and nothing is logged to a file or service; there are no retries. Some errors are deliberately swallowed: unreadable saved sources fall back to local defaults, a failed settings key means preferences are not kept, and a comment-file error is ignored.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 31,
+          "lastLine": 38
+         },
+         "shows": "Message box, then default sources."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/ConfigurationStorage.vb",
+          "firstLine": 7,
+          "lastLine": 9
+         },
+         "shows": "Registry key failure is ignored silently."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 617,
+          "lastLine": 623
+         },
+         "shows": "Comment save errors are ignored."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 123,
+          "lastLine": 127
+         },
+         "shows": "Download failure shows only the failed phase."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus is a Windows desktop editor for Group Policy administrative-template settings. It loads policy definition files into a searchable tree and reads or writes values in the live registry, user profiles or policy files. Administrators and power users use it, including on Windows Home, which lacks the built-in editor.",
+    "It runs on the user's own Windows machine as a single desktop program on .NET Framework 4.x, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft. That it is limited to administrator desktops is our assumption.",
+    "A person launches the program, which opens the main window; closing that window ends it. On start it loads the saved policy definitions folder and policy sources from the user's registry, and on close it releases any mounted registry hives.",
+    "Built with MSBuild from the Visual Studio project, in Debug and Release configurations. A batch script stamps the Git description as the version first. A GitHub Actions workflow named Build Latest builds the Release executable automatically; its release target is not readable here. There is no test project.",
+    "Developers build by opening the Visual Studio solution in Release mode, with version.bat stamping the git version into a source file. Separately, the GitHub workflow .github/workflows/latest.yml (a file left out of the read, so not cited here) runs on every push to master (and on demand): it stamps the version, builds Release with MSBuild on a Windows server, prints the executable's hash (never compared to anything) and uploads the unsigned Policy Plus.exe to an Amazon S3 bucket as PolicyPlusLatest.exe, using stored AWS secrets through a third-party action (stcalica/s3-upload@0.0.1) and the old actions/checkout@v2. That bucket copy is what is distributed as the latest build. No test step exists.",
+    "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+    "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+    "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable."
+   ]
+  }
+ ]
+}

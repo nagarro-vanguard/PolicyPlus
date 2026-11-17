@@ -1,0 +1,21 @@
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": "created", "to": 2, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 59, "lastLine": 59}, "id": "transition-90630457322830009356"}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": "created", "to": 3, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 59, "lastLine": 59}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": "created", "to": 4, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 59, "lastLine": 59}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": "created", "to": 1, "writtenAt": {"file": "PolicyPlus/PolicyLoader.vb", "firstLine": 80, "lastLine": 81}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": "created", "to": 1, "writtenAt": {"file": "PolicyPlus/PolicyLoader.vb", "firstLine": 97, "lastLine": 100}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": "created", "to": 1, "writtenAt": {"file": "PolicyPlus/PolicyLoader.vb", "firstLine": 73, "lastLine": 74}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": "created", "to": 1, "writtenAt": {"file": "PolicyPlus/PolicyLoader.vb", "firstLine": 102, "lastLine": 102}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [1, 2, 3], "to": 3, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 92, "lastLine": 98}, "id": "transition-89785094540074943220"}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [2, 3], "to": 1, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 99, "lastLine": 104}, "id": "transition-15290968985947483081"}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [1, 2, 3, 4], "to": 2, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 105, "lastLine": 109}, "id": "transition-56440381676012540371"}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [1, 2, 3, 4], "to": 4, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 183, "lastLine": 189}, "id": "transition-61535191739544516515"}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [2, 3], "to": 1, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 184, "lastLine": 186}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [4], "to": 1, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 190, "lastLine": 195}, "id": "transition-69213906522153093707"}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [2], "to": 1, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 365, "lastLine": 370}, "id": "transition-61282040932379223909"}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [1, 2], "to": 2, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 374, "lastLine": 382}, "id": "transition-48523967702313172109"}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [2], "to": 1, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 371, "lastLine": 373}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [2], "to": 1, "writtenAt": {"file": "PolicyPlus/PolicySource.vb", "firstLine": 416, "lastLine": 420}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [1, 2, 3], "to": 2, "writtenAt": {"file": "PolicyPlus/RegFile.vb", "firstLine": 226, "lastLine": 236}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [1, 2, 3], "to": 3, "writtenAt": {"file": "PolicyPlus/RegFile.vb", "firstLine": 240, "lastLine": 247}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [1, 2, 3, 4], "to": 4, "writtenAt": {"file": "PolicyPlus/RegFile.vb", "firstLine": 248, "lastLine": 253}}
+{"lifecycle": "lifecycle-31121928221385551983", "fromStates": [4], "to": 1, "writtenAt": {"file": "PolicyPlus/RegFile.vb", "firstLine": 254, "lastLine": 259}}

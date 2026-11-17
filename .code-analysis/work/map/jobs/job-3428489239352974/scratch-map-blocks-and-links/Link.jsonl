@@ -1,0 +1,21 @@
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedAdmx.vb", "firstLine": 11, "lastLine": 11}, "to": {"file": "PolicyPlus/LoadedAdmx.vb", "line": 20}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedAdmx.vb", "firstLine": 14, "lastLine": 14}, "to": {"externalSystem": "external-29531700766871564844", "resource": "ShowDialog"}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedAdmx.vb", "firstLine": 17, "lastLine": 17}, "to": {"file": "PolicyPlus/DetailAdmx.vb", "line": 2}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedAdmx.vb", "firstLine": 23, "lastLine": 23}, "to": {"file": "PolicyPlus/LoadedAdmx.vb", "line": 17}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedProducts.vb", "firstLine": 12, "lastLine": 12}, "to": {"file": "PolicyPlus/LoadedProducts.vb", "line": 23}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedProducts.vb", "firstLine": 21, "lastLine": 21}, "to": {"externalSystem": "external-29531700766871564844", "resource": "ShowDialog"}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedProducts.vb", "firstLine": 39, "lastLine": 39}, "to": {"file": "PolicyPlus/LoadedProducts.vb", "line": 41}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedProducts.vb", "firstLine": 61, "lastLine": 61}, "to": {"file": "PolicyPlus/DetailProduct.vb", "line": 3}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedProducts.vb", "firstLine": 65, "lastLine": 65}, "to": {"file": "PolicyPlus/LoadedProducts.vb", "line": 57}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "firstLine": 6, "lastLine": 6}, "to": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "line": 10}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "firstLine": 8, "lastLine": 8}, "to": {"externalSystem": "external-29531700766871564844", "resource": "ShowDialog"}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "firstLine": 21, "lastLine": 21}, "to": {"file": "PolicyPlus/DetailSupport.vb", "line": 2}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "firstLine": 25, "lastLine": 25}, "to": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "line": 10}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "firstLine": 28, "lastLine": 28}, "to": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "line": 20}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedProducts.Designer.vb", "firstLine": 13, "lastLine": 13}, "to": {"externalSystem": "external-29531700766871564844", "resource": "Form.Dispose"}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedProducts.Designer.vb", "firstLine": 33, "lastLine": 33}, "to": {"externalSystem": "external-29531700766871564844", "resource": "Control construction and layout"}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedSupportDefinitions.Designer.vb", "firstLine": 13, "lastLine": 13}, "to": {"externalSystem": "external-29531700766871564844", "resource": "Form.Dispose"}}
+{"kind": "call", "lines": {"file": "PolicyPlus/LoadedSupportDefinitions.Designer.vb", "firstLine": 26, "lastLine": 26}, "to": {"externalSystem": "external-29531700766871564844", "resource": "Control construction and layout"}}
+{"kind": "call", "lines": {"file": "PolicyPlus/Main.Designer.vb", "firstLine": 13, "lastLine": 13}, "to": {"externalSystem": "external-29531700766871564844", "resource": "Form.Dispose"}}
+{"kind": "call", "lines": {"file": "PolicyPlus/Main.Designer.vb", "firstLine": 37, "lastLine": 37}, "to": {"externalSystem": "external-29531700766871564844", "resource": "Control construction and layout"}}
+{"kind": "call", "lines": {"file": "PolicyPlus/Main.Designer.vb", "firstLine": 477, "lastLine": 477}, "to": {"externalSystem": "external-29531700766871564844", "resource": "ComponentResourceManager.GetObject"}}

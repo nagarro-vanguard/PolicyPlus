@@ -1,0 +1,16 @@
+{
+    "$schema": "https://unpkg.com/knip@6/schema.json",
+    "entry": [
+        "cli/*.ts!",
+        "tests/*.test.ts"
+    ],
+    "project": [
+        "cli/*.ts!",
+        "shared/**/*.{ts,tsx}!",
+        "stages/**/*.{ts,tsx}!"
+    ],
+    "ignoreExportsUsedInFile": false,
+    "ignore": [
+        "stages/publish/ux-visuals/**"
+    ]
+}

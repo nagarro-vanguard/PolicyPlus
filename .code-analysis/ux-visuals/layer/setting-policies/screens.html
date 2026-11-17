@@ -1,0 +1,590 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Screens</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/setting-policies.html">Setting policies</a> › Screens</div><h1>Screens</h1><p class="lead">What a person sees and enters: Windows Forms windows and dialogs, their layout, the handlers that react to a person using them, and the small value shapes dialogs fill in and hand back to the main window. In Setting policies: 41 actions and 80 business rules. Part of its code is also used by other capabilities.</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: The Screens layer of Setting policies: 41 actions and 80 rules; part of its code is also used by other capabilities.
+Where to look first:
+- PolicyPlus/ImportSpol.vb (only this capability)
+- PolicyPlus/ListEditor.vb (only this capability)
+- PolicyPlus/OpenUserGpo.vb (only this capability)
+- PolicyPlus/OpenUserRegistry.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+- PolicyPlus/InspectSpolFragment.vb (shared with 1 other capability)
+- PolicyPlus/OpenPol.vb (shared with 1 other capability)
+Data saved: Policy comment
+Data read: Policy comment, Policy setting, Windows user account
+Rules decided here: 80
+- Open File in Import SPOL offers .spol files first, then all files. Picking a file replaces the whole text box with its contents with no confirmation. Cancelling the picker changes nothing. (PolicyPlus/ImportSpol.vb:3)
+- A list editor opened with names shows a name column and the existing name and value pairs; opened without names it hides that column and shows the values only. (PolicyPlus/ListEditor.vb:4)
+- When a user name is searched in the per-user policy dialog, it is translated to a SID shown in the SID box; if Windows cannot translate it the person is told &quot;The name could not be translated to a SID.&quot; (PolicyPlus/OpenUserGpo.vb:7)
+- Each listed user hive is marked Yes when it can be opened for reading and writing and the program runs as an administrator, No (unprivileged) when it opens but the program is not an administrator, No when access is denied, and No (in use) for any other failure to open it. (PolicyPlus/OpenUserRegistry.vb:8)
+- The user hive list shows each folder under C:\Users that holds an ntuser.dat file, skipping folders that are links (reparse points). Folders without an ntuser.dat are not listed. (PolicyPlus/OpenUserRegistry.vb:9)
+- Verify reads the text as an SPOL file: valid text reports &quot;Validation successful, N policy settings found.&quot;; invalid text reports &quot;SPOL validation failed: &quot; and the reason. Nothing is applied. (PolicyPlus/ImportSpol.vb:12)
+- Pressing the Cancel button (also labelled Close, and the dialog's cancel button) closes the setting dialog reporting OK if at least one Apply was done during this opening, and Cancel otherwise. The OK button always reports OK. (PolicyPlus/EditSetting.vb:15)
+- When the per-user policy dialog is confirmed with a user name but no SID, the name is searched first; if that finds no SID the dialog stays open. (PolicyPlus/OpenUserGpo.vb:15)
+  ...and 72 more
+Unconfirmed:
+- For the capability: Whether a policy save asks Windows to refresh or the program applies the change itself depends on a fixed list of Windows edition codes. Whether newer editions are on that list is assumed. If wrong: On an unlisted edition with Group Policy, saves would apply changes to the registry directly instead of refreshing policy.
+- For the capability: Which Windows edition the computer is, and so whether Group Policy tools are offered, comes from a Windows system call. The code holds only a list of accepted edition codes, so new editions are missed until it is updated. If wrong: A supported edition is wrongly reported as lacking Group Policy, or an unsupported one passes.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What can be started here (41)</h2><div class="row"><div class="main"><a href="../../action/setting-policies/lets-the-person-pick-a-spol-file-and-loads-its-text-into-the.html">Lets the person pick a SPOL file and loads its text into the text box.</a><div class="sub">PolicyPlus/ImportSpol.vb:3</div></div><div class="meta">ImportSpol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/lists-the-user-profile-folders-under-c-users-that-hold-an.html">Lists the user profile folders under C:\Users that hold an NTUSER.DAT and whether each can be opened now.</a><div class="sub">PolicyPlus/OpenUserRegistry.vb:3</div></div><div class="meta">OpenUserRegistry</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/translates-the-typed-user-name-to-a-security-identifier-and.html">Translates the typed user name to a security identifier and shows it.</a><div class="sub">PolicyPlus/OpenUserGpo.vb:4</div></div><div class="meta">OpenUserGpo</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/parses-the-spol-text-and-reports-whether-it-is-valid-and-how.html">Parses the SPOL text and reports whether it is valid and how many policy settings it holds.</a><div class="sub">PolicyPlus/ImportSpol.vb:11</div></div><div class="meta">ImportSpol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/checks-the-sid-is-valid-and-closes-the-dialog-with-it-as-the.html">Checks the SID is valid and closes the dialog with it as the answer.</a><div class="sub">PolicyPlus/OpenUserGpo.vb:14</div></div><div class="meta">OpenUserGpo</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/closes-the-dialog-reporting-whether-changes-were-applied.html">Closes the dialog, reporting whether changes were applied</a><div class="sub">PolicyPlus/EditSetting.vb:15</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/fills-the-dialog-from-the-chosen-policy-when-it-opens.html">Fills the dialog from the chosen policy when it opens</a><div class="sub">PolicyPlus/EditSetting.vb:18</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/parses-the-spol-text-and-if-valid-hands-it-to-the-main.html">Parses the SPOL text and, if valid, hands it to the main window and closes with OK.</a><div class="sub">PolicyPlus/ImportSpol.vb:19</div></div><div class="meta">ImportSpol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/collects-the-grid-rows-into-a-list-or-name-value-set.html">Collects the grid rows into a list or name-value set, rejecting duplicate names, and closes with OK.</a><div class="sub">PolicyPlus/ListEditor.vb:25</div></div><div class="meta">ListEditor</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/selects-all-spol-text-and-copies-it-to-the-clipboard.html">Selects all SPOL text and copies it to the clipboard.</a><div class="sub">PolicyPlus/InspectSpolFragment.vb:26</div></div><div class="meta">InspectSpolFragment</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/clears-any-spol-left-from-an-earlier-use-of-the-dialog.html">Clears any SPOL left from an earlier use of the dialog.</a><div class="sub">PolicyPlus/ImportSpol.vb:27</div></div><div class="meta">ImportSpol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/closes-the-dialog-as-cancelled-when-escape-is-pressed-with.html">Closes the dialog as cancelled when Escape is pressed with no text selected.</a><div class="sub">PolicyPlus/ImportSpol.vb:30</div></div><div class="meta">ImportSpol</div></div><details class="more"><summary>Showing 12 of 41 actions. Show all 41</summary><div class="row"><div class="main"><a href="../../action/setting-policies/focuses-the-text-box-and-selects-all-its-text.html">Focuses the text box and selects all its text.</a><div class="sub">PolicyPlus/InspectSpolFragment.vb:30</div></div><div class="meta">InspectSpolFragment</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/empties-the-user-name-and-sid-boxes-when-the-dialog-appears.html">Empties the user name and SID boxes when the dialog appears.</a><div class="sub">PolicyPlus/OpenUserGpo.vb:30</div></div><div class="meta">OpenUserGpo</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/returns-the-chosen-profile-s-ntuser-dat-path-and-closes-the.html">Returns the chosen profile&#39;s NTUSER.DAT path and closes the dialog with OK.</a><div class="sub">PolicyPlus/OpenUserRegistry.vb:31</div></div><div class="meta">OpenUserRegistry</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/selects-all-text-in-the-box-on-ctrl-a-2.html">Selects all text in the box on Ctrl+A.</a><div class="sub">PolicyPlus/ImportSpol.vb:33</div></div><div class="meta">ImportSpol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/refreshes-the-spol-text-with-or-without-the-header-line.html">Refreshes the SPOL text with or without the header line.</a><div class="sub">PolicyPlus/InspectSpolFragment.vb:34</div></div><div class="meta">InspectSpolFragment</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/closes-the-dialog-as-cancelled-when-escape-is-released.html">Closes the dialog as cancelled when Escape is released.</a><div class="sub">PolicyPlus/OpenUserGpo.vb:34</div></div><div class="meta">OpenUserGpo</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/after-confirmation-resets-the-text-box-to-the-spol-header.html">After confirmation, resets the text box to the SPOL header line.</a><div class="sub">PolicyPlus/ImportSpol.vb:36</div></div><div class="meta">ImportSpol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/closes-the-dialog-as-cancelled-when-escape-is-released-2.html">Closes the dialog as cancelled when Escape is released.</a><div class="sub">PolicyPlus/OpenUserRegistry.vb:36</div></div><div class="meta">OpenUserRegistry</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/selects-all-text-in-the-box-on-ctrl-a.html">Selects all text in the box on Ctrl+A.</a><div class="sub">PolicyPlus/InspectSpolFragment.vb:44</div></div><div class="meta">InspectSpolFragment</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/turns-the-registry-path-and-pol-file-boxes-on-or-off-to.html">Turns the registry path and POL file boxes on or off to match the computer source chosen.</a><div class="sub">PolicyPlus/OpenPol.vb:44</div></div><div class="meta">OpenPol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/turns-the-path-sid-and-hive-boxes-on-or-off-to-match-the.html">Turns the path, SID and hive boxes on or off to match the user source chosen.</a><div class="sub">PolicyPlus/OpenPol.vb:52</div></div><div class="meta">OpenPol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/lets-the-person-pick-a-pol-file-for-the-computer-source.html">Lets the person pick a POL file for the computer source.</a><div class="sub">PolicyPlus/OpenPol.vb:66</div></div><div class="meta">OpenPol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/lets-the-person-pick-a-pol-file-for-the-user-source.html">Lets the person pick a POL file for the user source.</a><div class="sub">PolicyPlus/OpenPol.vb:69</div></div><div class="meta">OpenPol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/opens-the-user-hive-picker-and-puts-the-chosen-ntuser-dat.html">Opens the user hive picker and puts the chosen NTUSER.DAT path in the hive box.</a><div class="sub">PolicyPlus/OpenPol.vb:72</div></div><div class="meta">OpenPol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/builds-the-computer-and-user-policy-loaders-from-the-options.html">Builds the computer and user policy loaders from the options chosen and closes the dialog with OK.</a><div class="sub">PolicyPlus/OpenPol.vb:76</div></div><div class="meta">OpenPol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/keeps-a-numeric-text-box-inside-its-allowed-range.html">Keeps a numeric text box inside its allowed range</a><div class="sub">PolicyPlus/EditSetting.vb:97</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/blocks-non-digit-keys-in-a-numeric-text-box.html">Blocks non-digit keys in a numeric text box</a><div class="sub">PolicyPlus/EditSetting.vb:103</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/opens-the-per-user-gpo-dialog-and-puts-the-chosen-sid-in-the.html">Opens the per-user GPO dialog and puts the chosen SID in the SID box.</a><div class="sub">PolicyPlus/OpenPol.vb:112</div></div><div class="meta">OpenPol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/closes-the-dialog-as-cancelled-when-escape-is-pressed.html">Closes the dialog as cancelled when Escape is pressed.</a><div class="sub">PolicyPlus/OpenPol.vb:116</div></div><div class="meta">OpenPol</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/opens-the-list-editor-for-a-list-element.html">Opens the list editor for a list element</a><div class="sub">PolicyPlus/EditSetting.vb:168</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/enables-the-option-controls-only-while-enabled-is-chosen.html">Enables the option controls only while Enabled is chosen</a><div class="sub">PolicyPlus/EditSetting.vb:298</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/switches-the-dialog-between-the-computer-and-user-policy.html">Switches the dialog between the computer and user policy source</a><div class="sub">PolicyPlus/EditSetting.vb:305</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/applies-the-chosen-state-to-the-policy-source-and-closes.html">Applies the chosen state to the policy source and closes</a><div class="sub">PolicyPlus/EditSetting.vb:312</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/applies-the-chosen-state-without-closing.html">Applies the chosen state without closing</a><div class="sub">PolicyPlus/EditSetting.vb:316</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/shares-extra-width-between-the-options-and-help-halves.html">Shares extra width between the options and help halves</a><div class="sub">PolicyPlus/EditSetting.vb:329</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/reports-ok-when-changes-were-made.html">Reports OK when changes were made</a><div class="sub">PolicyPlus/EditSetting.vb:343</div></div><div class="meta">EditSetting</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/lets-a-person-pick-new-user-and-computer-policy-sources-and.html">Lets a person pick new user and computer policy sources and opens them.</a><div class="sub">PolicyPlus/Main.vb:607</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/saves-comments-and-policy-state-to-disk-and-remembers-the.html">Saves comments and policy state to disk and remembers the chosen sources.</a><div class="sub">PolicyPlus/Main.vb:614</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/setting-policies/applies-a-pasted-or-loaded-semantic-policy-text-to-the.html">Applies a pasted or loaded semantic policy text to the policy sources.</a><div class="sub">PolicyPlus/Main.vb:707</div></div><div class="meta">Main</div></div></details><h2>Business rules in this layer (80)</h2><div class="row"><div class="main"><span>Open File in Import SPOL offers .spol files first, then all files. Picking a file replaces the whole text box with its contents with no confirmation. Cancelling the picker changes nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Open File in Import SPOL offers .spol files first, then all files. Picking a file replaces the whole text box with its contents with no confirmation. Cancelling the picker changes nothing.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:3
+- PolicyPlus/ImportSpol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportSpol.vb:3  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A list editor opened with names shows a name column and the existing name and value pairs; opened without names it hides that column and shows the values only.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A list editor opened with names shows a name column and the existing name and value pairs; opened without names it hides that column and shows the values only.
+Where to look first:
+- Starts at PolicyPlus/ListEditor.vb:4
+- PolicyPlus/ListEditor.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ListEditor.vb:4  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When a user name is searched in the per-user policy dialog, it is translated to a SID shown in the SID box; if Windows cannot translate it the person is told &quot;The name could not be translated to a SID.&quot;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a user name is searched in the per-user policy dialog, it is translated to a SID shown in the SID box; if Windows cannot translate it the person is told &quot;The name could not be translated to a SID.&quot;
+Where to look first:
+- Starts at PolicyPlus/OpenUserGpo.vb:7
+- PolicyPlus/OpenUserGpo.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenUserGpo.vb:7  ·  Screens: OpenUserGpo</div></div></div><div class="row"><div class="main"><span>Each listed user hive is marked Yes when it can be opened for reading and writing and the program runs as an administrator, No (unprivileged) when it opens but the program is not an administrator, No when access is denied, and No (in use) for any other failure to open it.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Each listed user hive is marked Yes when it can be opened for reading and writing and the program runs as an administrator, No (unprivileged) when it opens but the program is not an administrator, No when access is denied, and No (in use) for any other failure to open it.
+Where to look first:
+- Starts at PolicyPlus/OpenUserRegistry.vb:8
+- PolicyPlus/OpenUserRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenUserRegistry.vb:8  ·  Screens: OpenUserRegistry</div></div></div><div class="row"><div class="main"><span>The user hive list shows each folder under C:\Users that holds an ntuser.dat file, skipping folders that are links (reparse points). Folders without an ntuser.dat are not listed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The user hive list shows each folder under C:\Users that holds an ntuser.dat file, skipping folders that are links (reparse points). Folders without an ntuser.dat are not listed.
+Where to look first:
+- Starts at PolicyPlus/OpenUserRegistry.vb:9
+- PolicyPlus/OpenUserRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenUserRegistry.vb:9  ·  Screens: OpenUserRegistry</div></div></div><div class="row"><div class="main"><span>Verify reads the text as an SPOL file: valid text reports &quot;Validation successful, N policy settings found.&quot;; invalid text reports &quot;SPOL validation failed: &quot; and the reason. Nothing is applied.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Verify reads the text as an SPOL file: valid text reports &quot;Validation successful, N policy settings found.&quot;; invalid text reports &quot;SPOL validation failed: &quot; and the reason. Nothing is applied.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:12
+- PolicyPlus/ImportSpol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportSpol.vb:12  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>Pressing the Cancel button (also labelled Close, and the dialog&#39;s cancel button) closes the setting dialog reporting OK if at least one Apply was done during this opening, and Cancel otherwise. The OK button always reports OK.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Pressing the Cancel button (also labelled Close, and the dialog's cancel button) closes the setting dialog reporting OK if at least one Apply was done during this opening, and Cancel otherwise. The OK button always reports OK.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:15
+- PolicyPlus/EditSetting.Designer.vb (only this capability)
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:15  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When the per-user policy dialog is confirmed with a user name but no SID, the name is searched first; if that finds no SID the dialog stays open.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When the per-user policy dialog is confirmed with a user name but no SID, the name is searched first; if that finds no SID the dialog stays open.
+Where to look first:
+- Starts at PolicyPlus/OpenUserGpo.vb:15
+- PolicyPlus/OpenUserGpo.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenUserGpo.vb:15  ·  Screens: OpenUserGpo</div></div></div><div class="row"><div class="main"><span>The &#39;supported on&#39; box shows the supported platform name, or is empty when the policy declares none.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The 'supported on' box shows the supported platform name, or is empty when the policy declares none.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:20
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:20  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Apply reads the text as an SPOL file: valid text is handed back as ready and the dialog closes as accepted; invalid text stays open with &quot;The SPOL text is invalid: &quot; and the reason.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Apply reads the text as an SPOL file: valid text is handed back as ready and the dialog closes as accepted; invalid text stays open with &quot;The SPOL text is invalid: &quot; and the reason.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:20
+- PolicyPlus/ImportSpol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportSpol.vb:20  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>When the per-user policy dialog is confirmed with a SID that is not a valid SID, it stays open and the person is told &quot;The SID is not valid. Enter a SID in the lower box, or enter a username in the top box and press Search to translate.&quot;; a valid SID is returned.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When the per-user policy dialog is confirmed with a SID that is not a valid SID, it stays open and the person is told &quot;The SID is not valid. Enter a SID in the lower box, or enter a username in the top box and press Search to translate.&quot;; a valid SID is returned.
+Where to look first:
+- Starts at PolicyPlus/OpenUserGpo.vb:20
+- PolicyPlus/OpenUserGpo.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenUserGpo.vb:20  ·  Screens: OpenUserGpo</div></div></div><div class="row"><div class="main"><span>The help box shows the policy&#39;s explanation reformatted for reading.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The help box shows the policy's explanation reformatted for reading.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:21
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:21  ·  Screens: EditSetting</div></div></div><details class="more"><summary>Showing 12 of 80 business rules. Show all 80</summary><div class="row"><div class="main"><span>For a policy that applies to both computer and user, the section dropdown is available and starts on Computer unless User was requested. For a policy of one section only, the dropdown is disabled and fixed to that section.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: For a policy that applies to both computer and user, the section dropdown is available and starts on Computer unless User was requested. For a policy of one section only, the dropdown is disabled and fixed to that section.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:22
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:22  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When names are required in a list, confirming is refused if two entries share a name; the person is told &#39;Multiple entries are named &quot;&lt;name&gt;&quot;! Remove or rename all but one.&#39; and keeps editing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When names are required in a list, confirming is refused if two entries share a name; the person is told 'Multiple entries are named &quot;<name>&quot;! Remove or rename all but one.' and keeps editing.
+Where to look first:
+- Starts at PolicyPlus/ListEditor.vb:25
+- PolicyPlus/ListEditor.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ListEditor.vb:25  ·  Screens: ListEditor</div></div></div><div class="row"><div class="main"><span>Confirming a list without names keeps the value of every row in order as a plain list, ignoring the unfinished blank row; a row takes only its value cell, never a name. Confirming a list with names keeps each name with its value.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Confirming a list without names keeps the value of every row in order as a plain list, ignoring the unfinished blank row; a row takes only its value cell, never a name. Confirming a list with names keeps each name with its value.
+Where to look first:
+- Starts at PolicyPlus/ListEditor.vb:25
+- PolicyPlus/ListEditor.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ListEditor.vb:25  ·  Screens: ListEditor</div></div></div><div class="row"><div class="main"><span>When Import SPOL is shown, any SPOL result kept from an earlier use is cleared, so only a new Apply can hand one back.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When Import SPOL is shown, any SPOL result kept from an earlier use is cleared, so only a new Apply can hand one back.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:27
+- PolicyPlus/ImportSpol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportSpol.vb:27  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>In a list with names, a row whose name cell is blank is not checked or refused: its missing name is used as a key, so confirming fails with an error instead of being refused or accepted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: In a list with names, a row whose name cell is blank is not checked or refused: its missing name is used as a key, so confirming fails with an error instead of being refused or accepted.
+Where to look first:
+- Starts at PolicyPlus/ListEditor.vb:29
+- PolicyPlus/ListEditor.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ListEditor.vb:29  ·  Screens: ListEditor</div></div></div><div class="row"><div class="main"><span>Pressing Escape in Import SPOL closes it as cancelled, unless text in the focused text box is selected, in which case Escape does nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Pressing Escape in Import SPOL closes it as cancelled, unless text in the focused text box is selected, in which case Escape does nothing.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:30
+- PolicyPlus/ImportSpol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportSpol.vb:30  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>The per-user policy dialog clears both the user name and SID boxes each time it opens.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The per-user policy dialog clears both the user name and SID boxes each time it opens.
+Where to look first:
+- Starts at PolicyPlus/OpenUserGpo.vb:31
+- PolicyPlus/OpenUserGpo.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenUserGpo.vb:31  ·  Screens: OpenUserGpo</div></div></div><div class="row"><div class="main"><span>The user hive dialog is accepted only with a row selected, and returns C:\Users\&lt;folder&gt;\ntuser.dat for that row; with no row selected confirming does nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The user hive dialog is accepted only with a row selected, and returns C:\Users\<folder>\ntuser.dat for that row; with no row selected confirming does nothing.
+Where to look first:
+- Starts at PolicyPlus/OpenUserRegistry.vb:32
+- PolicyPlus/OpenUserRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenUserRegistry.vb:32  ·  Screens: OpenUserRegistry</div></div></div><div class="row"><div class="main"><span>Reset asks &quot;Are you sure you want to reset the text box?&quot;; only Yes replaces the text with the header &quot;Policy Plus Semantic Policy&quot; and a blank line.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Reset asks &quot;Are you sure you want to reset the text box?&quot;; only Yes replaces the text with the header &quot;Policy Plus Semantic Policy&quot; and a blank line.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:37
+- PolicyPlus/ImportSpol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportSpol.vb:37  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>The fragment text begins with the line &#39;Policy Plus Semantic Policy&#39; followed by a blank line only while the header box is ticked; otherwise only the fragment is shown.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The fragment text begins with the line 'Policy Plus Semantic Policy' followed by a blank line only while the header box is ticked; otherwise only the fragment is shown.
+Where to look first:
+- Starts at PolicyPlus/InspectSpolFragment.vb:37
+- PolicyPlus/InspectSpolFragment.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectSpolFragment.vb:37  ·  Screens: InspectSpolFragment</div></div></div><div class="row"><div class="main"><span>Choosing a POL file in the policy sources dialog offers only .pol files and does not warn when the chosen file already exists, so an existing or new file name can be picked.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Choosing a POL file in the policy sources dialog offers only .pol files and does not warn when the chosen file already exists, so an existing or new file name can be picked.
+Where to look first:
+- Starts at PolicyPlus/OpenPol.vb:38
+- PolicyPlus/OpenPol.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenPol.vb:38  ·  Screens: OpenPol</div></div></div><div class="row"><div class="main"><span>In the policy sources dialog the computer registry text box is enabled only for the registry choice; the computer POL file name box and Browse button only for the POL file choice.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: In the policy sources dialog the computer registry text box is enabled only for the registry choice; the computer POL file name box and Browse button only for the POL file choice.
+Where to look first:
+- Starts at PolicyPlus/OpenPol.vb:46
+- PolicyPlus/OpenPol.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenPol.vb:46  ·  Screens: OpenPol</div></div></div><div class="row"><div class="main"><span>In the policy sources dialog the user registry box is enabled only for the registry choice, the POL file box and Browse only for the file choice, the SID box and Browse only for the per-user policy choice, and the hive path box and Browse only for the per-user hive choice.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: In the policy sources dialog the user registry box is enabled only for the registry choice, the POL file box and Browse only for the file choice, the SID box and Browse only for the per-user policy choice, and the hive path box and Browse only for the per-user hive choice.
+Where to look first:
+- Starts at PolicyPlus/OpenPol.vb:54
+- PolicyPlus/OpenPol.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenPol.vb:54  ·  Screens: OpenPol</div></div></div><div class="row"><div class="main"><span>Option controls are built only when the policy declares elements and has a presentation; otherwise the dialog offers only Not configured, Enabled and Disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Option controls are built only when the policy declares elements and has a presentation; otherwise the dialog offers only Not configured, Enabled and Disabled.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:75
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:75  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When the policy sources dialog is accepted, the computer source is the local policy, the typed registry path, the typed POL file, or an empty scratch space, as chosen. If it cannot be created, the dialog stays open and the person is told &quot;The computer policy loader could not be created. &quot; followed by the reason.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When the policy sources dialog is accepted, the computer source is the local policy, the typed registry path, the typed POL file, or an empty scratch space, as chosen. If it cannot be created, the dialog stays open and the person is told &quot;The computer policy loader could not be created. &quot; followed by the reason.
+Where to look first:
+- Starts at PolicyPlus/OpenPol.vb:79
+- PolicyPlus/OpenPol.vb (shared with 1 other capability)
+- PolicyPlus/PolicyLoader.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenPol.vb:79  ·  Screens: OpenPol</div></div></div><div class="row"><div class="main"><span>A number option with a spinner is a spin box limited to the policy&#39;s minimum and maximum, stepping by the presentation&#39;s increment and starting at its default.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A number option with a spinner is a spin box limited to the policy's minimum and maximum, stepping by the presentation's increment and starting at its default.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:88
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:88  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When the policy sources dialog is accepted, the user source is the local policy, the typed registry path, the typed POL file, the per-user policy for a SID, the per-user hive file, or an empty scratch space, as chosen. If it cannot be created, the dialog stays open and the person is told &quot;The user policy loader could not be created. &quot; followed by the reason.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When the policy sources dialog is accepted, the user source is the local policy, the typed registry path, the typed POL file, the per-user policy for a SID, the per-user hive file, or an empty scratch space, as chosen. If it cannot be created, the dialog stays open and the person is told &quot;The user policy loader could not be created. &quot; followed by the reason.
+Where to look first:
+- Starts at PolicyPlus/OpenPol.vb:93
+- PolicyPlus/OpenPol.vb (shared with 1 other capability)
+- PolicyPlus/PolicyLoader.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenPol.vb:93  ·  Screens: OpenPol</div></div></div><div class="row"><div class="main"><span>A number option without a spinner is a plain text box, starting at the presentation&#39;s default.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A number option without a spinner is a plain text box, starting at the presentation's default.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:95
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:95  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>In a plain number box, text that is not a whole number is replaced by the default, a number above the policy&#39;s maximum is replaced by the maximum, and one below the minimum is replaced by the minimum.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: In a plain number box, text that is not a whole number is replaced by the default, a number above the policy's maximum is replaced by the maximum, and one below the minimum is replaced by the minimum.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:97
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:97  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A plain number box accepts only digits and control keys; any other key press is ignored, so a minus sign cannot be typed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A plain number box accepts only digits and control keys; any other key press is ignored, so a minus sign cannot be typed.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:103
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:103  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The category list shows an &quot;Up: &quot; parent entry (when a parent exists), then listed subcategories, then listed policies, each sorted by display name. The selected policy stays selected on refresh.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The category list shows an &quot;Up: &quot; parent entry (when a parent exists), then listed subcategories, then listed policies, each sorted by display name. The selected policy stays selected on refresh.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:105
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:105  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A text option is a text box starting at the default and limited to the policy&#39;s maximum length.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A text option is a text box starting at the default and limited to the policy's maximum length.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:112
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:112  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A check box option starts checked or unchecked as the presentation&#39;s default says.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A check box option starts checked or unchecked as the presentation's default says.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:128
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:128  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A combo box option (editable text with suggestions) starts at its default text, is limited to the policy&#39;s maximum length, and lists its suggestions sorted unless the presentation says not to sort.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A combo box option (editable text with suggestions) starts at its default text, is limited to the policy's maximum length, and lists its suggestions sorted unless the presentation says not to sort.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:133
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:133  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A dropdown option lists the policy&#39;s choices by their display names for the policy&#39;s language, sorted unless the presentation says not to sort, and starts on the presentation&#39;s default choice when there is one.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A dropdown option lists the policy's choices by their display names for the policy's language, sorted unless the presentation says not to sort, and starts on the presentation's default choice when there is one.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:144
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:144  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Policy details show the policy&#39;s name and either its requirements (the supported-on name) or &quot;(no requirements information)&quot;; the preference warning is shown only for preferences. A category shows its policy and subcategory counts with &quot;This&quot; for the current or &quot;The selected&quot; for a highlighted category. With nothing selected the text is &quot;Select an item to see its description.&quot;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Policy details show the policy's name and either its requirements (the supported-on name) or &quot;(no requirements information)&quot;; the preference warning is shown only for preferences. A category shows its policy and subcategory counts with &quot;This&quot; for the current or &quot;The selected&quot; for a highlighted category. With nothing selected the text is &quot;Select an item to see its description.&quot;
+Where to look first:
+- Starts at PolicyPlus/Main.vb:144
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:144  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A list option opens a list editor on its Edit button, with names entered by the person only when the policy says they provide names; the list is kept only if the editor is confirmed with OK.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A list option opens a list editor on its Edit button, with names entered by the person only when the policy says they provide names; the list is kept only if the editor is confirmed with OK.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:168
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:168  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A category is an orphan when it has no parent loaded but its definition names a parent.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A category is an orphan when it has no parent loaded but its definition names a parent.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:170
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:170  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A multi-line text option is a text box allowing several lines, without wrapping.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A multi-line text option is a text box allowing several lines, without wrapping.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:173
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:173  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A category is empty when it has no subcategories and no policies.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A category is empty when it has no subcategories and no policies.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:173
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:173  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category shows an icon by precedence: orphaned first, then empty, otherwise normal.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A category shows an icon by precedence: orphaned first, then empty, otherwise normal.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:176
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:176  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy shows a preference icon when it is a preference, a normal icon when it has no extra elements, and an extra-configuration icon otherwise.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A policy shows a preference icon when it is a preference, a normal icon when it has no extra elements, and an extra-configuration icon otherwise.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:185
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:185  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy is Disabled in the chosen section, the Disabled choice is selected; when Enabled, the Enabled choice is selected.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a policy is Disabled in the chosen section, the Disabled choice is selected; when Enabled, the Enabled choice is selected.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:191
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:191  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A category is listed when empty categories are switched on. Otherwise it is listed only if it holds a visible policy or a subcategory that is listed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A category is listed when empty categories are switched on. Otherwise it is listed only if it holds a visible policy or a subcategory that is listed.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:194
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:194  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy is Enabled, each option control shows the stored value: numbers in number boxes, text in text or combo boxes, the choice in dropdowns (left unselected if no choice matches), ticks in check boxes, lines in multi-line boxes, and the list kept for list options.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a policy is Enabled, each option control shows the stored value: numbers in number boxes, text in text or combo boxes, the choice in dropdowns (left unselected if no choice matches), ticks in check boxes, lines in multi-line boxes, and the list kept for list options.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:195
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:195  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A policy is listed only if it applies to a section being viewed (User, Computer or both). When the filter is on, it must also pass the filter in at least one viewed section that it applies to.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A policy is listed only if it applies to a section being viewed (User, Computer or both). When the filter is on, it must also pass the filter in at least one viewed section that it applies to.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:202
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:202  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When the view changes, the current category moves up to the nearest listed ancestor. The selected policy is dropped whenever the view had to move up. It is kept only when the current category stays listed and the policy is still listed. If no ancestor is listed, the current category becomes none.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When the view changes, the current category moves up to the nearest listed ancestor. The selected policy is dropped whenever the view had to move up. It is kept only when the current category stays listed and the policy is still listed. If no ancestor is listed, the current category becomes none.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:217
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:217  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy is neither Enabled nor Disabled in the chosen section, Not configured is selected.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a policy is neither Enabled nor Disabled in the chosen section, Not configured is selected.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:223
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:223  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Apply and OK are available only when the chosen section&#39;s policy source can be written to; for a read-only source they are disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Apply and OK are available only when the chosen section's policy source can be written to; for a read-only source they are disabled.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:226
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:226  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The comment box is disabled and reads &quot;Comments unavailable for this policy source&quot; when the source has no comments; otherwise it shows the policy&#39;s saved comment, or is empty when it has none.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The comment box is disabled and reads &quot;Comments unavailable for this policy source&quot; when the source has no comments; otherwise it shows the policy's saved comment, or is empty when it has none.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:229
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:229  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When viewing both sections, a policy applying to both is shown as the state followed by &quot;(2)&quot; if both match; the other section&#39;s state with &quot;(C)&quot; (computer) or &quot;(U)&quot; (user) if one is Not Configured; otherwise &quot;Mixed&quot;. A single-section policy shows its state with &quot;(C)&quot; or &quot;(U)&quot;. With one section viewed, that section&#39;s state is shown plain.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When viewing both sections, a policy applying to both is shown as the state followed by &quot;(2)&quot; if both match; the other section's state with &quot;(C)&quot; (computer) or &quot;(U)&quot; (user) if one is Not Configured; otherwise &quot;Mixed&quot;. A single-section policy shows its state with &quot;(C)&quot; or &quot;(U)&quot;. With one section viewed, that section's state is shown plain.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:232
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:232  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Applying first removes the policy&#39;s existing configuration in the chosen section, so a setting changed to Not configured leaves no trace.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Applying first removes the policy's existing configuration in the chosen section, so a setting changed to Not configured leaves no trace.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:242
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:242  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Applying with Enabled selected stores the policy as Enabled together with the value of each option control: numbers, text, tick state, the chosen dropdown entry, the list and the lines of multi-line text. Label-only elements store nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Applying with Enabled selected stores the policy as Enabled together with the value of each option control: numbers, text, tick state, the chosen dropdown entry, the list and the lines of multi-line text. Label-only elements store nothing.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:243
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:243  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A policy&#39;s state in the list is judged per section: Enabled, Disabled, Not Configured, or Unknown for anything else.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A policy's state in the list is judged per section: Enabled, Disabled, Not Configured, or Unknown for anything else.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:255
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:255  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When Apply or OK is pressed with Enabled selected and a dropdown option has no choice selected, nothing is stored and no message is shown: the policy&#39;s previous configuration was already removed, and the action fails with an unhandled error. A dropdown starts without a choice when the presentation names no default or the stored value matches no item, so the person must pick one first.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When Apply or OK is pressed with Enabled selected and a dropdown option has no choice selected, nothing is stored and no message is shown: the policy's previous configuration was already removed, and the action fails with an unhandled error. A dropdown starts without a choice when the presentation names no default or the stored value matches no item, so the person must pick one first.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:263
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:263  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The comment column shows a policy&#39;s comment from the sections viewed. With both viewed: blank if neither has one, &quot;(multiple)&quot; if both do, otherwise the one present. With one section viewed, that section&#39;s comment is shown.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The comment column shows a policy's comment from the sections viewed. With both viewed: blank if neither has one, &quot;(multiple)&quot; if both do, otherwise the one present. With one section viewed, that section's comment is shown.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:268
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:268  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Applying with Disabled selected stores the policy as Disabled; with Not configured selected nothing is stored.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Applying with Disabled selected stores the policy as Disabled; with Not configured selected nothing is stored.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:273
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:273  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The comment is changed only when the policy source supports comments; otherwise it is left alone.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The comment is changed only when the policy source supports comments; otherwise it is left alone.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:277
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:277  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Applying with an empty comment box removes the policy&#39;s existing comment, so the policy no longer has a comment.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Applying with an empty comment box removes the policy's existing comment, so the policy no longer has a comment.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:278
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:278  ·  Screens: EditSetting</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Applying with a non-empty comment box saves that text as the policy&#39;s comment, adding it or replacing the previous one.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Applying with a non-empty comment box saves that text as the policy's comment, adding it or replacing the previous one.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:281
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:281  ·  Screens: EditSetting</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>A policy&#39;s comment in a section is its stored text, or blank when the source has no comment table or no entry for the policy.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A policy's comment in a section is its stored text, or blank when the source has no comment table or no entry for the policy.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:286
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:286  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is a preference, not a managed policy, when it names a registry key that is not one of the registry&#39;s recognised policy keys.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A policy is a preference, not a managed policy, when it names a registry key that is not one of the registry's recognised policy keys.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:295
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:295  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The option controls are enabled only when Enabled is selected; with Not configured or Disabled they are disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The option controls are enabled only when Enabled is selected; with Not configured or Disabled they are disabled.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:299
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:299  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Choosing User in the section dropdown makes the user policy source, loader and comments current; any other choice makes the computer ones current.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Choosing User in the section dropdown makes the user policy source, loader and comments current; any other choice makes the computer ones current.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:306
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:306  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When user and computer policy sources are opened, any earlier sources are closed first. Each is classed as fully writable, &quot;cannot be saved&quot; or &quot;cannot be modified&quot;. If either is not fully writable, the user is told &quot;Not all policy sources are fully writable.&quot; with each source&#39;s status.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When user and computer policy sources are opened, any earlier sources are closed first. Each is classed as fully writable, &quot;cannot be saved&quot; or &quot;cannot be modified&quot;. If either is not fully writable, the user is told &quot;Not all policy sources are fully writable.&quot; with each source's status.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:309
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:309  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>OK applies the settings and closes the dialog with OK.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: OK applies the settings and closes the dialog with OK.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:313
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:313  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Apply applies the settings, keeps the dialog open and records that changes were made.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Apply applies the settings, keeps the dialog open and records that changes were made.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:317
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:317  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When a source has no comment file path, its comments are unavailable.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a source has no comment file path, its comments are unavailable.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:330
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:330  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>When a source&#39;s comment file exists, its comments are loaded and the policies in it start as Has a comment.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a source's comment file exists, its comments are loaded and the policies in it start as Has a comment.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:336
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:336  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>When a source&#39;s comment file does not exist, comments start as an empty table, so every policy has No comment.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a source's comment file does not exist, comments start as an empty table, so every policy has No comment.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:338
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:338  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>When the comment file cannot be created or read, comments are unavailable for that source.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When the comment file cannot be created or read, comments are unavailable for that source.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:341
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:341  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>When both sources are writable and opening was not automatic, the user is told &quot;Both the user and computer policy sources are loaded and writable.&quot;. Automatic opening at start stays silent.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When both sources are writable and opening was not automatic, the user is told &quot;Both the user and computer policy sources are loaded and writable.&quot;. Automatic opening at start stays silent.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:352
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:352  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When the sources are closed and either is still held open by another program, the user is told &quot;Cleanup did not complete fully because the loaded resources are open in other programs.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When the sources are closed and either is still held open by another program, the user is told &quot;Cleanup did not complete fully because the loaded resources are open in other programs.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:362
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:362  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Each filter test applies only when its option is set. A policy is hidden when its managed-or-preference kind is the opposite of the wanted kind; its state does not match Configured, Not configured, Enabled or Disabled; its having a non-blank comment differs from the wanted value; or it is unsupported on the allowed products (judged by the always-match-any and match-blank-support options). Otherwise it is shown. With the comment option set, a viewed source that has no comment table (no comment file, or one that could not be read) makes the check fail with an unhandled error, not treat the policy as having no comment.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Each filter test applies only when its option is set. A policy is hidden when its managed-or-preference kind is the opposite of the wanted kind; its state does not match Configured, Not configured, Enabled or Disabled; its having a non-blank comment differs from the wanted value; or it is unsupported on the allowed products (judged by the always-match-any and match-blank-support options). Otherwise it is shown. With the comment option set, a viewed source that has no comment table (no comment file, or one that could not be read) makes the check fail with an unhandled error, not treat the policy as having no comment.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:409
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:409  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy applies to a section when its definition&#39;s section (user, computer or both) overlaps that section.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A policy applies to a section when its definition's section (user, computer or both) overlaps that section.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:436
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:436  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Saving writes comments for each source, ignoring comment save errors. Only writable sources are saved; others report &quot;not writable&quot;. The source types and data are then remembered for next start. Success shows each source&#39;s result; failure shows &quot;Saving failed!&quot; and the reason.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Saving writes comments for each source, ignoring comment save errors. Only writable sources are saved; others report &quot;not writable&quot;. The source types and data are then remembered for next start. Success shows each source's result; failure shows &quot;Saving failed!&quot; and the reason.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:614
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:614  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Importing a semantic policy applies it to the loaded sources. If none failed, &quot;Semantic Policy successfully applied.&quot; is shown; otherwise &quot;N out of M could not be applied.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Importing a semantic policy applies it to the loaded sources. If none failed, &quot;Semantic Policy successfully applied.&quot; is shown; otherwise &quot;N out of M could not be applied.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:707
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:707  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A description is shown with each line stripped of leading and trailing spaces, and trailing blank space at the end of the whole text removed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: A description is shown with each line stripped of leading and trailing spaces, and trailing blank space at the end of the whole text removed.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:866
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:866  ·  Screens: EditSetting, Main</div></div></div></details><h2>Data structures defined here (21)</h2><div class="row"><div class="main"><span>EditPol</span><div class="sub">LsvPol, ButtonSave, ChItem, ChValue, ButtonAddKey, ButtonAddValue, ButtonDeleteValue, ButtonForget, ButtonEdit, ButtonImport, ButtonExport</div></div><div class="meta">11 fields</div></div><div class="row"><div class="main"><span>PolValueInfo</span><div class="sub">Key, Name, Kind, Data, IsDeleter</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>EditPolDelete</span><div class="sub">TextKey, OptPurge, OptClearFirst, OptDeleteOne, TextValueName, ButtonOK</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditPolKey</span><div class="sub">TextName, ButtonOK</div></div><div class="meta">2 fields</div></div><div class="row"><div class="main"><span>EditPolMultiStringData</span><div class="sub">TextName, TextData, ButtonOK</div></div><div class="meta">3 fields</div></div><div class="row"><div class="main"><span>EditPolNumericData</span><div class="sub">TextName, CheckHexadecimal, NumData, ButtonOK</div></div><div class="meta">4 fields</div></div><div class="row"><div class="main"><span>EditPolStringData</span><div class="sub">TextName, TextData, ButtonOK</div></div><div class="meta">3 fields</div></div><div class="row"><div class="main"><span>EditPolValue</span><div class="sub">ComboKind, ButtonOK, TextName</div></div><div class="meta">3 fields</div></div><div class="row"><div class="main"><span>EditSetting</span><div class="sub">CommentLabel, SupportedLabel, SettingNameLabel, CommentTextbox, SupportedTextbox, NotConfiguredOption, EnabledOption, DisabledOption, ExtraOptionsPanel, ExtraOptionsTable, CloseButton, OkButton, HelpTextbox, SectionDropdown, ApplyButton</div></div><div class="meta">15 fields</div></div><div class="row"><div class="main"><span>ExportReg</span><div class="sub">TextReg, TextBranch, TextRoot, ButtonBrowse, ButtonExport</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>ImportReg</span><div class="sub">Label1, Label2, TextReg, TextRoot, ButtonBrowse, ButtonImport</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>ImportSpol</span><div class="sub">ButtonOpenFile, Label1, ButtonApply, TextSpol, ButtonVerify, ButtonReset</div></div><div class="meta">6 fields</div></div><details class="more"><summary>Showing 12 of 21 data structures. Show all 21</summary><div class="row"><div class="main"><span>InspectSpolFragment</span><div class="sub">TextPolicyName, LabelPolicy, TextSpol, ButtonClose, ButtonCopy, CheckHeader</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>ListEditor</span><div class="sub">EntriesDatagrid, NameColumn, ValueColumn, ElementNameLabel, CloseButton, OkButton</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>OpenPol</span><div class="sub">ComputerGroup, CompNullOption, CompFileBrowseButton, CompPolFilenameTextbox, CompFileOption, CompRegistryOption, CompLocalOption, UserGroup, UserPerUserRegOption, UserPerUserGpoOption, UserBrowseHiveButton, UserNullOption, UserBrowseGpoButton, UserHivePathTextbox, UserFileBrowseButton, UserGpoSidTextbox, UserPolFilenameTextbox, UserFileOption, UserRegistryOption, UserLocalOption, OkButton, CompRegTextbox, UserRegTextbox</div></div><div class="meta">23 fields</div></div><div class="row"><div class="main"><span>OpenSection</span><div class="sub">OptUser, OptComputer, ButtonOK, ButtonCancel</div></div><div class="meta">4 fields</div></div><div class="row"><div class="main"><span>OpenUserGpo</span><div class="sub">Label1, UsernameTextbox, SearchButton, Label2, SidTextbox, OkButton</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>OpenUserRegistry</span><div class="sub">SubfoldersListview, ChUsername, ChAccess, OkButton</div></div><div class="meta">4 fields</div></div><div class="row"><div class="main"><span>LanguageOptions</span><div class="sub">Label1, Label2, ButtonOK, TextAdmlLanguage</div></div><div class="meta">4 fields</div></div><div class="row"><div class="main"><span>PolicyLoaderSource</span><div class="sub">LocalGpo, LocalRegistry, PolFile, SidGpo, NtUserDat, Null</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>PolicySourceWritability</span><div class="sub">Writable, NoCommit, NoWriting</div></div><div class="meta">3 fields</div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

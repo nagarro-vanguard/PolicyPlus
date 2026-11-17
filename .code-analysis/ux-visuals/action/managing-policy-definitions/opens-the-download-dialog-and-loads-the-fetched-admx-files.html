@@ -1,0 +1,604 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opens the download dialog and loads the fetched ADMX files.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/managing-policy-definitions.html">Managing policy definitions</a> › <a href="../../screen/PolicyPlus/Main.vb.html">Main.vb</a></div><h1>Opens the download dialog and loads the fetched ADMX files.</h1><p class="lead">Started by a person. In the code: PolicyPlus/Main.vb:756</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the Main screen of Managing policy definitions: Opens the download dialog and loads the fetched ADMX files.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:756
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+- PolicyPlus/ConfigurationStorage.vb (shared with 3 other capabilities)
+- PolicyPlus/XmlExtensions.vb (shared with 2 other capabilities)
+- PolicyPlus/AdmlFile.vb (shared with 1 other capability)
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+- PolicyPlus/FindResults.vb (shared with 1 other capability)
+Data saved: Program setting
+Data read: Policy definition, Policy setting, Program setting
+Rules decided here: 81
+- A missing XML attribute, or one whose text cannot be converted to the default's type, reads as the default. (PolicyPlus/XmlExtensions.vb:10)
+- Reading a setting returns the stored value, or the given default when the setting is absent or the settings key could not be opened. (PolicyPlus/ConfigurationStorage.vb:11)
+- For a checkbox element queued for deletion counts as one disabled element. Otherwise each present value counts: every present off value or off-list value adds a tenth of a disabled element, and every present on value or on-list value adds one present element, so a list can add several. (PolicyPlus/PolicyProcessing.vb:11)
+- Saving a setting writes it under the settings key; when the key could not be opened, the setting is silently not saved. (PolicyPlus/ConfigurationStorage.vb:14)
+- A localized-text file (ADML) is refused as invalid when it has no policyDefinitionResources element or when that element has no revision number. The revision is read as a decimal number using invariant (culture-neutral) formatting. (PolicyPlus/AdmlFile.vb:18)
+- Loading a policy-definition folder reads only the .admx files directly inside it (the extension is matched in any letter case, subfolders are not searched). A file that fails is reported and skipped, and the other files still load. The folder's categories, products, policies and support rules are linked together only after every file has been tried, so references between files resolve whatever the order. (PolicyPlus/AdmxBundle.vb:18)
+- A policy with a registry value counts toward Enabled when that value holds its on value (or the number 1 when none is defined), and toward Disabled when it holds its off value (or is queued for deletion when none is defined). (PolicyPlus/PolicyProcessing.vb:20)
+- Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out. (PolicyPlus/PolicySource.vb:20)
+  ...and 73 more
+Unconfirmed:
+- For the capability: When several sibling language folders share the chosen language, such as de-AT and de-CH for de-DE, the one used depends on the order Windows lists folders. The code states no preference among them. If wrong: People may see definitions in a different regional variant of their language than expected.
+- For the capability: When linking stops the load with an error, what the person sees depends on the calling screen, which reports a failed load but whose exact message and the state left in the workspace we did not trace. If wrong: A person might see a different message, or be left with a partly loaded set of definitions.
+- For the capability: The download assumes Microsoft still serves the fixed Windows 11 26H2 package at its link, with definitions at the expected folder inside it. If not, the download fails with a step message. If wrong: Downloads fail at the download or move step, and the person cannot fetch definitions from within the program.
+- For the capability: Offering the domain definitions folder relies on Windows reporting the computer's domain. When Windows cannot, the choice is silently disabled, so domain-joined machines without reachable controllers cannot pick it. If wrong: The domain choice could appear or stay disabled differently than described.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/managing-policy-definitions/screens.html">Screens</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/managing-policy-definitions/settings-and-configuration.html">Settings and configuration</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/managing-policy-definitions/policy-definitions-and-data-model.html">Policy definitions and data model</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/managing-policy-definitions/policy-state-logic-and-windows-interop.html">Policy state logic and Windows interop</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (81)</h2><div class="group-name">Screens</div><div class="row"><div class="main"><span>A policy is listed only if it applies to a section being viewed (User, Computer or both). When the filter is on, it must also pass the filter in at least one viewed section that it applies to.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A policy is listed only if it applies to a section being viewed (User, Computer or both). When the filter is on, it must also pass the filter in at least one viewed section that it applies to.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:202
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:202  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Policy details show the policy&#39;s name and either its requirements (the supported-on name) or &quot;(no requirements information)&quot;; the preference warning is shown only for preferences. A category shows its policy and subcategory counts with &quot;This&quot; for the current or &quot;The selected&quot; for a highlighted category. With nothing selected the text is &quot;Select an item to see its description.&quot;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: Policy details show the policy's name and either its requirements (the supported-on name) or &quot;(no requirements information)&quot;; the preference warning is shown only for preferences. A category shows its policy and subcategory counts with &quot;This&quot; for the current or &quot;The selected&quot; for a highlighted category. With nothing selected the text is &quot;Select an item to see its description.&quot;
+Where to look first:
+- Starts at PolicyPlus/Main.vb:144
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:144  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>After downloading definitions, if a new folder was produced it replaces the workspace, is loaded and saved as the definitions source.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: After downloading definitions, if a new folder was produced it replaces the workspace, is loaded and saved as the definitions source.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:756
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:756  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is a preference, not a managed policy, when it names a registry key that is not one of the registry&#39;s recognised policy keys.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A policy is a preference, not a managed policy, when it names a registry key that is not one of the registry's recognised policy keys.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:295
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:295  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When viewing both sections, a policy applying to both is shown as the state followed by &quot;(2)&quot; if both match; the other section&#39;s state with &quot;(C)&quot; (computer) or &quot;(U)&quot; (user) if one is Not Configured; otherwise &quot;Mixed&quot;. A single-section policy shows its state with &quot;(C)&quot; or &quot;(U)&quot;. With one section viewed, that section&#39;s state is shown plain.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: When viewing both sections, a policy applying to both is shown as the state followed by &quot;(2)&quot; if both match; the other section's state with &quot;(C)&quot; (computer) or &quot;(U)&quot; (user) if one is Not Configured; otherwise &quot;Mixed&quot;. A single-section policy shows its state with &quot;(C)&quot; or &quot;(U)&quot;. With one section viewed, that section's state is shown plain.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:232
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:232  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category shows an icon by precedence: orphaned first, then empty, otherwise normal.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A category shows an icon by precedence: orphaned first, then empty, otherwise normal.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:176
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:176  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s comment in a section is its stored text, or blank when the source has no comment table or no entry for the policy.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A policy's comment in a section is its stored text, or blank when the source has no comment table or no entry for the policy.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:286
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:286  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is listed when empty categories are switched on. Otherwise it is listed only if it holds a visible policy or a subcategory that is listed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A category is listed when empty categories are switched on. Otherwise it is listed only if it holds a visible policy or a subcategory that is listed.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:194
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:194  ·  Screens: Main</div></div></div><details class="more"><summary>Showing 8 of 21 business rules. Show all 21</summary><div class="row"><div class="main"><span>Closing the definitions workspace, replacing it with a downloaded folder, reloading it for a language change, or opening a folder with the clear option also discards the earlier search results. Find Next and Search Results then start empty.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: Closing the definitions workspace, replacing it with a downloaded folder, reloading it for a language change, or opening a folder with the clear option also discards the earlier search results. Find Next and Search Results then start empty.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:389
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:389  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is an orphan when it has no parent loaded but its definition names a parent.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A category is an orphan when it has no parent loaded but its definition names a parent.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:170
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:170  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy shows a preference icon when it is a preference, a normal icon when it has no extra elements, and an extra-configuration icon otherwise.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A policy shows a preference icon when it is a preference, a normal icon when it has no extra elements, and an extra-configuration icon otherwise.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:185
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:185  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Errors loading definitions are shown as a list; no message appears when none failed. Offering Yes/No to continue applies only when asked for.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: Errors loading definitions are shown as a list; no message appears when none failed. Offering Yes/No to continue applies only when asked for.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:470
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:470  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s state in the list is judged per section: Enabled, Disabled, Not Configured, or Unknown for anything else.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A policy's state in the list is judged per section: Enabled, Disabled, Not Configured, or Unknown for anything else.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:255
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:255  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy applies to a section when its definition&#39;s section (user, computer or both) overlaps that section.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A policy applies to a section when its definition's section (user, computer or both) overlaps that section.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:436
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:436  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The comment column shows a policy&#39;s comment from the sections viewed. With both viewed: blank if neither has one, &quot;(multiple)&quot; if both do, otherwise the one present. With one section viewed, that section&#39;s comment is shown.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: The comment column shows a policy's comment from the sections viewed. With both viewed: blank if neither has one, &quot;(multiple)&quot; if both do, otherwise the one present. With one section viewed, that section's comment is shown.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:268
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:268  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is empty when it has no subcategories and no policies.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A category is empty when it has no subcategories and no policies.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:173
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:173  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The definitions language is the saved language code, or the Windows culture name when none is saved.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: The definitions language is the saved language code, or the Windows culture name when none is saved.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:477
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:477  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The category list shows an &quot;Up: &quot; parent entry (when a parent exists), then listed subcategories, then listed policies, each sorted by display name. The selected policy stays selected on refresh.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: The category list shows an &quot;Up: &quot; parent entry (when a parent exists), then listed subcategories, then listed policies, each sorted by display name. The selected policy stays selected on refresh.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:105
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:105  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A description is shown with each line stripped of leading and trailing spaces, and trailing blank space at the end of the whole text removed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: A description is shown with each line stripped of leading and trailing spaces, and trailing blank space at the end of the whole text removed.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:866
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:866  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Clearing the search (when definitions are opened, closed, acquired or the language changes) discards the results, so Search Results again reports that no search has run.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: Clearing the search (when definitions are opened, closed, acquired or the language changes) discards the results, so Search Results again reports that no search has run.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:38
+- PolicyPlus/FindResults.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:38  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Each filter test applies only when its option is set. A policy is hidden when its managed-or-preference kind is the opposite of the wanted kind; its state does not match Configured, Not configured, Enabled or Disabled; its having a non-blank comment differs from the wanted value; or it is unsupported on the allowed products (judged by the always-match-any and match-blank-support options). Otherwise it is shown. With the comment option set, a viewed source that has no comment table (no comment file, or one that could not be read) makes the check fail with an unhandled error, not treat the policy as having no comment.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Managing policy definitions: Each filter test applies only when its option is set. A policy is hidden when its managed-or-preference kind is the opposite of the wanted kind; its state does not match Configured, Not configured, Enabled or Disabled; its having a non-blank comment differs from the wanted value; or it is unsupported on the allowed products (judged by the always-match-any and match-blank-support options). Otherwise it is shown. With the comment option set, a viewed source that has no comment table (no comment file, or one that could not be read) makes the check fail with an unhandled error, not treat the policy as having no comment.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:409
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:409  ·  Screens: Main</div></div></div></details><div class="group-name">Settings and configuration</div><div class="row"><div class="main"><span>Saving a setting writes it under the settings key; when the key could not be opened, the setting is silently not saved.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Settings and configuration layer of Managing policy definitions: Saving a setting writes it under the settings key; when the key could not be opened, the setting is silently not saved.
+Where to look first:
+- Starts at PolicyPlus/ConfigurationStorage.vb:14
+- PolicyPlus/ConfigurationStorage.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ConfigurationStorage.vb:14  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Reading a setting returns the stored value, or the given default when the setting is absent or the settings key could not be opened.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Settings and configuration layer of Managing policy definitions: Reading a setting returns the stored value, or the given default when the setting is absent or the settings key could not be opened.
+Where to look first:
+- Starts at PolicyPlus/ConfigurationStorage.vb:11
+- PolicyPlus/ConfigurationStorage.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ConfigurationStorage.vb:11  ·  Screens: Main</div></div></div><div class="group-name">Policy definitions and data model</div><div class="row"><div class="main"><span>Loading a policy-definition folder reads only the .admx files directly inside it (the extension is matched in any letter case, subfolders are not searched). A file that fails is reported and skipped, and the other files still load. The folder&#39;s categories, products, policies and support rules are linked together only after every file has been tried, so references between files resolve whatever the order.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: Loading a policy-definition folder reads only the .admx files directly inside it (the extension is matched in any letter case, subfolders are not searched). A file that fails is reported and skipped, and the other files still load. The folder's categories, products, policies and support rules are linked together only after every file has been tried, so references between files resolve whatever the order.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:18
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:18  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a reference to another item is looked up while building, an item from the files being loaded now is preferred over one loaded earlier; otherwise the earlier one is used; if neither exists there is no match.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: When a reference to another item is looked up while building, an item from the files being loaded now is preferred over one loaded earlier; otherwise the earlier one is used; if neither exists there is no match.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:183
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:183  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>An ADMX file whose target namespace is not listed among its declared namespaces is accepted by the file reader with an empty namespace. The check for an already-owned namespace then stops with an error instead of reporting a load failure for that file.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: An ADMX file whose target namespace is not listed among its declared namespaces is accepted by the file reader with an empty namespace. The check for an already-owned namespace then stops with an error instead of reporting a load failure for that file.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:44
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:44  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy has on and off settings read from its enabled value, disabled value, enabled list and disabled list; a value or list not present is left empty, so the policy sets nothing for that side.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy has on and off settings read from its enabled value, disabled value, enabled list and disabled list; a value or list not present is left empty, so the policy sets nothing for that side.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:152
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:152  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A displayed name or explanation resolves as follows: empty text stays empty; text not written as $(string.&lt;id&gt;) is shown as it is; $(string.&lt;id&gt;) is replaced by that text from the localized-text file; an id missing from the file leaves the $(string.&lt;id&gt;) text visible.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A displayed name or explanation resolves as follows: empty text stays empty; text not written as $(string.<id>) is shown as it is; $(string.<id>) is replaced by that text from the localized-text file; an id missing from the file leaves the $(string.<id>) text visible.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:193
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:193  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category whose declared parent cannot be found among the loaded categories is kept as a top-level category instead of being refused. A category with no declared parent is top-level. Only top-level categories appear in the top-level list; every category appears in the full list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A category whose declared parent cannot be found among the loaded categories is kept as a top-level category instead of being refused. A category with no declared parent is top-level. Only top-level categories appear in the top-level list; every category appears in the full list.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:128
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:128  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy that has no parent-category reference, or no supported-on reference, is accepted when the ADMX file is read, but the load then stops with an error while linking, instead of skipping that policy or file. The same happens when a child product&#39;s parent cannot be found.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy that has no parent-category reference, or no supported-on reference, is accepted when the ADMX file is read, but the load then stops with an error while linking, instead of skipping that policy or file. The same happens when a child product's parent cannot be found.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:152
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:152  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is placed in the category it names, when that category exists. When it does not exist, the policy has no category but is still loaded and listed with all policies. A policy&#39;s &#39;supported on&#39; rule is linked when found, otherwise left empty.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy is placed in the category it names, when that category exists. When it does not exist, the policy has no category but is still loaded and listed with all policies. A policy's 'supported on' rule is linked when found, otherwise left empty.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:152
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:152  ·  Screens: Main</div></div></div><details class="more"><summary>Showing 8 of 40 business rules. Show all 40</summary><div class="row"><div class="main"><span>A missing XML attribute, or one whose text cannot be converted to the default&#39;s type, reads as the default.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A missing XML attribute, or one whose text cannot be converted to the default's type, reads as the default.
+Where to look first:
+- Starts at PolicyPlus/XmlExtensions.vb:10
+- PolicyPlus/XmlExtensions.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/XmlExtensions.vb:10  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>An ADMX file is accepted into the loaded set only when both it and its localized-text file load, and its namespace is not already owned; then its categories, products, policies and support rules are held for linking and its namespace becomes owned by it. A file that fails at this stage leaves nothing behind. Faults found later, while linking, are covered by a separate rule.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: An ADMX file is accepted into the loaded set only when both it and its localized-text file load, and its namespace is not already owned; then its categories, products, policies and support rules are held for linking and its namespace becomes owned by it. A file that fails at this stage leaves nothing behind. Faults found later, while linking, are covered by a separate rule.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:72
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:72  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>An ADMX file whose namespace is already owned by an ADMX file that is loaded is refused and reported as &#39;The &lt;namespace&gt; namespace is already owned by a different ADMX file&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: An ADMX file whose namespace is already owned by an ADMX file that is loaded is refused and reported as 'The <namespace> namespace is already owned by a different ADMX file'.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:44
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:44  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The localized-text file (ADML) for an ADMX file is chosen in this order, and each step is taken only if the .adml file actually exists in that folder, not merely the folder. First, the folder named exactly like the chosen language code beside the ADMX file. Otherwise, the first sibling folder, in the order the system lists folders, whose language part (before the dash) matches the chosen language, such as de-AT for de-DE, and that holds the file. Otherwise, the en-US folder. The file has the same name as the ADMX with the extension .adml.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: The localized-text file (ADML) for an ADMX file is chosen in this order, and each step is taken only if the .adml file actually exists in that folder, not merely the folder. First, the folder named exactly like the chosen language code beside the ADMX file. Otherwise, the first sibling folder, in the order the system lists folders, whose language part (before the dash) matches the chosen language, such as de-AT for de-DE, and that holds the file. Otherwise, the en-US folder. The file has the same name as the ADMX with the extension .adml.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:46
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:46  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A support definition is combined as All-of only when the caller opts in to honouring All-of and the definition is marked All-of; otherwise every definition is treated as any-one-of. An All-of definition is met when every entry is met, so one with no entries is met. An any-one-of definition is met when any entry is met, so one with no entries is not met. Products are checked before nested definitions.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A support definition is combined as All-of only when the caller opts in to honouring All-of and the definition is marked All-of; otherwise every definition is treated as any-one-of. An All-of definition is met when every entry is met, so one with no entries is met. An any-one-of definition is met when any entry is met, so one with no entries is not met. Products are checked before nested definitions.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:380
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:380  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a presentation (the layout of a policy&#39;s input controls) has no explicit setting, the controls start as follows. A number box starts at 1, with a spin control and a step of 1. A check box starts unchecked. Combo boxes and drop-down lists are sorted. A drop-down has no preselected item. A setting whose text cannot be read as the expected type falls back to the same start value.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: When a presentation (the layout of a policy's input controls) has no explicit setting, the controls start as follows. A number box starts at 1, with a spin control and a step of 1. A check box starts unchecked. Combo boxes and drop-down lists are sorted. A drop-down has no preselected item. A setting whose text cannot be read as the expected type falls back to the same start value.
+Where to look first:
+- Starts at PolicyPlus/AdmlFile.vb:54
+- PolicyPlus/XmlExtensions.vb (shared with 2 other capabilities)
+- PolicyPlus/AdmlFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmlFile.vb:54  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy input of type list records whether it declares a value prefix: it does whenever the attribute is present, even if empty. The registry value name of any input element, lists included, is the prefix when non-empty; otherwise it is the element&#39;s own valueName, when given. A name already set from the prefix is kept.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy input of type list records whether it declares a value prefix: it does whenever the attribute is present, even if empty. The registry value name of any input element, lists included, is the prefix when non-empty; otherwise it is the element's own valueName, when given. A name already set from the prefix is kept.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:217
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:217  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy input element of a type other than number, true/false, text, list, choice or multi-line text is skipped and not offered to the person.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy input element of a type other than number, true/false, text, list, choice or multi-line text is skipped and not offered to the person.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:196
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:196  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Products form three levels by position: a top-level product, its major versions (major revisions) and their minor versions (minor revisions). Versions below the first level must carry a version index.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: Products form three levels by position: a top-level product, its major versions (major revisions) and their minor versions (minor revisions). Versions below the first level must carry a version index.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:74
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:74  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy shows a presentation only when it names one and the name resolves to a presentation in its localized-text file. Otherwise the policy has no presentation.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy shows a presentation only when it names one and the name resolves to a presentation in its localized-text file. Otherwise the policy has no presentation.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:122
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:122  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s presentation reference is honoured only when written as $(presentation.&lt;id&gt;) and the id exists in the localized-text file; any other form or a missing id yields no presentation.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy's presentation reference is honoured only when written as $(presentation.<id>) and the id exists in the localized-text file; any other form or a missing id yields no presentation.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:201
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:201  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A control in a presentation (the layout of a policy&#39;s input controls) is kept only when its type is one of the eight known ones: text, number box, text box, check box, combo box, drop-down list, list box, multi-line text box. Any other control type is dropped and not shown. A known control is tied to a policy input only when it carries a reference id; one without a reference id is still shown, just not tied to an input.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A control in a presentation (the layout of a policy's input controls) is kept only when its type is one of the eight known ones: text, number box, text box, check box, combo box, drop-down list, list box, multi-line text box. Any other control type is dropped and not shown. A known control is tied to a policy input only when it carries a reference id; one without a reference id is still shown, just not tied to an input.
+Where to look first:
+- Starts at PolicyPlus/AdmlFile.vb:47
+- PolicyPlus/AdmlFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmlFile.vb:47  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A localized-text file that cannot be parsed as XML is reported as &#39;The ADML XML couldn&#39;t be parsed&#39;, with the parser&#39;s message, and the ADMX file is skipped. Any other fault is reported as &#39;The ADML is invalid&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A localized-text file that cannot be parsed as XML is reported as 'The ADML XML couldn't be parsed', with the parser's message, and the ADMX file is skipped. Any other fault is reported as 'The ADML is invalid'.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:64
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:64  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A localized-text file is refused as invalid when it lists the same text id twice in its string table, or the same presentation id twice in its presentation table. It is also refused when a string or a presentation has no id. Only the first string table and the first presentation table in the file are read. A control in a presentation without a reference id is kept.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A localized-text file is refused as invalid when it lists the same text id twice in its string table, or the same presentation id twice in its presentation table. It is also refused when a string or a presentation has no id. Only the first string table and the first presentation table in the file are read. A control in a presentation without a reference id is kept.
+Where to look first:
+- Starts at PolicyPlus/AdmlFile.vb:29
+- PolicyPlus/AdmlFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmlFile.vb:29  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Every category, product, support rule and policy is identified across all loaded files by its namespace, a colon and its own name, so equal names in different files stay distinct.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: Every category, product, support rule and policy is identified across all loaded files by its namespace, a colon and its own name, so equal names in different files stay distinct.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:93
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:93  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The ADMX file&#39;s own namespace is the one declared as the target; the other declared namespaces are available under their prefixes for references.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: The ADMX file's own namespace is the one declared as the target; the other declared namespaces are available under their prefixes for references.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:23
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:23  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category element that has any child nodes but no parent-category child makes the ADMX file invalid; it is reported as &#39;The ADMX is invalid&#39; and the file is skipped. A category with no child nodes at all is a top-level category.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A category element that has any child nodes but no parent-category child makes the ADMX file invalid; it is reported as 'The ADMX is invalid' and the file is skipped. A category with no child nodes at all is a top-level category.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:107
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:107  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy applies to the computer when its class is &#39;Machine&#39;, to the user when its class is &#39;User&#39;, and to both when its class is anything else.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy applies to the computer when its class is 'Machine', to the user when its class is 'User', and to both when its class is anything else.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:174
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:174  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A support rule combines its conditions as &#39;any of&#39; when its first &#39;or&#39; or &#39;and&#39; child is &#39;or&#39;, and as &#39;all of&#39; when it is &#39;and&#39;. Only the first such child is read. A rule with neither has no conditions and a blank logic. A condition is either a plain product reference or a product range with optional minimum and maximum version numbers.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A support rule combines its conditions as 'any of' when its first 'or' or 'and' child is 'or', and as 'all of' when it is 'and'. Only the first such child is read. A rule with neither has no conditions and a blank logic. A condition is either a plain product reference or a product range with optional minimum and maximum version numbers.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:39
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:39  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Policy input elements start with these limits unless the file states otherwise: a number is between 0 and 4294967295, not soft and not stored as text; a text box allows 255 characters, is not required, not expandable and not soft; a list is not additive, not expandable, has no explicit names; a choice list is not required. Settings that cannot be read as the expected type fall back to these.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: Policy input elements start with these limits unless the file states otherwise: a number is between 0 and 4294967295, not soft and not stored as text; a text box allows 255 characters, is not required, not expandable and not soft; a list is not additive, not expandable, has no explicit names; a choice list is not required. Settings that cannot be read as the expected type fall back to these.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:199
+- PolicyPlus/XmlExtensions.vb (shared with 2 other capabilities)
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:199  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>An ADMX file that cannot be parsed as XML is reported as &#39;The ADMX XML couldn&#39;t be parsed&#39; with the parser&#39;s message. Any other fault in it is reported as &#39;The ADMX is invalid&#39;. Either way the file is skipped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: An ADMX file that cannot be parsed as XML is reported as 'The ADMX XML couldn't be parsed' with the parser's message. Any other fault in it is reported as 'The ADMX is invalid'. Either way the file is skipped.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:37
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:37  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When two categories, two products, two support rules or two policies in one ADMX file share a name, the load stops with an error while linking, instead of skipping the file or keeping the first. Items already staged from that file are not removed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: When two categories, two products, two support rules or two policies in one ADMX file share a name, the load stops with an error while linking, instead of skipping the file or keeping the first. Items already staged from that file are not removed.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:89
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:89  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A reference to another item is turned into a full identifier as follows: with a colon and a prefix declared in this ADMX file, the prefix is replaced by its namespace; with a colon and an undeclared prefix, the text is taken literally as the full identifier; without a colon, the item is taken to be in this file&#39;s own namespace.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A reference to another item is turned into a full identifier as follows: with a colon and a prefix declared in this ADMX file, the prefix is replaced by its namespace; with a colon and an undeclared prefix, the text is taken literally as the full identifier; without a colon, the item is taken to be in this file's own namespace.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:211
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:211  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy with no &#39;supported on&#39; definition, or a blank one, counts as supported only when the caller allows unknown (&#39;literal&#39;) support text. Entries naming no known product follow the same allowance.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy with no 'supported on' definition, or a blank one, counts as supported only when the caller allows unknown ('literal') support text. Entries naming no known product follow the same allowance.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:382
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:382  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When no localized-text file is found in any of those places, the ADMX file is refused and reported as &#39;The corresponding ADML is missing&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: When no localized-text file is found in any of those places, the ADMX file is refused and reported as 'The corresponding ADML is missing'.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:62
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:62  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy-definition (ADMX) file is refused as invalid when it declares the same namespace prefix twice. A policy missing its name, display name, registry key or class, or an element missing its id, is also refused. Support rules, products and categories missing their required name or display name are refused likewise.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A policy-definition (ADMX) file is refused as invalid when it declares the same namespace prefix twice. A policy missing its name, display name, registry key or class, or an element missing its id, is also refused. Support rules, products and categories missing their required name or display name are refused likewise.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:23
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:23  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A support definition already visited earlier in the same check counts as not met, even if it was met then and is not part of a circular reference. For an All-of definition, a shared sub-definition reached from two places therefore fails the whole definition the second time.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A support definition already visited earlier in the same check counts as not met, even if it was met then and is not part of a circular reference. For an All-of definition, a shared sub-definition reached from two places therefore fails the whole definition the second time.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:398
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:398  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A registry value in a policy is read from its first child: &#39;delete&#39; means the value is removed, &#39;decimal&#39; means a number, &#39;string&#39; means text. A value with none of these has no type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A registry value in a policy is read from its first child: 'delete' means the value is removed, 'decimal' means a number, 'string' means text. A value with none of these has no type.
+Where to look first:
+- Starts at PolicyPlus/AdmxFile.vb:115
+- PolicyPlus/AdmxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxFile.vb:115  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A plain supported-on product entry is met when the computer lists that product, or, for a parent product, when it lists any sub-product (or a sub-product&#39;s child). A version-range entry is met only by a sub-product, or its child, whose version lies within the range, minimum 0 and maximum the highest known version by default; listing the parent itself does not meet it. A product with no sub-products is met only by being listed. An entry with no known product is met only when unknown entries are approved.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A plain supported-on product entry is met when the computer lists that product, or, for a parent product, when it lists any sub-product (or a sub-product's child). A version-range entry is met only by a sub-product, or its child, whose version lies within the range, minimum 0 and maximum the highest known version by default; listing the parent itself does not meet it. A product with no sub-products is met only by being listed. An entry with no known product is met only when unknown entries are approved.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:383
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:383  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A child product is attached to a parent product that must be defined in the same ADMX file; the parent is looked up under that file&#39;s namespace. Only products without a parent appear in the top-level product list; every product appears in the full list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A child product is attached to a parent product that must be defined in the same ADMX file; the parent is looked up under that file's namespace. Only products without a parent appear in the top-level product list; every product appears in the full list.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:137
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:137  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Each entry of a support rule points at a product if one with that name exists, and otherwise at another support rule. An entry that matches neither points at nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: Each entry of a support rule points at a product if one with that name exists, and otherwise at another support rule. An entry that matches neither points at nothing.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:145
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:145  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A localized-text file (ADML) is refused as invalid when it has no policyDefinitionResources element or when that element has no revision number. The revision is read as a decimal number using invariant (culture-neutral) formatting.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and data model layer of Managing policy definitions: A localized-text file (ADML) is refused as invalid when it has no policyDefinitionResources element or when that element has no revision number. The revision is read as a decimal number using invariant (culture-neutral) formatting.
+Where to look first:
+- Starts at PolicyPlus/AdmlFile.vb:18
+- PolicyPlus/AdmlFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmlFile.vb:18  ·  Screens: Main</div></div></div></details><div class="group-name">Policy state logic and Windows interop</div><div class="row"><div class="main"><span>Asking for the data of a POL file value that is absent or queued for deletion returns nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: Asking for the data of a POL file value that is absent or queued for deletion returns nothing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:114
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:114  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:231
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:231  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For a checkbox element queued for deletion counts as one disabled element. Otherwise each present value counts: every present off value or off-list value adds a tenth of a disabled element, and every present on value or on-list value adds one present element, so a list can add several.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: For a checkbox element queued for deletion counts as one disabled element. Otherwise each present value counts: every present off value or off-list value adds a tenth of a disabled element, and every present on value or on-list value adds one present element, so a list can add several.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:11
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:11  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For any other element, a value queued for deletion counts as one disabled element and a stored value counts as one present element.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: For any other element, a value queued for deletion counts as one disabled element and a stored value counts as one present element.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:62
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:62  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy with a registry value counts toward Enabled when that value holds its on value (or the number 1 when none is defined), and toward Disabled when it holds its off value (or is queued for deletion when none is defined).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: A policy with a registry value counts toward Enabled when that value holds its on value (or the number 1 when none is defined), and toward Disabled when it holds its off value (or is queued for deletion when none is defined).
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:20
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:20  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The real registry never reports a value as queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: The real registry never reports a value as queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:409
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:409  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A key path counts as a policy key when it equals, or lies below, one of Software\Policies, Software\Microsoft\Windows\CurrentVersion\Policies or System\CurrentControlSet\Policies, ignoring case.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: A key path counts as a policy key when it equals, or lies below, one of Software\Policies, Software\Microsoft\Windows\CurrentVersion\Policies or System\CurrentControlSet\Policies, ignoring case.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:412
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:412  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:20
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:20  ·  Screens: Main</div></div></div><details class="more"><summary>Showing 8 of 18 business rules. Show all 18</summary><div class="row"><div class="main"><span>For a list element, a key queued for deletion counts as one disabled element; if the key holds any values, it counts as one present element instead.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: For a list element, a key queued for deletion counts as one disabled element; if the key holds any values, it counts as one present element instead.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:40
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:40  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A POL file value is queued for deletion when: it has a &#39;**del.&lt;name&gt;&#39; marker; its key has a key-clearing marker; its name is in the key&#39;s &#39;**deletevalues&#39; list (semicolon separated, ignoring case). A later real value record for it cancels this.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: A POL file value is queued for deletion when: it has a '**del.<name>' marker; its key has a key-clearing marker; its name is in the key's '**deletevalues' list (semicolon separated, ignoring case). A later real value record for it cancels this.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:118
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:118  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Reading a registry value returns it without expanding %variables%, and numbers come back as unsigned; a missing key returns nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: Reading a registry value returns it without expanding %variables%, and numbers come back as unsigned; a missing key returns nothing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:391
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:391  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A required number value is present only if the stored value is a whole number equal to it, a required text value only if stored text is equal to it, and a required deletion only if the value is queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: A required number value is present only if the stored value is a whole number equal to it, a required text value only if stored text is equal to it, and a required deletion only if the value is queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:90
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:90  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is Enabled when Enabled evidence exceeds Disabled evidence, Disabled when the reverse, Not configured when both are zero, and Unknown when both are equal and above zero.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: A policy is Enabled when Enabled evidence exceeds Disabled evidence, Disabled when the reverse, Not configured when both are zero, and Unknown when both are equal and above zero.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:77
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:77  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A value in a POL file is reported as present only if it is not queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: A value in a POL file is reported as present only if it is not queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:110
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:110  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Present elements count toward Enabled, and disabled elements are counted only if none are present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: Present elements count toward Enabled, and disabled elements are counted only if none are present.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:70
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:70  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Listing the value names of a POL file key leaves out &#39;**&#39; marker names unless the caller asks for them.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: Listing the value names of a POL file key leaves out '**' marker names unless the caller asks for them.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:139
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:139  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A registry value is reported present when its key exists and the value name matches ignoring case; an empty value name means the key itself and is present when the key exists.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: A registry value is reported present when its key exists and the value name matches ignoring case; an empty value name means the key itself and is present when the key exists.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:384
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:384  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Each value in a policy&#39;s on value list counts toward Enabled, and each value in its off value list counts toward Disabled, when present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Managing policy definitions: Each value in a policy's on value list counts toward Enabled, and each value in its off value list counts toward Disabled, when present.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:32
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:32  ·  Screens: Main</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

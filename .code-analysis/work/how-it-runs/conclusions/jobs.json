@@ -1,0 +1,45 @@
+[
+ {
+  "name": "the conclusions of the parts",
+  "jobId": "job-7300529647575325",
+  "tier": "entries",
+  "topics": [
+   "parts:part-38111104373939233299\u0000purpose",
+   "parts:part-38111104373939233299\u0000who-can-do-what",
+   "parts:part-38111104373939233299\u0000runs-where"
+  ]
+ },
+ {
+  "name": "the harms of the system",
+  "jobId": "job-7322353102850435",
+  "tier": "harms",
+  "topics": [
+   "system\u0000harms\u0000access-control",
+   "system\u0000harms\u0000input-handling",
+   "system\u0000harms\u0000cryptography",
+   "system\u0000harms\u0000unsupported-technology",
+   "system\u0000harms\u0000data-integrity",
+   "system\u0000harms\u0000failure-handling",
+   "system\u0000harms\u0000release-and-operations"
+  ]
+ },
+ {
+  "name": "the conclusions of the system",
+  "jobId": "job-4530057178678892",
+  "tier": "system",
+  "topics": [
+   "system\u0000purpose",
+   "system\u0000runs-where",
+   "system\u0000starts-stops",
+   "system\u0000build-release",
+   "system\u0000work-enters",
+   "system\u0000unit-of-work",
+   "system\u0000around-work",
+   "system\u0000scheduled-work",
+   "system\u0000who-can-do-what",
+   "system\u0000customers-apart",
+   "system\u0000settings",
+   "system\u0000failures"
+  ]
+ }
+]

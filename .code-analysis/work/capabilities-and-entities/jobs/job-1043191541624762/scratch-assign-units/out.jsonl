@@ -1,0 +1,3 @@
+{"id":"shapeassignment-06323778346943126172","definition":"definition-16484328867116774720","entity":"entity-15432428091703108209"}
+{"id":"shapeassignment-64469693668268319227","definition":"definition-92597762915820669263","notBusinessDataReason":"A transient view filter: the criteria (configured state, comments, products) a person picks to narrow the policy list on screen. It is held in memory only and never stored or sent, so it keeps no data the business knows."}
+{"id":"shapeassignment-51857307027237157936","definition":"definition-02105739445709600331","notBusinessDataReason":"One choice (configured, not configured, enabled, disabled) in the on-screen policy filter. It only selects which policies to show; the actual state of a policy is kept as a policy setting."}

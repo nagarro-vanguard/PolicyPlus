@@ -1,0 +1,66 @@
+{"id":"shapeassignment-99326655075022700666","definition":"definition-29988194300853251519","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-07488856766436834744","definition":"definition-06796442363533686199","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-01692120838410949633","definition":"definition-34512623118099202992","notBusinessDataReason":"Names the ways loading a template file can fail; it is an error code, not data the business keeps."}
+{"id":"shapeassignment-26667161144906734272","definition":"definition-05506266958461471691","notBusinessDataReason":"Reports a template file that failed to load, with its path and message; an error record, not business data."}
+{"id":"shapeassignment-19128679292100054500","definition":"definition-64667633755621381699","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-60931122570285779455","definition":"definition-28872699654945177670","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-96263043427579514582","definition":"definition-29736429051158209042","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-31307045157212858366","definition":"definition-08562244925732296951","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-31062205303993129929","definition":"definition-86770727382411256181","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-85480937087073921081","definition":"definition-20412925215769810888","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-04834136159137416364","definition":"definition-48200802817585215668","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-82986936548842373351","definition":"definition-99191707822029673230","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-13413126280294719555","definition":"definition-30984115650697469802","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-44208405642141163985","definition":"definition-03496003687786165890","notBusinessDataReason":"The .NET runtime version setting of the program; technical configuration, not business data."}
+{"id":"shapeassignment-35259558364863224040","definition":"definition-73032119536129936811","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-69366365172850425874","definition":"definition-14096185223188736726","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-18622992895073685739","definition":"definition-79149001884360842763","entity":"entity-01494854910295739228"}
+{"id":"shapeassignment-64938113030715719102","definition":"definition-31842585819276094611","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-08955245495415997524","definition":"definition-52625331736887426319","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-58089257562552998081","definition":"definition-65089391404545899376","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-95518769882851082596","definition":"definition-07333496193018085846","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-68911316999426256654","definition":"definition-91074334669748547650","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-98516267479785969718","definition":"definition-67972655995756726495","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-25927316119499359621","definition":"definition-95635465304684000216","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-43451163083947550003","definition":"definition-29524367005915834404","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-07940336864020998573","definition":"definition-60720034139489159206","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-75455659334398993413","definition":"definition-00350648051160722717","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-68798926236894669740","definition":"definition-89257796672134835596","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-03657433718806875064","definition":"definition-52131030087191099210","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-55754372571965829867","definition":"definition-02088783259432840147","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-37157498314184414982","definition":"definition-07224515274833022927","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-73486182484958691994","definition":"definition-11076807848819160295","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-94861171943804374208","definition":"definition-53351280753634841522","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-29993220902882497217","definition":"definition-67704222699406159151","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-17589503962842818209","definition":"definition-83561331034137908442","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-08756892492488605587","definition":"definition-91682890709721943807","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-46162824502800590397","definition":"definition-02344583497421846154","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-31129460197351898729","definition":"definition-38810371227647158835","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-06278403463789377230","definition":"definition-07984472905044917603","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-99469846987760729907","definition":"definition-07255456577007096161","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-51857307027237157936","definition":"definition-02105739445709600331","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-64469693668268319227","definition":"definition-92597762915820669263","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-78953567325797160441","definition":"definition-54822785594066606579","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-53854284230281710711","definition":"definition-65490449858537291672","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-79647186448368960038","definition":"definition-25581162719294905241","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-10017619402969088807","definition":"definition-53160573699948860470","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-43722634983154674447","definition":"definition-97084233570145732779","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-46823917917448253620","definition":"definition-81011196318071487670","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-96745133739678956509","definition":"definition-07124577483005940486","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-67098055139929078640","definition":"definition-32480504057498547676","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-06323778346943126172","definition":"definition-16484328867116774720","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-04567785970305547747","definition":"definition-41460150713291398081","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-38230502744573080104","definition":"definition-93433668862063337330","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-57880670804227807251","definition":"definition-47348599041187079068","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-95182311633758364419","definition":"definition-37968129553321811374","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-34153058094641701428","definition":"definition-37675030075182745793","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-81737975812442247466","definition":"definition-13837864150371516839","entity":"entity-46358977591869678499"}
+{"id":"shapeassignment-46142445916357376424","definition":"definition-24011248880102864441","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-57893321146088085686","definition":"definition-03229203761322262213","entity":"entity-54216265301484356956"}
+{"id":"shapeassignment-10649129968004749404","definition":"definition-08186546887946898388","entity":"entity-63009817546631803878"}
+{"id":"shapeassignment-59967388727510148087","definition":"definition-55097013949453474835","entity":"entity-63009817546631803878"}
+{"id":"shapeassignment-59420803520787535131","definition":"definition-96869025948982817043","notBusinessDataReason":"Windows interop structure used to request process privileges; technical, not business data."}
+{"id":"shapeassignment-36652549368814269278","definition":"definition-21603209111398861997","notBusinessDataReason":"Windows interop structure identifying a privilege; technical, not business data."}
+{"id":"shapeassignment-06323778346943126172","definition":"definition-16484328867116774720","entity":"entity-15432428091703108209"}
+{"id":"shapeassignment-64469693668268319227","definition":"definition-92597762915820669263","notBusinessDataReason":"A transient view filter: the criteria (configured state, comments, products) a person picks to narrow the policy list on screen. It is held in memory only and never stored or sent, so it keeps no data the business knows."}
+{"id":"shapeassignment-51857307027237157936","definition":"definition-02105739445709600331","notBusinessDataReason":"One choice (configured, not configured, enabled, disabled) in the on-screen policy filter. It only selects which policies to show; the actual state of a policy is kept as a policy setting."}

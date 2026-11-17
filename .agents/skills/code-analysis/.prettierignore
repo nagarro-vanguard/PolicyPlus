@@ -1,0 +1,5 @@
+node_modules/
+stages/publish/ux-visuals/.astro/
+stages/publish/ux-visuals/src/generated/
+stages/publish/ux-visuals/dist/
+stages/publish/ux-visuals/node_modules/

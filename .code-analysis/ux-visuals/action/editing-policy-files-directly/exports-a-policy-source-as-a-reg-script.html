@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Exports a policy source as a REG script.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/editing-policy-files-directly.html">Editing policy files directly</a> › <a href="../../screen/PolicyPlus/Main.vb.html">Main.vb</a></div><h1>Exports a policy source as a REG script.</h1><p class="lead">Started by a person. In the code: PolicyPlus/Main.vb:795</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the Main screen of Editing policy files directly: Exports a policy source as a REG script.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:795
+- PolicyPlus/ExportReg.vb (only this capability)
+- PolicyPlus/OpenSection.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Data read: Policy setting
+Rules decided here: 7
+- Setting a value in a POL file replaces any earlier record of the same value with the new data and kind. An existing deletion marker is not removed; the value record wins when the file is read. (PolicyPlus/PolicySource.vb:105)
+- The export dialog starts with the chosen key path, the root HKEY_CURRENT_USER\ for the user policy file or HKEY_LOCAL_MACHINE\ for the computer one, and an empty file name. (PolicyPlus/ExportReg.vb:4)
+- The section dialog offers User and Computer only when the caller says each is available; an unavailable one is disabled. (PolicyPlus/OpenSection.vb:18)
+- Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out. (PolicyPlus/PolicySource.vb:20)
+- When data is converted to POL storage, text kinds become two-byte characters ended by an empty character, and kinds not otherwise known are kept as raw bytes. (PolicyPlus/PolicySource.vb:337)
+- A POL file is created from a source: a POL source is used as is; a registry source is copied by walking each policy key and all subkeys, keeping each value's type and unexpanded data; any other source type is refused as &quot;Policy source type not supported&quot;. (PolicyPlus/Main.vb:440)
+- Exporting REG offers both sections and exports the chosen section (Computer, otherwise User). (PolicyPlus/Main.vb:795)
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/editing-policy-files-directly/screens.html">Screens</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/editing-policy-files-directly/policy-state-logic-and-windows-interop.html">Policy state logic and Windows interop</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (7)</h2><div class="group-name">Screens</div><div class="row"><div class="main"><span>A POL file is created from a source: a POL source is used as is; a registry source is copied by walking each policy key and all subkeys, keeping each value&#39;s type and unexpanded data; any other source type is refused as &quot;Policy source type not supported&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: A POL file is created from a source: a POL source is used as is; a registry source is copied by walking each policy key and all subkeys, keeping each value's type and unexpanded data; any other source type is refused as &quot;Policy source type not supported&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:440
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:440  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The section dialog offers User and Computer only when the caller says each is available; an unavailable one is disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: The section dialog offers User and Computer only when the caller says each is available; an unavailable one is disabled.
+Where to look first:
+- Starts at PolicyPlus/OpenSection.vb:18
+- PolicyPlus/OpenSection.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenSection.vb:18  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The export dialog starts with the chosen key path, the root HKEY_CURRENT_USER\ for the user policy file or HKEY_LOCAL_MACHINE\ for the computer one, and an empty file name.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: The export dialog starts with the chosen key path, the root HKEY_CURRENT_USER\ for the user policy file or HKEY_LOCAL_MACHINE\ for the computer one, and an empty file name.
+Where to look first:
+- Starts at PolicyPlus/ExportReg.vb:4
+- PolicyPlus/ExportReg.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ExportReg.vb:4  ·  Screens: EditPol, Main</div></div></div><div class="row"><div class="main"><span>Exporting REG offers both sections and exports the chosen section (Computer, otherwise User).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: Exporting REG offers both sections and exports the chosen section (Computer, otherwise User).
+Where to look first:
+- Starts at PolicyPlus/Main.vb:795
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:795  ·  Screens: Main</div></div></div><div class="group-name">Policy state logic and Windows interop</div><div class="row"><div class="main"><span>Setting a value in a POL file replaces any earlier record of the same value with the new data and kind. An existing deletion marker is not removed; the value record wins when the file is read.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Setting a value in a POL file replaces any earlier record of the same value with the new data and kind. An existing deletion marker is not removed; the value record wins when the file is read.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:105
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:105  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:20
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:20  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>When data is converted to POL storage, text kinds become two-byte characters ended by an empty character, and kinds not otherwise known are kept as raw bytes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When data is converted to POL storage, text kinds become two-byte characters ended by an empty character, and kinds not otherwise known are kept as raw bytes.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:337
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:337  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

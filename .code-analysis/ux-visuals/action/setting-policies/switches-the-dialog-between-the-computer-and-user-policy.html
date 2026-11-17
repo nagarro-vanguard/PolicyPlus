@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Switches the dialog between the computer and user policy source</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/setting-policies.html">Setting policies</a> › <a href="../../screen/PolicyPlus/EditSetting.vb.html">EditSetting.vb</a></div><h1>Switches the dialog between the computer and user policy source</h1><p class="lead">Started by a person. In the code: PolicyPlus/EditSetting.vb:305</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the EditSetting screen of Setting policies: Switches the dialog between the computer and user policy source
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:305
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+- PolicyPlus/PolicyLoader.vb (shared with 1 other capability)
+Data read: Policy setting
+Rules decided here: 28
+- For a checkbox element queued for deletion counts as one disabled element. Otherwise each present value counts: every present off value or off-list value adds a tenth of a disabled element, and every present on value or on-list value adds one present element, so a list can add several. (PolicyPlus/PolicyProcessing.vb:11)
+- A policy with a registry value counts toward Enabled when that value holds its on value (or the number 1 when none is defined), and toward Disabled when it holds its off value (or is queued for deletion when none is defined). (PolicyPlus/PolicyProcessing.vb:20)
+- Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out. (PolicyPlus/PolicySource.vb:20)
+- Each value in a policy's on value list counts toward Enabled, and each value in its off value list counts toward Disabled, when present. (PolicyPlus/PolicyProcessing.vb:32)
+- For a list element, a key queued for deletion counts as one disabled element; if the key holds any values, it counts as one present element instead. (PolicyPlus/PolicyProcessing.vb:40)
+- For any other element, a value queued for deletion counts as one disabled element and a stored value counts as one present element. (PolicyPlus/PolicyProcessing.vb:62)
+- Present elements count toward Enabled, and disabled elements are counted only if none are present. (PolicyPlus/PolicyProcessing.vb:70)
+- A policy is Enabled when Enabled evidence exceeds Disabled evidence, Disabled when the reverse, Not configured when both are zero, and Unknown when both are equal and above zero. (PolicyPlus/PolicyProcessing.vb:77)
+  ...and 20 more
+Unconfirmed:
+- For the capability: Whether a policy save asks Windows to refresh or the program applies the change itself depends on a fixed list of Windows edition codes. Whether newer editions are on that list is assumed. If wrong: On an unlisted edition with Group Policy, saves would apply changes to the registry directly instead of refreshing policy.
+- For the capability: Which Windows edition the computer is, and so whether Group Policy tools are offered, comes from a Windows system call. The code holds only a list of accepted edition codes, so new editions are missed until it is updated. If wrong: A supported edition is wrongly reported as lacking Group Policy, or an unsupported one passes.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/setting-policies/screens.html">Screens</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/setting-policies/policy-state-logic-and-windows-interop.html">Policy state logic and Windows interop</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (28)</h2><div class="group-name">Screens</div><div class="row"><div class="main"><span>When a policy is neither Enabled nor Disabled in the chosen section, Not configured is selected.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a policy is neither Enabled nor Disabled in the chosen section, Not configured is selected.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:223
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:223  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When a policy is Enabled, each option control shows the stored value: numbers in number boxes, text in text or combo boxes, the choice in dropdowns (left unselected if no choice matches), ticks in check boxes, lines in multi-line boxes, and the list kept for list options.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a policy is Enabled, each option control shows the stored value: numbers in number boxes, text in text or combo boxes, the choice in dropdowns (left unselected if no choice matches), ticks in check boxes, lines in multi-line boxes, and the list kept for list options.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:195
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:195  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Choosing User in the section dropdown makes the user policy source, loader and comments current; any other choice makes the computer ones current.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Choosing User in the section dropdown makes the user policy source, loader and comments current; any other choice makes the computer ones current.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:306
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:306  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The comment box is disabled and reads &quot;Comments unavailable for this policy source&quot; when the source has no comments; otherwise it shows the policy&#39;s saved comment, or is empty when it has none.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: The comment box is disabled and reads &quot;Comments unavailable for this policy source&quot; when the source has no comments; otherwise it shows the policy's saved comment, or is empty when it has none.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:229
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:229  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When a policy is Disabled in the chosen section, the Disabled choice is selected; when Enabled, the Enabled choice is selected.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: When a policy is Disabled in the chosen section, the Disabled choice is selected; when Enabled, the Enabled choice is selected.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:191
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:191  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Apply and OK are available only when the chosen section&#39;s policy source can be written to; for a read-only source they are disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Setting policies: Apply and OK are available only when the chosen section's policy source can be written to; for a read-only source they are disabled.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:226
+- PolicyPlus/EditSetting.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:226  ·  Screens: EditSetting</div></div></div><div class="group-name">Policy state logic and Windows interop</div><div class="row"><div class="main"><span>Asking for the data of a POL file value that is absent or queued for deletion returns nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: Asking for the data of a POL file value that is absent or queued for deletion returns nothing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:114
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:114  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:231
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:231  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>For a checkbox element queued for deletion counts as one disabled element. Otherwise each present value counts: every present off value or off-list value adds a tenth of a disabled element, and every present on value or on-list value adds one present element, so a list can add several.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: For a checkbox element queued for deletion counts as one disabled element. Otherwise each present value counts: every present off value or off-list value adds a tenth of a disabled element, and every present on value or on-list value adds one present element, so a list can add several.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:11
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:11  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>For any other element, a value queued for deletion counts as one disabled element and a stored value counts as one present element.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: For any other element, a value queued for deletion counts as one disabled element and a stored value counts as one present element.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:62
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:62  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A checkbox element reads as ticked by precedence: if an on value is defined, only its presence ticks it; else if an on value list is defined, only that list being fully present ticks it; else only a stored number equal to 1 ticks it. Off values and off lists never change the result, which is unticked otherwise.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A checkbox element reads as ticked by precedence: if an on value is defined, only its presence ticks it; else if an on value list is defined, only that list being fully present ticks it; else only a stored number equal to 1 ticks it. Off values and off lists never change the result, which is unticked otherwise.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:190
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:190  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A registry source that could not be written offers no editing; any other source that is not writable allows editing but is not saved; scratch space is always writable.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A registry source that could not be written offers no editing; any other source that is not writable allows editing but is not saved; scratch space is always writable.
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:165
+- PolicyPlus/PolicyLoader.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:165  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A policy with a registry value counts toward Enabled when that value holds its on value (or the number 1 when none is defined), and toward Disabled when it holds its off value (or is queued for deletion when none is defined).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A policy with a registry value counts toward Enabled when that value holds its on value (or the number 1 when none is defined), and toward Disabled when it holds its off value (or is queued for deletion when none is defined).
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:20
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:20  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>The real registry never reports a value as queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: The real registry never reports a value as queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:409
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:409  ·  Screens: EditSetting, Main</div></div></div><details class="more"><summary>Showing 8 of 22 business rules. Show all 22</summary><div class="row"><div class="main"><span>Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:20
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:20  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>An element reads as a list of entries: named entries if the person supplies names; else numbered values (name plus 1, 2, ... until one is missing) if it has a prefix; else every value name under the key.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: An element reads as a list of entries: named entries if the person supplies names; else numbered values (name plus 1, 2, ... until one is missing) if it has a prefix; else every value name under the key.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:149
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:149  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>For a list element, a key queued for deletion counts as one disabled element; if the key holds any values, it counts as one present element instead.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: For a list element, a key queued for deletion counts as one disabled element; if the key holds any values, it counts as one present element instead.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:40
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:40  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A POL file value is queued for deletion when: it has a &#39;**del.&lt;name&gt;&#39; marker; its key has a key-clearing marker; its name is in the key&#39;s &#39;**deletevalues&#39; list (semicolon separated, ignoring case). A later real value record for it cancels this.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A POL file value is queued for deletion when: it has a '**del.<name>' marker; its key has a key-clearing marker; its name is in the key's '**deletevalues' list (semicolon separated, ignoring case). A later real value record for it cancels this.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:118
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:118  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A list of required values is present only when every value in it is present, each using its own key or the list&#39;s key.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A list of required values is present only when every value in it is present, each using its own key or the list's key.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:108
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:108  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>Reading a registry value returns it without expanding %variables%, and numbers come back as unsigned; a missing key returns nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: Reading a registry value returns it without expanding %variables%, and numbers come back as unsigned; a missing key returns nothing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:391
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:391  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A required number value is present only if the stored value is a whole number equal to it, a required text value only if stored text is equal to it, and a required deletion only if the value is queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A required number value is present only if the stored value is a whole number equal to it, a required text value only if stored text is equal to it, and a required deletion only if the value is queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:90
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:90  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A dropdown element reads as the first item whose value is present and whose value list, if any, is fully present; if none match, no item is selected.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A dropdown element reads as the first item whose value is present and whose value list, if any, is fully present; if none match, no item is selected.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:170
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:170  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A policy is Enabled when Enabled evidence exceeds Disabled evidence, Disabled when the reverse, Not configured when both are zero, and Unknown when both are equal and above zero.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A policy is Enabled when Enabled evidence exceeds Disabled evidence, Disabled when the reverse, Not configured when both are zero, and Unknown when both are equal and above zero.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:77
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:77  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A value in a POL file is reported as present only if it is not queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A value in a POL file is reported as present only if it is not queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:110
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:110  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>Present elements count toward Enabled, and disabled elements are counted only if none are present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: Present elements count toward Enabled, and disabled elements are counted only if none are present.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:70
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:70  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>Listing the value names of a POL file key leaves out &#39;**&#39; marker names unless the caller asks for them.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: Listing the value names of a POL file key leaves out '**' marker names unless the caller asks for them.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:139
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:139  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A registry value is reported present when its key exists and the value name matches ignoring case; an empty value name means the key itself and is present when the key exists.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: A registry value is reported present when its key exists and the value name matches ignoring case; an empty value name means the key itself and is present when the key exists.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:384
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:384  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>Each value in a policy&#39;s on value list counts toward Enabled, and each value in its off value list counts toward Disabled, when present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Setting policies: Each value in a policy's on value list counts toward Enabled, and each value in its off value list counts toward Disabled, when present.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:32
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:32  ·  Screens: EditSetting, Main</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

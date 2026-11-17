@@ -1,0 +1,77 @@
+{
+  "byFileExtension": {
+    "(none: dotfile)": {
+      "files": 1,
+      "lines": 256,
+      "bytes": 4243,
+      "binary": 0,
+      "notUtf8": 0
+    },
+    ".md": {
+      "files": 5,
+      "lines": 174,
+      "bytes": 21145,
+      "binary": 0,
+      "notUtf8": 0
+    },
+    ".vb": {
+      "files": 89,
+      "lines": 12083,
+      "bytes": 592065,
+      "binary": 0,
+      "notUtf8": 0
+    },
+    ".config": {
+      "files": 1,
+      "lines": 6,
+      "bytes": 179,
+      "binary": 0,
+      "notUtf8": 0
+    },
+    ".sln": {
+      "files": 1,
+      "lines": 22,
+      "bytes": 964,
+      "binary": 0,
+      "notUtf8": 0
+    },
+    ".vbproj": {
+      "files": 1,
+      "lines": 459,
+      "bytes": 17694,
+      "binary": 0,
+      "notUtf8": 0
+    },
+    ".bat": {
+      "files": 1,
+      "lines": 8,
+      "bytes": 271,
+      "binary": 0,
+      "notUtf8": 0
+    }
+  },
+  "byFolder": {
+    ".": {
+      "files": 5,
+      "lines": 355
+    },
+    "Docs": {
+      "files": 2,
+      "lines": 83
+    },
+    "PolicyPlus": {
+      "files": 92,
+      "lines": 12570
+    }
+  },
+  "longLineFiles": [],
+  "uncertainEncoding": [],
+  "roots": [
+    {
+      "name": "PolicyPlus",
+      "commit": "e26bca2f190902189933e1e6e75db2bceac8306a",
+      "clean": false
+    }
+  ],
+  "skipped": []
+}

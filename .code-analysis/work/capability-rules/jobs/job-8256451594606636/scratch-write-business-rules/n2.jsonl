@@ -1,0 +1,2 @@
+{"says":"Find by Text starts a search only when its dialog was accepted. Cancelling starts nothing and keeps earlier results.","decidedAt":{"file":"PolicyPlus/Main.vb","firstLine":645,"lastLine":649},"evidence":[{"file":"PolicyPlus/Main.vb","firstLine":375,"lastLine":388}]}
+{"says":"Find by Registry starts a search only when its dialog was accepted. Cancelling starts nothing and keeps earlier results.","decidedAt":{"file":"PolicyPlus/Main.vb","firstLine":668,"lastLine":671},"evidence":[{"file":"PolicyPlus/Main.vb","firstLine":375,"lastLine":388}]}

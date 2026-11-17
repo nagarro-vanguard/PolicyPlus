@@ -1,0 +1,51 @@
+[
+ {
+  "name": "Windows Forms",
+  "kind": "technology",
+  "technology": "technology-70387911586559782494",
+  "parts": [
+   "part-38111104373939233299"
+  ],
+  "jobId": "job-9393010978668434",
+  "preparedAgainst": "bf9bb4891f3a1521250124cbc62ce3e6935bc9fa"
+ },
+ {
+  "name": ".NET Framework",
+  "kind": "technology",
+  "technology": "technology-84822039951309122274",
+  "parts": [
+   "part-38111104373939233299"
+  ],
+  "jobId": "job-5768310990242016",
+  "preparedAgainst": "be81dca81ed48525e80837bb4c8295dc34e30b27"
+ },
+ {
+  "name": "Windows registry and Win32 APIs",
+  "kind": "technology",
+  "technology": "technology-46802979159136959237",
+  "parts": [
+   "part-38111104373939233299"
+  ],
+  "jobId": "job-0159238932789899",
+  "preparedAgainst": "88d681143372ae517a4b5dc9d8e3b6daa53e4681"
+ },
+ {
+  "name": "Windows Installer (msiexec) and .NET WebClient",
+  "kind": "technology",
+  "technology": "technology-07011706629345673005",
+  "parts": [
+   "part-38111104373939233299"
+  ],
+  "jobId": "job-9355002438265174",
+  "preparedAgainst": "f618ec7a382a4da0a907cf4496419bc53177cd63"
+ },
+ {
+  "name": "Policy Plus desktop application",
+  "kind": "parts",
+  "parts": [
+   "part-38111104373939233299"
+  ],
+  "jobId": "job-5018767200043123",
+  "preparedAgainst": "16ce0d2989289ef0259a843b3ee3f8dd3251cf6a"
+ }
+]

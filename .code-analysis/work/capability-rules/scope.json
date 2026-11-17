@@ -1,0 +1,29 @@
+{
+ "capabilities": [
+  {
+   "id": "capability-09256362696334557463",
+   "name": "Using Policy Plus"
+  },
+  {
+   "id": "capability-94819467697830882144",
+   "name": "Managing policy definitions"
+  },
+  {
+   "id": "capability-95522755523734389125",
+   "name": "Finding and browsing policies"
+  },
+  {
+   "id": "capability-52723301806026979742",
+   "name": "Setting policies"
+  },
+  {
+   "id": "capability-96720013561244733699",
+   "name": "Editing policy files directly"
+  },
+  {
+   "id": "capability-82913637939331863147",
+   "name": "Building and versioning Policy Plus"
+  }
+ ],
+ "everyBlock": true
+}

@@ -1,0 +1,441 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Policy state logic and Windows interop</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/editing-policy-files-directly.html">Editing policy files directly</a> › Policy state logic and Windows interop</div><h1>Policy state logic and Windows interop</h1><p class="lead">Decides which state each policy is in, reads and writes policy sources (POL files, REG files, the registry), parses policy-state scripts, and wraps Windows system calls, edition checks and privileges. In Editing policy files directly: 0 actions and 60 business rules. Part of its code is also used by other capabilities.</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: The Policy state logic and Windows interop layer of Editing policy files directly: 0 actions and 60 rules; part of its code is also used by other capabilities.
+Where to look first:
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Data saved: Policy setting
+Data read: Policy setting
+Rules decided here: 60
+- For a checkbox element queued for deletion counts as one disabled element. Otherwise each present value counts: every present off value or off-list value adds a tenth of a disabled element, and every present on value or on-list value adds one present element, so a list can add several. (PolicyPlus/PolicyProcessing.vb:11)
+- In a REG file, quotes and backslashes in value names and text data are written with a leading backslash. (PolicyPlus/RegFile.vb:11)
+- A policy with a registry value counts toward Enabled when that value holds its on value (or the number 1 when none is defined), and toward Disabled when it holds its off value (or is queued for deletion when none is defined). (PolicyPlus/PolicyProcessing.vb:20)
+- Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out. (PolicyPlus/PolicySource.vb:20)
+- When a REG file is read, a backslash in a value name or text data means the next character is taken literally and the backslash is dropped. (PolicyPlus/RegFile.vb:21)
+- Each value in a policy's on value list counts toward Enabled, and each value in its off value list counts toward Disabled, when present. (PolicyPlus/PolicyProcessing.vb:32)
+- When a policy (POL) file is opened, it is refused unless it starts with the 'PReg' signature, and refused when its format version is not 1. A value name may be followed by one extra empty character, which is tolerated. (PolicyPlus/PolicySource.vb:33)
+- When a REG file is read, blank lines and lines starting with a semicolon are skipped. (PolicyPlus/RegFile.vb:37)
+  ...and 52 more
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What can be started here (0)</h2><p class="empty">Nothing starts in this layer; work reaches it from other layers.</p><h2>Business rules in this layer (60)</h2><div class="row"><div class="main"><span>For a checkbox element queued for deletion counts as one disabled element. Otherwise each present value counts: every present off value or off-list value adds a tenth of a disabled element, and every present on value or on-list value adds one present element, so a list can add several.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: For a checkbox element queued for deletion counts as one disabled element. Otherwise each present value counts: every present off value or off-list value adds a tenth of a disabled element, and every present on value or on-list value adds one present element, so a list can add several.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:11
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:11  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>In a REG file, quotes and backslashes in value names and text data are written with a leading backslash.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: In a REG file, quotes and backslashes in value names and text data are written with a leading backslash.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:11
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:11  ·  Screens: ExportReg</div></div></div><div class="row"><div class="main"><span>A policy with a registry value counts toward Enabled when that value holds its on value (or the number 1 when none is defined), and toward Disabled when it holds its off value (or is queued for deletion when none is defined).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A policy with a registry value counts toward Enabled when that value holds its on value (or the number 1 when none is defined), and toward Disabled when it holds its off value (or is queued for deletion when none is defined).
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:20
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:20  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Registry keys and value names in a policy file are matched ignoring case; the first spelling met is kept and written back out.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:20
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:20  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>When a REG file is read, a backslash in a value name or text data means the next character is taken literally and the backslash is dropped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When a REG file is read, a backslash in a value name or text data means the next character is taken literally and the backslash is dropped.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:21
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:21  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>Each value in a policy&#39;s on value list counts toward Enabled, and each value in its off value list counts toward Disabled, when present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Each value in a policy's on value list counts toward Enabled, and each value in its off value list counts toward Disabled, when present.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:32
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:32  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy (POL) file is opened, it is refused unless it starts with the &#39;PReg&#39; signature, and refused when its format version is not 1. A value name may be followed by one extra empty character, which is tolerated.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When a policy (POL) file is opened, it is refused unless it starts with the 'PReg' signature, and refused when its format version is not 1. A value name may be followed by one extra empty character, which is tolerated.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:33
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:33  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a REG file is read, blank lines and lines starting with a semicolon are skipped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When a REG file is read, blank lines and lines starting with a semicolon are skipped.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:37
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:37  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>For a list element, a key queued for deletion counts as one disabled element; if the key holds any values, it counts as one present element instead.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: For a list element, a key queued for deletion counts as one disabled element; if the key holds any values, it counts as one present element instead.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:40
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:40  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a POL file is opened, each record is kept under its key and value name; a later record with the same key and name replaces an earlier one. The record kinds (a plain value, a deletion marker or a key-clearing marker) set what state each value is in.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When a POL file is opened, each record is kept under its key and value name; a later record with the same key and name replaces an earlier one. The record kinds (a plain value, a deletion marker or a key-clearing marker) set what state each value is in.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:44
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:44  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Same load rule, for the value state Queued for deletion: a &#39;**del.&#39; marker read from the file leaves the value queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Same load rule, for the value state Queued for deletion: a '**del.' marker read from the file leaves the value queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:44
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:44  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Same load rule, for the state Key cleared: a &#39;**delvals&#39; marker read from the file leaves the key cleared.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Same load rule, for the state Key cleared: a '**delvals' marker read from the file leaves the key cleared.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:44
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:44  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><details class="more"><summary>Showing 12 of 60 business rules. Show all 60</summary><div class="row"><div class="main"><span>A REG file is refused unless its first line is exactly &#39;Windows Registry Editor Version 5.00&#39;, with the message &#39;Incorrect REG signature&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A REG file is refused unless its first line is exactly 'Windows Registry Editor Version 5.00', with the message 'Incorrect REG signature'.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:47
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:47  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>In a REG file a key header starting with &#39;-&#39; marks the whole key for removal; a value whose data is &#39;-&#39; marks that value for removal; &#39;@&#39; names the default value.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: In a REG file a key header starting with '-' marks the whole key for removal; a value whose data is '-' marks that value for removal; '@' names the default value.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:54
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:54  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>For any other element, a value queued for deletion counts as one disabled element and a stored value counts as one present element.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: For any other element, a value queued for deletion counts as one disabled element and a stored value counts as one present element.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:62
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:62  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Present elements count toward Enabled, and disabled elements are counted only if none are present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Present elements count toward Enabled, and disabled elements are counted only if none are present.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:70
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:70  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A REG file value whose data matches none of the known forms is kept with no data and no kind.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A REG file value whose data matches none of the known forms is kept with no data and no kind.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:72
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:72  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>REG file data is read by its prefix: quoted text is a string, &#39;dword:&#39; a hexadecimal 32-bit number, and &#39;hex&#39; bytes of binary, or of the kind given in &#39;hex(n):&#39; where n is hexadecimal. A line ending in a backslash continues on the next line.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: REG file data is read by its prefix: quoted text is a string, 'dword:' a hexadecimal 32-bit number, and 'hex' bytes of binary, or of the kind given in 'hex(n):' where n is hexadecimal. A line ending in a backslash continues on the next line.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:75
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:75  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>A policy is Enabled when Enabled evidence exceeds Disabled evidence, Disabled when the reverse, Not configured when both are zero, and Unknown when both are equal and above zero.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A policy is Enabled when Enabled evidence exceeds Disabled evidence, Disabled when the reverse, Not configured when both are zero, and Unknown when both are equal and above zero.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:77
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:77  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A POL file is saved in sorted order of lowercase key and value name, so clearing and deletion markers (&#39;**&#39; names) come before ordinary values and are processed first.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A POL file is saved in sorted order of lowercase key and value name, so clearing and deletion markers ('**' names) come before ordinary values and are processed first.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:77
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:77  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A required number value is present only if the stored value is a whole number equal to it, a required text value only if stored text is equal to it, and a required deletion only if the value is queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A required number value is present only if the stored value is a whole number equal to it, a required text value only if stored text is equal to it, and a required deletion only if the value is queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:90
+- PolicyPlus/PolicyProcessing.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:90  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Deleting a value in a POL file first forgets any value and marker for it. Unless it is already queued, a &#39;**del.&lt;name&gt;&#39; marker with the number 32 is then added, as Microsoft does.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Deleting a value in a POL file first forgets any value and marker for it. Unless it is already queued, a '**del.<name>' marker with the number 32 is then added, as Microsoft does.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:92
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:92  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Forgetting a value in a POL file removes both its value record and its deletion marker, so it returns to Not configured.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Forgetting a value in a POL file removes both its value record and its deletion marker, so it returns to Not configured.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:99
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:99  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Setting a value in a POL file replaces any earlier record of the same value with the new data and kind. An existing deletion marker is not removed; the value record wins when the file is read.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Setting a value in a POL file replaces any earlier record of the same value with the new data and kind. An existing deletion marker is not removed; the value record wins when the file is read.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:105
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:105  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>A value in a POL file is reported as present only if it is not queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A value in a POL file is reported as present only if it is not queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:110
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:110  ·  Screens: EditPol, Main</div></div></div><div class="row"><div class="main"><span>Asking for the data of a POL file value that is absent or queued for deletion returns nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Asking for the data of a POL file value that is absent or queued for deletion returns nothing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:114
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:114  ·  Screens: EditPol, Main</div></div></div><div class="row"><div class="main"><span>When a REG file is written, a removed key is written as &#39;[-name]&#39;, a removed value as &#39;name=-&#39;, an empty value name as &#39;@&#39;, 32-bit numbers as &#39;dword:&#39; with 8 hex digits, and other kinds as hex bytes, with &#39;hex(n)&#39; for kinds other than binary and a line break after the position reaches 78 columns.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When a REG file is written, a removed key is written as '[-name]', a removed value as 'name=-', an empty value name as '@', 32-bit numbers as 'dword:' with 8 hex digits, and other kinds as hex bytes, with 'hex(n)' for kinds other than binary and a line break after the position reaches 78 columns.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:117
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:117  ·  Screens: ExportReg</div></div></div><div class="row"><div class="main"><span>A POL file value is queued for deletion when: it has a &#39;**del.&lt;name&gt;&#39; marker; its key has a key-clearing marker; its name is in the key&#39;s &#39;**deletevalues&#39; list (semicolon separated, ignoring case). A later real value record for it cancels this.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A POL file value is queued for deletion when: it has a '**del.<name>' marker; its key has a key-clearing marker; its name is in the key's '**deletevalues' list (semicolon separated, ignoring case). A later real value record for it cancels this.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:118
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:118  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>Listing the value names of a POL file key leaves out &#39;**&#39; marker names unless the caller asks for them.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Listing the value names of a POL file key leaves out '**' marker names unless the caller asks for them.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:139
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:139  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>Applying a POL file without an older version forgets nothing: every record is applied and no stale values are removed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Applying a POL file without an older version forgets nothing: every record is applied and no stale values are removed.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:152
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:152  ·  Screens: ExportReg, Main</div></div></div><div class="row"><div class="main"><span>When one POL file is applied to a target, a &#39;**del.&lt;name&gt;&#39; record deletes that value in the target.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When one POL file is applied to a target, a '**del.<name>' record deletes that value in the target.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:157
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:157  ·  Screens: ExportReg, Main</div></div></div><div class="row"><div class="main"><span>When one POL file is applied to a target, a &#39;**delvals&#39; record clears all values of that key, and a &#39;**deletevalues&#39; record deletes each listed value, in the target.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When one POL file is applied to a target, a '**delvals' record clears all values of that key, and a '**deletevalues' record deletes each listed value, in the target.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:159
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:159  ·  Screens: ExportReg, Main</div></div></div><div class="row"><div class="main"><span>When one POL file is applied to a target, a &#39;**deletekeys&#39; record clears each listed subkey in the target.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When one POL file is applied to a target, a '**deletekeys' record clears each listed subkey in the target.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:165
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:165  ·  Screens: ExportReg, Main</div></div></div><div class="row"><div class="main"><span>When one POL file is applied to a target, each ordinary value with a name is set in the target with its original spelling and kind. Other &#39;**&#39; records are ignored.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When one POL file is applied to a target, each ordinary value with a name is set in the target with its original spelling and kind. Other '**' records are ignored.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:169
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:169  ·  Screens: ExportReg, Main</div></div></div><div class="row"><div class="main"><span>After applying a POL file against an older version, every value present in the old version but missing from the new one is forgotten in the target, but only if it lies under a policy branch (Software\Policies, Software\Microsoft\Windows\CurrentVersion\Policies, System\CurrentControlSet\Policies).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: After applying a POL file against an older version, every value present in the old version but missing from the new one is forgotten in the target, but only if it lies under a policy branch (Software\Policies, Software\Microsoft\Windows\CurrentVersion\Policies, System\CurrentControlSet\Policies).
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:174
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:174  ·  Screens: ExportReg, Main</div></div></div><div class="row"><div class="main"><span>Clearing a key in a POL file forgets every value and marker in the key, and adds a &#39;**delvals.&#39; marker, so the key is in the state Key cleared.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Clearing a key in a POL file forgets every value and marker in the key, and adds a '**delvals.' marker, so the key is in the state Key cleared.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:183
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:183  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Clearing a key in a POL file forgets the stored record of every value in it, so those values no longer hold data. The clearing marker it leaves makes every value in that key count as Queued for deletion, until a real value is set for it; they do not read as Not configured.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Clearing a key in a POL file forgets the stored record of every value in it, so those values no longer hold data. The clearing marker it leaves makes every value in that key count as Queued for deletion, until a real value is set for it; they do not read as Not configured.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:183
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:183  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>A key name from a REG file loses the chosen prefix (such as HKEY_LOCAL_MACHINE\) only when it begins with it, ignoring case; the prefix always ends with a backslash.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A key name from a REG file loses the chosen prefix (such as HKEY_LOCAL_MACHINE\) only when it begins with it, ignoring case; the prefix always ends with a backslash.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:187
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:187  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>Removing the key-clearing mark of a POL file key deletes every marker whose name starts with &#39;**delvals&#39; (with or without a final dot).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Removing the key-clearing mark of a POL file key deletes every marker whose name starts with '**delvals' (with or without a final dot).
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:190
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:190  ·  Screens: EditPol</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Keys in a REG file are matched by name ignoring case; value names too.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Keys in a REG file are matched by name ignoring case; value names too.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:193
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:193  ·  Screens: ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>The sub-keys of a POL file key are listed once each, ignoring case, using the spelling first met; the key itself is never listed, and an empty key name means the root.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: The sub-keys of a POL file key are listed once each, ignoring case, using the spelling first met; the key itself is never listed, and an empty key name means the root.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:196
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:196  ·  Screens: EditPol, Main</div></div></div><div class="row"><div class="main"><span>When a REG file is built from policy changes, writes to keys outside the chosen source branch are ignored; with no branch set, all are accepted. The branch itself and anything under it are accepted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When a REG file is built from policy changes, writes to keys outside the chosen source branch are ignored; with no branch set, all are accepted. The branch itself and anything under it are accepted.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:210
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:210  ·  Screens: ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>Setting a value in a REG file puts the key and value in the file, creating the key&#39;s record if no non-removal record exists, and replacing a same-named value, so the value is in the state Configured.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Setting a value in a REG file puts the key and value in the file, creating the key's record if no non-removal record exists, and replacing a same-named value, so the value is in the state Configured.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:226
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:226  ·  Screens: ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:231
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:231  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>A REG file is only a write target. Setting a value, deleting a value, clearing a key and forgetting a key clearance work. Reading a value, checking a value, checking queued deletion, listing value names and forgetting a value are not implemented and fail. A difference-apply that must forget values fails if it targets a REG file, and a REG file cannot be read back as a policy source.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A REG file is only a write target. Setting a value, deleting a value, clearing a key and forgetting a key clearance work. Reading a value, checking a value, checking queued deletion, listing value names and forgetting a value are not implemented and fail. A difference-apply that must forget values fails if it targets a REG file, and a REG file cannot be read back as a policy source.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:237
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:237  ·  Screens: ExportReg, Main</div></div></div><div class="row"><div class="main"><span>Deleting a value in a REG file does nothing if the key is already marked for removal. Otherwise the value is replaced by a removal mark, so it is in the state Queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Deleting a value in a REG file does nothing if the key is already marked for removal. Otherwise the value is replaced by a removal mark, so it is in the state Queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:240
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:240  ·  Screens: ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Clearing a key in a REG file replaces the key&#39;s record, with all its values, by a whole-key removal mark, so the key is in the state Key cleared.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Clearing a key in a REG file replaces the key's record, with all its values, by a whole-key removal mark, so the key is in the state Key cleared.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:248
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:248  ·  Screens: ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>When a REG file is applied, a removed key clears that key in the target, a removed value deletes it, and every other value is set, using key names without the prefix.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When a REG file is applied, a removed key clears that key in the target, a removed value deletes it, and every other value is set, using key names without the prefix.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:260
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:260  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>Source branch given to a REG file has any trailing backslash trimmed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Source branch given to a REG file has any trailing backslash trimmed.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:280
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:280  ·  Screens: ExportReg</div></div></div><div class="row"><div class="main"><span>A prefix for a REG file is guessed from the first key: for HKEY_USERS it includes the user&#39;s SID; otherwise it is the hive name; an empty file gives HKEY_LOCAL_MACHINE\.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A prefix for a REG file is guessed from the first key: for HKEY_USERS it includes the user's SID; otherwise it is the hive name; an empty file gives HKEY_LOCAL_MACHINE\.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:284
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:284  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>A REG file contains default values when any value has an empty name.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A REG file contains default values when any value has an empty name.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:298
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:298  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>When data is converted to POL storage, text kinds become two-byte characters ended by an empty character, and kinds not otherwise known are kept as raw bytes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When data is converted to POL storage, text kinds become two-byte characters ended by an empty character, and kinds not otherwise known are kept as raw bytes.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:337
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:337  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>Deleting a value in the real Windows registry removes it when its key exists; a missing key or value is silently ignored.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Deleting a value in the real Windows registry removes it when its key exists; a missing key or value is silently ignored.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:365
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:365  ·  Screens: ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Forgetting a value in the real Windows registry deletes it, because the registry cannot keep a value &#39;queued for deletion&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Forgetting a value in the real Windows registry deletes it, because the registry cannot keep a value 'queued for deletion'.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:371
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:371  ·  Screens: ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Setting a value in the real registry creates the key if missing and stores the data; unsigned 32-bit and 64-bit numbers are saved as the same bits in signed form.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Setting a value in the real registry creates the key if missing and stores the data; unsigned 32-bit and 64-bit numbers are saved as the same bits in signed form.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:374
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:374  ·  Screens: ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>A registry value is reported present when its key exists and the value name matches ignoring case; an empty value name means the key itself and is present when the key exists.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A registry value is reported present when its key exists and the value name matches ignoring case; an empty value name means the key itself and is present when the key exists.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:384
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:384  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Reading a registry value returns it without expanding %variables%, and numbers come back as unsigned; a missing key returns nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Reading a registry value returns it without expanding %variables%, and numbers come back as unsigned; a missing key returns nothing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:391
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:391  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The real registry never reports a value as queued for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: The real registry never reports a value as queued for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:409
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:409  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A key path counts as a policy key when it equals, or lies below, one of Software\Policies, Software\Microsoft\Windows\CurrentVersion\Policies or System\CurrentControlSet\Policies, ignoring case.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A key path counts as a policy key when it equals, or lies below, one of Software\Policies, Software\Microsoft\Windows\CurrentVersion\Policies or System\CurrentControlSet\Policies, ignoring case.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:412
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:412  ·  Screens: ExportReg, Main</div></div></div><div class="row"><div class="main"><span>Clearing a key in the real registry deletes each value directly in the key; subkeys are untouched.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: Clearing a key in the real registry deletes each value directly in the key; subkeys are untouched.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:416
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:416  ·  Screens: ExportReg, ImportReg, Main</div></div><div class="meta">Changes a state</div></div></details><h2>Data structures defined here (0)</h2><p class="empty">This layer defines no data structure for this capability.</p></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

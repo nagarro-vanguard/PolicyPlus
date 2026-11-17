@@ -1,0 +1,154 @@
+{
+  "capability": {
+    "id": "capability-82913637939331863147",
+    "name": "Building and versioning Policy Plus",
+    "purpose": "Stamp each build of the program with the Git commit it was made from, so the About box shows it."
+  },
+  "area": "Building the program",
+  "layers": [
+    {
+      "id": "layer-12755895260081786352",
+      "name": "Build tooling",
+      "purpose": "Scripts a developer runs outside the application to prepare it for compiling.",
+      "evidence": [
+        {
+          "file": "version.bat",
+          "firstLine": 1,
+          "lastLine": 8
+        }
+      ],
+      "role": "runsAsTooling",
+      "group": "batch",
+      "blocks": 1,
+      "sharedBlocks": 0,
+      "actions": [
+        {
+          "id": "block-17189842579464263101",
+          "name": "version.bat",
+          "purpose": "Regenerates PolicyPlus\\Version.vb so the program carries the current Git commit description.",
+          "startedBy": "person",
+          "screen": "",
+          "place": {
+            "file": "version.bat",
+            "firstLine": 1,
+            "lastLine": 8
+          },
+          "path": [
+            {
+              "layer": "layer-12755895260081786352",
+              "depth": 0
+            }
+          ],
+          "rules": [],
+          "context": {
+            "scope": "Action started by a person of Building and versioning Policy Plus: Regenerates PolicyPlus\\Version.vb so the program carries the current Git commit description.",
+            "inside": [],
+            "insideNotShown": 0,
+            "insideLabel": "",
+            "lookFirst": [
+              "Starts at version.bat:1",
+              "version.bat (only this capability)"
+            ],
+            "lookFirstNotShown": 0,
+            "layers": [],
+            "saves": [],
+            "reads": [],
+            "rules": [],
+            "rulesNotShown": 0,
+            "rulesTotal": 0,
+            "unconfirmed": [],
+            "notFollowed": [],
+            "commit": "not recorded: the folder was not a git repository",
+            "text": "Ask: (say what you want done here: verify, test, rewrite or explain)\nScope: Action started by a person of Building and versioning Policy Plus: Regenerates PolicyPlus\\Version.vb so the program carries the current Git commit description.\nWhere to look first:\n- Starts at version.bat:1\n- version.bat (only this capability)\nRules decided here: 0\nUnconfirmed: nothing the analysis could not settle here\nCommit: not recorded: the folder was not a git repository"
+          }
+        }
+      ],
+      "rules": [],
+      "shapes": [],
+      "context": {
+        "scope": "The Build tooling layer of Building and versioning Policy Plus: 1 action and 0 rules.",
+        "inside": [],
+        "insideNotShown": 0,
+        "insideLabel": "",
+        "lookFirst": [
+          "version.bat (only this capability)"
+        ],
+        "lookFirstNotShown": 0,
+        "layers": [],
+        "saves": [],
+        "reads": [],
+        "rules": [],
+        "rulesNotShown": 0,
+        "rulesTotal": 0,
+        "unconfirmed": [],
+        "notFollowed": [],
+        "commit": "not recorded: the folder was not a git repository",
+        "text": "Ask: (say what you want done here: verify, test, rewrite or explain)\nScope: The Build tooling layer of Building and versioning Policy Plus: 1 action and 0 rules.\nWhere to look first:\n- version.bat (only this capability)\nRules decided here: 0\nUnconfirmed: nothing the analysis could not settle here\nCommit: not recorded: the folder was not a git repository"
+      }
+    }
+  ],
+  "screens": [
+    {
+      "name": "",
+      "actions": 1,
+      "controls": [],
+      "layersTouched": [],
+      "rules": [],
+      "context": {
+        "scope": "Actions no screen holds of Building and versioning Policy Plus: 1 action, 0 controls.",
+        "inside": [
+          "Regenerates PolicyPlus\\Version.vb so the program carries the current Git commit description."
+        ],
+        "insideNotShown": 0,
+        "insideLabel": "Its actions",
+        "lookFirst": [
+          "version.bat (only this capability)"
+        ],
+        "lookFirstNotShown": 0,
+        "layers": [],
+        "saves": [],
+        "reads": [],
+        "rules": [],
+        "rulesNotShown": 0,
+        "rulesTotal": 0,
+        "unconfirmed": [],
+        "notFollowed": [],
+        "commit": "not recorded: the folder was not a git repository",
+        "text": "Ask: (say what you want done here: verify, test, rewrite or explain)\nScope: Actions no screen holds of Building and versioning Policy Plus: 1 action, 0 controls.\nIts actions:\n- Regenerates PolicyPlus\\Version.vb so the program carries the current Git commit description.\nWhere to look first:\n- version.bat (only this capability)\nRules decided here: 0\nUnconfirmed: nothing the analysis could not settle here\nCommit: not recorded: the folder was not a git repository"
+      }
+    }
+  ],
+  "concerns": [],
+  "data": [],
+  "gaps": [],
+  "openPoints": [],
+  "totals": {
+    "actions": 1,
+    "rules": 0,
+    "blocks": 1,
+    "rulesOnNoScreen": 0
+  },
+  "context": {
+    "scope": "Capability Building and versioning Policy Plus: Stamp each build of the program with the Git commit it was made from, so the About box shows it.",
+    "inside": [
+      "Actions no screen holds: 1 action",
+      "Layer Build tooling: 1 action, 0 rules"
+    ],
+    "insideNotShown": 0,
+    "insideLabel": "Its screens and layers",
+    "lookFirst": [
+      "version.bat (only this capability)"
+    ],
+    "lookFirstNotShown": 0,
+    "layers": [],
+    "saves": [],
+    "reads": [],
+    "rules": [],
+    "rulesNotShown": 0,
+    "rulesTotal": 0,
+    "unconfirmed": [],
+    "notFollowed": [],
+    "commit": "not recorded: the folder was not a git repository",
+    "text": "Ask: (say what you want done here: verify, test, rewrite or explain)\nScope: Capability Building and versioning Policy Plus: Stamp each build of the program with the Git commit it was made from, so the About box shows it.\nIts screens and layers:\n- Actions no screen holds: 1 action\n- Layer Build tooling: 1 action, 0 rules\nWhere to look first:\n- version.bat (only this capability)\nRules decided here: 0\nUnconfirmed: nothing the analysis could not settle here\nCommit: not recorded: the folder was not a git repository"
+  }
+}

@@ -1,0 +1,269 @@
+{
+ "tier": "entries",
+ "topics": [
+  {
+   "key": "parts:part-38111104373939233299\u0000purpose",
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "aspect": "purpose",
+   "question": "What is it for, and who uses it?",
+   "facts": [
+    {
+     "id": "fact-26199616017668963631",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "purpose",
+     "statement": "Policy Plus reads Windows policy definition files and shows their settings in a searchable tree, then reads or writes the policy values on a computer, a user account or a policy file.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 23,
+          "lastLine": 29
+         },
+         "shows": "Opens the current user, all users or local machine registry areas as policy sources."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/AdmxFile.vb",
+          "firstLine": 18,
+          "lastLine": 18
+         },
+         "shows": "Parses policy definition XML files."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-20566268585521707300",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "purpose",
+     "statement": "A Windows desktop editor for Group Policy administrative-template settings, used by administrators and power users. It works on all Windows editions, including Home, which lack the built-in editor, and on offline user profiles, policy files and the live registry.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "README.md",
+          "firstLine": 1,
+          "lastLine": 12
+         },
+         "shows": "States the goal: Group Policy editing for all Windows editions."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 18,
+          "lastLine": 35
+         },
+         "shows": "Opens the saved policy source or the local policy object at startup."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "The program's manifest (a left-out file) asks it to run with the highest rights the signed-in user has. Access to policy data is decided by Windows, not by the program. When an administrator downloads policy files, the program enables ownership and restore privileges to take control of the destination folder.",
+    "The program has no users or roles of its own; the operating system decides. What it can change depends on the privileges of the person running it: machine policy folders and registry need an administrator. It tests writability and marks sources unmodifiable.",
+    "We go with the program running only on Windows desktops used by administrators, as a single copy started by a person, from a downloaded executable. No installer, service or schedule exists in the code.",
+    "It runs on the user's own Windows machine, as a 32- or 64-bit process on a .NET Framework 4.x runtime built for 4.5.2, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft."
+   ]
+  },
+  {
+   "key": "parts:part-38111104373939233299\u0000who-can-do-what",
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "aspect": "who-can-do-what",
+   "question": "Who can do what, and where is that decided?",
+   "facts": [
+    {
+     "id": "fact-85076331296331959370",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "who-can-do-what",
+     "statement": "The program's manifest (a left-out file) asks it to run with the highest rights the signed-in user has. Access to policy data is decided by Windows, not by the program. When an administrator downloads policy files, the program enables ownership and restore privileges to take control of the destination folder.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 94,
+          "lastLine": 98
+         },
+         "shows": "Takes ownership of destination when running as administrator."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Privilege.vb",
+          "firstLine": 3,
+          "lastLine": 13
+         },
+         "shows": "Enables a named Windows privilege for the process."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-93499364106373511767",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "who-can-do-what",
+     "statement": "The program has no users or roles of its own; the operating system decides. What it can change depends on the privileges of the person running it: machine policy folders and registry need an administrator. It tests writability and marks sources unmodifiable.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 52,
+          "lastLine": 59
+         },
+         "shows": "Tests write access to the registry policy key."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 303,
+          "lastLine": 330
+         },
+         "shows": "Reports sources as modifiable, not saveable or read-only."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 38,
+          "lastLine": 41
+         },
+         "shows": "Checks whether the user is an administrator."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus reads Windows policy definition files and shows their settings in a searchable tree, then reads or writes the policy values on a computer, a user account or a policy file.",
+    "A Windows desktop editor for Group Policy administrative-template settings, used by administrators and power users. It works on all Windows editions, including Home, which lack the built-in editor, and on offline user profiles, policy files and the live registry.",
+    "We go with the program running only on Windows desktops used by administrators, as a single copy started by a person, from a downloaded executable. No installer, service or schedule exists in the code.",
+    "It runs on the user's own Windows machine, as a 32- or 64-bit process on a .NET Framework 4.x runtime built for 4.5.2, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft."
+   ]
+  },
+  {
+   "key": "parts:part-38111104373939233299\u0000runs-where",
+   "subject": {
+    "registry": "parts",
+    "key": "part-38111104373939233299"
+   },
+   "aspect": "runs-where",
+   "question": "Where does it run?",
+   "facts": [
+    {
+     "id": "fact-34973251341927790158",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "runs-where",
+     "statement": "We go with the program running only on Windows desktops used by administrators, as a single copy started by a person, from a downloaded executable. No installer, service or schedule exists in the code.",
+     "basis": {
+      "assumed": {
+       "why": "No file states the intended audience or deployment; the code only shows a Windows executable.",
+       "confirmWith": "decision",
+       "ifWrong": "If it must run on servers, unattended or on other operating systems, parts of the design would need to change.",
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 8,
+          "lastLine": 8
+         },
+         "shows": "Output type is a Windows executable."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PInvoke.vb",
+          "firstLine": 3,
+          "lastLine": 13
+         },
+         "shows": "Relies on Windows-only system calls."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "fact-79358133505481577576",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "runs-where",
+     "statement": "It runs on the user's own Windows machine, as a 32- or 64-bit process on a .NET Framework 4.x runtime built for 4.5.2, editing that machine's registry and policy files. It hosts no service; its only outside call is the optional definitions download from Microsoft.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 8,
+          "lastLine": 14
+         },
+         "shows": "Windows executable targeting .NET Framework 4.5.2."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/App.config",
+          "firstLine": 3,
+          "lastLine": 5
+         },
+         "shows": "Accepts any 4.x runtime, built for 4.5.2."
+        },
+        {
+         "lines": {
+          "file": "README.md",
+          "firstLine": 30,
+          "lastLine": 35
+         },
+         "shows": "Requires .NET Framework 4.5.2 or newer on Windows."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 1,
+          "lastLine": 4
+         },
+         "shows": "Fixed download address at download.microsoft.com and a fixed path inside the package for one Windows 11 release."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "nearby": [
+    "Policy Plus reads Windows policy definition files and shows their settings in a searchable tree, then reads or writes the policy values on a computer, a user account or a policy file.",
+    "A Windows desktop editor for Group Policy administrative-template settings, used by administrators and power users. It works on all Windows editions, including Home, which lack the built-in editor, and on offline user profiles, policy files and the live registry.",
+    "The program's manifest (a left-out file) asks it to run with the highest rights the signed-in user has. Access to policy data is decided by Windows, not by the program. When an administrator downloads policy files, the program enables ownership and restore privileges to take control of the destination folder.",
+    "The program has no users or roles of its own; the operating system decides. What it can change depends on the privileges of the person running it: machine policy folders and registry need an administrator. It tests writability and marks sources unmodifiable."
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1400 @@
+{
+ "preparedFrom": [
+  {
+   "stage": "inventory",
+   "digest": "d80a133dc7ae393084e856c58b0bd9b86968d46a"
+  },
+  {
+   "stage": "how-it-runs",
+   "digest": "7c525115cca79955cd42b04a5cff1cc8f5006c04"
+  }
+ ],
+ "parts": [
+  {
+   "id": "part-38111104373939233299",
+   "name": "Policy Plus desktop application",
+   "kind": "program",
+   "folders": [
+    "PolicyPlus"
+   ]
+  }
+ ],
+ "technologies": [
+  {
+   "id": "technology-01461407206042067883",
+   "kind": "language",
+   "name": "Visual Basic .NET"
+  },
+  {
+   "id": "technology-69435565827697322145",
+   "kind": "notCode",
+   "name": "MSBuild and Visual Studio project files"
+  },
+  {
+   "id": "technology-43296856028316749167",
+   "kind": "language",
+   "name": "Windows batch script"
+  },
+  {
+   "id": "technology-77430797706235549308",
+   "kind": "notCode",
+   "name": "Markdown documentation",
+   "purpose": "Written documentation: README, INSTALL, COMPILE, ATTRIBUTION and the two Docs files (Components.md maps each .vb file to its component; Lexicon.md defines the program's terms). They describe the program and its build and hold no behaviour."
+  },
+  {
+   "id": "technology-94649561279123884956",
+   "kind": "notCode",
+   "name": "Git ignore settings"
+  },
+  {
+   "id": "technology-84822039951309122274",
+   "kind": "platform",
+   "name": ".NET Framework",
+   "purpose": "The Windows runtime the application is compiled for and runs inside."
+  },
+  {
+   "id": "technology-70387911586559782494",
+   "kind": "framework",
+   "name": "Windows Forms",
+   "purpose": "Builds the application's windows, dialogs and controls; each screen is a form whose events drive the work."
+  },
+  {
+   "id": "technology-46802979159136959237",
+   "kind": "platform",
+   "name": "Windows registry and Win32 APIs",
+   "purpose": "Where policy settings are stored and applied: the registry, loaded user hives, privileges and policy refresh calls."
+  },
+  {
+   "id": "technology-07011706629345673005",
+   "kind": "platform",
+   "name": "Windows Installer (msiexec) and .NET WebClient",
+   "purpose": "The ADMX download feature fetches an MSI from download.microsoft.com with WebClient and unpacks it with msiexec to extract policy files."
+  }
+ ],
+ "facts": [
+  {
+   "id": "fact-27363154755698320097",
+   "about": "Windows Forms",
+   "question": "What is the syntax of each contract between layers?",
+   "statement": "There is no network contract. Layers talk through direct method calls, and the program's outside formats are file layouts: ADMX and ADML policy definitions as XML, binary POL policy files, REG scripts, CMTX comment files and SPOL text files.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/AdmxFile.vb",
+      "firstLine": 115,
+      "lastLine": 141
+     },
+     "shows": "Policy definitions are read from XML attributes by name."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicySource.vb",
+      "firstLine": 14,
+      "lastLine": 20
+     },
+     "shows": "A class reads and writes the binary policy file format."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/RegFile.vb",
+      "firstLine": 117,
+      "lastLine": 117
+     },
+     "shows": "Registry scripts are written by a class."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/SpolFile.vb",
+      "firstLine": 1,
+      "lastLine": 1
+     },
+     "shows": "A class handles the text policy-state format."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/CmtxFile.vb",
+      "firstLine": 78,
+      "lastLine": 81
+     },
+     "shows": "A class saves comment files."
+    }
+   ]
+  },
+  {
+   "id": "fact-46356071957278050630",
+   "about": "Windows Forms",
+   "question": "Where is each shape of data defined, in every layer?",
+   "statement": "Shapes are plain classes in code, one set per format. Raw ADMX shapes, compiled policy, category and product classes, and screen-element classes for ADML presentations each have a file. Edited values live in POL or registry sources. There is no database or schema.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/AdmxStructures.vb",
+      "firstLine": 49,
+      "lastLine": 51
+     },
+     "shows": "Raw policy definitions hold key and value names."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/CompiledStructures.vb",
+      "firstLine": 2,
+      "lastLine": 29
+     },
+     "shows": "Compiled category, product, support and policy classes."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PresentationStructures.vb",
+      "firstLine": 2,
+      "lastLine": 48
+     },
+     "shows": "Screen element shapes mirror the ADML presentation tags."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicySource.vb",
+      "firstLine": 14,
+      "lastLine": 14
+     },
+     "shows": "POL file shape for stored policy values."
+    }
+   ]
+  },
+  {
+   "id": "fact-12917922260733230390",
+   "about": "Windows Forms",
+   "question": "Which code with no source in scope does the system call for its own behaviour, and what does it do?",
+   "statement": "The program calls Windows itself without source: registry and policy-refresh functions, token privilege and hive-loading functions, and the msiexec tool that unpacks the downloaded ADMX package. .NET's web client does the download.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PInvoke.vb",
+      "firstLine": 3,
+      "lastLine": 12
+     },
+     "shows": "Windows system library functions declared for direct calls."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 84,
+      "lastLine": 90
+     },
+     "shows": "A web client downloads the package and msiexec unpacks it."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 58,
+      "lastLine": 63
+     },
+     "shows": "Only built-in framework assemblies are referenced."
+    }
+   ]
+  },
+  {
+   "id": "fact-34303378494677196993",
+   "about": "Windows Forms",
+   "question": "How does code brought in or chosen at build time change what code exists?",
+   "statement": "Build choices are fixed in the project file: Visual Basic compiled for .NET Framework 4.5.2 as a Windows program, with debug or release symbols chosen per configuration. No macros or conditional code are used.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 5,
+      "lastLine": 24
+     },
+     "shows": "Project type, startup object and target framework are set at build time."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 31,
+      "lastLine": 36
+     },
+     "shows": "Release configuration turns debug off and optimisation on."
+    }
+   ]
+  },
+  {
+   "id": "fact-42183545128665688200",
+   "about": "Windows Forms",
+   "question": "How are what a person sees and the code that reacts to it tied together?",
+   "statement": "Each screen is a form split across two files: a generated half that declares and positions controls, and a hand-written half whose handlers are tied to control events by name. A resource file per form holds layout details.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.Designer.vb",
+      "firstLine": 706,
+      "lastLine": 708
+     },
+     "shows": "Controls are declared as event-capable fields in the generated half."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 480,
+      "lastLine": 491
+     },
+     "shows": "Hand-written handlers name the control event they respond to."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 420,
+      "lastLine": 424
+     },
+     "shows": "Each form's resource file is embedded and tied to its form."
+    }
+   ]
+  },
+  {
+   "id": "fact-64261877740921211106",
+   "about": "Windows Forms",
+   "question": "Where are navigation and permissions declared, in code or in data?",
+   "statement": "Navigation is declared in code: the main form's menu strip and dialog buttons open other forms by direct calls. Permissions are not in data; code checks for administrator before mounting registry files or securing the ADMX folder.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.Designer.vb",
+      "firstLine": 31,
+      "lastLine": 33
+     },
+     "shows": "The menu strip is built in generated code."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 510,
+      "lastLine": 515
+     },
+     "shows": "A menu click handler opens a dialog."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/OpenUserRegistry.vb",
+      "firstLine": 8,
+      "lastLine": 8
+     },
+     "shows": "Administrator membership is tested in code."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 38,
+      "lastLine": 40
+     },
+     "shows": "Administrator membership is tested before taking ownership."
+    }
+   ]
+  },
+  {
+   "id": "fact-55892587157649999552",
+   "about": "Windows Forms",
+   "question": "What does each user's state hold between requests?",
+   "statement": "State lives in the running window and in the current user's registry. The main form holds loaded definitions, the open user and computer policy sources, comments and view choices. Between runs, a registry key keeps last sources, folder, language and two first-run flags.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 5,
+      "lastLine": 16
+     },
+     "shows": "The main form's fields hold the session's loaded data."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 22,
+      "lastLine": 37
+     },
+     "shows": "Last-used sources are read from, and defaults written to, stored settings."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/ConfigurationStorage.vb",
+      "firstLine": 4,
+      "lastLine": 18
+     },
+     "shows": "Settings are read and written in the current user's registry."
+    }
+   ]
+  },
+  {
+   "id": "fact-35345121546897562358",
+   "about": "Windows Forms",
+   "question": "Which named pieces of code run when invoked, and which only group or declare?",
+   "statement": "Code runs from three places: startup handlers on the main form (load and shown, which restore settings, open the last sources and may offer the ADMX download without any person acting), event handlers on forms, and background tasks those handlers start. Beyond that it is procedures in plain classes and modules and calls into Windows; designer files only declare controls.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 18,
+      "lastLine": 37
+     },
+     "shows": "The main form's load handler runs at launch: it sets protocols, reads and writes the registry and opens the last sources."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 46,
+      "lastLine": 53
+     },
+     "shows": "The shown handler runs at launch and may prompt to download ADMX files."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 76,
+      "lastLine": 90
+     },
+     "shows": "A click handler starts a background task for the download, msiexec and file moves."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/FindResults.vb",
+      "firstLine": 95,
+      "lastLine": 97
+     },
+     "shows": "A shown handler starts the search on a background task."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.Designer.vb",
+      "firstLine": 1,
+      "lastLine": 24
+     },
+     "shows": "The generated designer half only declares controls and builds them."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PInvoke.vb",
+      "firstLine": 2,
+      "lastLine": 13
+     },
+     "shows": "Declarations that expose Windows functions to callable code."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyProcessing.vb",
+      "firstLine": 1,
+      "lastLine": 2
+     },
+     "shows": "Shared functions that do the policy work when called from forms."
+    }
+   ]
+  },
+  {
+   "id": "fact-28682926926190727211",
+   "about": ".NET Framework",
+   "question": "Which named pieces of code run when invoked, and which only group or declare?",
+   "statement": "Code is grouped into classes and modules; the runnable pieces are event-handler procedures on forms and ordinary methods. Classes and structures only declare data and group members, and run only when a handler or caller uses them.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 18,
+      "lastLine": 18
+     },
+     "shows": "A form load handler is a block bound to an event"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/AdmxStructures.vb",
+      "firstLine": 2,
+      "lastLine": 10
+     },
+     "shows": "Plain data classes and enums only declare shapes"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/SystemInfo.vb",
+      "firstLine": 1,
+      "lastLine": 1
+     },
+     "shows": "A module groups shared procedures"
+    }
+   ]
+  },
+  {
+   "id": "fact-55562118965042149015",
+   "about": ".NET Framework",
+   "question": "What is the syntax of each contract between layers?",
+   "statement": "There are no routes, operations or messages between layers; this is a single-process desktop program. The only contracts are method calls, the Windows registry paths it edits, and Win32 function declarations.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PInvoke.vb",
+      "firstLine": 3,
+      "lastLine": 13
+     },
+     "shows": "Win32 functions are declared by library and signature"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 11,
+      "lastLine": 11
+     },
+     "shows": "Program is one WinExe output"
+    }
+   ]
+  },
+  {
+   "id": "fact-21819217567454840548",
+   "about": ".NET Framework",
+   "question": "How are what a person sees and the code that reacts to it tied together?",
+   "statement": "Each window is a partial class split in two: a designer file lays out the controls, and a code file holds handlers tied to control events by name. Layout text is kept in a resource file beside each form.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.Designer.vb",
+      "firstLine": 2,
+      "lastLine": 2
+     },
+     "shows": "Designer half declares the Main form"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 480,
+      "lastLine": 507
+     },
+     "shows": "Handlers attach to controls through Handles clauses"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 326,
+      "lastLine": 328
+     },
+     "shows": "Each form's resource file is embedded"
+    }
+   ]
+  },
+  {
+   "id": "fact-48835083324999731847",
+   "about": ".NET Framework",
+   "question": "Where is each shape of data defined, in every layer?",
+   "statement": "Data lives as plain in-memory classes filled by parsing the ADMX, ADML and comment files and the policy files; there is no database. Each dialog shows and edits its values in its own form controls.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/AdmxFile.vb",
+      "firstLine": 14,
+      "lastLine": 14
+     },
+     "shows": "ADMX file parsed by a Load function"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/AdmlFile.vb",
+      "firstLine": 11,
+      "lastLine": 11
+     },
+     "shows": "ADML file parsed by a Load function"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/CmtxFile.vb",
+      "firstLine": 7,
+      "lastLine": 7
+     },
+     "shows": "Comment file parsed by a Load function"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/AdmxStructures.vb",
+      "firstLine": 2,
+      "lastLine": 55
+     },
+     "shows": "Raw definition classes"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/CompiledStructures.vb",
+      "firstLine": 2,
+      "lastLine": 29
+     },
+     "shows": "Merged policy, category and product classes"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyStructures.vb",
+      "firstLine": 2,
+      "lastLine": 17
+     },
+     "shows": "Registry value and list classes"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/EditSetting.vb",
+      "firstLine": 19,
+      "lastLine": 21
+     },
+     "shows": "A dialog fills its own controls from the setting"
+    }
+   ]
+  },
+  {
+   "id": "fact-99632587527307990724",
+   "about": ".NET Framework",
+   "question": "Which code with no source in scope does the system call for its own behaviour, and what does it do?",
+   "statement": "The program relies on Windows-only native calls for policy refresh, registry hive load and unload, privilege adjustment and change broadcast, plus one external program, the Windows installer tool, to unpack the download. It runs only on Windows.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PInvoke.vb",
+      "firstLine": 3,
+      "lastLine": 13
+     },
+     "shows": "Declares the native Windows functions called"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyLoader.vb",
+      "firstLine": 131,
+      "lastLine": 131
+     },
+     "shows": "Broadcasts a settings-changed message"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 88,
+      "lastLine": 90
+     },
+     "shows": "Starts the installer tool"
+    }
+   ]
+  },
+  {
+   "id": "fact-42595514144781188630",
+   "about": ".NET Framework",
+   "question": "How does code brought in or chosen at build time change what code exists?",
+   "statement": "The project compiles every listed source and form resource into one executable, with only Debug and Release settings. A batch step writes the git version into a source file that is compiled in.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 18,
+      "lastLine": 18
+     },
+     "shows": "Debug settings group"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 30,
+      "lastLine": 30
+     },
+     "shows": "Release settings group"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 322,
+      "lastLine": 322
+     },
+     "shows": "Generated version file is compiled in"
+    },
+    {
+     "lines": {
+      "file": "version.bat",
+      "firstLine": 1,
+      "lastLine": 8
+     },
+     "shows": "Script writes the git version into that file"
+    }
+   ]
+  },
+  {
+   "id": "fact-50067563093449208907",
+   "about": ".NET Framework",
+   "question": "Where are navigation and permissions declared, in code or in data?",
+   "statement": "Navigation is in code: menus and buttons open dialogs. Permission is the Windows user's rights, with administrator checks in code that unlock hive mounting and file-security changes.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 9,
+      "lastLine": 9
+     },
+     "shows": "Startup object is the application class"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/OpenUserRegistry.vb",
+      "firstLine": 8,
+      "lastLine": 8
+     },
+     "shows": "Hive mounting depends on an administrator check"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 39,
+      "lastLine": 40
+     },
+     "shows": "Administrator membership checked in code"
+    }
+   ]
+  },
+  {
+   "id": "fact-17010206963848736479",
+   "about": ".NET Framework",
+   "question": "What does each user's state hold between requests?",
+   "statement": "State is held in memory for one session: loaded policy sources, the ADMX workspace and selections. Choices are kept in the per-user registry key. On start, the main window restores them, and falls back to local Group Policy sources with a warning if they fail.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 8,
+      "lastLine": 8
+     },
+     "shows": "Policy loaders held in form fields"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 18,
+      "lastLine": 50
+     },
+     "shows": "Start sequence: open settings, restore ADMX folder and sources, fall back to local policy"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/ConfigurationStorage.vb",
+      "firstLine": 3,
+      "lastLine": 19
+     },
+     "shows": "Values read and written as registry values"
+    }
+   ]
+  },
+  {
+   "id": "fact-22747871890822912391",
+   "about": "Windows registry and Win32 APIs",
+   "question": "Which named pieces of code run when invoked, and which only group or declare?",
+   "statement": "Win32 calls are declared as a group of external function signatures that run nothing themselves; each runs only when a policy-loading, privilege or system-info routine calls it. Registry access goes through .NET registry classes, not declarations.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PInvoke.vb",
+      "firstLine": 1,
+      "lastLine": 13
+     },
+     "shows": "One class only declares native functions from advapi32, userenv, user32 and kernel32"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Privilege.vb",
+      "firstLine": 2,
+      "lastLine": 15
+     },
+     "shows": "A routine that calls those declarations to enable a privilege"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyLoader.vb",
+      "firstLine": 49,
+      "lastLine": 116
+     },
+     "shows": "Opening and closing a policy source calls the hive load and unload functions"
+    }
+   ]
+  },
+  {
+   "id": "fact-57036440155052917681",
+   "about": "Windows registry and Win32 APIs",
+   "question": "What does each user's state hold between requests?",
+   "statement": "Per-user state lives in the current user's registry under Software\\Policy Plus: last policy source types and paths, ADMX folder, language, and acknowledgement flags. It is read at start and written when sources change; no session exists. Failure to create the key silently falls back to defaults.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/ConfigurationStorage.vb",
+      "firstLine": 1,
+      "lastLine": 20
+     },
+     "shows": "Settings class wraps a registry key and ignores creation failure"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 22,
+      "lastLine": 28
+     },
+     "shows": "Key Software\\Policy Plus opened and last sources read"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 630,
+      "lastLine": 633
+     },
+     "shows": "Source types and data saved back"
+    }
+   ]
+  },
+  {
+   "id": "fact-03403923608239464359",
+   "about": "Windows registry and Win32 APIs",
+   "question": "Which code with no source in scope does the system call for its own behaviour, and what does it do?",
+   "statement": "The program calls Windows itself for its core behaviour: advapi32 loads and unloads a user registry hive and adjusts process privileges; userenv refreshes Group Policy; user32 broadcasts a setting-change message and hides a scrollbar; kernel32 reads the Windows edition. Edition decides whether Windows applies policy or the program writes the registry itself.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PInvoke.vb",
+      "firstLine": 3,
+      "lastLine": 13
+     },
+     "shows": "All native functions called, by DLL"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/SystemInfo.vb",
+      "firstLine": 3,
+      "lastLine": 11
+     },
+     "shows": "Edition code is looked up in a list of editions having Group Policy"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyLoader.vb",
+      "firstLine": 125,
+      "lastLine": 133
+     },
+     "shows": "Policy refresh is called, or registry diff written and change broadcast"
+    }
+   ]
+  },
+  {
+   "id": "fact-38355860591134339847",
+   "about": "Windows registry and Win32 APIs",
+   "question": "Where are navigation and permissions declared, in code or in data?",
+   "statement": "Permissions are not declared in data or code by the system: the executable manifest asks Windows for the highest rights the user holds, and code then turns on backup, restore and take-ownership privileges when needed. Other checks are write probes against the real target.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 55,
+      "lastLine": 55
+     },
+     "shows": "Project embeds an application manifest, which sets the execution level to highest available"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Privilege.vb",
+      "firstLine": 2,
+      "lastLine": 15
+     },
+     "shows": "Privilege is enabled by adjusting the process token"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyLoader.vb",
+      "firstLine": 54,
+      "lastLine": 60
+     },
+     "shows": "Writability is tested by writing and deleting a probe value"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 38,
+      "lastLine": 41
+     },
+     "shows": "Administrator role is checked from the Windows identity"
+    }
+   ]
+  },
+  {
+   "id": "fact-46965310311805682175",
+   "about": "Windows registry and Win32 APIs",
+   "question": "How are what a person sees and the code that reacts to it tied together?",
+   "statement": "Three screen-level uses of Windows APIs exist: the main window hides its horizontal scrollbar through a user32 call, the main window's load asks kernel32 (via the edition check) whether Group Policy exists, and the ADMX download dialog enables token privileges through advapi32. Everything else reaches the registry only indirectly, by asking a policy loader to open, save or close a source.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 683,
+      "lastLine": 683
+     },
+     "shows": "Main window calls ShowScrollBar on the setting info panel"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 50,
+      "lastLine": 50
+     },
+     "shows": "Main window load calls HasGroupPolicyInfrastructure"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/SystemInfo.vb",
+      "firstLine": 3,
+      "lastLine": 5
+     },
+     "shows": "That check reads the Windows edition through kernel32"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 97,
+      "lastLine": 98
+     },
+     "shows": "Download dialog enables take-ownership and restore privileges"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/OpenPol.vb",
+      "firstLine": 80,
+      "lastLine": 102
+     },
+     "shows": "Dialog builds policy loaders for registry, file, user GPO and hive choices"
+    }
+   ]
+  },
+  {
+   "id": "fact-02245569291244927874",
+   "about": "Windows registry and Win32 APIs",
+   "question": "What is the syntax of each contract between layers?",
+   "statement": "The contract with Windows is by name: native functions are named with their DLL (for example RegLoadKeyW in advapi32), and registry locations are text paths such as Software\\Policies under the machine or user root. Roots accepted by text are HKCU, HKU and HKLM, short or long form. Three lowercase branches (software\\policies, software\\microsoft\\windows\\currentversion\\policies, system\\currentcontrolset\\policies) are fixed in code, but only to scope which keys a policy-file difference tracks; other registry paths are still readable and writable.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PInvoke.vb",
+      "firstLine": 4,
+      "lastLine": 5
+     },
+     "shows": "Hive load and unload declared with DLL name and wide-string arguments"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyLoader.vb",
+      "firstLine": 21,
+      "lastLine": 32
+     },
+     "shows": "Typed registry path is split at the first backslash and its root name matched"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicySource.vb",
+      "firstLine": 428,
+      "lastLine": 433
+     },
+     "shows": "PolicyKeys lists the three branches, which only limit what ApplyDifference tracks"
+    }
+   ]
+  },
+  {
+   "id": "fact-90774655635137346622",
+   "about": "Windows registry and Win32 APIs",
+   "question": "Where is each shape of data defined, in every layer?",
+   "statement": "Registry data is shaped in code: policy values are typed numeric, string, multi-string or binary and passed through one policy-source interface, with registry, policy file and hive-file implementations. The registry implementation converts unsigned 32/64-bit numbers to the registry's signed form on write and back on read; native structs are defined for token privileges.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicySource.vb",
+      "firstLine": 3,
+      "lastLine": 13
+     },
+     "shows": "Single interface for reading and writing policy values"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicySource.vb",
+      "firstLine": 374,
+      "lastLine": 379
+     },
+     "shows": "RegistryPolicyProxy.SetValue reinterprets unsigned numbers as signed before writing"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicySource.vb",
+      "firstLine": 391,
+      "lastLine": 398
+     },
+     "shows": "GetValue reinterprets signed numbers back to unsigned"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PInvoke.vb",
+      "firstLine": 15,
+      "lastLine": 23
+     },
+     "shows": "Two native structures for privilege adjustment"
+    }
+   ]
+  },
+  {
+   "id": "fact-40643762409592867348",
+   "about": "Windows registry and Win32 APIs",
+   "question": "How does code brought in or chosen at build time change what code exists?",
+   "statement": "Nothing in the project changes which Windows API code exists: all native declarations are compiled unconditionally in every build. The only conditional compilation is the generated _MyType check in the settings designer; no #If or #Const touches registry or Win32 code, and the project defines no custom constants. Debug and Release differ only in debug, trace and optimisation flags, and the manifest is embedded in all builds.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 18,
+      "lastLine": 36
+     },
+     "shows": "Debug and Release set only debug, trace, optimisation and output flags, no custom constants"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 55,
+      "lastLine": 55
+     },
+     "shows": "Application manifest is set unconditionally"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PInvoke.vb",
+      "firstLine": 3,
+      "lastLine": 13
+     },
+     "shows": "Declarations carry no conditional compilation"
+    }
+   ]
+  },
+  {
+   "id": "fact-68702689298280609774",
+   "about": "Windows Installer (msiexec) and .NET WebClient",
+   "question": "Which named pieces of code run when invoked, and which only group or declare?",
+   "statement": "Neither technology holds our code. The download runs as one button-click routine on a background task, calling a WebClient download and starting the msiexec program; the form class only groups those handlers.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 33,
+      "lastLine": 34
+     },
+     "shows": "Start click handler starts the work"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 76,
+      "lastLine": 76
+     },
+     "shows": "work runs on a background task"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 84,
+      "lastLine": 90
+     },
+     "shows": "WebClient downloads; msiexec started as a child process"
+    }
+   ]
+  },
+  {
+   "id": "fact-42799850057922493976",
+   "about": "Windows Installer (msiexec) and .NET WebClient",
+   "question": "How does code brought in or chosen at build time change what code exists?",
+   "statement": "Not applicable: nothing here is chosen or included at build time. The download address and the folder inside the package are fixed constants in the form's code.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 3,
+      "lastLine": 4
+     },
+     "shows": "Package URL and inner folder are compile-time constants"
+    }
+   ]
+  },
+  {
+   "id": "fact-80920989776505407747",
+   "about": "Windows Installer (msiexec) and .NET WebClient",
+   "question": "What is the syntax of each contract between layers?",
+   "statement": "The contract with the installer is a command line: administrative-install mode, quiet, with a target folder. The contract with the web is one fixed HTTPS address for a Windows 11 26H2 package; unpacked files are expected under one fixed folder name.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 3,
+      "lastLine": 4
+     },
+     "shows": "Fixed package URL and expected folder inside the package"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 90,
+      "lastLine": 90
+     },
+     "shows": "msiexec /a /quiet /qn TARGETDIR command line"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 103,
+      "lastLine": 103
+     },
+     "shows": "Files read from that fixed folder"
+    }
+   ]
+  },
+  {
+   "id": "fact-97861036695942150375",
+   "about": "Windows Installer (msiexec) and .NET WebClient",
+   "question": "How are what a person sees and the code that reacts to it tied together?",
+   "statement": "Not applicable to these technologies; the download screen is Windows Forms. Its buttons are wired to code by handler declarations, and progress text is pushed to the screen from the background task.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 7,
+      "lastLine": 7
+     },
+     "shows": "Handler bound by Handles clause"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 34,
+      "lastLine": 34
+     },
+     "shows": "Progress updated through Invoke"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 758,
+      "lastLine": 762
+     },
+     "shows": "Main window opens the dialog and loads the result"
+    }
+   ]
+  },
+  {
+   "id": "fact-57994148422732672704",
+   "about": "Windows Installer (msiexec) and .NET WebClient",
+   "question": "Where are navigation and permissions declared, in code or in data?",
+   "statement": "Neither technology declares navigation or permissions. The code checks in its own logic whether the user is an administrator; only then it takes ownership of the destination and resets file permissions. Non-administrators still download and move files.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 38,
+      "lastLine": 41
+     },
+     "shows": "Administrator role checked in code"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 55,
+      "lastLine": 63
+     },
+     "shows": "Permission changes only when administrator"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 94,
+      "lastLine": 100
+     },
+     "shows": "Ownership privileges enabled only when administrator"
+    }
+   ]
+  },
+  {
+   "id": "fact-93339387952476693537",
+   "about": "Windows Installer (msiexec) and .NET WebClient",
+   "question": "What does each user's state hold between requests?",
+   "statement": "Neither technology keeps user state. The only state is a busy flag on the dialog, a scratch folder under the user's local app data, and the chosen destination folder handed back to the main window.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 5,
+      "lastLine": 6
+     },
+     "shows": "Busy flag and result folder fields"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 79,
+      "lastLine": 80
+     },
+     "shows": "Scratch folder in local app data"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 116,
+      "lastLine": 121
+     },
+     "shows": "Result folder returned on success"
+    }
+   ]
+  },
+  {
+   "id": "fact-97248943856184979760",
+   "about": "Windows Installer (msiexec) and .NET WebClient",
+   "question": "Which code with no source in scope does the system call for its own behaviour, and what does it do?",
+   "statement": "Two pieces without source are called. The .NET WebClient fetches the package over the web. The Windows msiexec program unpacks the MSI without installing it, writing the policy files to a scratch folder.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 84,
+      "lastLine": 86
+     },
+     "shows": "WebClient download"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 90,
+      "lastLine": 92
+     },
+     "shows": "msiexec run; non-zero exit treated as failure"
+    }
+   ]
+  },
+  {
+   "id": "fact-51389369385174395453",
+   "about": "Windows Installer (msiexec) and .NET WebClient",
+   "question": "Where is each shape of data defined, in every layer?",
+   "statement": "The data is a Microsoft installer package, defined by Microsoft. It is saved to a scratch file and unpacked to a folder tree. Only the definition files at the top, the language folder matching the current culture and the en-US fallback are moved; other languages are discarded.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 83,
+      "lastLine": 83
+     },
+     "shows": "Package saved to scratch file"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 89,
+      "lastLine": 89
+     },
+     "shows": "Unpack folder"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 103,
+      "lastLine": 111
+     },
+     "shows": "Top-level files, current-culture folder and en-US moved"
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/DownloadAdmx.vb",
+      "firstLine": 114,
+      "lastLine": 114
+     },
+     "shows": "Whole scratch folder deleted, leaving other languages out"
+    }
+   ]
+  },
+  {
+   "id": "fact-73949570452935185355",
+   "about": "Policy Plus desktop application",
+   "question": "How does work enter it, and who or what starts that work?",
+   "statement": "Work begins only when a person uses the window: menu choices, double-clicking a policy, and dialog buttons raise form events. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX download.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 18,
+      "lastLine": 35
+     },
+     "shows": "Load event runs startup work; later work comes from menu events."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 46,
+      "lastLine": 57
+     },
+     "shows": "First-run prompt offers the ADMX download."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 602,
+      "lastLine": 609
+     },
+     "shows": "Menu click handler opens a dialog and reloads."
+    }
+   ]
+  },
+  {
+   "id": "fact-83357811608669618801",
+   "about": "Policy Plus desktop application",
+   "question": "Where do settings and secrets come from, and which live outside the code?",
+   "statement": "The program keeps its few preferences (last definitions folder, last policy sources, first-run flag) in the current user's registry under a Policy Plus key. It holds no secrets and no configuration file beyond the runtime version pin.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 21,
+      "lastLine": 28
+     },
+     "shows": "Reads saved sources from the user's registry key."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/ConfigurationStorage.vb",
+      "firstLine": 4,
+      "lastLine": 10
+     },
+     "shows": "Opens the settings key under the current-user registry."
+    }
+   ]
+  },
+  {
+   "id": "fact-61070311063657510232",
+   "about": "Policy Plus desktop application",
+   "question": "How is one piece of work carried out, from arrival to response?",
+   "statement": "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it. Only writable sources are saved. Local policy writes the file, then refreshes Windows policy or copies the difference into the registry. Per-user policy refreshes. A policy file is only written to disk; live registry is already applied; an offline user hive applies on close.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 615,
+      "lastLine": 637
+     },
+     "shows": "Save writes comments and writable sources, stores choices, shows a message."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyLoader.vb",
+      "firstLine": 119,
+      "lastLine": 133
+     },
+     "shows": "Local policy save writes file, refreshes or applies difference."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyLoader.vb",
+      "firstLine": 134,
+      "lastLine": 142
+     },
+     "shows": "Registry, offline hive, null and policy-file sources do different things."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyLoader.vb",
+      "firstLine": 143,
+      "lastLine": 147
+     },
+     "shows": "Per-user policy save writes file and refreshes policy."
+    }
+   ]
+  },
+  {
+   "id": "fact-12592040259199448626",
+   "about": "Policy Plus desktop application",
+   "question": "What runs around all incoming work, such as checks every request passes?",
+   "statement": "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch. When policy sources open and when saving, the program checks and reports whether each source is writable.",
+   "basis": "observed",
+   "evidence": [
+    {
+     "lines": {
+      "file": "PolicyPlus/PolicyPlus.vbproj",
+      "firstLine": 55,
+      "lastLine": 55
+     },
+     "shows": "Application manifest is attached to the project."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 320,
+      "lastLine": 330
+     },
+     "shows": "Reports each source's writability after opening."
+    },
+    {
+     "lines": {
+      "file": "PolicyPlus/Main.vb",
+      "firstLine": 626,
+      "lastLine": 629
+     },
+     "shows": "Save checks writability of each source."
+    }
+   ]
+  },
+  {
+   "id": "fact-55794682977306181026",
+   "about": "the system",
+   "question": "How does work enter it, and who or what starts that work?",
+   "statement": "Work begins only when a person uses the window: menu choices, double-clicking a policy and dialog buttons. There are no command-line arguments, network listeners or other programs calling in. A first-run prompt may also start the ADMX definitions download.",
+   "basis": "concluded",
+   "evidence": []
+  },
+  {
+   "id": "fact-32602272405376291526",
+   "about": "the system",
+   "question": "Where do settings and secrets come from, and which live outside the code?",
+   "statement": "The program keeps its few preferences (last definitions folder, last policy sources, first-run flag) in the current user's registry under a Policy Plus key. It holds no secrets and no configuration file beyond the runtime version pin.",
+   "basis": "concluded",
+   "evidence": []
+  },
+  {
+   "id": "fact-21116940008343883977",
+   "about": "the system",
+   "question": "How is one piece of work carried out, from arrival to response?",
+   "statement": "One edit: the person opens a policy, the dialog changes an in-memory copy, then File | Save writes it, plus the comments file, and remembers the chosen sources in the settings key. Only writable sources are saved. Local policy is written to file, then Windows policy is refreshed where Group Policy exists; on Windows Home the difference is copied into the registry and a setting-change message broadcast. Another user's policy folder is written and refreshed. A policy file is only written; the live registry is already applied; an offline user hive applies on close.",
+   "basis": "concluded",
+   "evidence": []
+  },
+  {
+   "id": "fact-72555790124599327409",
+   "about": "the system",
+   "question": "What runs around all incoming work, such as checks every request passes?",
+   "statement": "Nothing runs around every action: no sign-in, request pipeline or interceptor. The program is attached to an application manifest that Windows reads at launch; the facts beneath leave its content unstated. When policy sources open and when saving, the program checks and reports whether each source is writable.",
+   "basis": "concluded",
+   "evidence": []
+  }
+ ]
+}

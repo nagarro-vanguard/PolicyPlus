@@ -1,0 +1,5 @@
+{"id":"link-21183219436982032946","kind":"reads","lines":{"file":"PolicyPlus/DetailPolicy.vb","firstLine":7,"lastLine":18},"to":{"file":"PolicyPlus/AdmxStructures.vb","line":40},"fieldsUsed":["DefinedIn","DisplayCode","ExplainCode","PresentationID","Section"]}
+{"kind":"reads","lines":{"file":"PolicyPlus/DetailProduct.vb","firstLine":11,"lastLine":21},"to":{"file":"PolicyPlus/AdmxStructures.vb","line":2},"fieldsUsed":["DefinedIn","DisplayCode","Type","Version"]}
+{"kind":"reads","lines":{"file":"PolicyPlus/DetailProduct.vb","firstLine":32,"lastLine":32},"to":{"file":"PolicyPlus/AdmxStructures.vb","line":2},"fieldsUsed":["Version"]}
+{"kind":"reads","lines":{"file":"PolicyPlus/DetailSupport.vb","firstLine":9,"lastLine":11},"to":{"file":"PolicyPlus/AdmxStructures.vb","line":15},"fieldsUsed":["DefinedIn","DisplayCode","Logic"]}
+{"kind":"reads","lines":{"file":"PolicyPlus/DetailSupport.vb","firstLine":27,"lastLine":32},"to":{"file":"PolicyPlus/AdmxStructures.vb","line":27},"fieldsUsed":["IsRange","MinVersion","MaxVersion","ProductID"]}

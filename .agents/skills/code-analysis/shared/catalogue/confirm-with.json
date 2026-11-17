@@ -1,0 +1,20 @@
+{
+    "version": 1,
+    "confirmWith": [
+        {
+            "id": "material",
+            "words": "a document",
+            "means": "a document, export or configuration the team holds"
+        },
+        {
+            "id": "runningSystem",
+            "words": "the running system",
+            "means": "seeing the system run, or its live settings"
+        },
+        {
+            "id": "decision",
+            "words": "a decision",
+            "means": "a choice only the team can make"
+        }
+    ]
+}

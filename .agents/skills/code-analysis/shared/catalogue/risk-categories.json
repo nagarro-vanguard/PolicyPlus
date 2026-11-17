@@ -1,0 +1,57 @@
+{
+    "version": 1,
+    "riskCategories": [
+        {
+            "id": "access-control",
+            "words": "Someone can read or change what they should not"
+        },
+        {
+            "id": "input-handling",
+            "words": "Input from outside is used without checks, so it can change what the code does"
+        },
+        {
+            "id": "secrets",
+            "words": "Passwords, keys or tokens are kept where others can read them"
+        },
+        {
+            "id": "cryptography",
+            "words": "Data is protected by weak or fixed encryption"
+        },
+        {
+            "id": "personal-data",
+            "words": "Personal or confidential data is exposed or kept longer than needed"
+        },
+        {
+            "id": "unsupported-technology",
+            "words": "A technology is out of support or no longer receives fixes"
+        },
+        {
+            "id": "data-integrity",
+            "words": "Data can end up wrong, lost or inconsistent"
+        },
+        {
+            "id": "failure-handling",
+            "words": "Failures are hidden, lost or not retried"
+        },
+        {
+            "id": "release-and-operations",
+            "words": "Releasing or running the system depends on manual or missing steps"
+        },
+        {
+            "id": "duplicated-definitions",
+            "words": "One thing is defined in several places that can drift apart"
+        },
+        {
+            "id": "missing-source",
+            "words": "Behaviour depends on code we do not have the source for"
+        },
+        {
+            "id": "information-exposure",
+            "words": "Error details, internal addresses or tokens are shown to people or callers who should not see them"
+        },
+        {
+            "id": "behaviour-a-rebuild-could-drop",
+            "words": "Behaviour lives where a rebuild could miss it: in screens, browser code or the database"
+        }
+    ]
+}

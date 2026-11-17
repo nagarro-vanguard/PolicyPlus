@@ -1,0 +1,387 @@
+{
+    "version": 1,
+    "aspects": [
+        {
+            "id": "composition",
+            "words": "What is the system made of, and where is the mass of its code?",
+            "group": "What it is",
+            "readers": ["person"],
+            "subjects": ["system"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "purpose",
+            "words": "What is it for, and who uses it?",
+            "group": "What it is",
+            "readers": ["person", "capabilities-and-entities"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "database", "library", "tool", "tests"],
+            "codeHolds": true,
+            "answeredBy": "facts"
+        },
+        {
+            "id": "built-with",
+            "words": "What is it built with, and at which versions?",
+            "group": "What it is",
+            "readers": ["person"],
+            "subjects": ["parts", "technologies", "system"],
+            "partKinds": ["program", "site", "service", "database", "library", "tool", "tests"],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "scope",
+            "words": "What did we read, what did we leave out, and why?",
+            "group": "What it is",
+            "readers": ["person"],
+            "subjects": ["system"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "runs-where",
+            "words": "Where does it run?",
+            "group": "Where it runs, and how each part starts and stops",
+            "readers": ["person"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "database"],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "For example a server, a browser, a device, a batch host, a transaction monitor."
+        },
+        {
+            "id": "starts-stops",
+            "words": "How does it start and stop?",
+            "group": "Where it runs, and how each part starts and stops",
+            "readers": ["person"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service"],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "How the application starts and stops, as the code and its settings show."
+        },
+        {
+            "id": "build-release",
+            "words": "How is it built, packaged and released, and in which environments?",
+            "group": "How each part is built and released",
+            "readers": ["person"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "database", "library"],
+            "codeHolds": false,
+            "answeredBy": "facts",
+            "guidance": "For example a build script, a deployment descriptor, a container file, a release pipeline, settings per environment."
+        },
+        {
+            "id": "work-enters",
+            "words": "How does work enter it, and who or what starts that work?",
+            "group": "How work enters, and how it is handled",
+            "readers": ["person", "map", "capabilities-and-entities"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service"],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "Through this technology, what starts work in the system from outside it (a person, a schedule, another system), what the technology calls that work (for example a JSP page, a CICS transaction, a REST route, a cron job, a queue listener), and exactly what makes code such an entry point, with every exception. What the system's own code starts is a step of a flow, not an entry point."
+        },
+        {
+            "id": "unit-of-work",
+            "words": "How is one piece of work carried out, from arrival to response?",
+            "group": "How work enters, and how it is handled",
+            "readers": ["person", "map"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service"],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "From arrival to response, step by step, as this technology carries it."
+        },
+        {
+            "id": "around-work",
+            "words": "What runs around all incoming work, such as checks every request passes?",
+            "group": "How work enters, and how it is handled",
+            "readers": ["person", "map"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service"],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "For example dispatchers, base-class hooks, filters, interceptors; and where each is configured."
+        },
+        {
+            "id": "scheduled-work",
+            "words": "What work runs on a schedule or in batches, and what starts it?",
+            "group": "How work enters, and how it is handled",
+            "readers": ["person", "capabilities-and-entities", "capability-rules"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "database"],
+            "codeHolds": false,
+            "answeredBy": "facts",
+            "guidance": "Every scheduled or batch job, and what starts it: a scheduler, a timer, a person."
+        },
+        {
+            "id": "who-can-do-what",
+            "words": "Who can do what, and where is that decided?",
+            "group": "Who can do what, settings, and when things fail",
+            "readers": ["person", "capabilities-and-entities", "capability-rules"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "database"],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "Where access is decided: in code, in configuration, in data."
+        },
+        {
+            "id": "customers-apart",
+            "words": "How are customers or organisations kept apart?",
+            "group": "Who can do what, settings, and when things fail",
+            "readers": ["person", "capabilities-and-entities", "capability-rules"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "database"],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "How tenants or organisations are kept apart, if they are."
+        },
+        {
+            "id": "settings",
+            "words": "Where do settings and secrets come from, and which live outside the code?",
+            "group": "Who can do what, settings, and when things fail",
+            "readers": ["person", "map"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "database", "library"],
+            "codeHolds": false,
+            "answeredBy": "facts",
+            "guidance": "Where each setting and secret comes from, and which live outside the code we have."
+        },
+        {
+            "id": "failures",
+            "words": "How are failures logged, retried and reported?",
+            "group": "Who can do what, settings, and when things fail",
+            "readers": ["person", "capability-rules"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "library"],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "How logs, failures and retries are handled, and how the application is run."
+        },
+        {
+            "id": "inside",
+            "words": "Which layers and code kinds is it made of?",
+            "group": "How it is built inside",
+            "readers": ["person"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "library"],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "external-systems",
+            "words": "Which external systems and data stores does it reach, and how?",
+            "group": "How it is built inside",
+            "readers": ["person"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "library", "database"],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "connections",
+            "words": "How does its code connect to other parts and external systems?",
+            "group": "How it is built inside",
+            "readers": ["person", "capability-rules"],
+            "subjects": ["parts", "system"],
+            "partKinds": ["program", "site", "service", "library", "database"],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "anything-else",
+            "words": "What else here would change a decision?",
+            "group": "Who can do what, settings, and when things fail",
+            "readers": ["person"],
+            "subjects": ["parts", "technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "findings",
+            "guidance": "Only findings, each its own fact with a risk: a harm the code here shows that no other question asked, whichever question it would fall under or none, for example a value from outside pasted into a query or a command, a check one entry point skips, a secret in clear text. None when there is none: never an answer."
+        },
+        {
+            "id": "harms",
+            "words": "What can harm the business or block a change?",
+            "group": "Who can do what, settings, and when things fail",
+            "readers": ["person"],
+            "subjects": ["system"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "findings",
+            "guidance": "Concluded over every finding of one kind of harm: one fact per distinct harm, wherever its findings sit, resting on exactly the findings that tell it, each finding in one harm only. Its statement says what can happen, to whom, and where (the parts it reaches); its severity is the one its worst place warrants, among its findings'. Two findings tell one harm when one fix closes both; copies of the same weakness in different parts are one harm with several places."
+        },
+        {
+            "id": "blocks-and-containers",
+            "words": "Which named pieces of code run when invoked, and which only group or declare?",
+            "group": "Rules the later stages apply",
+            "readers": ["map"],
+            "subjects": ["technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "Which named pieces of code run when invoked (blocks), and which only group or declare (containers), in this technology's terms."
+        },
+        {
+            "id": "build-time-code",
+            "words": "How does code brought in or chosen at build time change what code exists?",
+            "group": "Rules the later stages apply",
+            "readers": ["map"],
+            "subjects": ["technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "For example includes, copybooks, macros, build conditions."
+        },
+        {
+            "id": "contract-syntax",
+            "words": "What is the syntax of each contract between layers?",
+            "group": "Rules the later stages apply",
+            "readers": ["map"],
+            "subjects": ["technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "For example routes, operations, transactions, topics: including placeholders, prefixes, mounts, rewrites and versions."
+        },
+        {
+            "id": "screen-wiring",
+            "words": "How are what a person sees and the code that reacts to it tied together?",
+            "group": "Rules the later stages apply",
+            "readers": ["map"],
+            "subjects": ["technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "For example markup and code-behind, partials, scripts, a map and its program."
+        },
+        {
+            "id": "navigation-and-permissions",
+            "words": "Where are navigation and permissions declared, in code or in data?",
+            "group": "Rules the later stages apply",
+            "readers": ["map", "capabilities-and-entities", "capability-rules"],
+            "subjects": ["technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "Whether they are declared in code or in data, and where."
+        },
+        {
+            "id": "user-state",
+            "words": "What does each user's state hold between requests?",
+            "group": "Rules the later stages apply",
+            "readers": ["map", "capabilities-and-entities", "capability-rules"],
+            "subjects": ["technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "What a user's session or state holds between requests, and where it is kept."
+        },
+        {
+            "id": "data-shapes",
+            "words": "Where is each shape of data defined, in every layer?",
+            "group": "Rules the later stages apply",
+            "readers": ["map", "capabilities-and-entities", "capability-rules"],
+            "subjects": ["technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "For example the shape of what a person sees and enters, a request or response object, a message, a domain class, a mapping, a schema, a migration, a record layout."
+        },
+        {
+            "id": "integration-config",
+            "words": "Where does the configuration of each external system live?",
+            "group": "Rules the later stages apply",
+            "readers": ["capabilities-and-entities"],
+            "subjects": ["technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "Where each external system's address, keys and settings are configured."
+        },
+        {
+            "id": "code-without-source",
+            "words": "Which code with no source in scope does the system call for its own behaviour, and what does it do?",
+            "group": "Rules the later stages apply",
+            "readers": ["map"],
+            "subjects": ["technologies"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "facts",
+            "guidance": "For example a library, a package, a load module; and what each does: keep data, talk to services, apply rules. A compiled copy of code whose source is in scope is not one."
+        },
+        {
+            "id": "what-it-does",
+            "words": "What does it do, and for whom?",
+            "group": "What it offers",
+            "readers": ["person"],
+            "subjects": ["capabilities"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "how-it-starts",
+            "words": "Who starts it, and how?",
+            "group": "What it offers",
+            "readers": ["person"],
+            "subjects": ["capabilities"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "rules-it-applies",
+            "words": "Which rules does it apply?",
+            "group": "What it offers",
+            "readers": ["person"],
+            "subjects": ["capabilities"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "data-it-changes",
+            "words": "Which kinds of data does it read and change?",
+            "group": "What it offers",
+            "readers": ["person"],
+            "subjects": ["capabilities"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "what-it-holds",
+            "words": "What does it hold?",
+            "group": "What it keeps",
+            "readers": ["person"],
+            "subjects": ["entities"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "where-it-is-kept",
+            "words": "Where is it kept?",
+            "group": "What it keeps",
+            "readers": ["person"],
+            "subjects": ["entities"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        },
+        {
+            "id": "life-of-states",
+            "words": "Which states does it go through, and what moves it on?",
+            "group": "What it keeps",
+            "readers": ["person"],
+            "subjects": ["entities"],
+            "partKinds": [],
+            "codeHolds": true,
+            "answeredBy": "subjects"
+        }
+    ]
+}

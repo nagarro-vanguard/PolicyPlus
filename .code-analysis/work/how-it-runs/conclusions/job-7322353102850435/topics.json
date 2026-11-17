@@ -1,0 +1,1321 @@
+{
+ "tier": "harms",
+ "topics": [
+  {
+   "key": "system\u0000harms\u0000access-control",
+   "subject": "system",
+   "aspect": "harms",
+   "question": "What can harm the business or block a change?",
+   "facts": [
+    {
+     "id": "fact-34802519617808919332",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-70387911586559782494"
+     },
+     "aspect": "anything-else",
+     "statement": "The Download ADMX dialog takes the destination from a free-text box with no restriction to a policy-definitions folder. When run as administrator it enables ownership and restore privileges, makes Administrators the owner with full control of any existing folder typed or browsed to, deletes same-named files there and rewrites file ACLs.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 37,
+          "lastLine": 37
+         },
+         "shows": "The destination is read straight from the text box."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 42,
+          "lastLine": 50
+         },
+         "shows": "Owner is set to Administrators and a full-control allow rule is added."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 94,
+          "lastLine": 99
+         },
+         "shows": "Privileges are enabled and ownership taken on the typed destination when administrator."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 62,
+          "lastLine": 74
+         },
+         "shows": "Same-named files are deleted and file ACLs rewritten."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "access-control",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-87976621935764415381",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-84822039951309122274"
+     },
+     "aspect": "anything-else",
+     "statement": "When run as administrator, the download dialog changes ownership and permissions of a folder typed by the user, with no check it is an ADMX folder. It gives Administrators full control, deletes same-named files and resets permissions on moved files.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 37,
+          "lastLine": 49
+         },
+         "shows": "Destination is the typed folder; owner set to Administrators with full control"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 67,
+          "lastLine": 72
+         },
+         "shows": "Same-named files deleted; moved files get reset permissions"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 96,
+          "lastLine": 99
+         },
+         "shows": "Take-ownership and restore privileges enabled before taking control"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "access-control",
+      "severity": "medium"
+     }
+    },
+    {
+     "id": "fact-44328994184714585634",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-84822039951309122274"
+     },
+     "aspect": "anything-else",
+     "statement": "When run as administrator, the download dialog changes ownership and permissions of a folder typed by the user, with no check it is an ADMX folder. It gives Administrators full control, deletes same-named files and resets permissions on moved files.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 37,
+          "lastLine": 49
+         },
+         "shows": "Destination is the typed folder; owner set to Administrators with full control"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 67,
+          "lastLine": 72
+         },
+         "shows": "Same-named files deleted; moved files get reset permissions"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 96,
+          "lastLine": 99
+         },
+         "shows": "Take-ownership and restore privileges enabled before taking control"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "access-control",
+      "severity": "medium"
+     }
+    },
+    {
+     "id": "fact-27233760689503775496",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-07011706629345673005"
+     },
+     "aspect": "anything-else",
+     "statement": "Files with the same name in the folder typed into the dialog are deleted and replaced, for any user. Only administrators also have ownership of that folder, and of an existing language subfolder, taken over and full control granted. The folder defaults to the Windows policy folder.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 18,
+          "lastLine": 18
+         },
+         "shows": "Destination text defaults to the Windows policy folder"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 64,
+          "lastLine": 68
+         },
+         "shows": "Same-named files deleted then moved, with no administrator check"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 55,
+          "lastLine": 63
+         },
+         "shows": "Administrator only: access rules reset, ownership of existing folder taken"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 94,
+          "lastLine": 100
+         },
+         "shows": "Administrator only: privileges enabled and destination ownership taken"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "access-control",
+      "severity": "medium"
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "system\u0000harms\u0000input-handling",
+   "subject": "system",
+   "aspect": "harms",
+   "question": "What can harm the business or block a change?",
+   "facts": [
+    {
+     "id": "fact-29401234656439079469",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "external-systems",
+     "statement": "The ADMX download feature fetches a Microsoft installer package over HTTPS with the .NET WebClient, unpacks it with Windows Installer (msiexec), and moves the files into the policy folder, with no check of the package's hash or signature.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 84,
+          "lastLine": 90
+         },
+         "shows": "Downloads the MSI and runs msiexec on it without verifying it."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 3,
+          "lastLine": 3
+         },
+         "shows": "Fixed Microsoft download address naming one specific update."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "input-handling",
+      "severity": "medium"
+     }
+    },
+    {
+     "id": "fact-09020362215102177167",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-70387911586559782494"
+     },
+     "aspect": "anything-else",
+     "statement": "The ADMX package is trusted on transport alone: it is fetched from a constant https download.microsoft.com address, then msiexec runs on it with no hash or signature check, and the unpacked ADMX and ADML files replace same-named files in the destination. A compromised or downgraded channel would therefore put attacker files there.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 3,
+          "lastLine": 3
+         },
+         "shows": "The download address is a constant https Microsoft URL."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 84,
+          "lastLine": 90
+         },
+         "shows": "The file is downloaded and passed to msiexec administrative unpack with no verification."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 62,
+          "lastLine": 68
+         },
+         "shows": "Existing same-named files in the destination are deleted and replaced by the unpacked files."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "input-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-02281209187153212575",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-84822039951309122274"
+     },
+     "aspect": "anything-else",
+     "statement": "The ADMX download fetches an installer from Microsoft into a fixed, predictable folder under the user's local application data, then unpacks it with the Windows installer tool. No hash or signature is checked; only the HTTPS link protects it, and Tls 1.0 is allowed.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 82,
+          "lastLine": 91
+         },
+         "shows": "Fixed temp folder, download, then msiexec unpack with no hash or signature check"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 19,
+          "lastLine": 20
+         },
+         "shows": "Same web requests permit Tls 1.0 and 1.1 as well as 1.2"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "input-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-36408208651050681334",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-84822039951309122274"
+     },
+     "aspect": "anything-else",
+     "statement": "As administrator, the program lists other users' profile folders under a fixed C:\\Users and can load a user's registry file into the machine registry, as can a policy source path chosen in a dialog. This is administrator-only and uses user-chosen paths.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/OpenUserRegistry.vb",
+          "firstLine": 6,
+          "lastLine": 12
+         },
+         "shows": "Scans C:\\Users and checks for administrator"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 63,
+          "lastLine": 70
+         },
+         "shows": "Enables backup and restore privileges, then loads the given file as a hive"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PInvoke.vb",
+          "firstLine": 5,
+          "lastLine": 6
+         },
+         "shows": "Hive load and unload declared"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "input-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-49630762293811456731",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-84822039951309122274"
+     },
+     "aspect": "anything-else",
+     "statement": "As administrator, the program lists other users' profile folders under a fixed C:\\Users and can load a user's registry file into the machine registry, as can a policy source path chosen in a dialog. This is administrator-only and uses user-chosen paths.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/OpenUserRegistry.vb",
+          "firstLine": 6,
+          "lastLine": 12
+         },
+         "shows": "Scans C:\\Users and checks for administrator"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 63,
+          "lastLine": 70
+         },
+         "shows": "Enables backup and restore privileges, then loads the given file as a hive"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PInvoke.vb",
+          "firstLine": 5,
+          "lastLine": 6
+         },
+         "shows": "Hive load and unload declared"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "input-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-95916775568664824333",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-46802979159136959237"
+     },
+     "aspect": "anything-else",
+     "statement": "The typed SID for a user policy source is joined straight into a file path under the system folder, then written to, with no check of its form, so a crafted value could point the write elsewhere.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 40,
+          "lastLine": 42
+         },
+         "shows": "Argument concatenated into GroupPolicyUsers path"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/OpenPol.vb",
+          "firstLine": 100,
+          "lastLine": 100
+         },
+         "shows": "Argument comes from a text box"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "input-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-11556222557718811714",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-46802979159136959237"
+     },
+     "aspect": "anything-else",
+     "statement": "When the user presses start, the ADMX download fetches a Microsoft installer package from a fixed https address with WebClient, with no hash, signature or publisher check, and the app allows TLS 1.0 and 1.1 as well as 1.2 for it. It is unpacked with msiexec /a (an administrative extract, not an install) and only the ADMX/ADML files are moved into the policy folder the app takes ownership of as administrator. A tampered package, for example through a downgraded connection, would put attacker-chosen policy definition files there; reach is this download only.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 3,
+          "lastLine": 3
+         },
+         "shows": "Fixed https download address on a Microsoft host"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 20,
+          "lastLine": 20
+         },
+         "shows": "SecurityProtocol set to Tls, Tls11 and Tls12 at main window load"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 33,
+          "lastLine": 33
+         },
+         "shows": "Whole download runs only from the start button click"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 84,
+          "lastLine": 90
+         },
+         "shows": "Package downloaded and extracted with msiexec /a, no verification"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 97,
+          "lastLine": 108
+         },
+         "shows": "Administrator takes ownership of the destination, then extracted files are moved in"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "input-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-61592187422577908619",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-07011706629345673005"
+     },
+     "aspect": "anything-else",
+     "statement": "The installer program is started by bare name, so the system's search order, not the code, decides which executable runs. The scratch and unpack folders are fixed names, not emptied before use, so leftovers of an earlier failed run, which is never cleaned up, sit in the next unpack target.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 90,
+          "lastLine": 90
+         },
+         "shows": "Started as msiexec with no path"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 79,
+          "lastLine": 80
+         },
+         "shows": "Fixed scratch folder, created but not emptied"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 89,
+          "lastLine": 89
+         },
+         "shows": "Fixed unpack folder under scratch"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 114,
+          "lastLine": 114
+         },
+         "shows": "Cleanup only on the success path"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "input-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-90929842698162052455",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "anything-else",
+     "statement": "The definitions download fetches a Microsoft installer over HTTPS from one fixed address and runs it with no checksum or signature check, trusting that host alone. Into the chosen destination (default the Windows policy folder) it moves files; for an administrator it replaces owner and permissions on that folder and the files.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 84,
+          "lastLine": 93
+         },
+         "shows": "Downloads the installer and runs msiexec on it without verification."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 94,
+          "lastLine": 111
+         },
+         "shows": "If the destination exists and user is administrator, takes ownership; moves files in."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 52,
+          "lastLine": 75
+         },
+         "shows": "Replaces permissions on moved files and new folders."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 16,
+          "lastLine": 18
+         },
+         "shows": "Destination defaults to the Windows policy definitions folder and is editable."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "input-handling",
+      "severity": "low"
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "system\u0000harms\u0000cryptography",
+   "subject": "system",
+   "aspect": "harms",
+   "question": "What can harm the business or block a change?",
+   "facts": [
+    {
+     "id": "fact-43004874175582428556",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-70387911586559782494"
+     },
+     "aspect": "anything-else",
+     "statement": "At startup the process-wide outbound security protocol set is widened to include TLS 1.0 and 1.1 alongside 1.2, for Vista compatibility, so every .NET web request including the ADMX download may negotiate a deprecated protocol.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 19,
+          "lastLine": 20
+         },
+         "shows": "ServicePointManager protocols include Tls and Tls11."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 84,
+          "lastLine": 86
+         },
+         "shows": "The download uses a .NET WebClient, covered by that setting."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "cryptography",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-43193911611514899391",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-84822039951309122274"
+     },
+     "aspect": "anything-else",
+     "statement": "Every web request, including the installer download, permits the obsolete Tls 1.0 and 1.1 beside Tls 1.2. The code says this keeps Windows Vista working. A weaker protocol could be negotiated on the download.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 19,
+          "lastLine": 20
+         },
+         "shows": "Tls, Tls11 and Tls12 all enabled for web requests"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "cryptography",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-21818934497368295725",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-84822039951309122274"
+     },
+     "aspect": "anything-else",
+     "statement": "Every web request, including the installer download, permits the obsolete Tls 1.0 and 1.1 beside Tls 1.2. The code says this keeps Windows Vista working. A weaker protocol could be negotiated on the download.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 19,
+          "lastLine": 20
+         },
+         "shows": "Tls, Tls11 and Tls12 all enabled for web requests"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "cryptography",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-33932630186853432606",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-07011706629345673005"
+     },
+     "aspect": "anything-else",
+     "statement": "The application permits the older TLS 1.0 and 1.1 protocol versions beside 1.2, for every web request it makes; the package download is the only one found. A comment gives Vista compatibility as the reason. The code does not show an older version being used.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 18,
+          "lastLine": 20
+         },
+         "shows": "Tls, Tls11 and Tls12 enabled process-wide, comment cites Vista compatibility"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 84,
+          "lastLine": 86
+         },
+         "shows": "Package download is the web call affected"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "cryptography",
+      "severity": "low"
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "system\u0000harms\u0000unsupported-technology",
+   "subject": "system",
+   "aspect": "harms",
+   "question": "What can harm the business or block a change?",
+   "facts": [
+    {
+     "id": "fact-52035816907406269786",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-84822039951309122274"
+     },
+     "aspect": "anything-else",
+     "statement": "The program targets .NET Framework 4.5.2, which no longer receives security fixes from Microsoft. Newer Windows still ships a compatible runtime, but the targeted version itself is out of support.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 14,
+          "lastLine": 14
+         },
+         "shows": "Target framework is version 4.5.2."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/App.config",
+          "firstLine": 4,
+          "lastLine": 4
+         },
+         "shows": "Runtime configuration also pins 4.5.2."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "unsupported-technology",
+      "severity": "medium"
+     },
+     "externalSource": {
+      "source": "Microsoft support lifecycle: .NET Framework 4.5.2 support ended in April 2022",
+      "asOf": "2022-04"
+     }
+    },
+    {
+     "id": "fact-20434486715458429942",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-70387911586559782494"
+     },
+     "aspect": "anything-else",
+     "statement": "The program targets .NET Framework 4.5.2, a version whose own support Microsoft ended. The lines show only the build target and the minimum the config accepts, not which installed 4.x runtime actually executes it.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 14,
+          "lastLine": 14
+         },
+         "shows": "Target framework is 4.5.2."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/App.config",
+          "firstLine": 3,
+          "lastLine": 5
+         },
+         "shows": "Supported runtime is v4.0 with sku 4.5.2, a minimum rather than a pinned runtime."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "unsupported-technology",
+      "severity": "low"
+     },
+     "externalSource": {
+      "source": "Microsoft lifecycle policy: .NET Framework 4.5.2 support ended 26 April 2022",
+      "asOf": "2022-04-26"
+     }
+    },
+    {
+     "id": "fact-04778930488503450393",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-84822039951309122274"
+     },
+     "aspect": "anything-else",
+     "statement": "The application is built for .NET Framework 4.5.2, a target Microsoft ended support for in 2022. On current Windows, 4.x programs run on the installed 4.8 runtime, which is still supported, so the exposure is the old build target, not the runtime in use.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 14,
+          "lastLine": 14
+         },
+         "shows": "Target framework set to 4.5.2"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/App.config",
+          "firstLine": 4,
+          "lastLine": 4
+         },
+         "shows": "Runtime declared as 4.0 family with the 4.5.2 sku"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "unsupported-technology",
+      "severity": "low"
+     },
+     "externalSource": {
+      "source": "Microsoft support lifecycle for .NET Framework 4.5.2 (ended 2022-04-26); 4.x is an in-place update on Windows",
+      "asOf": "2026-11-12"
+     }
+    },
+    {
+     "id": "fact-42537732265436997736",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "anything-else",
+     "statement": "The program is built against .NET Framework 4.5.2, a version Microsoft no longer supports. It still runs on newer 4.x runtimes, but its build target receives no fixes.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 14,
+          "lastLine": 14
+         },
+         "shows": "Targets .NET Framework 4.5.2."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/App.config",
+          "firstLine": 3,
+          "lastLine": 5
+         },
+         "shows": "Accepts any 4.x runtime."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "unsupported-technology",
+      "severity": "low"
+     },
+     "externalSource": {
+      "source": "Microsoft support lifecycle for .NET Framework 4.5.2, which ended support in April 2022",
+      "asOf": "2022-04-26"
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "system\u0000harms\u0000data-integrity",
+   "subject": "system",
+   "aspect": "harms",
+   "question": "What can harm the business or block a change?",
+   "facts": [
+    {
+     "id": "fact-67241389888373414486",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-46802979159136959237"
+     },
+     "aspect": "anything-else",
+     "statement": "The policy-version file is rewritten in place after being read, so a failure midway leaves it truncated; Windows may then not notice the policy change.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 179,
+          "lastLine": 197
+         },
+         "shows": "File lines read, then file reopened for overwrite and rewritten line by line"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "data-integrity",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-41338618841491383774",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-07011706629345673005"
+     },
+     "aspect": "anything-else",
+     "statement": "The package is fetched over HTTPS from one fixed Microsoft address and unpacked, with no signature or hash check by this code. A compromised or substituted package on that host, or a compromised trust store or proxy, would put altered definitions into the chosen destination, the Windows policy folder by default.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 3,
+          "lastLine": 3
+         },
+         "shows": "Fixed HTTPS download address"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 84,
+          "lastLine": 93
+         },
+         "shows": "Downloaded and unpacked with no integrity check"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 103,
+          "lastLine": 110
+         },
+         "shows": "Only top-level definition files, current-culture and en-US folders are moved"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 18,
+          "lastLine": 18
+         },
+         "shows": "Destination only defaults to the Windows policy folder"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "data-integrity",
+      "severity": "medium"
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "system\u0000harms\u0000failure-handling",
+   "subject": "system",
+   "aspect": "harms",
+   "question": "What can harm the business or block a change?",
+   "facts": [
+    {
+     "id": "fact-84508752863650436911",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-70387911586559782494"
+     },
+     "aspect": "anything-else",
+     "statement": "Settings storage swallows failures: if the registry key cannot be created or written, saved choices silently do not persist and the person is not told.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/ConfigurationStorage.vb",
+          "firstLine": 4,
+          "lastLine": 9
+         },
+         "shows": "Key creation errors are caught and ignored."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/ConfigurationStorage.vb",
+          "firstLine": 13,
+          "lastLine": 15
+         },
+         "shows": "Writes do nothing when the key is missing."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "failure-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-94259025531842894562",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-46802979159136959237"
+     },
+     "aspect": "anything-else",
+     "statement": "Results of privilege enabling and of hive loading are ignored: if the privilege or the hive load fails, the program proceeds without saying why, and a later save can fail or be silently skipped.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Privilege.vb",
+          "firstLine": 8,
+          "lastLine": 13
+         },
+         "shows": "Return values of native privilege calls are not checked"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 69,
+          "lastLine": 74
+         },
+         "shows": "Hive load result ignored; failure only noticed as a missing key"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "failure-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-40055428109820011055",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-07011706629345673005"
+     },
+     "aspect": "anything-else",
+     "statement": "Any failure is reduced to a generic message naming only the phase. The cause is discarded, and the scratch folder is left behind on failure.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 123,
+          "lastLine": 127
+         },
+         "shows": "Exception caught and cause not logged or shown"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 114,
+          "lastLine": 114
+         },
+         "shows": "Cleanup only on success path"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "failure-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-94561088597614441209",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-07011706629345673005"
+     },
+     "aspect": "anything-else",
+     "statement": "The download and unpack have no timeout or cancel. While they run the dialog refuses to close and its buttons are disabled, so a stalled connection or hung installer program leaves the dialog, and its modal owner window, unusable until the process is killed.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 14,
+          "lastLine": 16
+         },
+         "shows": "Closing is cancelled while busy"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 22,
+          "lastLine": 28
+         },
+         "shows": "Close, Start and Browse disabled while busy"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 84,
+          "lastLine": 86
+         },
+         "shows": "Download call blocks with no timeout"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 90,
+          "lastLine": 91
+         },
+         "shows": "Unpack waits for exit indefinitely"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "failure-handling",
+      "severity": "medium"
+     }
+    },
+    {
+     "id": "fact-10829351115006720639",
+     "subject": {
+      "registry": "technologies",
+      "key": "technology-07011706629345673005"
+     },
+     "aspect": "anything-else",
+     "statement": "The move deletes each same-named destination file before moving its replacement, and the sequence is not atomic. A failure part-way, such as a disk or permission error or a changed package layout, can leave the destination, by default the system policy folder, with a mix of old and new files and ownership already changed.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 4,
+          "lastLine": 4
+         },
+         "shows": "Fixed inner folder name inside the package"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 64,
+          "lastLine": 68
+         },
+         "shows": "Old file deleted before new one moved"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 99,
+          "lastLine": 111
+         },
+         "shows": "Ownership changed first, then several separate moves, including a required en-US folder"
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 123,
+          "lastLine": 127
+         },
+         "shows": "On failure only a generic message; nothing rolled back"
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "failure-handling",
+      "severity": "medium"
+     }
+    },
+    {
+     "id": "fact-42297929278731951818",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "anything-else",
+     "statement": "Errors are swallowed in places: if the settings key cannot be opened, preferences silently are not kept, and a failed comment save is ignored, so a person can lose notes without being told.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/ConfigurationStorage.vb",
+          "firstLine": 7,
+          "lastLine": 9
+         },
+         "shows": "Registry key failure is ignored silently."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 617,
+          "lastLine": 623
+         },
+         "shows": "Comment save errors are ignored."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "failure-handling",
+      "severity": "low"
+     }
+    },
+    {
+     "id": "fact-69474479758908699510",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "anything-else",
+     "statement": "Saving can report success when nothing was saved: a source that is not writable is skipped, yet the message still says Success and names it not writable. A failed comment save is ignored. A person can believe an edit to such a source was kept.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 625,
+          "lastLine": 634
+         },
+         "shows": "Skips non-writable sources, then always shows Success with status."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 617,
+          "lastLine": 623
+         },
+         "shows": "Comment save errors are ignored."
+        },
+        {
+         "lines": {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 52,
+          "lastLine": 60
+         },
+         "shows": "Writability is tested by trial write to the policy key."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "failure-handling",
+      "severity": "medium"
+     }
+    }
+   ],
+   "nearby": []
+  },
+  {
+   "key": "system\u0000harms\u0000release-and-operations",
+   "subject": "system",
+   "aspect": "harms",
+   "question": "What can harm the business or block a change?",
+   "facts": [
+    {
+     "id": "fact-12687379168709712029",
+     "subject": {
+      "registry": "parts",
+      "key": "part-38111104373939233299"
+     },
+     "aspect": "external-systems",
+     "statement": "The download address and the folder inside the package are both pinned to one named release, Windows 11 Sep 2026 Update (26H2), on download.microsoft.com. If Microsoft moves or removes that file, or the folder name inside changes, the download feature fails until the code is edited; later Windows releases are not picked up.",
+     "basis": {
+      "observed": {
+       "evidence": [
+        {
+         "lines": {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 3,
+          "lastLine": 4
+         },
+         "shows": "Fixed download link and package subfolder naming the Sep 2026 Update."
+        }
+       ]
+      }
+     },
+     "risk": {
+      "category": "release-and-operations",
+      "severity": "medium"
+     }
+    }
+   ],
+   "nearby": []
+  }
+ ]
+}

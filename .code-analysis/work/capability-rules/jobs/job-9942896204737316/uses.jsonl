@@ -1,0 +1,4 @@
+{"link":"link-02141460978535538774","kind":"saves","lines":{"file":"PolicyPlus/ConfigurationStorage.vb","firstLine":6,"lastLine":6},"externalSystem":"external-76952632453450489524","resource":"Subkey","reached":true}
+{"link":"link-35035792592544626004","kind":"reads","lines":{"file":"PolicyPlus/ConfigurationStorage.vb","firstLine":12,"lastLine":12},"externalSystem":"external-76952632453450489524","resource":"Subkey","fieldsUsed":["ValueName"],"reached":true}
+{"link":"link-97153293610361561449","kind":"saves","lines":{"file":"PolicyPlus/ConfigurationStorage.vb","firstLine":15,"lastLine":15},"externalSystem":"external-76952632453450489524","resource":"Subkey","fieldsUsed":["ValueName","Data"],"reached":true}
+{"link":"link-11878267935514681285","kind":"reads","lines":{"file":"PolicyPlus/ConfigurationStorage.vb","firstLine":18,"lastLine":18},"externalSystem":"external-76952632453450489524","resource":"Subkey","fieldsUsed":["ValueName"],"reached":false}

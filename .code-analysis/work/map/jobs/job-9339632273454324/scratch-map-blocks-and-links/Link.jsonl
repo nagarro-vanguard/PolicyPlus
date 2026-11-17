@@ -1,0 +1,7 @@
+{"id": "link-31345133613928486513", "kind": "call", "lines": {"file": "PolicyPlus/EditSetting.vb", "firstLine": 191, "lastLine": 191}, "to": {"file": "PolicyPlus/PolicyProcessing.vb", "line": 2}}
+{"kind": "reads", "lines": {"file": "PolicyPlus/FindById.vb", "firstLine": 29, "lastLine": 29}, "to": {"file": "PolicyPlus/AdmxBundle.vb", "line": 11}, "fieldsUsed": ["FlatCategories"]}
+{"kind": "reads", "lines": {"file": "PolicyPlus/FindById.vb", "firstLine": 32, "lastLine": 32}, "to": {"file": "PolicyPlus/AdmxBundle.vb", "line": 12}, "fieldsUsed": ["FlatProducts"]}
+{"kind": "reads", "lines": {"file": "PolicyPlus/FindById.vb", "firstLine": 35, "lastLine": 35}, "to": {"file": "PolicyPlus/AdmxBundle.vb", "line": 17}, "fieldsUsed": ["SupportDefinitions"]}
+{"kind": "reads", "lines": {"file": "PolicyPlus/FindById.vb", "firstLine": 41, "lastLine": 41}, "to": {"file": "PolicyPlus/AdmxBundle.vb", "line": 16}, "fieldsUsed": ["Policies"]}
+{"kind": "reads", "lines": {"file": "PolicyPlus/FilterOptions.vb", "firstLine": 17, "lastLine": 17}, "to": {"file": "PolicyPlus/AdmxBundle.vb", "line": 15}, "fieldsUsed": ["Products"]}
+{"kind": "reads", "lines": {"file": "PolicyPlus/EditSetting.vb", "firstLine": 169, "lastLine": 169}, "to": {"file": "PolicyPlus/ListEditor.vb", "line": 3}, "fieldsUsed": ["FinalData"]}

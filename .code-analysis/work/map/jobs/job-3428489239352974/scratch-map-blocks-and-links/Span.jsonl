@@ -1,0 +1,15 @@
+{"lines": {"file": "PolicyPlus/LoadedAdmx.vb", "firstLine": 1, "lastLine": 2}, "says": "Class header and the field holding the loaded workspace"}
+{"lines": {"file": "PolicyPlus/LoadedAdmx.vb", "firstLine": 25, "lastLine": 25}, "says": "End of the class"}
+{"lines": {"file": "PolicyPlus/LoadedProducts.vb", "firstLine": 1, "lastLine": 1}, "says": "Class header"}
+{"lines": {"file": "PolicyPlus/LoadedProducts.vb", "firstLine": 69, "lastLine": 69}, "says": "End of the class"}
+{"lines": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "firstLine": 1, "lastLine": 2}, "says": "Class header and the field holding the support definitions being listed"}
+{"lines": {"file": "PolicyPlus/LoadedSupportDefinitions.vb", "firstLine": 30, "lastLine": 30}, "says": "End of the class"}
+{"lines": {"file": "PolicyPlus/LoadedProducts.Designer.vb", "firstLine": 1, "lastLine": 5}, "says": "Generated class header and a comment"}
+{"lines": {"file": "PolicyPlus/LoadedProducts.Designer.vb", "firstLine": 16, "lastLine": 22}, "says": "Comments and the components field of the generated form"}
+{"lines": {"file": "PolicyPlus/LoadedProducts.Designer.vb", "firstLine": 194, "lastLine": 194}, "says": "End of the class"}
+{"lines": {"file": "PolicyPlus/LoadedSupportDefinitions.Designer.vb", "firstLine": 1, "lastLine": 5}, "says": "Generated class header and a comment"}
+{"lines": {"file": "PolicyPlus/LoadedSupportDefinitions.Designer.vb", "firstLine": 16, "lastLine": 22}, "says": "Comments and the components field of the generated form"}
+{"lines": {"file": "PolicyPlus/LoadedSupportDefinitions.Designer.vb", "firstLine": 111, "lastLine": 111}, "says": "End of the class"}
+{"lines": {"file": "PolicyPlus/Main.Designer.vb", "firstLine": 1, "lastLine": 5}, "says": "Generated class header and a comment"}
+{"lines": {"file": "PolicyPlus/Main.Designer.vb", "firstLine": 16, "lastLine": 22}, "says": "Comments and the components field of the generated form"}
+{"lines": {"file": "PolicyPlus/Main.Designer.vb", "firstLine": 762, "lastLine": 762}, "says": "End of the class"}

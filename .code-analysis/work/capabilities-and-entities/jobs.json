@@ -1,0 +1,37 @@
+[
+ {
+  "jobId": "job-0054380951994400",
+  "kind": "assignEntryPoints",
+  "definition": "1c410d6126c250e6c7169b5eb5f712bebf364835"
+ },
+ {
+  "jobId": "job-2325401899656596",
+  "kind": "assignEntryPoints",
+  "definition": "acaff65c4ae18cda9746d5ed1a15baac546574fe"
+ },
+ {
+  "jobId": "job-2504979299516611",
+  "kind": "assignResources",
+  "definition": "713f86f21741982f46460c5b57809878ccb2856e"
+ },
+ {
+  "jobId": "job-1043191541624762",
+  "kind": "assignShapes",
+  "definition": "099d0c3d406537cc645bb1914d41c7c2786521ea"
+ },
+ {
+  "jobId": "job-3051274062459107",
+  "kind": "assignShapes",
+  "definition": "f415dd9671adb76a053231eb78a789b8b360c72e"
+ },
+ {
+  "jobId": "job-3279760113279741",
+  "kind": "mergeCapabilities",
+  "definition": "b5f6702cebfe8b7b4a00322bd3747f35007a06a5"
+ },
+ {
+  "jobId": "job-6366211417121221",
+  "kind": "mergeEntities",
+  "definition": "58a2d07f372a20036d444b1daab7cf366528e436"
+ }
+]

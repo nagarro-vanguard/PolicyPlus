@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Releases policy sources when the main window closes.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/using-policy-plus.html">Using Policy Plus</a> › <a href="../../screen/PolicyPlus/Main.vb.html">Main.vb</a></div><h1>Releases policy sources when the main window closes.</h1><p class="lead">Started by a person. In the code: PolicyPlus/Main.vb:685</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the Main screen of Using Policy Plus: Releases policy sources when the main window closes.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:685
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+- PolicyPlus/PInvoke.vb (shared with 3 other capabilities)
+- PolicyPlus/PolicyLoader.vb (shared with 1 other capability)
+Rules decided here: 3
+- Closing a user hive source that mounted successfully unloads the hive and reports success only if Windows unloads it. Closing any other source, including a user hive that failed to mount and so holds an empty scratch store, reports success without any step. (PolicyPlus/PolicyLoader.vb:110)
+- When the sources are closed and either is still held open by another program, the user is told &quot;Cleanup did not complete fully because the loaded resources are open in other programs.&quot;. (PolicyPlus/Main.vb:362)
+- Closing the program closes the policy sources. (PolicyPlus/Main.vb:685)
+Unconfirmed:
+- For the capability: Whether this PC has Group Policy infrastructure is decided by code we do not have. The first-run offer to download definitions depends on it, so a wrong answer shows or hides the welcome prompt. If wrong: The welcome prompt to download definitions would appear on the wrong PCs, or not at all.
+Not followed:
+- a reads at PolicyPlus/Main.vb:642: The code reads the constant Version, which version.bat generates into Version.vb; that file is not among the analysed files, so its value is not shown.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/using-policy-plus/screens.html">Screens</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/using-policy-plus/policy-state-logic-and-windows-interop.html">Policy state logic and Windows interop</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (3)</h2><div class="group-name">Screens</div><div class="row"><div class="main"><span>Closing the program closes the policy sources.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Using Policy Plus: Closing the program closes the policy sources.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:685
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:685  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When the sources are closed and either is still held open by another program, the user is told &quot;Cleanup did not complete fully because the loaded resources are open in other programs.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Using Policy Plus: When the sources are closed and either is still held open by another program, the user is told &quot;Cleanup did not complete fully because the loaded resources are open in other programs.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:362
+- PolicyPlus/Main.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:362  ·  Screens: Main</div></div></div><div class="group-name">Policy state logic and Windows interop</div><div class="row"><div class="main"><span>Closing a user hive source that mounted successfully unloads the hive and reports success only if Windows unloads it. Closing any other source, including a user hive that failed to mount and so holds an empty scratch store, reports success without any step.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Using Policy Plus: Closing a user hive source that mounted successfully unloads the hive and reports success only if Windows unloads it. Closing any other source, including a user hive that failed to mount and so holds an empty scratch store, reports success without any step.
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:110
+- PolicyPlus/PolicyLoader.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:110  ·  Screens: Main</div></div></div></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

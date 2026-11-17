@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Lets the person pick a REG file and guesses the registry prefix used in it.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/editing-policy-files-directly.html">Editing policy files directly</a> › <a href="../../screen/PolicyPlus/ImportReg.vb.html">ImportReg.vb</a></div><h1>Lets the person pick a REG file and guesses the registry prefix used in it.</h1><p class="lead">Started by a person. In the code: PolicyPlus/ImportReg.vb:9</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the ImportReg screen of Editing policy files directly: Lets the person pick a REG file and guesses the registry prefix used in it.
+Where to look first:
+- Starts at PolicyPlus/ImportReg.vb:9
+- PolicyPlus/ImportReg.vb (only this capability)
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Data read: Policy setting
+Rules decided here: 13
+- Only files ending .reg are offered when browsing for a REG file. (PolicyPlus/ImportReg.vb:11)
+- When a REG file is browsed and the prefix box is empty, the prefix is filled with the prefix guessed from the file. (PolicyPlus/ImportReg.vb:14)
+- When that guessed REG file holds default values, the person is warned &quot;This REG file contains data for default values, which cannot be applied to all policy sources.&quot; (PolicyPlus/ImportReg.vb:18)
+- When the REG file cannot be read to guess the prefix, the person is told &quot;An error occurred while trying to guess the prefix.&quot; (PolicyPlus/ImportReg.vb:19)
+- When a REG file is read, a backslash in a value name or text data means the next character is taken literally and the backslash is dropped. (PolicyPlus/RegFile.vb:21)
+- When a REG file is read, blank lines and lines starting with a semicolon are skipped. (PolicyPlus/RegFile.vb:37)
+- A REG file is refused unless its first line is exactly 'Windows Registry Editor Version 5.00', with the message 'Incorrect REG signature'. (PolicyPlus/RegFile.vb:47)
+- In a REG file a key header starting with '-' marks the whole key for removal; a value whose data is '-' marks that value for removal; '@' names the default value. (PolicyPlus/RegFile.vb:54)
+  ...and 5 more
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/editing-policy-files-directly/screens.html">Screens</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/editing-policy-files-directly/policy-state-logic-and-windows-interop.html">Policy state logic and Windows interop</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (13)</h2><div class="group-name">Screens</div><div class="row"><div class="main"><span>When that guessed REG file holds default values, the person is warned &quot;This REG file contains data for default values, which cannot be applied to all policy sources.&quot;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: When that guessed REG file holds default values, the person is warned &quot;This REG file contains data for default values, which cannot be applied to all policy sources.&quot;
+Where to look first:
+- Starts at PolicyPlus/ImportReg.vb:18
+- PolicyPlus/ImportReg.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportReg.vb:18  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>When the REG file cannot be read to guess the prefix, the person is told &quot;An error occurred while trying to guess the prefix.&quot;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: When the REG file cannot be read to guess the prefix, the person is told &quot;An error occurred while trying to guess the prefix.&quot;
+Where to look first:
+- Starts at PolicyPlus/ImportReg.vb:19
+- PolicyPlus/ImportReg.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportReg.vb:19  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>Only files ending .reg are offered when browsing for a REG file.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: Only files ending .reg are offered when browsing for a REG file.
+Where to look first:
+- Starts at PolicyPlus/ImportReg.vb:11
+- PolicyPlus/ImportReg.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportReg.vb:11  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>When a REG file is browsed and the prefix box is empty, the prefix is filled with the prefix guessed from the file.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Screens layer of Editing policy files directly: When a REG file is browsed and the prefix box is empty, the prefix is filled with the prefix guessed from the file.
+Where to look first:
+- Starts at PolicyPlus/ImportReg.vb:14
+- PolicyPlus/ImportReg.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportReg.vb:14  ·  Screens: ImportReg</div></div></div><div class="group-name">Policy state logic and Windows interop</div><div class="row"><div class="main"><span>A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A text value stored in a POL file is read up to its first empty character. A multi-line value ends at the first empty line; kinds the program does not know are read as raw bytes.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:231
+- PolicyPlus/PolicySource.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:231  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>In a REG file a key header starting with &#39;-&#39; marks the whole key for removal; a value whose data is &#39;-&#39; marks that value for removal; &#39;@&#39; names the default value.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: In a REG file a key header starting with '-' marks the whole key for removal; a value whose data is '-' marks that value for removal; '@' names the default value.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:54
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:54  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>When a REG file is read, a backslash in a value name or text data means the next character is taken literally and the backslash is dropped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When a REG file is read, a backslash in a value name or text data means the next character is taken literally and the backslash is dropped.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:21
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:21  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>REG file data is read by its prefix: quoted text is a string, &#39;dword:&#39; a hexadecimal 32-bit number, and &#39;hex&#39; bytes of binary, or of the kind given in &#39;hex(n):&#39; where n is hexadecimal. A line ending in a backslash continues on the next line.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: REG file data is read by its prefix: quoted text is a string, 'dword:' a hexadecimal 32-bit number, and 'hex' bytes of binary, or of the kind given in 'hex(n):' where n is hexadecimal. A line ending in a backslash continues on the next line.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:75
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:75  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>A prefix for a REG file is guessed from the first key: for HKEY_USERS it includes the user&#39;s SID; otherwise it is the hive name; an empty file gives HKEY_LOCAL_MACHINE\.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A prefix for a REG file is guessed from the first key: for HKEY_USERS it includes the user's SID; otherwise it is the hive name; an empty file gives HKEY_LOCAL_MACHINE\.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:284
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:284  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>A REG file contains default values when any value has an empty name.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A REG file contains default values when any value has an empty name.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:298
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:298  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>A REG file value whose data matches none of the known forms is kept with no data and no kind.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A REG file value whose data matches none of the known forms is kept with no data and no kind.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:72
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:72  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>A REG file is refused unless its first line is exactly &#39;Windows Registry Editor Version 5.00&#39;, with the message &#39;Incorrect REG signature&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: A REG file is refused unless its first line is exactly 'Windows Registry Editor Version 5.00', with the message 'Incorrect REG signature'.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:47
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:47  ·  Screens: ImportReg</div></div></div><details class="more"><summary>Showing 8 of 9 business rules. Show all 9</summary><div class="row"><div class="main"><span>When a REG file is read, blank lines and lines starting with a semicolon are skipped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy state logic and Windows interop layer of Editing policy files directly: When a REG file is read, blank lines and lines starting with a semicolon are skipped.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:37
+- PolicyPlus/RegFile.vb (shared with 4 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:37  ·  Screens: ImportReg</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

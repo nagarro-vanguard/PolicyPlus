@@ -1,0 +1,47 @@
+{
+    "version": 1,
+    "partKinds": [
+        {
+            "id": "program",
+            "words": "program",
+            "means": "runs as an executable that a person starts or a schedule runs, on a computer, a server or a host",
+            "merged": false
+        },
+        {
+            "id": "site",
+            "words": "site",
+            "means": "screens the system serves to the people who work in it: web pages or terminal screens",
+            "merged": false
+        },
+        {
+            "id": "service",
+            "words": "service",
+            "means": "answers other programs' requests: an API, a message handler, a transaction another program calls",
+            "merged": false
+        },
+        {
+            "id": "database",
+            "words": "database",
+            "means": "a database and the scripts that build or change it",
+            "merged": false
+        },
+        {
+            "id": "library",
+            "words": "shared library",
+            "means": "code other parts build in or load",
+            "merged": false
+        },
+        {
+            "id": "tool",
+            "words": "tool",
+            "means": "run by the team to install, configure, upgrade or support the system",
+            "merged": false
+        },
+        {
+            "id": "tests",
+            "words": "set of tests",
+            "means": "code that tests other parts, and stand-ins used only by tests",
+            "merged": true
+        }
+    ]
+}
