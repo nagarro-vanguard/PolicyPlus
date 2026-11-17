@@ -46,7 +46,12 @@ export const SystemPayload = Schema.Struct({
                     "The screen's address: the path of its page file without the extension, with the folders every page shares left off.",
                 ),
             ),
-            name: Schema.String.annotate(about("The screen's name: its page file's name without the extension.")),
+            name: Schema.String.annotate(
+                about("The screen's name as the people using it say it; its page file's name when no one named it."),
+            ),
+            purpose: Schema.String.annotate(
+                about("What a person does there, in one sentence; empty when no one named it."),
+            ),
             files: Schema.Array(Schema.String).annotate(
                 about("The files its actions start in: its markup, its code-behind class and its browser scripts."),
             ),

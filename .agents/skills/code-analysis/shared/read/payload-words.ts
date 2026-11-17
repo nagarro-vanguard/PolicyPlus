@@ -75,3 +75,25 @@ export const ruleLine = (rule: {
  * @returns the phrase
  */
 export const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
+
+/**
+ * A name as an address: letters and digits in lower case, other runs of characters one hyphen.
+ * @param name the name
+ * @returns the address
+ */
+export const slugOf = (name: string) => {
+    const words: string[] = [];
+    let word = "";
+    for (const char of name.toLowerCase()) {
+        if ((char >= "a" && char <= "z") || (char >= "0" && char <= "9")) {
+            word += char;
+        } else if (word !== "") {
+            words.push(word);
+            word = "";
+        }
+    }
+    if (word !== "") {
+        words.push(word);
+    }
+    return words.join("-");
+};

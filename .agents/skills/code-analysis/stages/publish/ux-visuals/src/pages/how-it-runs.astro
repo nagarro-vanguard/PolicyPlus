@@ -1,0 +1,38 @@
+---
+import Page from "../layouts/Page.astro";
+import Answers from "../components/Answers.astro";
+import Evidence from "../components/Evidence.astro";
+import { knowledge } from "../lib/payloads";
+import { copy } from "../lib/copy";
+import { compareText } from "../lib/text";
+import { answerGroups, subjectWords, wordFor } from "../lib/words";
+
+const know = await knowledge();
+const assumptions = know.assumptions.toSorted((one, other) => compareText(one.subject.name, other.subject.name) || compareText(one.statement, other.statement));
+const shown = assumptions.slice(0, 10);
+const rest = assumptions.slice(10);
+---
+<Page title={copy.runs.title} lead={copy.runs.lead}>
+    <Answers answers={know.answers} groups={answerGroups.runs} />
+    <h2 id="assumptions">{copy.runs.assumptions}</h2>
+    <p class="note">{copy.runs.assumptionsLead}</p>
+    {assumptions.length === 0 && <p class="empty">{copy.runs.none}</p>}
+    {shown.map((item) => <div class="assume">
+        <div>{item.statement}</div>
+        <div class="sub">{copy.runs.about(wordFor(subjectWords, item.subject.kind), item.subject.name)}</div>
+        <div class="sub"><strong>{copy.runs.why}:</strong> {item.why}</div>
+        <div class="sub"><strong>{copy.runs.confirm}:</strong> {item.confirmWith}</div>
+        <div class="sub"><strong>{copy.runs.ifWrong}:</strong> {item.ifWrong}</div>
+        <Evidence places={item.evidence} />
+    </div>)}
+    {rest.length > 0 && <details class="more"><summary>{copy.site.showAll(shown.length, assumptions.length, "assumptions")}</summary>
+        {rest.map((item) => <div class="assume">
+            <div>{item.statement}</div>
+            <div class="sub">{copy.runs.about(wordFor(subjectWords, item.subject.kind), item.subject.name)}</div>
+            <div class="sub"><strong>{copy.runs.why}:</strong> {item.why}</div>
+            <div class="sub"><strong>{copy.runs.confirm}:</strong> {item.confirmWith}</div>
+            <div class="sub"><strong>{copy.runs.ifWrong}:</strong> {item.ifWrong}</div>
+            <Evidence places={item.evidence} />
+        </div>)}
+    </details>}
+</Page>

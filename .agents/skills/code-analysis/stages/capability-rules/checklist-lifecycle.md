@@ -15,3 +15,4 @@ Every rule that allows or refuses a change of state is attached to this life's t
 - A change of state written at a save no entry point reaches, without saying the system never makes it as it runs.
 - A transition made by code no entry point reaches (a trigger, a listener, a job run on a schedule), which a chain never shows.
 - A state set only in data or configuration outside the code, with no assumption saying so.
+- A state that can be reached without the check its transition needs, or data a failed step leaves inconsistent, that the lines plainly show with no finding of its own.

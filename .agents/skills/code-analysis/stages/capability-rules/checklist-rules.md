@@ -17,3 +17,9 @@ Every rule is shown on its capability's page to people who must rebuild or chang
 - A rule held in data or configuration outside the code, with no assumption saying so.
 - A rule in a block's own lines missed because the block holds others read elsewhere (`readInOtherJobs`): the job reads the lines between them.
 - A rule a block's links out show it applies (a check before a save, a lookup that refuses) left unwritten.
+- A weakness the job's own lines plainly show (input used unchecked, a check an action skips, a step that can leave data inconsistent, a secret or error detail sent out) with no finding of its own, or merged into a rule.
+
+## Wrong findings
+
+- A finding that says what might go wrong, one its lines do not show, or one resting on knowledge from outside the code; one that names a class, a method or a table where a person needs what can happen.
+- The same weakness written as several findings, or two different weaknesses merged into one.

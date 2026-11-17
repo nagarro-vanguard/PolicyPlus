@@ -2,7 +2,11 @@
 import Page from "../../layouts/Page.astro";
 import Figure from "../../components/Figure.astro";
 import Rows from "../../components/Rows.astro";
-import { capabilities, productLayers, screenHref, slugs, system } from "../../lib/payloads";
+import Bundle from "../../components/Bundle.astro";
+import RiskMarker from "../../components/RiskMarker.astro";
+import { capabilities, knowledge, productLayers, screenHref, slugs, system } from "../../lib/payloads";
+import { bundleOfCapability } from "../../lib/bundle";
+import { risksOfCapability } from "../../lib/risks";
 import { capabilityModel } from "../../lib/model";
 import { knownIds } from "../../lib/check";
 import { copy } from "../../lib/copy";
@@ -17,10 +21,13 @@ export async function getStaticPaths() {
 const { id } = Astro.props;
 const sys = await system();
 const all = await capabilities();
+const know = await knowledge();
 const addresses = await slugs();
 const cap = all.find((each) => each.capability.id === id);
 if (cap === undefined) throw new Error("no such capability");
-const known = knownIds(sys, all);
+const known = knownIds(sys, all, know);
+const risks = risksOfCapability(know, id);
+const held = bundleOfCapability(sys, all, know, id);
 const product = productLayers(sys);
 const figure = capabilityModel(cap, undefined, product);
 const area = sys.areas.find((each) => each.name === cap.area);
@@ -35,6 +42,7 @@ const layerOrder = inProduct.toSorted((one, other) => other.blocks - one.blocks)
 const actionHref = (actionId: string) => `../action/${addresses.capability(cap.capability.id)}/${addresses.action(cap.capability.id, actionId)}.html`;
 ---
 <Page title={cap.capability.name} lead={cap.capability.purpose} depth={1} brief={cap.context.text} trail={trail}>
+    <RiskMarker risks={risks} root="../" slug={addresses.risk} />
     <Figure id="capability-layers" facts={figure.facts} build={(limit) => capabilityModel(cap, limit, product).model} known={known} />
     <p class="note">{copy.capability.rulesNote(rules.length, cap.totals.rulesOnNoScreen)}</p>
     <h2>{copy.capability.screens(pages.length)}</h2>
@@ -58,4 +66,5 @@ const actionHref = (actionId: string) => `../action/${addresses.capability(cap.c
     <h2 class="gap">{copy.capability.gaps(cap.gaps.length)}</h2>
     {cap.gaps.length === 0 && <p class="empty">{copy.capability.noGaps}</p>}
     <Rows rows={cap.gaps.map((gap) => ({ text: copy.capability.gapTitle(wordFor(gapWords, gap.kind)), sub: `${gap.reason} ${copy.capability.gapWhere(where(gap.place))}` }))} cap={6} noun="gaps" />
+    <Bundle files={held === undefined ? [] : held.files} command={`cd .agents/skills/code-analysis && CODE_ANALYSIS_ROOT=${copy.bundle.place} bun cli/build-bundle.ts capability "${cap.capability.name}"`} />
 </Page>

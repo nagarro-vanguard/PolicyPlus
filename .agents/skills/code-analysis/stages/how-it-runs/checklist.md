@@ -1,6 +1,6 @@
 # Review checklist: How It Runs
 
-Each fact answers one topic its job was given (`jobPath`): one question about one part or technology, which this job alone answers, in one answer, a fact with no `risk` (the gate refuses a second); each harm the code shows is a finding of its own, a fact with a `risk`, beside the answer. Never ask for a second answer on a topic: where part of an answer rests on what no file settles, ask for the whole answer to be `assumed`, its statement saying what the code shows and what is assumed; where it rests on knowledge from outside the code, ask for `externalSource`. A technology job states the rules later stages apply across the code; an area job writes notes on one area of a large part, which the concluding step reduces. A entry-point rule claims every piece it admits across the code, not only the pieces it was written from.
+Each fact answers one topic its job was given (`jobPath`): one question about one part or technology, which this job alone answers, in one answer, a fact with no `risk` (the gate refuses a second); each risk the code shows is a finding of its own, a fact with a `risk`, beside the answer. Never ask for a second answer on a topic: where part of an answer rests on what no file settles, ask for the whole answer to be `assumed`, its statement saying what the code shows and what is assumed; where it rests on knowledge from outside the code, ask for `externalSource`. A technology job states the rules later stages apply across the code; an area job writes notes on one area of a large part, which the concluding step reduces. A entry-point rule claims every piece it admits across the code, not only the pieces it was written from.
 
 ## Wrong
 
@@ -13,7 +13,7 @@ Each fact answers one topic its job was given (`jobPath`): one question about on
 - An area job's note about code outside its area, stated as if it were the area's.
 - Two facts of the job that contradict each other: challenge both, each citing the other's lines.
 - A statement resting on a code comment, a name or a test page rather than on what the code does as production runs it.
-- A harm stated at a reach its lines do not show: every install, every customer, anyone holding the code.
+- A risk stated at a reach its lines do not show: every install, every customer, anyone holding the code.
 
 ## Missing
 

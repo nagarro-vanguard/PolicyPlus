@@ -164,7 +164,7 @@
         },
         {
             "id": "inside",
-            "words": "Which layers and code kinds is it made of?",
+            "words": "Which layers and kinds of code is it made of?",
             "group": "How it is built inside",
             "readers": ["person"],
             "subjects": ["parts", "system"],
@@ -196,15 +196,15 @@
             "id": "anything-else",
             "words": "What else here would change a decision?",
             "group": "Who can do what, settings, and when things fail",
-            "readers": ["person"],
-            "subjects": ["parts", "technologies"],
+            "readers": ["person", "capability-rules"],
+            "subjects": ["parts", "technologies", "capabilities"],
             "partKinds": [],
             "codeHolds": true,
             "answeredBy": "findings",
-            "guidance": "Only findings, each its own fact with a risk: a harm the code here shows that no other question asked, whichever question it would fall under or none, for example a value from outside pasted into a query or a command, a check one entry point skips, a secret in clear text. None when there is none: never an answer."
+            "guidance": "Only findings, each its own fact with a risk: a risk the code here shows that no other question asked, whichever question it would fall under or none, for example a value from outside pasted into a query or a command, a check one entry point skips, a secret in clear text. Each risk kind is looked for where the stage that reads what it needs is (the catalogue's `seenAt`): of a part or technology by the stages that read parts and settings, of a capability by the stage that reads every rule its code decides. None when there is none: never an answer."
         },
         {
-            "id": "harms",
+            "id": "risks",
             "words": "What can harm the business or block a change?",
             "group": "Who can do what, settings, and when things fail",
             "readers": ["person"],
@@ -212,7 +212,7 @@
             "partKinds": [],
             "codeHolds": true,
             "answeredBy": "findings",
-            "guidance": "Concluded over every finding of one kind of harm: one fact per distinct harm, wherever its findings sit, resting on exactly the findings that tell it, each finding in one harm only. Its statement says what can happen, to whom, and where (the parts it reaches); its severity is the one its worst place warrants, among its findings'. Two findings tell one harm when one fix closes both; copies of the same weakness in different parts are one harm with several places."
+            "guidance": "Concluded over every finding of one kind of risk: one fact per distinct risk, wherever its findings sit, resting on exactly the findings that tell it, each finding in one risk only. Its statement says what can happen, to whom, and where (the parts it reaches); its severity is the one its worst place warrants, among its findings'. Two findings tell one risk when one fix closes both; copies of the same weakness in different parts are one risk with several places."
         },
         {
             "id": "blocks-and-containers",

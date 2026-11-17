@@ -1,6 +1,10 @@
 import { Console, Effect, Schema } from "effect";
 import { Command } from "effect/cli";
 import { CapabilityPayload } from "../shared/model/schemas/payloads";
+import { KnowledgePayload } from "../shared/model/schemas/knowledge-payload";
+import { readCatalogue } from "../shared/run/catalogue";
+import { knowledgePayload } from "../shared/read/payload-knowledge";
+import { knowledgeGaps } from "../shared/read/knowledge-checks";
 import { SystemPayload } from "../shared/model/schemas/system-payload";
 import { capabilityPayload } from "../shared/read/payload-capability";
 import { payloadGaps } from "../shared/read/payload-checks";
@@ -13,6 +17,31 @@ import { decodedRows } from "../shared/store/stored-bodies";
 
 const IdRow = Schema.Struct({ id: Schema.String });
 const AreaRow = Schema.Struct({ name: Schema.String, capabilities: Schema.String });
+
+/**
+ * Write the knowledge payload: what the analysis knows of the system as a whole, checked to hold together.
+ * @param store the record store, read only
+ * @param system the system's payload, for the ids of the outside systems and layers
+ * @param folder the payloads' folder
+ * @returns how many gaps it printed
+ */
+const writeKnowledge = Effect.fnUntraced(function* (
+    store: RecordStore["Service"],
+    system: SystemPayload,
+    folder: string,
+) {
+    const knowledge = yield* knowledgePayload(store, yield* readCatalogue());
+    const known = new Set([...system.externals.map((each) => each.id), ...system.layers.map((each) => each.id)]);
+    const gaps = knowledgeGaps(knowledge, known);
+    for (const gap of gaps) {
+        yield* Console.log(`the knowledge payload does not add up: ${gap}`);
+    }
+    yield* (yield* FileAccess).writeText(
+        `${folder}/knowledge.json`,
+        `${JSON.stringify(Schema.encodeSync(KnowledgePayload)(knowledge), null, 2)}\n`,
+    );
+    return gaps.length;
+});
 
 /**
  * Write one typed payload per place of a finished analysis: each capability with its layers, screens, shared code,
@@ -58,9 +87,11 @@ const writePayloads = Effect.fn("writePayloads")(function* () {
         `${folder}/system.json`,
         `${JSON.stringify(Schema.encodeSync(SystemPayload)(system), null, 2)}\n`,
     );
+    broken += yield* writeKnowledge(store, system, folder);
     for (const [name, schema] of [
         ["system", SystemPayload],
         ["capability", CapabilityPayload],
+        ["knowledge", KnowledgePayload],
     ] as const) {
         yield* files.writeText(
             `${folder}/schema/${name}.schema.json`,

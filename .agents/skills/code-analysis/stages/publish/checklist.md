@@ -18,3 +18,16 @@ The system page lists what the system offers under these areas, read by people d
 - A `CrossCuttingConcern` whose name or purpose the lines do not support, or whose verdict is not the one the lines show: shared business code called a mechanism, or a mechanism (language lookup, rights, logging, error reporting, configuration) called domain code.
 - A candidate grouped with blocks that do different work, or one concern split across records where one name covers the blocks.
 - A concern the code applies without a call that the briefing left out of its facts.
+
+## Screens
+
+- A `Screen` named by a file, class or folder, not by what a person does there; two records that are one screen to the people using it (a page and its dialog), or one that merges screens they would tell apart.
+- A `kind` `screen` on a command, build or install step, test or scheduled-task start; a `kind` `other` on a page, window or dialog a person works in.
+- A purpose that would fit any screen, or that its candidate's actions do not show.
+
+## Pictures
+
+- A `Figure` whose question no reader would ask, or whose caption says what its records do not show, or that restates its title.
+- A shape the menu offers that would answer a plain question about the system (what it is made of, what it reaches outside itself, how a kind of data changes, who keeps what) with no figure, or a figure for a shape that answers nothing.
+- Records named so the picture hides what matters (one lifecycle of many, the parts of one kind only) where the question needs them all.
+- An `other` figure that asks for what the menu already offers.

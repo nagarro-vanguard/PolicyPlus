@@ -1,0 +1,9 @@
+---
+import { copy } from "../lib/copy";
+import { where } from "../lib/text";
+export interface Props { places: readonly { file: string; firstLine: number; lastLine: number }[]; }
+const { places } = Astro.props;
+---
+{places.length > 0 && <details class="evidence"><summary>{copy.runs.rests(places.length)}</summary>
+    {places.map((place) => <div class="where">{where(place)}</div>)}
+</details>}

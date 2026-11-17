@@ -1,0 +1,16 @@
+---
+import { copy } from "../lib/copy";
+import { wordFor, severityWords } from "../lib/words";
+import type { Risk } from "../lib/types";
+export interface Props { risks: readonly Risk[]; root: string; slug: (id: string) => string; shown?: number; }
+const { risks, root, slug, shown = 4 } = Astro.props;
+const first = risks.slice(0, shown);
+const rest = risks.slice(shown);
+---
+{risks.length > 0 && <div class="risk-marker" role="note">
+    <p><span class="badge">{copy.risks.marker}</span> <strong>{copy.risks.markerHere(risks.length)}</strong></p>
+    <ul>{first.map((risk) => <li><span class={`sev ${risk.severity}`}>{wordFor(severityWords, risk.severity)}</span> <a href={`${root}risk/${slug(risk.id)}.html`}>{risk.statement}</a></li>)}</ul>
+    {rest.length > 0 && <details class="more"><summary>{copy.site.showAll(first.length, risks.length, "risks")}</summary>
+        <ul>{rest.map((risk) => <li><span class={`sev ${risk.severity}`}>{wordFor(severityWords, risk.severity)}</span> <a href={`${root}risk/${slug(risk.id)}.html`}>{risk.statement}</a></li>)}</ul>
+    </details>}
+</div>}

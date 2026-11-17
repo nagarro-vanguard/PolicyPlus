@@ -25,8 +25,8 @@ const conclusionShapes = { Fact };
 const ConclusionJob = Schema.Struct({
     name: Text.annotate(about("The job's name, as a person reads it; nothing looks a job up by it: its job id does.")),
     jobId: Text.annotate(about("The job id: the name of its folder.")),
-    tier: Schema.Literals(["entries", "system", "harms"]).annotate(
-        about("Whether it concludes the entries' topics, the system's, or the kinds of harm."),
+    tier: Schema.Literals(["entries", "system", "risks"]).annotate(
+        about("Whether it concludes the entries' topics, the system's, or the kinds of risk."),
     ),
     topics: Schema.Array(Text).annotate(about("The keys of the topics it concludes.")),
 }).annotate(about("One concluding job of a stage (D177, 4.10)."));
@@ -36,7 +36,7 @@ const ConclusionList = Schema.Array(ConclusionJob);
 export type ConclusionJob = typeof ConclusionJob.Type;
 
 const TopicsFile = Schema.Struct({
-    tier: Schema.Literals(["entries", "system", "harms"]),
+    tier: Schema.Literals(["entries", "system", "risks"]),
     topics: Schema.Array(
         Schema.Struct({
             key: Text,
@@ -81,7 +81,7 @@ const readTopics = Effect.fnUntraced(function* (root: string, stage: Stage, job:
 /**
  * A tier's topics cut into jobs (D177; plan 0003, H3 and H6): each tier in runs of at most T topics and F facts
  * beneath, so a job's fan-in is bounded whatever the estate's size; the parts' tier reduces the notes of a part's areas
- * and any topic two stages wrote, the system's reads every part's answer to its questions, the harms' every finding of
+ * and any topic two stages wrote, the system's reads every part's answer to its questions, the risks' every finding of
  * a kind (plan 0005). A topic with more than F facts beneath is refused, never cut short: past F the
  * tree by source root is designed (the architecture's section 2A) and not built.
  * @param tier the tier
@@ -127,7 +127,7 @@ function cutTier(
             ? "the conclusions of the parts"
             : tier === "system"
               ? "the conclusions of the system"
-              : "the harms of the system";
+              : "the risks of the system";
     return Effect.succeed(
         chunks.map((chunk, i) => ({
             name: chunks.length > 1 ? `${name} (${i + 1} of ${chunks.length})` : name,
@@ -277,8 +277,8 @@ const listTier = Effect.fnUntraced(function* (
 
 /**
  * List the concluding jobs a stage's facts call for, in tiers (D177): the entries' tier from the facts beneath, never
- * from the stage's own conclusions, so a job keeps its topics once it is accepted; the harms' tier beside it, from the
- * findings and the earlier stages' harms beneath, never from its own (plan 0005); the system's tier once every job of the entries' tier,
+ * from the stage's own conclusions, so a job keeps its topics once it is accepted; the risks' tier beside it, from the
+ * findings and the earlier stages' risks beneath, never from its own (plan 0005); the system's tier once every job of the entries' tier,
  * as listed now, is decided, from the facts beneath and the entries' conclusions.
  * @param root the analysis root
  * @param stage the stage
@@ -303,7 +303,7 @@ export const listConclusions = Effect.fnUntraced(function* (
                 return facts === undefined ? [] : facts;
             });
     yield* listTier(root, stage, "entries", topicsToConclude(beneath, catalogue).entries);
-    const withEntries = yield* listTier(root, stage, "harms", topicsToConclude(beneath, catalogue).harms);
+    const withEntries = yield* listTier(root, stage, "risks", topicsToConclude(beneath, catalogue).risks);
     if (!tierDone(withEntries, "entries")) {
         return withEntries.filter((job) => job.tier !== "system");
     }

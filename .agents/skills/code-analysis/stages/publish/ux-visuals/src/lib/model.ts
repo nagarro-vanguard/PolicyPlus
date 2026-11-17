@@ -1,11 +1,12 @@
 import { diagrams } from "./diagram-config";
 import type { DiagramId } from "./diagram-config";
-import type { Action, Capability, Layer, Screen, System } from "./types";
-import { accessWords, groupWords, kindWords, startedWords, wordFor } from "./words";
+import type { Action, Capability, Knowledge, Layer, Lifecycle, Screen, System } from "./types";
+import { accessWords, groupWords, kindWords, partKindWords, startedWords, wordFor } from "./words";
 import { copy } from "./copy";
 import { compareText, plural } from "./text";
 
-export type NodeKind = "layer" | "group" | "data" | "store" | "outside" | "starter" | "system" | "action" | "more";
+export type NodeKind =
+    "layer" | "group" | "data" | "store" | "outside" | "starter" | "system" | "action" | "part" | "state" | "more";
 
 /** One box of a figure: what it says, and the record ids it stands for, so a figure traces back to the payloads. */
 export type FlowNode = {
@@ -495,4 +496,205 @@ export const landscapeModel = (system: System, capabilities: readonly Capability
         ...(project.length > 0 ? [{ title: copy.system.layersProject, project: true, items: project }] : []),
     ].filter((group) => group.items.length > 0);
     return { facts: { capabilities: system.capabilities.length }, groups };
+};
+
+/**
+ * Links between the same two things, one arrow per pair: the ways they reach each other named together, the counts added,
+ * so a figure of many parts and outside systems is not a tangle of wires.
+ * @param links the links, each with how it reaches and how many
+ * @returns one connection per pair
+ */
+const perPair = (links: readonly { from: string; to: string; kind: string; links: number }[]): Link[] => {
+    const pairs = new Map<string, { from: string; to: string; kinds: string[]; count: number }>();
+    for (const link of links) {
+        const key = `${link.from}>${link.to}`;
+        const seen = pairs.get(key) ?? { from: link.from, to: link.to, kinds: [], count: 0 };
+        pairs.set(key, {
+            ...seen,
+            kinds: seen.kinds.includes(link.kind) ? seen.kinds : [...seen.kinds, link.kind],
+            count: seen.count + link.links,
+        });
+    }
+    return [...pairs.values()].map((pair) => ({
+        from: pair.from,
+        to: pair.to,
+        verb: pair.kinds
+            .slice(0, 3)
+            .map((kind) => wordFor(accessWords, kind))
+            .join(", "),
+        unit: "link",
+        count: pair.count,
+    }));
+};
+
+/**
+ * What the system is made of: a box per part and an arrow where one part uses another, with how many links the code makes.
+ * Parts that are only tests are project work and left out, and said so.
+ * @param knowledge what the analysis knows of the system as a whole
+ * @param limit how many boxes at most
+ * @returns the figure, and how many parts it covers
+ */
+export const partsModel = (knowledge: Knowledge, limit?: number) => {
+    const budget = limit ?? diagrams.parts.budget?.nodes ?? 14;
+    const shown = knowledge.parts.filter((part) => part.kind !== "tests");
+    const ids = new Set(shown.map((part) => part.id));
+    const nodes = shown.map((part): FlowNode => ({
+        id: part.id,
+        label: part.name,
+        sub: `${wordFor(partKindWords, part.kind)} · ${plural(part.files, "file")}`,
+        kind: "part",
+        ids: [part.id],
+    }));
+    const edges = merged(perPair(knowledge.partLinks.filter((link) => ids.has(link.from) && ids.has(link.to))));
+    const weightOf = new Map(nodes.map((node) => [node.id, 0]));
+    for (const edge of edges) {
+        weightOf.set(edge.from, (weightOf.get(edge.from) ?? 0) + edge.count);
+        weightOf.set(edge.to, (weightOf.get(edge.to) ?? 0) + edge.count);
+    }
+    const model = capped({ nodes, edges }, (node) => weightOf.get(node.id) ?? 0, budget, "parts");
+    const leftOut = knowledge.parts.filter((part) => part.kind === "tests").map((part) => part.name);
+    return { facts: { parts: shown.length }, model: { id: "parts" as const, ...model, leftOut } satisfies FlowModel };
+};
+
+/**
+ * What the parts reach outside the system: a box per part that uses an outside system or store, one per outside system,
+ * an arrow for how, with how many links.
+ * @param system the system payload, for the outside systems
+ * @param knowledge what the analysis knows of the system as a whole, for the links
+ * @param limit how many boxes at most
+ * @returns the figure, and how many outside systems there are
+ */
+export const integrationModel = (system: System, knowledge: Knowledge, limit?: number) => {
+    const budget = limit ?? diagrams.integration.budget?.nodes ?? 14;
+    const outside = new Map(system.externals.map((each) => [each.id, each]));
+    const parts = new Map(knowledge.parts.map((part) => [part.id, part]));
+    const links = knowledge.partLinks.filter(
+        (link) => outside.has(link.to) && parts.has(link.from) && parts.get(link.from)?.kind !== "tests",
+    );
+    const partIds = [...new Set(links.map((link) => link.from))];
+    const outsideIds = [...new Set(links.map((link) => link.to))];
+    const byKind = outsideIds.length > Math.max(3, budget - partIds.length - 1);
+    const boxOf = (id: string) => (byKind ? `kind-${outside.get(id)?.kind ?? "other"}` : id);
+    const edges = merged(perPair(links.map((link) => ({ ...link, to: boxOf(link.to) }))));
+    const partNodes = partIds.flatMap((id): FlowNode[] => {
+        const part = parts.get(id);
+        return part === undefined
+            ? []
+            : [{ id, label: part.name, sub: wordFor(partKindWords, part.kind), kind: "part", ids: [id] }];
+    });
+    const outsideNodes: FlowNode[] = byKind
+        ? [...Map.groupBy(outsideIds, (id) => outside.get(id)?.kind ?? "other")].map(([kind, members]) => ({
+              id: `kind-${kind}`,
+              label: wordFor(kindWords, kind),
+              sub: plural(members.length, "system"),
+              kind: kind === "dataStore" ? "store" : "outside",
+              ids: members,
+          }))
+        : outsideIds.flatMap((id): FlowNode[] => {
+              const each = outside.get(id);
+              return each === undefined
+                  ? []
+                  : [
+                        {
+                            id,
+                            label: each.name,
+                            sub: wordFor(kindWords, each.kind),
+                            kind: each.kind === "dataStore" ? "store" : "outside",
+                            ids: [id],
+                        },
+                    ];
+          });
+    const weightOf = new Map<string, number>();
+    for (const edge of edges) {
+        weightOf.set(edge.from, (weightOf.get(edge.from) ?? 0) + edge.count);
+        weightOf.set(edge.to, (weightOf.get(edge.to) ?? 0) + edge.count);
+    }
+    const model = capped(
+        { nodes: [...partNodes, ...outsideNodes], edges },
+        (node) => weightOf.get(node.id) ?? 0,
+        budget,
+        "parts and outside systems",
+    );
+    return {
+        facts: { externals: links.length === 0 ? 0 : outsideIds.length },
+        model: { id: "integration" as const, ...model, leftOut: [] } satisfies FlowModel,
+    };
+};
+
+/**
+ * How one kind of data changes over time: a box for where a record is created and one per state in the order a record
+ * passes them, an arrow for each change the code makes, with how many places in the code make it.
+ * @param life the life of one kind of data
+ * @param limit how many boxes at most
+ * @returns the figure, and how many lives it covers
+ */
+export const statesModel = (life: Lifecycle, limit?: number) => {
+    const budget = limit ?? diagrams.states.budget?.nodes ?? 14;
+    const start: FlowNode = {
+        id: "created",
+        label: "Record created",
+        sub: "where a record starts",
+        kind: "starter",
+        ids: [],
+    };
+    const into = (state: number) => life.transitions.filter((change) => change.to === state).length;
+    const nodes = life.states.map((name, i): FlowNode => ({
+        id: `state-${i + 1}`,
+        label: name,
+        sub: `reached in ${plural(into(i + 1), "place")}`,
+        kind: "state",
+        ids: [],
+    }));
+    const edges = merged(
+        life.transitions.flatMap((change) =>
+            (change.from.length === 0 ? ["created"] : change.from.map((from) => `state-${from}`)).map((from) => ({
+                from,
+                to: `state-${change.to}`,
+                verb: "",
+                unit: "place",
+                count: 1,
+            })),
+        ),
+    );
+    const weightOf = new Map(nodes.map((node) => [node.id, 0]));
+    for (const edge of edges) {
+        weightOf.set(edge.to, (weightOf.get(edge.to) ?? 0) + edge.count);
+    }
+    const hasStart = edges.some((edge) => edge.from === "created");
+    const model = capped(
+        { nodes: [...(hasStart ? [start] : []), ...nodes], edges },
+        (node) => (node.kind === "starter" ? 1_000_000 : 0) + (weightOf.get(node.id) ?? 0),
+        budget,
+        "states",
+    );
+    return { facts: { lifecycles: 1 }, model: { id: "states" as const, ...model, leftOut: [] } satisfies FlowModel };
+};
+
+export type DataGrid = {
+    readonly kinds: readonly { readonly id: string; readonly name: string }[];
+    readonly capabilities: readonly { readonly id: string; readonly name: string }[];
+    readonly cell: (kind: string, capability: string) => "saves" | "reads" | "both" | "";
+};
+
+/**
+ * Which capability saves or reads which kind of data, as a grid of kinds of data by capabilities: only the kinds asked for
+ * (all when none are named) and only the capabilities that use one of them.
+ * @param knowledge what the analysis knows of the system as a whole
+ * @param records the kinds of data asked for, by record id; none for all
+ * @returns the grid, and how many kinds of data it holds
+ */
+export const dataGridModel = (knowledge: Knowledge, records: readonly string[] = []) => {
+    const uses = knowledge.dataUse.filter((use) => records.length === 0 || records.includes(use.entity.id));
+    const kinds = [...new Map(uses.map((use) => [use.entity.id, use.entity])).values()].toSorted((one, other) =>
+        compareText(one.name, other.name),
+    );
+    const capabilities = [...new Map(uses.map((use) => [use.capability.id, use.capability])).values()].toSorted(
+        (one, other) => compareText(one.name, other.name),
+    );
+    const at = new Map(uses.map((use) => [`${use.entity.id}|${use.capability.id}`, use]));
+    const cell = (kind: string, capability: string) => {
+        const use = at.get(`${kind}|${capability}`);
+        return use === undefined ? "" : use.saves && use.reads ? "both" : use.saves ? "saves" : "reads";
+    };
+    return { facts: { kinds: kinds.length }, grid: { kinds, capabilities, cell } satisfies DataGrid };
 };

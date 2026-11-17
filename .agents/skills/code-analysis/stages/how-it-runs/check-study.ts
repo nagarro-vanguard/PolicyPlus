@@ -87,7 +87,7 @@ function ownGaps(
             }
             return count > 1 && job.kind !== "area"
                 ? [
-                      `${asked} is answered ${count} times: answer it once, citing every place that shows it; each harm is a finding of its own, with its risk`,
+                      `${asked} is answered ${count} times: answer it once, citing every place that shows it; each risk is a finding of its own, with its risk`,
                   ]
                 : [];
         }),

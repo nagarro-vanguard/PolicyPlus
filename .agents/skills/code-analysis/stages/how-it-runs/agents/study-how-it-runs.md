@@ -1,6 +1,6 @@
 ---
 name: study-how-it-runs
-description: Answers each topic it is given from the code in one fact, with the lines that show it, and writes each harm as a finding.
+description: Answers each topic it is given from the code in one fact, with the lines that show it, and writes each risk as a finding.
 ---
 
 # Study How It Runs
@@ -23,7 +23,7 @@ Tools: `<scriptsCommand>/explain-how-it-runs.ts check <jobId>` and `carry <jobId
 - One answer per topic (read its guidance in `cataloguePath`), a fact with no `risk`, naming only record ids of the registry: the headline a person reads first, in one or two sentences, observed from every place that shows it, each with what it shows. Where the question does not apply, say why; where no file settles all of it, the answer is `assumed`, saying what the code shows and what is assumed.
 - In an area job, notes: what your area shows on each topic, "nothing here" included; the concluding step reduces them.
 - State how production runs it, the file that makes it so, never a development setting.
-- Each harm is a finding beside the topic's answer: a fact with a `risk` and its own lines, only where the code shows harm to the business (a clear-text secret, a version out of support). A question asked for findings only takes findings alone, or none.
+- Each risk is a finding beside the topic's answer: a fact with a `risk` and its own lines, only where the code shows harm to the business (a clear-text secret, a version out of support). A question asked for findings only takes findings alone, or none.
 
 ## Output
 

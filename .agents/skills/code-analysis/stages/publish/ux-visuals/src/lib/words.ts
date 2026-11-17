@@ -75,3 +75,37 @@ export const wordFor = (words: Readonly<Record<string, string>>, value: string):
     const word = words[value];
     return word === undefined ? value : word;
 };
+
+export const partKindWords: Record<string, string> = {
+    program: "Program",
+    site: "Web site",
+    service: "Service",
+    database: "Database",
+    library: "Shared library",
+    tool: "Tool",
+    tests: "Automated tests",
+};
+
+export const severityWords: Record<string, string> = { high: "High", medium: "Medium", low: "Low" };
+export const severityOrder = ["high", "medium", "low"];
+
+/** The headings the answers sit under, in the order a reader meets them. */
+export const answerGroups = {
+    madeOf: ["What it is", "How it is built inside"],
+    keeps: ["What it keeps"],
+    runs: [
+        "Where it runs, and how each part starts and stops",
+        "How each part is built and released",
+        "How work enters, and how it is handled",
+        "Who can do what, settings, and when things fail",
+        "What it offers",
+    ],
+} as const;
+
+export const subjectWords: Record<string, string> = {
+    system: "The whole system",
+    part: "Part",
+    technology: "Technology",
+    capability: "Capability",
+    entity: "Data",
+};

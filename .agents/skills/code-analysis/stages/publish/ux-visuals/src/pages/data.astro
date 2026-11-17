@@ -1,0 +1,22 @@
+---
+import Page from "../layouts/Page.astro";
+import Picture from "../components/Picture.astro";
+import Answers from "../components/Answers.astro";
+import { capabilities, knowledge, system } from "../lib/payloads";
+import { knownIds } from "../lib/check";
+import { briefsFor, kindsOf } from "../lib/figures";
+import { copy } from "../lib/copy";
+import { answerGroups } from "../lib/words";
+
+const sys = await system();
+const caps = await capabilities();
+const know = await knowledge();
+const known = knownIds(sys, caps, know);
+const briefs = briefsFor(kindsOf.data, sys, know);
+---
+<Page title={copy.data.title} lead={copy.data.lead}>
+    {briefs.length === 0 && <p class="empty">{copy.data.noGrid}</p>}
+    {briefs.map((brief) => <Picture brief={brief} sys={sys} knowledge={know} known={known} />)}
+    <h2>{copy.data.answers}</h2>
+    <Answers answers={know.answers} groups={answerGroups.keeps} />
+</Page>

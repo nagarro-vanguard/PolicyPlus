@@ -1,0 +1,18 @@
+---
+import { copy } from "../lib/copy";
+import type { DataGrid } from "../lib/model";
+export interface Props { grid: DataGrid; title: string; question: string; caption?: string; legend: string; }
+const { grid, title, question, caption = "", legend } = Astro.props;
+const mark = (cell: string) => (cell === "both" ? "S R" : cell === "saves" ? "S" : cell === "reads" ? "R" : "");
+const words = (cell: string) => (cell === "both" ? copy.data.both : cell === "saves" ? copy.data.saves : cell === "reads" ? copy.data.reads : copy.data.none);
+---
+<figure class="dg" data-diagram="data">
+    <figcaption><h3>{title}</h3><p class="sub">{question}</p></figcaption>
+    {caption !== "" && <p class="caption">{caption}</p>}
+    <div class="table-wrap"><table class="grid">
+        <caption class="visually-hidden">{title}</caption>
+        <thead><tr><th scope="col">{copy.data.kind}</th>{grid.capabilities.map((cap) => <th scope="col">{cap.name}</th>)}</tr></thead>
+        <tbody>{grid.kinds.map((kind) => <tr><th scope="row">{kind.name}</th>{grid.capabilities.map((cap) => { const cell = grid.cell(kind.id, cap.id); return <td class={cell === "" ? "none" : "used"} title={words(cell)}><span aria-hidden="true">{mark(cell)}</span><span class="visually-hidden">{words(cell)}</span></td>; })}</tr>)}</tbody>
+    </table></div>
+    <p class="note">{legend}</p>
+</figure>

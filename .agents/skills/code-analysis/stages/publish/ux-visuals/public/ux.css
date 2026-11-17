@@ -33,3 +33,25 @@ details.more>summary,details.dg-text>summary{cursor:pointer;color:var(--accent-l
 .dg-flow .react-flow__edge-textbg{fill:var(--surface-page)}.dg-flow .react-flow__edge-text{fill:var(--text-primary);font-size:11px}
 /* The design system sizes every svg to its container; the library's edge layers are zero-width svgs that draw outside it. */
 .dg-flow svg{max-inline-size:none}
+
+.top{flex-wrap:wrap}.top .sections{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.92em}
+.caption{margin:.2em 0 .6em;max-width:75ch}
+.table-wrap{overflow-x:auto}
+table.data,table.grid{border-collapse:collapse;width:100%;font-size:.93em}
+table.data th,table.data td,table.grid th,table.grid td{padding:7px 10px;border-bottom:1px solid var(--line-subtle);text-align:left;vertical-align:top}
+table.data thead th,table.grid thead th{color:var(--text-secondary);font-weight:700;border-bottom:1px solid var(--line-strong)}
+table.grid td{text-align:center;font-weight:700;min-width:44px}table.grid td.used{background:var(--accent-tint)}table.grid td.none{color:var(--text-muted)}
+table.grid tbody th{white-space:nowrap}
+.glance{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin:.6em 0}
+.glance div{padding:10px 12px;border:1px solid var(--line-subtle);border-radius:var(--radius-md);background:var(--surface-raised)}
+.paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:.6em 0}
+.paths a.card h3{margin:.1em 0}
+.sev{display:inline-block;font-size:.78em;font-weight:700;padding:0 7px;border:1px solid var(--line-strong);border-radius:4px;margin-right:6px}
+.sev.high{border-color:var(--warn-text);color:var(--warn-text)}
+.risk{padding:10px 0;border-bottom:1px solid var(--line-subtle)}.risk .sub{margin-top:3px}
+.risk-marker{margin:12px 0;padding:10px 14px;border:1px solid var(--warn-text);border-radius:var(--radius-md);background:var(--warn-surface)}
+.risk-marker ul{margin:.3em 0 0;padding-left:1.1em}.risk-marker p{margin:0}
+.bundle .command{padding:10px 12px;border:1px solid var(--line-strong);border-radius:var(--radius-md);background:var(--surface-sunken);overflow-x:auto;font:.85em var(--font-code,monospace)}
+dl.facts{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px}dl.facts dt{color:var(--text-secondary)}dl.facts dd{margin:0}
+.assume{padding:10px 0;border-bottom:1px solid var(--line-subtle)}.assume .sub{margin-top:2px}
+table.grid thead th{max-width:9rem;white-space:normal;vertical-align:bottom}

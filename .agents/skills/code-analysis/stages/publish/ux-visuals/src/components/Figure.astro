@@ -15,8 +15,11 @@ export interface Props {
     facts: Record<string, number>;
     build: (limit: number) => FlowModel;
     known: ReadonlySet<string>;
+    title?: string;
+    question?: string;
+    caption?: string;
 }
-const { id, facts, build, known } = Astro.props;
+const { id, facts, build, known, title = diagrams[id].title, question = diagrams[id].question, caption = "" } = Astro.props;
 const settings = diagrams[id];
 const verdict = applies(id, facts);
 const problems: string[] = [];
@@ -34,10 +37,11 @@ const lines = model.edges.map((edge) => accessWordsOf(nodeName.get(edge.from) ??
 const more = model.nodes.find((node) => node.kind === "more");
 ---
 <figure class="dg" data-diagram={id}>
-    <figcaption><h3>{settings.title}</h3><p class="sub">{settings.question}</p></figcaption>
+    <figcaption><h3>{title}</h3><p class="sub">{question}</p></figcaption>
+    {caption !== "" && <p class="caption">{caption}</p>}
     {!verdict.drawn && <p class="note">{copy.notDrawn(verdict.reason)}</p>}
-    {verdict.drawn && laid && settings.renderer === "svg" && <Dag model={model} laid={laid} title={settings.title} />}
-    {verdict.drawn && laid && settings.renderer === "flow" && <Flow client:only="react" model={model} laid={laid} title={settings.title} nodeWidth={nodeWidth} nodeHeight={nodeHeight} labelLines={settings.budget ? settings.budget.labelLines : 2} />}
+    {verdict.drawn && laid && settings.renderer === "svg" && <Dag model={model} laid={laid} title={title} />}
+    {verdict.drawn && laid && settings.renderer === "flow" && <Flow client:only="react" model={model} laid={laid} title={title} nodeWidth={nodeWidth} nodeHeight={nodeHeight} labelLines={settings.budget ? settings.budget.labelLines : 2} />}
     {fit && !fit.readable && <p class="note gap">{copy.tooBig}</p>}
     {verdict.drawn && more && <p class="note">{copy.folded(model.omitted, more.sub)}</p>}
     {verdict.drawn && model.leftOut.length > 0 && <p class="note">{copy.leftOut([...model.leftOut])}</p>}

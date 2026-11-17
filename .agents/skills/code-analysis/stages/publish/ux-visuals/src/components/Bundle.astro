@@ -1,0 +1,14 @@
+---
+import { copy } from "../lib/copy";
+export interface Props { files: readonly { path: string; why: string }[]; command: string; }
+const { files, command } = Astro.props;
+---
+<section class="bundle">
+    <h2>{copy.bundle.heading}</h2>
+    <p class="note">{copy.bundle.lead}</p>
+    <details><summary>{copy.bundle.files(files.length)}</summary>
+        {files.map((file) => <div class="row"><div class="main"><span class="where">{file.path}</span></div><div class="meta">{file.why}</div></div>)}
+    </details>
+    <p class="note">{copy.bundle.command}:</p>
+    <pre class="command"><code>{command}</code></pre>
+</section>

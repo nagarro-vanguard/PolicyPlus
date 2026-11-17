@@ -3,55 +3,68 @@
     "riskCategories": [
         {
             "id": "access-control",
-            "words": "Someone can read or change what they should not"
+            "words": "Someone can read or change what they should not",
+            "seenAt": ["capability-rules"]
         },
         {
             "id": "input-handling",
-            "words": "Input from outside is used without checks, so it can change what the code does"
+            "words": "Input from outside is used without checks, so it can change what the code does",
+            "seenAt": ["capability-rules"]
         },
         {
             "id": "secrets",
-            "words": "Passwords, keys or tokens are kept where others can read them"
+            "words": "Passwords, keys or tokens are kept where others can read them",
+            "seenAt": ["inventory", "how-it-runs"]
         },
         {
             "id": "cryptography",
-            "words": "Data is protected by weak or fixed encryption"
+            "words": "Data is protected by weak or fixed encryption",
+            "seenAt": ["how-it-runs", "capability-rules"]
         },
         {
             "id": "personal-data",
-            "words": "Personal or confidential data is exposed or kept longer than needed"
+            "words": "Personal or confidential data is exposed or kept longer than needed",
+            "seenAt": ["capability-rules", "how-it-runs"]
         },
         {
             "id": "unsupported-technology",
-            "words": "A technology is out of support or no longer receives fixes"
+            "words": "A technology is out of support or no longer receives fixes",
+            "seenAt": ["inventory"]
         },
         {
             "id": "data-integrity",
-            "words": "Data can end up wrong, lost or inconsistent"
+            "words": "Data can end up wrong, lost or inconsistent",
+            "seenAt": ["capability-rules"]
         },
         {
             "id": "failure-handling",
-            "words": "Failures are hidden, lost or not retried"
+            "words": "Failures are hidden, lost or not retried",
+            "seenAt": ["how-it-runs", "capability-rules"]
         },
         {
             "id": "release-and-operations",
-            "words": "Releasing or running the system depends on manual or missing steps"
+            "words": "Releasing or running the system depends on manual or missing steps",
+            "seenAt": ["how-it-runs"]
         },
         {
             "id": "duplicated-definitions",
-            "words": "One thing is defined in several places that can drift apart"
+            "words": "One thing is defined in several places that can drift apart",
+            "seenAt": ["capability-rules"]
         },
         {
             "id": "missing-source",
-            "words": "Behaviour depends on code we do not have the source for"
+            "words": "Behaviour depends on code we do not have the source for",
+            "seenAt": ["inventory", "how-it-runs"]
         },
         {
             "id": "information-exposure",
-            "words": "Error details, internal addresses or tokens are shown to people or callers who should not see them"
+            "words": "Error details, internal addresses or tokens are shown to people or callers who should not see them",
+            "seenAt": ["capability-rules", "how-it-runs"]
         },
         {
             "id": "behaviour-a-rebuild-could-drop",
-            "words": "Behaviour lives where a rebuild could miss it: in screens, browser code or the database"
+            "words": "Behaviour lives where a rebuild could miss it: in screens, browser code or the database",
+            "seenAt": ["capability-rules"]
         }
     ]
 }

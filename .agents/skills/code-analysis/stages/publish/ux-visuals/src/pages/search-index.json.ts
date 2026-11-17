@@ -1,4 +1,4 @@
-import { capabilities, screenHref, slugs, system } from "../lib/payloads";
+import { capabilities, knowledge, screenHref, slugs, system } from "../lib/payloads";
 
 /**
  * The index the search reads: one entry per capability, screen, action and rule, with where it leads.
@@ -8,7 +8,14 @@ export async function GET() {
     const sys = await system();
     const all = await capabilities();
     const addresses = await slugs();
+    const know = await knowledge();
     const entries = [
+        ...know.risks.map((risk) => ({
+            k: "Risks",
+            t: `${risk.statement} ${risk.categoryWords}`,
+            l: risk.statement,
+            h: `risk/${addresses.risk(risk.id)}.html`,
+        })),
         ...sys.screens.map((screen) => ({
             k: "Screens",
             t: `${screen.name} ${screen.files.join(" ")}`,

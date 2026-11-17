@@ -7,9 +7,9 @@ Each answer is the headline of one topic: one subject, one question, read by a p
 - An answer a fact beneath contradicts, or one that says more than the facts it rests on (a number, a name, a scope none of them states).
 - An answer that blends facts that disagree instead of saying they disagree and which to believe.
 - An answer true of one part or one case stated of the whole subject, or the parts that differ left unnamed.
-- An answer that drops a condition the facts beneath state, or merges a harm in that a finding already tells.
+- An answer that drops a condition the facts beneath state, or merges a risk in that a finding already tells.
 - An `assumed` answer the facts beneath do settle.
-- Two harms written as one, or one harm told twice; a finding placed under a harm it does not tell; a severity the harm's worst place does not warrant.
+- Two risks written as one, or one risk told twice; a finding placed under a risk it does not tell; a severity the risk's worst place does not warrant.
 
 ## Missing
 

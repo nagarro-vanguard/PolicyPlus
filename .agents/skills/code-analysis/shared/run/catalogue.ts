@@ -37,7 +37,15 @@ const Aspect = Schema.Struct({
 
 export const Catalogue = Schema.Struct({
     aspects: Schema.NonEmptyArray(Aspect),
-    riskCategories: Schema.NonEmptyArray(Schema.Struct({ id: Text, words: Text })),
+    riskCategories: Schema.NonEmptyArray(
+        Schema.Struct({
+            id: Text,
+            words: Text,
+            seenAt: Schema.NonEmptyArray(Text).annotate(
+                about("The stages whose agents look for this kind of risk, because what they read shows it."),
+            ),
+        }),
+    ),
     severities: Schema.NonEmptyArray(Schema.Struct(Entry)),
     partKinds: Schema.NonEmptyArray(
         Schema.Struct({
@@ -99,7 +107,13 @@ function catalogueGaps(catalogue: Catalogue): string[] {
         ["part kinds", catalogue.partKinds],
         ["ways to confirm", catalogue.confirmWith],
     ];
+    const stages = new Set<string>(stageNames);
     return [
+        ...catalogue.riskCategories.flatMap((category) =>
+            category.seenAt
+                .filter((stage) => !stages.has(stage))
+                .map((stage) => `the risk kind ${category.id} is seen at ${stage}, which is not a stage`),
+        ),
         ...lists.flatMap(([name, entries]) =>
             entries
                 .map((entry) => entry.id)

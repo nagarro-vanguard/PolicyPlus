@@ -9,10 +9,12 @@ const ready = dir !== undefined && existsSync(`${dir}/system.json`) && existsSyn
 describe.skipIf(!ready)("the generated schemas hold the payloads to the Effect schemas", async () => {
     const { capabilitySchema } = await import("../src/generated/capability");
     const { systemSchema } = await import("../src/generated/system");
+    const { knowledgeSchema } = await import("../src/generated/knowledge");
     const read = (file: string): Record<string, unknown> => JSON.parse(readFileSync(`${dir}/${file}`, "utf8"));
     test("every payload of the run is valid", () => {
         for (const file of readdirSync(dir ?? ".").filter((name) => name.endsWith(".json"))) {
-            const schema = file === "system.json" ? systemSchema : capabilitySchema;
+            const schema =
+                file === "system.json" ? systemSchema : file === "knowledge.json" ? knowledgeSchema : capabilitySchema;
             expect(schema.safeParse(read(file)).success).toBe(true);
         }
     });
@@ -21,6 +23,14 @@ describe.skipIf(!ready)("the generated schemas hold the payloads to the Effect s
         const layers = structuredClone(system) as { layers: Record<string, unknown>[] };
         delete layers.layers[0]?.blocks;
         expect(systemSchema.safeParse(layers).success).toBe(false);
+        const know = structuredClone(read("knowledge.json")) as { risks: Record<string, unknown>[] };
+        if (know.risks[0] !== undefined) {
+            know.risks[0].severity = "catastrophic";
+            expect(knowledgeSchema.safeParse(know).success).toBe(false);
+        }
+        const parts = structuredClone(read("knowledge.json")) as { parts: Record<string, unknown>[] };
+        delete parts.parts[0]?.purpose;
+        expect(knowledgeSchema.safeParse(parts).success).toBe(false);
         const kinds = structuredClone(system) as { externals: Record<string, unknown>[] };
         if (kinds.externals[0] !== undefined) {
             kinds.externals[0].kind = "not a kind";

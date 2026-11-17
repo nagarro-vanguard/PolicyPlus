@@ -12,13 +12,14 @@ import {
     LayerRecordRow,
     ListOfText,
     PurposeRow,
+    ScreenRecordRow,
     commitOf,
     layerRoles,
     numberOf,
     read,
 } from "./payload-queries";
 import { layersTouchedOf, screenContext } from "./payload-screens";
-import { groupOf, plural, ruleLine, type Group } from "./payload-words";
+import { groupOf, plural, ruleLine, slugOf, type Group } from "./payload-words";
 import { externalUse, layerPartUse } from "./system-queries";
 
 type Capabilities = readonly CapabilityPayload[];
@@ -73,17 +74,56 @@ const layerLookups = (payloads: Capabilities, roles: readonly { readonly layer: 
     groupOfLayer: new Map<string, Group>(roles.map((each) => [each.layer, groupOf(each.role)] as const)),
 });
 
+type Grouped = Map<string, { record: typeof ScreenRecordRow.Type | undefined; actions: ActionOf[]; key: string }>;
+
+/**
+ * Group the actions of the candidate screens into the screens the briefing named; a candidate it did not name stays
+ * a screen of its own, and one it judged no screen is left out.
+ * @param screenActions the actions of each candidate screen, by its key
+ * @param named the screens the briefing named
+ * @param folders the folders every page shares
+ * @returns the screens, each with its actions and its address
+ */
+const groupScreens = (
+    screenActions: ReadonlyMap<string, ActionOf[]>,
+    named: ReadonlyArray<typeof ScreenRecordRow.Type>,
+    folders: string,
+): Grouped => {
+    const nameOfKey = new Map(named.flatMap((record) => record.places.map((place) => [place, record] as const)));
+    const grouped: Grouped = new Map();
+    for (const [key, actions] of screenActions) {
+        const record = nameOfKey.get(key);
+        if (record !== undefined && record.kind === "other") {
+            continue;
+        }
+        const groupKey = record === undefined ? `path:${key}` : `record:${record.id}`;
+        const own = key.startsWith(folders) ? key.slice(folders.length) : key;
+        if (grouped.has(groupKey)) {
+            known(grouped, groupKey, "checked").actions.push(...actions);
+        } else {
+            grouped.set(groupKey, {
+                record,
+                actions: [...actions],
+                key: record === undefined ? own : slugOf(record.name),
+            });
+        }
+    }
+    return grouped;
+};
+
 /**
  * The screens of the system, merged by page across capabilities, each with the layers it touches and its context.
  * @param payloads every capability's payload
  * @param roles the layers with their roles
  * @param commit the commit the analysis describes
+ * @param named the screens the briefing named
  * @returns the screens, ordered by key
  */
 const screensOfSystem = (
     payloads: Capabilities,
     roles: readonly { readonly layer: string; readonly role: string }[],
     commit: string,
+    named: ReadonlyArray<typeof ScreenRecordRow.Type> = [],
 ): SystemPayload["screens"] => {
     const { layerOfRule, groupOfLayer } = layerLookups(payloads, roles);
     const everyAction = everyActionOf(payloads);
@@ -105,19 +145,26 @@ const screensOfSystem = (
             screenActions.set(key, [...(screenActions.has(key) ? known(screenActions, key, "checked") : []), action]);
         }
     }
-    return [...screenActions]
-        .map(([key, actions]) => {
+    const grouped = groupScreens(screenActions, named, folders);
+    const used = new Map<string, number>();
+    return [...grouped.values()]
+        .map(({ record, actions, key }) => {
             const last = key.split("/").at(-1);
+            const before = used.get(key);
+            const times = (before === undefined ? 0 : before) + 1;
+            used.set(key, times);
+            const unique = times === 1 ? key : `${key}-${times}`;
             return {
-                key: key.startsWith(folders) ? key.slice(folders.length) : key,
-                name: last === undefined ? key : last,
+                key: unique,
+                name: record === undefined ? (last === undefined ? key : last) : record.name,
+                purpose: record === undefined ? "" : record.purpose,
                 files: [...new Set(actions.map((action) => action.place.file))].toSorted(),
                 capabilities: [...new Set(actions.map((action) => action.capability))].toSorted(),
                 actionIds: actions.map((action) => action.id),
                 actions: actions.length,
                 rules: new Set(actions.flatMap((action) => action.rules)).size,
                 layersTouched: layersTouchedOf(actions, layerOfRule, groupOfLayer),
-                context: screenContext({ key, actions, payloads, layerOfRule, groupOfLayer, commit }),
+                context: screenContext({ key: unique, actions, payloads, layerOfRule, groupOfLayer, commit }),
             };
         })
         .toSorted((one, other) => compareText(one.key, other.key));
@@ -230,7 +277,21 @@ const systemRows = Effect.fnUntraced(function* (store: RecordStore["Service"]) {
         PurposeRow,
         (sql) => sql`SELECT statement FROM v_fact WHERE subjectRegistry = 'system' AND aspect = 'purpose' LIMIT 1`,
     );
-    return { areas, layerRecords, edges, capabilities, purpose: purposeRow === undefined ? "" : purposeRow.statement };
+    const screenRecords = yield* read(
+        store,
+        ScreenRecordRow,
+        (sql) => sql`SELECT id, json_extract(body, '$.name') AS name, json_extract(body, '$.purpose') AS purpose,
+                json_extract(body, '$.kind') AS kind, json_extract(body, '$.places') AS places
+            FROM record WHERE type = 'Screen' ORDER BY recordNumber`,
+    );
+    return {
+        areas,
+        layerRecords,
+        edges,
+        capabilities,
+        screenRecords,
+        purpose: purposeRow === undefined ? "" : purposeRow.statement,
+    };
 });
 
 /**
@@ -261,7 +322,7 @@ export const systemPayload = Effect.fnUntraced(function* (store: RecordStore["Se
     const layers = (yield* layerRoles(store)).toSorted(
         (one, other) => compareText(one.name, other.name) || compareText(one.layer, other.layer),
     );
-    const { areas, layerRecords, edges, capabilities, purpose } = yield* systemRows(store);
+    const { areas, layerRecords, edges, capabilities, screenRecords, purpose } = yield* systemRows(store);
     const commit = yield* commitOf(store);
     const unresolved = yield* numberOf(store, (sql) => sql`SELECT count(*) AS number FROM v_unresolved_link`);
     const unattributed = yield* numberOf(
@@ -283,7 +344,7 @@ export const systemPayload = Effect.fnUntraced(function* (store: RecordStore["Se
             blocks: layer.blocks,
             product: layer.product,
         })),
-        screens: screensOfSystem(payloads, layers, commit),
+        screens: screensOfSystem(payloads, layers, commit, screenRecords),
         edges: edges.map((edge) => ({ from: edge.fromLayer, to: edge.toLayer, kind: edge.kind, links: edge.links })),
         entries: entriesOf(payloads, new Set(judged.filter((each) => each.product).map((each) => each.layer))),
         externals: externalsOf(yield* externalUse(store)),

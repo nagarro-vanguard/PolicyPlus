@@ -36,7 +36,7 @@
       var found = entries.filter(function (e) { return words.every(function (w) { return e.t.toLowerCase().indexOf(w) !== -1; }); });
       box.hidden = false;
       if (!found.length) { var none = document.createElement("div"); none.className = "none"; none.textContent = strings.noMatch; box.append(none); return; }
-      ["Capabilities", "Screens", "Actions", "Business rules"].forEach(function (kind) {
+      ["Capabilities", "Screens", "Risks", "Actions", "Business rules"].forEach(function (kind) {
         var of = found.filter(function (e) { return e.k === kind; });
         if (!of.length) return;
         var h = document.createElement("h4"); h.textContent = kind + " (" + of.length + ")"; box.append(h);

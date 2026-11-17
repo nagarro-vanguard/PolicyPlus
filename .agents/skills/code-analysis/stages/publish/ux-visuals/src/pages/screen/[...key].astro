@@ -2,7 +2,11 @@
 import Page from "../../layouts/Page.astro";
 import Figure from "../../components/Figure.astro";
 import Rows from "../../components/Rows.astro";
-import { capabilities, pathOf, productLayers, slugs, system } from "../../lib/payloads";
+import Bundle from "../../components/Bundle.astro";
+import RiskMarker from "../../components/RiskMarker.astro";
+import { capabilities, knowledge, pathOf, productLayers, slugs, system } from "../../lib/payloads";
+import { bundleOfScreen } from "../../lib/bundle";
+import { risksInFiles } from "../../lib/risks";
 import { screenModel } from "../../lib/model";
 import { knownIds } from "../../lib/check";
 import { copy } from "../../lib/copy";
@@ -17,6 +21,7 @@ export async function getStaticPaths() {
 const { key } = Astro.params;
 const sys = await system();
 const all = await capabilities();
+const know = await knowledge();
 const addresses = await slugs();
 const screen = sys.screens.find((each) => each.key === key);
 if (screen === undefined) throw new Error("no such screen");
@@ -24,7 +29,7 @@ const depth = screen.key.split("/").length;
 const root = "../".repeat(depth);
 const caps = all.filter((each) => screen.capabilities.includes(each.capability.id));
 const wanted = new Set(screen.actionIds);
-const known = knownIds(sys, all);
+const known = knownIds(sys, all, know);
 const product = productLayers(sys);
 const figure = screenModel(screen, caps, undefined, product);
 const mine: { action: Action; cid: string; layer: Layer }[] = caps.flatMap((cap) => cap.layers.flatMap((layer) => layer.actions.filter((action) => wanted.has(action.id)).map((action) => ({ action, cid: cap.capability.id, layer }))));
@@ -56,9 +61,12 @@ const controls = caps.flatMap((cap) => cap.screens.filter((each) => classes.has(
 const seen = new Set<string>();
 const uniqueControls = controls.filter((control) => { if (seen.has(control.name)) return false; seen.add(control.name); return true; });
 const ruleLayers = touchedLayers.flatMap((touched) => { const rules = [...reached].flatMap((rule) => { const found = ruleOf.get(rule); return found && found.layer.id === touched.layerId ? [found] : []; }); return rules.length > 0 ? [{ touched, name: layerOf.get(touched.layerId)?.layer.name ?? touched.layerId, rules }] : []; });
-const lead = copy.screen.figureFiles(screen.files);
+const lead = `${screen.purpose === "" ? "" : `${screen.purpose} `}${copy.screen.figureFiles(screen.files)}`;
+const risks = risksInFiles(know, screen.files);
+const held = bundleOfScreen(sys, all, know, screen.key);
 ---
 <Page title={screen.name} lead={lead} depth={depth} brief={screen.context.text} trail={[{ text: copy.site.home, href: `${root}index.html` }, { text: screen.name }]}>
+    <RiskMarker risks={risks} root={root} slug={addresses.risk} />
     <Figure id="screen-trace" facts={figure.facts} build={(limit) => screenModel(screen, caps, limit, product).model} known={known} />
     {caps.length > 1 && <div class="filter" role="group" aria-label={copy.screen.filter}><span class="note">{copy.screen.filter}:</span> {caps.map((cap) => <button class="chip toggle on" aria-pressed="true" data-capability-chip={cap.capability.id}>{cap.capability.name}</button>)}</div>}
     <h2>{copy.screen.layers(strip.length)}</h2>
@@ -86,4 +94,5 @@ const lead = copy.screen.figureFiles(screen.files);
     {ruleLayers.map(({ touched, name, rules }) => <details class="group" id={`group-${touched.layerId}`}><summary>{name} ({rules.length})</summary>
         <Rows rows={rules.map(({ rule, cid }) => ({ text: rule.says, copy: rule.context.text, meta: rule.gates ? copy.words.changesState : undefined, sub: where(rule.place), capability: cid }))} cap={8} noun="business rules" />
     </details>)}
+    <Bundle files={held === undefined ? [] : held.files} command={`cd .agents/skills/code-analysis && CODE_ANALYSIS_ROOT=${copy.bundle.place} bun cli/build-bundle.ts screen ${screen.key}`} />
 </Page>

@@ -1,0 +1,40 @@
+---
+import Page from "../../layouts/Page.astro";
+import Evidence from "../../components/Evidence.astro";
+import { knowledge, screenHref, slugs, system } from "../../lib/payloads";
+import { copy } from "../../lib/copy";
+import { subjectWords, severityWords, wordFor } from "../../lib/words";
+
+export async function getStaticPaths() {
+    const know = await knowledge();
+    const addresses = await slugs();
+    return know.risks.map((risk) => ({ params: { slug: addresses.risk(risk.id) }, props: { id: risk.id } }));
+}
+const { id } = Astro.props;
+const know = await knowledge();
+const sys = await system();
+const addresses = await slugs();
+const risk = know.risks.find((each) => each.id === id);
+if (risk === undefined) throw new Error("no such risk");
+const files = new Set(risk.places.files);
+const screens = sys.screens.filter((screen) => screen.files.some((file) => files.has(file)));
+const capHref = (cid: string) => `../capability/${addresses.capability(cid)}.html`;
+---
+<Page title={risk.statement} lead={`${copy.risks.severityLabel}: ${wordFor(severityWords, risk.severity)}. ${copy.risks.kindOf}: ${risk.categoryWords}.`} depth={1} trail={[{ text: copy.site.home, href: "../index.html" }, { text: copy.risks.title, href: "../risks.html" }, { text: wordFor(severityWords, risk.severity) }]}>
+    <h2>{copy.risks.shows} ({risk.findings.length})</h2>
+    {risk.findings.map((finding) => <div class="assume">
+        <div>{finding.statement}</div>
+        <div class="sub">{copy.runs.about(wordFor(subjectWords, finding.subject.kind), finding.subject.name)}</div>
+        <Evidence places={finding.evidence} />
+    </div>)}
+    <h2>{copy.risks.where}</h2>
+    <h3>{copy.risks.capabilities} ({risk.places.capabilities.length})</h3>
+    {risk.places.capabilities.map((place) => <div class="row"><div class="main"><a href={capHref(place.id)}>{place.name}</a></div></div>)}
+    <h3>{copy.risks.screens} ({screens.length})</h3>
+    {screens.length === 0 && <p class="empty">{copy.risks.noScreens}</p>}
+    {screens.map((screen) => <div class="row"><div class="main"><a href={screenHref("../", screen.key)}>{screen.name}</a></div></div>)}
+    <h3>{copy.risks.parts} ({risk.places.parts.length})</h3>
+    {risk.places.parts.map((part) => <div class="row"><div class="main"><a href="../made-of.html">{part.name}</a></div></div>)}
+    <h3>{copy.risks.files} ({risk.places.files.length})</h3>
+    {risk.places.files.map((file) => <div class="where">{file}</div>)}
+</Page>

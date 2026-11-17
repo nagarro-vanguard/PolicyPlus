@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { contextOf, shown } from "../shared/read/payload-context";
 
 /**
- * The context of a place has the shape plans/ux-lean-design.md documents: an ask, the scope, a map with pointers (own
+ * The context of a place has the documented shape: an ask, the scope, a map with pointers (own
  * files first, then the shared ones, the most widely shared first), the data saved and read, the rules, what is
  * unconfirmed, what was not followed and the commit; capped, with the count left out; and no record id.
  */

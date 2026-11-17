@@ -2,16 +2,18 @@ import { diagrams } from "./diagram-config";
 import type { Laid } from "./layout";
 import { linesOf } from "./layout";
 import type { FlowModel } from "./model";
-import type { Capability, System } from "./types";
+import type { Capability, Knowledge, System } from "./types";
 
 /**
  * Every record id the payloads name that a figure may stand for.
  * @param system the system payload
  * @param capabilities every capability payload
+ * @param knowledge what the analysis knows of the system as a whole, for the parts
  * @returns the ids
  */
-export const knownIds = (system: System, capabilities: readonly Capability[]) =>
+export const knownIds = (system: System, capabilities: readonly Capability[], knowledge?: Pick<Knowledge, "parts">) =>
     new Set([
+        ...(knowledge === undefined ? [] : knowledge.parts.map((part) => part.id)),
         ...system.layers.map((layer) => layer.id),
         ...system.capabilities.map((each) => each.id),
         ...system.externals.map((each) => each.id),

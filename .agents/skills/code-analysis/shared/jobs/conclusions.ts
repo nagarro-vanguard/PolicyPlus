@@ -3,7 +3,7 @@ import { basisOf, type Fact } from "../model/schemas/fact";
 
 type FactRecord = typeof Fact.Type;
 
-export type Tier = "entries" | "system" | "harms";
+export type Tier = "entries" | "system" | "risks";
 
 export type TopicToConclude = {
     readonly key: string;
@@ -22,8 +22,8 @@ export const topicKey = (subject: FactRecord["subject"], aspect: string) =>
     `${subject === "system" ? "system" : `${subject.registry}:${subject.key}`}\u0000${aspect}`;
 
 /**
- * The key of the topic a written fact concludes (plan 0005): a harm, a fact with a risk, concludes the harm topic of its
- * kind, so each kind of harm is one topic under the one question for harms; any other fact, its subject's topic.
+ * The key of the topic a written fact concludes (plan 0005): a risk, a fact with a risk, concludes the risk topic of its
+ * kind, so each kind of risk is one topic under the one question for risks; any other fact, its subject's topic.
  * @param fact the fact
  * @returns the key
  */
@@ -33,27 +33,27 @@ const concludedTopicKey = (fact: FactRecord) =>
         : `${topicKey(fact.subject, fact.aspect)}\u0000${fact.risk.category}`;
 
 /**
- * The harm topics a stage's concluding step concludes (plan 0005, decision B): for each kind of harm, every finding of
+ * The risk topics a stage's concluding step concludes (plan 0005, decision B): for each kind of risk, every finding of
  * that kind (a fact with a risk that no step concluded, whatever question it answers, since a risk is for the person,
- * D182), under the one question asked of the system for harms, unless the harms already concluded of that kind hold
+ * D182), under the one question asked of the system for risks, unless the risks already concluded of that kind hold
  * every one of them. None when the catalogue asks no such question.
  * @param facts every fact standing, accepted and decided
  * @param catalogue the catalogue
- * @returns the topics, one per kind of harm left to conclude
+ * @returns the topics, one per kind of risk left to conclude
  */
-function harmTopics(facts: readonly FactRecord[], catalogue: Catalogue): TopicToConclude[] {
+function riskTopics(facts: readonly FactRecord[], catalogue: Catalogue): TopicToConclude[] {
     const question = catalogue.aspects.find((aspect) => aspect.answeredBy === "findings" && askedOf(aspect, "system"));
     if (question === undefined) {
         return [];
     }
     const findings = facts.filter((fact) => fact.risk !== undefined && basisOf(fact) !== "concluded");
-    const harms = facts.filter((fact) => fact.aspect === question.id && basisOf(fact) === "concluded");
+    const risks = facts.filter((fact) => fact.aspect === question.id && basisOf(fact) === "concluded");
     return catalogue.riskCategories.flatMap((kind) => {
         const ofKind = findings.filter((fact) => fact.risk !== undefined && fact.risk.category === kind.id);
         const held = new Set<string>(
-            harms.flatMap((harm) =>
-                harm.risk !== undefined && harm.risk.category === kind.id && "concluded" in harm.basis
-                    ? harm.basis.concluded.from
+            risks.flatMap((risk) =>
+                risk.risk !== undefined && risk.risk.category === kind.id && "concluded" in risk.basis
+                    ? risk.basis.concluded.from
                     : [],
             ),
         );
@@ -90,8 +90,8 @@ const coversAll = (concluded: FactRecord, resting: readonly FactRecord[]) => {
  * since findings stand beside the answers and are never concluded (plan 0004): in the entries' tier,
  * each topic of a part or a technology the person reads that holds two facts or more and no concluded fact covering
  * them; in the system's tier, each question the person reads answered by facts, from the answer of every entry that
- * answers it, when no concluded fact of the system covers them; in the harms' tier, each kind of harm with a finding no
- * harm holds yet (`harmTopics`). A topic of one fact is answered by that fact.
+ * answers it, when no concluded fact of the system covers them; in the risks' tier, each kind of risk with a finding no
+ * risk holds yet (`riskTopics`). A topic of one fact is answered by that fact.
  * @param facts every fact standing, accepted and decided
  * @param catalogue the catalogue
  * @returns the topics, by tier
@@ -141,19 +141,19 @@ export function topicsToConclude(facts: readonly FactRecord[], catalogue: Catalo
             ? [{ key: topicKey("system", aspect.id), subject: "system" as const, aspect: aspect.id, facts: resting }]
             : [];
     });
-    return { entries, system, harms: harmTopics(facts, catalogue) };
+    return { entries, system, risks: riskTopics(facts, catalogue) };
 }
 
 /**
- * Whether a topic is a kind of harm (plan 0005): its key carries the kind beside its subject and question.
+ * Whether a topic is a kind of risk (plan 0005): its key carries the kind beside its subject and question.
  * @param topic the topic
- * @returns true for a harm topic
+ * @returns true for a risk topic
  */
-const isHarmTopic = (topic: TopicToConclude) => topic.key !== topicKey(topic.subject, topic.aspect);
+const isRiskTopic = (topic: TopicToConclude) => topic.key !== topicKey(topic.subject, topic.aspect);
 
 /**
  * The gaps of one conclusion against the facts beneath its topic: a source not beneath it; an answer leaving a fact
- * beneath out (A7: no note or answer is dropped); a harm whose severity none of its findings gives.
+ * beneath out (A7: no note or answer is dropped); a risk whose severity none of its findings gives.
  * @param fact the conclusion
  * @param topic its topic
  * @returns one line per gap
@@ -168,12 +168,12 @@ function restingGaps(fact: FactRecord, topic: TopicToConclude): string[] {
         ...from
             .filter((id) => !beneath.has(id))
             .map((id) => `${fact.id} rests on ${id}, which is not beneath its topic`),
-        ...(!isHarmTopic(topic) && "concluded" in fact.basis && left.length
+        ...(!isRiskTopic(topic) && "concluded" in fact.basis && left.length
             ? [
                   `${fact.id} leaves out ${left.map((each) => each.id).join(", ")} of the facts beneath its topic: rest on every one, saying which to believe where they disagree`,
               ]
             : []),
-        ...(isHarmTopic(topic) && !sources.some((each) => each.risk !== undefined && each.risk.severity === severity)
+        ...(isRiskTopic(topic) && !sources.some((each) => each.risk !== undefined && each.risk.severity === severity)
             ? [
                   `${fact.id} is rated ${String(severity)}, which none of the findings it groups is: rate it as one of them is`,
               ]
@@ -182,14 +182,14 @@ function restingGaps(fact: FactRecord, topic: TopicToConclude): string[] {
 }
 
 /**
- * The gaps of a topic's conclusions taken together: an answer topic answered once, never twice or not at all; a harm
- * topic with every finding beneath in exactly one harm (plan 0005).
+ * The gaps of a topic's conclusions taken together: an answer topic answered once, never twice or not at all; a risk
+ * topic with every finding beneath in exactly one risk (plan 0005).
  * @param topic the topic
  * @param concluded the facts the job wrote for it
  * @returns one line per gap
  */
 function topicGaps(topic: TopicToConclude, concluded: readonly FactRecord[]): string[] {
-    if (!isHarmTopic(topic)) {
+    if (!isRiskTopic(topic)) {
         return concluded.length === 1
             ? []
             : [
@@ -202,7 +202,7 @@ function topicGaps(topic: TopicToConclude, concluded: readonly FactRecord[]): st
         return times === 1
             ? []
             : [
-                  `${finding.id} is in ${times} harms: place every finding of this kind in exactly one harm, the harm it tells`,
+                  `${finding.id} is in ${times} risks: place every finding of this kind in exactly one risk, the risk it tells`,
               ];
     });
 }
@@ -226,7 +226,7 @@ export function conclusionGaps(written: readonly FactRecord[], topics: readonly 
         if (topic === undefined) {
             return [
                 fact.risk !== undefined && listed.has(topicKey(fact.subject, fact.aspect))
-                    ? `${fact.id} carries a risk: an answer carries none, and each harm is concluded under the question for harms`
+                    ? `${fact.id} carries a risk: an answer carries none, and each risk is concluded under the question for risks`
                     : `${fact.id} answers a topic this job was not given`,
             ];
         }

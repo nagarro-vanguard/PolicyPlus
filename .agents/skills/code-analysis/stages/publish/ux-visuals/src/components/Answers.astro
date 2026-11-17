@@ -1,0 +1,23 @@
+---
+import Evidence from "./Evidence.astro";
+import { copy } from "../lib/copy";
+import { compareText } from "../lib/text";
+import { subjectWords, wordFor } from "../lib/words";
+import type { Knowledge } from "../lib/types";
+export interface Props { answers: Knowledge["answers"]; groups: readonly string[]; }
+const { answers, groups } = Astro.props;
+const shown = groups.flatMap((group) => {
+    const here = answers.filter((answer) => answer.group === group);
+    return here.length === 0 ? [] : [{ group, here: here.toSorted((one, other) => compareText(one.question, other.question) || compareText(one.subject.name, other.subject.name)) }];
+});
+---
+{shown.length === 0 && <p class="empty">{copy.runs.none}</p>}
+{shown.map(({ group, here }) => <section>
+    <h3>{group}</h3>
+    {here.map((answer) => <div class="assume">
+        <div class="sub">{answer.question}</div>
+        <div>{answer.statement}</div>
+        <div class="sub">{copy.runs.about(wordFor(subjectWords, answer.subject.kind), answer.subject.name)}</div>
+        <Evidence places={answer.evidence} />
+    </div>)}
+</section>)}

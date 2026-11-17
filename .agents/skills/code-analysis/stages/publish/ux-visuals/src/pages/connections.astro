@@ -1,0 +1,31 @@
+---
+import Page from "../layouts/Page.astro";
+import Picture from "../components/Picture.astro";
+import Answers from "../components/Answers.astro";
+import { capabilities, knowledge, system } from "../lib/payloads";
+import { knownIds } from "../lib/check";
+import { briefsFor, kindsOf } from "../lib/figures";
+import { copy } from "../lib/copy";
+import { compareText, plural } from "../lib/text";
+import { accessWords, kindWords, wordFor } from "../lib/words";
+
+const sys = await system();
+const caps = await capabilities();
+const know = await knowledge();
+const known = knownIds(sys, caps, know);
+const briefs = briefsFor(kindsOf.connections, sys, know);
+const partName = new Map(know.parts.map((part) => [part.id, part.name]));
+const reached = (id: string) => [...Map.groupBy(know.partLinks.filter((link) => link.to === id), (link) => link.from)].map(([from, links]) => ({ part: partName.get(from) ?? "", how: links.map((link) => `${wordFor(accessWords, link.kind)} · ${plural(link.links, "link")}`) })).filter((use) => use.part !== "").toSorted((one, other) => compareText(one.part, other.part));
+const outside = sys.externals.toSorted((one, other) => other.links - one.links || compareText(one.name, other.name));
+---
+<Page title={copy.connections.title} lead={copy.connections.lead}>
+    {briefs.map((brief) => <Picture brief={brief} sys={sys} knowledge={know} known={known} />)}
+    <h2>{copy.connections.table}</h2>
+    {outside.length === 0 && <p class="empty">{copy.connections.none}</p>}
+    {outside.length > 0 && <div class="table-wrap"><table class="data">
+        <thead><tr><th scope="col">{copy.connections.columns.name}</th><th scope="col">{copy.connections.columns.kind}</th><th scope="col">{copy.connections.columns.usedBy}</th></tr></thead>
+        <tbody>{outside.map((each) => <tr><th scope="row">{each.name}</th><td>{wordFor(kindWords, each.kind)}</td><td>{reached(each.id).map((use) => copy.connections.usedBy(use.part, use.how)).join("; ")}</td></tr>)}</tbody>
+    </table></div>}
+    <h2>{copy.connections.answers}</h2>
+    <Answers answers={know.answers.filter((answer) => answer.aspect === "external-systems" || answer.aspect === "connections")} groups={["How it is built inside"]} />
+</Page>

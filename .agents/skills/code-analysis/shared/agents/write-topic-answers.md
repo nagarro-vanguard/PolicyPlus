@@ -1,6 +1,6 @@
 ---
 name: write-topic-answers
-description: Concludes each topic it is given - one subject, one question, the facts beneath it - in one fact that answers it, resting only on those facts; a kind of harm, in one fact per distinct harm over its findings.
+description: Concludes each topic it is given - one subject, one question, the facts beneath it - in one fact that answers it, resting only on those facts; a kind of risk, in one fact per distinct risk over its findings.
 ---
 
 # Write Topic Answers
@@ -23,7 +23,7 @@ Tools: `<scriptsCommand>/append-agent-records.ts Fact <outputPath>`, `<scriptsCo
 Read every fact beneath a topic of `jobPath`, and `nearby`, and the question's guidance in `cataloguePath`; where facts disagree, read the lines they cite. `checkCommand` printing `no gap` is the minimum; read each answer beside its facts.
 
 - One `concluded` fact per topic, with its subject and aspect, from every fact beneath it: what is true of the subject as a whole, in plain words, differing parts named, no number the facts do not state.
-- Where the facts disagree, say so and which to believe, never a blend; where they leave it open, an `assumed` fact with the nearest lines, why, what would confirm it, what changes if it is wrong. An answer carries no `risk`. A topic of one kind of harm takes one `concluded` fact per distinct harm: its kind, a severity among its findings', resting on exactly the findings that tell it.
+- Where the facts disagree, say so and which to believe, never a blend; where they leave it open, an `assumed` fact with the nearest lines, why, what would confirm it, what changes if it is wrong. An answer carries no `risk`. A topic of one kind of risk takes one `concluded` fact per distinct risk: its kind, a severity among its findings', resting on exactly the findings that tell it.
 
 ## Output
 

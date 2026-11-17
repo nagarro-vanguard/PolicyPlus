@@ -7,3 +7,4 @@
 - Code no entry point reaches may still run (a trigger, a listener, a job the platform starts): read whether anything starts it before you say a save is never made.
 - Read every save in the uses file, those with no fields recorded included: `check` weighs only your receipt's coverage of them. Test each state against saves you did not write it from.
 - Re-read each text as someone who has never seen the code and must decide with it.
+- **Risk findings:** where a state can be reached without the check its transition needs, a state is skipped, or data is left inconsistent when a step fails, write a `Fact` with aspect `anything-else`, the capability as subject, a `risk` (category and severity from the catalogue), an observed basis and the lines that show it. None where the code shows none.

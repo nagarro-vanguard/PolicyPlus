@@ -1,0 +1,25 @@
+---
+import Page from "../layouts/Page.astro";
+import RiskRow from "../components/RiskRow.astro";
+import { knowledge, slugs } from "../lib/payloads";
+import { copy } from "../lib/copy";
+import { groupedRisks, severityCounts } from "../lib/risks";
+import { severityWords, wordFor } from "../lib/words";
+
+const know = await knowledge();
+const addresses = await slugs();
+const counts = severityCounts(know.risks);
+const groups = groupedRisks(know.risks);
+---
+<Page title={copy.risks.title} lead={copy.risks.lead}>
+    {know.risks.length === 0 ? <p class="empty">{copy.risks.none}</p> : <p class="note">{copy.risks.count(counts.high, counts.medium, counts.low)}</p>}
+    {groups.map((group) => <section>
+        <h2>{wordFor(severityWords, group.severity)} ({group.kinds.reduce((sum, kind) => sum + kind.risks.length, 0)})</h2>
+        <p class="note">{copy.risks.severity[group.severity as "high" | "medium" | "low"]}</p>
+        {group.kinds.map((kind) => <Fragment>
+            <h3>{kind.words}</h3>
+            {kind.risks.map((risk) => <RiskRow risk={risk} href={`risk/${addresses.risk(risk.id)}.html`} />)}
+        </Fragment>)}
+    </section>)}
+    <p class="note"><a href="how-it-runs.html#assumptions">{copy.risks.assumptionsLink}</a></p>
+</Page>

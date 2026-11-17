@@ -1,0 +1,10 @@
+---
+import { copy } from "../lib/copy";
+import type { Risk } from "../lib/types";
+export interface Props { risk: Risk; href: string; }
+const { risk, href } = Astro.props;
+---
+<div class="risk">
+    <a href={href}>{risk.statement}</a>
+    <div class="sub">{copy.risks.reaches(risk.places.capabilities.length, risk.places.parts.length)}</div>
+</div>

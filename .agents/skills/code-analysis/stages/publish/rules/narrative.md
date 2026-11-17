@@ -19,6 +19,8 @@ How ux-visuals talks about the system. It is read by business analysts, product 
 
 - Every page opens with the question it answers; every figure has a one-line key, a text version and its own title.
 - Project work (tests, build scripts) is named as such and kept out of figures about the product.
+- A page that carries a number says what it counts, and the agent's captions and summaries state none: the build counts, so a caption cannot disagree with a figure.
+- Every risk is shown once, with the places it reaches linked; a screen or capability that carries risks shows a marker with a word, never colour alone.
 - All the sentences the build writes sit in `src/lib/copy.ts`, so they can be read as a whole and are tested against these rules.
 
 ## What the code cannot settle

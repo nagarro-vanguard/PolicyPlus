@@ -3,33 +3,79 @@ import Page from "../layouts/Page.astro";
 import Figure from "../components/Figure.astro";
 import Landscape from "../components/Landscape.astro";
 import Rows from "../components/Rows.astro";
-import { capabilities, slugs, system } from "../lib/payloads";
+import { capabilities, knowledge, slugs, system } from "../lib/payloads";
 import { landscapeModel, tiersModel, contextModel } from "../lib/model";
 import { applies, diagrams } from "../lib/diagram-config";
 import { knownIds } from "../lib/check";
+import { wantedPictures } from "../lib/figures";
+import { severityCounts } from "../lib/risks";
 import { copy } from "../lib/copy";
 import { firstSentence } from "../lib/text";
+import { severityWords, wordFor } from "../lib/words";
 
 const sys = await system();
 const caps = await capabilities();
+const know = await knowledge();
 const addresses = await slugs();
-const known = knownIds(sys, caps);
+const known = knownIds(sys, caps, know);
 const land = landscapeModel(sys, caps);
 const landVerdict = applies("landscape", land.facts);
 const tiers = tiersModel(sys);
 const context = contextModel(sys);
+const counts = severityCounts(know.risks);
+const rules = new Set(caps.flatMap((cap) => cap.layers.flatMap((layer) => layer.rules.map((rule) => rule.id)))).size;
+const top = know.risks.slice(0, 5);
+const wanted = wantedPictures(know);
 const layerRows = (product: boolean) => sys.layers.filter((layer) => layer.product === product).toSorted((one, other) => other.blocks - one.blocks).map((layer) => ({ text: layer.name, sub: firstSentence(layer.purpose) }));
+const glance = [
+    copy.glance.capabilities(sys.capabilities.length),
+    copy.glance.screens(sys.screens.length),
+    copy.glance.rules(rules),
+    copy.glance.parts(know.parts.length),
+    copy.glance.technologies(know.technologies.length),
+    copy.glance.outside(sys.externals.length),
+    copy.glance.assumptions(know.assumptions.length),
+    copy.glance.risks(counts.high, counts.medium, counts.low),
+];
 ---
 <Page title={copy.system.title} lead={sys.purpose === "" ? copy.system.noPurpose : sys.purpose} brief={sys.context.text}>
+    <h2>{copy.glance.heading}</h2>
+    <div class="glance">{glance.map((item) => <div>{item}</div>)}</div>
+    <h2>{copy.home.topRisks}</h2>
+    {top.length === 0 ? <p class="empty">{copy.home.noRisks}</p> : <Fragment>
+        {top.map((risk) => <div class="risk"><span class={`sev ${risk.severity}`}>{wordFor(severityWords, risk.severity)}</span> <a href={`risk/${addresses.risk(risk.id)}.html`}>{risk.statement}</a></div>)}
+        <p class="note"><a href="risks.html">{copy.home.allRisks(know.risks.length)}</a></p>
+    </Fragment>}
+    <h2>{copy.home.paths}</h2>
+    <div class="paths">
+        <a class="card" href="#does"><h3>{copy.nav.does}</h3><span class="sub">{copy.home.doesLead}</span></a>
+        <a class="card" href="#built"><h3>{copy.nav.built}</h3><span class="sub">{copy.home.builtLead}</span></a>
+        <a class="card" href="#wrong"><h3>{copy.nav.risks}</h3><span class="sub">{copy.home.wrongLead}</span></a>
+    </div>
+    <h2 id="does">{copy.nav.does}</h2>
     <figure class="dg" data-diagram="landscape">
         <figcaption><h3>{diagrams.landscape.title}</h3><p class="sub">{diagrams.landscape.question}</p></figcaption>
         {landVerdict.drawn ? <Fragment><Landscape groups={land.groups} root="./" slugs={addresses} /><p class="note">{diagrams.landscape.legend}</p></Fragment> : <p class="note">{copy.notDrawn(landVerdict.reason)}</p>}
     </figure>
+    <h2 id="built">{copy.nav.built}</h2>
+    <div class="paths">
+        <a class="card" href="made-of.html"><h3>{copy.nav.madeOf}</h3></a>
+        <a class="card" href="how-it-runs.html"><h3>{copy.nav.runs}</h3></a>
+        <a class="card" href="connections.html"><h3>{copy.nav.connections}</h3></a>
+        <a class="card" href="data.html"><h3>{copy.nav.data}</h3></a>
+    </div>
     <Figure id="context" facts={context.facts} build={(limit) => contextModel(sys, limit).model} known={known} />
     <Figure id="tiers" facts={tiers.facts} build={(limit) => tiersModel(sys, limit).model} known={known} />
-    <h2>{copy.system.layersHeading}</h2>
+    <h3>{copy.system.layersHeading}</h3>
     <Rows rows={layerRows(true)} />
     {sys.layers.some((layer) => !layer.product) && <Fragment><h3>{copy.system.layersProject}</h3><Rows rows={layerRows(false)} /></Fragment>}
+    <h2 id="wrong">{copy.nav.risks}</h2>
+    <p class="note"><a href="risks.html">{copy.nav.risks}</a> · <a href="how-it-runs.html#assumptions">{copy.risks.assumptionsLink}</a></p>
     <h2>{copy.system.gaps}</h2>
     <p class="note">{copy.system.gapsText(sys.gaps.unresolvedLinks, sys.gaps.unattributedBlocks)}</p>
+    {wanted.length > 0 && <Fragment>
+        <h2>{copy.home.wanted}</h2>
+        <p class="note">{copy.home.wantedLead}</p>
+        {wanted.map((item) => <div class="assume"><div>{item.question}</div><div class="sub">{item.wanted}</div></div>)}
+    </Fragment>}
 </Page>

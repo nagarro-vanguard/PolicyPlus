@@ -1,5 +1,5 @@
 import { compareText } from "./text";
-import type { Capability, System } from "./types";
+import type { Capability, Knowledge, System } from "./types";
 
 /**
  * A readable address part from a name: lower case, letters and digits, words joined by hyphens, never empty and never
@@ -48,6 +48,7 @@ export type Slugs = {
     readonly area: (id: string) => string;
     readonly layer: (capability: string, layer: string) => string;
     readonly action: (capability: string, action: string) => string;
+    readonly risk: (id: string) => string;
 };
 
 /**
@@ -56,7 +57,11 @@ export type Slugs = {
  * @param capabilities every capability payload
  * @returns the lookups
  */
-export const slugsOf = (system: System, capabilities: readonly Capability[]): Slugs => {
+export const slugsOf = (
+    system: System,
+    capabilities: readonly Capability[],
+    knowledge?: Pick<Knowledge, "risks">,
+): Slugs => {
     const caps = uniqueSlugs(system.capabilities);
     const areas = uniqueSlugs(system.areas);
     const layers = new Map(capabilities.map((each) => [each.capability.id, uniqueSlugs(each.layers)] as const));
@@ -73,6 +78,12 @@ export const slugsOf = (system: System, capabilities: readonly Capability[]): Sl
                 ] as const,
         ),
     );
+    const risks = uniqueSlugs(
+        (knowledge === undefined ? [] : knowledge.risks).map((risk) => ({
+            id: risk.id,
+            name: risk.statement.split(/\s+/).slice(0, 8).join(" "),
+        })),
+    );
     const get = (map: ReadonlyMap<string, string>, id: string) => {
         const found = map.get(id);
         if (found === undefined) {
@@ -85,5 +96,6 @@ export const slugsOf = (system: System, capabilities: readonly Capability[]): Sl
         area: (id) => get(areas, id),
         layer: (capability, layer) => get(layers.get(capability) ?? new Map(), layer),
         action: (capability, action) => get(actions.get(capability) ?? new Map(), action),
+        risk: (id) => get(risks, id),
     };
 };

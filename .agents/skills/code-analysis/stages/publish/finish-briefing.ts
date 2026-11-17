@@ -40,6 +40,13 @@ const decided = (
     result: { written: commit, ...decision, settled },
 });
 
+const briefedTypes = [
+    ["CapabilityGroup", RecordIdPrefix.CapabilityGroup],
+    ["CrossCuttingConcern", RecordIdPrefix.CrossCuttingConcern],
+    ["Screen", RecordIdPrefix.Screen],
+    ["Figure", RecordIdPrefix.Figure],
+] as const;
+
 /**
  * `finish`: Publish as the last pass (4.10, D177, D225), in one transaction of the record store. The briefing is decided
  * by its review: one to redo is set aside with its round counted, and nothing more is done. Then the concluding step
@@ -82,14 +89,12 @@ export const finishBriefing = Effect.fnUntraced(function* (root: string) {
                 listed.some((listedJob) => listedJob.jobId === each.job.jobId),
             );
             if (briefing.outcome === "accepted") {
-                yield* writer.insertRecords(
-                    "CapabilityGroup",
-                    briefing.accepted.filter((record) => prefixOf(record.id) === RecordIdPrefix.CapabilityGroup),
-                );
-                yield* writer.insertRecords(
-                    "CrossCuttingConcern",
-                    briefing.accepted.filter((record) => prefixOf(record.id) === RecordIdPrefix.CrossCuttingConcern),
-                );
+                for (const [type, prefix] of briefedTypes) {
+                    yield* writer.insertRecords(
+                        type,
+                        briefing.accepted.filter((record) => prefixOf(record.id) === prefix),
+                    );
+                }
                 yield* writer.insertRecords("Fact", ofType(briefing.accepted, RecordIdPrefix.Fact, Fact));
             }
             for (const each of kept) {

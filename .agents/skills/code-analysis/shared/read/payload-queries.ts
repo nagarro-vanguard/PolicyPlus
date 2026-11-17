@@ -47,6 +47,13 @@ export const CapabilityIndexRow = Schema.Struct({
 export const PurposeRow = Schema.Struct({ statement: Text });
 export const EdgeRow = Schema.Struct({ fromLayer: Text, toLayer: Text, kind: Text, links: Count });
 export const FieldNames = Schema.fromJsonString(Schema.Array(Schema.Struct({ writtenAs: Text })));
+export const ScreenRecordRow = Schema.Struct({
+    id: Text,
+    name: Text,
+    purpose: Text,
+    kind: Schema.Literals(["screen", "other"]),
+    places: Schema.fromJsonString(Schema.Array(Schema.String)),
+});
 export const ListOfText = Schema.fromJsonString(Schema.Array(Schema.String));
 
 const CapabilityRow = Schema.Struct({ id: Text, name: Text, purpose: Text });

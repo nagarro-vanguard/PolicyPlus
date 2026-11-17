@@ -11,7 +11,16 @@ const Settings = z.object({
     budget: z.object({ nodes: z.number().int().min(2), labelLines: z.number().int().min(1).max(3) }).optional(),
 });
 
-export type DiagramId = "landscape" | "tiers" | "context" | "capability-layers" | "screen-trace";
+export type DiagramId =
+    | "landscape"
+    | "tiers"
+    | "context"
+    | "capability-layers"
+    | "screen-trace"
+    | "parts"
+    | "integration"
+    | "states"
+    | "data";
 
 export type DiagramSettings = z.infer<typeof Settings>;
 
@@ -66,6 +75,44 @@ const config: Record<DiagramId, DiagramSettings> = {
         layout: { algorithm: "layered", direction: "RIGHT" },
         budget: { nodes: 14, labelLines: 2 },
     },
+    parts: {
+        place: "system",
+        title: "What the system is made of",
+        question: "What is the system made of, and which parts use which?",
+        legend: "Each box is a part: something that is built, run or shipped. An arrow is one part using another, with how many links the code makes. Parts that are only tests are left out.",
+        needs: { parts: 2 },
+        renderer: "svg",
+        layout: { algorithm: "layered", direction: "RIGHT" },
+        budget: { nodes: 14, labelLines: 2 },
+    },
+    integration: {
+        place: "system",
+        title: "What the parts reach outside the system",
+        question: "Which outside systems and stores does each part use, and how?",
+        legend: "An arrow joins a part to an outside system it uses; the words say how, and the number is how many links the code makes.",
+        needs: { externals: 1 },
+        renderer: "svg",
+        layout: { algorithm: "layered", direction: "RIGHT" },
+        budget: { nodes: 14, labelLines: 2 },
+    },
+    states: {
+        place: "system",
+        title: "How this data changes over time",
+        question: "Which states can one record be in, and what moves it from one to the next?",
+        legend: "Each box is a state. An arrow is a change the code makes, with the number of places in the code that make it. The first box shows where a record is created.",
+        needs: { lifecycles: 1 },
+        renderer: "svg",
+        layout: { algorithm: "layered", direction: "DOWN" },
+        budget: { nodes: 14, labelLines: 2 },
+    },
+    data: {
+        place: "system",
+        title: "Which capability keeps which data",
+        question: "Which capabilities save and which only read each kind of data?",
+        legend: "A row is a kind of data and a column a capability. S means the capability saves it, R that it reads it.",
+        needs: { kinds: 2 },
+        renderer: "html",
+    },
 };
 
 export const diagrams: Readonly<Record<DiagramId, DiagramSettings>> = z
@@ -78,6 +125,9 @@ const nouns: Record<string, string> = {
     externals: "outside systems",
     layers: "layers",
     actions: "actions",
+    parts: "parts",
+    lifecycles: "kinds of data with states",
+    kinds: "kinds of data",
 };
 
 /**

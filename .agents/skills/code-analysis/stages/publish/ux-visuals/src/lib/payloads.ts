@@ -2,7 +2,7 @@ import { getCollection, getEntry } from "astro:content";
 import { compareText } from "./text";
 import { slugsOf } from "./slugs";
 import type { Slugs } from "./slugs";
-import type { Capability, Layer, System } from "./types";
+import type { Capability, Knowledge, Layer, System } from "./types";
 
 /**
  * The system payload.
@@ -12,6 +12,18 @@ export const system = async (): Promise<System> => {
     const entry = await getEntry("system", "system");
     if (entry === undefined) {
         throw new Error("the payloads hold no system.json");
+    }
+    return entry.data;
+};
+
+/**
+ * What the analysis knows of the system as a whole: its parts, answers, risks and pictures.
+ * @returns the payload
+ */
+export const knowledge = async (): Promise<Knowledge> => {
+    const entry = await getEntry("knowledge", "knowledge");
+    if (entry === undefined) {
+        throw new Error("the payloads hold no knowledge.json: run write-payloads again");
     }
     return entry.data;
 };
@@ -73,7 +85,9 @@ let slugCache: Promise<Slugs> | undefined;
  * @returns the lookups
  */
 export const slugs = (): Promise<Slugs> => {
-    slugCache ??= Promise.all([system(), capabilities()]).then(([sys, caps]) => slugsOf(sys, caps));
+    slugCache ??= Promise.all([system(), capabilities(), knowledge()]).then(([sys, caps, know]) =>
+        slugsOf(sys, caps, know),
+    );
     return slugCache;
 };
 

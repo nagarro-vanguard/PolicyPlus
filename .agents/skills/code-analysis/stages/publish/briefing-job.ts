@@ -16,11 +16,11 @@ import { readDocumentStrictly } from "../../shared/run/json-files";
 import { reviewArguments } from "../../shared/jobs/review-sheet";
 import { requireAcceptedRecords, startStageRun } from "../../shared/store/stage-guards";
 import { StageRecords } from "../../shared/store/stage-records";
-import { CapabilityGroup, CrossCuttingConcern } from "../../shared/model/schemas/briefing";
+import { CapabilityGroup, CrossCuttingConcern, Figure, Screen } from "../../shared/model/schemas/briefing";
 import { Fact } from "../../shared/model/schemas/fact";
 import { writeBriefingBrief } from "./briefing-brief";
 
-export const briefingShapes = { CapabilityGroup, CrossCuttingConcern, Fact };
+export const briefingShapes = { CapabilityGroup, CrossCuttingConcern, Screen, Figure, Fact };
 
 export const briefingLabel = briefingKey;
 

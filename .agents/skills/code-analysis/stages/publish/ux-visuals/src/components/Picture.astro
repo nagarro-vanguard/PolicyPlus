@@ -1,0 +1,22 @@
+---
+import Figure from "./Figure.astro";
+import DataGrid from "./DataGrid.astro";
+import { applies, diagrams } from "../lib/diagram-config";
+import { copy } from "../lib/copy";
+import { dataGridModel, integrationModel, partsModel, statesModel, tiersModel } from "../lib/model";
+import type { FigureBrief, Knowledge, System } from "../lib/types";
+export interface Props { brief: FigureBrief; sys: System; knowledge: Knowledge; known: ReadonlySet<string>; }
+const { brief, sys, knowledge, known } = Astro.props;
+const lives = knowledge.lifecycles.filter((life) => brief.records.length === 0 || brief.records.includes(life.id));
+const grid = dataGridModel(knowledge, brief.records);
+const tiers = tiersModel(sys);
+const parts = partsModel(knowledge);
+const integration = integrationModel(sys, knowledge);
+---
+{brief.kind === "parts" && <Figure id="parts" facts={parts.facts} build={(limit) => partsModel(knowledge, limit).model} known={known} question={brief.question} caption={brief.caption} />}
+{brief.kind === "integration" && <Figure id="integration" facts={integration.facts} build={(limit) => integrationModel(sys, knowledge, limit).model} known={known} question={brief.question} caption={brief.caption} />}
+{brief.kind === "layers" && <Figure id="tiers" facts={tiers.facts} build={(limit) => tiersModel(sys, limit).model} known={known} question={brief.question} caption={brief.caption} />}
+{brief.kind === "states" && lives.map((life, i) => <Figure id="states" title={copy.figures.statesTitle(life.entity.name)} question={i === 0 ? brief.question : diagrams.states.question} caption={i === 0 ? brief.caption : ""} facts={statesModel(life).facts} build={(limit) => statesModel(life, limit).model} known={known} />)}
+{brief.kind === "data" && (applies("data", grid.facts).drawn
+    ? <DataGrid grid={grid.grid} title={diagrams.data.title} question={brief.question} caption={brief.caption} legend={diagrams.data.legend} />
+    : <p class="note">{copy.notDrawn(applies("data", grid.facts).reason)}</p>)}

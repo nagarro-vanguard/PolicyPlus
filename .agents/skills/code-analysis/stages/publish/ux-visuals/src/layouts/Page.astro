@@ -23,6 +23,14 @@ const root = rootOf(depth);
 <body data-root={root}>
     <header class="top">
         <a class="home" href={`${root}index.html`}>{copy.site.home}</a>
+        <nav class="sections" aria-label={copy.nav.label}>
+            <a href={`${root}index.html#does`}>{copy.nav.does}</a>
+            <a href={`${root}made-of.html`}>{copy.nav.madeOf}</a>
+            <a href={`${root}how-it-runs.html`}>{copy.nav.runs}</a>
+            <a href={`${root}connections.html`}>{copy.nav.connections}</a>
+            <a href={`${root}data.html`}>{copy.nav.data}</a>
+            <a href={`${root}risks.html`}>{copy.nav.risks}</a>
+        </nav>
         <input id="search" type="search" placeholder={copy.site.search} aria-label={copy.site.search} />
     </header>
     <div id="results" hidden></div>
