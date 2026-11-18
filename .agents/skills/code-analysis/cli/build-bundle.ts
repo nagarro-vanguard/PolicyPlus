@@ -1,16 +1,17 @@
 import { Console, Effect } from "effect";
 import { Argument, Command, Flag } from "effect/cli";
 import { join } from "node:path";
+import { BundlePayload } from "../shared/model/schemas/bundle-payload";
 import { CapabilityPayload } from "../shared/model/schemas/payloads";
 import { KnowledgePayload } from "../shared/model/schemas/knowledge-payload";
 import { SystemPayload } from "../shared/model/schemas/system-payload";
-import { bundleText, capabilityBundle, screenBundle, type Payloads } from "../shared/read/bundle";
+import { bundleGaps, bundleText, capabilityBundle, screenBundle, type Payloads } from "../shared/read/bundle";
 import { AnalysisRoot } from "../shared/run/analysis-root";
 import { analysisPaths, sourceBase } from "../shared/run/analysis-layout";
 import { AnalysisRequest } from "../shared/run/analysis-request";
 import { readDocumentStrictly } from "../shared/run/json-files";
 import { UsageInvalid } from "../shared/run/script-errors";
-import { rootServices, runScript } from "../shared/run/run-script";
+import { needsAction, rootServices, runScript } from "../shared/run/run-script";
 import { FileAccess } from "../shared/source/file-access";
 
 /**
@@ -38,7 +39,8 @@ const readPayloads = Effect.fnUntraced(function* (folder: string) {
     for (const each of system.capabilities) {
         capabilities.push(yield* readDocumentStrictly(join(folder, `${each.id}.json`), CapabilityPayload));
     }
-    const payloads: Payloads = { system, capabilities, knowledge };
+    const index = yield* readDocumentStrictly(join(folder, "bundle.json"), BundlePayload);
+    const payloads: Payloads = { system, capabilities, knowledge, index };
     return payloads;
 });
 
@@ -102,6 +104,13 @@ const buildBundle = Effect.fn("buildBundle")(function* (kind: string, name: stri
         bundleText(bundle, (file) => sources.get(file)),
     );
     yield* Console.log(`${path}: ${bundle.files.length} files named, ${sources.size} embedded`);
+    const gaps = bundleGaps(bundle);
+    for (const gap of gaps) {
+        yield* Console.log(`the bundle does not add up: ${gap}`);
+    }
+    if (gaps.length > 0) {
+        yield* needsAction;
+    }
 });
 
 const command = Command.make(
@@ -109,12 +118,12 @@ const command = Command.make(
     {
         kind: Argument.String("kind"),
         name: Argument.String("name"),
-        noSource: Flag.Boolean("no-source").pipe(Flag.withDefault(false)),
+        withSource: Flag.Boolean("with-source").pipe(Flag.withDefault(false)),
     },
-    ({ kind, name, noSource }) => buildBundle(kind, name, !noSource),
+    ({ kind, name, withSource }) => buildBundle(kind, name, withSource),
 ).pipe(
     Command.withDescription(
-        "Builds the bundle of one screen or one capability of a finished analysis, to modernise it to another stack: what it is, what a person can do there, every rule it applies with where each is decided, the data it keeps, the shared mechanisms it leans on, the risks in its code, what is unconfirmed and what the code cannot tell, then every file it names with the reason, and, unless --no-source is given, the whole source of each file. Written to <analysis root>/bundles/<kind>-<name>.md as one text to paste. Run write-payloads first. Nothing is redacted: a secret in the code is in the bundle. Arguments: `screen` with the screen's address as its page shows it, or `capability` with its name.",
+        "Builds the bundle of one screen or one capability of a finished analysis, to modernise it to another stack, as one markdown text written to <analysis root>/bundles/<kind>-<name>.md. It holds the product context with the system diagram, where the slice sits (diagram), the screens it opens and is opened by, what it must do (controls, actions and the rules it owns), the rules it relies on that other code decides, the data it touches with the life of each kind and its changes of state, what to doubt (records challenged in review, risks once each, assumptions, code nothing reaches) and the files to read in order, each with the lines to read. The source is referenced, not embedded; --with-source embeds the lines the file list names. Checks that each rule is listed once, every cited place is covered by the file list and no boilerplate is left; the run needs action when not. Run write-payloads first. Nothing is redacted: a secret in the code is in the bundle when the source is embedded. Arguments: `screen` with the screen's address as its page shows it, or `capability` with its name.",
     ),
 );
 

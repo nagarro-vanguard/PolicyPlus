@@ -1,6 +1,9 @@
 import { Console, Effect, Schema } from "effect";
 import { Command } from "effect/cli";
+import { BundlePayload } from "../shared/model/schemas/bundle-payload";
 import { CapabilityPayload } from "../shared/model/schemas/payloads";
+import { readSecondReadings } from "../shared/jobs/second-readings";
+import { bundlePayload } from "../shared/read/payload-bundle";
 import { KnowledgePayload } from "../shared/model/schemas/knowledge-payload";
 import { readCatalogue } from "../shared/run/catalogue";
 import { knowledgePayload } from "../shared/read/payload-knowledge";
@@ -41,6 +44,23 @@ const writeKnowledge = Effect.fnUntraced(function* (
         `${JSON.stringify(Schema.encodeSync(KnowledgePayload)(knowledge), null, 2)}\n`,
     );
     return gaps.length;
+});
+
+/**
+ * Write the bundle payload: what a bundle needs beyond the other payloads, with where a second reading left each rule.
+ * @param store the record store, read only
+ * @param root the analysis root
+ * @param folder the payloads' folder
+ */
+const writeBundle = Effect.fnUntraced(function* (store: RecordStore["Service"], root: string, folder: string) {
+    const readings = new Map([
+        ...(yield* readSecondReadings(root, "BusinessRule")),
+        ...(yield* readSecondReadings(root, "Transition")),
+    ]);
+    yield* (yield* FileAccess).writeText(
+        `${folder}/bundle.json`,
+        `${JSON.stringify(Schema.encodeSync(BundlePayload)(yield* bundlePayload(store, readings)), null, 2)}\n`,
+    );
 });
 
 /**
@@ -88,10 +108,12 @@ const writePayloads = Effect.fn("writePayloads")(function* () {
         `${JSON.stringify(Schema.encodeSync(SystemPayload)(system), null, 2)}\n`,
     );
     broken += yield* writeKnowledge(store, system, folder);
+    yield* writeBundle(store, root, folder);
     for (const [name, schema] of [
         ["system", SystemPayload],
         ["capability", CapabilityPayload],
         ["knowledge", KnowledgePayload],
+        ["bundle", BundlePayload],
     ] as const) {
         yield* files.writeText(
             `${folder}/schema/${name}.schema.json`,
@@ -99,7 +121,7 @@ const writePayloads = Effect.fn("writePayloads")(function* () {
         );
     }
     yield* Console.log(
-        `${ids.length + 1} payloads written to ${folder}${broken === 0 ? "" : `; ${broken} do not add up`}`,
+        `${ids.length + 3} payloads written to ${folder}${broken === 0 ? "" : `; ${broken} do not add up`}`,
     );
     if (broken > 0) {
         yield* needsAction;

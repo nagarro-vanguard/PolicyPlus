@@ -3,10 +3,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Schema } from "effect";
 import { derive, makeRoot, type Spec } from "./fixture";
+import { BundlePayload } from "../shared/model/schemas/bundle-payload";
 import { CapabilityPayload } from "../shared/model/schemas/payloads";
 import { KnowledgePayload } from "../shared/model/schemas/knowledge-payload";
 import { SystemPayload } from "../shared/model/schemas/system-payload";
-import { bundleText, capabilityBundle, screenBundle } from "../shared/read/bundle";
+import { bundleGaps, bundleText, capabilityBundle, screenBundle } from "../shared/read/bundle";
 
 const spec: Spec = {
     layers: [
@@ -43,11 +44,12 @@ const written = async () => {
     const system = read("system.json", SystemPayload);
     const knowledge = read("knowledge.json", KnowledgePayload);
     const capabilities = system.capabilities.map((each) => read(`${each.id}.json`, CapabilityPayload));
-    return { system, knowledge, capabilities };
+    const index = read("bundle.json", BundlePayload);
+    return { system, knowledge, capabilities, index };
 };
 
 describe("bundles", () => {
-    test("a capability's bundle holds its rules, its files and what the code cannot tell", async () => {
+    test("a capability's bundle holds its rules, its read order and the diagrams, and adds up", async () => {
         const payloads = await written();
         const [capability] = payloads.capabilities;
         expect(capability).toBeDefined();
@@ -61,13 +63,36 @@ describe("bundles", () => {
         }
         const text = bundleText(bundle, () => undefined);
         expect(text).toContain("Only enabled rows are read.");
-        expect(text).toContain("Ask:");
-        expect(text).toContain("What the code cannot tell you");
+        expect(text).toContain("## Product context");
+        expect(text).toContain("```mermaid");
+        expect(text).toContain("## Read order");
+        expect(text).not.toContain("Ask:");
+        expect(text).not.toContain("secrets stores");
         expect(bundle.files.length).toBeGreaterThan(0);
+        expect(bundleGaps(bundle)).toEqual([]);
         expect(bundleText(bundle, () => undefined)).toBe(bundleText(bundle, () => undefined));
     });
 
-    test("embeds the source of the files it names when it is given, and names an unknown place as none", async () => {
+    test("a screen's bundle names the code it runs and is its own slice", async () => {
+        const payloads = await written();
+        const [screen] = payloads.system.screens;
+        expect(screen).toBeDefined();
+        if (screen === undefined) {
+            return;
+        }
+        const bundle = screenBundle(payloads, screen.key);
+        expect(bundle).toBeDefined();
+        if (bundle === undefined) {
+            return;
+        }
+        const text = bundleText(bundle, () => undefined);
+        expect(text).toContain(`# Screen: ${screen.name}`);
+        expect(text).toContain("Only enabled rows are read.");
+        expect(bundle.files.length).toBeGreaterThan(0);
+        expect(bundleGaps(bundle)).toEqual([]);
+    });
+
+    test("embeds only the lines it names, numbered, when the source is given, and names an unknown place as none", async () => {
         const payloads = await written();
         const [capability] = payloads.capabilities;
         if (capability === undefined) {
@@ -77,7 +102,11 @@ describe("bundles", () => {
         if (bundle === undefined) {
             return;
         }
-        expect(bundleText(bundle, (path) => `source of ${path}`)).toContain("source of ");
+        const text = bundleText(bundle, () =>
+            Array.from({ length: 40 }, (_, number) => `line ${number + 1}`).join("\n"),
+        );
+        expect(text).toContain("## Source");
+        expect(text).toMatch(/^1: line 1$/m);
         expect(screenBundle(payloads, "no-such-screen")).toBeUndefined();
         expect(capabilityBundle(payloads, "capability-none")).toBeUndefined();
     });
