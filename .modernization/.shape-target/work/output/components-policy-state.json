@@ -1,0 +1,305 @@
+{
+  "components": [
+    {
+      "name": "Enablement Evidence Reader",
+      "domain": "Policy State",
+      "responsibility": "Counts enabled and disabled evidence from the values and lists a source holds for a policy and its options, and settles the policy's state in an area.",
+      "module": "enablement-evidence-reader",
+      "uses": [
+        "Policy File Entries",
+        "Live Registry Values"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#4",
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#1",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#2",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#3",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#4",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#5",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#7",
+        "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#1"
+      ],
+      "enforces": [
+        "businessrule-07376289294643129633",
+        "businessrule-07554086131159240838",
+        "businessrule-22959538508130326801",
+        "businessrule-25766167090873157702",
+        "businessrule-29495869201116213931",
+        "businessrule-33872241894384295212",
+        "businessrule-46971412075927401870",
+        "businessrule-71909773168029429916",
+        "businessrule-92873738128602220135"
+      ]
+    },
+    {
+      "name": "Option Value Reader",
+      "domain": "Policy State",
+      "responsibility": "Reads the stored value of each option of a policy from a source: numbers, text, choices, ticks and lists.",
+      "module": "option-value-reader",
+      "uses": [
+        "Policy File Entries",
+        "Live Registry Values"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1"
+      ],
+      "enforces": [
+        "businessrule-24534399091993971891",
+        "businessrule-34769835898304277453",
+        "businessrule-37022902056569995834",
+        "businessrule-49179499449653183223",
+        "businessrule-90493804689850695370",
+        "businessrule-43638846001153509048",
+        "businessrule-92057272745409912098"
+      ]
+    },
+    {
+      "name": "Policy Forgetter",
+      "domain": "Policy State",
+      "responsibility": "Finds every value a policy touches and clears them, with key clearances, from a source.",
+      "module": "policy-forgetter",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-30662593154265010717",
+        "businessrule-52553634867035971750",
+        "businessrule-49955247469929977676",
+        "businessrule-60358450731077326247"
+      ]
+    },
+    {
+      "name": "Policy State Writer",
+      "domain": "Policy State",
+      "responsibility": "Writes the chosen state of a policy with its own on and off values and its options into a source.",
+      "module": "policy-state-writer",
+      "uses": [
+        "Policy File Entries",
+        "Option Value Writer",
+        "Policy Forgetter"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-04152128046162000583",
+        "businessrule-14958427259964761169",
+        "businessrule-56832565542674334637",
+        "businessrule-66734059366331213205",
+        "businessrule-60774486401252037450",
+        "businessrule-97175686457081101132",
+        "businessrule-90058940824311429227"
+      ]
+    },
+    {
+      "name": "Option Value Writer",
+      "domain": "Policy State",
+      "responsibility": "Saves one option's value under the right key with the right kind of value.",
+      "module": "option-value-writer",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-19622432139142313215",
+        "businessrule-46516041958192928718",
+        "businessrule-53178349170981485484",
+        "businessrule-55949208713495428877",
+        "businessrule-64524120751868809207",
+        "businessrule-67842190900074642321",
+        "businessrule-75244076300039577548",
+        "businessrule-80911529766189561154"
+      ]
+    },
+    {
+      "name": "Policy Comment Keeper",
+      "domain": "Policy State",
+      "responsibility": "Stores, replaces or removes a policy's comment and says when a source holds no comments.",
+      "module": "policy-comment-keeper",
+      "uses": [
+        "Policy Comment Catalog"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-01560321201783674273",
+        "businessrule-33456476599558212379"
+      ]
+    },
+    {
+      "name": "Policy Edit Session",
+      "domain": "Policy State",
+      "responsibility": "Holds one open edit of a policy: the area, the writable check, the chosen state, the forecast, and how it ends as a change or a cancel.",
+      "module": "policy-edit-session",
+      "uses": [
+        "Enablement Evidence Reader",
+        "Option Value Reader",
+        "Policy State Writer",
+        "Policy Forgetter",
+        "Policy Comment Keeper",
+        "Policy details presenter",
+        "Policy state presenter"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-07359577675270518038",
+        "businessrule-22919299514571743135",
+        "businessrule-23336067846798029987",
+        "businessrule-33075335985104561108",
+        "businessrule-37207468109369530089",
+        "businessrule-47264131679601828501",
+        "businessrule-53979609002646144363",
+        "businessrule-65724709448091621197",
+        "businessrule-59619098183313284576",
+        "businessrule-75178338270301910966",
+        "businessrule-90485587050957154914",
+        "businessrule-20408685392954236399",
+        "businessrule-84933301477035282498"
+      ]
+    },
+    {
+      "name": "Option Input Rules",
+      "domain": "Policy State",
+      "responsibility": "Decides what each option control accepts, starts with and offers.",
+      "module": "option-input-rules",
+      "uses": [],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2"
+      ],
+      "enforces": [
+        "businessrule-11779280825123119273",
+        "businessrule-47134496169701496073",
+        "businessrule-47891883049575092611",
+        "businessrule-76178080166619590309",
+        "businessrule-76476292137970655950",
+        "businessrule-95995013385384587600",
+        "businessrule-98958969318255528192",
+        "businessrule-36860850025836880139",
+        "businessrule-67944280997214552078"
+      ]
+    },
+    {
+      "name": "Semantic Text Reader",
+      "domain": "Policy State",
+      "responsibility": "Reads semantic policy text into policies, states and settings, and reports what is wrong and on which line.",
+      "module": "semantic-text-reader",
+      "uses": [],
+      "serves": [
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#1"
+      ],
+      "enforces": [
+        "businessrule-17846007911557610465",
+        "businessrule-21688833916465491468",
+        "businessrule-37953448968627114950",
+        "businessrule-38078267378406118840",
+        "businessrule-49239739229069713399",
+        "businessrule-64894609785645160893",
+        "businessrule-82283321913472173436",
+        "businessrule-85959955505766938318",
+        "businessrule-91520515189249767580",
+        "businessrule-97058087218177971913",
+        "businessrule-14257585336729172869"
+      ]
+    },
+    {
+      "name": "Semantic Text Applier",
+      "domain": "Policy State",
+      "responsibility": "Applies read policies to the right source, skipping and counting the ones that fail, and reports the outcome.",
+      "module": "semantic-text-applier",
+      "uses": [
+        "Policy State Writer",
+        "Policy Forgetter",
+        "Policy Comment Keeper",
+        "Semantic Text Reader"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2"
+      ],
+      "enforces": [
+        "businessrule-12966156302506777327",
+        "businessrule-45692609540846356884",
+        "businessrule-47001836867625969953",
+        "businessrule-78566706966921753288",
+        "businessrule-70167687024707690035"
+      ]
+    },
+    {
+      "name": "Semantic Text Import Session",
+      "domain": "Policy State",
+      "responsibility": "Holds the text being brought in, from a file or typed, and offers apply only for text that read correctly.",
+      "module": "semantic-text-import-session",
+      "uses": [
+        "Semantic Text Reader",
+        "Semantic Text Applier"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#1",
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2"
+      ],
+      "enforces": [
+        "businessrule-27078270365699057081",
+        "businessrule-30078789996227150580",
+        "businessrule-53070511165338807522"
+      ]
+    },
+    {
+      "name": "Semantic Text Writer",
+      "domain": "Policy State",
+      "responsibility": "Writes a policy's settings as semantic policy text, with or without the heading.",
+      "module": "semantic-text-writer",
+      "uses": [
+        "Enablement Evidence Reader",
+        "Option Value Reader",
+        "Semantic policy writer"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.inspect-policy-settings-as-text:ready-to-take-away#1",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3"
+      ],
+      "enforces": [
+        "businessrule-47036476815425257305"
+      ]
+    },
+    {
+      "name": "Policy State Provider",
+      "domain": "Policy State",
+      "responsibility": "Gives the state of each policy in an area, and of the sources being worked on, to the screens that show them, by reading it through the evidence reader and returning it as plain facts.",
+      "module": "policy-state-provider",
+      "uses": [
+        "Enablement Evidence Reader"
+      ],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#1",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#3",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#4",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#5",
+        "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#1",
+        "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#2",
+        "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#1",
+        "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#2",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#1",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#2",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#4"
+      ],
+      "enforces": []
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "read": 1,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The second and third criteria (the success and failure messages) have no cited rule and give no reason, although businessrule-57982804566984189207 states both messages, so they should cite that rule."
+    },
+    {
+      "record": 0,
+      "says": "The term \"Policy file\" adds \"not a registry export file\" and the \"what\" adds \"whatever holds it\", neither of which the cited rule or the step states as a rule, so they risk inventing behaviour."
+    }
+  ]
+}

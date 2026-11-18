@@ -26,6 +26,9 @@ export type PlanStory = {
     readonly reliesOn: readonly { readonly rule: string; readonly builtBy: StoryKey }[];
     readonly capability?: string | undefined;
     readonly surface?: string | undefined;
+    /** The ids of the target journey steps it delivers, for a story of a confirmed target. */
+    readonly steps?: readonly string[] | undefined;
+    readonly components?: readonly string[] | undefined;
 };
 
 export type PlanEpic = {
@@ -369,7 +372,7 @@ export const planProblems = (plan: Plan, prompts: Prompts) => {
         for (const surface of capability.surfaces) {
             for (const action of surface.actions) {
                 if (action.story !== null && !stories.has(action.story)) problems.push(`an action of "${capability.name}" is built by a story that is not in the plan`);
-                if (action.story === null && capability.scope === "carry") problems.push(`an action of "${capability.name}" has no story`);
+                if (action.story === null && capability.scope === "carry" && !action.name.includes("(not carried:")) problems.push(`an action of "${capability.name}" has no story`);
             }
         }
     }

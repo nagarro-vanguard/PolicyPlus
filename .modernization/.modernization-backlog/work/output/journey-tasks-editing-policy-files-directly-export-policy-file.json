@@ -1,0 +1,60 @@
+{
+  "stories": [
+    {
+      "title": "Save a policy source out as a policy file",
+      "what": "A person names the area, user or computer, and the file to write, and the system writes that area's policy source as a policy file, then says whether it worked.",
+      "why": "Administrators can take the settings of one area out of the program as a policy file to keep, move or apply elsewhere, and are told plainly when the file could not be saved.",
+      "actions": [
+        "block-41514309757986060440"
+      ],
+      "terms": [
+        {
+          "name": "Policy file",
+          "means": "A file of policy settings for one area, user or computer, that Group Policy reads."
+        }
+      ],
+      "journey": {
+        "name": "One request",
+        "steps": [
+          "tasks-editing-policy-files-directly.export-policy-file:one-request#1"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given a person has chosen an area and a file to write, when they export, then the area's policy source is written to that file as a policy file.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57982804566984189207"
+            }
+          ]
+        },
+        {
+          "says": "Given the policy file was written, when the export finishes, then the person sees \"POL exported successfully.\".",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57982804566984189207"
+            }
+          ]
+        },
+        {
+          "says": "Given the policy file could not be written, when the export finishes, then the person sees \"The POL file could not be saved.\".",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57982804566984189207"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        "tasks-editing-policy-files-directly.export-policy-file:one-request#1"
+      ],
+      "components": [
+        "Policy File Export"
+      ],
+      "open": []
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{"read": 1, "challenges": [
+{"record":0,"says":"The criterion for a policy that names no support definition says the support-details button is disabled, but rule businessrule-59317523370985833904 only says the text is blank for no code (the button is disabled only when the named definition does not exist), and the story's own open question admits the rules do not say; this invents behaviour and contradicts the open item."},
+{"record":0,"says":"Seven criteria (computer-only and user-only section, orphaned category, uncategorized, missing support, no support, and the two details-button criteria) have empty 'from' although the first five restate parts of cited rules businessrule-89677004946923202726, 30888155476627040275 and 59317523370985833904, and the last two cite no rule and say nothing about why, so the criteria neither trace to their rules nor explain the absence."}
+]}

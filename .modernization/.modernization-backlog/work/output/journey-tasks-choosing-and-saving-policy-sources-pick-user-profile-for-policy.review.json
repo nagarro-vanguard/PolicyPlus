@@ -1,0 +1,13 @@
+{
+  "read": 1,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The Escape criterion adds that the current policy source is unchanged, which rule businessrule-37850254215893887157 does not state (it only says the dialog closes as cancelled); that comes from the journey step, not a rule."
+    },
+    {
+      "record": 0,
+      "says": "The story text (what and why) asserts as fact that the person is offered their own profile and sees the other profiles, yet no criterion or rule states this behaviour and the open note admits it is unstated, so the story is partly invented behaviour."
+    }
+  ]
+}

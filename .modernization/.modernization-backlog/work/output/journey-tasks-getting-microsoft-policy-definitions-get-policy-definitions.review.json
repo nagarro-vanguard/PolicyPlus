@@ -1,0 +1,29 @@
+{
+ "read": 2,
+ "challenges": [
+  {
+   "record": 0,
+   "says": "The third criterion (cancelling the folder dialog leaves the destination unchanged) cites no rule although businessrule-78945520165872370051 states it, and it neither cites it nor says why it has none."
+  },
+  {
+   "record": 1,
+   "says": "No criterion carries the rule that the download always fetches one fixed Microsoft package (Windows 11 September 2026 Update 26H2 templates) into a scratch folder and the person cannot choose another version (businessrule-53408776186716933732), which step 1 of the journey keeps."
+  },
+  {
+   "record": 1,
+   "says": "The criterion for businessrule-16960626064100495277 drops that a standard user skips taking control and that a failure ends the download with \"Failed to take control of the destination.\" with nothing moved."
+  },
+  {
+   "record": 1,
+   "says": "The criterion for businessrule-24154317128059319852 drops that if the package has no en-US folder the download stops with \"Failed to move the ADMX files.\" after the destination files were already replaced."
+  },
+  {
+   "record": 1,
+   "says": "The criterion for businessrule-70392920399990339776 drops that a standard user changes no permissions and that a language folder created during the move inherits permissions while existing ones have ownership taken, and it does not state that this failure is reported as the move message, not the take-control message."
+  },
+  {
+   "record": 1,
+   "says": "The story's what repeats proposing the usual folder, which is the other story's behaviour and is not built by this story's cited rules, so the two stories overlap."
+  }
+ ]
+}

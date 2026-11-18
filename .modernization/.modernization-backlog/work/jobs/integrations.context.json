@@ -1,90 +1,541 @@
 {
+  "architecture": {
+    "containers": [
+      {
+        "name": "Policy Plus application",
+        "kind": "interface",
+        "tech": "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+        "holds": [
+          "Policy Definitions",
+          "Policy Source",
+          "Policy State",
+          "Policy Discovery",
+          "Policy File Exchange",
+          "Definition Acquisition",
+          "Workspace"
+        ]
+      },
+      {
+        "name": "Preference store",
+        "kind": "store",
+        "tech": "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+        "holds": [
+          "Workspace"
+        ]
+      }
+    ],
+    "modules": [
+      {
+        "module": "definition-installation-flow",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "missing-definitions-detector",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "template-folder-scanner",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "template-file-source-adapter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "language-file-locator",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "language-text-reader",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "definition-language-setting",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "template-validator",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "definition-structure-builder",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-option-reader",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "support-evaluator",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "definition-load-coordinator",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "definition-reset",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-state-presenter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "category-tree-presenter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "item-description-pane",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "item-action-resolver",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "duplicate-policy-merger",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-details-presenter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "category-details-presenter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "product-browser",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "support-rule-browser",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-inspector",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "semantic-policy-writer",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "loaded-file-reviewer",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-lookup",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-file-codec",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "policy-file-entries",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "live-registry-values",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "user-hive-mounter",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "registry-export-source",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "policy-change-applier",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "scratch-policy-store",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "computer-file-access",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "group-policy-version-tracker",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-location-resolver",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-status-describer",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-opener",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-releaser",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-memory",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-saver",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "policy-comment-catalog",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "comment-file-adapter",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "directory-account-resolver",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-choice-builder",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-choice-entry",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "user-identification-entry",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "user-profile-pick",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "visible-category-follow",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "enablement-evidence-reader",
+        "domain": "Policy State"
+      },
+      {
+        "module": "option-value-reader",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-forgetter",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-state-writer",
+        "domain": "Policy State"
+      },
+      {
+        "module": "option-value-writer",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-comment-keeper",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-edit-session",
+        "domain": "Policy State"
+      },
+      {
+        "module": "option-input-rules",
+        "domain": "Policy State"
+      },
+      {
+        "module": "semantic-text-reader",
+        "domain": "Policy State"
+      },
+      {
+        "module": "semantic-text-applier",
+        "domain": "Policy State"
+      },
+      {
+        "module": "semantic-text-import-session",
+        "domain": "Policy State"
+      },
+      {
+        "module": "semantic-text-writer",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-state-provider",
+        "domain": "Policy State"
+      },
+      {
+        "module": "visibility-judge",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "area-scope-chooser",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "identifier-kind-resolver",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "identifier-arrival-router",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "single-selection-guard",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "text-terms-parser",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "text-hit-matcher",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "text-search-intake",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "registry-line-splitter",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "registry-terms-intake",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "registry-term-matcher",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "search-run-coordinator",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "result-picker",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "result-stepper",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "result-recall",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "limit-draft-presenter",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "limit-draft-applier",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "product-limit-selector",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "limit-focus-mover",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "limit-draft-session",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "raw-editing-gate",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "entry-tree-lister",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "entry-action-availability",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "editing-session-recap",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "key-name-validator",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "key-creator",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "value-creator",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "number-text-reader",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "value-data-editor",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "deletion-marker-writer",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "key-clearing-chooser",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "entry-forgetter",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "registry-script-intake",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "registry-script-reader",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "prefix-guesser",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "registry-script-applier",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "policy-file-import",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "export-branch-defaults",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "export-source-preparer",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "registry-script-writer",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "policy-file-export",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "acquisition-session",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "destination-chooser",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "package-fetcher",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "package-extractor",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "destination-access-controller",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "template-installer",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "group-policy-edition-detector",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "welcome-offer",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "acquired-definitions-adoption",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "version-stamper",
+        "domain": "Workspace"
+      },
+      {
+        "module": "program-identity-presenter",
+        "domain": "Workspace"
+      },
+      {
+        "module": "preference-store-adapter",
+        "domain": "Workspace"
+      },
+      {
+        "module": "remembered-choices-keeper",
+        "domain": "Workspace"
+      },
+      {
+        "module": "saved-definitions-folder-resolver",
+        "domain": "Workspace"
+      },
+      {
+        "module": "start-up-load-recovery",
+        "domain": "Workspace"
+      },
+      {
+        "module": "definitions-folder-choice-validator",
+        "domain": "Workspace"
+      },
+      {
+        "module": "replace-option-proposer",
+        "domain": "Workspace"
+      },
+      {
+        "module": "folder-addition-run",
+        "domain": "Workspace"
+      },
+      {
+        "module": "template-file-adder",
+        "domain": "Workspace"
+      },
+      {
+        "module": "session-discarder",
+        "domain": "Workspace"
+      },
+      {
+        "module": "language-code-checker",
+        "domain": "Workspace"
+      },
+      {
+        "module": "language-change-applier",
+        "domain": "Workspace"
+      },
+      {
+        "module": "offer-consideration-record",
+        "domain": "Workspace"
+      },
+      {
+        "module": "acquired-definitions-switcher",
+        "domain": "Workspace"
+      }
+    ]
+  },
   "purpose": "Policy Plus is a Windows desktop editor for Group Policy settings, used by administrators and power users. It reads Microsoft's policy definition files and edits policy files directly, so it works on any Windows edition, including Home, which lacks the built-in editor.",
-  "stack": [
-    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
-    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages",
-    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
-    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
-    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
-  ],
-  "notes": [],
-  "documents": [],
-  "layers": [
-    {
-      "id": "layer-tooling",
-      "name": "Tooling",
-      "path": "packages/tooling",
-      "purpose": "the shared TypeScript, ESLint, Prettier, knip, markdownlint, commitlint and lefthook configuration every layer extends, on Bun and Turborepo",
-      "carries": [
-        1,
-        5
-      ]
-    },
-    {
-      "id": "layer-domain",
-      "name": "Domain",
-      "path": "packages/domain",
-      "purpose": "the pure policy rules: reading policy definitions, resolving and editing policy state, with no I/O framework",
-      "carries": [
-        1
-      ]
-    },
-    {
-      "id": "layer-contracts",
-      "name": "Contracts",
-      "path": "packages/contracts",
-      "purpose": "the Effect Schema types and HttpApi contract, and the OpenAPI document generated from it",
-      "carries": [
-        3
-      ]
-    },
-    {
-      "id": "layer-data",
-      "name": "Data",
-      "path": "packages/data",
-      "purpose": "the PostgreSQL schema, Drizzle on Effect SQL repositories and Drizzle Kit migrations",
-      "carries": [
-        4
-      ]
-    },
-    {
-      "id": "layer-api",
-      "name": "Services",
-      "path": "apps/api",
-      "purpose": "the Effect HttpApi service implementing the contract on Bun, and serving the OpenAPI document",
-      "carries": [
-        3
-      ]
-    },
-    {
-      "id": "layer-ui",
-      "name": "Components",
-      "path": "packages/ui",
-      "purpose": "the shadcn on Base UI components, Tailwind theme and lucide icons, documented in Storybook",
-      "carries": [
-        2
-      ]
-    },
-    {
-      "id": "layer-web",
-      "name": "Screens",
-      "path": "apps/web",
-      "purpose": "the server rendered TanStack Start screens, routes, queries, forms and Paraglide messages",
-      "carries": [
-        2
-      ]
-    },
-    {
-      "id": "layer-e2e",
-      "name": "Black-box tests",
-      "path": "apps/e2e",
-      "purpose": "the Playwright and axe tests that drive the running product through its screens and API",
-      "carries": [
-        5
-      ]
-    }
-  ],
-  "decisions": [],
   "capabilities": [
     {
       "name": "Building and versioning Policy Plus",
@@ -136,5 +587,91 @@
     "Policy comment files (CMTX)",
     "Active Directory domain",
     "Microsoft download site"
-  ]
+  ],
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "notes": [],
+  "documents": [],
+  "layers": [
+    {
+      "id": "layer-contracts",
+      "name": "Contracts",
+      "path": "packages/contracts",
+      "purpose": "the Effect Schema types and the HttpApi contract the OpenAPI document is generated from",
+      "carries": [
+        1,
+        3
+      ]
+    },
+    {
+      "id": "layer-domain",
+      "name": "Domain",
+      "path": "packages/domain",
+      "purpose": "the pure policy rules in TypeScript, with no I/O, one folder per capability",
+      "carries": [
+        1
+      ]
+    },
+    {
+      "id": "layer-database",
+      "name": "Database",
+      "path": "packages/database",
+      "purpose": "the Drizzle schema, Drizzle Kit migrations and Effect SQL queries on PostgreSQL",
+      "carries": [
+        4
+      ]
+    },
+    {
+      "id": "layer-api",
+      "name": "API service",
+      "path": "apps/api",
+      "purpose": "the Effect HttpApi handlers served on Bun, which carry the outside systems and call domain and database",
+      "carries": [
+        1,
+        3
+      ]
+    },
+    {
+      "id": "layer-ui",
+      "name": "UI components",
+      "path": "packages/ui",
+      "purpose": "the shadcn on Base UI components, Tailwind 4 styles and lucide icons, shown in Storybook",
+      "carries": [
+        2
+      ]
+    },
+    {
+      "id": "layer-web",
+      "name": "Web app",
+      "path": "apps/web",
+      "purpose": "the TanStack Start screens, routes, Query and Form wiring and Paraglide messages",
+      "carries": [
+        2
+      ]
+    },
+    {
+      "id": "layer-e2e",
+      "name": "End-to-end tests",
+      "path": "apps/e2e",
+      "purpose": "the Playwright and axe tests that drive the running product, committed before the code they test",
+      "carries": [
+        5
+      ]
+    },
+    {
+      "id": "layer-tooling",
+      "name": "Tooling",
+      "path": "packages/tooling",
+      "purpose": "the shared ESLint, Prettier, knip, markdownlint, commitlint and lefthook configuration",
+      "carries": [
+        5
+      ]
+    }
+  ],
+  "decisions": []
 }

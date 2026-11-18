@@ -1,9 +1,0 @@
-{"read":6,"challenges":[
-{"record":0,"says":"Criteria 1 and 2 promise that Search turns a typed account name into a SID, but decision 7 removes the directory connection and nothing in the inputs can carry that translation, so these criteria assert behaviour no decision supports (the open question admits it, the criteria still state it as fact)."},
-{"record":3,"says":"The user POL file Browse criterion drops the conditions of businessrule-60819102502476341284 (only '.pol' files, a file that does not exist yet may be named, no question before an existing file), which the computer-side story applies but this story never states for the user side."},
-{"record":3,"says":"The words per-user GPO, user hive and Scratch space are used without a term in this story (terms is empty), so a product owner reading it alone cannot follow them."},
-{"record":4,"says":"The criteria offer Local GPO as a choice for both sides, while the 'Open the chosen policy sources' story says the live system source is not offered and decisions 1, 2 and 12 give Local GPO no file-based replacement, so the stories contradict each other."},
-{"record":5,"says":"The criterion says the live system source is not offered, contradicting stories 2 to 4 which still list Local GPO as a choice, and it cites decision 12 for a statement that decision only supports for the sources it names."},
-{"record":6,"says":"businessrule-13724150063390760319 also says saving remembers the chosen source types and locations for the next start, but no criterion carries that condition; it is left only as an open question, and decision 4 gives no basis for what is remembered."},
-{"record":6,"says":"Wording a product owner cannot follow: Registry.pol, CMTX and 'running number' are used without a term, and the story mixes file names of the legacy system into the outcomes."}
-]}

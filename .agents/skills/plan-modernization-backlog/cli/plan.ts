@@ -4,6 +4,7 @@ import { deriveFacts } from "../shared/derive/facts";
 import { loadRequest, recordFiles, runBuild, writeJson } from "../shared/derive/run";
 import { standin } from "../shared/derive/standin";
 import { readAnalysis } from "../shared/read/analysis";
+import { targetGaps } from "../shared/read/confirmed";
 
 const [command, root, ...rest] = process.argv.slice(2);
 const help = `Usage: plan.ts <facts|standin|build> <Output Root> [--work-tracking <AGENTS.md>]
@@ -39,6 +40,12 @@ if (command === "facts") {
     );
 } else if (command === "build") {
     const at = rest.indexOf("--work-tracking");
+    const unconfirmed = targetGaps(layout);
+    if (unconfirmed.length > 0) {
+        for (const gap of unconfirmed) console.error(`failing: ${gap}`);
+        console.error("the target is not confirmed, so the plan cannot be built");
+        process.exit(1);
+    }
     const result = runBuild(layout, at >= 0 ? rest[at + 1] : undefined);
     for (const gap of result.gaps.advisory) console.log(`advisory: ${gap}`);
     if (!result.written) {

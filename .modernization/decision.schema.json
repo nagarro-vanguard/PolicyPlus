@@ -1,0 +1,142 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "topic": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "convention"
+              ]
+            }
+          },
+          "required": [
+            "_tag"
+          ],
+          "additionalProperties": true
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "integration"
+              ]
+            },
+            "system": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "_tag",
+            "system"
+          ],
+          "additionalProperties": true
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "scope"
+              ]
+            },
+            "capability": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "_tag",
+            "capability"
+          ],
+          "additionalProperties": true
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "note"
+              ]
+            },
+            "number": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "_tag",
+            "number"
+          ],
+          "additionalProperties": true
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "area"
+              ]
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "_tag",
+            "name"
+          ],
+          "additionalProperties": true
+        }
+      ],
+      "description": "What a decision is about: one line of a layer's AGENTS.md, an outside system, whether a capability is carried, replaced or dropped, one of the person's notes, or a free-named area such as libraries."
+    },
+    "layer": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string",
+          "enum": [
+            "workspace"
+          ]
+        }
+      ],
+      "description": "The layer the decision governs, or `workspace` when it governs them all."
+    },
+    "chose": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What was chosen; for a convention, the AGENTS.md line itself."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why, as the trade-off: what was chosen over what, and any assumption it rests on."
+    }
+  },
+  "required": [
+    "id",
+    "topic",
+    "layer",
+    "chose",
+    "reason"
+  ],
+  "additionalProperties": true,
+  "description": "One decision and the trade-off behind it."
+}

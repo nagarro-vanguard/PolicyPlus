@@ -1,0 +1,8 @@
+{
+  "kind": "variants",
+  "tasks": [
+    "tasks-finding-policies.find-policies-by-registry",
+    "tasks-finding-policies.review-search-results",
+    "tasks-finding-policies.narrow-policy-list-by-filter"
+  ]
+}

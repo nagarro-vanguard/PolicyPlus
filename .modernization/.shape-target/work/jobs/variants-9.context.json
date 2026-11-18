@@ -1,0 +1,512 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "notes": [],
+  "tasks": [
+    {
+      "id": "tasks-editing-policy-files-directly.import-registry-file-into-policy-source",
+      "outcome": "Bring the contents of an exported set of machine settings into a policy source.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-13677197335497518185",
+          "what": "Loads the chosen REG file with its prefix and applies it to the policy source."
+        },
+        {
+          "id": "block-37220153383335897650",
+          "what": "Closes the window as cancelled when Escape is pressed."
+        },
+        {
+          "id": "block-42014485464934566054",
+          "what": "Opens the registry file import dialog and refreshes the list if values were imported."
+        },
+        {
+          "id": "block-61484076288336240425",
+          "what": "Imports a registry export (REG) file into a policy source."
+        },
+        {
+          "id": "block-89194191501498123777",
+          "what": "Lets the person pick a REG file and guesses the key prefix from it."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-00824990257185597112",
+          "statement": "Only files of type *.reg are offered by the file chooser when browsing for the REG file."
+        },
+        {
+          "id": "businessrule-17451417049747776074",
+          "statement": "When the guess fails, the person is only warned \"An error occurred while trying to guess the prefix.\" and the prefix stays empty."
+        },
+        {
+          "id": "businessrule-18627979551357993299",
+          "statement": "A REG key name is shortened by the prefix only when it starts with it, regardless of case. A prefix always ends in a backslash."
+        },
+        {
+          "id": "businessrule-18921117498420510792",
+          "statement": "A REG file is reported as holding default values when any value has an empty name."
+        },
+        {
+          "id": "businessrule-23306400970907693227",
+          "statement": "A REG file value line starting with an at sign is the key's default value, with an empty name."
+        },
+        {
+          "id": "businessrule-45318436042524755037",
+          "statement": "When a REG file is applied to a source, a key marked for removal is cleared, a value marked for deletion is deleted and any other value is saved. A key name starting with the prefix is applied without it. A key not starting with the prefix is applied with its full original name, so the registry source would create a key of that name. The source branch limit is not checked."
+        },
+        {
+          "id": "businessrule-52142616153788952070",
+          "statement": "A REG file is refused when its first line is not 'Windows Registry Editor Version 5.00', with the message 'Incorrect REG signature'."
+        },
+        {
+          "id": "businessrule-55584576559812010511",
+          "statement": "Blank lines and lines starting with a semicolon in a REG file are ignored."
+        },
+        {
+          "id": "businessrule-57877192145861745927",
+          "statement": "A REG key header starting with a minus sign marks the whole key for removal. Otherwise it opens a key whose values follow."
+        },
+        {
+          "id": "businessrule-59516130836014950967",
+          "statement": "Pressing Escape closes Import REG as cancelled."
+        },
+        {
+          "id": "businessrule-59618595788928559733",
+          "statement": "In a REG file, a value written as a bare minus sign is a value to delete. A quoted value is text, 'dword:' is a 32-bit number in hexadecimal, and 'hex' is bytes, typed by the number in brackets or binary if none. Data in none of these forms is kept as a value with no data and no type, with no error, and applying it writes an empty value or fails."
+        },
+        {
+          "id": "businessrule-60060400053285241820",
+          "statement": "Importing a registry file (REG) applies it to the policy source of the area the person chooses and refreshes the view."
+        },
+        {
+          "id": "businessrule-61966293182360194116",
+          "statement": "Import loads the REG file with the prefix and applies it straight to the chosen policy source; on any failure the person is told only \"Failed to import the REG file.\""
+        },
+        {
+          "id": "businessrule-75481654180830858390",
+          "statement": "The prefix of a REG file is guessed from its first key only. For a key starting with 'HKEY_USERS\\' it is that hive plus the user identifier. For any other key, including HKEY_CURRENT_USER, it is the hive name alone. A first key with no further backslash gives an empty prefix. A file with no keys gets 'HKEY_LOCAL_MACHINE\\'."
+        },
+        {
+          "id": "businessrule-89009644626675244455",
+          "statement": "When a REG file is chosen and the prefix is empty, the prefix is guessed from the file; if the file holds default values, the person is warned \"This REG file contains data for default values, which cannot be applied to all policy sources.\""
+        },
+        {
+          "id": "businessrule-97032716123610483497",
+          "statement": "Import is refused with \"Please specify a REG file to import.\" when no file is named, and with \"Please specify the prefix used to fully qualify paths in the REG file.\" when no prefix is given."
+        }
+      ],
+      "facts": [],
+      "needs": [
+        {
+          "id": "external-90077838450756006603",
+          "name": "Computer file system folders",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.import-policy-file",
+      "outcome": "Load a policy file into the user or computer policy source.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-75389740485334604011",
+          "what": "Reads a chosen POL file and applies it to the user or computer policy source."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-69354381130041181167",
+          "statement": "Importing a POL file applies it to the source the person chooses (user or computer). A file that cannot be read gives \"The POL file could not be loaded.\" and changes nothing; success gives \"POL import successful.\". Nothing reaches disk until the person saves."
+        },
+        {
+          "id": "businessrule-97686874157870392601",
+          "statement": "Applying a whole policy file to a source applies it as the difference from an empty file, so nothing is forgotten."
+        }
+      ],
+      "facts": [],
+      "needs": [
+        {
+          "id": "external-90077838450756006603",
+          "name": "Computer file system folders",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.export-policy-as-registry-file",
+      "outcome": "Write a policy source, or one branch of it, as an exported set of machine settings.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-00156606002660817029",
+          "what": "Opens the registry file export dialog for the selected key."
+        },
+        {
+          "id": "block-04644155608109103956",
+          "what": "Exports a policy source as a registry export (REG) file."
+        },
+        {
+          "id": "block-25624747884727551547",
+          "what": "Closes the dialog as cancelled when Escape is pressed"
+        },
+        {
+          "id": "block-37048128904866618877",
+          "what": "Writes the chosen branch of the policy file to a .reg file"
+        },
+        {
+          "id": "block-60201373498704616545",
+          "what": "Lets the person pick the .reg file to write"
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-04261341694819838767",
+          "statement": "The registry prefix box in the export dialog starts as HKEY_CURRENT_USER\\ when the user policy source is being edited and HKEY_LOCAL_MACHINE\\ otherwise. It can be changed, and the export uses the text in the box unchecked."
+        },
+        {
+          "id": "businessrule-14603482078338141941",
+          "statement": "When the registry script is written, the person is told \"REG exported successfully.\" and the dialog closes; on any failure they are told only \"Failed to export REG!\" and the dialog stays open."
+        },
+        {
+          "id": "businessrule-25739450692106090110",
+          "statement": "Exporting to a registry file (REG) hands the policy source of the area the person chooses, as a POL, to the export dialog. An unsupported source raises an unhandled error, unlike Export POL, which tells the person."
+        },
+        {
+          "id": "businessrule-38615217867457911992",
+          "statement": "A branch name given as the source of a REG export has any trailing backslash removed."
+        },
+        {
+          "id": "businessrule-50297867320833369013",
+          "statement": "When a POL is built from a registry-backed source, every value and every sub-key under each of the three policy locations is copied with its own data type, with environment variables left unexpanded. A location missing from the registry stops the copy with an unhandled error."
+        },
+        {
+          "id": "businessrule-57163770116853325546",
+          "statement": "Keys marked for removal are written to a REG file with a leading minus sign and values marked for deletion as a bare minus sign."
+        },
+        {
+          "id": "businessrule-60632388568264259103",
+          "statement": "The export dialog starts with the selected key as its source branch, or empty when nothing is selected. The branch can be typed over, and the export uses the text in the box at the time: an empty box exports all of the policy file."
+        },
+        {
+          "id": "businessrule-62577216252619197563",
+          "statement": "Exporting uses a source backed by a POL file as is. A registry-backed source (a chosen registry key or a loaded user hive file) is rebuilt as a new POL from the three policy locations: software\\policies, software\\microsoft\\windows\\currentversion\\policies and system\\currentcontrolset\\policies. Any other source type is rejected, which no known source type reaches."
+        },
+        {
+          "id": "businessrule-78788630170323770129",
+          "statement": "When a REG file is written, a default value is shown as an at sign, and quotes and backslashes in names and text are escaped. Text is written as quoted text and a 32-bit number as 'dword:' with eight hexadecimal digits. Every other type, including 64-bit numbers, expandable text and multiple strings, is written as hex bytes. Each carries its type number as hex(n), except plain binary, which is written as hex. Lines wrap before column 78 with a trailing backslash."
+        },
+        {
+          "id": "businessrule-98458070891453225274",
+          "statement": "Export to a registry script is refused until a file name is given; the person is told \"Please specify a filename and path for the exported REG.\""
+        }
+      ],
+      "facts": [],
+      "needs": [
+        {
+          "id": "external-90077838450756006603",
+          "name": "Computer file system folders",
+          "kind": "dataStore"
+        },
+        {
+          "id": "external-97068941883605652538",
+          "name": "Windows registry policy keys and loaded user hives",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.export-policy-file",
+      "outcome": "Save a policy source out as a policy file.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-41514309757986060440",
+          "what": "Writes a policy source out as a POL file."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-57982804566984189207",
+          "statement": "Exporting a POL file writes the chosen area's policy source as a POL file; the person sees \"POL exported successfully.\" or \"The POL file could not be saved.\"."
+        }
+      ],
+      "facts": [],
+      "needs": [
+        {
+          "id": "external-90077838450756006603",
+          "name": "Computer file system folders",
+          "kind": "dataStore"
+        },
+        {
+          "id": "external-97068941883605652538",
+          "name": "Windows registry policy keys and loaded user hives",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.load-definitions-folder",
+      "outcome": "Load a folder of policy definitions into the workspace so its policies can be browsed.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-13117547435582731450",
+          "what": "Enables the folder box and Browse button only when the custom folder choice is selected."
+        },
+        {
+          "id": "block-13558804890992588767",
+          "what": "Asks for a folder of policy definitions and loads it into the workspace."
+        },
+        {
+          "id": "block-20168653063977540452",
+          "what": "Lets the person pick a folder in a folder dialog and puts it in the folder box."
+        },
+        {
+          "id": "block-30537692166592904451",
+          "what": "Takes the chosen folder, checks it exists and closes the window with OK."
+        },
+        {
+          "id": "block-59255999245406242607",
+          "what": "Looks for the domain's SYSVOL policy definitions folder and enables that choice only if it exists."
+        },
+        {
+          "id": "block-73356074458344317029",
+          "what": "Closes the window as cancelled when Escape is pressed."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-06850078746756456273",
+          "statement": "When a definitions folder is opened, the workspace is emptied first only if \"clear workspace\" is chosen. Otherwise the folder's definitions are added to the current workspace. Problems found are reported but do not stop the load."
+        },
+        {
+          "id": "businessrule-19671296259932138006",
+          "statement": "When opening a definitions folder fails, the person is told \"The folder could not be fully added to the workspace.\" with the reason. The workspace may already be emptied or partly filled, the remembered folder is unchanged, and the view is rebuilt anyway."
+        },
+        {
+          "id": "businessrule-43765682097437166867",
+          "statement": "The option to clear the workspace before adding the folder is ticked by default, and its choice is passed on only when a folder that exists was accepted."
+        },
+        {
+          "id": "businessrule-53176229115945924012",
+          "statement": "When OK is pressed in the ADMX folder dialog, the folder is the system's Windows PolicyDefinitions folder, the domain SYSVOL folder, or the typed folder, as chosen. A folder that does not exist is refused with \"The folder you specified does not exist.\" and the dialog stays open."
+        },
+        {
+          "id": "businessrule-56221298079625729644",
+          "statement": "A definitions folder is remembered as the definitions folder for the next start only when \"clear workspace\" was chosen and the load did not fail; when the workspace is added to, the remembered folder is unchanged."
+        },
+        {
+          "id": "businessrule-76226373219464614800",
+          "statement": "When the ADMX folder dialog opens, 'This folder' is chosen first, and the 'The domain's SYSVOL' choice is available only if the computer is joined to a domain and the folder \\\\domain\\SYSVOL\\domain\\Policies\\PolicyDefinitions exists."
+        },
+        {
+          "id": "businessrule-88154451768954453608",
+          "statement": "The folder box and its Browse button are usable only when the 'This folder' choice is selected."
+        },
+        {
+          "id": "businessrule-98012095360980700253",
+          "statement": "Pressing Escape closes the ADMX folder dialog as cancelled, with no folder chosen."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        },
+        {
+          "id": "entity-40163170707735391190",
+          "name": "Program preference",
+          "states": [
+            "Welcome download offer not yet considered",
+            "Welcome download offer considered",
+            "Raw POL editing warning not yet accepted",
+            "Raw POL editing warning accepted",
+            "Policy sources at default (Local GPO)",
+            "Policy sources remembered",
+            "Templates folder at Windows default",
+            "Templates folder chosen",
+            "Language follows the system",
+            "Language chosen"
+          ]
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-90077838450756006603",
+          "name": "Computer file system folders",
+          "kind": "dataStore"
+        },
+        {
+          "id": "external-25314431250146805945",
+          "name": "Administrative template files (ADMX and ADML)",
+          "kind": "dataStore"
+        },
+        {
+          "id": "external-90078096462363044953",
+          "name": "Active Directory domain",
+          "kind": "outsideService"
+        },
+        {
+          "id": "external-45436197603688581519",
+          "name": "Windows registry settings key of Policy Plus",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.add-template-file",
+      "outcome": "Add a single policy template file to the policies already loaded.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-95818603562143517431",
+          "what": "Asks for one ADMX file and adds it to the workspace."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-07200475892676201466",
+          "statement": "A single ADMX file picked from the file dialog (ADMX files only) is added to the current workspace without emptying it and is not remembered as the definitions folder; a failure shows \"The ADMX file could not be added to the workspace.\" with the reason."
+        },
+        {
+          "id": "businessrule-61344191921921935952",
+          "statement": "Loading a single template file adds that file alone to the policies already loaded, builds the structures, and reports one failure when the file is refused."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-90077838450756006603",
+          "name": "Computer file system folders",
+          "kind": "dataStore"
+        },
+        {
+          "id": "external-25314431250146805945",
+          "name": "Administrative template files (ADMX and ADML)",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.clear-loaded-definitions",
+      "outcome": "Remove all loaded policy definitions from the workspace.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-61070195191480277301",
+          "what": "Clears all loaded policy definitions."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-83939170310206178732",
+          "statement": "Closing the workspace from the menu empties it at once with no confirmation and rebuilds the view."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.review-loaded-template-files",
+      "outcome": "See which policy template files are loaded and what each one contributes.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-04424586335392218217",
+          "what": "Keeps the namespace column filling the width left over when the window changes size."
+        },
+        {
+          "id": "block-39318096240988456545",
+          "what": "Opens the selected ADMX file's details when Enter is pressed."
+        },
+        {
+          "id": "block-55650905820560115513",
+          "what": "Opens the details window of the ADMX file double-clicked in the list."
+        },
+        {
+          "id": "block-64668818041164253976",
+          "what": "Lists the ADMX files loaded in the workspace."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-31675843578661081361",
+          "statement": "Double-clicking the loaded ADMX files list opens the file details for the selected row without checking that a row is selected; pressing Enter does check."
+        },
+        {
+          "id": "businessrule-52722053913285909842",
+          "statement": "The detail window of a template file lists only the policies, categories (including sub-categories), products (including versions) and support rules that were defined in that file."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-25314431250146805945",
+          "name": "Administrative template files (ADMX and ADML)",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    }
+  ]
+}

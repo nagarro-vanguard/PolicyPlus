@@ -1,0 +1,36 @@
+{
+ "stories": [
+  {
+   "title": "Let a person leave the user entry without choosing a user",
+   "what": "The entry where a person says which user account's own policy is wanted, built so that pressing Escape closes it with no user chosen. Turning a typed name into a security identifier (the account's unique number) and refusing an invalid one is done by the account lookup, built in its own story, which this entry hands the typed text to.",
+   "why": "A person who opens the entry to name a user can back out with Escape and carry on without having chosen a user.",
+   "actions": [
+    "block-75399435004242266349",
+    "block-85480965507959714722",
+    "block-94740465332149589219"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given the person is naming a user, when they press Escape, then the entry closes with no user chosen.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-26724904229141688759"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-choosing-and-saving-policy-sources.identify-user-for-policy:give-a-name-or-an-identifier#1"
+   ],
+   "components": [
+    "User Identification Entry"
+   ],
+   "open": [
+    "Should the entry show the translated security identifier to the person before they confirm, as the old dialog did?",
+    "Should leaving be possible by other means than Escape, such as a Cancel button?"
+   ]
+  }
+ ]
+}

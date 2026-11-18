@@ -1,0 +1,1023 @@
+{
+  "architecture": {
+    "containers": [
+      {
+        "name": "Policy Plus application",
+        "kind": "interface",
+        "tech": "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+        "holds": [
+          "Policy Definitions",
+          "Policy Source",
+          "Policy State",
+          "Policy Discovery",
+          "Policy File Exchange",
+          "Definition Acquisition",
+          "Workspace"
+        ]
+      },
+      {
+        "name": "Preference store",
+        "kind": "store",
+        "tech": "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+        "holds": [
+          "Workspace"
+        ]
+      }
+    ],
+    "modules": [
+      {
+        "module": "definition-installation-flow",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "missing-definitions-detector",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "template-folder-scanner",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "template-file-source-adapter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "language-file-locator",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "language-text-reader",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "definition-language-setting",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "template-validator",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "definition-structure-builder",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-option-reader",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "support-evaluator",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "definition-load-coordinator",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "definition-reset",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-state-presenter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "category-tree-presenter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "item-description-pane",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "item-action-resolver",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "duplicate-policy-merger",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-details-presenter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "category-details-presenter",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "product-browser",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "support-rule-browser",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-inspector",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "semantic-policy-writer",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "loaded-file-reviewer",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-lookup",
+        "domain": "Policy Definitions"
+      },
+      {
+        "module": "policy-file-codec",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "policy-file-entries",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "live-registry-values",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "user-hive-mounter",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "registry-export-source",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "policy-change-applier",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "scratch-policy-store",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "computer-file-access",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "group-policy-version-tracker",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-location-resolver",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-status-describer",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-opener",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-releaser",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-memory",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-saver",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "policy-comment-catalog",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "comment-file-adapter",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "directory-account-resolver",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-choice-builder",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "source-choice-entry",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "user-identification-entry",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "user-profile-pick",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "visible-category-follow",
+        "domain": "Policy Source"
+      },
+      {
+        "module": "enablement-evidence-reader",
+        "domain": "Policy State"
+      },
+      {
+        "module": "option-value-reader",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-forgetter",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-state-writer",
+        "domain": "Policy State"
+      },
+      {
+        "module": "option-value-writer",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-comment-keeper",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-edit-session",
+        "domain": "Policy State"
+      },
+      {
+        "module": "option-input-rules",
+        "domain": "Policy State"
+      },
+      {
+        "module": "semantic-text-reader",
+        "domain": "Policy State"
+      },
+      {
+        "module": "semantic-text-applier",
+        "domain": "Policy State"
+      },
+      {
+        "module": "semantic-text-import-session",
+        "domain": "Policy State"
+      },
+      {
+        "module": "semantic-text-writer",
+        "domain": "Policy State"
+      },
+      {
+        "module": "policy-state-provider",
+        "domain": "Policy State"
+      },
+      {
+        "module": "visibility-judge",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "area-scope-chooser",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "identifier-kind-resolver",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "identifier-arrival-router",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "single-selection-guard",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "text-terms-parser",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "text-hit-matcher",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "text-search-intake",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "registry-line-splitter",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "registry-terms-intake",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "registry-term-matcher",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "search-run-coordinator",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "result-picker",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "result-stepper",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "result-recall",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "limit-draft-presenter",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "limit-draft-applier",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "product-limit-selector",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "limit-focus-mover",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "limit-draft-session",
+        "domain": "Policy Discovery"
+      },
+      {
+        "module": "raw-editing-gate",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "entry-tree-lister",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "entry-action-availability",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "editing-session-recap",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "key-name-validator",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "key-creator",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "value-creator",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "number-text-reader",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "value-data-editor",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "deletion-marker-writer",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "key-clearing-chooser",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "entry-forgetter",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "registry-script-intake",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "registry-script-reader",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "prefix-guesser",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "registry-script-applier",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "policy-file-import",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "export-branch-defaults",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "export-source-preparer",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "registry-script-writer",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "policy-file-export",
+        "domain": "Policy File Exchange"
+      },
+      {
+        "module": "acquisition-session",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "destination-chooser",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "package-fetcher",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "package-extractor",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "destination-access-controller",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "template-installer",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "group-policy-edition-detector",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "welcome-offer",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "acquired-definitions-adoption",
+        "domain": "Definition Acquisition"
+      },
+      {
+        "module": "version-stamper",
+        "domain": "Workspace"
+      },
+      {
+        "module": "program-identity-presenter",
+        "domain": "Workspace"
+      },
+      {
+        "module": "preference-store-adapter",
+        "domain": "Workspace"
+      },
+      {
+        "module": "remembered-choices-keeper",
+        "domain": "Workspace"
+      },
+      {
+        "module": "saved-definitions-folder-resolver",
+        "domain": "Workspace"
+      },
+      {
+        "module": "start-up-load-recovery",
+        "domain": "Workspace"
+      },
+      {
+        "module": "definitions-folder-choice-validator",
+        "domain": "Workspace"
+      },
+      {
+        "module": "replace-option-proposer",
+        "domain": "Workspace"
+      },
+      {
+        "module": "folder-addition-run",
+        "domain": "Workspace"
+      },
+      {
+        "module": "template-file-adder",
+        "domain": "Workspace"
+      },
+      {
+        "module": "session-discarder",
+        "domain": "Workspace"
+      },
+      {
+        "module": "language-code-checker",
+        "domain": "Workspace"
+      },
+      {
+        "module": "language-change-applier",
+        "domain": "Workspace"
+      },
+      {
+        "module": "offer-consideration-record",
+        "domain": "Workspace"
+      },
+      {
+        "module": "acquired-definitions-switcher",
+        "domain": "Workspace"
+      }
+    ]
+  },
+  "purpose": "Policy Plus is a Windows desktop editor for Group Policy settings, used by administrators and power users. It reads Microsoft's policy definition files and edits policy files directly, so it works on any Windows edition, including Home, which lacks the built-in editor.",
+  "capabilities": [
+    {
+      "name": "Building and versioning Policy Plus",
+      "purpose": "Stamp the program with its current Git version when it is built.",
+      "actions": 1
+    },
+    {
+      "name": "Getting Microsoft policy definitions",
+      "purpose": "Download Microsoft's current policy template package and unpack it into a folder the program can read.",
+      "actions": 6
+    },
+    {
+      "name": "Using the product",
+      "purpose": "Product's own settings, such as the language of the policy text.",
+      "actions": 6
+    },
+    {
+      "name": "Choosing and saving policy sources",
+      "purpose": "Pick where the user and computer policies are kept (POL file, registry, a user's registry hive, a user's Group Policy object, or the live system) and save changes back to them.",
+      "actions": 15
+    },
+    {
+      "name": "Changing policy settings",
+      "purpose": "Set a policy to Enabled, Disabled or Not configured with its options and comment, and move settings in or out as SPOL text.",
+      "actions": 24
+    },
+    {
+      "name": "Finding policies",
+      "purpose": "Narrow the policy list by filter and find policies by ID, text or registry key and value, then pick a result.",
+      "actions": 29
+    },
+    {
+      "name": "Editing policy files directly",
+      "purpose": "Change the raw keys and values of a policy file, and bring registry files in or out of it.",
+      "actions": 35
+    },
+    {
+      "name": "Browsing policy definitions",
+      "purpose": "Look through the loaded policy templates: categories, products, support rules, template files and policies, and open the details of each.",
+      "actions": 47
+    }
+  ],
+  "outsideSystems": [
+    "Computer file system folders",
+    "Windows registry policy keys and loaded user hives",
+    "Administrative template files (ADMX and ADML)",
+    "Windows registry settings key of Policy Plus",
+    "Generated version source file",
+    "Policy comment files (CMTX)",
+    "Active Directory domain",
+    "Microsoft download site"
+  ],
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "notes": [],
+  "documents": [],
+  "layers": [
+    {
+      "id": "layer-contracts",
+      "name": "Contracts",
+      "path": "packages/contracts",
+      "purpose": "the Effect Schema types and the HttpApi contract the OpenAPI document is generated from",
+      "carries": [
+        1,
+        3
+      ]
+    },
+    {
+      "id": "layer-domain",
+      "name": "Domain",
+      "path": "packages/domain",
+      "purpose": "the pure policy rules in TypeScript, with no I/O, one folder per capability",
+      "carries": [
+        1
+      ]
+    },
+    {
+      "id": "layer-database",
+      "name": "Database",
+      "path": "packages/database",
+      "purpose": "the Drizzle schema, Drizzle Kit migrations and Effect SQL queries on PostgreSQL",
+      "carries": [
+        4
+      ]
+    },
+    {
+      "id": "layer-api",
+      "name": "API service",
+      "path": "apps/api",
+      "purpose": "the Effect HttpApi handlers served on Bun, which carry the outside systems and call domain and database",
+      "carries": [
+        1,
+        3
+      ]
+    },
+    {
+      "id": "layer-ui",
+      "name": "UI components",
+      "path": "packages/ui",
+      "purpose": "the shadcn on Base UI components, Tailwind 4 styles and lucide icons, shown in Storybook",
+      "carries": [
+        2
+      ]
+    },
+    {
+      "id": "layer-web",
+      "name": "Web app",
+      "path": "apps/web",
+      "purpose": "the TanStack Start screens, routes, Query and Form wiring and Paraglide messages",
+      "carries": [
+        2
+      ]
+    },
+    {
+      "id": "layer-e2e",
+      "name": "End-to-end tests",
+      "path": "apps/e2e",
+      "purpose": "the Playwright and axe tests that drive the running product, committed before the code they test",
+      "carries": [
+        5
+      ]
+    },
+    {
+      "id": "layer-tooling",
+      "name": "Tooling",
+      "path": "packages/tooling",
+      "purpose": "the shared ESLint, Prettier, knip, markdownlint, commitlint and lefthook configuration",
+      "carries": [
+        5
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "integrations.decision-1",
+      "topic": {
+        "_tag": "integration",
+        "system": "Computer file system folders"
+      },
+      "layer": "layer-api",
+      "chose": "Carried by apps/api: the Bun service runs on the person's own Windows machine and reads, writes and lists folders (POL files, template folders, export targets) directly with Bun and node:fs; the web app asks it through the HttpApi contract and never touches disk.",
+      "reason": "Chose the local API over browser file pickers because the program must edit real policy files at fixed Windows paths and a browser sandbox cannot; assumes the service and the browser both run on the same machine as the files."
+    },
+    {
+      "id": "integrations.decision-2",
+      "topic": {
+        "_tag": "integration",
+        "system": "Windows registry policy keys and loaded user hives"
+      },
+      "layer": "layer-api",
+      "chose": "Carried by apps/api: reads and writes policy keys, and loads and unloads user hives, by running reg.exe and PowerShell from Bun on the person's machine, behind one registry port that the domain layer sees only as plain data.",
+      "reason": "Chose spawning the built-in Windows tools over a native Node addon because it needs no compiled dependency and works on Home editions; assumes the service runs elevated when writing machine policy and that the machine is Windows."
+    },
+    {
+      "id": "integrations.decision-3",
+      "topic": {
+        "_tag": "integration",
+        "system": "Administrative template files (ADMX and ADML)"
+      },
+      "layer": "layer-api",
+      "chose": "Carried by apps/api: reads ADMX and ADML files from the chosen folders through the file system carrier and hands their text to the pure parsers in packages/domain; schemas for the parsed result live in packages/contracts.",
+      "reason": "Chose parsing in the domain over parsing in the API handler so the rules stay pure and testable with fixture text; the API owns only reading bytes."
+    },
+    {
+      "id": "integrations.decision-4",
+      "topic": {
+        "_tag": "integration",
+        "system": "Windows registry settings key of Policy Plus"
+      },
+      "layer": "layer-database",
+      "chose": "Replaced by the Preference store: remembered choices (language, definitions folder, offers considered) are rows in PostgreSQL through Drizzle in packages/database, reached by apps/api; the old registry key is not read or written.",
+      "reason": "Chose the database that the confirmed architecture already includes over keeping a registry key because the Workspace domain is held by the Preference store container; the trade-off is that existing registry settings are not migrated, which is assumed acceptable (a one-time import can be a story if the owner wants it)."
+    },
+    {
+      "id": "integrations.decision-5",
+      "topic": {
+        "_tag": "integration",
+        "system": "Generated version source file"
+      },
+      "layer": "layer-tooling",
+      "chose": "Replaced: the Git version is stamped at build time by a script in packages/tooling that writes it into an environment value the API reports, instead of generating and compiling a version source file.",
+      "reason": "Chose a build-time environment value over a generated source file because the TypeScript and Bun build has no compile step that needs one and a committed generated file goes stale."
+    },
+    {
+      "id": "integrations.decision-6",
+      "topic": {
+        "_tag": "integration",
+        "system": "Policy comment files (CMTX)"
+      },
+      "layer": "layer-api",
+      "chose": "Carried by apps/api: reads and writes CMTX files beside the policy sources through the file system carrier, with the XML encoding and decoding in packages/domain.",
+      "reason": "Chose keeping CMTX files on disk over storing comments in the database because Windows and other tools read these files in place; the API owns only the bytes."
+    },
+    {
+      "id": "integrations.decision-7",
+      "topic": {
+        "_tag": "integration",
+        "system": "Active Directory domain"
+      },
+      "layer": "layer-api",
+      "chose": "Carried by apps/api: resolves user and group accounts and their profile and policy-object locations by calling the machine's own Windows directory tools (PowerShell and ADSI) from Bun, on the person's machine, and returns a plain result or an unavailable status when no domain is reachable.",
+      "reason": "Chose the local machine's directory access over a hosted lookup service because only the person's machine is joined to the domain with their credentials; assumes a domain may be absent, so the contract models unavailable as a normal outcome."
+    },
+    {
+      "id": "integrations.decision-8",
+      "topic": {
+        "_tag": "integration",
+        "system": "Microsoft download site"
+      },
+      "layer": "layer-api",
+      "chose": "Carried by apps/api: downloads the policy template package with Bun fetch from the Microsoft download site, extracts it into the chosen folder through the file system carrier, and reports progress and failure through the contract; the web app never calls the site itself.",
+      "reason": "Chose server-side download over a browser download because the package must be unpacked into a Windows folder and the browser cannot write there; assumes internet access is optional and failure is a normal outcome."
+    },
+    {
+      "id": "base.decision-1",
+      "topic": {
+        "_tag": "area",
+        "name": "libraries"
+      },
+      "layer": "workspace",
+      "chose": "Only the stack's libraries, plus fast-xml-parser (ADMX, ADML and CMTX XML in packages/domain), a small zip reader (fflate) in apps/api for the Microsoft template package, and Effect's own Schema, HttpApi, SQL and Layer modules for every service seam; no state library beyond TanStack Query and Form.",
+      "reason": "Chose fast-xml-parser and fflate over hand-written parsers or shelling to a zip tool because they are pure TypeScript, run on Bun with no native build and keep the domain free of I/O; chose Effect modules over adding a second DI or validation library because the stack already commits to Effect. Assumes the template package is a standard zip and the XML is well-formed enough for a tolerant parser with schema checks after."
+    },
+    {
+      "id": "base.decision-2",
+      "topic": {
+        "_tag": "area",
+        "name": "tooling and environment"
+      },
+      "layer": "workspace",
+      "chose": "Bun runs scripts and the API, Turborepo orchestrates one task name per layer (lint, typecheck, test, build) cached by inputs, TypeScript is strict with project references, configuration comes from typed environment values read once through Effect Config, and the app targets Windows 10 and 11 only, run locally as api plus web.",
+      "reason": "Chose Turborepo task names that every layer implements over per-layer ad hoc scripts so one command verifies any layer and CI stays uniform; chose Effect Config over reading process.env freely so missing values fail at start. Assumes developers can build on any OS but the registry and directory carriers only function on Windows, so those carriers sit behind ports with in-memory fakes elsewhere."
+    },
+    {
+      "id": "base.decision-3",
+      "topic": {
+        "_tag": "area",
+        "name": "testing"
+      },
+      "layer": "workspace",
+      "chose": "Vitest for domain, contracts, database and api with fixture text for ADMX, ADML, POL and REG files; database tests run against a real PostgreSQL started by the test task, never a mock; Windows-only carriers are tested against fakes behind their ports plus a few Windows-gated tests; e2e is Playwright with axe against the running product, written before the code it tests; every rule and story carries its legacy rule as a test name.",
+      "reason": "Chose a real PostgreSQL over mocked queries because mocks hide migration and SQL faults, and chose port fakes over mocking reg.exe or PowerShell calls so domain and handler tests run anywhere; the trade-off is slower database tests and a Windows-gated subset. Assumes a Postgres instance is available locally or in CI via a container."
+    },
+    {
+      "id": "base.decision-4",
+      "topic": {
+        "_tag": "area",
+        "name": "knowledge in code"
+      },
+      "layer": "workspace",
+      "chose": "Behaviour lives in code and tests, not prose: contract schemas carry doc annotations that feed the OpenAPI document, each domain folder has a short README-free index with typed exports, rule names in test titles cite the legacy rule, and AGENTS.md holds only what code and tools do not show; decisions with trade-offs are kept in the plan, not copied into source.",
+      "reason": "Chose schema annotations and test names as the home of knowledge over separate design documents because they are checked and cannot drift silently; the trade-off is that rationale beyond a line is found in the plan, not beside the code. Assumes agents and developers read AGENTS.md before editing a layer."
+    },
+    {
+      "id": "base.decision-5",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-contracts",
+      "chose": "Every request, response and error is an Effect Schema; define it once here and generate the OpenAPI document from the HttpApi, never write the document by hand.",
+      "reason": "Chose one source for types and the document over separate hand-kept specs because they cannot disagree."
+    },
+    {
+      "id": "base.decision-6",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-contracts",
+      "chose": "An outside system being absent or failing (no domain, no network, no admin rights) is a tagged result in the schema, not a thrown error or an HTTP 500.",
+      "reason": "Chose modelled outcomes over exceptions because the analysis treats these as normal outcomes the screen must show."
+    },
+    {
+      "id": "base.decision-7",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-contracts",
+      "chose": "Do not import from any other workspace package; contracts depend only on effect.",
+      "reason": "Keeps the layer reachable by all without cycles."
+    },
+    {
+      "id": "base.decision-8",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-domain",
+      "chose": "No I/O, clock, randomness or environment access: functions take data in and return data or Effect values of data; outside systems arrive as ports declared here and implemented in apps/api.",
+      "reason": "Chose ports over direct imports so every rule is testable with fixture text."
+    },
+    {
+      "id": "base.decision-9",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-domain",
+      "chose": "One folder per capability, named as in the plan; shared helpers go in a folder named for what they do, never utils or common.",
+      "reason": "Capability folders keep the plan-to-code trace direct."
+    },
+    {
+      "id": "base.decision-10",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-domain",
+      "chose": "Parse ADMX, ADML, CMTX, POL and REG text into schema-checked values at the edge; downstream rules never see raw XML or bytes.",
+      "reason": "One parse boundary stops malformed input spreading."
+    },
+    {
+      "id": "base.decision-11",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-database",
+      "chose": "Change the schema only through a Drizzle Kit migration that is committed; never edit a generated migration after it is merged.",
+      "reason": "Merged migrations are history other databases already ran."
+    },
+    {
+      "id": "base.decision-12",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-database",
+      "chose": "Queries are Effect SQL functions returning contract types' data shapes; callers never receive Drizzle table objects.",
+      "reason": "Keeps persistence replaceable behind the layer."
+    },
+    {
+      "id": "base.decision-13",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-database",
+      "chose": "Tests run against a real PostgreSQL with migrations applied from empty; no mocked client.",
+      "reason": "Mocks hide SQL and migration faults."
+    },
+    {
+      "id": "base.decision-14",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-api",
+      "chose": "Handlers are thin: decode with the contract, call domain functions and carriers, encode; rules never live in a handler.",
+      "reason": "Keeps rules in the tested pure layer."
+    },
+    {
+      "id": "base.decision-15",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-api",
+      "chose": "Each outside system (file system, registry, directory, download) is one Effect Layer implementing a domain port; the Windows ones have an in-memory fake used in tests and non-Windows runs.",
+      "reason": "Fakes let tests run anywhere while Windows tools stay isolated."
+    },
+    {
+      "id": "base.decision-16",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-api",
+      "chose": "Spawn reg.exe and PowerShell with an argument array, never a built shell string, and validate key paths and account names against the contract schema first.",
+      "reason": "Prevents command injection from user-typed registry keys and names."
+    },
+    {
+      "id": "base.decision-17",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-api",
+      "chose": "Writes to a policy file go to a temporary file and are renamed over the target so a failed save never leaves a half-written file.",
+      "reason": "A corrupted policy file is worse than a failed save."
+    },
+    {
+      "id": "base.decision-18",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-ui",
+      "chose": "Components take data and callbacks only, never call the API or router; each has a Storybook story covering its states, with an axe check.",
+      "reason": "Keeps components reusable and accessibility proven in isolation."
+    },
+    {
+      "id": "base.decision-19",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-ui",
+      "chose": "Use Tailwind 4 design tokens and the shadcn on Base UI primitives; do not add colors, spacing or icon sets outside them.",
+      "reason": "One visual language across screens."
+    },
+    {
+      "id": "base.decision-20",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-web",
+      "chose": "Fetch through TanStack Query using a client generated from the contract; no hand-written fetch calls or duplicated response types.",
+      "reason": "The contract stays the one source of types."
+    },
+    {
+      "id": "base.decision-21",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-web",
+      "chose": "Every visible string is a Paraglide message; no literals in components, and policy text from definitions is shown as data, not translated.",
+      "reason": "The product's own language setting must switch all chrome."
+    },
+    {
+      "id": "base.decision-22",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-web",
+      "chose": "Forms use TanStack Form with the contract schema as the validator, so client and server reject the same input.",
+      "reason": "Avoids drift between client and server validation."
+    },
+    {
+      "id": "base.decision-23",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-web",
+      "chose": "Server rendering must not touch the machine: only the API reads disk or registry, and route loaders call it over HTTP.",
+      "reason": "Keeps the web app unprivileged."
+    },
+    {
+      "id": "base.decision-24",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-e2e",
+      "chose": "Write each test from the story's acceptance criteria and commit it before the code; it fails first, and runs against the real api with fake Windows carriers.",
+      "reason": "Tests-first proves the test can fail and keeps a deterministic Windows-free run."
+    },
+    {
+      "id": "base.decision-25",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-e2e",
+      "chose": "Every page visited is scanned with axe, and a violation fails the test.",
+      "reason": "Accessibility is a gate, not a review item."
+    },
+    {
+      "id": "base.decision-26",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-e2e",
+      "chose": "Select elements by role and accessible name, never by CSS class or test id unless no role exists.",
+      "reason": "Role queries double as an accessibility check."
+    },
+    {
+      "id": "base.decision-27",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-tooling",
+      "chose": "Layers extend the shared configs here and add no local lint or format rules; a rule change is made here once.",
+      "reason": "One policy for every layer."
+    },
+    {
+      "id": "base.decision-28",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-tooling",
+      "chose": "Commits follow conventional commits and lefthook runs lint, format and the affected layers' checks before commit; skipping hooks is not allowed.",
+      "reason": "Early failure beats CI failure."
+    },
+    {
+      "id": "base.decision-29",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-tooling",
+      "chose": "knip must pass with no unused files, exports or dependencies in any layer.",
+      "reason": "Keeps dead code out of an incremental port."
+    }
+  ]
+}

@@ -1,0 +1,274 @@
+[
+  {
+    "job": "variants-1",
+    "says": "Record 0: The tradeoff admits the rule that the stamp can also be run by hand must still be offered, yet no step offers it, so the 'when someone runs it' half of businessrule-12414618955963878773 is silently dropped; and since the release workflow already stamps today, 'automate first' adds little beyond today."
+  },
+  {
+    "job": "variants-1",
+    "says": "Record 1: This is today's script in new words (someone or the release asks, version is written) with a 'confirm what was stamped' step added, and that confirmation step honours the rule though it is a new behaviour; the variant is not a real alternative."
+  },
+  {
+    "job": "variants-1",
+    "says": "Record 2: Rewording lost conditions: the language fallback drops 'unless the regional language is en-US' and the failure when the package has no en-US folder after files were already replaced (businessrule-24154317128059319852), the take-control step omits that it applies to whatever folder text is typed and ends the download with nothing moved (businessrule-16960626064100495277), and the result step loses that a failed final cleanup leaves files installed yet reports failure and no new folder (businessrule-17840470067823720423)."
+  },
+  {
+    "job": "variants-1",
+    "says": "Record 2: The step 'Install somewhere other than the usual folder' comes after the install has finished, so the person cannot choose a folder before it runs, and the person would also not be told that package is kept when extraction fails or that failures part-way leave some files replaced."
+  },
+  {
+    "job": "variants-1",
+    "says": "Record 3: It only splits today's single dialog into labelled stages and keeps the choose-then-start shape, so it repeats today rather than offering another way; the splitting into 'prepare' and 'put in place' also blurs which failure message applies (take-control versus move, businessrule-70392920399990339776), and the replace-with-no-backup and cleanup-failure outcomes are not stated."
+  },
+  {
+    "job": "variants-1",
+    "says": "Record 4: Step 'Come back to the definitions later' is marked new with the reason that today the text only says it can be done later, but today's Help | Acquire ADMX Files route already exists (businessrule-23603907625209300500), so the 'standing invitation' misstates the old system and duplicates the get-policy-definitions task; 'works out whether lacking without asking' is also exactly what happens today."
+  },
+  {
+    "job": "variants-1",
+    "says": "Record 5: The tradeoff says a person who declines must find the later route themselves, but the offer text names Help | Acquire ADMX Files today; the variant just restates today's first-run dialog, and its steps drop that the message names that route."
+  },
+  {
+    "job": "variants-2",
+    "says": "Record 0: Step 3 validates the templates 'beside the current definitions', but the legacy rule that refuses a namespace 'already owned by a different ADMX file' only works because the workspace was emptied first, so re-downloading the same templates would refuse every one of them unless the check is limited to the new set."
+  },
+  {
+    "job": "variants-2",
+    "says": "Record 0: The 'continue trying to use this workspace?' choice (legacy 'Errors were encountered...' rule) comes in step 5 after the switch in step 4, so the person is asked whether to continue after the old definitions are already gone, which contradicts the idea of keeping the current ones until the new ones are known usable."
+  },
+  {
+    "job": "variants-2",
+    "says": "Record 0: 'Ready' is never defined: legacy skips a refused template and still builds from the rest, yet stops with nothing built on a missing namespace; the journey switches in one step without saying that a partly loaded set replaces the current one, nor that a missing-namespace stop leaves the current definitions untouched."
+  },
+  {
+    "job": "variants-2",
+    "says": "Record 1: Today a successful download already empties the workspace, loads the folder and saves it with no request from the person, so this variant only repeats the legacy behaviour in new words, and its trade-off ('gives up the moment of control') names a control the person never had."
+  },
+  {
+    "job": "variants-2",
+    "says": "Record 1: Step 2 replaces the workspace 'when they are usable' and step 3 asks about continuing afterwards, losing the legacy ordering of the namespace-missing stop (nothing built, error shown) and the question to continue, which would arrive after the replacement is done."
+  },
+  {
+    "job": "variants-2",
+    "says": "Record 2: Step 4 ('Know what went wrong') comes after the confirmed replacement although step 2 already shows the refused templates, so the person is told problems twice, and the legacy 'continue trying to use this workspace?' question is asked after the old definitions were replaced instead of at the preview."
+  },
+  {
+    "job": "variants-2",
+    "says": "Record 2: The preview in step 2 does not say what the person sees when the template has no target namespace, where legacy stops at once and builds nothing, so counts of categories, products and policies cannot be shown and there is nothing to confirm."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 0: The step \"Have my preferences remembered\" honours the TLS rule (businessrule-15364695696024462204), which is about download protocols, not preferences, so that rule has no real home in the journey."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 0: The definitions step says the person is asked only when problems are \"minor\", but the rule asks whenever loading reports any problems, and the answer No (workspace thrown away, then the default offered, or told it could not be loaded) and the default-folder failure message (businessrule-72200124994498270380) are not carried."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 0: The journey claims every problem is reported once, but the sources step silently drops behaviour the rules fix as silent (a hive that cannot be opened becomes an empty read-only scratch source; a missing or uncreatable Registry.pol is created or replaced without any error) and describes only a notice on fallback, so that quiet behaviour is lost or hidden."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 1: The first step honours the definitions-failure rules (businessrule-41547680626150552574, 78253526822536661517, 58877134447436981389, 72200124994498270380) but its text only says it loads and shows categories, dropping the ask-to-keep prompt, the offer to load the default folder and the could-not-load message."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 2: The check says only that the code equals the stored language, losing that the comparison is case-sensitive (en-us differs from en-US) and trims the entered text but not the stored code (businessrule-93543924991745555552)."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 7: Nothing in the steps shows the sources dialog opening with the remembered kinds and their paths preselected for each side (businessrule-72559528436656832979), so a first-time or returning person is not told what the starting choice is."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 7: The \"Confirm and start working\" step honours businessrule-84588009124214109370, a rule about changing view settings (hiding categories and selected policy), not about choosing sources; only businessrule-10464012301936997836 applies."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 8: The first step promises a note on whether each remembered source can be opened and changed before the person confirms, but sources are only created and opened at Go ahead, so the system cannot know this beforehand; the step also mis-honours businessrule-84588009124214109370, which concerns view settings."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 9: The step says a name is translated at once, but today the lookup happens on Search or on OK; it also lists businessrule-88238619586671903040 (dialog stays open when no SID results) without saying so in the step text."
+  },
+  {
+    "job": "variants-3",
+    "says": "Record 10: Picking from known accounts already yields an identifier, so the separate \"Check the chosen user\" step is largely redundant, and it is placed before \"Back out\" as if cancelling came after checking; the variant reads as today with a pick list added rather than a different way of doing the task."
+  },
+  {
+    "job": "variants-4",
+    "says": "Record 1: It proposes a profile before the person selects one, yet claims to honour the rule that OK does nothing until a folder is selected; the recommendation's 'explicit-choice rule still enforced' is contradicted by a preselected default."
+  },
+  {
+    "job": "variants-4",
+    "says": "Record 3: Apart from an added preview step, it replays today's order (comments, sources, effect, remember, report) in new words, so it is barely a variant of the legacy shape, and its claim that people cannot see where changes land today is not in the legacy sentences."
+  },
+  {
+    "job": "variants-4",
+    "says": "Record 4: The step says the same rules apply for every source kind and file encoding, but the honoured rules differ by kind (REG files fail 'not implemented' when forgetting a value, branch limits only apply to REG, POL/registry/user hive/scratch report differently), so a REG failure and the per-kind outcomes are hidden behind the recommended wording."
+  },
+  {
+    "job": "variants-4",
+    "says": "Record 5: A check-first stage cannot say per source how the change will take effect, because the edition-dependent diff is computed from the file as last on disk at the moment of saving, and it adds a check-then-write gap the legacy 'write only if fully writable, else report not writable' rule does not have."
+  },
+  {
+    "job": "variants-5",
+    "says": "Record 0: \"Decide and save\" keeps today's dialog shape (scope, state, options, list editor, comment, save or save and stay) as six steps in new words, so it is not a better way of doing the task, and it also keeps the old Apply versus OK split."
+  },
+  {
+    "job": "variants-5",
+    "says": "Record 1: No step lets the person choose Computer or User: step 1 only shows the side and whether it can be written, yet rules 22919 and 47264 (a policy for both sections is editable for either, switching reloads state and options) need a choice, and step 1 claims nothing is asked that the system can read although the side cannot be inferred."
+  },
+  {
+    "job": "variants-5",
+    "says": "Record 1: The recommendation says the old way surprised people by writing all options and clearing list keys, which is not in the legacy words (rule 60774 conflicts with 97175 on what is written) and the 'fewest steps' claim is bought by bundling 25 rules, including cancel and unsaved-Apply reporting, into a single confirm step."
+  },
+  {
+    "job": "variants-5",
+    "says": "Record 0: Step 3 says numbers outside limits are brought back to the limit, but rule 76178 also replaces text that is not a number, and numbers above 2,147,483,647, with the default, so the condition is lost in the rewording."
+  },
+  {
+    "job": "variants-5",
+    "says": "Record 2: The guided variant asks for a 'reason' with link new yet the comment is only asked for where the source keeps comments, and nothing says a refusal for duplicate names or the digits-only rule (11779, 76178) is explained at the moment of the single question, so a person cannot fix a list entered one at a time after an error at the final summary."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 0: Step 3 claims to keep the comment-first rule (businessrule-78566706966921753288) and the refresh-either-way rule (businessrule-70167687024707690035) but never says a comment is stored first, nor that the view refreshes after success or partial failure."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 0: This journey is today's Verify then Apply flow in new words; the only difference is the merged file/reset step, so it adds little as the task-first variant."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 1: The recommendation says text can never be applied unchecked, but Apply already refuses unreadable text (businessrule-30078789996227150580); the claimed benefit is not new."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 1: Step 1 honours businessrule-27078270365699057081, where Open File replaces the text 'without asking and without checking it', yet it now checks on arrival; it also drops the confirmed Reset (start again) from the intent and system, though block-20479299247601531941 is cited as merged in."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 1: Reading on arrival leaves unclear when typed or edited text is re-checked, since the step covers only 'a file or entered'; a person who edits the text after the check can see a stale count or fault."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 3: The step claims 'reading is possible but not required', but the system only provides the text to take and the person can no longer see what is being copied, which loses the read step and the focus-and-select behaviour (block-18241451168755948032)."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 4: Step 2 changes rule businessrule-62209428351075007862 (a hidden policy leaves nothing happening and no message) and businessrule-73292110340688125936 (the area is the lower of the area shown and the area found) into 'tells the person when hidden' and 'computer in preference to user', yet marks both as kept."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 4: Step 1 does not mention the area choice (businessrule-81666786810242280110) or the stale-section behaviour (businessrule-56645748073860464161), and it honours businessrule-75178338270301910966, which is about the edit dialog refreshing and not about going to an identifier."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 5: Step 2 repeats details that step 1 already opens for a product or support definition (businessrule-49582367227471127226), and its claim that details are 'not a dialog every time' is not a change, because today only products and support definitions open one."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 7: Step 1 lists businessrule-63262725504588029346 as kept and honoured, but that rule is a silent drop of an unclosed quote, while the system now tells the person; the contradiction is not named as a change, and the single-quote absorbing behaviour is not addressed."
+  },
+  {
+    "job": "variants-6",
+    "says": "Record 7: Searching on every change contradicts the rule that Search is pressed to refuse empty text (businessrule-73561308167207352856): there is no press, and the person would see 'words are needed' constantly while typing the first character."
+  },
+  {
+    "job": "variants-7",
+    "says": "Record 0: Step 2 is marked 'reordered' as sparing a wait that ends in a refusal, but the old system already checks the terms and refuses (empty search, root key) in the dialog before any search starts, so this variant repeats today's flow and its stated gain is false."
+  },
+  {
+    "job": "variants-7",
+    "says": "Record 1: The variant invites pasting 'a path copied from documentation', but such paths normally begin with HKLM\\ or HKCU\\, which businessrule-71024372746156766440 refuses, so the headline use case would be refused while typing and the variant never says how the inferred split treats a leading root key."
+  },
+  {
+    "job": "variants-7",
+    "says": "Record 3: Step 4 lets the person open a hit while the search is still running, but in the old system accepting a result closes the window, and closing stops the search (businessrule-15877826642522947109); the variant does not say whether opening a hit cancels the running search, nor does step 1 keep the 'refreshed after every 20 policies' progress wording it claims to honour."
+  },
+  {
+    "job": "variants-7",
+    "says": "Record 5: Step 3 lets the person move on from a hit without opening it, but businessrule-53914450774482291886 takes the next result after the last chosen one, so moving past an unopened hit cannot advance under the legacy rule; the variant's 'one decision per hit' silently changes what 'next' means."
+  },
+  {
+    "job": "variants-7",
+    "says": "Record 6: Step 7 says undo 'puts back the limit held when the person began and leaves it unchanged', which is self-contradictory and not what businessrule-57716378734614233724 says (cancel leaves the current filter untouched); with live changes, Escape would have to actively revert, and unticking Supported on never states that ticked products and options are discarded (businessrule-90628240213834851721)."
+  },
+  {
+    "job": "variants-7",
+    "says": "Record 7: By its own trade-off this variant keeps the open, choose, confirm cycle with no fewer steps than today, so it only repeats the old dialog in new words, and step 4 never states that product ticks and options are discarded when Supported on is unticked (businessrule-90628240213834851721)."
+  },
+  {
+    "job": "variants-8",
+    "says": "Record 3: The value-data step cites the rule that an unsupported kind such as binary is refused with \"This value kind is not supported.\" and nothing changes, but its sentence never says so, so that refusal is lost in the rewording."
+  },
+  {
+    "job": "variants-8",
+    "says": "Record 5: Asking \"whether to add a key or a value and where\" ignores that a value can only be added under the selected key (and is unavailable with nothing or a value selected, where only Add key exists), so the choice and the location question offer things the old system does not allow."
+  },
+  {
+    "job": "variants-8",
+    "says": "Record 6: Entering new data 'to match the kind' omits that editing a binary value is refused with \"This value kind is not supported.\" and that deletion entries cannot be edited, so the step implies every selected value can be changed."
+  },
+  {
+    "job": "variants-8",
+    "says": "Record 9: The journey has no path for a selected value being marked for deletion directly (its name taken from the selection, no typing); delete-one is only reachable by typed name from a key, so that legacy behaviour is dropped."
+  },
+  {
+    "job": "variants-8",
+    "says": "Record 9: \"Clear then keep existing ordinary direct values\" hides that deletion entries already in the key are lost and values of sub-keys are not put back, which is the data-losing part of the choice."
+  },
+  {
+    "job": "variants-8",
+    "says": "Record 10: The key choice \"clear then keep existing ordinary direct values\" omits that existing deletion entries are lost and sub-key values are not put back, so the person cannot see what that option discards."
+  },
+  {
+    "job": "variants-9",
+    "says": "Record 0: The prefix is asked only when the system could not decide one, so a wrongly guessed prefix (first key only; any non-HKEY_USERS key gives just the hive, and an empty file gets HKEY_LOCAL_MACHINE\\) can never be corrected, although the tradeoff says the person must read and fix it; today a typed prefix is kept and only an empty one is guessed."
+  },
+  {
+    "job": "variants-9",
+    "says": "Record 3: Nothing is previewed: the system only reads the file and reports a load failure, then applies, so this is the one-request journey split in two with an added confirming click, not a distinct 'preview then apply'."
+  },
+  {
+    "job": "variants-9",
+    "says": "Record 9: Replace-or-add is asked only when something is loaded, but today the clear option is always shown and ticked by default, and the 'remember folder only when workspace cleared' rule then depends on an unstated implied replace when nothing is loaded; the title 'without questions' also overstates it, and the failure outcome (workspace may be emptied or partly filled, view rebuilt anyway) is lost."
+  },
+  {
+    "job": "variants-9",
+    "says": "Record 11: 'Builds the structures once' changes today's behaviour, where loading a single file builds the structures and reports one failure per file, and the multi-file result list and partial-failure semantics are not backed by any legacy rule."
+  },
+  {
+    "job": "variants-9",
+    "says": "Record 13: The undo step has no legacy rule and does not say what is restored (the loaded files only, or also the view and the remembered definitions folder) or how long it stays available, so it cannot be done from these words."
+  },
+  {
+    "job": "variants-9",
+    "says": "Record 15: Per-file counts of policies, categories, products and support rules are new and ambiguous against the legacy rule that sub-categories and product versions are part of the contribution; the variant is the list-then-details journey with counts added."
+  },
+  {
+    "job": "variants-9",
+    "says": "Record 8: The failure step drops that the remembered folder stays unchanged on failure and the view is rebuilt anyway; only the message is kept."
+  },
+  {
+    "job": "variants-10",
+    "says": "Record 1: The variant reaches every category and policy only through typed words, so the outcome of moving through the tree and reading what each is for is no longer possible without knowing what to search for, and word search is the separate finding-policies task rather than browsing."
+  },
+  {
+    "job": "variants-10",
+    "says": "Record 5: It promises to flag each gap, but a policy with no support code is shown blank by the legacy rule (businessrule-59317523370985833904), so that gap is not flagged and the sentence contradicts the rule it honours."
+  },
+  {
+    "job": "variants-10",
+    "says": "Record 7: Showing the full parent chain and the policies a category holds is new behaviour, yet its steps are linked as legacy 'inferred' with the single parent-name rule, when they should be marked new."
+  },
+  {
+    "job": "variants-10",
+    "says": "Record 11: Narrowing support definitions by the product they cover and showing which products a definition covers is a reverse lookup the old system lacks, but the step is linked as legacy 'inferred' keeping the name-filter rule, and nothing states how coverage is worked out."
+  },
+  {
+    "job": "variants-10",
+    "says": "Record 13: The plain summary of what the policy stores is new content derived by the system, not in the legacy words, yet it is linked as legacy 'inferred' and cites only the registry-value and client-extension rules, hiding that it adds a capability."
+  }
+]

@@ -1,0 +1,105 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A short kebab-case name for the task, unique within the job's tasks."
+    },
+    "outcome": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What the person gets done, one sentence in the business's words, naming no control, page or medium."
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Who does it: a role of the business, or 'person' when nothing says more."
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "Every legacy entry point the task is made of; each belongs to exactly one task."
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the business rules decided by those entry points."
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the kinds of data the task reads or changes."
+    },
+    "needs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the outside systems the task reaches."
+    },
+    "current": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "intent": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the person is trying to get done in this step, in the words of the business."
+          },
+          "system": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the system does in response."
+          },
+          "from": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "The legacy entry points that make up this step."
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "sure",
+              "inferred"
+            ],
+            "description": "sure when the code states it, inferred when it was concluded from the code."
+          }
+        },
+        "required": [
+          "intent",
+          "system",
+          "from",
+          "confidence"
+        ],
+        "additionalProperties": true,
+        "description": "One step of how a task is done today."
+      },
+      "minItems": 1,
+      "description": "How the task is done today, in order, each step citing its entry points."
+    }
+  },
+  "required": [
+    "id",
+    "outcome",
+    "actor",
+    "actions",
+    "rules",
+    "facts",
+    "needs",
+    "current"
+  ],
+  "additionalProperties": true,
+  "description": "A task people do with the system: an outcome, not a screen."
+}

@@ -1,0 +1,9 @@
+{"read": 11, "challenges": [
+{"record":0,"says":"The failure step drops that the workspace may already be emptied or partly filled and the remembered folder stays unchanged (businessrule-19671296259932138006), so the person is not told the old state is lost."},
+{"record":6,"says":"The step says unknown or missing support definitions are flagged and disabled, but a policy with no support code shows blank text (not 'missing') per businessrule-59317523370985833904, and the category and support conditions are folded together."},
+{"record":7,"says":"The outcome promises how a category 'relates to policies', but no rule or action in the legacy words shows any such relationship; the window shows only the category and its parent."},
+{"record":4,"says":"The right-click step drops that a tree with no selected category is not handled and fails (businessrule-36623707346851740456), and that a right-click in the policy list with no row shows nothing is stated but the tree failure is lost."},
+{"record":10,"says":"The first step 'Choose an inspection' is the Main menu that opens the category, edit, details or inspection view, so it mixes in category, details and editing and is not an inspection step on its own; those rules (details and category) belong to the other tasks."},
+{"record":10,"says":"The 'Read how the policy is built' step loses the conditions: registry value and client extension lines appear only when named, comments only when stored, a section only for areas the policy covers, 'Left implicit' vs 'Left to elements', list value-name wording, and the inspector stops with an unhandled error when no element has a presentation item's ID (businessrule-80096613073902079124)."},
+{"record":10,"says":"Rules about writing semantic policy text (quote and line-break escaping, 'cannot be read back', C/U prefix, number formats) describe file output, not browsing, and no step states them, so they are claimed but not carried."}
+]}

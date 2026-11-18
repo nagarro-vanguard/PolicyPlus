@@ -1,0 +1,11 @@
+{
+  "decision": "architecture",
+  "picks": [
+    {
+      "of": "architecture",
+      "variant": "One deployable on the person's Windows machine, a module per domain"
+    }
+  ],
+  "reason": "The person chose the recommended architecture",
+  "confirmedAt": "2026-11-18T15:28:35.557Z"
+}

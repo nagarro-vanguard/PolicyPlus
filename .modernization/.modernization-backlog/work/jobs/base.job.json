@@ -7,14 +7,14 @@
     "knowledge in code"
   ],
   "layerIds": [
-    "layer-tooling",
-    "layer-domain",
     "layer-contracts",
-    "layer-data",
+    "layer-domain",
+    "layer-database",
     "layer-api",
     "layer-ui",
     "layer-web",
-    "layer-e2e"
+    "layer-e2e",
+    "layer-tooling"
   ],
   "decisionIds": [
     "integrations.decision-1",

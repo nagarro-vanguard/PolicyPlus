@@ -1,0 +1,7 @@
+{"read": 2, "challenges": [
+{"record":0,"says":"The 'what', 'why' and journey step 2 promise that the person is told what the file contains (keys, removals, deletions, values) and how its keys will be named, but no cited rule states any such report; only the default-values warning and the guess-failure warning exist."},
+{"record":0,"says":"The story says the person chooses the policy source (user or computer) and can leave at any point without changing anything, yet no criterion covers the source choice and the only cited rule is Escape on the import step."},
+{"record":0,"says":"The open questions state facts no rule gives (that the old program offered the prefix only after the file was chosen, and that a first key outside the policy branches is accepted silently); Prefix Guesser's rule says nothing about policy branches."},
+{"record":0,"says":"Several criteria use words a product owner who never saw the code cannot follow: 'hive', 'user identifier', 'hexadecimal 32-bit number', 'typed by the number in brackets, or binary', and the quoted 'HKEY_USERS\\'; they are not explained in the terms."},
+{"record":1,"says":"The third criterion says 'when the person confirms', but the rules say the import is applied straight to the chosen source with no confirmation step; it also adds no behaviour beyond the first criterion's apply-and-refresh."}
+]}

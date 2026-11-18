@@ -28,6 +28,16 @@ export const AttachmentHeader = Schema.Struct({
     data: Schema.Array(Schema.Struct({ kind: Text, access: Text })),
     transitions: Schema.Array(Schema.Struct({ entity: Text, from: Text, to: Text, where: Place })),
     outsideSystems: Schema.Array(Text),
+    steps: Schema.optionalKey(
+        Schema.Array(Schema.Struct({ intent: Text, change: Text, reason: Text })).annotate(
+            about("The target journey's steps this story delivers, with how each differs from today and why."),
+        ),
+    ),
+    components: Schema.optionalKey(
+        Schema.Array(Schema.Struct({ name: Text, module: Text, layer: Schema.String })).annotate(
+            about("The components this story builds, with their module and the folder of the layer that holds them."),
+        ),
+    ),
     cited: Schema.Array(Place).annotate(
         about("Every place the header names; each must lie in the attached bundle's read order."),
     ),

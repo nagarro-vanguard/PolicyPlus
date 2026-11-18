@@ -1,0 +1,11 @@
+{
+  "decision": "components",
+  "picks": [
+    {
+      "of": "components",
+      "variant": "One deployable on the person's Windows machine, a module per domain"
+    }
+  ],
+  "reason": "Confirmed by the person after reviewing the rendered system, lineage and ERD pages.",
+  "confirmedAt": "2026-11-18T16:32:43.759Z"
+}

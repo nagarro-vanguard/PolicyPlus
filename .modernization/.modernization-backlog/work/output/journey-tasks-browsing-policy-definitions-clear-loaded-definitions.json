@@ -1,0 +1,67 @@
+{
+ "stories": [
+  {
+   "title": "Clear all loaded policy definitions from the workspace",
+   "what": "A person can close the workspace from the menu, which clears every loaded policy definition at once with no confirmation. Putting back what was cleared after a mistake is planned, but its behaviour is still open.",
+   "why": "Clearing stays as quick as people expect, and a mistaken clear should no longer mean reloading everything from the folders.",
+   "actions": [
+    "block-61070195191480277301"
+   ],
+   "terms": [
+    {
+     "name": "Loaded definitions",
+     "means": "The policy definitions currently open in the workspace for browsing; not the definition files kept in the folders they were read from."
+    },
+    {
+     "name": "Workspace",
+     "means": "Everything the person has open in the program: the loaded definitions and the previous search results; not the folders the definitions were read from."
+    },
+    {
+     "name": "Previous search results",
+     "means": "The results of searches run earlier in the workspace; not the policies that are loaded."
+    }
+   ],
+   "journey": {
+    "name": "Clear with a way back",
+    "steps": [
+     "Remove all loaded definitions.",
+     "Undo it if it was a mistake."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given policy definitions are loaded, when the person closes the workspace from the menu, then all loaded definitions are removed at once, no confirmation is asked, and the view is rebuilt.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-83939170310206178732"
+      }
+     ]
+    },
+    {
+     "says": "Given definitions were loaded and a search had been run, when the workspace is closed or replaced by a new one, then all loaded definitions and the previous search results are discarded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-73782132825452925601"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#1",
+    "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#2"
+   ],
+   "components": [
+    "Definition reset",
+    "Session discarder"
+   ],
+   "open": [
+    "The plan adds a new step with no existing rule: after a clear the system says what was removed and restores it on request. What exactly should it say about what was removed?",
+    "When the person asks to undo, are the removed definitions loaded again exactly as they were?",
+    "Does undo also bring back the previous search results, or only the loaded definitions?",
+    "How long is the way back offered: until the next load, until the next action, or for a set time?"
+   ]
+  }
+ ]
+}

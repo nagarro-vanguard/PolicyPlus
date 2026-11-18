@@ -1,0 +1,7 @@
+---
+import TargetHome from "../components/TargetHome.astro";
+import { hasTarget, targetData } from "../lib/target-data";
+if (!hasTarget()) throw new Error("no target: this page is built only with a target");
+const data = targetData();
+---
+<TargetHome data={data} />

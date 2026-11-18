@@ -1,0 +1,66 @@
+{
+  "stories": [
+    {
+      "title": "Release every open source when the person leaves the program",
+      "what": "When the person finishes and leaves, every policy source that is open is released on its own, and the person is told only when something could not be released.",
+      "why": "Finish the work and leave, releasing everything that was opened, without being interrupted unless resources are still held elsewhere.",
+      "actions": [
+        "block-07512317177811313080",
+        "block-64319035576012171282"
+      ],
+      "terms": [
+        {
+          "name": "Open source",
+          "means": "A set of policy definitions the person has loaded to work on, such as a folder, a file or a user's stored settings; not a policy setting itself."
+        }
+      ],
+      "journey": {
+        "name": "Leave and let go",
+        "steps": [
+          "Finish and leave",
+          "Know if anything was left open"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the person has policy sources open, when they leave the program, then each open source is released on its own and the program window closes.",
+          "from": []
+        },
+        {
+          "says": "Given one of the open sources is a user's stored settings that was loaded for work, when the person leaves the program, then those settings are unloaded and the result says whether unloading succeeded, while every other kind of source is released successfully.",
+          "from": []
+        },
+        {
+          "says": "Given every open source released its resources, when the person leaves the program, then no message is shown, because the cleanup message is only given when any source could not release and the step is silent on success.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-59631775004799082543"
+            }
+          ]
+        },
+        {
+          "says": "Given at least one open source could not release its resources, when the person leaves the program, then they are told \"Cleanup did not complete fully because the loaded resources are open in other programs.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-59631775004799082543"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        "tasks-using-the-product.leave-the-program:leave-and-let-go#1",
+        "tasks-using-the-product.leave-the-program:leave-and-let-go#2"
+      ],
+      "components": [
+        "Source Releaser"
+      ],
+      "open": [
+        "Does the program still close after the cleanup message is shown, or does the person get a chance to stay?",
+        "When one open source cannot be released, are the other open sources still released?",
+        "Two criteria here (releasing every open source, and unloading a user's loaded settings) come from the journey's recorded steps and from a rule that another story builds; should they be cited here or in that story?"
+      ]
+    }
+  ]
+}

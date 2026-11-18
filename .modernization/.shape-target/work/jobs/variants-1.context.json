@@ -1,0 +1,191 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "notes": [],
+  "tasks": [
+    {
+      "id": "tasks-building-and-versioning-policy-plus.stamp-program-version",
+      "outcome": "Make each built copy of the program carry the version of the code it was built from.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-46722061090424791745",
+          "what": "Rewrites the generated version file so the program carries the current Git commit description."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-12414618955963878773",
+          "statement": "When the build script runs, it replaces the program's version in a generated source file with the text git gives for the current commit. That text is a tag, commit count and short commit name when tags exist, and a short commit name otherwise. The script runs when someone runs it or the release workflow does. The committed file holds an empty version."
+        }
+      ],
+      "facts": [],
+      "needs": [
+        {
+          "id": "external-84087908423930356962",
+          "name": "Generated version source file",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions",
+      "outcome": "Obtain Microsoft's current set of policy definitions and install them in a folder the program can use.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-03053454096779816382",
+          "what": "Lets the person pick the destination folder in a folder dialog."
+        },
+        {
+          "id": "block-36474692648442947336",
+          "what": "Downloads Microsoft's policy definitions package, unpacks it and moves the files into the chosen folder."
+        },
+        {
+          "id": "block-60182551583579953457",
+          "what": "Fills the destination folder with the Windows policy definitions folder and clears the busy state."
+        },
+        {
+          "id": "block-71707654079332679729",
+          "what": "Blocks closing the window while a download is running."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-16960626064100495277",
+          "statement": "Before any file is moved, when the folder written in the destination box already exists and the person is an administrator, ownership of it is taken and Administrators are given full control. This applies to whatever folder text is in the box, not only the Windows folder; a standard user skips it. A failure ends the download with \"Failed to take control of the destination.\" and nothing is moved."
+        },
+        {
+          "id": "businessrule-17840470067823720423",
+          "statement": "When any step fails, the person is told \"Failed to \" followed by the step that failed (create a scratch space, download the package, extract the package, take control of the destination, move the ADMX files, remove temporary files); the window stays open, controls are re-enabled, and no policy folder is reported. If only the final cleanup of the scratch folder fails, all files are already installed yet the person is told \"Failed to remove temporary files.\" and no new policy folder is offered."
+        },
+        {
+          "id": "businessrule-19284863828429321329",
+          "statement": "While a download runs, the start button, close button, destination box and browse button are all disabled, so a second download cannot be started and the destination cannot change; they are enabled again when it ends."
+        },
+        {
+          "id": "businessrule-24154317128059319852",
+          "statement": "The template files are moved into the destination, then the language files for the person's regional format language (the culture of the regional settings, which can differ from the display language) are moved into a folder of that name if the package holds one. Unless that language is en-US, the English files are also moved into an en-US folder as a fallback; if the package has no en-US folder, the download stops with \"Failed to move the ADMX files.\" after the destination files were already replaced."
+        },
+        {
+          "id": "businessrule-33969702428946021999",
+          "statement": "When files are moved into a folder, the folder is created if missing and every file already there with the same name is deleted first and then replaced by the new one, with no backup. Only files directly in the source folder are moved. A failure part-way leaves some files replaced and others not."
+        },
+        {
+          "id": "businessrule-34650805596483639458",
+          "statement": "Each time the download window opens, the destination folder is set to the Windows policy definitions folder (the PolicyDefinitions folder under the Windows folder) and no new policy folder is reported to the caller."
+        },
+        {
+          "id": "businessrule-53408776186716933732",
+          "statement": "Starting the download always fetches one fixed Microsoft package, the Windows 11 September 2026 Update (26H2) administrative templates, into a scratch folder under the person's local application data as \"W11Admx.msi\"; the person cannot choose another version."
+        },
+        {
+          "id": "businessrule-70392920399990339776",
+          "statement": "For an administrator, each folder handed to the file move that already exists, the destination itself and any existing language folder, has its ownership taken; a language folder created during the move instead inherits permissions from the folder above. Every moved file, including the template files in the destination, is reset to inherit permissions. A standard user changes no permissions. A failure here ends the download with \"Failed to move the ADMX files.\", not the take-control message."
+        },
+        {
+          "id": "businessrule-75570169794845906057",
+          "statement": "When the person closes the download window while a download is running, the close is refused; the window closes only when no download is running."
+        },
+        {
+          "id": "businessrule-78945520165872370051",
+          "statement": "Choosing a folder in the browse dialog replaces the destination; cancelling the dialog leaves the destination unchanged."
+        },
+        {
+          "id": "businessrule-84139143444339961851",
+          "statement": "After a successful download the scratch folder is deleted, the person is asked \"ADMX files downloaded successfully. Open them now?\", and the destination is reported as the new policy folder only if they answer Yes; either answer closes the window as done."
+        },
+        {
+          "id": "businessrule-91358402464075338920",
+          "statement": "The downloaded package is unpacked with the Windows installer tool; if the tool ends with a non-zero code the download stops with \"Failed to extract the package.\" and the package is kept. When it succeeds, the downloaded package file is deleted."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-47673734579321187695",
+          "name": "Microsoft download site",
+          "kind": "outsideService"
+        },
+        {
+          "id": "external-90077838450756006603",
+          "name": "Computer file system folders",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer",
+      "outcome": "Be offered the full set of policy definitions the first time the program is used on an edition that lacks them.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-31629065709184768465",
+          "what": "On first run without a full set of definitions, offers to download them."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-02030966310880796596",
+          "statement": "A category is orphaned when it has no parent among the loaded definitions although its definition names one."
+        },
+        {
+          "id": "businessrule-23603907625209300500",
+          "statement": "When the offer is considered, it is made only if this Windows edition has no Group Policy support and more than two non-empty categories name a parent that is not among the loaded definitions. The person sees \"Welcome to Policy Plus! Home editions do not come with the full set of policy definitions. Would you like to download them now? This can also be done later with Help | Acquire ADMX Files.\"; Yes starts the download dialog."
+        },
+        {
+          "id": "businessrule-44390406872239414183",
+          "statement": "The computer counts as having the Group Policy infrastructure only when the number Windows gives for its edition equals one of 59 fixed codes in a list. The edition is asked for as Windows version 6.0, and the result of the call is not checked. When the call fails the edition stays 0, which is not in the list, so the computer counts as having none."
+        },
+        {
+          "id": "businessrule-68766858893219046657",
+          "statement": "The welcome offer to download policy definitions is considered only once: the first time the window is shown the program records that it has been considered, even when no offer is made, and never considers it again."
+        },
+        {
+          "id": "businessrule-87097618083601098949",
+          "statement": "A category is empty when it holds no subcategories and no policies at all, counting hidden ones."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-40163170707735391190",
+          "name": "Program preference",
+          "states": [
+            "Welcome download offer not yet considered",
+            "Welcome download offer considered",
+            "Raw POL editing warning not yet accepted",
+            "Raw POL editing warning accepted",
+            "Policy sources at default (Local GPO)",
+            "Policy sources remembered",
+            "Templates folder at Windows default",
+            "Templates folder chosen",
+            "Language follows the system",
+            "Language chosen"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    }
+  ]
+}

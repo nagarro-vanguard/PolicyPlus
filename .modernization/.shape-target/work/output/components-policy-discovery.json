@@ -1,0 +1,360 @@
+{
+ "components": [
+  {
+   "name": "Visibility Judge",
+   "domain": "Policy Discovery",
+   "responsibility": "Decides whether a policy is listed, from the chosen area and, when the filter is on, from every active part of the limit: type, state, comment and products.",
+   "module": "visibility-judge",
+   "uses": [
+    "Policy state presenter",
+    "Policy Comment Catalog",
+    "Support evaluator"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8"
+   ],
+   "enforces": [
+    "businessrule-09965726926686583005",
+    "businessrule-12540995342195943001",
+    "businessrule-67323359061601595450",
+    "businessrule-70331897906623822249",
+    "businessrule-79960316131030112593",
+    "businessrule-97862941341357225531"
+   ]
+  },
+  {
+   "name": "Area Scope Chooser",
+   "domain": "Policy Discovery",
+   "responsibility": "Offers exactly three area choices and starts on the first, so both areas are shown at the start.",
+   "module": "area-scope-chooser",
+   "uses": [],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#6",
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#7"
+   ],
+   "enforces": [
+    "businessrule-85204901615179220846",
+    "businessrule-81666786810242280110"
+   ]
+  },
+  {
+   "name": "Identifier Kind Resolver",
+   "domain": "Policy Discovery",
+   "responsibility": "Trims the typed identifier, cuts off a section suffix and looks the kind up in the fixed order, policy last.",
+   "module": "identifier-kind-resolver",
+   "uses": [
+    "Policy lookup",
+    "Product browser",
+    "Support rule browser",
+    "Category tree presenter"
+   ],
+   "serves": [
+    "tasks-finding-policies.find-policy-by-id:type-and-arrive#1"
+   ],
+   "enforces": [
+    "businessrule-34818300362920325745",
+    "businessrule-73680018829588409732"
+   ]
+  },
+  {
+   "name": "Identifier Arrival Router",
+   "domain": "Policy Discovery",
+   "responsibility": "Opens what was found as its kind requires, says when nothing is found, and shows the matching icon.",
+   "module": "identifier-arrival-router",
+   "uses": [
+    "Identifier Kind Resolver",
+    "Visible Category Follow",
+    "Policy inspector",
+    "Policy Edit Session",
+    "Policy details presenter",
+    "Category details presenter"
+   ],
+   "serves": [
+    "tasks-finding-policies.find-policy-by-id:type-and-arrive#1"
+   ],
+   "enforces": [
+    "businessrule-49582367227471127226",
+    "businessrule-56645748073860464161",
+    "businessrule-62209428351075007862",
+    "businessrule-73292110340688125936"
+   ]
+  },
+  {
+   "name": "Single Selection Guard",
+   "domain": "Policy Discovery",
+   "responsibility": "Keeps at most one item of the policy list selected.",
+   "module": "single-selection-guard",
+   "uses": [],
+   "serves": [
+    "tasks-finding-policies.find-policy-by-id:type-and-arrive#1"
+   ],
+   "enforces": [
+    "businessrule-93221850558792273709"
+   ]
+  },
+  {
+   "name": "Text Terms Parser",
+   "domain": "Policy Discovery",
+   "responsibility": "Splits the typed words into plain words, wildcard words and quoted phrases, cleaned of punctuation, dropping a phrase never closed.",
+   "module": "text-terms-parser",
+   "uses": [],
+   "serves": [
+    "tasks-finding-policies.find-policies-by-text:search-as-you-type#1"
+   ],
+   "enforces": [
+    "businessrule-20714647401379544771",
+    "businessrule-63262725504588029346"
+   ]
+  },
+  {
+   "name": "Text Hit Matcher",
+   "domain": "Policy Discovery",
+   "responsibility": "Decides whether a text holds every word, wildcard and phrase, and whether a policy hits through its title, description or comments.",
+   "module": "text-hit-matcher",
+   "uses": [
+    "Text Terms Parser",
+    "Policy Comment Catalog"
+   ],
+   "serves": [
+    "tasks-finding-policies.find-policies-by-text:search-as-you-type#1",
+    "tasks-finding-policies.find-policies-by-text:search-as-you-type#2"
+   ],
+   "enforces": [
+    "businessrule-21915530910585082056",
+    "businessrule-51916167191556979448"
+   ]
+  },
+  {
+   "name": "Text Search Intake",
+   "domain": "Policy Discovery",
+   "responsibility": "Accepts the typed words and the chosen places, refusing empty words or no place, and starts the search for both areas.",
+   "module": "text-search-intake",
+   "uses": [
+    "Text Terms Parser",
+    "Search Run Coordinator"
+   ],
+   "serves": [
+    "tasks-finding-policies.find-policies-by-text:search-as-you-type#1",
+    "tasks-finding-policies.find-policies-by-text:search-as-you-type#2"
+   ],
+   "enforces": [
+    "businessrule-31790508764365764837",
+    "businessrule-73561308167207352856",
+    "businessrule-86305970842078630022"
+   ]
+  },
+  {
+   "name": "Registry Line Splitter",
+   "domain": "Policy Discovery",
+   "responsibility": "Works out which part of a pasted line is the key and which the value, so the reading can be shown and corrected.",
+   "module": "registry-line-splitter",
+   "uses": [],
+   "serves": [
+    "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#1"
+   ],
+   "enforces": []
+  },
+  {
+   "name": "Registry Terms Intake",
+   "domain": "Policy Discovery",
+   "responsibility": "Judges at once whether the typed terms are usable, refusing empty terms and a root key, and starts the search when usable.",
+   "module": "registry-terms-intake",
+   "uses": [
+    "Registry Line Splitter",
+    "Search Run Coordinator"
+   ],
+   "serves": [
+    "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#1",
+    "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#2"
+   ],
+   "enforces": [
+    "businessrule-73898787083077319907",
+    "businessrule-71024372746156766440",
+    "businessrule-90661647574869686546"
+   ]
+  },
+  {
+   "name": "Registry Term Matcher",
+   "domain": "Policy Discovery",
+   "responsibility": "Decides whether one setting a policy reads or writes meets the key and value terms with wildcard, prefix, whole-name and path-part rules.",
+   "module": "registry-term-matcher",
+   "uses": [
+    "Policy option reader"
+   ],
+   "serves": [
+    "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#3"
+   ],
+   "enforces": [
+    "businessrule-27271850163543025066",
+    "businessrule-35545130062422334165",
+    "businessrule-54035538146675510973",
+    "businessrule-54588279423566663184",
+    "businessrule-95826639622119629666"
+   ]
+  },
+  {
+   "name": "Search Run Coordinator",
+   "domain": "Policy Discovery",
+   "responsibility": "Runs a search over every policy in order, adds hits with their category, reports progress every twenty policies, supports cancelling and reports how it ended.",
+   "module": "search-run-coordinator",
+   "uses": [
+    "Visibility Judge",
+    "Policy lookup",
+    "Result Recall"
+   ],
+   "serves": [
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#1",
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#2",
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#3"
+   ],
+   "enforces": [
+    "businessrule-35354684864210149934",
+    "businessrule-79288582532948770219",
+    "businessrule-94342659396000502591",
+    "businessrule-15877826642522947109",
+    "businessrule-57749472934040708163"
+   ]
+  },
+  {
+   "name": "Result Picker",
+   "domain": "Policy Discovery",
+   "responsibility": "Accepts only a chosen hit, remembers its position and opens that policy's editor in the current area.",
+   "module": "result-picker",
+   "uses": [
+    "Result Recall",
+    "Policy Edit Session",
+    "Visible Category Follow"
+   ],
+   "serves": [
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#4"
+   ],
+   "enforces": [
+    "businessrule-48840711587592938759",
+    "businessrule-80544887789558031281"
+   ]
+  },
+  {
+   "name": "Result Stepper",
+   "domain": "Policy Discovery",
+   "responsibility": "Takes the next hit still shown after the last one chosen, says when none is left, and returns nothing when no search ran.",
+   "module": "result-stepper",
+   "uses": [
+    "Result Recall",
+    "Visibility Judge"
+   ],
+   "serves": [
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#5"
+   ],
+   "enforces": [
+    "businessrule-17430127230259081557",
+    "businessrule-53914450774482291886"
+   ]
+  },
+  {
+   "name": "Result Recall",
+   "domain": "Policy Discovery",
+   "responsibility": "Holds the last results and chosen position, reopens them without a new search, and forgets them when the search is cleared.",
+   "module": "result-recall",
+   "uses": [],
+   "serves": [
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#6",
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#1",
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#7"
+   ],
+   "enforces": [
+    "businessrule-38090025507732480917",
+    "businessrule-17385510066480798684",
+    "businessrule-78338951417255409296",
+    "businessrule-97390301066419776959"
+   ]
+  },
+  {
+   "name": "Limit Draft Presenter",
+   "domain": "Policy Discovery",
+   "responsibility": "Shows the limit in force as editable choices: type, state, comment and products, with the defaults when a condition is absent.",
+   "module": "limit-draft-presenter",
+   "uses": [
+    "Visibility Judge",
+    "Product browser"
+   ],
+   "serves": [
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#1"
+   ],
+   "enforces": [
+    "businessrule-01575097247784730570",
+    "businessrule-26561900736287578271",
+    "businessrule-32591775124677875588",
+    "businessrule-59209755491778300947",
+    "businessrule-76306981111385169671"
+   ]
+  },
+  {
+   "name": "Limit Draft Applier",
+   "domain": "Policy Discovery",
+   "responsibility": "Turns the chosen type, state, comment and products into the new limit's conditions.",
+   "module": "limit-draft-applier",
+   "uses": [
+    "Visibility Judge"
+   ],
+   "serves": [
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#2",
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#3"
+   ],
+   "enforces": [
+    "businessrule-03237181236179074787",
+    "businessrule-81055540068763556055",
+    "businessrule-70906412717211463954",
+    "businessrule-90628240213834851721"
+   ]
+  },
+  {
+   "name": "Product Limit Selector",
+   "domain": "Policy Discovery",
+   "responsibility": "Opens product choice only while a support limit is wanted and spreads a hand choice to the products beneath.",
+   "module": "product-limit-selector",
+   "uses": [
+    "Product browser"
+   ],
+   "serves": [
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#3"
+   ],
+   "enforces": [
+    "businessrule-88807660791719489759",
+    "businessrule-61457439461915744538"
+   ]
+  },
+  {
+   "name": "Limit Focus Mover",
+   "domain": "Policy Discovery",
+   "responsibility": "Switches the limit on or off and moves to the nearest category still shown.",
+   "module": "limit-focus-mover",
+   "uses": [
+    "Visibility Judge",
+    "Visible Category Follow"
+   ],
+   "serves": [
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#4",
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#5"
+   ],
+   "enforces": [
+    "businessrule-85052319902195299547",
+    "businessrule-36944318108231327872"
+   ]
+  },
+  {
+   "name": "Limit Draft Session",
+   "domain": "Policy Discovery",
+   "responsibility": "Returns every choice to its default and, when the round is abandoned, puts back the limit held at the start.",
+   "module": "limit-draft-session",
+   "uses": [],
+   "serves": [
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#6",
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#7"
+   ],
+   "enforces": [
+    "businessrule-81206266674090971597",
+    "businessrule-57716378734614233724"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,5 @@
+{"read": 4, "challenges": [
+{"record":1,"says":"The task includes action block-04864433854821115058 but drops five of the rules that action cites (40551856488084894130, 41547680626150552574, 58877134447436981389, 72200124994498270380, 78253526822536661517), so the reload step hides what happens when the new language's reload reports problems or fails: the keep-or-discard question, the offer to load the default folder, and the empty workspace."},
+{"record":1,"says":"The step 'Enter the language wanted' loses that the same-code check is case-sensitive and compares the entered text (spaces trimmed) with the stored code untrimmed, so en-us counts as a change from en-US, and that text with path characters passes and is later used as a folder name."},
+{"record":0,"says":"The step 'Know whether changes can be kept' omits that the all-writable confirmation is never shown at start, only the not-fully-writable warning (businessrule-98025569949322378254), and the first step omits that an unopenable settings area is carried past without telling the person, so settings are not remembered (businessrule-25353365313977612083)."}
+]}

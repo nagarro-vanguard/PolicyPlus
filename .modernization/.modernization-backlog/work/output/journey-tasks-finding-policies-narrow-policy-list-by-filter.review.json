@@ -1,0 +1,11 @@
+{
+ "read": 4,
+ "challenges": [
+  {"record": 1, "says": "Every criterion adds 'the list narrows now' / 'when the choice is made' where the cited rules say the new filter takes effect when OK is pressed, so the live, no-confirm behaviour is invented and no rule or decision states it."},
+  {"record": 1, "says": "The criterion for rule 61457439461915744538 adds the condition 'Supported on is ticked' and turns 'changes made by the dialog itself do not spread' into 'when the limit is loaded for display', neither of which the rule states."},
+  {"record": 1, "says": "The criterion for rule 90628240213834851721 (discarding ticks when Supported on is unticked) is applied 'when the person has chosen', not at OK as the rule says, and the story's own open question admits the moment is unknown."},
+  {"record": 2, "says": "Both criteria invent conditions ('the limit is off', 'the limit has been set') and the phrase 'without being lost', none of which rules 85052319902195299547 and 36944318108231327872 state."},
+  {"record": 3, "says": "Escape is recast as 'undo this round of changes' and the criterion says the limit is the one held when they began, whereas the rule only says Escape closes as cancelled with the filter unchanged; with live narrowing this meaning is unsettled, as the story's open question concedes."},
+  {"record": 0, "says": "The journey step 'Be taken to the right place when the limit changes' is attached to the same action as showing the limit, yet this story's criteria cover only the opening display, so the shared action is built here without a rule for its other behaviour."}
+ ]
+}

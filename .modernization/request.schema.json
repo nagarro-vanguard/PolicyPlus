@@ -1,0 +1,112 @@
+{
+  "type": "object",
+  "properties": {
+    "outputRoot": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The folder every output is kept in, as an absolute path."
+    },
+    "sourceRoots": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ],
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Every folder of legacy code, as absolute paths."
+    },
+    "leaveOut": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Files left out, in .gitignore syntax."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Why, in the person's words."
+          }
+        },
+        "required": [
+          "pattern",
+          "reason"
+        ],
+        "additionalProperties": true
+      },
+      "description": "What the person decided is not part of the product."
+    },
+    "target": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The folder the new codebase is made in, as an absolute path."
+    },
+    "stack": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ],
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The target technology, one line each, in the person's words; numbered from 1 by their order."
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "description": "A file outside the code, as an absolute path."
+          },
+          "whatItIs": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What it is, in the person's words."
+          }
+        },
+        "required": [
+          "path",
+          "whatItIs"
+        ],
+        "additionalProperties": true
+      },
+      "description": "Documents that say what the product should be: an RFP, requirements, notes."
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Anything else the person wants honoured, one statement each."
+    }
+  },
+  "required": [
+    "outputRoot",
+    "sourceRoots",
+    "leaveOut",
+    "target",
+    "stack",
+    "documents",
+    "notes"
+  ],
+  "additionalProperties": true,
+  "description": "The modernization's settings, read from the person's request."
+}

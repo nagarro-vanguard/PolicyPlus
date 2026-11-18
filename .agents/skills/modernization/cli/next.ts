@@ -35,6 +35,16 @@ export const settingsFor = (root: string, firstSource: string | undefined): Sett
     parallel: 1,
 });
 
+/** The steps whose inputs are the target and the plan itself, which created work items depend on. */
+const lateStep = (name: string) => name.startsWith("target-") || name === "foundation" || name === "stories";
+
+/** Whether any work item has been created: from then on the target and the plan are not redone. */
+const itemsCreated = (ledger: string) =>
+    existsSync(ledger) &&
+    Object.values(read<{ items: Record<string, { status: string }> }>(ledger).items).some(
+        (entry) => entry.status !== "planned",
+    );
+
 /**
  * The next action: the first step that is due, else delivery. Pure over the files on disk, so a restart loses nothing.
  * @param root the Output Root
@@ -58,7 +68,15 @@ export const next = (root: string, request: string | undefined): Action => {
         const missing = step.makes(paths).filter((path) => !existsSync(path));
         const recorded = state.steps[step.name]?.inputs;
         const current = hashFiles(step.inputs(paths));
-        const stale = recorded !== undefined && recorded !== current;
+        const problems = step.valid?.(paths) ?? [];
+        // A step that says whether its record still holds is decided by that, not by the hash of its inputs.
+        const stale = step.valid === undefined ? recorded !== undefined && recorded !== current : problems.length > 0;
+        if (stale && lateStep(step.name) && itemsCreated(paths.ledger))
+            return {
+                action: "stop",
+                step: step.name,
+                message: `${step.name} is out of date, because the target or the plan changed after work items were created. Re-plan only the items not yet created, by hand: created items are locked.`,
+            };
         if (missing.length > 0 || stale) {
             return step.action({ paths, skills, settings: state.settings, request: state.request });
         }

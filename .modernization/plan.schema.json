@@ -1,0 +1,919 @@
+{
+  "type": "object",
+  "properties": {
+    "analysis": {
+      "type": "object",
+      "properties": {
+        "root": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fingerprint": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "root",
+        "fingerprint"
+      ],
+      "additionalProperties": true,
+      "description": "The analysis the plan was made from."
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The layer's name in plain words, unique in the plan."
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The layer's folder, relative to the target codebase's root."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "code",
+              "test"
+            ],
+            "description": "`test` for a layer whose tests drive the running product and are committed first; `code` otherwise."
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the layer holds, in one clause."
+          },
+          "carries": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "description": "The numbers of the target stack lines this layer carries, from 1."
+          },
+          "check": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The command that verifies the layer, run from its folder."
+          },
+          "dependsOn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The layers this one may reach."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "kind",
+          "purpose",
+          "carries",
+          "check",
+          "dependsOn"
+        ],
+        "additionalProperties": true,
+        "description": "One layer of the target codebase, as its root AGENTS.md lists it."
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "topic": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "_tag": {
+                    "type": "string",
+                    "enum": [
+                      "convention"
+                    ]
+                  }
+                },
+                "required": [
+                  "_tag"
+                ],
+                "additionalProperties": true
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_tag": {
+                    "type": "string",
+                    "enum": [
+                      "integration"
+                    ]
+                  },
+                  "system": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "_tag",
+                  "system"
+                ],
+                "additionalProperties": true
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_tag": {
+                    "type": "string",
+                    "enum": [
+                      "scope"
+                    ]
+                  },
+                  "capability": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "_tag",
+                  "capability"
+                ],
+                "additionalProperties": true
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_tag": {
+                    "type": "string",
+                    "enum": [
+                      "note"
+                    ]
+                  },
+                  "number": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "_tag",
+                  "number"
+                ],
+                "additionalProperties": true
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_tag": {
+                    "type": "string",
+                    "enum": [
+                      "area"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "_tag",
+                  "name"
+                ],
+                "additionalProperties": true
+              }
+            ],
+            "description": "What a decision is about: one line of a layer's AGENTS.md, an outside system, whether a capability is carried, replaced or dropped, one of the person's notes, or a free-named area such as libraries."
+          },
+          "layer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "workspace"
+                ]
+              }
+            ],
+            "description": "The layer the decision governs, or `workspace` when it governs them all."
+          },
+          "chose": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What was chosen; for a convention, the AGENTS.md line itself."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Why, as the trade-off: what was chosen over what, and any assumption it rests on."
+          }
+        },
+        "required": [
+          "id",
+          "topic",
+          "layer",
+          "chose",
+          "reason"
+        ],
+        "additionalProperties": true,
+        "description": "One decision and the trade-off behind it."
+      }
+    },
+    "epics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "functional",
+              "technical"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "outcome": {
+            "type": "string",
+            "minLength": 1
+          },
+          "area": {
+            "type": "string",
+            "minLength": 1
+          },
+          "capability": {
+            "type": "string",
+            "minLength": 1
+          },
+          "task": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The id of the target task whose journey this epic delivers."
+          },
+          "comesAfter": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "The epics that must be done first."
+          },
+          "stories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "key",
+          "kind",
+          "title",
+          "outcome",
+          "comesAfter",
+          "stories",
+          "sequence"
+        ],
+        "additionalProperties": true,
+        "description": "A capability, or an area of technical work, with its stories."
+      }
+    },
+    "phases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "why": {
+            "type": "string",
+            "minLength": 1
+          },
+          "stories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "In sequence order; unordered among themselves by dependency."
+          }
+        },
+        "required": [
+          "number",
+          "name",
+          "why",
+          "stories"
+        ],
+        "additionalProperties": true,
+        "description": "A band of stories that need only earlier phases."
+      }
+    },
+    "stories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "description": "A plain imperative of 72 characters or fewer, no type prefix."
+          },
+          "what": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the story delivers: the capability wanted, or the goal of a technical story."
+          },
+          "why": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The outcome it serves: the reason for the capability, or the problem a technical story solves."
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The legacy entry points this story ports; empty for a technical story."
+          },
+          "terms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The term, in the product's words."
+                },
+                "means": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The sentence its definition will carry: what it is and the nearest meaning it is not."
+                },
+                "entity": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The analysis's kind of data it defines, when it defines one."
+                }
+              },
+              "required": [
+                "name",
+                "means"
+              ],
+              "additionalProperties": true,
+              "description": "A business word the story introduces."
+            }
+          },
+          "journey": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The journey's name in the product owner's words."
+              },
+              "steps": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ],
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "The steps as a person lives them, one each."
+              }
+            },
+            "required": [
+              "name",
+              "steps"
+            ],
+            "additionalProperties": true,
+            "description": "The journey the story adds; only when a person starts the work."
+          },
+          "criteria": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "object",
+                "properties": {
+                  "says": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "One observable behaviour: given the state, when someone acts, then what they see."
+                  },
+                  "from": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "_tag": {
+                              "type": "string",
+                              "enum": [
+                                "rule"
+                              ]
+                            },
+                            "id": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "_tag",
+                            "id"
+                          ],
+                          "additionalProperties": true
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "_tag": {
+                              "type": "string",
+                              "enum": [
+                                "transition"
+                              ]
+                            },
+                            "id": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "_tag",
+                            "id"
+                          ],
+                          "additionalProperties": true
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "_tag": {
+                              "type": "string",
+                              "enum": [
+                                "decision"
+                              ]
+                            },
+                            "id": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "_tag",
+                            "id"
+                          ],
+                          "additionalProperties": true
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "_tag": {
+                              "type": "string",
+                              "enum": [
+                                "layer"
+                              ]
+                            },
+                            "id": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "_tag",
+                            "id"
+                          ],
+                          "additionalProperties": true
+                        }
+                      ],
+                      "description": "What a criterion rests on: a rule or a state change of the legacy system, a decision, or a layer."
+                    },
+                    "description": "What it rests on; a criterion may group related rules."
+                  }
+                },
+                "required": [
+                  "says",
+                  "from"
+                ],
+                "additionalProperties": true,
+                "description": "One acceptance criterion."
+              }
+            ],
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "says": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "One observable behaviour: given the state, when someone acts, then what they see."
+                },
+                "from": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "_tag": {
+                            "type": "string",
+                            "enum": [
+                              "rule"
+                            ]
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "_tag",
+                          "id"
+                        ],
+                        "additionalProperties": true
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "_tag": {
+                            "type": "string",
+                            "enum": [
+                              "transition"
+                            ]
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "_tag",
+                          "id"
+                        ],
+                        "additionalProperties": true
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "_tag": {
+                            "type": "string",
+                            "enum": [
+                              "decision"
+                            ]
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "_tag",
+                          "id"
+                        ],
+                        "additionalProperties": true
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "_tag": {
+                            "type": "string",
+                            "enum": [
+                              "layer"
+                            ]
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "_tag",
+                          "id"
+                        ],
+                        "additionalProperties": true
+                      }
+                    ],
+                    "description": "What a criterion rests on: a rule or a state change of the legacy system, a decision, or a layer."
+                  },
+                  "description": "What it rests on; a criterion may group related rules."
+                }
+              },
+              "required": [
+                "says",
+                "from"
+              ],
+              "additionalProperties": true,
+              "description": "One acceptance criterion."
+            }
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "The ids of the target journey steps this story delivers; for a story of a confirmed target only."
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "The names of the target components this story builds; for a story of a confirmed target only."
+          },
+          "open": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "What the decisions and the rules leave unsettled for this story, one question each, so the person can answer it; never invent the behaviour instead."
+          },
+          "key": {
+            "type": "string",
+            "description": "The story's stable key: a signature of what it builds."
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "The story's place in the one strict order, from 1; unique."
+          },
+          "phase": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "The phase it belongs to: 0 scaffold, 1 foundation, 2 shared rules, 3 and later capabilities."
+          },
+          "epic": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The key of its epic."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "functional",
+              "technical"
+            ],
+            "description": "Functional when it ports legacy actions."
+          },
+          "builder": {
+            "type": "string",
+            "enum": [
+              "shape-and-deliver",
+              "scaffold-codebase"
+            ],
+            "description": "The skill that delivers it."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "epic",
+                "story",
+                "functional",
+                "technical",
+                "modernize"
+              ]
+            },
+            "description": "The tags the work item carries."
+          },
+          "blockedBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The stories that must be merged first."
+          },
+          "builds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The legacy rules it builds, each exactly once across the plan."
+          },
+          "reliesOn": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rule": {
+                  "type": "string"
+                },
+                "builtBy": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "rule",
+                "builtBy"
+              ],
+              "additionalProperties": true
+            },
+            "description": "The legacy rules it needs that another story builds."
+          },
+          "capability": {
+            "type": "string",
+            "minLength": 1
+          },
+          "surface": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "title",
+          "what",
+          "why",
+          "actions",
+          "terms",
+          "criteria",
+          "key",
+          "sequence",
+          "phase",
+          "epic",
+          "kind",
+          "builder",
+          "tags",
+          "blockedBy",
+          "builds",
+          "reliesOn"
+        ],
+        "additionalProperties": true,
+        "description": "A story as the plan carries it, with everything derived from the records."
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope": {
+                "type": "string",
+                "enum": [
+                  "carry",
+                  "replace",
+                  "drop"
+                ]
+              },
+              "surfaces": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "actions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "story": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "story"
+                        ],
+                        "additionalProperties": true
+                      }
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "actions"
+                  ],
+                  "additionalProperties": true
+                }
+              }
+            },
+            "required": [
+              "name",
+              "scope",
+              "surfaces"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "rulesBuilt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "rulesTotal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "unplanned": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "what": {
+                "type": "string",
+                "minLength": 1
+              },
+              "file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "firstLine": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "lastLine": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "what",
+              "file",
+              "firstLine",
+              "lastLine"
+            ],
+            "additionalProperties": true
+          },
+          "description": "Code nothing the analysis could follow reaches, listed so its omission is visible."
+        }
+      },
+      "required": [
+        "capabilities",
+        "rulesBuilt",
+        "rulesTotal",
+        "unplanned"
+      ],
+      "additionalProperties": true,
+      "description": "What the plan covers of the analysis, so nothing is missed in silence."
+    }
+  },
+  "required": [
+    "analysis",
+    "layers",
+    "decisions",
+    "epics",
+    "phases",
+    "stories",
+    "coverage"
+  ],
+  "additionalProperties": true,
+  "description": "The strictly ordered, phase-wise modernization backlog."
+}

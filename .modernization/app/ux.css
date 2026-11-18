@@ -67,3 +67,19 @@ ul.coverage-actions{margin:.3em 0 0;padding-left:1.1em;color:var(--text-secondar
 .edit-panel form{margin:.8em 0;display:flex;flex-direction:column;gap:4px;max-width:70ch}.edit-panel fieldset{border:1px solid var(--line-subtle)}
 .edit-panel input:not([type=checkbox]),.edit-panel textarea,.edit-panel select{font:inherit;padding:6px 8px;border:1px solid var(--line-strong);border-radius:var(--radius-sm);background:var(--surface-page);color:var(--text-primary)}
 .edit-panel button{font:inherit;padding:4px 12px;margin:4px 8px 4px 0;align-self:flex-start;border:1px solid var(--line-strong);border-radius:var(--radius-sm);background:var(--surface-raised);color:var(--text-primary);cursor:pointer}
+
+/* The whiteboard of the target: drawings from the records, today's journey against each variant, and the decisions. */
+svg.tg{max-width:100%;height:auto;display:block;margin:.6em 0}.tg-wire{fill:none;stroke:var(--line-strong);stroke-width:1.4}.tg-arrowhead{fill:var(--line-strong)}
+.tg-node rect{fill:var(--surface-raised);stroke:var(--line-strong)}.tg-node.tg-other rect{fill:var(--surface-sunken);stroke:var(--line-subtle)}.tg-node.tg-other text{fill:var(--text-muted)}
+.tg-node.tg-outside rect{stroke-dasharray:5 3}.tg-node.tg-system rect,.tg-node.tg-actor rect{fill:var(--accent-tint);stroke:var(--accent-brand)}
+.tg-bold{font:700 12px system-ui,sans-serif;fill:var(--text-primary)}.tg-plain{font:11px system-ui,sans-serif;fill:var(--text-secondary)}.tg-wire-label{font:10px system-ui,sans-serif;fill:var(--text-secondary)}
+.variant{margin:1.2em 0;padding:12px 14px;border:1px solid var(--line-subtle);border-radius:var(--radius-lg);background:var(--surface-raised)}.variant.chosen{border-color:var(--accent-brand)}
+.variant h3{margin:.1em 0}.variant .tags{margin:.3em 0}
+.lane{display:flex;gap:8px;overflow-x:auto;padding:4px 0;margin:.3em 0}.lane-label{font-size:.8em;font-weight:700;color:var(--text-secondary);margin-top:.8em}
+.stepcard{flex:0 0 220px;padding:8px 10px;border:1px solid var(--line-strong);border-radius:var(--radius-md);background:var(--surface-page);font-size:.9em}
+.stepcard.today{background:var(--surface-sunken);border-style:dashed}.stepcard p{margin:.2em 0}.stepcard .sub{font-size:.85em}
+.badge{display:inline-block;font-size:.75em;font-weight:700;padding:0 7px;border:1px solid var(--info-text);color:var(--info-text);border-radius:4px;margin-right:4px}
+.badge.new{border-color:var(--pass-text);color:var(--pass-text)}.badge.kept{border-color:var(--line-strong);color:var(--text-secondary)}
+.badge.hurts,.badge.wrong{border-color:var(--fail-text);color:var(--fail-text)}.badge.unused{border-color:var(--warn-text);color:var(--warn-text)}.badge.correct{border-color:var(--pass-text);color:var(--pass-text)}
+.metrics{display:flex;flex-wrap:wrap;gap:10px;margin:.5em 0}.metrics div{padding:6px 10px;border:1px solid var(--line-subtle);border-radius:var(--radius-md);background:var(--surface-page);font-size:.9em}.metrics strong{display:block;font-size:1.15em}
+.decision{padding:10px 12px;border:1px solid var(--line-subtle);border-radius:var(--radius-md);margin:.5em 0}.decision.done{border-color:var(--pass-text)}.decision.todo{border-color:var(--warn-text)}

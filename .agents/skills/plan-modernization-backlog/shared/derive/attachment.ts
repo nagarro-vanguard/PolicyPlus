@@ -1,6 +1,8 @@
 import type { AttachmentHeader } from "../model/header";
 import type { Plan, StoryView } from "../model/plan";
 import type { Facts, Place } from "./facts";
+import type { Target } from "../read/target";
+import type { ModernizationRequest } from "../model/request";
 
 const placeText = (place: Place) => `${place.file}:${place.firstLine}-${place.lastLine}`;
 
@@ -8,7 +10,25 @@ const placeText = (place: Place) => `${place.file}:${place.firstLine}-${place.la
  * The typed front of a story's attachment, written from the analysis facts: each criterion with the rules it backs, what
  * the story relies on, its data, its changes of state, the outside systems, and every place cited.
  */
-export const headerFor = (view: StoryView, plan: Plan, facts: Facts): AttachmentHeader => {
+/** The folder of the layer that carries a component: the one carrying the stack line that names its container's technology. */
+const layerFolderOf = (name: string, target: Target, request: ModernizationRequest, plan: Plan) => {
+    const component = target.architecture.components.find((each) => each.name === name);
+    const container = target.architecture.containers.find(
+        (each) => each.kind !== "store" && each.holds.includes(component?.domain ?? ""),
+    );
+    const tech = container?.tech.trim().toLowerCase() ?? "";
+    const lines = request.stack.flatMap((line, at) =>
+        tech !== "" && line.toLowerCase().includes(tech) ? [at + 1] : [],
+    );
+    return plan.layers.find((layer) => layer.carries.some((n) => lines.includes(n)))?.path ?? "";
+};
+
+export const headerFor = (
+    view: StoryView,
+    plan: Plan,
+    facts: Facts,
+    extras?: { readonly target: Target; readonly request: ModernizationRequest },
+): AttachmentHeader => {
     const titleOf = new Map(plan.stories.map((story) => [story.key as string, story.title]));
     const capability = facts.capabilities.find((each) => each.name === view.capability);
     const transitions = view.criteria.flatMap((c) =>
@@ -39,6 +59,33 @@ export const headerFor = (view: StoryView, plan: Plan, facts: Facts): Attachment
         data: (capability?.data ?? []).map((each) => ({ kind: each.name, access: each.access })),
         transitions: transitionFacts.map((t) => ({ entity: t.entityName, from: t.from, to: t.to, where: t.place })),
         outsideSystems: [...new Set((capability?.data ?? []).flatMap((each) => each.stores))],
+        ...(extras === undefined
+            ? {}
+            : {
+                  steps: (view.steps ?? []).flatMap((id) =>
+                      extras.target.journeys.flatMap((journey) =>
+                          journey.steps
+                              .filter((step) => step.id === id)
+                              .map((step) => ({
+                                  intent: step.intent,
+                                  change: step.link._tag === "legacy" ? step.link.change : "new",
+                                  reason: step.link.reason,
+                              })),
+                      ),
+                  ),
+                  components: (view.components ?? []).flatMap((name) => {
+                      const component = extras.target.architecture.components.find((each) => each.name === name);
+                      return component
+                          ? [
+                                {
+                                    name,
+                                    module: component.module,
+                                    layer: layerFolderOf(name, extras.target, extras.request, plan),
+                                },
+                            ]
+                          : [];
+                  }),
+              }),
         cited: [...actionPlaces, ...rulePlaces, ...transitionFacts.map((t) => t.place)],
     } as unknown as AttachmentHeader;
 };

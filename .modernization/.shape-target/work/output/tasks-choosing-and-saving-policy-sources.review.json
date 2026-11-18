@@ -1,0 +1,29 @@
+{
+  "read": 4,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The intents name only some source kinds (computer: only the policy file is described; user: omits Local GPO and the scratch-space fallback is only in the confirm step), and the file picker line drops that choosing an existing policy file raises no overwrite question."
+    },
+    {
+      "record": 0,
+      "says": "The step to see the policies of the newly chosen sources folds in the view-setting rule (businessrule-84588009124214109370) but drops that a policy kept after moving up is shown in the information pane only and is not highlighted in the list."
+    },
+    {
+      "record": 1,
+      "says": "This is the old user-account dialog, not something a person sets out to do on their own: choosing the account is a step of choosing the user policy source, so the task is a surface of the old system."
+    },
+    {
+      "record": 2,
+      "says": "This is the old user-profile dialog, not a separate outcome: picking a profile hive is a step of choosing the user policy source, and the Escape-cancel and OK-does-nothing-until-selected behaviours are dialog mechanics."
+    },
+    {
+      "record": 3,
+      "says": "The Keep the policy settings sentence reduces about twenty rules to the source own form and loses refusals and conditions: a REG file source cannot forget a value (fails as not implemented), values outside a set source branch are ignored, forgetting applies only under the three policy branches, and entries without a value name or starting with ** are skipped silently."
+    },
+    {
+      "record": 3,
+      "says": "The take-effect sentence omits the POL-file case (saved to disk only) and does not state the condition that decides between asking Windows to refresh policy and applying the difference to the running account registry (Windows editions that have Group Policy), nor that the per-user GPO always asks for a user refresh."
+    }
+  ]
+}

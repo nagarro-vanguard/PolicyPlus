@@ -1,24 +1,24 @@
 {
   "findings": 4,
   "byRule": {
-    "a word of the analysis's own machinery": 3,
-    "phrasing that reads as boilerplate": 1
+    "phrasing that reads as boilerplate": 3,
+    "a word of the analysis's own machinery": 1
   },
   "examples": [
     {
-      "rule": "a word of the analysis's own machinery",
-      "hit": "laceable; assumes knip config lists the entry points of each layer. Domain · Chose: Pure cod",
+      "rule": "phrasing that reads as boilerplate",
+      "hit": "Home editions; assumes the service runs elevated when writing machine policy and that th",
       "where": "plan/foundation.html"
     },
     {
       "rule": "a word of the analysis's own machinery",
-      "hit": "es, so every screen must reach the same verdict from the same values. Waits for these s",
-      "where": "plan/story/013-work-out-whether-a-policy-is-enabled-or-disabled-from-its.html"
+      "hit": "se 1: Platform Epic Set up knowledge in code Kind story technical Delivered with the shap",
+      "where": "plan/story/004-keep-behaviour-in-code-tests-and-short-agent-notes.html"
     },
     {
-      "rule": "a word of the analysis's own machinery",
-      "hit": "se 1: Platform Epic Set up knowledge in code Kind story technical Delivered with the shap",
-      "where": "plan/story/006-set-the-pattern-for-rules-written-as-tested-code.html"
+      "rule": "phrasing that reads as boilerplate",
+      "hit": "nds on, a larger session domain, and an elevated screens process during installation. 11",
+      "where": "target/architecture.html"
     },
     {
       "rule": "phrasing that reads as boilerplate",

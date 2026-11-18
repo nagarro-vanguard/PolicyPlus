@@ -1,0 +1,9 @@
+{
+  "kind": "variants",
+  "tasks": [
+    "tasks-editing-policy-files-directly.open-raw-policy-editor",
+    "tasks-editing-policy-files-directly.add-policy-file-key-or-value",
+    "tasks-editing-policy-files-directly.change-policy-file-value-data",
+    "tasks-editing-policy-files-directly.remove-policy-file-entries"
+  ]
+}

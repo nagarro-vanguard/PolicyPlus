@@ -1,0 +1,27 @@
+---
+import Page from "../layouts/Page.astro";
+import { draw } from "../lib/target-diagram";
+import { components, integration, overall } from "../lib/target-views";
+import { erdPath, taskPath } from "../lib/target-text";
+import ConfirmBar from "./ConfirmBar.astro";
+import type { TargetData, Architecture, Journey, Legacy, Task } from "../lib/target-types";
+export interface Props { architecture: Architecture; tasks: readonly Task[]; journeys: readonly Journey[]; legacy: Legacy | undefined; data: TargetData; }
+const { architecture, tasks, journeys, legacy, data } = Astro.props;
+const whole = await draw(overall(architecture, legacy));
+const adapters = await draw(integration(architecture, legacy));
+const parts = await Promise.all(architecture.containers.map(async (container) => ({ container, svg: await draw(components(architecture, container.name)) })));
+---
+<Page title="The chosen system" lead={`${architecture.name}: ${architecture.idea}.`} depth={1} trail={[{ text: "Overview", href: "../index.html" }, { text: "Target", href: "../target.html" }, { text: "The chosen system" }]}>
+    <ConfirmBar data={data} show={["components"]} />
+    <h2>The whole system</h2>
+    <Fragment set:html={whole} />
+    <h2>Outside systems</h2>
+    <Fragment set:html={adapters} />
+    <h2>Components of each part</h2>
+    {parts.map(({ container, svg }) => <section><h3>{container.name}</h3><p class="sub">{container.kind}: {container.tech}</p><Fragment set:html={svg} /></section>)}
+    <h2>Data, journey by journey</h2>
+    <ul>{journeys.map((journey) => {
+        const task = tasks.find((each) => each.id === journey.task);
+        return task === undefined ? null : <li><a href={`${erdPath(task).replace("target/", "")}.html`}>{task.outcome}</a> <span class="sub">({journey.name})</span> · <a href={`${taskPath(task).replace("target/", "")}.html`}>the journey</a></li>;
+    })}</ul>
+</Page>

@@ -2,6 +2,7 @@
 import { copy } from "../lib/copy";
 import { rootOf } from "../lib/payloads";
 import { hasPlan } from "../lib/plan-data";
+import { hasTarget } from "../lib/target-data";
 export interface Props {
     title: string;
     lead?: string;
@@ -12,6 +13,7 @@ export interface Props {
 const { title, lead = "", trail = [], depth = 0, brief = "" } = Astro.props;
 const root = rootOf(depth);
 const plan = hasPlan();
+const target = hasTarget();
 ---
 <!doctype html>
 <html lang="en">
@@ -32,6 +34,7 @@ const plan = hasPlan();
             <a href={`${root}connections.html`}>{copy.nav.connections}</a>
             <a href={`${root}data.html`}>{copy.nav.data}</a>
             <a href={`${root}risks.html`}>{copy.nav.risks}</a>
+            {target && <a href={`${root}target.html`}>{copy.nav.target}</a>}
             {plan && <a href={`${root}plan.html`}>{copy.nav.plan}</a>}
         </nav>
         <input id="search" type="search" placeholder={copy.site.search} aria-label={copy.site.search} />

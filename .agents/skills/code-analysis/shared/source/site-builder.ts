@@ -9,6 +9,7 @@ export interface SiteBuilderOps {
     readonly build: (input: {
         readonly analysis: string;
         readonly plan?: string | undefined;
+        readonly target?: string | undefined;
         readonly out: string;
     }) => Effect.Effect<string, SiteBuildFailed>;
 }
@@ -26,7 +27,7 @@ const designSystemStyles = join(skillRoot, "..", "..", "shared", "page-component
  */
 const runStep = (step: string, args: readonly string[], environment: Record<string, string>) =>
     Effect.suspend(() => {
-        const { PLAN_DIR: _inherited, ...inherited } = process.env;
+        const { PLAN_DIR: _plan, TARGET_DIR: _target, ...inherited } = process.env;
         const ran = spawnSync("bun", [...args], {
             cwd: template,
             env: { ...inherited, ...environment },
@@ -53,15 +54,17 @@ const siteBuilderOps: SiteBuilderOps = {
      * @param input the folders
      * @param input.analysis the folder write-payloads wrote
      * @param input.plan the folder that holds the plan's files (`.modernization-backlog/` and `work-items/`), when there is one
+     * @param input.target the Output Root that holds the target's files (`target/` and `.shape-target/`), when there is one
      * @param input.out the folder the pages are written to
      * @returns what the build printed
      */
-    build: ({ analysis, plan, out }) =>
+    build: ({ analysis, plan, target, out }) =>
         Effect.gen(function* () {
             const environment: Record<string, string> = {
                 ANALYSIS_PAYLOADS_DIR: analysis,
                 APP_OUT: out,
                 ...(plan === undefined ? {} : { PLAN_DIR: plan }),
+                ...(target === undefined ? {} : { TARGET_DIR: target }),
             };
             if (!existsSync(join(template, "node_modules"))) {
                 yield* runStep("install the app's dependencies", ["install", "--frozen-lockfile"], environment);

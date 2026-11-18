@@ -1,0 +1,71 @@
+---
+import Page from "../layouts/Page.astro";
+import ConfirmBar from "./ConfirmBar.astro";
+import { confirmCommand } from "../lib/confirmation";
+import type { Choice, Journey, Legacy, Task, TargetData } from "../lib/target-types";
+import { actionSays, changeKinds, marksOf, metricsOf, ruleSays, taskSlug, todayOf } from "../lib/target-text";
+export interface Props { task: Task; variants: readonly Journey[]; chosen: Journey | undefined; legacy: Legacy | undefined; choiceAsIs: Choice | undefined; hasArchitecture: boolean; data: TargetData; }
+const { task, variants, chosen, legacy, choiceAsIs, hasArchitecture, data } = Astro.props;
+const marks = marksOf(choiceAsIs?.marks, task);
+const verdictOf = (position: number) => marks.find((mark) => mark.of === `${task.id}#${position}`);
+const pick = (variant: Journey) => confirmCommand("journeys", data.root).replace("[--all-recommended] [--pick <task>=<variant>]", `--pick ${task.id}=${variant.name}`);
+---
+<Page title={task.outcome} lead={`Done by ${task.actor}. Today's way, against the ways we propose.`} depth={2} trail={[{ text: "Overview", href: "../../index.html" }, { text: "Target", href: "../../target.html" }, { text: task.outcome }]}>
+    <ConfirmBar data={data} show={["as-is", "journeys"]} />
+    <h2>How it is done today</h2>
+    <p class="note">Worked out from the code, so each step says how sure we are. Marks are yours: what hurts, what is never used, what is wrong.</p>
+    <div class="lane">{task.current.map((step, i) => {
+        const mark = verdictOf(i + 1);
+        return <div class="stepcard today">
+            <p><strong>{i + 1}. {step.intent}</strong></p>
+            <p class="sub">{step.system}</p>
+            <p class="sub">{step.confidence === "sure" ? "Stated by the code" : "Inferred from the code"}{" "}{mark && <span class={`badge ${mark.verdict}`}>{mark.verdict}</span>}</p>
+            {mark?.note && <p class="sub">{mark.note}</p>}
+        </div>;
+    })}</div>
+    <h2>Ways we propose</h2>
+    {variants.length === 0 && <p class="note">No variants yet: the journeys stage has not run for this task.</p>}
+    {variants.map((variant) => {
+        const m = metricsOf(task, variant);
+        const isChosen = chosen !== undefined && chosen.name === variant.name;
+        return <section class={`variant${isChosen ? " chosen" : ""}`}>
+            <h3>{variant.name}</h3>
+            <p class="tags">
+                {variant.recommended && <span class="badge new">recommended</span>}
+                {variant.baseline && <span class="badge hurts">mirrors today</span>}
+                {isChosen && <span class="badge correct">chosen</span>}
+                <span class="chip">{variant.strategy}</span>
+            </p>
+            <p>{variant.idea}</p>
+            <p class="sub">Costs: {variant.tradeoff}</p>
+            {variant.recommended && <p class="sub">Recommended because {variant.recommended}</p>}
+            <div class="metrics">
+                <div><strong>{m.today} → {m.steps}</strong>steps</div>
+                <div><strong>{m.rulesKept} of {m.rulesTotal}</strong>rules kept</div>
+                <div><strong>{m.dropped}</strong>old behaviours dropped</div>
+                {changeKinds(variant).map(([kind, count]) => <div><strong>{count}</strong>{kind}</div>)}
+            </div>
+            <div class="lane-label">Today</div>
+            <div class="lane">{task.current.map((step, i) => <div class="stepcard today"><p>{i + 1}. {step.intent}</p></div>)}</div>
+            <div class="lane-label">This way</div>
+            <div class="lane">{variant.steps.map((step, i) => {
+                const today = todayOf(task, step);
+                const kind = step.link._tag === "new" ? "new" : step.link.change;
+                return <div class="stepcard">
+                    <p><span class={`badge ${kind}`}>{kind}</span> <strong>{i + 1}. {step.intent}</strong></p>
+                    <p class="sub">{step.system}</p>
+                    <p class="sub">{today.length > 0 ? `takes the place of today's ${today.join(", ")}` : "new"}</p>
+                    <details><summary class="sub">Why, and what it keeps</summary>
+                        <p class="sub">{step.link.reason}</p>
+                        {step.link._tag === "legacy" && <ul class="sub">{step.link.keeps.map((id) => <li>{ruleSays(legacy, id)}</li>)}</ul>}
+                    </details>
+                </div>;
+            })}</div>
+            {variant.drops.length > 0 && <details><summary>What this way leaves out</summary>
+                {variant.drops.map((drop) => <div><p class="sub">{drop.reason}</p><ul>{drop.actions.map((id) => <li>{actionSays(legacy, id)}</li>)}</ul></div>)}
+            </details>}
+            {!isChosen && <details><summary class="sub">Choose this way</summary><pre class="prompt">{pick(variant)}</pre></details>}
+        </section>;
+    })}
+    {chosen && hasArchitecture && <p><a href={`../erd/${taskSlug(task)}.html`}>The data this journey touches</a></p>}
+</Page>

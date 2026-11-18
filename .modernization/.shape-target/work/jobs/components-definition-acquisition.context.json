@@ -1,0 +1,251 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "domain": {
+    "name": "Definition Acquisition",
+    "concept": "Getting Microsoft's current policy definitions installed where the program can use them.",
+    "facts": [],
+    "rules": [
+      "businessrule-16960626064100495277",
+      "businessrule-17840470067823720423",
+      "businessrule-19284863828429321329",
+      "businessrule-24154317128059319852",
+      "businessrule-33969702428946021999",
+      "businessrule-34650805596483639458",
+      "businessrule-53408776186716933732",
+      "businessrule-70392920399990339776",
+      "businessrule-75570169794845906057",
+      "businessrule-78945520165872370051",
+      "businessrule-84139143444339961851",
+      "businessrule-91358402464075338920",
+      "businessrule-23603907625209300500",
+      "businessrule-44390406872239414183",
+      "businessrule-94371671563498468562",
+      "businessrule-15364695696024462204"
+    ],
+    "dependsOn": [
+      "Policy Definitions"
+    ],
+    "why": "A one-off, failure-prone journey across a network and the file system with its own rules, apart from how definitions are later read; it holds nothing about the loaded catalogue."
+  },
+  "container": {
+    "name": "Policy Plus application",
+    "kind": "interface",
+    "tech": "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "holds": [
+      "Policy Definitions",
+      "Policy Source",
+      "Policy State",
+      "Policy Discovery",
+      "Policy File Exchange",
+      "Definition Acquisition",
+      "Workspace"
+    ]
+  },
+  "integrations": [
+    {
+      "need": "external-47673734579321187695",
+      "domain": "Definition Acquisition",
+      "how": "A server-side adapter fetches the one fixed Microsoft package over a secure connection on the Windows machine that will receive the files.",
+      "name": "Microsoft download site"
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-16960626064100495277",
+      "statement": "Before any file is moved, when the folder written in the destination box already exists and the person is an administrator, ownership of it is taken and Administrators are given full control. This applies to whatever folder text is in the box, not only the Windows folder; a standard user skips it. A failure ends the download with \"Failed to take control of the destination.\" and nothing is moved."
+    },
+    {
+      "id": "businessrule-17840470067823720423",
+      "statement": "When any step fails, the person is told \"Failed to \" followed by the step that failed (create a scratch space, download the package, extract the package, take control of the destination, move the ADMX files, remove temporary files); the window stays open, controls are re-enabled, and no policy folder is reported. If only the final cleanup of the scratch folder fails, all files are already installed yet the person is told \"Failed to remove temporary files.\" and no new policy folder is offered."
+    },
+    {
+      "id": "businessrule-19284863828429321329",
+      "statement": "While a download runs, the start button, close button, destination box and browse button are all disabled, so a second download cannot be started and the destination cannot change; they are enabled again when it ends."
+    },
+    {
+      "id": "businessrule-24154317128059319852",
+      "statement": "The template files are moved into the destination, then the language files for the person's regional format language (the culture of the regional settings, which can differ from the display language) are moved into a folder of that name if the package holds one. Unless that language is en-US, the English files are also moved into an en-US folder as a fallback; if the package has no en-US folder, the download stops with \"Failed to move the ADMX files.\" after the destination files were already replaced."
+    },
+    {
+      "id": "businessrule-33969702428946021999",
+      "statement": "When files are moved into a folder, the folder is created if missing and every file already there with the same name is deleted first and then replaced by the new one, with no backup. Only files directly in the source folder are moved. A failure part-way leaves some files replaced and others not."
+    },
+    {
+      "id": "businessrule-34650805596483639458",
+      "statement": "Each time the download window opens, the destination folder is set to the Windows policy definitions folder (the PolicyDefinitions folder under the Windows folder) and no new policy folder is reported to the caller."
+    },
+    {
+      "id": "businessrule-53408776186716933732",
+      "statement": "Starting the download always fetches one fixed Microsoft package, the Windows 11 September 2026 Update (26H2) administrative templates, into a scratch folder under the person's local application data as \"W11Admx.msi\"; the person cannot choose another version."
+    },
+    {
+      "id": "businessrule-70392920399990339776",
+      "statement": "For an administrator, each folder handed to the file move that already exists, the destination itself and any existing language folder, has its ownership taken; a language folder created during the move instead inherits permissions from the folder above. Every moved file, including the template files in the destination, is reset to inherit permissions. A standard user changes no permissions. A failure here ends the download with \"Failed to move the ADMX files.\", not the take-control message."
+    },
+    {
+      "id": "businessrule-75570169794845906057",
+      "statement": "When the person closes the download window while a download is running, the close is refused; the window closes only when no download is running."
+    },
+    {
+      "id": "businessrule-78945520165872370051",
+      "statement": "Choosing a folder in the browse dialog replaces the destination; cancelling the dialog leaves the destination unchanged."
+    },
+    {
+      "id": "businessrule-84139143444339961851",
+      "statement": "After a successful download the scratch folder is deleted, the person is asked \"ADMX files downloaded successfully. Open them now?\", and the destination is reported as the new policy folder only if they answer Yes; either answer closes the window as done."
+    },
+    {
+      "id": "businessrule-91358402464075338920",
+      "statement": "The downloaded package is unpacked with the Windows installer tool; if the tool ends with a non-zero code the download stops with \"Failed to extract the package.\" and the package is kept. When it succeeds, the downloaded package file is deleted."
+    },
+    {
+      "id": "businessrule-23603907625209300500",
+      "statement": "When the offer is considered, it is made only if this Windows edition has no Group Policy support and more than two non-empty categories name a parent that is not among the loaded definitions. The person sees \"Welcome to Policy Plus! Home editions do not come with the full set of policy definitions. Would you like to download them now? This can also be done later with Help | Acquire ADMX Files.\"; Yes starts the download dialog."
+    },
+    {
+      "id": "businessrule-44390406872239414183",
+      "statement": "The computer counts as having the Group Policy infrastructure only when the number Windows gives for its edition equals one of 59 fixed codes in a list. The edition is asked for as Windows version 6.0, and the result of the call is not checked. When the call fails the edition stays 0, which is not in the list, so the computer counts as having none."
+    },
+    {
+      "id": "businessrule-94371671563498468562",
+      "statement": "After a successful download of definitions, the workspace is emptied, the downloaded folder loaded and saved as the definitions folder, and the view rebuilt; with no new folder nothing changes."
+    },
+    {
+      "id": "businessrule-15364695696024462204",
+      "statement": "The program allows secure connections using TLS 1.0, 1.1 and 1.2 only, so downloads use no other protocol."
+    }
+  ],
+  "steps": [
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#1",
+      "intent": "Get the current policy definitions.",
+      "system": "Proposes the operating system's own policy definitions folder as the destination every time and fetches the one fixed Microsoft package.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-34650805596483639458",
+        "businessrule-53408776186716933732"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2",
+      "intent": "Wait while the definitions are installed.",
+      "system": "Locks the destination and the start, prevents leaving while it runs, takes control of an existing destination for an administrator, unpacks the package and removes it, then replaces files in the destination with the templates, the regional-format language files and the English fallback, resetting permissions.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-16960626064100495277",
+        "businessrule-19284863828429321329",
+        "businessrule-75570169794845906057",
+        "businessrule-91358402464075338920",
+        "businessrule-24154317128059319852",
+        "businessrule-33969702428946021999",
+        "businessrule-70392920399990339776"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#3",
+      "intent": "Learn the result and use the definitions.",
+      "system": "Tells which step failed if any, re-enables everything and reports no new folder; on success removes scratch files and asks whether to open them, reporting the folder only on yes.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-17840470067823720423",
+        "businessrule-84139143444339961851"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#4",
+      "intent": "Install somewhere other than the usual folder, only when needed.",
+      "system": "Replaces the destination with the folder chosen; cancelling leaves it unchanged.",
+      "touches": [],
+      "honours": [
+        "businessrule-78945520165872370051"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#2",
+      "intent": "Have missing definitions noticed without having to check.",
+      "system": "Works out whether the edition lacks Group Policy support and whether more than two non-empty categories name a missing parent.",
+      "touches": [],
+      "honours": [
+        "businessrule-44390406872239414183",
+        "businessrule-02030966310880796596",
+        "businessrule-87097618083601098949",
+        "businessrule-23603907625209300500"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#3",
+      "intent": "Accept or put off the definitions.",
+      "system": "Makes the welcome offer; yes starts getting the definitions.",
+      "touches": [],
+      "honours": [
+        "businessrule-23603907625209300500"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1",
+      "intent": "Say that the downloaded definitions should become the ones in use.",
+      "system": "The system takes the downloaded folder and finds the template files in it, ignoring everything else.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-87686960346106148106",
+        "businessrule-94371671563498468562",
+        "businessrule-73782132825452925601",
+        "businessrule-92965345094444319678"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#1",
+      "intent": "Have my preferences remembered",
+      "system": "Recovers the remembered preferences; when they cannot be kept, carries on with defaults and does not stop the person.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-25353365313977612083",
+        "businessrule-15364695696024462204"
+      ]
+    }
+  ],
+  "available": [
+    "Definition installation flow",
+    "Missing definitions detector",
+    "Template folder scanner",
+    "Template file source adapter",
+    "Language file locator",
+    "Language text reader",
+    "Definition language setting",
+    "Template validator",
+    "Definition structure builder",
+    "Policy option reader",
+    "Support evaluator",
+    "Definition load coordinator",
+    "Definition reset",
+    "Policy state presenter",
+    "Category tree presenter",
+    "Item description pane",
+    "Item action resolver",
+    "Duplicate policy merger",
+    "Policy details presenter",
+    "Category details presenter",
+    "Product browser",
+    "Support rule browser",
+    "Policy inspector",
+    "Semantic policy writer",
+    "Loaded file reviewer",
+    "Policy lookup"
+  ]
+}

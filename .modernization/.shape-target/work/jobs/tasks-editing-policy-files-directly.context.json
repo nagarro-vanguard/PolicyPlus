@@ -1,0 +1,1199 @@
+{
+  "capability": {
+    "id": "capability-38063153752557655155",
+    "name": "Editing policy files directly",
+    "purpose": "Change the raw keys and values of a policy file, and bring registry files in or out of it."
+  },
+  "surfaces": [
+    {
+      "name": "EditPol",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-editpol--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-91089666300107221398",
+          "what": "Closes the editor window with an OK result; the changes were already applied to the policy source as each was made.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-18574755515767742264"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 84,
+            "lastLine": 86
+          }
+        },
+        {
+          "id": "block-93573573421282575863",
+          "what": "Closes the editor window with a Cancel result when Escape is pressed; edits already made stay applied to the policy source.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 87,
+            "lastLine": 89
+          }
+        },
+        {
+          "id": "block-54431974963440976475",
+          "what": "Asks for a new key name, checks it is valid and free, and adds the empty key to the policy file.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-21846002666758208174",
+            "businessrule-27239953863800337722",
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545",
+            "businessrule-65588006996628019814",
+            "businessrule-67529938588779257243",
+            "businessrule-81365817698028227620",
+            "businessrule-94140234913184124479"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 113,
+            "lastLine": 129
+          }
+        },
+        {
+          "id": "block-73079666774281241997",
+          "what": "Asks for a value name and type, then its data, and adds the value under the selected key.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-13220028854331489804",
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545",
+            "businessrule-64891270751019389302",
+            "businessrule-67529938588779257243",
+            "businessrule-81365817698028227620",
+            "businessrule-87150598845683946147",
+            "businessrule-88605435114040098546"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 154,
+            "lastLine": 173
+          }
+        },
+        {
+          "id": "block-16970529596856009541",
+          "what": "Marks a value for deletion, or clears or purges a selected key, as the person chooses.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-27194812132584860836",
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545",
+            "businessrule-63694206615951133419",
+            "businessrule-67529938588779257243",
+            "businessrule-81365817698028227620"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 174,
+            "lastLine": 207
+          }
+        },
+        {
+          "id": "block-42642804897148691736",
+          "what": "Removes a key with its contents, or one value, from the policy file without leaving a deletion mark.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-04432638879352685329",
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545",
+            "businessrule-67529938588779257243",
+            "businessrule-81365817698028227620"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 208,
+            "lastLine": 238
+          }
+        },
+        {
+          "id": "block-04045695864978247457",
+          "what": "Asks for new data for the selected value and stores it in the policy file.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-05846735750774889498",
+            "businessrule-13220028854331489804",
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545",
+            "businessrule-67529938588779257243",
+            "businessrule-81365817698028227620",
+            "businessrule-87150598845683946147"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 239,
+            "lastLine": 247
+          }
+        },
+        {
+          "id": "block-82351254846133371644",
+          "what": "Turns the editor buttons on or off to match the kind of item selected in the list.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-13057335115870748705",
+            "businessrule-32089237714667793315",
+            "businessrule-86296876237579429124"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 248,
+            "lastLine": 275
+          }
+        },
+        {
+          "id": "block-42014485464934566054",
+          "what": "Opens the registry file import dialog and refreshes the list if values were imported.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545",
+            "businessrule-67529938588779257243",
+            "businessrule-81365817698028227620"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 276,
+            "lastLine": 278
+          }
+        },
+        {
+          "id": "block-00156606002660817029",
+          "what": "Opens the registry file export dialog for the selected key.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-04261341694819838767",
+            "businessrule-60632388568264259103"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPol.vb",
+            "firstLine": 279,
+            "lastLine": 283
+          }
+        }
+      ]
+    },
+    {
+      "name": "EditPolDelete",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-editpoldelete--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-53120693124506724348",
+          "what": "Accepts the delete dialog when a choice is made and asks for a value name when deleting one value.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-30359040357073744492",
+            "businessrule-84404651755849490179"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPolDelete.vb",
+            "firstLine": 10,
+            "lastLine": 19
+          }
+        },
+        {
+          "id": "block-52241240840751807884",
+          "what": "Closes the delete dialog as cancelled when Escape is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/EditPolDelete.vb",
+            "firstLine": 20,
+            "lastLine": 22
+          }
+        },
+        {
+          "id": "block-96284792383932228976",
+          "what": "Enables the value name box only while the delete-one-value option is chosen.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-30251051045932916641"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPolDelete.vb",
+            "firstLine": 23,
+            "lastLine": 25
+          }
+        }
+      ]
+    },
+    {
+      "name": "EditPolKey",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-editpolkey--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-33339374210388875839",
+          "what": "Closes the key name dialog as cancelled when Escape is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/EditPolKey.vb",
+            "firstLine": 2,
+            "lastLine": 4
+          }
+        },
+        {
+          "id": "block-56011203566573573100",
+          "what": "Puts the cursor in the key name box with its text selected when the dialog appears.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/EditPolKey.vb",
+            "firstLine": 5,
+            "lastLine": 8
+          }
+        }
+      ]
+    },
+    {
+      "name": "EditPolMultiStringData",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-editpolmultistringdata--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-80078734348197600769",
+          "what": "Closes the list-of-strings dialog as cancelled when Escape is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/EditPolMultiStringData.vb",
+            "firstLine": 2,
+            "lastLine": 4
+          }
+        }
+      ]
+    },
+    {
+      "name": "EditPolNumericData",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-editpolnumericdata--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-50446188615114520824",
+          "what": "Switches the number box between decimal and hexadecimal display.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/EditPolNumericData.vb",
+            "firstLine": 9,
+            "lastLine": 11
+          }
+        },
+        {
+          "id": "block-72694376270340482080",
+          "what": "Closes the number dialog as cancelled when Escape is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/EditPolNumericData.vb",
+            "firstLine": 12,
+            "lastLine": 14
+          }
+        }
+      ]
+    },
+    {
+      "name": "EditPolStringData",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-editpolstringdata--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-93495413918984610841",
+          "what": "Closes the string dialog as cancelled when Escape is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/EditPolStringData.vb",
+            "firstLine": 9,
+            "lastLine": 11
+          }
+        }
+      ]
+    },
+    {
+      "name": "EditPolValue",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-editpolvalue--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-12381913549521886903",
+          "what": "Closes the new value dialog as cancelled when Escape is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/EditPolValue.vb",
+            "firstLine": 5,
+            "lastLine": 7
+          }
+        }
+      ]
+    },
+    {
+      "name": "ExportReg",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-exportreg--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-60201373498704616545",
+          "what": "Lets the person pick the .reg file to write",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/ExportReg.vb",
+            "firstLine": 10,
+            "lastLine": 15
+          }
+        },
+        {
+          "id": "block-25624747884727551547",
+          "what": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/ExportReg.vb",
+            "firstLine": 16,
+            "lastLine": 18
+          }
+        },
+        {
+          "id": "block-37048128904866618877",
+          "what": "Writes the chosen branch of the policy file to a .reg file",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-14603482078338141941",
+            "businessrule-38615217867457911992",
+            "businessrule-57163770116853325546",
+            "businessrule-78788630170323770129",
+            "businessrule-97686874157870392601",
+            "businessrule-98458070891453225274"
+          ],
+          "place": {
+            "file": "PolicyPlus/ExportReg.vb",
+            "firstLine": 19,
+            "lastLine": 35
+          }
+        }
+      ]
+    },
+    {
+      "name": "ImportReg",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-importreg--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-89194191501498123777",
+          "what": "Lets the person pick a REG file and guesses the key prefix from it.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-00824990257185597112",
+            "businessrule-17451417049747776074",
+            "businessrule-18921117498420510792",
+            "businessrule-23306400970907693227",
+            "businessrule-52142616153788952070",
+            "businessrule-55584576559812010511",
+            "businessrule-57877192145861745927",
+            "businessrule-59618595788928559733",
+            "businessrule-75481654180830858390",
+            "businessrule-89009644626675244455"
+          ],
+          "place": {
+            "file": "PolicyPlus/ImportReg.vb",
+            "firstLine": 9,
+            "lastLine": 24
+          }
+        },
+        {
+          "id": "block-37220153383335897650",
+          "what": "Closes the window as cancelled when Escape is pressed.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-59516130836014950967"
+          ],
+          "place": {
+            "file": "PolicyPlus/ImportReg.vb",
+            "firstLine": 25,
+            "lastLine": 27
+          }
+        },
+        {
+          "id": "block-13677197335497518185",
+          "what": "Loads the chosen REG file with its prefix and applies it to the policy source.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-18627979551357993299",
+            "businessrule-23306400970907693227",
+            "businessrule-45318436042524755037",
+            "businessrule-52142616153788952070",
+            "businessrule-55584576559812010511",
+            "businessrule-57877192145861745927",
+            "businessrule-59618595788928559733",
+            "businessrule-61966293182360194116",
+            "businessrule-97032716123610483497"
+          ],
+          "place": {
+            "file": "PolicyPlus/ImportReg.vb",
+            "firstLine": 28,
+            "lastLine": 44
+          }
+        }
+      ]
+    },
+    {
+      "name": "Main",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-main--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-75389740485334604011",
+          "what": "Reads a chosen POL file and applies it to the user or computer policy source.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-14969413888672404933",
+            "businessrule-69354381130041181167",
+            "businessrule-97686874157870392601"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 720,
+            "lastLine": 740
+          }
+        },
+        {
+          "id": "block-41514309757986060440",
+          "what": "Writes a policy source out as a POL file.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-14969413888672404933",
+            "businessrule-50297867320833369013",
+            "businessrule-57982804566984189207",
+            "businessrule-62577216252619197563"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 741,
+            "lastLine": 755
+          }
+        },
+        {
+          "id": "block-18043112458533276543",
+          "what": "After a warning, opens the raw editor on a POL-backed policy source.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-14969413888672404933",
+            "businessrule-40441510620479008895",
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545",
+            "businessrule-67529938588779257243",
+            "businessrule-81365817698028227620",
+            "businessrule-98676109650316370626"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 776,
+            "lastLine": 794
+          }
+        },
+        {
+          "id": "block-04644155608109103956",
+          "what": "Exports a policy source as a registry export (REG) file.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-04261341694819838767",
+            "businessrule-14969413888672404933",
+            "businessrule-25739450692106090110",
+            "businessrule-50297867320833369013",
+            "businessrule-62577216252619197563"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 795,
+            "lastLine": 800
+          }
+        },
+        {
+          "id": "block-61484076288336240425",
+          "what": "Imports a registry export (REG) file into a policy source.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-14969413888672404933",
+            "businessrule-60060400053285241820"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 801,
+            "lastLine": 806
+          }
+        }
+      ]
+    },
+    {
+      "name": "OpenSection",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-opensection--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-91792378122287310099",
+          "what": "Reports the chosen section (user or computer) and closes the dialog as accepted",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-64564273672622472190"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenSection.vb",
+            "firstLine": 3,
+            "lastLine": 9
+          }
+        },
+        {
+          "id": "block-74715625061692366925",
+          "what": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-21403142511575039594"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenSection.vb",
+            "firstLine": 10,
+            "lastLine": 12
+          }
+        }
+      ]
+    },
+    {
+      "name": "WideRangeNumericUpDown",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-widerangenumericupdown--editing-policy-files-directly.md",
+      "actions": [
+        {
+          "id": "block-89740736795318812041",
+          "what": "Shows the value as hexadecimal text when hexadecimal mode is on, otherwise leaves display to the standard control.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-85571919984782494727"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPolNumericData.vb",
+            "firstLine": 21,
+            "lastLine": 31
+          }
+        },
+        {
+          "id": "block-20624708115873028291",
+          "what": "Reads typed hexadecimal text into the value in hexadecimal mode, otherwise leaves it to the standard control.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-85571919984782494727"
+          ],
+          "place": {
+            "file": "PolicyPlus/EditPolNumericData.vb",
+            "firstLine": 32,
+            "lastLine": 39
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-64564273672622472190",
+      "statement": "In the section dialog, OK does nothing until User or Computer is chosen; then it returns that section and closes.",
+      "place": {
+        "file": "PolicyPlus/OpenSection.vb",
+        "firstLine": 3,
+        "lastLine": 9
+      }
+    },
+    {
+      "id": "businessrule-00824990257185597112",
+      "statement": "Only files of type *.reg are offered by the file chooser when browsing for the REG file.",
+      "place": {
+        "file": "PolicyPlus/ImportReg.vb",
+        "firstLine": 10,
+        "lastLine": 11
+      }
+    },
+    {
+      "id": "businessrule-17451417049747776074",
+      "statement": "When the guess fails, the person is only warned \"An error occurred while trying to guess the prefix.\" and the prefix stays empty.",
+      "place": {
+        "file": "PolicyPlus/ImportReg.vb",
+        "firstLine": 19,
+        "lastLine": 21
+      }
+    },
+    {
+      "id": "businessrule-18921117498420510792",
+      "statement": "A REG file is reported as holding default values when any value has an empty name.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 298,
+        "lastLine": 300
+      }
+    },
+    {
+      "id": "businessrule-23306400970907693227",
+      "statement": "A REG file value line starting with an at sign is the key's default value, with an empty name.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 65,
+        "lastLine": 67
+      }
+    },
+    {
+      "id": "businessrule-52142616153788952070",
+      "statement": "A REG file is refused when its first line is not 'Windows Registry Editor Version 5.00', with the message 'Incorrect REG signature'.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 47,
+        "lastLine": 47
+      }
+    },
+    {
+      "id": "businessrule-55584576559812010511",
+      "statement": "Blank lines and lines starting with a semicolon in a REG file are ignored.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 42,
+        "lastLine": 42
+      }
+    },
+    {
+      "id": "businessrule-57877192145861745927",
+      "statement": "A REG key header starting with a minus sign marks the whole key for removal. Otherwise it opens a key whose values follow.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 54,
+        "lastLine": 59
+      }
+    },
+    {
+      "id": "businessrule-59618595788928559733",
+      "statement": "In a REG file, a value written as a bare minus sign is a value to delete. A quoted value is text, 'dword:' is a 32-bit number in hexadecimal, and 'hex' is bytes, typed by the number in brackets or binary if none. Data in none of these forms is kept as a value with no data and no type, with no error, and applying it writes an empty value or fails.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 65,
+        "lastLine": 104
+      }
+    },
+    {
+      "id": "businessrule-75481654180830858390",
+      "statement": "The prefix of a REG file is guessed from its first key only. For a key starting with 'HKEY_USERS\\' it is that hive plus the user identifier. For any other key, including HKEY_CURRENT_USER, it is the hive name alone. A first key with no further backslash gives an empty prefix. A file with no keys gets 'HKEY_LOCAL_MACHINE\\'.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 284,
+        "lastLine": 297
+      }
+    },
+    {
+      "id": "businessrule-89009644626675244455",
+      "statement": "When a REG file is chosen and the prefix is empty, the prefix is guessed from the file; if the file holds default values, the person is warned \"This REG file contains data for default values, which cannot be applied to all policy sources.\"",
+      "place": {
+        "file": "PolicyPlus/ImportReg.vb",
+        "firstLine": 9,
+        "lastLine": 24
+      }
+    },
+    {
+      "id": "businessrule-30359040357073744492",
+      "statement": "When Delete is confirmed with the option to clear the key or to delete all values under it, the choice is accepted without further input; no option is chosen when the dialog opens, and confirming with none chosen does nothing.",
+      "place": {
+        "file": "PolicyPlus/EditPolDelete.vb",
+        "firstLine": 11,
+        "lastLine": 11
+      }
+    },
+    {
+      "id": "businessrule-84404651755849490179",
+      "statement": "When Delete is confirmed with the option to delete one value and the value name is empty, it is refused and the person is told \"You must enter a value name.\"; with a name, the choice is accepted.",
+      "place": {
+        "file": "PolicyPlus/EditPolDelete.vb",
+        "firstLine": 12,
+        "lastLine": 18
+      }
+    },
+    {
+      "id": "businessrule-21403142511575039594",
+      "statement": "Pressing Escape closes the section dialog as cancelled.",
+      "place": {
+        "file": "PolicyPlus/OpenSection.vb",
+        "firstLine": 10,
+        "lastLine": 12
+      }
+    },
+    {
+      "id": "businessrule-14603482078338141941",
+      "statement": "When the registry script is written, the person is told \"REG exported successfully.\" and the dialog closes; on any failure they are told only \"Failed to export REG!\" and the dialog stays open.",
+      "place": {
+        "file": "PolicyPlus/ExportReg.vb",
+        "firstLine": 27,
+        "lastLine": 34
+      }
+    },
+    {
+      "id": "businessrule-38615217867457911992",
+      "statement": "A branch name given as the source of a REG export has any trailing backslash removed.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 280,
+        "lastLine": 283
+      }
+    },
+    {
+      "id": "businessrule-57163770116853325546",
+      "statement": "Keys marked for removal are written to a REG file with a leading minus sign and values marked for deletion as a bare minus sign.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 121,
+        "lastLine": 138
+      }
+    },
+    {
+      "id": "businessrule-78788630170323770129",
+      "statement": "When a REG file is written, a default value is shown as an at sign, and quotes and backslashes in names and text are escaped. Text is written as quoted text and a 32-bit number as 'dword:' with eight hexadecimal digits. Every other type, including 64-bit numbers, expandable text and multiple strings, is written as hex bytes. Each carries its type number as hex(n), except plain binary, which is written as hex. Lines wrap before column 78 with a trailing backslash.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 117,
+        "lastLine": 181
+      }
+    },
+    {
+      "id": "businessrule-97686874157870392601",
+      "statement": "Applying a whole policy file to a source applies it as the difference from an empty file, so nothing is forgotten.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 179,
+        "lastLine": 182
+      }
+    },
+    {
+      "id": "businessrule-98458070891453225274",
+      "statement": "Export to a registry script is refused until a file name is given; the person is told \"Please specify a filename and path for the exported REG.\"",
+      "place": {
+        "file": "PolicyPlus/ExportReg.vb",
+        "firstLine": 20,
+        "lastLine": 23
+      }
+    },
+    {
+      "id": "businessrule-85571919984782494727",
+      "statement": "When a typed hexadecimal number is too large to fit, the value is set to the largest allowed value; text that is not a hexadecimal number leaves the value unchanged.",
+      "place": {
+        "file": "PolicyPlus/EditPolNumericData.vb",
+        "firstLine": 40,
+        "lastLine": 58
+      }
+    },
+    {
+      "id": "businessrule-30251051045932916641",
+      "statement": "The value name box in the delete dialog can be typed in only while the option to delete one value is chosen.",
+      "place": {
+        "file": "PolicyPlus/EditPolDelete.vb",
+        "firstLine": 24,
+        "lastLine": 24
+      }
+    },
+    {
+      "id": "businessrule-59516130836014950967",
+      "statement": "Pressing Escape closes Import REG as cancelled.",
+      "place": {
+        "file": "PolicyPlus/ImportReg.vb",
+        "firstLine": 25,
+        "lastLine": 27
+      }
+    },
+    {
+      "id": "businessrule-18627979551357993299",
+      "statement": "A REG key name is shortened by the prefix only when it starts with it, regardless of case. A prefix always ends in a backslash.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 187,
+        "lastLine": 189
+      }
+    },
+    {
+      "id": "businessrule-45318436042524755037",
+      "statement": "When a REG file is applied to a source, a key marked for removal is cleared, a value marked for deletion is deleted and any other value is saved. A key name starting with the prefix is applied without it. A key not starting with the prefix is applied with its full original name, so the registry source would create a key of that name. The source branch limit is not checked.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 260,
+        "lastLine": 275
+      }
+    },
+    {
+      "id": "businessrule-61966293182360194116",
+      "statement": "Import loads the REG file with the prefix and applies it straight to the chosen policy source; on any failure the person is told only \"Failed to import the REG file.\"",
+      "place": {
+        "file": "PolicyPlus/ImportReg.vb",
+        "firstLine": 37,
+        "lastLine": 43
+      }
+    },
+    {
+      "id": "businessrule-97032716123610483497",
+      "statement": "Import is refused with \"Please specify a REG file to import.\" when no file is named, and with \"Please specify the prefix used to fully qualify paths in the REG file.\" when no prefix is given.",
+      "place": {
+        "file": "PolicyPlus/ImportReg.vb",
+        "firstLine": 29,
+        "lastLine": 36
+      }
+    },
+    {
+      "id": "businessrule-18574755515767742264",
+      "statement": "Pressing Done (or Enter) closes the raw policy editor as accepted, and pressing Escape closes it as cancelled; there is no Cancel button. The caller ignores the answer, so every change made in the editor stays on the loaded policy source either way, to reach disk only when policies are saved.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 84,
+        "lastLine": 86
+      }
+    },
+    {
+      "id": "businessrule-21846002666758208174",
+      "statement": "When the key name dialog is confirmed, the typed name is returned unchecked; when it is cancelled, an empty name is returned, so an empty typed name and a cancel look the same to the caller.",
+      "place": {
+        "file": "PolicyPlus/EditPolKey.vb",
+        "firstLine": 11,
+        "lastLine": 15
+      }
+    },
+    {
+      "id": "businessrule-27239953863800337722",
+      "statement": "A new key name is refused with \"The key name is already taken.\" when a key of that name, ignoring case, already exists under the same parent.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 110,
+        "lastLine": 112
+      }
+    },
+    {
+      "id": "businessrule-43194539708053716006",
+      "statement": "Special deletion entries in a policy file are listed as such: \"**deletevalues\" as \"Delete values\" with its data, \"**del.<name>\" as \"Delete value\" with the name, and entries starting \"**delvals\" as \"Delete all values\". They cannot be edited or deleted.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 29,
+        "lastLine": 47
+      }
+    },
+    {
+      "id": "businessrule-44523725638753390545",
+      "statement": "Ordinary values are listed with their content: lists of text joined by spaces, text as it is, 32-bit and 64-bit numbers in decimal, binary data as hexadecimal bytes separated by spaces. Other kinds show no content.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 48,
+        "lastLine": 68
+      }
+    },
+    {
+      "id": "businessrule-65588006996628019814",
+      "statement": "A new key name is refused with \"The key name is not valid.\" when it contains a backslash.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 107,
+        "lastLine": 109
+      }
+    },
+    {
+      "id": "businessrule-67529938588779257243",
+      "statement": "A key name in a policy file is listed as a subkey only once, regardless of case, and the requested key itself is never listed.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 196,
+        "lastLine": 207
+      }
+    },
+    {
+      "id": "businessrule-81365817698028227620",
+      "statement": "The raw policy file editor lists keys in alphabetical order ignoring case, each followed by its sub-keys indented, then its values in alphabetical order; a value with an empty name (the marker that keeps an empty key) is not listed.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 11,
+        "lastLine": 28
+      }
+    },
+    {
+      "id": "businessrule-94140234913184124479",
+      "statement": "Adding a key does nothing when the name is left empty or the dialog is cancelled; otherwise the key is created under the selected key, or at the top level when nothing is selected, as an empty key, and is selected in the list.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 113,
+        "lastLine": 129
+      }
+    },
+    {
+      "id": "businessrule-13220028854331489804",
+      "statement": "A number entered for a registry value is limited to 0 to 4,294,967,295 for a 32-bit value and to 0 to 18,446,744,073,709,551,615 for a 64-bit value.",
+      "place": {
+        "file": "PolicyPlus/EditPolNumericData.vb",
+        "firstLine": 4,
+        "lastLine": 4
+      }
+    },
+    {
+      "id": "businessrule-64891270751019389302",
+      "statement": "Adding a value to the selected key lets the person choose a name and one of five kinds; the starting data is empty text, zero, or an empty list by kind, and the value is stored only if the person then confirms its data. A value of the same name in that key is replaced without warning.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 154,
+        "lastLine": 173
+      }
+    },
+    {
+      "id": "businessrule-87150598845683946147",
+      "statement": "Editing a value offers a text, number or list-of-text dialog by kind: text kinds (plain and expandable) a text box, 32-bit and 64-bit numbers a number box, lists of text a multi-line box. Any other kind, such as binary, is refused with \"This value kind is not supported.\" and nothing changes. Cancelling the dialog leaves the value as it was.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 130,
+        "lastLine": 153
+      }
+    },
+    {
+      "id": "businessrule-88605435114040098546",
+      "statement": "The new registry value dialog offers the types String, Expandable string, List of strings, 32-bit DWord and 64-bit QWord, and starts on String. Confirming returns the typed name, unchecked and possibly empty, with the chosen type; cancelling returns neither.",
+      "place": {
+        "file": "PolicyPlus/EditPolValue.vb",
+        "firstLine": 9,
+        "lastLine": 26
+      }
+    },
+    {
+      "id": "businessrule-27194812132584860836",
+      "statement": "Deleting a single value from the list does not erase it from the file: it is replaced by a deletion entry named \"**del.\" followed by the value name, which removes the value on the machine when policies are applied.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 201,
+        "lastLine": 206
+      }
+    },
+    {
+      "id": "businessrule-63694206615951133419",
+      "statement": "Deleting a key offers three choices, and OK does nothing until one is chosen; cancelling or Escape changes nothing. Clear everything removes all values and marks the key cleared. Clear first marks the key cleared and puts back only its existing direct values with ordinary content; deletion entries already in that key are lost and values of sub-keys are not put back. Delete one value is refused with \"You must enter a value name.\" when the name is empty; otherwise any value of that name, whether or not it exists, is removed and replaced by a deletion entry.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 176,
+        "lastLine": 198
+      }
+    },
+    {
+      "id": "businessrule-04432638879352685329",
+      "statement": "Forgetting a key asks \"Are you sure you want to remove this key and all its contents?\" and, on Yes, removes the key, all its sub-keys, every value and every clearing mark from the file with no deletion left behind; No changes nothing. Forgetting a value removes the value and its deletion entry the same way.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 211,
+        "lastLine": 228
+      }
+    },
+    {
+      "id": "businessrule-05846735750774889498",
+      "statement": "Editing a value replaces its data with the confirmed new data and keeps its name and kind; the value stays selected.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 240,
+        "lastLine": 246
+      }
+    },
+    {
+      "id": "businessrule-13057335115870748705",
+      "statement": "When nothing is selected in the policy file's list, only Add key and Export are available; Add value, Delete value, Edit and Forget are unavailable.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 250,
+        "lastLine": 256
+      }
+    },
+    {
+      "id": "businessrule-32089237714667793315",
+      "statement": "When a value is selected in the list, only Forget is always available; Add key, Add value and Export are unavailable, and Edit and Delete value are available only when the value is not already a delete marker.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 259,
+        "lastLine": 273
+      }
+    },
+    {
+      "id": "businessrule-86296876237579429124",
+      "statement": "When a key is selected in the list, Add key, Add value, Delete value, Forget and Export are available, and Edit is unavailable.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 259,
+        "lastLine": 265
+      }
+    },
+    {
+      "id": "businessrule-04261341694819838767",
+      "statement": "The registry prefix box in the export dialog starts as HKEY_CURRENT_USER\\ when the user policy source is being edited and HKEY_LOCAL_MACHINE\\ otherwise. It can be changed, and the export uses the text in the box unchecked.",
+      "place": {
+        "file": "PolicyPlus/ExportReg.vb",
+        "firstLine": 6,
+        "lastLine": 6
+      }
+    },
+    {
+      "id": "businessrule-60632388568264259103",
+      "statement": "The export dialog starts with the selected key as its source branch, or empty when nothing is selected. The branch can be typed over, and the export uses the text in the box at the time: an empty box exports all of the policy file.",
+      "place": {
+        "file": "PolicyPlus/EditPol.vb",
+        "firstLine": 280,
+        "lastLine": 282
+      }
+    },
+    {
+      "id": "businessrule-14969413888672404933",
+      "statement": "The section dialog lets a person choose only the sections the caller allows: User and Computer are each usable only when enabled by the caller.",
+      "place": {
+        "file": "PolicyPlus/OpenSection.vb",
+        "firstLine": 17,
+        "lastLine": 21
+      }
+    },
+    {
+      "id": "businessrule-69354381130041181167",
+      "statement": "Importing a POL file applies it to the source the person chooses (user or computer). A file that cannot be read gives \"The POL file could not be loaded.\" and changes nothing; success gives \"POL import successful.\". Nothing reaches disk until the person saves.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 724,
+        "lastLine": 738
+      }
+    },
+    {
+      "id": "businessrule-50297867320833369013",
+      "statement": "When a POL is built from a registry-backed source, every value and every sub-key under each of the three policy locations is copied with its own data type, with environment variables left unexpanded. A location missing from the registry stops the copy with an unhandled error.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 450,
+        "lastLine": 458
+      }
+    },
+    {
+      "id": "businessrule-57982804566984189207",
+      "statement": "Exporting a POL file writes the chosen area's policy source as a POL file; the person sees \"POL exported successfully.\" or \"The POL file could not be saved.\".",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 745,
+        "lastLine": 753
+      }
+    },
+    {
+      "id": "businessrule-62577216252619197563",
+      "statement": "Exporting uses a source backed by a POL file as is. A registry-backed source (a chosen registry key or a loaded user hive file) is rebuilt as a new POL from the three policy locations: software\\policies, software\\microsoft\\windows\\currentversion\\policies and system\\currentcontrolset\\policies. Any other source type is rejected, which no known source type reaches.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 441,
+        "lastLine": 468
+      }
+    },
+    {
+      "id": "businessrule-40441510620479008895",
+      "statement": "Raw POL editing is available only when the user or computer source is backed by a POL file, otherwise the person is told \"Neither loaded source is backed by a POL file.\"; the area chosen is limited to POL-backed sources.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 777,
+        "lastLine": 782
+      }
+    },
+    {
+      "id": "businessrule-98676109650316370626",
+      "statement": "The first time raw POL editing is used, the person must accept \"Caution! This tool is for very advanced users. Improper modifications may result in inconsistencies in policies' states.\" (Yes continues and records the acceptance; No cancels and asks again next time).",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 783,
+        "lastLine": 788
+      }
+    },
+    {
+      "id": "businessrule-25739450692106090110",
+      "statement": "Exporting to a registry file (REG) hands the policy source of the area the person chooses, as a POL, to the export dialog. An unsupported source raises an unhandled error, unlike Export POL, which tells the person.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 796,
+        "lastLine": 798
+      }
+    },
+    {
+      "id": "businessrule-60060400053285241820",
+      "statement": "Importing a registry file (REG) applies it to the policy source of the area the person chooses and refreshes the view.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 802,
+        "lastLine": 804
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "entity-99683518011128701149",
+      "name": "Policy setting",
+      "states": [
+        "Not configured",
+        "Enabled",
+        "Disabled",
+        "Unclear"
+      ]
+    },
+    {
+      "id": "entity-40163170707735391190",
+      "name": "Program preference",
+      "states": [
+        "Welcome download offer not yet considered",
+        "Welcome download offer considered",
+        "Raw POL editing warning not yet accepted",
+        "Raw POL editing warning accepted",
+        "Policy sources at default (Local GPO)",
+        "Policy sources remembered",
+        "Templates folder at Windows default",
+        "Templates folder chosen",
+        "Language follows the system",
+        "Language chosen"
+      ]
+    },
+    {
+      "id": "entity-92808062881922645840",
+      "name": "Administrative template",
+      "states": [
+        "Downloaded package",
+        "Unpacked",
+        "Installed in a template folder",
+        "Loaded into the workspace",
+        "Available as policy definitions",
+        "Cleared from the workspace"
+      ]
+    },
+    {
+      "id": "entity-52418278656387992812",
+      "name": "Policy comment",
+      "states": []
+    }
+  ],
+  "externals": [
+    {
+      "id": "external-90077838450756006603",
+      "name": "Computer file system folders",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-97068941883605652538",
+      "name": "Windows registry policy keys and loaded user hives",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-25314431250146805945",
+      "name": "Administrative template files (ADMX and ADML)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-45436197603688581519",
+      "name": "Windows registry settings key of Policy Plus",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-84087908423930356962",
+      "name": "Generated version source file",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-08492831744411585027",
+      "name": "Policy comment files (CMTX)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-90078096462363044953",
+      "name": "Active Directory domain",
+      "kind": "outsideService"
+    },
+    {
+      "id": "external-47673734579321187695",
+      "name": "Microsoft download site",
+      "kind": "outsideService"
+    }
+  ]
+}

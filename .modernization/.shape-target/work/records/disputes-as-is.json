@@ -1,0 +1,174 @@
+[
+  {
+    "job": "tasks-getting-microsoft-policy-definitions",
+    "says": "Record 0: The outcome promises Microsoft's \"current\" set, but the legacy rule says the program always fetches one fixed package (Windows 11 September 2026 Update 26H2) and the person cannot choose another version."
+  },
+  {
+    "job": "tasks-getting-microsoft-policy-definitions",
+    "says": "Record 0: The third current step drops the partial-failure outcomes: a failed cleanup still leaves all files installed yet reports \"Failed to remove temporary files.\" with no folder reported, a failed extraction keeps the package, and a failed move can leave some files replaced and others not with no backup."
+  },
+  {
+    "job": "tasks-getting-microsoft-policy-definitions",
+    "says": "Record 1: The first current step says \"many categories lack their parent\", losing the legacy condition that the offer is made only when more than two non-empty categories name a parent that is not loaded, and that group-policy support comes from a fixed list of edition codes where a failed lookup counts as no support."
+  },
+  {
+    "job": "tasks-getting-microsoft-policy-definitions",
+    "says": "Record 2: This task bundles about 100 rules covering the whole load and browse of the program (registry evaluation, support definitions, filters, comment columns, ADMX/ADML parsing errors) under one outcome, so it is the old Acquire menu handler rather than a task, and its first step repeats the Help-menu start already in get-policy-definitions."
+  },
+  {
+    "job": "tasks-getting-microsoft-policy-definitions",
+    "says": "Record 2: The browse step omits the load-problem path: errors are listed and, where a choice is wanted, the person is asked \"Continue trying to use this workspace?\"; failing files are skipped while the others load, so the step misstates what happens when the new definitions are partly bad."
+  },
+  {
+    "job": "tasks-using-the-product",
+    "says": "Record 1: The task includes action block-04864433854821115058 but drops five of the rules that action cites (40551856488084894130, 41547680626150552574, 58877134447436981389, 72200124994498270380, 78253526822536661517), so the reload step hides what happens when the new language's reload reports problems or fails: the keep-or-discard question, the offer to load the default folder, and the empty workspace."
+  },
+  {
+    "job": "tasks-using-the-product",
+    "says": "Record 1: The step 'Enter the language wanted' loses that the same-code check is case-sensitive and compares the entered text (spaces trimmed) with the stored code untrimmed, so en-us counts as a change from en-US, and that text with path characters passes and is later used as a folder name."
+  },
+  {
+    "job": "tasks-using-the-product",
+    "says": "Record 0: The step 'Know whether changes can be kept' omits that the all-writable confirmation is never shown at start, only the not-fully-writable warning (businessrule-98025569949322378254), and the first step omits that an unopenable settings area is carried past without telling the person, so settings are not remembered (businessrule-25353365313977612083)."
+  },
+  {
+    "job": "tasks-choosing-and-saving-policy-sources",
+    "says": "Record 0: The intents name only some source kinds (computer: only the policy file is described; user: omits Local GPO and the scratch-space fallback is only in the confirm step), and the file picker line drops that choosing an existing policy file raises no overwrite question."
+  },
+  {
+    "job": "tasks-choosing-and-saving-policy-sources",
+    "says": "Record 0: The step to see the policies of the newly chosen sources folds in the view-setting rule (businessrule-84588009124214109370) but drops that a policy kept after moving up is shown in the information pane only and is not highlighted in the list."
+  },
+  {
+    "job": "tasks-choosing-and-saving-policy-sources",
+    "says": "Record 1: This is the old user-account dialog, not something a person sets out to do on their own: choosing the account is a step of choosing the user policy source, so the task is a surface of the old system."
+  },
+  {
+    "job": "tasks-choosing-and-saving-policy-sources",
+    "says": "Record 2: This is the old user-profile dialog, not a separate outcome: picking a profile hive is a step of choosing the user policy source, and the Escape-cancel and OK-does-nothing-until-selected behaviours are dialog mechanics."
+  },
+  {
+    "job": "tasks-choosing-and-saving-policy-sources",
+    "says": "Record 3: The Keep the policy settings sentence reduces about twenty rules to the source own form and loses refusals and conditions: a REG file source cannot forget a value (fails as not implemented), values outside a set source branch are ignored, forgetting applies only under the three policy branches, and entries without a value name or starting with ** are skipped silently."
+  },
+  {
+    "job": "tasks-choosing-and-saving-policy-sources",
+    "says": "Record 3: The take-effect sentence omits the POL-file case (saved to disk only) and does not state the condition that decides between asking Windows to refresh policy and applying the difference to the running account registry (Windows editions that have Group Policy), nor that the per-user GPO always asks for a user refresh."
+  },
+  {
+    "job": "tasks-changing-policy-settings",
+    "says": "Record 0: The save step says it writes the chosen state, every option and the comment, but drops that OK and Apply are available only when the chosen source can be written to, that an empty comment removes the stored comment, and that Disabled writes only each option's own removal and Not configured writes nothing beyond the forgetting."
+  },
+  {
+    "job": "tasks-changing-policy-settings",
+    "says": "Record 0: Leaving without saving (Cancel, with its reported-as-change-if-Apply-was-used rule) is folded into the save step, so the person has no step for cancelling, and Apply keeping the dialog open versus OK closing it is blurred."
+  },
+  {
+    "job": "tasks-changing-policy-settings",
+    "says": "Record 0: The option-filling step loses the quirks of the number rules: text a whole-number reading accepts (signs, spaces) is kept, pasted text is not restricted to digits, numbers above 2,147,483,647 revert to the default even when the policy maximum is higher, and a negative minimum is stored unsigned."
+  },
+  {
+    "job": "tasks-changing-policy-settings",
+    "says": "Record 0: Rules that decide how a REG file or policy file forgets a key's clearance (businessrule-49955247469929977676, businessrule-60358450731077326247) are placed in this task, but no step is about source files; they belong to the storage layer, not to what the person does here."
+  },
+  {
+    "job": "tasks-changing-policy-settings",
+    "says": "Record 1: The Escape key (block-02431696381301467584) is placed under accepting the text and described only as leaving passing nothing on, losing the rule that Escape closes the window only when no text in the box is selected."
+  },
+  {
+    "job": "tasks-changing-policy-settings",
+    "says": "Record 1: Select-all with Ctrl+A (block-98990608667721641067) is grouped under providing the policy text, where it does not belong, and no step covers the text format the checks enforce (signature line, CRLF line breaks, exact U for user, state words, value formats, comment escapes), so the person cannot write a valid text from these steps."
+  },
+  {
+    "job": "tasks-changing-policy-settings",
+    "says": "Record 1: The apply step says each policy is wiped then written with its comment, but drops that a failed policy leaves the new comment against a half-written policy, that an empty comment leaves an existing comment alone, and that the person is told only how many failed, not which."
+  },
+  {
+    "job": "tasks-changing-policy-settings",
+    "says": "Record 2: The outcome says the person sees policy settings as text, yet no action or step produces the text or says which settings it holds; only the fragment view, header toggle and copy are given, and there is no entry that opens it, so it reads as a surface of the old system rather than a task."
+  },
+  {
+    "job": "tasks-finding-policies",
+    "says": "Record 0: The rules include ones that do not belong here: Deduplicate Policies being hidden, only one list row being selectable, and the list refresh after an edit is accepted; none of them is about finding by identifier."
+  },
+  {
+    "job": "tasks-finding-policies",
+    "says": "Record 0: The journey drops what the old system does with the identifier: an \"@U\" or \"@C\" suffix picks the section (any other suffix is cut off and the policy applies to both), the policy opens in the lower-numbered of the shown area and the area found (Computer wins), and a policy hidden by the area or filter leaves the category shown with nothing selected and no message."
+  },
+  {
+    "job": "tasks-finding-policies",
+    "says": "Record 0: The \"See what was found\" step lumps the product and support-definition detail windows (parent button, child revisions, major/minor/top-level labels, match-all/any/none wording, missing-product display) into one clause, so the person could not tell what those windows must show; they are a separate outcome from locating something by its identifier."
+  },
+  {
+    "job": "tasks-finding-policies",
+    "says": "Record 1: The journey omits what makes a hit: words match as whole words, the characters . , ' \" ; / ! ( ) { } [ ] are stripped, and a single-quoted word does not close itself but absorbs the words after it."
+  },
+  {
+    "job": "tasks-finding-policies",
+    "says": "Record 3: The \"Pick a hit to open\" step drops the condition that Go or a double-click accepts only when a result is selected, and that the position is remembered for Find Next."
+  },
+  {
+    "job": "tasks-finding-policies",
+    "says": "Record 4: The journey omits that a filter with Supported on ticked and no product ticked is accepted, and that unticking Supported on discards the ticked products and matching options, and it does not say which choices the dialog shows when it reopens from an existing filter."
+  },
+  {
+    "job": "tasks-editing-policy-files-directly",
+    "says": "Record 0: The raw-edit entry says only that the person is told when neither source is POL-backed, but the rule also limits the chosen area to POL-backed sources, and the first-time warning loses that answering No cancels and asks again next time."
+  },
+  {
+    "job": "tasks-editing-policy-files-directly",
+    "says": "Record 1: The rule that Edit refuses unsupported kinds such as binary with \"This value kind is not supported.\" is filed under this task's rules although it belongs to changing a value's data."
+  },
+  {
+    "job": "tasks-editing-policy-files-directly",
+    "says": "Record 2: The step 'Choose a value to change' relies on the kind-refusal rule and the step 'Enter the new data' on the 0 to 4,294,967,295 / 18,446,744,073,709,551,615 number limits, yet both rules sit in the add task and not in this task's rules, so the task cites rules that do not carry its behaviour."
+  },
+  {
+    "job": "tasks-editing-policy-files-directly",
+    "says": "Record 3: The key-delete choices lose their condition: Clear first drops deletion entries already in the key and does not put back sub-key values, and Delete one value on a key replaces any value of that name whether or not it exists; the step names the options without these consequences."
+  },
+  {
+    "job": "tasks-editing-policy-files-directly",
+    "says": "Record 4: The steps drop what the import does with the file: a REG key header with a minus clears the key, a bare minus value deletes it, a key not starting with the prefix is applied with its full name, unreadable data is kept as an empty value without error, and a wrong first line is refused ('Incorrect REG signature')."
+  },
+  {
+    "job": "tasks-editing-policy-files-directly",
+    "says": "Record 5: The step omits that a policy file is applied as the difference from an empty file so nothing is forgotten, a rule the task cites but never states."
+  },
+  {
+    "job": "tasks-editing-policy-files-directly",
+    "says": "Record 6: The write step says only 'with deletion marks' and loses how values are written (64-bit, expandable text and multiple strings become hex bytes, trailing backslash removed from the branch, unsupported source or missing registry location ends in an unhandled error rather than a message)."
+  },
+  {
+    "job": "tasks-editing-policy-files-directly",
+    "says": "Record 7: The step does not say that a registry-backed source is rebuilt from the three policy locations and that a missing location stops it, behaviour the task relies on through its need for the registry."
+  },
+  {
+    "job": "tasks-browsing-policy-definitions",
+    "says": "Record 0: The failure step drops that the workspace may already be emptied or partly filled and the remembered folder stays unchanged (businessrule-19671296259932138006), so the person is not told the old state is lost."
+  },
+  {
+    "job": "tasks-browsing-policy-definitions",
+    "says": "Record 6: The step says unknown or missing support definitions are flagged and disabled, but a policy with no support code shows blank text (not 'missing') per businessrule-59317523370985833904, and the category and support conditions are folded together."
+  },
+  {
+    "job": "tasks-browsing-policy-definitions",
+    "says": "Record 7: The outcome promises how a category 'relates to policies', but no rule or action in the legacy words shows any such relationship; the window shows only the category and its parent."
+  },
+  {
+    "job": "tasks-browsing-policy-definitions",
+    "says": "Record 4: The right-click step drops that a tree with no selected category is not handled and fails (businessrule-36623707346851740456), and that a right-click in the policy list with no row shows nothing is stated but the tree failure is lost."
+  },
+  {
+    "job": "tasks-browsing-policy-definitions",
+    "says": "Record 10: The first step 'Choose an inspection' is the Main menu that opens the category, edit, details or inspection view, so it mixes in category, details and editing and is not an inspection step on its own; those rules (details and category) belong to the other tasks."
+  },
+  {
+    "job": "tasks-browsing-policy-definitions",
+    "says": "Record 10: The 'Read how the policy is built' step loses the conditions: registry value and client extension lines appear only when named, comments only when stored, a section only for areas the policy covers, 'Left implicit' vs 'Left to elements', list value-name wording, and the inspector stops with an unhandled error when no element has a presentation item's ID (businessrule-80096613073902079124)."
+  },
+  {
+    "job": "tasks-browsing-policy-definitions",
+    "says": "Record 10: Rules about writing semantic policy text (quote and line-break escaping, 'cannot be read back', C/U prefix, number formats) describe file output, not browsing, and no step states them, so they are claimed but not carried."
+  }
+]

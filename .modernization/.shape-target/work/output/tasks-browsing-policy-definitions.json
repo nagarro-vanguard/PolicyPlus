@@ -1,0 +1,540 @@
+{
+  "tasks": [
+    {
+      "id": "load-definitions-folder",
+      "outcome": "Load a folder of policy definitions into the workspace so its policies can be browsed.",
+      "actor": "person",
+      "actions": [
+        "block-13117547435582731450",
+        "block-59255999245406242607",
+        "block-30537692166592904451",
+        "block-20168653063977540452",
+        "block-73356074458344317029",
+        "block-13558804890992588767"
+      ],
+      "rules": [
+        "businessrule-88154451768954453608",
+        "businessrule-76226373219464614800",
+        "businessrule-43765682097437166867",
+        "businessrule-53176229115945924012",
+        "businessrule-98012095360980700253",
+        "businessrule-06850078746756456273",
+        "businessrule-19671296259932138006",
+        "businessrule-56221298079625729644"
+      ],
+      "facts": [
+        "entity-92808062881922645840",
+        "entity-40163170707735391190"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-25314431250146805945",
+        "external-90078096462363044953",
+        "external-45436197603688581519"
+      ],
+      "current": [
+        {
+          "intent": "Choose where the definitions come from: the Windows folder, the domain's shared folder, or a folder of their own.",
+          "system": "Starts on the own-folder choice, offers the domain choice only when the computer is joined to a domain and that shared folder exists, and lets the folder be typed or picked only for the own-folder choice.",
+          "from": [
+            "block-13117547435582731450",
+            "block-59255999245406242607",
+            "block-20168653063977540452"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Confirm the choice, or give up.",
+          "system": "Refuses a folder that does not exist and stays open; otherwise passes on the folder and whether to clear the workspace first (offered by default). Escape cancels with nothing chosen.",
+          "from": [
+            "block-30537692166592904451",
+            "block-73356074458344317029"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Have the definitions in that folder available to browse.",
+          "system": "Empties the workspace first only if asked, adds the folder's definitions, reports problems without stopping, and on failure says the folder could not be fully added. The folder is remembered for the next start only when the workspace was cleared and the load succeeded.",
+          "from": [
+            "block-13558804890992588767"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "add-template-file",
+      "outcome": "Add a single policy template file to the policies already loaded.",
+      "actor": "person",
+      "actions": [
+        "block-95818603562143517431"
+      ],
+      "rules": [
+        "businessrule-07200475892676201466",
+        "businessrule-61344191921921935952"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-25314431250146805945"
+      ],
+      "current": [
+        {
+          "intent": "Pick one template file to add.",
+          "system": "Accepts template files only and adds that file alone to the current workspace without emptying it or remembering it as the definitions folder.",
+          "from": [
+            "block-95818603562143517431"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Learn whether the file was accepted.",
+          "system": "Rebuilds the structures; when refused, says the file could not be added with the reason.",
+          "from": [
+            "block-95818603562143517431"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "clear-loaded-definitions",
+      "outcome": "Remove all loaded policy definitions from the workspace.",
+      "actor": "person",
+      "actions": [
+        "block-61070195191480277301"
+      ],
+      "rules": [
+        "businessrule-83939170310206178732"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Start over with no definitions loaded.",
+          "system": "Empties the workspace at once with no confirmation and rebuilds the view.",
+          "from": [
+            "block-61070195191480277301"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "review-loaded-template-files",
+      "outcome": "See which policy template files are loaded and what each one contributes.",
+      "actor": "person",
+      "actions": [
+        "block-64668818041164253976",
+        "block-55650905820560115513",
+        "block-39318096240988456545",
+        "block-04424586335392218217"
+      ],
+      "rules": [
+        "businessrule-31675843578661081361",
+        "businessrule-52722053913285909842"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [
+        "external-25314431250146805945"
+      ],
+      "current": [
+        {
+          "intent": "See the list of loaded template files.",
+          "system": "Lists the template files loaded in the workspace.",
+          "from": [
+            "block-64668818041164253976"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Look into one file.",
+          "system": "Shows only the policies, categories, products and support rules defined in that file. Opening by double-click does not check that a file is selected; Enter does.",
+          "from": [
+            "block-55650905820560115513",
+            "block-39318096240988456545"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Read the list comfortably as the window changes size.",
+          "system": "Keeps the namespace column filling the width left over.",
+          "from": [
+            "block-04424586335392218217"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "browse-policy-tree",
+      "outcome": "Move through the categories and policies of the loaded definitions and read what each is for.",
+      "actor": "person",
+      "actions": [
+        "block-38981877830602633388",
+        "block-89406388478575619459",
+        "block-62656188540901169217",
+        "block-79379072249641546586",
+        "block-28869808154726861529",
+        "block-20560369235271632336",
+        "block-69879767786914075914",
+        "block-71012193977886609003",
+        "block-65211679249909420884",
+        "block-25872160162253268719"
+      ],
+      "rules": [
+        "businessrule-03031297687036444400",
+        "businessrule-29660896839160984241",
+        "businessrule-75222346168306051090",
+        "businessrule-41685454348767959653",
+        "businessrule-68891329302657284154",
+        "businessrule-57028469241171716582",
+        "businessrule-25501360175578063856",
+        "businessrule-36623707346851740456"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Choose which sections of policies to look at, and whether empty categories show.",
+          "system": "Shows user, computer or both kinds of policies; shows or hides categories with no visible policies and moves to the nearest visible category.",
+          "from": [
+            "block-79379072249641546586",
+            "block-28869808154726861529"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Pick a category and see its subcategories, policies and description.",
+          "system": "Makes it the current category, clears any selected policy and lists its contents. Highlighting a policy or category shows its description and clears the other.",
+          "from": [
+            "block-38981877830602633388",
+            "block-62656188540901169217",
+            "block-89406388478575619459",
+            "block-71012193977886609003"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Go into a category or open a policy.",
+          "system": "Opens a category as the current one, or opens the policy for editing in the section currently shown; nothing happens with no selection. Enter does the same.",
+          "from": [
+            "block-20560369235271632336",
+            "block-69879767786914075914"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "See the actions that fit the thing under the pointer.",
+          "system": "A secondary click selects a category in the tree and shows only the actions that fit a category or a policy; with no row selected in the list, nothing is shown.",
+          "from": [
+            "block-25872160162253268719",
+            "block-65211679249909420884"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "merge-duplicate-policies",
+      "outcome": "Merge identical user and computer policies into single policies that apply to both.",
+      "actor": "person",
+      "actions": [
+        "block-52477240354082269436"
+      ],
+      "rules": [
+        "businessrule-40351382289100643848",
+        "businessrule-92560631592608734086"
+      ],
+      "facts": [
+        "entity-99683518011128701149"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Tidy the list by combining twin policies.",
+          "system": "Merges pairs alone in the same category with the same name, explanation and registry key, one for users and one for computers, and tells how many were merged.",
+          "from": [
+            "block-52477240354082269436"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "view-policy-details",
+      "outcome": "See what a policy is, which section it applies to, where it sits and what it is supported on.",
+      "actor": "person",
+      "actions": [
+        "block-78252692403653225370",
+        "block-92180322422063221145",
+        "block-42055154505610373837"
+      ],
+      "rules": [
+        "businessrule-30888155476627040275",
+        "businessrule-59317523370985833904",
+        "businessrule-89677004946923202726"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Open the details of a policy from a list of policies.",
+          "system": "Shows the policy with its section (user, computer or both), its category and its support definition; unknown or missing ones are flagged as orphaned, uncategorized or missing and their buttons disabled.",
+          "from": [
+            "block-78252692403653225370",
+            "block-92180322422063221145"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Follow the policy to what it is supported on.",
+          "system": "Opens the support definition the policy names, when it exists.",
+          "from": [
+            "block-42055154505610373837"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "view-category-details",
+      "outcome": "See a category, its parent and how it relates to policies.",
+      "actor": "person",
+      "actions": [
+        "block-66828128113828383962",
+        "block-33894596800557045530",
+        "block-84939599421744669029"
+      ],
+      "rules": [
+        "businessrule-88550832449331267612"
+      ],
+      "facts": [
+        "entity-99683518011128701149"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Open a category from a file's details or from a policy.",
+          "system": "Shows the category with its parent's name.",
+          "from": [
+            "block-66828128113828383962",
+            "block-84939599421744669029"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Walk up to the parent category.",
+          "system": "Shows the parent in the same window; a missing parent is flagged orphaned and a top-level category shows none.",
+          "from": [
+            "block-33894596800557045530"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "browse-products",
+      "outcome": "Browse the products and their versions that the loaded definitions cover, and see the details of each.",
+      "actor": "person",
+      "actions": [
+        "block-08454163414443845831",
+        "block-70438482535332396460",
+        "block-21250694452518135903",
+        "block-85565043795242001799",
+        "block-78795492686610610516",
+        "block-27521638512866951547",
+        "block-75890035579964781740",
+        "block-68471089903278595698",
+        "block-94974939167069133577"
+      ],
+      "rules": [
+        "businessrule-93683837313593251984",
+        "businessrule-12357125815438552418",
+        "businessrule-69465149169735487446",
+        "businessrule-52738497804454297244",
+        "businessrule-77846110822300189675"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "See every product.",
+          "system": "Lists loaded products by name, each with its number of children.",
+          "from": [
+            "block-08454163414443845831"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Narrow down to a version.",
+          "system": "Lists major versions of the chosen product, then minor versions of the chosen major version, ordered by version; empty with a prompt when nothing is chosen.",
+          "from": [
+            "block-70438482535332396460",
+            "block-21250694452518135903"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Open a product's details.",
+          "system": "Opens details by double-click or Enter, doing nothing with no selection; a product from a template file opens the same way.",
+          "from": [
+            "block-85565043795242001799",
+            "block-78795492686610610516",
+            "block-27521638512866951547"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Move between a product's child versions and its parent.",
+          "system": "Shows the chosen child or the parent in the same window; nothing happens with no selection.",
+          "from": [
+            "block-68471089903278595698",
+            "block-94974939167069133577"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Read the version list comfortably.",
+          "system": "Name column fills the width beside the version column.",
+          "from": [
+            "block-75890035579964781740"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "browse-support-rules",
+      "outcome": "Find the support rules and see which products they cover.",
+      "actor": "person",
+      "actions": [
+        "block-82164480679050137750",
+        "block-33689568439379299743",
+        "block-80435818182674952821",
+        "block-64431347962942436201",
+        "block-45462513891449541466",
+        "block-82962493722270760078",
+        "block-53898486546586719743"
+      ],
+      "rules": [
+        "businessrule-84991051448916998249",
+        "businessrule-54625832347030556938",
+        "businessrule-82075493230431806208"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "See every support rule and narrow the list by name.",
+          "system": "Lists all support definitions ordered by name with leading spaces ignored, filtered by typed text ignoring case.",
+          "from": [
+            "block-82164480679050137750",
+            "block-80435818182674952821"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Open a support rule's details.",
+          "system": "Opens by double-click (without checking selection) or Enter (which checks), also from a template file's details.",
+          "from": [
+            "block-33689568439379299743",
+            "block-64431347962942436201",
+            "block-45462513891449541466"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Follow an entry to a product or a nested support rule.",
+          "system": "Opens the product's details for a product entry, or shows a nested support rule in the same window; missing products do nothing.",
+          "from": [
+            "block-53898486546586719743"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Read the list comfortably.",
+          "system": "Name column fills the width beside the version columns.",
+          "from": [
+            "block-82962493722270760078"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "inspect-policy-technical-details",
+      "outcome": "Inspect the technical makeup of a policy: its stored setting, presentation, elements and semantic text, and copy it.",
+      "actor": "person",
+      "actions": [
+        "block-76908522554461045751",
+        "block-01358626545675013383"
+      ],
+      "rules": [
+        "businessrule-57016400965631502733",
+        "businessrule-01704207253788877148",
+        "businessrule-10913365400690794412",
+        "businessrule-20897965123834184786",
+        "businessrule-43141523484770952437",
+        "businessrule-49549620435870223174",
+        "businessrule-50694068263592934768",
+        "businessrule-77000026808397550095",
+        "businessrule-78281155676242942940",
+        "businessrule-79057744450548393955",
+        "businessrule-80096613073902079124",
+        "businessrule-94076713436940158385",
+        "businessrule-96393168223138786394"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "needs": [
+        "external-45436197603688581519",
+        "external-25314431250146805945"
+      ],
+      "current": [
+        {
+          "intent": "Choose an inspection of a policy.",
+          "system": "Offers the category, edit, details or inspection view for the chosen object.",
+          "from": [
+            "block-76908522554461045751"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Read how the policy is built.",
+          "system": "Shows registry value, client extension, presentation and element details, choices numbered from zero, and per-section semantic policy text with comments and, only when Enabled, option values.",
+          "from": [
+            "block-76908522554461045751"
+          ],
+          "confidence": "inferred"
+        },
+        {
+          "intent": "Copy a line for use elsewhere.",
+          "system": "Copies the selected line on Ctrl+C when a line is selected.",
+          "from": [
+            "block-01358626545675013383"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    }
+  ]
+}

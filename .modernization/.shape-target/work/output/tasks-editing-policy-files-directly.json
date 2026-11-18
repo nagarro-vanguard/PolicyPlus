@@ -1,0 +1,384 @@
+{
+  "tasks": [
+    {
+      "id": "open-raw-policy-editor",
+      "outcome": "Open a policy file for direct editing of its raw keys and values, with a warning the first time, and leave the editor when done.",
+      "actor": "person",
+      "needs": [
+        "external-90077838450756006603"
+      ],
+      "facts": [
+        "entity-40163170707735391190"
+      ],
+      "actions": [
+        "block-18043112458533276543",
+        "block-91792378122287310099",
+        "block-74715625061692366925",
+        "block-91089666300107221398",
+        "block-93573573421282575863",
+        "block-82351254846133371644"
+      ],
+      "current": [
+        {
+          "intent": "Start raw editing of a policy file",
+          "system": "Tells the person if neither loaded policy source is backed by a policy file; otherwise warns the first time that raw editing is for advanced users and records acceptance.",
+          "from": [
+            "block-18043112458533276543"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Choose whether the user or computer policy source is edited",
+          "system": "Offers only the sources the caller allows and returns the chosen one; leaving cancels.",
+          "from": [
+            "block-91792378122287310099",
+            "block-74715625061692366925"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Browse the keys and values and see what can be done with the current selection",
+          "system": "Lists keys alphabetically with sub-keys and values, and makes available only the actions that suit what is selected.",
+          "from": [
+            "block-82351254846133371644"
+          ],
+          "confidence": "inferred"
+        },
+        {
+          "intent": "Finish editing",
+          "system": "Closes the editor; every change was already applied to the loaded policy source and reaches disk only when policies are saved, whether the person finishes or leaves.",
+          "from": [
+            "block-91089666300107221398",
+            "block-93573573421282575863"
+          ],
+          "confidence": "sure"
+        }
+      ],
+      "rules": [
+        "businessrule-14969413888672404933",
+        "businessrule-40441510620479008895",
+        "businessrule-43194539708053716006",
+        "businessrule-44523725638753390545",
+        "businessrule-67529938588779257243",
+        "businessrule-81365817698028227620",
+        "businessrule-98676109650316370626",
+        "businessrule-64564273672622472190",
+        "businessrule-21403142511575039594",
+        "businessrule-18574755515767742264",
+        "businessrule-13057335115870748705",
+        "businessrule-32089237714667793315",
+        "businessrule-86296876237579429124"
+      ]
+    },
+    {
+      "id": "add-policy-file-key-or-value",
+      "outcome": "Add a new key, or a new value of a chosen kind, to a policy file.",
+      "actor": "person",
+      "needs": [],
+      "facts": [],
+      "actions": [
+        "block-54431974963440976475",
+        "block-33339374210388875839",
+        "block-56011203566573573100",
+        "block-73079666774281241997",
+        "block-12381913549521886903"
+      ],
+      "current": [
+        {
+          "intent": "Name a new key",
+          "system": "Asks for the key name, checks it is valid and not taken under the same parent, and adds it as an empty key, selected in the list.",
+          "from": [
+            "block-54431974963440976475",
+            "block-33339374210388875839",
+            "block-56011203566573573100"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Add a value to the selected key",
+          "system": "Asks for the value name and one of five kinds, then asks for the data and stores it, replacing a value of the same name without warning.",
+          "from": [
+            "block-73079666774281241997",
+            "block-12381913549521886903"
+          ],
+          "confidence": "sure"
+        }
+      ],
+      "rules": [
+        "businessrule-21846002666758208174",
+        "businessrule-27239953863800337722",
+        "businessrule-65588006996628019814",
+        "businessrule-94140234913184124479",
+        "businessrule-13220028854331489804",
+        "businessrule-64891270751019389302",
+        "businessrule-87150598845683946147",
+        "businessrule-88605435114040098546"
+      ]
+    },
+    {
+      "id": "change-policy-file-value-data",
+      "outcome": "Change the data of an existing value in a policy file.",
+      "actor": "person",
+      "needs": [],
+      "facts": [],
+      "actions": [
+        "block-04045695864978247457",
+        "block-93495413918984610841",
+        "block-80078734348197600769",
+        "block-50446188615114520824",
+        "block-72694376270340482080",
+        "block-89740736795318812041",
+        "block-20624708115873028291"
+      ],
+      "current": [
+        {
+          "intent": "Choose a value to change",
+          "system": "Offers a text, number or list-of-text entry by the kind of the value, and refuses kinds such as binary.",
+          "from": [
+            "block-04045695864978247457"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Enter the new data",
+          "system": "Takes text, a list of lines, or a number within the limits of its size, shown in decimal or hexadecimal; a too-large hexadecimal number becomes the largest allowed and non-numbers change nothing. Leaving keeps the old data.",
+          "from": [
+            "block-93495413918984610841",
+            "block-80078734348197600769",
+            "block-50446188615114520824",
+            "block-72694376270340482080",
+            "block-89740736795318812041",
+            "block-20624708115873028291"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Store the change",
+          "system": "Replaces the data, keeping name and kind, and keeps the value selected.",
+          "from": [
+            "block-04045695864978247457"
+          ],
+          "confidence": "inferred"
+        }
+      ],
+      "rules": [
+        "businessrule-05846735750774889498",
+        "businessrule-85571919984782494727"
+      ]
+    },
+    {
+      "id": "remove-policy-file-entries",
+      "outcome": "Remove keys or values from a policy file, either leaving a deletion instruction for the machine or forgetting them entirely.",
+      "actor": "person",
+      "needs": [],
+      "facts": [],
+      "actions": [
+        "block-16970529596856009541",
+        "block-53120693124506724348",
+        "block-52241240840751807884",
+        "block-96284792383932228976",
+        "block-42642804897148691736"
+      ],
+      "current": [
+        {
+          "intent": "Mark a value for deletion, or clear a key",
+          "system": "Replaces a value with a deletion entry, or on a key offers clear everything, clear first, or delete one value by name; nothing changes until a choice is made.",
+          "from": [
+            "block-16970529596856009541",
+            "block-53120693124506724348",
+            "block-52241240840751807884",
+            "block-96284792383932228976"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Forget a key or value completely",
+          "system": "After confirming for a key, removes the key, its sub-keys, values and marks, or the value and its deletion entry, leaving no deletion behind.",
+          "from": [
+            "block-42642804897148691736"
+          ],
+          "confidence": "sure"
+        }
+      ],
+      "rules": [
+        "businessrule-27194812132584860836",
+        "businessrule-63694206615951133419",
+        "businessrule-30359040357073744492",
+        "businessrule-84404651755849490179",
+        "businessrule-30251051045932916641",
+        "businessrule-04432638879352685329"
+      ]
+    },
+    {
+      "id": "import-registry-file-into-policy-source",
+      "outcome": "Bring the contents of an exported set of machine settings into a policy source.",
+      "actor": "person",
+      "needs": [
+        "external-90077838450756006603"
+      ],
+      "facts": [],
+      "actions": [
+        "block-61484076288336240425",
+        "block-42014485464934566054",
+        "block-89194191501498123777",
+        "block-37220153383335897650",
+        "block-13677197335497518185"
+      ],
+      "current": [
+        {
+          "intent": "Choose the area and start the import",
+          "system": "Applies to the policy source of the chosen area, or from the raw editor to the file being edited, and refreshes the view afterwards.",
+          "from": [
+            "block-61484076288336240425",
+            "block-42014485464934566054"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Pick the registry file",
+          "system": "Offers only registry files and guesses the key prefix from the first key, warning if the guess fails or the file holds default values.",
+          "from": [
+            "block-89194191501498123777"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Confirm the prefix and import",
+          "system": "Refuses without a file or prefix, loads the file and applies it directly to the policy source, saying only that it failed on any error. Leaving cancels.",
+          "from": [
+            "block-37220153383335897650",
+            "block-13677197335497518185"
+          ],
+          "confidence": "sure"
+        }
+      ],
+      "rules": [
+        "businessrule-60060400053285241820",
+        "businessrule-00824990257185597112",
+        "businessrule-17451417049747776074",
+        "businessrule-18921117498420510792",
+        "businessrule-23306400970907693227",
+        "businessrule-52142616153788952070",
+        "businessrule-55584576559812010511",
+        "businessrule-57877192145861745927",
+        "businessrule-59618595788928559733",
+        "businessrule-75481654180830858390",
+        "businessrule-89009644626675244455",
+        "businessrule-59516130836014950967",
+        "businessrule-18627979551357993299",
+        "businessrule-45318436042524755037",
+        "businessrule-61966293182360194116",
+        "businessrule-97032716123610483497"
+      ]
+    },
+    {
+      "id": "import-policy-file",
+      "outcome": "Load a policy file into the user or computer policy source.",
+      "actor": "person",
+      "needs": [
+        "external-90077838450756006603"
+      ],
+      "facts": [],
+      "actions": [
+        "block-75389740485334604011"
+      ],
+      "current": [
+        {
+          "intent": "Choose a policy file and where it applies",
+          "system": "Reads the file and applies it to the chosen source, reporting success or that it could not be loaded; nothing reaches disk until policies are saved.",
+          "from": [
+            "block-75389740485334604011"
+          ],
+          "confidence": "sure"
+        }
+      ],
+      "rules": [
+        "businessrule-69354381130041181167",
+        "businessrule-97686874157870392601"
+      ]
+    },
+    {
+      "id": "export-policy-as-registry-file",
+      "outcome": "Write a policy source, or one branch of it, as an exported set of machine settings.",
+      "actor": "person",
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538"
+      ],
+      "facts": [],
+      "actions": [
+        "block-04644155608109103956",
+        "block-00156606002660817029",
+        "block-60201373498704616545",
+        "block-25624747884727551547",
+        "block-37048128904866618877"
+      ],
+      "current": [
+        {
+          "intent": "Choose the area, or a branch of the file being edited, to export",
+          "system": "Hands the policy source to the export step; a registry-backed source is first rebuilt as a policy file.",
+          "from": [
+            "block-04644155608109103956",
+            "block-00156606002660817029"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Set the destination file, key prefix and branch",
+          "system": "Starts the prefix from the user or computer default and the branch from the selected key; an empty branch exports everything.",
+          "from": [
+            "block-60201373498704616545"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Write the registry file",
+          "system": "Refuses without a file name, writes the branch with deletion marks, and reports success or failure. Leaving cancels.",
+          "from": [
+            "block-25624747884727551547",
+            "block-37048128904866618877"
+          ],
+          "confidence": "sure"
+        }
+      ],
+      "rules": [
+        "businessrule-04261341694819838767",
+        "businessrule-25739450692106090110",
+        "businessrule-50297867320833369013",
+        "businessrule-62577216252619197563",
+        "businessrule-60632388568264259103",
+        "businessrule-14603482078338141941",
+        "businessrule-38615217867457911992",
+        "businessrule-57163770116853325546",
+        "businessrule-78788630170323770129",
+        "businessrule-98458070891453225274"
+      ]
+    },
+    {
+      "id": "export-policy-file",
+      "outcome": "Save a policy source out as a policy file.",
+      "actor": "person",
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538"
+      ],
+      "facts": [],
+      "actions": [
+        "block-41514309757986060440"
+      ],
+      "current": [
+        {
+          "intent": "Choose the area and a file to write",
+          "system": "Uses a policy-file-backed source as is, rebuilds a registry-backed one from the three policy locations, and reports success or that it could not be saved.",
+          "from": [
+            "block-41514309757986060440"
+          ],
+          "confidence": "sure"
+        }
+      ],
+      "rules": [
+        "businessrule-57982804566984189207"
+      ]
+    }
+  ]
+}

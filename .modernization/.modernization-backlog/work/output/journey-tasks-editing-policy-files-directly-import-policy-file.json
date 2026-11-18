@@ -1,0 +1,68 @@
+{
+ "stories": [
+  {
+   "title": "Import a policy file into the user or computer policy source",
+   "what": "A person chooses a policy file and the source it belongs to, user or computer, and the system loads the file into that source and says whether it worked. The result is held until the person saves.",
+   "why": "People can bring in policy settings someone else prepared, in one request, without losing or leaving behind any setting, and without being surprised about what is already stored.",
+   "actions": [
+    "block-75389740485334604011"
+   ],
+   "terms": [
+    {
+     "name": "Policy file import",
+     "means": "Loading a chosen policy file into the user or computer source, held in memory; it is not saving to disk."
+    },
+    {
+     "name": "Held change",
+     "means": "A change kept in memory that reaches disk only when the person saves; it is not a stored change."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a readable policy file and a chosen source of user or computer, when the person imports the file, then its settings are applied to that source and the message \"POL import successful.\" is shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-69354381130041181167"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy file that cannot be read, when the person imports it, then the message \"The POL file could not be loaded.\" is shown and the source is left unchanged.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-69354381130041181167"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy file imported into a source, when the person has not yet saved, then nothing has reached disk.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-69354381130041181167"
+      }
+     ]
+    },
+    {
+     "says": "Given a whole policy file is imported into a source, when it is applied, then it is applied in full as if the source began empty, so nothing in the file is forgotten.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-97686874157870392601"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-editing-policy-files-directly.import-policy-file:one-request#1",
+    "tasks-editing-policy-files-directly.import-policy-file:one-request#2"
+   ],
+   "components": [
+    "Policy File Import"
+   ],
+   "open": []
+  }
+ ]
+}

@@ -2,44 +2,20 @@
   "read": 10,
   "challenges": [
     {
-      "record": 0,
-      "says": "The criterion on the language falls back to \"the computer's own language\", which in a server-rendered product is the server's or is undefined; it cites no decision (integrations.decision-4 and base.decision-22 store the language in a settings row) and does not say whose language is used when none is saved."
+      "record": 9,
+      "says": "The why says typing mistakes never silently change a value, but the cited rule clamps a too-large hexadecimal number to the largest allowed value without any message, and the what adds \"decimal or marked hexadecimal\" that no cited rule states."
     },
     {
       "record": 0,
-      "says": "\"Namespace\" is used in the criteria (owned namespace, recorded under the template's namespace) but is not defined in the terms, so a product owner who never saw the code cannot follow it."
+      "says": "The sixth criterion says \"the three policy branches of the registry\" without naming them, so a product owner who never saw the code cannot tell which values are forgotten."
     },
     {
-      "record": 4,
-      "says": "The last criterion promises identical bytes on write-back, but the cited rule 70425663320377904356 truncates text at its first empty character and a multiple-string value at its first empty string on read, so bytes after the truncation cannot be written back; the criterion contradicts the rule it sits beside without saying which wins."
-    },
-    {
-      "record": 4,
-      "says": "base.decision-16 is about unknown policy elements in definitions, yet it is applied to a POL file as 'an unknown element is kept and reported'; the claim 'a value is written as the type it was read as' comes from no cited rule or decision."
-    },
-    {
-      "record": 5,
-      "says": "The 'Policy source' and 'SID' terms say a User hive source may show the SID in brackets, but the name criterion says the brackets hold the imported file name in place of a path or SID; the term and the criterion contradict."
-    },
-    {
-      "record": 5,
-      "says": "The criterion on sources that could not release their resources (rule 59631775004799082543) is kept as written, but with no hive mounted and no file held open (the story's own criteria say so) no source can fail to release, so the criterion can never be met or tested."
-    },
-    {
-      "record": 5,
-      "says": "The writability criterion says a registry source is always changeable, dropping the rule's read-only outcome, and the close criterion says closing a user hive always succeeds, dropping the rule's reported failure; these are changes in behaviour with no condition kept to say when they would differ."
-    },
-    {
-      "record": 5,
-      "says": "The criteria that read values from a registry source filled by an imported REG file contradict the next story, which says a REG file source fails every read with 'not implemented'; the two stories do not say how a REG import is held so that reading works here and fails there."
+      "record": 7,
+      "says": "The story and its criterion use \"semantic policy text\" and \"the fragment\" without explaining either, which a person who never saw the code could not follow."
     },
     {
       "record": 6,
-      "says": "Its rules describe a live REG file source that cannot be read, but integrations.decision-2 and scope.decision-15 turn REG into an import and export format whose content is read into stored sources, so it is unclear when this failure can still occur; the criterion cites no decision and does not say what carries the rule."
-    },
-    {
-      "record": 5,
-      "says": "Wording a product owner cannot follow: 'Registry.pol file', 'GPO', 'signed number with the same bits' and 'unsigned 32-bit or 64-bit number' are used in criteria without being explained in plain terms."
+      "says": "The last criterion adds that the screens receive each policy state \"as plain facts\", which the cited rule does not say and a product owner cannot follow; the criteria also lean on undefined words such as \"element\" and \"switched-on effects\"."
     }
   ]
 }

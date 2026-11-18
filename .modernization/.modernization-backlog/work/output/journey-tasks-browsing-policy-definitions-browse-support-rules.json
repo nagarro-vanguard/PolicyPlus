@@ -1,0 +1,81 @@
+{
+  "stories": [
+    {
+      "title": "Browse the support rules and see which products they cover",
+      "what": "The person narrows the list of support rules by name, opens one to see how it matches products and which products or nested support rules it names, and follows an entry to the product details or to the nested rule in the same place.",
+      "why": "People can find the support rules by name and see which products and nested rules each one names.",
+      "actions": [
+        "block-80435818182674952821",
+        "block-82164480679050137750",
+        "block-33689568439379299743",
+        "block-45462513891449541466",
+        "block-64431347962942436201",
+        "block-53898486546586719743"
+      ],
+      "terms": [
+        {
+          "name": "Support rule",
+          "means": "A named definition saying which products a policy works with, by matching all or any of them; it is not a policy or a product."
+        }
+      ],
+      "journey": {
+        "name": "Start from the product",
+        "steps": [
+          "Say which name I care about",
+          "Open a support rule and see which products it covers",
+          "Follow an entry to its product or nested rule"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given support rules are loaded, when the person types text in the filter, then only support rules whose name contains the text are shown, whatever the upper or lower case; with no text every support rule is listed, ordered by name with leading spaces ignored and not shown.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-54625832347030556938"
+            }
+          ]
+        },
+        {
+          "says": "Given a support rule has entries, when its details are shown, then each entry is listed by the name of the nested support rule, otherwise the name of the product, otherwise as \"<missing: \" followed by the product code it names; minimum and maximum versions are listed only for product entries that name a version range, a missing bound blank.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-22485752927450345044"
+            }
+          ]
+        },
+        {
+          "says": "Given a support rule is shown, when the person reads its details, then it states \"Match all the referenced products\", \"Match any of the referenced products\", or \"Do not match products\" when it has no matching logic.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-97405551033143476269"
+            }
+          ]
+        },
+        {
+          "says": "Given the person double-clicks an entry in the support rule details, when it is a product entry, then the product details are opened; when it is a nested support rule, then that rule is shown in the same window; when its product is missing or nothing is selected, then nothing happens.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-82075493230431806208"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#1",
+        "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#2",
+        "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#3"
+      ],
+      "components": [
+        "Support rule browser"
+      ],
+      "open": [
+        "Should a person be able to narrow the support rules by the product they care about, not only by name, and which rule would say how?",
+        "Should opening a support rule by double-click or Enter, and doing nothing when none is chosen, be stated as a rule, since no rule states it today?"
+      ]
+    }
+  ]
+}

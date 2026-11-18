@@ -1,0 +1,126 @@
+{
+  "capability": {
+    "id": "capability-17758885276262804412",
+    "name": "Building and versioning Policy Plus",
+    "purpose": "Stamp the program with its current Git version when it is built."
+  },
+  "surfaces": [
+    {
+      "name": "entry points no window holds",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen---building-and-versioning-policy-plus.md",
+      "actions": [
+        {
+          "id": "block-46722061090424791745",
+          "what": "Rewrites the generated version file so the program carries the current Git commit description.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-12414618955963878773"
+          ],
+          "place": {
+            "file": "version.bat",
+            "firstLine": 1,
+            "lastLine": 8
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-12414618955963878773",
+      "statement": "When the build script runs, it replaces the program's version in a generated source file with the text git gives for the current commit. That text is a tag, commit count and short commit name when tags exist, and a short commit name otherwise. The script runs when someone runs it or the release workflow does. The committed file holds an empty version.",
+      "place": {
+        "file": "version.bat",
+        "firstLine": 1,
+        "lastLine": 8
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "entity-99683518011128701149",
+      "name": "Policy setting",
+      "states": [
+        "Not configured",
+        "Enabled",
+        "Disabled",
+        "Unclear"
+      ]
+    },
+    {
+      "id": "entity-40163170707735391190",
+      "name": "Program preference",
+      "states": [
+        "Welcome download offer not yet considered",
+        "Welcome download offer considered",
+        "Raw POL editing warning not yet accepted",
+        "Raw POL editing warning accepted",
+        "Policy sources at default (Local GPO)",
+        "Policy sources remembered",
+        "Templates folder at Windows default",
+        "Templates folder chosen",
+        "Language follows the system",
+        "Language chosen"
+      ]
+    },
+    {
+      "id": "entity-92808062881922645840",
+      "name": "Administrative template",
+      "states": [
+        "Downloaded package",
+        "Unpacked",
+        "Installed in a template folder",
+        "Loaded into the workspace",
+        "Available as policy definitions",
+        "Cleared from the workspace"
+      ]
+    },
+    {
+      "id": "entity-52418278656387992812",
+      "name": "Policy comment",
+      "states": []
+    }
+  ],
+  "externals": [
+    {
+      "id": "external-90077838450756006603",
+      "name": "Computer file system folders",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-97068941883605652538",
+      "name": "Windows registry policy keys and loaded user hives",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-25314431250146805945",
+      "name": "Administrative template files (ADMX and ADML)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-45436197603688581519",
+      "name": "Windows registry settings key of Policy Plus",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-84087908423930356962",
+      "name": "Generated version source file",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-08492831744411585027",
+      "name": "Policy comment files (CMTX)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-90078096462363044953",
+      "name": "Active Directory domain",
+      "kind": "outsideService"
+    },
+    {
+      "id": "external-47673734579321187695",
+      "name": "Microsoft download site",
+      "kind": "outsideService"
+    }
+  ]
+}

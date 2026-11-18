@@ -1,0 +1,12 @@
+{
+  "kind": "variants",
+  "tasks": [
+    "tasks-browsing-policy-definitions.browse-policy-tree",
+    "tasks-browsing-policy-definitions.merge-duplicate-policies",
+    "tasks-browsing-policy-definitions.view-policy-details",
+    "tasks-browsing-policy-definitions.view-category-details",
+    "tasks-browsing-policy-definitions.browse-products",
+    "tasks-browsing-policy-definitions.browse-support-rules",
+    "tasks-browsing-policy-definitions.inspect-policy-technical-details"
+  ]
+}

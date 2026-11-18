@@ -1,0 +1,1331 @@
+{
+  "journeys": [
+    {
+      "task": "tasks-browsing-policy-definitions.browse-policy-tree",
+      "actor": "person",
+      "name": "One place to explore",
+      "strategy": "task first",
+      "idea": "Choose what to look at once, then move through categories and policies as a single focus that always shows what it is for.",
+      "tradeoff": "Merges two kinds of selection into one focus, so the product must decide what happens to the category when a policy is chosen.",
+      "steps": [
+        {
+          "intent": "Decide which area to read about: user policies, computer policies or both.",
+          "system": "Shows the policies of the chosen area; any other choice shows both, and starts with both.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-75222346168306051090"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-79379072249641546586"
+            ],
+            "change": "defaulted",
+            "reason": "Both areas are shown until the person narrows, so no choice is needed to begin.",
+            "keeps": [
+              "businessrule-75222346168306051090"
+            ]
+          }
+        },
+        {
+          "intent": "Decide whether categories that hold no visible policies should be shown.",
+          "system": "Shows or hides empty categories and moves the focus to the nearest visible category.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-41685454348767959653"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-28869808154726861529"
+            ],
+            "change": "kept",
+            "reason": "The same choice, kept beside the area choice so both narrow the view together.",
+            "keeps": [
+              "businessrule-41685454348767959653"
+            ]
+          }
+        },
+        {
+          "intent": "Move to a category and see what it holds and what it is for.",
+          "system": "Makes it the current category, clears any chosen policy, lists its subcategories and policies and shows its description.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-03031297687036444400"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-38981877830602633388"
+            ],
+            "change": "merged",
+            "reason": "Contents and description appear together as soon as a category is chosen.",
+            "keeps": [
+              "businessrule-03031297687036444400"
+            ]
+          }
+        },
+        {
+          "intent": "Point at a policy or a category to read what it is for.",
+          "system": "Makes the pointed item the focus, clearing the other kind, and shows its description; pointing at nothing clears both.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-29660896839160984241"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-62656188540901169217"
+            ],
+            "change": "merged",
+            "reason": "One focus replaces a separate record of highlighted policy and category.",
+            "keeps": [
+              "businessrule-29660896839160984241"
+            ]
+          }
+        },
+        {
+          "intent": "Act on an item: open a category as the current one or open a policy for the area shown.",
+          "system": "Offers only the actions that fit the item, takes an item chosen for an action as the focus first, does nothing when nothing is chosen, and the same opening is available without a pointer.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-68891329302657284154",
+            "businessrule-25501360175578063856",
+            "businessrule-36623707346851740456",
+            "businessrule-57028469241171716582"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-20560369235271632336",
+              "block-69879767786914075914",
+              "block-25872160162253268719",
+              "block-65211679249909420884"
+            ],
+            "change": "merged",
+            "reason": "Opening, keyboard opening and the actions offered share one rule set, and a missing selection is handled instead of failing.",
+            "keeps": [
+              "businessrule-68891329302657284154",
+              "businessrule-25501360175578063856",
+              "businessrule-36623707346851740456",
+              "businessrule-57028469241171716582"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-71012193977886609003",
+            "block-89406388478575619459"
+          ],
+          "rules": [],
+          "reason": "Fitting labels and column widths is presentation of one kind of screen; the target lays text out to suit any display."
+        }
+      ],
+      "recommended": "Keeps the person in one tree they already understand while removing the double selection and the up-front choices; the search variant adds a capability not shown in the analysis."
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.browse-policy-tree",
+      "actor": "person",
+      "name": "Find by words, then read",
+      "strategy": "automate first",
+      "idea": "The person says what they are after and the system narrows the categories and policies, then the usual reading and opening follow from the result.",
+      "tradeoff": "Adds a way of finding that the old system does not have, and needs words that match names and descriptions.",
+      "steps": [
+        {
+          "intent": "Say what the policy or category is about.",
+          "system": "Narrows the categories and policies to those whose names or descriptions match, within the chosen area.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [],
+          "link": {
+            "_tag": "new",
+            "reason": "Moving through a large tree by hand is the main cost of browsing; finding by words skips it."
+          }
+        },
+        {
+          "intent": "Limit the view to user policies, computer policies or both.",
+          "system": "Shows the matching policies of the chosen area; any other choice shows both.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-75222346168306051090"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-79379072249641546586"
+            ],
+            "change": "defaulted",
+            "reason": "Both areas are searched until narrowed.",
+            "keeps": [
+              "businessrule-75222346168306051090"
+            ]
+          }
+        },
+        {
+          "intent": "Decide whether empty categories are included.",
+          "system": "Shows or hides empty categories and moves the focus to the nearest visible category.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-41685454348767959653"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-28869808154726861529"
+            ],
+            "change": "kept",
+            "reason": "Unchanged behaviour, kept as a way to tidy the results.",
+            "keeps": [
+              "businessrule-41685454348767959653"
+            ]
+          }
+        },
+        {
+          "intent": "Move to a result or a category and read what it holds and what it is for.",
+          "system": "Makes it the focus (a category becomes current and clears any policy; a policy clears any category), lists its contents and shows its description.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-03031297687036444400",
+            "businessrule-29660896839160984241"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-38981877830602633388",
+              "block-62656188540901169217"
+            ],
+            "change": "merged",
+            "reason": "Reading follows directly from the finding.",
+            "keeps": [
+              "businessrule-03031297687036444400",
+              "businessrule-29660896839160984241"
+            ]
+          }
+        },
+        {
+          "intent": "Open the chosen item.",
+          "system": "Opens a category as current or a policy for the area shown, offers only fitting actions, does nothing when nothing is chosen.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-68891329302657284154",
+            "businessrule-25501360175578063856",
+            "businessrule-36623707346851740456",
+            "businessrule-57028469241171716582"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-20560369235271632336",
+              "block-69879767786914075914",
+              "block-25872160162253268719",
+              "block-65211679249909420884"
+            ],
+            "change": "merged",
+            "reason": "One opening step in place of several entry routes.",
+            "keeps": [
+              "businessrule-68891329302657284154",
+              "businessrule-25501360175578063856",
+              "businessrule-36623707346851740456",
+              "businessrule-57028469241171716582"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-71012193977886609003",
+            "block-89406388478575619459"
+          ],
+          "rules": [],
+          "reason": "Fitting labels and column widths is presentation of one kind of screen; the target lays text out to suit any display."
+        }
+      ]
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.merge-duplicate-policies",
+      "actor": "person",
+      "name": "Merge as definitions load",
+      "strategy": "automate first",
+      "idea": "Identical user and computer pairs are merged by the system whenever definitions are loaded, with a plain summary.",
+      "tradeoff": "The person loses the moment of choosing when merging happens.",
+      "steps": [
+        {
+          "intent": "Have the loaded definitions tidied so identical user and computer policies appear once.",
+          "system": "Finds pairs alone in the same category with the same name, explanation text and stored-setting location, one for users and one for computers; removes the first and makes the second apply to both.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-40351382289100643848"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-52477240354082269436"
+            ],
+            "change": "inferred",
+            "reason": "The system can see the duplicates without being asked.",
+            "keeps": [
+              "businessrule-40351382289100643848"
+            ]
+          }
+        },
+        {
+          "intent": "Be told what was tidied.",
+          "system": "States how many policies were deduplicated.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-92560631592608734086"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-52477240354082269436"
+            ],
+            "change": "defaulted",
+            "reason": "The summary arrives without an extra request.",
+            "keeps": [
+              "businessrule-92560631592608734086"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.merge-duplicate-policies",
+      "actor": "person",
+      "name": "Review then merge",
+      "strategy": "guided",
+      "idea": "Show the identical pairs first, let the person confirm, then merge and report the count.",
+      "tradeoff": "Adds one confirming step to a task that was a single action.",
+      "steps": [
+        {
+          "intent": "See which user and computer policies are identical.",
+          "system": "Lists each pair that is alone in the same category under the same name with the same explanation text and stored-setting location.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-40351382289100643848"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-52477240354082269436"
+            ],
+            "change": "split",
+            "reason": "The person sees what will be lost before the first of each pair is removed.",
+            "keeps": [
+              "businessrule-40351382289100643848"
+            ]
+          }
+        },
+        {
+          "intent": "Confirm the merge.",
+          "system": "Removes the first of each pair and makes the second apply to both sections, then states how many policies were deduplicated.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-40351382289100643848",
+            "businessrule-92560631592608734086"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-52477240354082269436"
+            ],
+            "change": "deferred",
+            "reason": "Merging removes policies, so it waits for an explicit yes.",
+            "keeps": [
+              "businessrule-40351382289100643848",
+              "businessrule-92560631592608734086"
+            ]
+          }
+        }
+      ],
+      "drops": [],
+      "recommended": "Merging removes a policy for good, so seeing the pairs and confirming is safer while still keeping the rule and the count message."
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.view-policy-details",
+      "actor": "person",
+      "name": "What, where, supported on",
+      "strategy": "task first",
+      "idea": "Open a policy and read, in order, what it is and which section it applies to, where it sits, and what it is supported on.",
+      "tradeoff": "Three questions answered one after another, as today.",
+      "steps": [
+        {
+          "intent": "See what a policy is and which section it applies to.",
+          "system": "Names the section: \"User or computer\" for both, \"Computer\" for machine-only, \"User\" for user-only.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-89677004946923202726"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-78252692403653225370",
+              "block-92180322422063221145"
+            ],
+            "change": "kept",
+            "reason": "Reached from either the list or an inspected policy.",
+            "keeps": [
+              "businessrule-89677004946923202726"
+            ]
+          }
+        },
+        {
+          "intent": "See where the policy sits and go to that category.",
+          "system": "Shows the category name and allows going to it; an unknown category shows \"<orphaned from \" plus its code, none shows \"<uncategorized>\", and going to it is then unavailable.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-30888155476627040275"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-78252692403653225370",
+              "block-92180322422063221145"
+            ],
+            "change": "split",
+            "reason": "Where the policy sits is its own question, answered from the same opened policy.",
+            "keeps": [
+              "businessrule-30888155476627040275"
+            ]
+          }
+        },
+        {
+          "intent": "See what the policy is supported on and go to that definition.",
+          "system": "Shows the support definition name and allows going to it; an unknown one shows \"<missing: \" plus the code, a policy with no code shows blank, and going to it is then unavailable.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-59317523370985833904"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-42055154505610373837"
+            ],
+            "change": "kept",
+            "reason": "The support definition is one step from the policy.",
+            "keeps": [
+              "businessrule-59317523370985833904"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.view-policy-details",
+      "actor": "person",
+      "name": "Everything at a glance",
+      "strategy": "automate first",
+      "idea": "The whole context of a policy is shown together, with gaps (orphaned category, missing support) flagged up front.",
+      "tradeoff": "A fuller first view that carries more at once.",
+      "steps": [
+        {
+          "intent": "Open a policy and see its section, place and support in one view.",
+          "system": "Shows the section name, the category name or its orphaned/uncategorized marker, and the support definition name or its missing marker, flagging each gap.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-30888155476627040275",
+            "businessrule-59317523370985833904",
+            "businessrule-89677004946923202726"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-78252692403653225370",
+              "block-92180322422063221145"
+            ],
+            "change": "merged",
+            "reason": "Three questions answered at once; problems are visible without searching.",
+            "keeps": [
+              "businessrule-30888155476627040275",
+              "businessrule-59317523370985833904",
+              "businessrule-89677004946923202726"
+            ]
+          }
+        },
+        {
+          "intent": "Go to the category or the support definition it names.",
+          "system": "Takes the person to the existing category or support definition; where it is unknown or missing, going there is unavailable.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-30888155476627040275",
+            "businessrule-59317523370985833904"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-42055154505610373837"
+            ],
+            "change": "merged",
+            "reason": "Following a reference replaces separate lookups.",
+            "keeps": [
+              "businessrule-30888155476627040275",
+              "businessrule-59317523370985833904"
+            ]
+          }
+        }
+      ],
+      "drops": [],
+      "recommended": "One view answers all three questions and exposes broken references immediately, with fewer steps."
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.view-category-details",
+      "actor": "person",
+      "name": "Category then parent",
+      "strategy": "task first",
+      "idea": "Open a category from a list or from a policy, read it, and move up to its parent.",
+      "tradeoff": "Moving up is one level at a time.",
+      "steps": [
+        {
+          "intent": "See a category, from the category list or from the policy it holds.",
+          "system": "Shows the category details.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-66828128113828383962",
+              "block-84939599421744669029"
+            ],
+            "change": "merged",
+            "reason": "Both routes lead to the same category view.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "See the category's parent and move up to it.",
+          "system": "Shows the parent's name and moves up to it; a missing parent shows \"<orphaned from <parent>>\" and moving up is unavailable; a top-level category shows nothing.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-88550832449331267612"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-33894596800557045530"
+            ],
+            "change": "kept",
+            "reason": "Moving up stays in the same place.",
+            "keeps": [
+              "businessrule-88550832449331267612"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.view-category-details",
+      "actor": "person",
+      "name": "Whole ancestry at once",
+      "strategy": "automate first",
+      "idea": "Show the category with its full chain of parents and the policies it relates to, so no step-by-step climbing is needed.",
+      "tradeoff": "Needs a chain view to be shown for every category.",
+      "steps": [
+        {
+          "intent": "Open a category and see where it sits in the whole tree.",
+          "system": "Shows the category with its chain of parents and the policies it holds; a missing parent shows \"<orphaned from <parent>>\" and ends the chain, a top-level category shows no parent.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-88550832449331267612"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-66828128113828383962",
+              "block-84939599421744669029"
+            ],
+            "change": "inferred",
+            "reason": "The chain is worked out for the person instead of climbing one level at a time.",
+            "keeps": [
+              "businessrule-88550832449331267612"
+            ]
+          }
+        },
+        {
+          "intent": "Jump to any parent in the chain.",
+          "system": "Shows that parent's details; a missing parent is not followable.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-88550832449331267612"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-33894596800557045530"
+            ],
+            "change": "merged",
+            "reason": "One step reaches any level.",
+            "keeps": [
+              "businessrule-88550832449331267612"
+            ]
+          }
+        }
+      ],
+      "drops": [],
+      "recommended": "Answers how a category relates to its parents and policies at once, in fewer steps."
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.browse-products",
+      "actor": "person",
+      "name": "Drill down by version",
+      "strategy": "task first",
+      "idea": "See every product, narrow to its major then minor versions, open details, and move to child or parent products.",
+      "tradeoff": "Several lists must be worked through to reach a minor version.",
+      "steps": [
+        {
+          "intent": "See every product the loaded definitions cover.",
+          "system": "Lists all products ordered by name, each with its number of children.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-93683837313593251984"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-08454163414443845831"
+            ],
+            "change": "kept",
+            "reason": "The starting overview.",
+            "keeps": [
+              "businessrule-93683837313593251984"
+            ]
+          }
+        },
+        {
+          "intent": "See the major versions of a product.",
+          "system": "Lists the product's children ordered by version with the product named in the heading; with none chosen, empty with a prompt to choose.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-12357125815438552418"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-70438482535332396460"
+            ],
+            "change": "kept",
+            "reason": "Narrowing by version stays.",
+            "keeps": [
+              "businessrule-12357125815438552418"
+            ]
+          }
+        },
+        {
+          "intent": "See the minor versions of a major version.",
+          "system": "Lists the major version's children ordered by version with it named in the heading; with none chosen, empty with a prompt to choose.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-69465149169735487446"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-21250694452518135903"
+            ],
+            "change": "kept",
+            "reason": "The same narrowing, one level on.",
+            "keeps": [
+              "businessrule-69465149169735487446"
+            ]
+          }
+        },
+        {
+          "intent": "Open the details of a product.",
+          "system": "Shows the chosen product's details by any route, and does nothing when none is chosen.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-52738497804454297244"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-27521638512866951547",
+              "block-85565043795242001799",
+              "block-78795492686610610516"
+            ],
+            "change": "merged",
+            "reason": "Three routes become one way to open.",
+            "keeps": [
+              "businessrule-52738497804454297244"
+            ]
+          }
+        },
+        {
+          "intent": "Move to a child product or the parent product from the details.",
+          "system": "Shows the chosen child or the parent in the same place; nothing is chosen, nothing happens.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-77846110822300189675"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-68471089903278595698",
+              "block-94974939167069133577"
+            ],
+            "change": "merged",
+            "reason": "Child and parent movement are one idea.",
+            "keeps": [
+              "businessrule-77846110822300189675"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-75890035579964781740"
+          ],
+          "rules": [],
+          "reason": "Column width is presentation of one kind of screen."
+        }
+      ]
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.browse-products",
+      "actor": "person",
+      "name": "Product family in one view",
+      "strategy": "automate first",
+      "idea": "Each product opens into its full family of versions in one view, with details beside the selection.",
+      "tradeoff": "The three separate lists become one structure that has to stay readable for large families.",
+      "steps": [
+        {
+          "intent": "See every product with how many children it has.",
+          "system": "Lists all products ordered by name with child counts.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-93683837313593251984"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-08454163414443845831"
+            ],
+            "change": "kept",
+            "reason": "Same overview.",
+            "keeps": [
+              "businessrule-93683837313593251984"
+            ]
+          }
+        },
+        {
+          "intent": "Open a product to see all its major and minor versions together.",
+          "system": "Shows major versions ordered by version, and under each its minor versions ordered by version, headed by the names; with nothing chosen, invites a choice.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-12357125815438552418",
+            "businessrule-69465149169735487446"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-70438482535332396460",
+              "block-21250694452518135903"
+            ],
+            "change": "merged",
+            "reason": "One step replaces two list-by-list narrowings.",
+            "keeps": [
+              "businessrule-12357125815438552418",
+              "businessrule-69465149169735487446"
+            ]
+          }
+        },
+        {
+          "intent": "Read the details of any product, version, child or parent.",
+          "system": "Shows the details of the chosen item in place, moving to children or parent as asked, and does nothing when none is chosen.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-52738497804454297244",
+            "businessrule-77846110822300189675"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-27521638512866951547",
+              "block-85565043795242001799",
+              "block-78795492686610610516",
+              "block-68471089903278595698",
+              "block-94974939167069133577"
+            ],
+            "change": "merged",
+            "reason": "Details and movement share one view.",
+            "keeps": [
+              "businessrule-52738497804454297244",
+              "businessrule-77846110822300189675"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-75890035579964781740"
+          ],
+          "rules": [],
+          "reason": "Column width is presentation of one kind of screen."
+        }
+      ],
+      "recommended": "Gets from product to any version and its details in three steps instead of five, keeping every ordering and heading rule."
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.browse-support-rules",
+      "actor": "person",
+      "name": "Find then open",
+      "strategy": "task first",
+      "idea": "See all support definitions, narrow by name, open one and follow what it names.",
+      "tradeoff": "Finding is by name only.",
+      "steps": [
+        {
+          "intent": "See every support definition.",
+          "system": "Lists all support definitions.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-82164480679050137750"
+            ],
+            "change": "kept",
+            "reason": "The starting overview.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "Narrow the list by part of a name.",
+          "system": "Shows only definitions whose name contains the text, ignoring case; empty shows all; entries ordered by name ignoring leading spaces and shown without them.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-54625832347030556938"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-80435818182674952821"
+            ],
+            "change": "kept",
+            "reason": "Same narrowing.",
+            "keeps": [
+              "businessrule-54625832347030556938"
+            ]
+          }
+        },
+        {
+          "intent": "Open a support definition or support rule.",
+          "system": "Shows its details by any route, doing nothing when none is chosen.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-33689568439379299743",
+              "block-45462513891449541466",
+              "block-64431347962942436201"
+            ],
+            "change": "merged",
+            "reason": "Mouse and keyboard routes become one way to open.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "Follow an entry to the product or nested definition it names.",
+          "system": "Opens a product entry's product, shows a nested definition in the same place; a missing product or nothing chosen does nothing.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-82075493230431806208"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-53898486546586719743"
+            ],
+            "change": "kept",
+            "reason": "Following references stays one step.",
+            "keeps": [
+              "businessrule-82075493230431806208"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-82962493722270760078"
+          ],
+          "rules": [],
+          "reason": "Column width is presentation of one kind of screen."
+        },
+        {
+          "actions": [],
+          "rules": [
+            "businessrule-84991051448916998249"
+          ],
+          "reason": "Legacy behaviour opens a definition from a double press without checking a selection while the keyboard does check; the target checks in both cases so nothing opens when nothing is chosen."
+        }
+      ]
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.browse-support-rules",
+      "actor": "person",
+      "name": "Start from the product",
+      "strategy": "automate first",
+      "idea": "Start from a product and see which support rules cover it, or from a name, with the system working out coverage.",
+      "tradeoff": "Reverse lookup by product is not in the legacy and needs coverage to be worked out.",
+      "steps": [
+        {
+          "intent": "Say which product or name I care about.",
+          "system": "Narrows support definitions to names containing the text, ignoring case, and to those covering the product; empty shows all, ordered by name ignoring leading spaces.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-54625832347030556938"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-80435818182674952821",
+              "block-82164480679050137750"
+            ],
+            "change": "inferred",
+            "reason": "Answers \"what covers my product\" directly, in line with the outcome.",
+            "keeps": [
+              "businessrule-54625832347030556938"
+            ]
+          }
+        },
+        {
+          "intent": "Open a support definition or rule and see which products it covers.",
+          "system": "Shows its details, doing nothing when none is chosen.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-33689568439379299743",
+              "block-45462513891449541466",
+              "block-64431347962942436201"
+            ],
+            "change": "merged",
+            "reason": "One way to open.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "Follow an entry to its product or nested definition.",
+          "system": "Opens a product entry's product, shows a nested definition in the same place; missing product or nothing chosen does nothing.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-82075493230431806208"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-53898486546586719743"
+            ],
+            "change": "kept",
+            "reason": "Same following.",
+            "keeps": [
+              "businessrule-82075493230431806208"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-82962493722270760078"
+          ],
+          "rules": [],
+          "reason": "Column width is presentation of one kind of screen."
+        },
+        {
+          "actions": [],
+          "rules": [
+            "businessrule-84991051448916998249"
+          ],
+          "reason": "Legacy behaviour opens a definition from a double press without checking a selection while the keyboard does check; the target checks in both cases so nothing opens when nothing is chosen."
+        }
+      ],
+      "recommended": "The outcome is to see which products the rules cover, and starting from the product answers that in fewer steps."
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.inspect-policy-technical-details",
+      "actor": "person",
+      "name": "Inspect section by section",
+      "strategy": "task first",
+      "idea": "Open a policy's inspection and read stored setting, presentation, then semantic text, and copy a line.",
+      "tradeoff": "All technical detail is shown at once, which is long for rare readers.",
+      "steps": [
+        {
+          "intent": "Choose a policy and open its technical makeup.",
+          "system": "Opens the inspection of the chosen object.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-76908522554461045751"
+            ],
+            "change": "kept",
+            "reason": "Same entry.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "Read the stored setting.",
+          "system": "Shows the stored value line only when the policy names one and a \"Client extension\" line only when it names one; affected stored-setting groups with no on or off setting read \"Left implicit\" when a stored value is named, \"Left to elements\" otherwise, and always \"Left implicit\" in a Yes/No element.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-43141523484770952437",
+            "businessrule-79057744450548393955",
+            "businessrule-96393168223138786394"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-76908522554461045751"
+            ],
+            "change": "split",
+            "reason": "Each part of the inspection is a distinct reading, shown as its own step.",
+            "keeps": [
+              "businessrule-43141523484770952437",
+              "businessrule-79057744450548393955",
+              "businessrule-96393168223138786394"
+            ]
+          }
+        },
+        {
+          "intent": "Read the presentation and elements.",
+          "system": "Lists presentation details whenever there is both a presentation and elements, matching each item to the element with the same ID (none for items without an ID; a missing element is reported rather than stopping everything); choice names come from the defining file, numbered from zero; list value names read \"User provides value names\", a prefix or \"No prefix (values named for their data)\".",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-80096613073902079124",
+            "businessrule-49549620435870223174",
+            "businessrule-94076713436940158385"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-76908522554461045751"
+            ],
+            "change": "split",
+            "reason": "Each part of the inspection is a distinct reading, shown as its own step.",
+            "keeps": [
+              "businessrule-80096613073902079124",
+              "businessrule-49549620435870223174",
+              "businessrule-94076713436940158385"
+            ]
+          }
+        },
+        {
+          "intent": "Read the policy as semantic text.",
+          "system": "Writes one section per area it applies to (C for computer, U for user, then the identifier), with comment only when stored, settings and option values only when Enabled; values are written in the semantic format, with backslashes doubled and CR LF as \\n, and text that cannot be read back safely is flagged.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-01704207253788877148",
+            "businessrule-10913365400690794412",
+            "businessrule-20897965123834184786",
+            "businessrule-50694068263592934768",
+            "businessrule-77000026808397550095",
+            "businessrule-78281155676242942940"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-76908522554461045751"
+            ],
+            "change": "split",
+            "reason": "Each part of the inspection is a distinct reading, shown as its own step.",
+            "keeps": [
+              "businessrule-01704207253788877148",
+              "businessrule-10913365400690794412",
+              "businessrule-20897965123834184786",
+              "businessrule-50694068263592934768",
+              "businessrule-77000026808397550095",
+              "businessrule-78281155676242942940"
+            ]
+          }
+        },
+        {
+          "intent": "Copy a line of the text.",
+          "system": "Copies the selected line only when one is selected.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-57016400965631502733"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-01358626545675013383"
+            ],
+            "change": "kept",
+            "reason": "Same copy.",
+            "keeps": [
+              "businessrule-57016400965631502733"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-browsing-policy-definitions.inspect-policy-technical-details",
+      "actor": "person",
+      "name": "Plain words first, detail on demand",
+      "strategy": "guided",
+      "idea": "Start with a plain-language summary of what the policy stores and does, and open the technical detail only for the part wanted.",
+      "tradeoff": "The summary has to be derived and may be wrong where the code is unclear.",
+      "steps": [
+        {
+          "intent": "Open a policy and get a plain summary of what it stores and where.",
+          "system": "Opens the inspection with a short summary drawn from the stored setting; the stored value and client extension are included only when the policy names them.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-43141523484770952437",
+            "businessrule-79057744450548393955"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-76908522554461045751"
+            ],
+            "change": "inferred",
+            "reason": "Most readers want the gist before the detail.",
+            "keeps": [
+              "businessrule-43141523484770952437",
+              "businessrule-79057744450548393955"
+            ]
+          }
+        },
+        {
+          "intent": "Ask for the presentation and element detail.",
+          "system": "Lists presentation details when there is both a presentation and elements, matching items to elements by ID and reporting a missing element; choice names from the defining file numbered from zero; list value naming stated; groups left implicit or to elements read as defined.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-80096613073902079124",
+            "businessrule-49549620435870223174",
+            "businessrule-94076713436940158385",
+            "businessrule-96393168223138786394"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-76908522554461045751"
+            ],
+            "change": "deferred",
+            "reason": "Each part is asked for only when wanted.",
+            "keeps": [
+              "businessrule-80096613073902079124",
+              "businessrule-49549620435870223174",
+              "businessrule-94076713436940158385",
+              "businessrule-96393168223138786394"
+            ]
+          }
+        },
+        {
+          "intent": "Ask for the semantic text of the policy.",
+          "system": "Writes one section per area it applies to (C or U then identifier), comments only when stored, settings and options only when Enabled, in the semantic format with backslashes doubled and CR LF as \\n, flagging text that cannot be read back safely.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-01704207253788877148",
+            "businessrule-10913365400690794412",
+            "businessrule-20897965123834184786",
+            "businessrule-50694068263592934768",
+            "businessrule-77000026808397550095",
+            "businessrule-78281155676242942940"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-76908522554461045751"
+            ],
+            "change": "deferred",
+            "reason": "Each part is asked for only when wanted.",
+            "keeps": [
+              "businessrule-01704207253788877148",
+              "businessrule-10913365400690794412",
+              "businessrule-20897965123834184786",
+              "businessrule-50694068263592934768",
+              "businessrule-77000026808397550095",
+              "businessrule-78281155676242942940"
+            ]
+          }
+        },
+        {
+          "intent": "Copy a line.",
+          "system": "Copies the selected line only when one is selected.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-57016400965631502733"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-01358626545675013383"
+            ],
+            "change": "kept",
+            "reason": "Same copy.",
+            "keeps": [
+              "businessrule-57016400965631502733"
+            ]
+          }
+        }
+      ],
+      "drops": [],
+      "recommended": "Most people only need the gist, and layering the detail removes the long single read while keeping every rule."
+    }
+  ]
+}

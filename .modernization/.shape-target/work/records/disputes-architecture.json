@@ -1,0 +1,50 @@
+[
+  {
+    "job": "shape",
+    "says": "Record 0: The Policy Source and Workspace integrations read the machine's file folders, the live Windows registry, loaded user hives and Active Directory from a server-rendered web application on Bun, yet nothing says the server must be the person's own Windows machine, so a browser user would be editing the server's registry, not their own."
+  },
+  {
+    "job": "shape",
+    "says": "Record 1: Source services are split from the screens, and the registry, user-hive and directory adapters work only on the person's own Windows machine, so a networked service container with no stated placement cannot do what Policy Source's rules (mount hive, raise gpt.ini version, ask Windows to refresh policy) require."
+  },
+  {
+    "job": "shape",
+    "says": "Record 2: Policy Source and File Exchange run as a service while the engine holding Policy State is a library in the screens, so every state change must write through the service and the risk of an engine/source version mismatch is only half named; and the Workspace (which owns loaded definitions) is in a different container from Policy Definitions, which is not stated as a contract."
+  },
+  {
+    "job": "shape",
+    "says": "Record 0: The Workspace integration stores remembered choices as PostgreSQL preference rows, but no container in this or the other two architectures is a data store holding them, so the data layer of the Target Stack is used nowhere in the container list."
+  },
+  {
+    "job": "shape",
+    "says": "Record 0: Definition Acquisition holds the rules that a category is orphaned or empty, which describe the loaded catalogue and belong to Policy Definitions; the domain is also given the 'welcome offer considered once' rule that is really the Workspace remembering a choice."
+  },
+  {
+    "job": "shape",
+    "says": "Record 0: Workspace holds rules that Policy Source decides: the policy sources dialog opening with the last-used sources, 'not fully writable' reporting after opening, and unloading a mounted user hive when a source closes."
+  },
+  {
+    "job": "shape",
+    "says": "Record 0: Policy Discovery holds the product details, support details and parent-product window rules and 'refresh the list after the edit dialog is accepted', which are Policy Definitions (catalogue browsing) and Policy State rules; the domain is partly a screen layer in disguise."
+  },
+  {
+    "job": "shape",
+    "says": "Record 0: Policy Definitions holds loading-folder and language-dialog rules (workspace emptied on 'clear workspace', folder dialog defaults, language dialog text) that are the Workspace's session behaviour, blurring the Policy Definitions / Workspace line."
+  },
+  {
+    "job": "shape",
+    "says": "Record 0: Nine legacy rules are in no domain in any of the three architectures (Escape on Import SPOL and Find by ID, Go on Find by ID, the hidden Deduplicate menu entry, the product checkbox double-click, the Export REG unhandled error, the ADMX and support list double-click, the partial choice-setting write), and the architectures give no reason for leaving them out."
+  },
+  {
+    "job": "shape",
+    "says": "Record 0: The risks omit the largest one: the app depends on Windows-only capabilities (registry, user hives, Group Policy refresh, msiexec extraction, administrator file ownership), which Bun on a non-Windows server cannot provide, and the Target Stack does not say it targets Windows."
+  },
+  {
+    "job": "shape",
+    "says": "Record 1: The Definition installer job, which must take ownership of folders, run the Windows installer tool and write into the machine's PolicyDefinitions folder, is placed as its own job but the 'job' container has no stated trigger or host, and the legacy rule that downloads allow only TLS 1.0 to 1.2 is not addressed as a decision for the new stack."
+  },
+  {
+    "job": "shape",
+    "says": "Record 2: The variant differs from the second only by moving Definitions and State into a library and Discovery into the screens; Policy Discovery depends on state, comments and definitions across the container boundary, so the claimed 'thin services' trade-off omits that Discovery search needs comments from the Source service for every policy."
+  }
+]

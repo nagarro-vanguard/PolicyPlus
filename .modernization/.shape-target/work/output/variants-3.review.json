@@ -1,0 +1,45 @@
+{
+  "read": 12,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The step \"Have my preferences remembered\" honours the TLS rule (businessrule-15364695696024462204), which is about download protocols, not preferences, so that rule has no real home in the journey."
+    },
+    {
+      "record": 0,
+      "says": "The definitions step says the person is asked only when problems are \"minor\", but the rule asks whenever loading reports any problems, and the answer No (workspace thrown away, then the default offered, or told it could not be loaded) and the default-folder failure message (businessrule-72200124994498270380) are not carried."
+    },
+    {
+      "record": 0,
+      "says": "The journey claims every problem is reported once, but the sources step silently drops behaviour the rules fix as silent (a hive that cannot be opened becomes an empty read-only scratch source; a missing or uncreatable Registry.pol is created or replaced without any error) and describes only a notice on fallback, so that quiet behaviour is lost or hidden."
+    },
+    {
+      "record": 1,
+      "says": "The first step honours the definitions-failure rules (businessrule-41547680626150552574, 78253526822536661517, 58877134447436981389, 72200124994498270380) but its text only says it loads and shows categories, dropping the ask-to-keep prompt, the offer to load the default folder and the could-not-load message."
+    },
+    {
+      "record": 2,
+      "says": "The check says only that the code equals the stored language, losing that the comparison is case-sensitive (en-us differs from en-US) and trims the entered text but not the stored code (businessrule-93543924991745555552)."
+    },
+    {
+      "record": 7,
+      "says": "Nothing in the steps shows the sources dialog opening with the remembered kinds and their paths preselected for each side (businessrule-72559528436656832979), so a first-time or returning person is not told what the starting choice is."
+    },
+    {
+      "record": 7,
+      "says": "The \"Confirm and start working\" step honours businessrule-84588009124214109370, a rule about changing view settings (hiding categories and selected policy), not about choosing sources; only businessrule-10464012301936997836 applies."
+    },
+    {
+      "record": 8,
+      "says": "The first step promises a note on whether each remembered source can be opened and changed before the person confirms, but sources are only created and opened at Go ahead, so the system cannot know this beforehand; the step also mis-honours businessrule-84588009124214109370, which concerns view settings."
+    },
+    {
+      "record": 9,
+      "says": "The step says a name is translated at once, but today the lookup happens on Search or on OK; it also lists businessrule-88238619586671903040 (dialog stays open when no SID results) without saying so in the step text."
+    },
+    {
+      "record": 10,
+      "says": "Picking from known accounts already yields an identifier, so the separate \"Check the chosen user\" step is largely redundant, and it is placed before \"Back out\" as if cancelling came after checking; the variant reads as today with a pick list added rather than a different way of doing the task."
+    }
+  ]
+}

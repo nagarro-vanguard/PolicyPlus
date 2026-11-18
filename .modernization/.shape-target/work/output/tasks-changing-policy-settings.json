@@ -1,0 +1,276 @@
+{
+  "tasks": [
+    {
+      "id": "set-policy-state",
+      "outcome": "Set one policy to Enabled, Disabled or Not configured, with its options and comment, for the computer or the user.",
+      "actor": "person",
+      "actions": [
+        "block-29401732049948573203",
+        "block-49789533336413980059",
+        "block-18703182669260421228",
+        "block-75724566670057728491",
+        "block-89806020979547308639",
+        "block-57992755110790680579",
+        "block-51334849021361427410",
+        "block-96135191155885644109",
+        "block-38804446611751385293",
+        "block-77916892868646047596",
+        "block-06231454516231170585",
+        "block-48615537389470790613"
+      ],
+      "rules": [
+        "businessrule-65724709448091621197",
+        "businessrule-01560321201783674273",
+        "businessrule-20408685392954236399",
+        "businessrule-22919299514571743135",
+        "businessrule-23336067846798029987",
+        "businessrule-24534399091993971891",
+        "businessrule-33075335985104561108",
+        "businessrule-34769835898304277453",
+        "businessrule-37022902056569995834",
+        "businessrule-43638846001153509048",
+        "businessrule-47134496169701496073",
+        "businessrule-47891883049575092611",
+        "businessrule-49179499449653183223",
+        "businessrule-76476292137970655950",
+        "businessrule-90485587050957154914",
+        "businessrule-90493804689850695370",
+        "businessrule-92057272745409912098",
+        "businessrule-95995013385384587600",
+        "businessrule-98958969318255528192",
+        "businessrule-36860850025836880139",
+        "businessrule-67944280997214552078",
+        "businessrule-76178080166619590309",
+        "businessrule-11779280825123119273",
+        "businessrule-59619098183313284576",
+        "businessrule-47264131679601828501",
+        "businessrule-04152128046162000583",
+        "businessrule-14958427259964761169",
+        "businessrule-19622432139142313215",
+        "businessrule-30662593154265010717",
+        "businessrule-33456476599558212379",
+        "businessrule-37207468109369530089",
+        "businessrule-46516041958192928718",
+        "businessrule-49955247469929977676",
+        "businessrule-52553634867035971750",
+        "businessrule-53178349170981485484",
+        "businessrule-55949208713495428877",
+        "businessrule-56832565542674334637",
+        "businessrule-60358450731077326247",
+        "businessrule-60774486401252037450",
+        "businessrule-64524120751868809207",
+        "businessrule-66734059366331213205",
+        "businessrule-67842190900074642321",
+        "businessrule-75244076300039577548",
+        "businessrule-80911529766189561154",
+        "businessrule-84933301477035282498",
+        "businessrule-90058940824311429227",
+        "businessrule-92009750053258186072",
+        "businessrule-97175686457081101132",
+        "businessrule-53979609002646144363",
+        "businessrule-07359577675270518038"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "needs": [
+        "external-97068941883605652538",
+        "external-08492831744411585027"
+      ],
+      "current": [
+        {
+          "intent": "Look at a policy and see how it is set today.",
+          "system": "Shows the policy's name, help, supported-on text, its current state and option values and its comment, read from the chosen policy source; a policy for both computer and user starts on computer.",
+          "from": [
+            "block-49789533336413980059"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Switch between the computer and the user setting of the policy.",
+          "system": "Moves to that policy source, shows whether it can be written and whether it holds comments, and reloads the state and option values.",
+          "from": [
+            "block-51334849021361427410"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Choose the state the policy should have.",
+          "system": "Allows the options to be edited only while Enabled is chosen.",
+          "from": [
+            "block-57992755110790680579"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Fill in the options of the policy.",
+          "system": "Keeps numbers inside the policy's limits and refuses non-digit typing, limits text length, offers suggestions and choices, and lets the person edit lists of entries, refusing duplicate names for named lists.",
+          "from": [
+            "block-18703182669260421228",
+            "block-75724566670057728491",
+            "block-89806020979547308639",
+            "block-48615537389470790613"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Add a comment to the policy.",
+          "system": "Keeps the comment for storing when the source supports comments.",
+          "from": [
+            "block-49789533336413980059"
+          ],
+          "confidence": "inferred"
+        },
+        {
+          "intent": "Save the choice, either leaving the dialog or staying to make more changes.",
+          "system": "Forgets everything the source held for the policy, then writes the chosen state, every option and the comment; reports a change on leaving if anything was saved earlier.",
+          "from": [
+            "block-96135191155885644109",
+            "block-38804446611751385293",
+            "block-29401732049948573203",
+            "block-06231454516231170585"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Make room to read the help and comment.",
+          "system": "Shares extra width between the options and the help and comment text.",
+          "from": [
+            "block-77916892868646047596"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "import-policy-settings-from-text",
+      "outcome": "Bring a set of policy settings in from a semantic policy text and apply them to the computer and user policy sources.",
+      "actor": "person",
+      "actions": [
+        "block-27933278213709856376",
+        "block-70742542454119360952",
+        "block-34107094698830091312",
+        "block-92467440283303600855",
+        "block-02431696381301467584",
+        "block-98990608667721641067",
+        "block-20479299247601531941",
+        "block-91334952261881723533"
+      ],
+      "rules": [
+        "businessrule-27078270365699057081",
+        "businessrule-14257585336729172869",
+        "businessrule-17846007911557610465",
+        "businessrule-21688833916465491468",
+        "businessrule-37953448968627114950",
+        "businessrule-38078267378406118840",
+        "businessrule-49239739229069713399",
+        "businessrule-64894609785645160893",
+        "businessrule-82283321913472173436",
+        "businessrule-85959955505766938318",
+        "businessrule-91520515189249767580",
+        "businessrule-97058087218177971913",
+        "businessrule-30078789996227150580",
+        "businessrule-53070511165338807522",
+        "businessrule-00415446495174126677",
+        "businessrule-12966156302506777327",
+        "businessrule-45692609540846356884",
+        "businessrule-47001836867625969953",
+        "businessrule-70167687024707690035",
+        "businessrule-78566706966921753288"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538",
+        "external-08492831744411585027"
+      ],
+      "current": [
+        {
+          "intent": "Provide the policy text, from a file or typed in, or start again from an empty one.",
+          "system": "Shows the whole file text in place of what was there, or after confirmation restores the empty header; discards any earlier result.",
+          "from": [
+            "block-27933278213709856376",
+            "block-92467440283303600855",
+            "block-98990608667721641067",
+            "block-20479299247601531941"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Check that the text is valid.",
+          "system": "Reads the text and says how many policy settings it holds or why it is refused, with the line it stopped at; nothing is applied.",
+          "from": [
+            "block-70742542454119360952"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Accept the text for applying.",
+          "system": "Hands the parsed text on, or refuses invalid text with the reason; leaving without accepting passes nothing on.",
+          "from": [
+            "block-34107094698830091312",
+            "block-02431696381301467584"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Apply all the settings.",
+          "system": "Applies each policy to the computer or user source by its section, wiping its earlier settings first and storing its comment, skipping and counting failures, then says it succeeded or how many could not be applied and refreshes the view.",
+          "from": [
+            "block-91334952261881723533"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "inspect-policy-settings-as-text",
+      "outcome": "See policy settings as semantic policy text and copy it out to use elsewhere.",
+      "actor": "person",
+      "actions": [
+        "block-56021383816140036498",
+        "block-18241451168755948032",
+        "block-93851338452706207861",
+        "block-74794780607473579452"
+      ],
+      "rules": [
+        "businessrule-47036476815425257305"
+      ],
+      "facts": [
+        "entity-99683518011128701149"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Choose whether the text carries its header.",
+          "system": "Shows the heading and a blank line before the text only when asked.",
+          "from": [
+            "block-93851338452706207861"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Select the text.",
+          "system": "Selects all the text.",
+          "from": [
+            "block-18241451168755948032",
+            "block-74794780607473579452"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Copy the text.",
+          "system": "Selects and copies the whole text to the clipboard.",
+          "from": [
+            "block-56021383816140036498"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    }
+  ]
+}

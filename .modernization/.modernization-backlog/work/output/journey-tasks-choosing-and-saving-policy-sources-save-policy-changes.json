@@ -1,0 +1,160 @@
+{
+ "stories": [
+  {
+   "title": "Save policy changes to every chosen source in one request",
+   "what": "The person asks once to save. The system saves the comments, writes each source that can be fully written, makes the change take effect where it can, remembers the chosen sources for next time, and shows one outcome line per source. A local or per-user Group Policy source also gets its version file created or raised so the machine notices the change.",
+   "why": "Administrators and power users change policy settings and expect them to be kept in their sources and to take effect, without saving each source by hand or guessing what happened to it.",
+   "actions": [
+    "block-66465089975119483214"
+   ],
+   "terms": [
+    {
+     "name": "Group Policy version file",
+     "means": "The small file beside a policy file that carries a version number the machine reads to notice a change; it is not the policy file itself."
+    },
+    {
+     "name": "Policy source",
+     "means": "A place where the user or computer policies are kept, such as a POL file, the registry, a user's registry hive, a user's Group Policy object or the live system; it is not a policy definition."
+    },
+    {
+     "name": "Scratch space",
+     "means": "A policy source choice whose changes are not kept anywhere; saving it reports that the changes are discarded."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given comments and policy changes on both the computer and the user source, when the person asks to save, then each source's comments are saved first, then each source that is fully writable is written, then the chosen source types and locations are remembered for the next start.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-13724150063390760319"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-4"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-6"
+      }
+     ]
+    },
+    {
+     "says": "Given a source that is not fully writable, when the person asks to save, then that source is reported as \"not writable\" and is not written.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-13724150063390760319"
+      }
+     ]
+    },
+    {
+     "says": "Given the save finishes, when every source saved well, then the person sees \"Success.\" with the user and computer outcomes; when a source fails, then the person sees \"Saving failed!\" with the reason.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-13724150063390760319"
+      }
+     ]
+    },
+    {
+     "says": "Given a local Group Policy source on a Windows edition that has Group Policy (decided by a fixed list of product edition codes), when the person saves, then its policy file is written, its version file is raised, Windows is asked to refresh policy and the outcome reads \"saved to disk and invoked policy refresh\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-19841193988434357732"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given a local Group Policy source on a Windows edition that is not on that fixed list of product edition codes, when the person saves, then its policy file is written, its version file is raised, the difference between the file as last on disk (read at the moment of saving) and the new content is applied to the running account's own registry (the current user's for a user source, the machine's for a machine source), all windows are notified and the outcome reads \"saved to disk and applied diff to Registry\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-19841193988434357732"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-2"
+      }
+     ]
+    },
+    {
+     "says": "Given a per-user Group Policy object, when the person saves, then its policy file is written, its version file is raised, Windows is asked to refresh user policy and the outcome reads \"saved to disk and invoked policy refresh\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-20632548312339129786"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given the person saves, when the source is a POL file, then the outcome reads \"saved to disk\" and only the file is written; when it is a registry source, then it reads \"already applied\" because it was changed live; when it is a user hive, then it reads \"will apply when policy source is closed\"; when it is the Scratch space, then it reads \"discarded\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-24339552780845919468"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-2"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy file with no version file beside it, when a save raises the version, then a new version file is written with the General section, both extension-name lines for registry policy and version 65537.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-00851565168679896073"
+      }
+     ]
+    },
+    {
+     "says": "Given a version file that already exists, when a save raises the version, then the version rises by 1 for a machine source and by 65536 for a user source, and becomes 65537 when the file holds no version line.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-09176393040056781958"
+      }
+     ]
+    },
+    {
+     "says": "Given a version file that lacks the Machine or User extension-name line for registry policy, when a save raises the version, then the missing line is added and a line already present is left untouched.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-26056926835272364672"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#2"
+   ],
+   "components": [
+    "Group Policy Version Tracker",
+    "Source Saver"
+   ],
+   "open": [
+    "What should the person see when Windows does not confirm the policy refresh, since the old program ignored that answer and could report a policy as applied when it was not?",
+    "If the computer source saves and the user source then fails, should the computer changes stay saved and the chosen sources be remembered, or should the person be told which source failed and what was kept?"
+   ],
+   "journey": {
+    "name": "Save in one go",
+    "steps": [
+     "Ask once to save my changes and see each source's outcome."
+    ]
+   }
+  }
+ ]
+}

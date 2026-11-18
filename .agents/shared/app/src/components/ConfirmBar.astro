@@ -1,0 +1,20 @@
+---
+import { confirmCommand, gates, type Gate } from "../lib/confirmation";
+import type { TargetData } from "../lib/target-types";
+export interface Props { data: TargetData; show?: readonly Gate[]; }
+const { data, show = gates } = Astro.props;
+const names: Record<Gate, string> = { "as-is": "How tasks are done today", journeys: "How tasks should be done", architecture: "The architecture", components: "Its components" };
+const says = (gate: Gate) => {
+    const view = data.gates[gate];
+    return view.state === "confirmed" ? `confirmed ${view.date ?? ""}`
+        : view.state === "waiting" ? "waiting for you"
+        : view.state === "changed" ? "changed since confirmed"
+        : view.state === "blocked" ? "blocked: confirm the one before first"
+        : "not made yet";
+};
+const tone = (gate: Gate) => data.gates[gate].state === "confirmed" ? "correct" : data.gates[gate].state === "changed" ? "wrong" : "unused";
+---
+{show.map((gate) => <div class={`decision ${data.gates[gate].state === "confirmed" ? "done" : "todo"}`}>
+    <strong>{names[gate]}</strong>{" "}<span class={`badge ${tone(gate)}`}>{says(gate)}</span>
+    {(data.gates[gate].state === "waiting" || data.gates[gate].state === "changed") && <><p class="sub">Look through what is shown here, then confirm, or say what to change and it is made again.</p><pre class="prompt">{confirmCommand(gate, data.root)}</pre></>}
+</div>)}

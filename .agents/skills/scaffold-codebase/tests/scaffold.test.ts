@@ -44,7 +44,7 @@ const fixture = () => {
         }),
     );
     put(
-        join(root, ".modernization-backlog/work/request.json"),
+        join(root, "request.json"),
         JSON.stringify({ target, stack: ["language: TypeScript"] }),
     );
     const rows = layers.map((l) => `| ${l.name} | layers/${l.name} | code | ${l.dependsOn.join(", ") || "-"} |`);

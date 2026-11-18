@@ -55,7 +55,7 @@ const readJson = (path: string): unknown => {
 /** Reads the plan's layers and the request's target and stack from an Output Root. */
 export const load = (root: string): Loaded => {
     const plan = readJson(join(root, ".modernization-backlog/payloads/plan.json")) as { layers?: PlanLayer[] };
-    const request = readJson(join(root, ".modernization-backlog/work/request.json")) as {
+    const request = readJson(join(root, "request.json")) as {
         target?: string;
         stack?: string[];
     };

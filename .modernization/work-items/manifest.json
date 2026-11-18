@@ -43,26 +43,6 @@
       "attachment": null
     },
     {
-      "key": "area:libraries",
-      "file": "epic-area-libraries",
-      "kind": "epic",
-      "title": "Set up libraries",
-      "tags": [
-        "epic",
-        "technical"
-      ],
-      "parent": null,
-      "blockedBy": [],
-      "comesAfter": [
-        "area:codebase"
-      ],
-      "sequence": 3,
-      "phase": 0,
-      "builder": "none",
-      "body": "bodies/epic-area-libraries.md",
-      "attachment": null
-    },
-    {
       "key": "area:testing",
       "file": "epic-area-testing",
       "kind": "epic",
@@ -76,7 +56,7 @@
       "comesAfter": [
         "area:codebase"
       ],
-      "sequence": 4,
+      "sequence": 3,
       "phase": 0,
       "builder": "none",
       "body": "bodies/epic-area-testing.md",
@@ -96,17 +76,37 @@
       "comesAfter": [
         "area:codebase"
       ],
-      "sequence": 5,
+      "sequence": 4,
       "phase": 0,
       "builder": "none",
       "body": "bodies/epic-area-knowledge-in-code.md",
       "attachment": null
     },
     {
-      "key": "area:shared rules",
-      "file": "epic-area-shared-rules",
+      "key": "area:platform",
+      "file": "epic-area-platform",
       "kind": "epic",
-      "title": "Build the shared rules",
+      "title": "Set up platform",
+      "tags": [
+        "epic",
+        "technical"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase"
+      ],
+      "sequence": 5,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-area-platform.md",
+      "attachment": null
+    },
+    {
+      "key": "area:shared components",
+      "file": "epic-area-shared-components",
+      "kind": "epic",
+      "title": "Build the shared components",
       "tags": [
         "epic",
         "technical"
@@ -116,21 +116,21 @@
       "comesAfter": [
         "area:codebase",
         "area:tooling and environment",
-        "area:libraries",
         "area:testing",
-        "area:knowledge in code"
+        "area:knowledge in code",
+        "area:platform"
       ],
       "sequence": 6,
       "phase": 0,
       "builder": "none",
-      "body": "bodies/epic-area-shared-rules.md",
+      "body": "bodies/epic-area-shared-components.md",
       "attachment": null
     },
     {
-      "key": "capability:capability-17758885276262804412",
-      "file": "epic-capability-capability-17758885276262804412",
+      "key": "journey:tasks-building-and-versioning-policy-plus.stamp-program-version",
+      "file": "epic-journey-tasks-building-and-versioning-policy-plus-stamp-program-version",
       "kind": "epic",
-      "title": "Carry over building and versioning Policy Plus",
+      "title": "Make each built copy of the program carry the version of the code it was built from.",
       "tags": [
         "epic",
         "functional"
@@ -140,22 +140,22 @@
       "comesAfter": [
         "area:codebase",
         "area:tooling and environment",
-        "area:libraries",
         "area:testing",
         "area:knowledge in code",
-        "area:shared rules"
+        "area:platform",
+        "area:shared components"
       ],
       "sequence": 7,
       "phase": 0,
       "builder": "none",
-      "body": "bodies/epic-capability-capability-17758885276262804412.md",
+      "body": "bodies/epic-journey-tasks-building-and-versioning-policy-plus-stamp-program-version.md",
       "attachment": null
     },
     {
-      "key": "capability:capability-37285537501950413921",
-      "file": "epic-capability-capability-37285537501950413921",
+      "key": "journey:tasks-getting-microsoft-policy-definitions.get-policy-definitions",
+      "file": "epic-journey-tasks-getting-microsoft-policy-definitions-get-policy-definitions",
       "kind": "epic",
-      "title": "Carry over getting Microsoft policy definitions",
+      "title": "Obtain Microsoft's current set of policy definitions and install them in a folder the program can use.",
       "tags": [
         "epic",
         "functional"
@@ -165,22 +165,22 @@
       "comesAfter": [
         "area:codebase",
         "area:tooling and environment",
-        "area:libraries",
         "area:testing",
         "area:knowledge in code",
-        "area:shared rules"
+        "area:platform",
+        "area:shared components"
       ],
       "sequence": 8,
       "phase": 0,
       "builder": "none",
-      "body": "bodies/epic-capability-capability-37285537501950413921.md",
+      "body": "bodies/epic-journey-tasks-getting-microsoft-policy-definitions-get-policy-definitions.md",
       "attachment": null
     },
     {
-      "key": "capability:capability-56009572261677044081",
-      "file": "epic-capability-capability-56009572261677044081",
+      "key": "journey:tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer",
+      "file": "epic-journey-tasks-getting-microsoft-policy-definitions-accept-welcome-download-offer",
       "kind": "epic",
-      "title": "Carry over using the product",
+      "title": "Be offered the full set of policy definitions the first time the program is used on an edition that lacks them.",
       "tags": [
         "epic",
         "functional"
@@ -190,22 +190,22 @@
       "comesAfter": [
         "area:codebase",
         "area:tooling and environment",
-        "area:libraries",
         "area:testing",
         "area:knowledge in code",
-        "area:shared rules"
+        "area:platform",
+        "area:shared components"
       ],
       "sequence": 9,
       "phase": 0,
       "builder": "none",
-      "body": "bodies/epic-capability-capability-56009572261677044081.md",
+      "body": "bodies/epic-journey-tasks-getting-microsoft-policy-definitions-accept-welcome-download-offer.md",
       "attachment": null
     },
     {
-      "key": "capability:capability-74192280505907161455",
-      "file": "epic-capability-capability-74192280505907161455",
+      "key": "journey:tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
+      "file": "epic-journey-tasks-getting-microsoft-policy-definitions-use-downloaded-definitions",
       "kind": "epic",
-      "title": "Carry over choosing and saving policy sources",
+      "title": "Make the newly downloaded policy definitions the ones the program works with.",
       "tags": [
         "epic",
         "functional"
@@ -215,22 +215,22 @@
       "comesAfter": [
         "area:codebase",
         "area:tooling and environment",
-        "area:libraries",
         "area:testing",
         "area:knowledge in code",
-        "area:shared rules"
+        "area:platform",
+        "area:shared components"
       ],
       "sequence": 10,
       "phase": 0,
       "builder": "none",
-      "body": "bodies/epic-capability-capability-74192280505907161455.md",
+      "body": "bodies/epic-journey-tasks-getting-microsoft-policy-definitions-use-downloaded-definitions.md",
       "attachment": null
     },
     {
-      "key": "capability:capability-64744418053658352712",
-      "file": "epic-capability-capability-64744418053658352712",
+      "key": "journey:tasks-using-the-product.open-the-workspace",
+      "file": "epic-journey-tasks-using-the-product-open-the-workspace",
       "kind": "epic",
-      "title": "Carry over changing policy settings",
+      "title": "Get back to the policy work where it was left: the last policy sources and policy definitions are ready to browse.",
       "tags": [
         "epic",
         "functional"
@@ -240,22 +240,22 @@
       "comesAfter": [
         "area:codebase",
         "area:tooling and environment",
-        "area:libraries",
         "area:testing",
         "area:knowledge in code",
-        "area:shared rules"
+        "area:platform",
+        "area:shared components"
       ],
       "sequence": 11,
       "phase": 0,
       "builder": "none",
-      "body": "bodies/epic-capability-capability-64744418053658352712.md",
+      "body": "bodies/epic-journey-tasks-using-the-product-open-the-workspace.md",
       "attachment": null
     },
     {
-      "key": "capability:capability-85379136702335736376",
-      "file": "epic-capability-capability-85379136702335736376",
+      "key": "journey:tasks-using-the-product.set-definition-language",
+      "file": "epic-journey-tasks-using-the-product-set-definition-language",
       "kind": "epic",
-      "title": "Carry over finding policies",
+      "title": "Choose the language in which policy definition text is shown and have it applied.",
       "tags": [
         "epic",
         "functional"
@@ -265,22 +265,22 @@
       "comesAfter": [
         "area:codebase",
         "area:tooling and environment",
-        "area:libraries",
         "area:testing",
         "area:knowledge in code",
-        "area:shared rules"
+        "area:platform",
+        "area:shared components"
       ],
       "sequence": 12,
       "phase": 0,
       "builder": "none",
-      "body": "bodies/epic-capability-capability-85379136702335736376.md",
+      "body": "bodies/epic-journey-tasks-using-the-product-set-definition-language.md",
       "attachment": null
     },
     {
-      "key": "capability:capability-38063153752557655155",
-      "file": "epic-capability-capability-38063153752557655155",
+      "key": "journey:tasks-using-the-product.leave-the-program",
+      "file": "epic-journey-tasks-using-the-product-leave-the-program",
       "kind": "epic",
-      "title": "Carry over editing policy files directly",
+      "title": "Finish the work and leave, releasing everything that was opened.",
       "tags": [
         "epic",
         "functional"
@@ -290,22 +290,22 @@
       "comesAfter": [
         "area:codebase",
         "area:tooling and environment",
-        "area:libraries",
         "area:testing",
         "area:knowledge in code",
-        "area:shared rules"
+        "area:platform",
+        "area:shared components"
       ],
       "sequence": 13,
       "phase": 0,
       "builder": "none",
-      "body": "bodies/epic-capability-capability-38063153752557655155.md",
+      "body": "bodies/epic-journey-tasks-using-the-product-leave-the-program.md",
       "attachment": null
     },
     {
-      "key": "capability:capability-12186108826760133070",
-      "file": "epic-capability-capability-12186108826760133070",
+      "key": "journey:tasks-using-the-product.see-about-information",
+      "file": "epic-journey-tasks-using-the-product-see-about-information",
       "kind": "epic",
-      "title": "Carry over browsing policy definitions",
+      "title": "Find out who made the program and which version is in use.",
       "tags": [
         "epic",
         "functional"
@@ -315,15 +315,790 @@
       "comesAfter": [
         "area:codebase",
         "area:tooling and environment",
-        "area:libraries",
         "area:testing",
         "area:knowledge in code",
-        "area:shared rules"
+        "area:platform",
+        "area:shared components"
       ],
       "sequence": 14,
       "phase": 0,
       "builder": "none",
-      "body": "bodies/epic-capability-capability-12186108826760133070.md",
+      "body": "bodies/epic-journey-tasks-using-the-product-see-about-information.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-choosing-and-saving-policy-sources.choose-policy-sources",
+      "file": "epic-journey-tasks-choosing-and-saving-policy-sources-choose-policy-sources",
+      "kind": "epic",
+      "title": "Decide where the user and computer policies are kept and start working against those sources.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 15,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-choosing-and-saving-policy-sources-choose-policy-sources.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-choosing-and-saving-policy-sources.identify-user-for-policy",
+      "file": "epic-journey-tasks-choosing-and-saving-policy-sources-identify-user-for-policy",
+      "kind": "epic",
+      "title": "Name the user account whose own Group Policy object is to be the user policy source.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 16,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-choosing-and-saving-policy-sources-identify-user-for-policy.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy",
+      "file": "epic-journey-tasks-choosing-and-saving-policy-sources-pick-user-profile-for-policy",
+      "kind": "epic",
+      "title": "Choose a user profile whose stored settings are to be the user policy source.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 17,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-choosing-and-saving-policy-sources-pick-user-profile-for-policy.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-choosing-and-saving-policy-sources.save-policy-changes",
+      "file": "epic-journey-tasks-choosing-and-saving-policy-sources-save-policy-changes",
+      "kind": "epic",
+      "title": "Save the policy settings and comments to their sources, make them take effect where possible, and remember the chosen sources for next time.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 18,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-choosing-and-saving-policy-sources-save-policy-changes.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-changing-policy-settings.set-policy-state",
+      "file": "epic-journey-tasks-changing-policy-settings-set-policy-state",
+      "kind": "epic",
+      "title": "Set one policy to Enabled, Disabled or Not configured, with its options and comment, for the computer or the user.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 19,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-changing-policy-settings-set-policy-state.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-changing-policy-settings.import-policy-settings-from-text",
+      "file": "epic-journey-tasks-changing-policy-settings-import-policy-settings-from-text",
+      "kind": "epic",
+      "title": "Bring a set of policy settings in from a semantic policy text and apply them to the computer and user policy sources.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 20,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-changing-policy-settings-import-policy-settings-from-text.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-changing-policy-settings.inspect-policy-settings-as-text",
+      "file": "epic-journey-tasks-changing-policy-settings-inspect-policy-settings-as-text",
+      "kind": "epic",
+      "title": "See policy settings as semantic policy text and copy it out to use elsewhere.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 21,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-changing-policy-settings-inspect-policy-settings-as-text.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-finding-policies.find-policy-by-id",
+      "file": "epic-journey-tasks-finding-policies-find-policy-by-id",
+      "kind": "epic",
+      "title": "Go straight to a known category, product, support definition or policy by typing its identifier.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 22,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-finding-policies-find-policy-by-id.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-finding-policies.find-policies-by-text",
+      "file": "epic-journey-tasks-finding-policies-find-policies-by-text",
+      "kind": "epic",
+      "title": "Find policies whose title, description or comments contain words or phrases the person remembers.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 23,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-finding-policies-find-policies-by-text.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-finding-policies.find-policies-by-registry",
+      "file": "epic-journey-tasks-finding-policies-find-policies-by-registry",
+      "kind": "epic",
+      "title": "Find the policies that control a given system setting, named by its key or value.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 24,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-finding-policies-find-policies-by-registry.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-finding-policies.review-search-results",
+      "file": "epic-journey-tasks-finding-policies-review-search-results",
+      "kind": "epic",
+      "title": "Work through the hits of a search and pick the policy to open.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 25,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-finding-policies-review-search-results.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-finding-policies.narrow-policy-list-by-filter",
+      "file": "epic-journey-tasks-finding-policies-narrow-policy-list-by-filter",
+      "kind": "epic",
+      "title": "Limit the policy list to policies of a chosen type, state, comment status and supported products, and switch that limit on or off.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 26,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-finding-policies-narrow-policy-list-by-filter.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-editing-policy-files-directly.open-raw-policy-editor",
+      "file": "epic-journey-tasks-editing-policy-files-directly-open-raw-policy-editor",
+      "kind": "epic",
+      "title": "Open a policy file for direct editing of its raw keys and values, with a warning the first time, and leave the editor when done.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 27,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-editing-policy-files-directly-open-raw-policy-editor.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-editing-policy-files-directly.add-policy-file-key-or-value",
+      "file": "epic-journey-tasks-editing-policy-files-directly-add-policy-file-key-or-value",
+      "kind": "epic",
+      "title": "Add a new key, or a new value of a chosen kind, to a policy file.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 28,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-editing-policy-files-directly-add-policy-file-key-or-value.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-editing-policy-files-directly.change-policy-file-value-data",
+      "file": "epic-journey-tasks-editing-policy-files-directly-change-policy-file-value-data",
+      "kind": "epic",
+      "title": "Change the data of an existing value in a policy file.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 29,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-editing-policy-files-directly-change-policy-file-value-data.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "file": "epic-journey-tasks-editing-policy-files-directly-remove-policy-file-entries",
+      "kind": "epic",
+      "title": "Remove keys or values from a policy file, either leaving a deletion instruction for the machine or forgetting them entirely.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 30,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-editing-policy-files-directly-remove-policy-file-entries.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-editing-policy-files-directly.import-registry-file-into-policy-source",
+      "file": "epic-journey-tasks-editing-policy-files-directly-import-registry-file-into-policy-source",
+      "kind": "epic",
+      "title": "Bring the contents of an exported set of machine settings into a policy source.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 31,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-editing-policy-files-directly-import-registry-file-into-policy-source.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-editing-policy-files-directly.import-policy-file",
+      "file": "epic-journey-tasks-editing-policy-files-directly-import-policy-file",
+      "kind": "epic",
+      "title": "Load a policy file into the user or computer policy source.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 32,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-editing-policy-files-directly-import-policy-file.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-editing-policy-files-directly.export-policy-as-registry-file",
+      "file": "epic-journey-tasks-editing-policy-files-directly-export-policy-as-registry-file",
+      "kind": "epic",
+      "title": "Write a policy source, or one branch of it, as an exported set of machine settings.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 33,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-editing-policy-files-directly-export-policy-as-registry-file.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-editing-policy-files-directly.export-policy-file",
+      "file": "epic-journey-tasks-editing-policy-files-directly-export-policy-file",
+      "kind": "epic",
+      "title": "Save a policy source out as a policy file.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 34,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-editing-policy-files-directly-export-policy-file.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.load-definitions-folder",
+      "file": "epic-journey-tasks-browsing-policy-definitions-load-definitions-folder",
+      "kind": "epic",
+      "title": "Load a folder of policy definitions into the workspace so its policies can be browsed.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 35,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-load-definitions-folder.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.add-template-file",
+      "file": "epic-journey-tasks-browsing-policy-definitions-add-template-file",
+      "kind": "epic",
+      "title": "Add a single policy template file to the policies already loaded.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 36,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-add-template-file.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.review-loaded-template-files",
+      "file": "epic-journey-tasks-browsing-policy-definitions-review-loaded-template-files",
+      "kind": "epic",
+      "title": "See which policy template files are loaded and what each one contributes.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 37,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-review-loaded-template-files.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.browse-policy-tree",
+      "file": "epic-journey-tasks-browsing-policy-definitions-browse-policy-tree",
+      "kind": "epic",
+      "title": "Move through the categories and policies of the loaded definitions and read what each is for.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 38,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-browse-policy-tree.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.merge-duplicate-policies",
+      "file": "epic-journey-tasks-browsing-policy-definitions-merge-duplicate-policies",
+      "kind": "epic",
+      "title": "Merge identical user and computer policies into single policies that apply to both.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 39,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-merge-duplicate-policies.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.view-policy-details",
+      "file": "epic-journey-tasks-browsing-policy-definitions-view-policy-details",
+      "kind": "epic",
+      "title": "See what a policy is, which section it applies to, where it sits and what it is supported on.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 40,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-view-policy-details.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.view-category-details",
+      "file": "epic-journey-tasks-browsing-policy-definitions-view-category-details",
+      "kind": "epic",
+      "title": "See a category, its parent and how it relates to policies.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 41,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-view-category-details.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.browse-products",
+      "file": "epic-journey-tasks-browsing-policy-definitions-browse-products",
+      "kind": "epic",
+      "title": "Browse the products and their versions that the loaded definitions cover, and see the details of each.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 42,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-browse-products.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.browse-support-rules",
+      "file": "epic-journey-tasks-browsing-policy-definitions-browse-support-rules",
+      "kind": "epic",
+      "title": "Find the support rules and see which products they cover.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 43,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-browse-support-rules.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.inspect-policy-technical-details",
+      "file": "epic-journey-tasks-browsing-policy-definitions-inspect-policy-technical-details",
+      "kind": "epic",
+      "title": "Inspect the technical makeup of a policy: its stored setting, presentation, elements and semantic text, and copy it.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 44,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-inspect-policy-technical-details.md",
+      "attachment": null
+    },
+    {
+      "key": "journey:tasks-browsing-policy-definitions.clear-loaded-definitions",
+      "file": "epic-journey-tasks-browsing-policy-definitions-clear-loaded-definitions",
+      "kind": "epic",
+      "title": "Remove all loaded policy definitions from the workspace.",
+      "tags": [
+        "epic",
+        "functional"
+      ],
+      "parent": null,
+      "blockedBy": [],
+      "comesAfter": [
+        "area:codebase",
+        "area:tooling and environment",
+        "area:testing",
+        "area:knowledge in code",
+        "area:platform",
+        "area:shared components"
+      ],
+      "sequence": 45,
+      "phase": 0,
+      "builder": "none",
+      "body": "bodies/epic-journey-tasks-browsing-policy-definitions-clear-loaded-definitions.md",
       "attachment": null
     },
     {
@@ -345,10 +1120,10 @@
       "attachment": null
     },
     {
-      "key": "story-d4956c72a3a9",
-      "file": "story-d4956c72a3a9",
+      "key": "story-d836fac7ab18",
+      "file": "story-d836fac7ab18",
       "kind": "story",
-      "title": "Set up the workspace, runtime and shared tooling",
+      "title": "Set up the shared workspace and the approved libraries",
       "tags": [
         "story",
         "technical"
@@ -359,50 +1134,14 @@
       "sequence": 2,
       "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-d4956c72a3a9.md",
+      "body": "bodies/story-d836fac7ab18.md",
       "attachment": null
     },
     {
-      "key": "story-64e83f23980d",
-      "file": "story-64e83f23980d",
+      "key": "story-7cddae7b2f75",
+      "file": "story-7cddae7b2f75",
       "kind": "story",
-      "title": "Configure environments, local database and the build version",
-      "tags": [
-        "story",
-        "technical"
-      ],
-      "parent": "area:tooling and environment",
-      "blockedBy": [],
-      "comesAfter": [],
-      "sequence": 3,
-      "phase": 1,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-64e83f23980d.md",
-      "attachment": null
-    },
-    {
-      "key": "story-e1a604495a0f",
-      "file": "story-e1a604495a0f",
-      "kind": "story",
-      "title": "Fix the libraries every layer may use",
-      "tags": [
-        "story",
-        "technical"
-      ],
-      "parent": "area:libraries",
-      "blockedBy": [],
-      "comesAfter": [],
-      "sequence": 4,
-      "phase": 1,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-e1a604495a0f.md",
-      "attachment": null
-    },
-    {
-      "key": "story-4417961b585a",
-      "file": "story-4417961b585a",
-      "kind": "story",
-      "title": "Set up the test tooling for every layer",
+      "title": "Set up the test approach with fixtures and a real database",
       "tags": [
         "story",
         "technical"
@@ -410,17 +1149,17 @@
       "parent": "area:testing",
       "blockedBy": [],
       "comesAfter": [],
-      "sequence": 5,
+      "sequence": 3,
       "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-4417961b585a.md",
+      "body": "bodies/story-7cddae7b2f75.md",
       "attachment": null
     },
     {
-      "key": "story-8f43dc022fc3",
-      "file": "story-8f43dc022fc3",
+      "key": "story-8d4e2e1de2af",
+      "file": "story-8d4e2e1de2af",
       "kind": "story",
-      "title": "Set the pattern for rules written as tested code",
+      "title": "Keep behaviour in code, tests and short agent notes",
       "tags": [
         "story",
         "technical"
@@ -428,2765 +1167,2962 @@
       "parent": "area:knowledge in code",
       "blockedBy": [],
       "comesAfter": [],
-      "sequence": 6,
+      "sequence": 4,
       "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-8f43dc022fc3.md",
+      "body": "bodies/story-8d4e2e1de2af.md",
       "attachment": null
     },
     {
-      "key": "story-be2ca86e91a5",
-      "file": "story-be2ca86e91a5",
+      "key": "story-5f94c651d3a1",
+      "file": "story-5f94c651d3a1",
       "kind": "story",
-      "title": "Show the category tree and the list of a chosen category",
+      "title": "Define the contract schemas and generate the interface document",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
+      "blockedBy": [],
+      "comesAfter": [],
+      "sequence": 5,
+      "phase": 1,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-5f94c651d3a1.md",
+      "attachment": null
+    },
+    {
+      "key": "story-b9efce3d9e05",
+      "file": "story-b9efce3d9e05",
+      "kind": "story",
+      "title": "Build the policy rules as a pure layer with named ports",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "area:platform",
+      "blockedBy": [],
+      "comesAfter": [],
+      "sequence": 6,
+      "phase": 1,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-b9efce3d9e05.md",
+      "attachment": null
+    },
+    {
+      "key": "story-34a066619fe3",
+      "file": "story-34a066619fe3",
+      "kind": "story",
+      "title": "Set up the preference store with committed migrations",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 7,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-be2ca86e91a5.md",
-      "attachment": "attachments/story-be2ca86e91a5.md"
+      "body": "bodies/story-34a066619fe3.md",
+      "attachment": null
     },
     {
-      "key": "story-de84e9444933",
-      "file": "story-de84e9444933",
+      "key": "story-b9cec1d7f003",
+      "file": "story-b9cec1d7f003",
       "kind": "story",
-      "title": "Show a policy's state and comment per area",
+      "title": "Serve the HTTP interface with thin handlers",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 8,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-de84e9444933.md",
-      "attachment": "attachments/story-de84e9444933.md"
+      "body": "bodies/story-b9cec1d7f003.md",
+      "attachment": null
     },
     {
-      "key": "story-5923b3f84201",
-      "file": "story-5923b3f84201",
+      "key": "story-0a13a3e06603",
+      "file": "story-0a13a3e06603",
       "kind": "story",
-      "title": "Refuse invalid template files with clear messages",
+      "title": "Read and write folders and policy files on the person's machine",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 9,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-5923b3f84201.md",
-      "attachment": "attachments/story-5923b3f84201.md"
+      "body": "bodies/story-0a13a3e06603.md",
+      "attachment": null
     },
     {
-      "key": "story-a0702af37a64",
-      "file": "story-a0702af37a64",
+      "key": "story-3dd0972af3ab",
+      "file": "story-3dd0972af3ab",
       "kind": "story",
-      "title": "Link loaded definitions into categories, products and policies",
+      "title": "Read and write registry policies and user hives safely",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 10,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a0702af37a64.md",
-      "attachment": "attachments/story-a0702af37a64.md"
+      "body": "bodies/story-3dd0972af3ab.md",
+      "attachment": null
     },
     {
-      "key": "story-ad5a2f6c129f",
-      "file": "story-ad5a2f6c129f",
+      "key": "story-3c4bd246a6f1",
+      "file": "story-3c4bd246a6f1",
       "kind": "story",
-      "title": "Read policies, products and options from template files",
+      "title": "Look up accounts and policy locations in the Active Directory domain",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 11,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-ad5a2f6c129f.md",
-      "attachment": "attachments/story-ad5a2f6c129f.md"
+      "body": "bodies/story-3c4bd246a6f1.md",
+      "attachment": null
     },
     {
-      "key": "story-a8ee9482f2c5",
-      "file": "story-a8ee9482f2c5",
+      "key": "story-c8f8decc5552",
+      "file": "story-c8f8decc5552",
       "kind": "story",
-      "title": "Read settings screen layouts from language files",
+      "title": "Download and unpack the Microsoft policy template package",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 12,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a8ee9482f2c5.md",
-      "attachment": "attachments/story-a8ee9482f2c5.md"
+      "body": "bodies/story-c8f8decc5552.md",
+      "attachment": null
     },
     {
-      "key": "story-8ca51ca63ee6",
-      "file": "story-8ca51ca63ee6",
+      "key": "story-31968782764c",
+      "file": "story-31968782764c",
       "kind": "story",
-      "title": "Work out whether a policy is enabled or disabled from its values",
+      "title": "Build the shared interface components with Storybook",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 13,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-8ca51ca63ee6.md",
-      "attachment": "attachments/story-8ca51ca63ee6.md"
+      "body": "bodies/story-31968782764c.md",
+      "attachment": null
     },
     {
-      "key": "story-762a4634aa04",
-      "file": "story-762a4634aa04",
+      "key": "story-951aaf33d796",
+      "file": "story-951aaf33d796",
       "kind": "story",
-      "title": "Decide whether a policy's support rules are met",
+      "title": "Build the web app shell, data access, messages and forms",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 14,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-762a4634aa04.md",
-      "attachment": "attachments/story-762a4634aa04.md"
+      "body": "bodies/story-951aaf33d796.md",
+      "attachment": null
     },
     {
-      "key": "story-a8dd1d11e6d9",
-      "file": "story-a8dd1d11e6d9",
+      "key": "story-5531b17b1d11",
+      "file": "story-5531b17b1d11",
       "kind": "story",
-      "title": "Read and list values in policy files and registry policy keys",
+      "title": "Set up end-to-end tests with accessibility scans",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 15,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a8dd1d11e6d9.md",
-      "attachment": "attachments/story-a8dd1d11e6d9.md"
+      "body": "bodies/story-5531b17b1d11.md",
+      "attachment": null
     },
     {
-      "key": "story-d4e9fbe4acd9",
-      "file": "story-d4e9fbe4acd9",
+      "key": "story-e15ffc6c6853",
+      "file": "story-e15ffc6c6853",
       "kind": "story",
-      "title": "Detect the Group Policy edition and read optional attributes",
+      "title": "Stamp the program with its Git version at build time",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 16,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-d4e9fbe4acd9.md",
-      "attachment": "attachments/story-d4e9fbe4acd9.md"
+      "body": "bodies/story-e15ffc6c6853.md",
+      "attachment": null
     },
     {
-      "key": "story-036b775c5bc8",
-      "file": "story-036b775c5bc8",
+      "key": "story-23f3d9b4bd30",
+      "file": "story-23f3d9b4bd30",
       "kind": "story",
-      "title": "Load policy templates from an uploaded package with the right language",
+      "title": "Share one set of code checks and commit rules across layers",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:platform",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 17,
-      "phase": 2,
+      "phase": 1,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-036b775c5bc8.md",
-      "attachment": "attachments/story-036b775c5bc8.md"
+      "body": "bodies/story-23f3d9b4bd30.md",
+      "attachment": null
     },
     {
-      "key": "story-a6877efa14bb",
-      "file": "story-a6877efa14bb",
+      "key": "story-50f6199de145",
+      "file": "story-50f6199de145",
       "kind": "story",
-      "title": "Validate template and language files while reading them",
+      "title": "Load policy definitions from a folder o...: Template file source adapter",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 18,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a6877efa14bb.md",
-      "attachment": "attachments/story-a6877efa14bb.md"
+      "body": "bodies/story-50f6199de145.md",
+      "attachment": null
     },
     {
-      "key": "story-9ad956ab7bf7",
-      "file": "story-9ad956ab7bf7",
+      "key": "story-223b6fc37207",
+      "file": "story-223b6fc37207",
       "kind": "story",
-      "title": "Read support rules, products, classes and list options from templates",
+      "title": "Show the category tree and the policies of the chosen area",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 19,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-9ad956ab7bf7.md",
-      "attachment": "attachments/story-9ad956ab7bf7.md"
+      "body": "bodies/story-223b6fc37207.md",
+      "attachment": "attachments/story-223b6fc37207.md"
     },
     {
-      "key": "story-e94f424068d7",
-      "file": "story-e94f424068d7",
+      "key": "story-c7d1bf28a69c",
+      "file": "story-c7d1bf28a69c",
       "kind": "story",
-      "title": "Decide whether a policy is enabled, disabled or unsupported",
+      "title": "Read and write policy files byte for byte",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 20,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-e94f424068d7.md",
-      "attachment": "attachments/story-e94f424068d7.md"
+      "body": "bodies/story-c7d1bf28a69c.md",
+      "attachment": "attachments/story-c7d1bf28a69c.md"
     },
     {
-      "key": "story-172c85be8ab9",
-      "file": "story-172c85be8ab9",
+      "key": "story-e1c57c0f14b7",
+      "file": "story-e1c57c0f14b7",
       "kind": "story",
-      "title": "Read and write policy files with a byte-faithful round trip",
+      "title": "Hold a policy file's settings in memory and answer questions about them",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
-      "blockedBy": [],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-c7d1bf28a69c"
+      ],
       "comesAfter": [],
       "sequence": 21,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-172c85be8ab9.md",
-      "attachment": "attachments/story-172c85be8ab9.md"
+      "body": "bodies/story-e1c57c0f14b7.md",
+      "attachment": "attachments/story-e1c57c0f14b7.md"
     },
     {
-      "key": "story-1f69f5dac963",
-      "file": "story-1f69f5dac963",
+      "key": "story-c2d313fd6e7e",
+      "file": "story-c2d313fd6e7e",
       "kind": "story",
-      "title": "Open policy sources from imported files and describe them",
+      "title": "Read and write the machine's live policy settings",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 22,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-1f69f5dac963.md",
-      "attachment": "attachments/story-1f69f5dac963.md"
+      "body": "bodies/story-c2d313fd6e7e.md",
+      "attachment": "attachments/story-c2d313fd6e7e.md"
     },
     {
-      "key": "story-94081f04c949",
-      "file": "story-94081f04c949",
+      "key": "story-d4abf716dbd3",
+      "file": "story-d4abf716dbd3",
       "kind": "story",
-      "title": "Refuse operations a REG file source cannot support",
+      "title": "Open another user's stored settings file as a source",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
-      "blockedBy": [],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-c2d313fd6e7e"
+      ],
       "comesAfter": [],
       "sequence": 23,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-94081f04c949.md",
-      "attachment": "attachments/story-94081f04c949.md"
+      "body": "bodies/story-d4abf716dbd3.md",
+      "attachment": "attachments/story-d4abf716dbd3.md"
     },
     {
-      "key": "story-9731b528cb3b",
-      "file": "story-9731b528cb3b",
+      "key": "story-3886a097fde3",
+      "file": "story-3886a097fde3",
       "kind": "story",
-      "title": "Keep policy comments with their source and read comment files",
+      "title": "Export settings to a registry text file",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 24,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-9731b528cb3b.md",
-      "attachment": "attachments/story-9731b528cb3b.md"
+      "body": "bodies/story-3886a097fde3.md",
+      "attachment": "attachments/story-3886a097fde3.md"
     },
     {
-      "key": "story-70d463c7a058",
-      "file": "story-70d463c7a058",
+      "key": "story-ad1604c8286c",
+      "file": "story-ad1604c8286c",
       "kind": "story",
-      "title": "Show category and policy details and keep the list tidy",
+      "title": "Apply one policy file's changes onto another source",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
-      "blockedBy": [],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-e1c57c0f14b7",
+        "story-c2d313fd6e7e"
+      ],
       "comesAfter": [],
       "sequence": 25,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-70d463c7a058.md",
-      "attachment": "attachments/story-70d463c7a058.md"
+      "body": "bodies/story-ad1604c8286c.md",
+      "attachment": "attachments/story-ad1604c8286c.md"
     },
     {
-      "key": "story-abfcd93404a2",
-      "file": "story-abfcd93404a2",
+      "key": "story-e6db33a1af4e",
+      "file": "story-e6db33a1af4e",
       "kind": "story",
-      "title": "Filter policies and keep search results",
+      "title": "Provide an empty scratch source and policy files on the machine",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
-      "blockedBy": [],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-e1c57c0f14b7"
+      ],
       "comesAfter": [],
       "sequence": 26,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-abfcd93404a2.md",
-      "attachment": "attachments/story-abfcd93404a2.md"
+      "body": "bodies/story-e6db33a1af4e.md",
+      "attachment": "attachments/story-e6db33a1af4e.md"
     },
     {
-      "key": "story-150cfe2cbb81",
-      "file": "story-150cfe2cbb81",
+      "key": "story-ce259f286ed9",
+      "file": "story-ce259f286ed9",
       "kind": "story",
-      "title": "Resolve where each policy source comes from and whether it can be saved",
+      "title": "Work out where each source's policy and comment files live",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 27,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-150cfe2cbb81.md",
-      "attachment": "attachments/story-150cfe2cbb81.md"
+      "body": "bodies/story-ce259f286ed9.md",
+      "attachment": "attachments/story-ce259f286ed9.md"
     },
     {
-      "key": "story-a4e2599b4bc5",
-      "file": "story-a4e2599b4bc5",
+      "key": "story-9edaf3416e67",
+      "file": "story-9edaf3416e67",
       "kind": "story",
-      "title": "Open policy sources, load their comments and report the result",
+      "title": "Keep and save policy comments for each source",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
-      "blockedBy": [],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-ce259f286ed9",
+        "story-e6db33a1af4e"
+      ],
       "comesAfter": [],
       "sequence": 28,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a4e2599b4bc5.md",
-      "attachment": "attachments/story-a4e2599b4bc5.md"
+      "body": "bodies/story-9edaf3416e67.md",
+      "attachment": "attachments/story-9edaf3416e67.md"
     },
     {
-      "key": "story-aea620d35ed5",
-      "file": "story-aea620d35ed5",
+      "key": "story-564aa6c00071",
+      "file": "story-564aa6c00071",
       "kind": "story",
-      "title": "Read and write the stored form of values in a policy file",
+      "title": "Turn a typed user name into a valid account identifier",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 29,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-aea620d35ed5.md",
-      "attachment": "attachments/story-aea620d35ed5.md"
+      "body": "bodies/story-564aa6c00071.md",
+      "attachment": "attachments/story-564aa6c00071.md"
     },
     {
-      "key": "story-f35a43c9e5e3",
-      "file": "story-f35a43c9e5e3",
+      "key": "story-94e69ddff5e9",
+      "file": "story-94e69ddff5e9",
       "kind": "story",
-      "title": "Set, delete and forget values and key clearances in a policy file",
+      "title": "Settle each policy's state from the evidence in its source",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
-      "blockedBy": [],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-e1c57c0f14b7",
+        "story-c2d313fd6e7e"
+      ],
       "comesAfter": [],
       "sequence": 30,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-f35a43c9e5e3.md",
-      "attachment": "attachments/story-f35a43c9e5e3.md"
+      "body": "bodies/story-94e69ddff5e9.md",
+      "attachment": "attachments/story-94e69ddff5e9.md"
     },
     {
-      "key": "story-568f434469cc",
-      "file": "story-568f434469cc",
+      "key": "story-5c7e7c63edf4",
+      "file": "story-5c7e7c63edf4",
       "kind": "story",
-      "title": "Apply one policy file's changes to another source",
+      "title": "Offer the area choice and reopen the last search results",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 31,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-568f434469cc.md",
-      "attachment": "attachments/story-568f434469cc.md"
+      "body": "bodies/story-5c7e7c63edf4.md",
+      "attachment": "attachments/story-5c7e7c63edf4.md"
     },
     {
-      "key": "story-8b2e2d3c7b29",
-      "file": "story-8b2e2d3c7b29",
+      "key": "story-3911953619fe",
+      "file": "story-3911953619fe",
       "kind": "story",
-      "title": "Replace live registry changes with the registry source model",
+      "title": "Read typed numbers within the 32-bit and 64-bit limits",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 32,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-8b2e2d3c7b29.md",
-      "attachment": "attachments/story-8b2e2d3c7b29.md"
+      "body": "bodies/story-3911953619fe.md",
+      "attachment": "attachments/story-3911953619fe.md"
     },
     {
-      "key": "story-8dfbc797cdf9",
-      "file": "story-8dfbc797cdf9",
+      "key": "story-e795e0ca691d",
+      "file": "story-e795e0ca691d",
       "kind": "story",
-      "title": "Edit entries of a REG file within its source branch",
+      "title": "Edit the data of a policy value by its kind",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
-      "blockedBy": [],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-e1c57c0f14b7",
+        "story-3911953619fe"
+      ],
       "comesAfter": [],
       "sequence": 33,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-8dfbc797cdf9.md",
-      "attachment": "attachments/story-8dfbc797cdf9.md"
+      "body": "bodies/story-e795e0ca691d.md",
+      "attachment": "attachments/story-e795e0ca691d.md"
     },
     {
-      "key": "story-a1881cb358d7",
-      "file": "story-a1881cb358d7",
+      "key": "story-7866e1c51431",
+      "file": "story-7866e1c51431",
       "kind": "story",
-      "title": "Read a policy's saved state from its stored values",
+      "title": "Download the fixed Microsoft policy template package",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 34,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a1881cb358d7.md",
-      "attachment": "attachments/story-a1881cb358d7.md"
+      "body": "bodies/story-7866e1c51431.md",
+      "attachment": "attachments/story-7866e1c51431.md"
     },
     {
-      "key": "story-83ca938d8520",
-      "file": "story-83ca938d8520",
+      "key": "story-f39d9f2e035c",
+      "file": "story-f39d9f2e035c",
       "kind": "story",
-      "title": "Forget a policy and list the registry values it touches",
+      "title": "Stamp the program with its Git version at build time",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 35,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-83ca938d8520.md",
-      "attachment": "attachments/story-83ca938d8520.md"
+      "body": "bodies/story-f39d9f2e035c.md",
+      "attachment": "attachments/story-f39d9f2e035c.md"
     },
     {
-      "key": "story-8e91072f4561",
-      "file": "story-8e91072f4561",
+      "key": "story-e53a6407cc3b",
+      "file": "story-e53a6407cc3b",
       "kind": "story",
-      "title": "Keep the browser view consistent after view or edit changes",
+      "title": "Read and write remembered preferences in the preference store",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 36,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-8e91072f4561.md",
-      "attachment": "attachments/story-8e91072f4561.md"
+      "body": "bodies/story-e53a6407cc3b.md",
+      "attachment": "attachments/story-e53a6407cc3b.md"
     },
     {
-      "key": "story-2f850ed84290",
-      "file": "story-2f850ed84290",
+      "key": "story-4a7d49af64c0",
+      "file": "story-4a7d49af64c0",
       "kind": "story",
-      "title": "Show the SPOL fragment with an optional header",
+      "title": "Keep the person's remembered choices for the rest of the program",
       "tags": [
         "story",
-        "technical",
-        "modernize"
+        "technical"
       ],
-      "parent": "area:shared rules",
-      "blockedBy": [],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-e53a6407cc3b"
+      ],
       "comesAfter": [],
       "sequence": 37,
       "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-2f850ed84290.md",
-      "attachment": "attachments/story-2f850ed84290.md"
+      "body": "bodies/story-4a7d49af64c0.md",
+      "attachment": null
     },
     {
-      "key": "story-97add99ab26c",
-      "file": "story-97add99ab26c",
+      "key": "story-e78f97aca7f1",
+      "file": "story-e78f97aca7f1",
       "kind": "story",
-      "title": "Describe products and support definitions in their detail views",
+      "title": "Find each template and its text in the perso...: Template folder scanner",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-50f6199de145"
+      ],
+      "comesAfter": [],
+      "sequence": 38,
+      "phase": 2,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-e78f97aca7f1.md",
+      "attachment": "attachments/story-e78f97aca7f1.md"
+    },
+    {
+      "key": "story-f14b83e10f25",
+      "file": "story-f14b83e10f25",
+      "kind": "story",
+      "title": "Find each template and its text in the person'...: Language file locator",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-50f6199de145"
+      ],
+      "comesAfter": [],
+      "sequence": 39,
+      "phase": 2,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-f14b83e10f25.md",
+      "attachment": "attachments/story-f14b83e10f25.md"
+    },
+    {
+      "key": "story-7f35e91a790a",
+      "file": "story-7f35e91a790a",
+      "kind": "story",
+      "title": "Find each template and its text in the person's...: Language text reader",
       "tags": [
         "story",
         "technical",
         "modernize"
       ],
-      "parent": "area:shared rules",
-      "blockedBy": [],
-      "comesAfter": [],
-      "sequence": 38,
-      "phase": 2,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-97add99ab26c.md",
-      "attachment": "attachments/story-97add99ab26c.md"
-    },
-    {
-      "key": "story-170cb2bdf690",
-      "file": "story-170cb2bdf690",
-      "kind": "story",
-      "title": "Stamp each build with its current Git version",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-50f6199de145"
       ],
-      "parent": "capability:capability-17758885276262804412",
-      "blockedBy": [],
-      "comesAfter": [],
-      "sequence": 39,
-      "phase": 3,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-170cb2bdf690.md",
-      "attachment": "attachments/story-170cb2bdf690.md"
-    },
-    {
-      "key": "story-1d118861a368",
-      "file": "story-1d118861a368",
-      "kind": "story",
-      "title": "Open the download window and name where the definitions go",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-37285537501950413921",
-      "blockedBy": [],
       "comesAfter": [],
       "sequence": 40,
-      "phase": 3,
+      "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-1d118861a368.md",
-      "attachment": "attachments/story-1d118861a368.md"
+      "body": "bodies/story-7f35e91a790a.md",
+      "attachment": "attachments/story-7f35e91a790a.md"
     },
     {
-      "key": "story-eba30736f441",
-      "file": "story-eba30736f441",
+      "key": "story-7d77b331e43a",
+      "file": "story-7d77b331e43a",
       "kind": "story",
-      "title": "Stop a second download and closing while a download runs",
+      "title": "Check every template is sound before using it",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-37285537501950413921",
-      "blockedBy": [],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-50f6199de145"
+      ],
       "comesAfter": [],
       "sequence": 41,
-      "phase": 3,
+      "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-eba30736f441.md",
-      "attachment": "attachments/story-eba30736f441.md"
+      "body": "bodies/story-7d77b331e43a.md",
+      "attachment": "attachments/story-7d77b331e43a.md"
     },
     {
-      "key": "story-fc15b3d1d5d2",
-      "file": "story-fc15b3d1d5d2",
+      "key": "story-fd0811a4ba30",
+      "file": "story-fd0811a4ba30",
       "kind": "story",
-      "title": "Download and install Microsoft's policy definitions",
+      "title": "Work out categories, products, policies and the...: Policy option reader",
       "tags": [
         "story",
-        "functional",
+        "technical",
         "modernize"
       ],
-      "parent": "capability:capability-37285537501950413921",
+      "parent": "area:shared components",
       "blockedBy": [
-        "story-eba30736f441"
+        "story-7f35e91a790a"
       ],
       "comesAfter": [],
       "sequence": 42,
-      "phase": 4,
+      "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-fc15b3d1d5d2.md",
-      "attachment": "attachments/story-fc15b3d1d5d2.md"
+      "body": "bodies/story-fd0811a4ba30.md",
+      "attachment": "attachments/story-fd0811a4ba30.md"
     },
     {
-      "key": "story-32a322173cc9",
-      "file": "story-32a322173cc9",
+      "key": "story-4087415f3a6d",
+      "file": "story-4087415f3a6d",
       "kind": "story",
-      "title": "Offer the download once, on first run, when definitions are incomplete",
+      "title": "Work out categories, products, policies...: Definition structure builder",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-37285537501950413921",
+      "parent": "area:shared components",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-d4e9fbe4acd9"
+        "story-7d77b331e43a",
+        "story-7f35e91a790a",
+        "story-fd0811a4ba30"
       ],
       "comesAfter": [],
       "sequence": 43,
-      "phase": 3,
+      "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-32a322173cc9.md",
-      "attachment": "attachments/story-32a322173cc9.md"
+      "body": "bodies/story-4087415f3a6d.md",
+      "attachment": "attachments/story-4087415f3a6d.md"
     },
     {
-      "key": "story-058474718e9e",
-      "file": "story-058474718e9e",
+      "key": "story-c8ba0a34efd1",
+      "file": "story-c8ba0a34efd1",
       "kind": "story",
-      "title": "Use the downloaded definitions as the program's definitions",
+      "title": "Tell me once whether the workspace is ready to change",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-37285537501950413921",
-      "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-a0702af37a64",
-        "story-8ca51ca63ee6",
-        "story-5923b3f84201",
-        "story-de84e9444933",
-        "story-ad5a2f6c129f",
-        "story-a8dd1d11e6d9",
-        "story-a8ee9482f2c5",
-        "story-d4e9fbe4acd9",
-        "story-762a4634aa04",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-a6877efa14bb",
-        "story-9ad956ab7bf7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-036b775c5bc8",
-        "story-172c85be8ab9",
-        "story-1f69f5dac963"
-      ],
-      "comesAfter": [],
-      "sequence": 44,
-      "phase": 3,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-058474718e9e.md",
-      "attachment": "attachments/story-058474718e9e.md"
-    },
-    {
-      "key": "story-418f7e4caa43",
-      "file": "story-418f7e4caa43",
-      "kind": "story",
-      "title": "Check and accept a new language for policy text",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-56009572261677044081",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
-      "sequence": 45,
-      "phase": 3,
+      "sequence": 44,
+      "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-418f7e4caa43.md",
-      "attachment": "attachments/story-418f7e4caa43.md"
+      "body": "bodies/story-c8ba0a34efd1.md",
+      "attachment": "attachments/story-c8ba0a34efd1.md"
     },
     {
-      "key": "story-61e8a75aa453",
-      "file": "story-61e8a75aa453",
+      "key": "story-f91173538524",
+      "file": "story-f91173538524",
       "kind": "story",
-      "title": "Start Policy Plus with the last used definitions and sources",
+      "title": "Open the user and computer sources and remember them",
+      "tags": [
+        "story",
+        "technical",
+        "modernize"
+      ],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-ce259f286ed9",
+        "story-e6db33a1af4e",
+        "story-c2d313fd6e7e",
+        "story-d4abf716dbd3",
+        "story-c7d1bf28a69c",
+        "story-9edaf3416e67",
+        "story-c8ba0a34efd1"
+      ],
+      "comesAfter": [],
+      "sequence": 45,
+      "phase": 2,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-f91173538524.md",
+      "attachment": "attachments/story-f91173538524.md"
+    },
+    {
+      "key": "story-3ae7cc203518",
+      "file": "story-3ae7cc203518",
+      "kind": "story",
+      "title": "Show each option's stored value and save it in the right form",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-56009572261677044081",
+      "parent": "area:shared components",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-a0702af37a64",
-        "story-1f69f5dac963",
-        "story-8ca51ca63ee6",
-        "story-5923b3f84201",
-        "story-de84e9444933",
-        "story-ad5a2f6c129f",
-        "story-a8dd1d11e6d9",
-        "story-a8ee9482f2c5",
-        "story-d4e9fbe4acd9",
-        "story-9731b528cb3b",
-        "story-762a4634aa04",
-        "story-172c85be8ab9",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-a6877efa14bb",
-        "story-9ad956ab7bf7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-036b775c5bc8",
-        "story-150cfe2cbb81",
-        "story-aea620d35ed5",
-        "story-a4e2599b4bc5",
-        "story-8b2e2d3c7b29"
+        "story-e1c57c0f14b7",
+        "story-c2d313fd6e7e"
       ],
       "comesAfter": [],
       "sequence": 46,
-      "phase": 3,
+      "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-61e8a75aa453.md",
-      "attachment": "attachments/story-61e8a75aa453.md"
+      "body": "bodies/story-3ae7cc203518.md",
+      "attachment": "attachments/story-3ae7cc203518.md"
     },
     {
-      "key": "story-a01cc046db61",
-      "file": "story-a01cc046db61",
+      "key": "story-c7bf993b34b3",
+      "file": "story-c7bf993b34b3",
       "kind": "story",
-      "title": "Show who made Policy Plus and which version this is",
+      "title": "Clear all loaded policy definitions from the workspace",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-56009572261677044081",
+      "parent": "area:shared components",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 47,
-      "phase": 3,
+      "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a01cc046db61.md",
-      "attachment": "attachments/story-a01cc046db61.md"
+      "body": "bodies/story-c7bf993b34b3.md",
+      "attachment": "attachments/story-c7bf993b34b3.md"
     },
     {
-      "key": "story-26d74f16fb34",
-      "file": "story-26d74f16fb34",
+      "key": "story-0fb110144cfb",
+      "file": "story-0fb110144cfb",
       "kind": "story",
-      "title": "Change the language of policy text and reload",
+      "title": "Load policy definitions from a folder or...: Definition load coordinator",
+      "tags": [
+        "story",
+        "technical",
+        "modernize"
+      ],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-e78f97aca7f1",
+        "story-f14b83e10f25",
+        "story-4087415f3a6d",
+        "story-c7bf993b34b3"
+      ],
+      "comesAfter": [],
+      "sequence": 48,
+      "phase": 2,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-0fb110144cfb.md",
+      "attachment": "attachments/story-0fb110144cfb.md"
+    },
+    {
+      "key": "story-291227533d1e",
+      "file": "story-291227533d1e",
+      "kind": "story",
+      "title": "Show a policy's semantic text on request",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-56009572261677044081",
-      "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-a0702af37a64",
-        "story-8ca51ca63ee6",
-        "story-5923b3f84201",
-        "story-de84e9444933",
-        "story-ad5a2f6c129f",
-        "story-a8dd1d11e6d9",
-        "story-a8ee9482f2c5",
-        "story-d4e9fbe4acd9",
-        "story-762a4634aa04",
-        "story-61e8a75aa453",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-a6877efa14bb",
-        "story-9ad956ab7bf7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-036b775c5bc8",
-        "story-172c85be8ab9",
-        "story-1f69f5dac963"
-      ],
+      "parent": "area:shared components",
+      "blockedBy": [],
       "comesAfter": [],
-      "sequence": 48,
-      "phase": 4,
+      "sequence": 49,
+      "phase": 2,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-26d74f16fb34.md",
-      "attachment": "attachments/story-26d74f16fb34.md"
+      "body": "bodies/story-291227533d1e.md",
+      "attachment": "attachments/story-291227533d1e.md"
     },
     {
-      "key": "story-df1d5bb6acd6",
-      "file": "story-df1d5bb6acd6",
+      "key": "story-5e36d175c14c",
+      "file": "story-5e36d175c14c",
       "kind": "story",
-      "title": "Leave Policy Plus",
+      "title": "Show policy settings as semantic policy text with or without a heading",
+      "tags": [
+        "story",
+        "technical",
+        "modernize"
+      ],
+      "parent": "area:shared components",
+      "blockedBy": [
+        "story-94e69ddff5e9",
+        "story-3ae7cc203518",
+        "story-291227533d1e"
+      ],
+      "comesAfter": [],
+      "sequence": 50,
+      "phase": 2,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-5e36d175c14c.md",
+      "attachment": "attachments/story-5e36d175c14c.md"
+    },
+    {
+      "key": "story-025155260bdf",
+      "file": "story-025155260bdf",
+      "kind": "story",
+      "title": "Stamp every built copy with the version of its code",
       "tags": [
         "story",
         "functional"
       ],
-      "parent": "capability:capability-56009572261677044081",
-      "blockedBy": [
-        "story-1f69f5dac963"
-      ],
-      "comesAfter": [],
-      "sequence": 49,
-      "phase": 3,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-df1d5bb6acd6.md",
-      "attachment": null
-    },
-    {
-      "key": "story-87e7d74a6b3d",
-      "file": "story-87e7d74a6b3d",
-      "kind": "story",
-      "title": "Look up a user's Group Policy object by account name",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-74192280505907161455",
-      "blockedBy": [],
-      "comesAfter": [],
-      "sequence": 50,
-      "phase": 3,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-87e7d74a6b3d.md",
-      "attachment": "attachments/story-87e7d74a6b3d.md"
-    },
-    {
-      "key": "story-48ec190f68ad",
-      "file": "story-48ec190f68ad",
-      "kind": "story",
-      "title": "Pick a user profile as the user policy source",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-74192280505907161455",
+      "parent": "journey:tasks-building-and-versioning-policy-plus.stamp-program-version",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 51,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-48ec190f68ad.md",
-      "attachment": "attachments/story-48ec190f68ad.md"
+      "body": "bodies/story-025155260bdf.md",
+      "attachment": null
     },
     {
-      "key": "story-90d6f8f08008",
-      "file": "story-90d6f8f08008",
+      "key": "story-025c5bef63fc",
+      "file": "story-025c5bef63fc",
       "kind": "story",
-      "title": "Choose the computer policy source",
+      "title": "Prove the journey: Make each built copy of the program carry the vers...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-74192280505907161455",
-      "blockedBy": [],
+      "parent": "journey:tasks-building-and-versioning-policy-plus.stamp-program-version",
+      "blockedBy": [
+        "story-025155260bdf"
+      ],
       "comesAfter": [],
       "sequence": 52,
-      "phase": 3,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-90d6f8f08008.md",
-      "attachment": "attachments/story-90d6f8f08008.md"
-    },
-    {
-      "key": "story-998f80fd2416",
-      "file": "story-998f80fd2416",
-      "kind": "story",
-      "title": "Choose the user policy source",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-74192280505907161455",
-      "blockedBy": [
-        "story-90d6f8f08008"
-      ],
-      "comesAfter": [],
-      "sequence": 53,
       "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-998f80fd2416.md",
-      "attachment": "attachments/story-998f80fd2416.md"
+      "body": "bodies/story-025c5bef63fc.md",
+      "attachment": null
     },
     {
-      "key": "story-165fca7b4adb",
-      "file": "story-165fca7b4adb",
+      "key": "story-63856409801a",
+      "file": "story-63856409801a",
       "kind": "story",
-      "title": "Confirm or cancel the chosen policy sources",
+      "title": "Propose the usual folder and allow another",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-74192280505907161455",
+      "parent": "journey:tasks-getting-microsoft-policy-definitions.get-policy-definitions",
+      "blockedBy": [],
+      "comesAfter": [],
+      "sequence": 53,
+      "phase": 3,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-63856409801a.md",
+      "attachment": "attachments/story-63856409801a.md"
+    },
+    {
+      "key": "story-010c05bb18c4",
+      "file": "story-010c05bb18c4",
+      "kind": "story",
+      "title": "Install Microsoft's policy definitions in one go",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-getting-microsoft-policy-definitions.get-policy-definitions",
       "blockedBy": [
-        "story-1f69f5dac963",
-        "story-150cfe2cbb81"
+        "story-0fb110144cfb",
+        "story-63856409801a",
+        "story-7866e1c51431"
       ],
       "comesAfter": [],
       "sequence": 54,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-165fca7b4adb.md",
-      "attachment": "attachments/story-165fca7b4adb.md"
+      "body": "bodies/story-010c05bb18c4.md",
+      "attachment": "attachments/story-010c05bb18c4.md"
     },
     {
-      "key": "story-c90420df0e04",
-      "file": "story-c90420df0e04",
+      "key": "story-1145d9ca3da0",
+      "file": "story-1145d9ca3da0",
       "kind": "story",
-      "title": "Open the chosen policy sources",
+      "title": "Prove the journey: Obtain Microsoft's current set of policy definitio...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-74192280505907161455",
+      "parent": "journey:tasks-getting-microsoft-policy-definitions.get-policy-definitions",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-1f69f5dac963",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-d4e9fbe4acd9",
-        "story-9731b528cb3b",
-        "story-762a4634aa04",
-        "story-172c85be8ab9",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-150cfe2cbb81",
-        "story-aea620d35ed5",
-        "story-a4e2599b4bc5",
-        "story-9ad956ab7bf7",
-        "story-8e91072f4561",
-        "story-8b2e2d3c7b29"
+        "story-63856409801a",
+        "story-010c05bb18c4"
       ],
       "comesAfter": [],
       "sequence": 55,
-      "phase": 3,
+      "phase": 5,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-c90420df0e04.md",
-      "attachment": "attachments/story-c90420df0e04.md"
+      "body": "bodies/story-1145d9ca3da0.md",
+      "attachment": null
     },
     {
-      "key": "story-da63d8fe0a80",
-      "file": "story-da63d8fe0a80",
+      "key": "story-e010660d2a97",
+      "file": "story-e010660d2a97",
       "kind": "story",
-      "title": "Save policy changes to their sources",
+      "title": "Offer the missing policy definitions once on first use",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-74192280505907161455",
+      "parent": "journey:tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer",
       "blockedBy": [
-        "story-568f434469cc",
-        "story-f35a43c9e5e3",
-        "story-8dfbc797cdf9",
-        "story-a8dd1d11e6d9",
-        "story-1f69f5dac963",
-        "story-172c85be8ab9",
-        "story-8b2e2d3c7b29",
-        "story-d4e9fbe4acd9",
-        "story-aea620d35ed5",
-        "story-9731b528cb3b",
-        "story-150cfe2cbb81"
+        "story-010c05bb18c4",
+        "story-4a7d49af64c0"
       ],
       "comesAfter": [],
       "sequence": 56,
-      "phase": 3,
+      "phase": 5,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-da63d8fe0a80.md",
-      "attachment": "attachments/story-da63d8fe0a80.md"
+      "body": "bodies/story-e010660d2a97.md",
+      "attachment": "attachments/story-e010660d2a97.md"
     },
     {
-      "key": "story-1c028d791ec1",
-      "file": "story-1c028d791ec1",
+      "key": "story-b7e6f6fcd29d",
+      "file": "story-b7e6f6fcd29d",
       "kind": "story",
-      "title": "Open a policy setting and see its current state",
+      "title": "Prove the journey: Be offered the full set of policy definitions the ...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-64744418053658352712",
+      "parent": "journey:tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer",
       "blockedBy": [
-        "story-a0702af37a64",
-        "story-8ca51ca63ee6",
-        "story-a8dd1d11e6d9",
-        "story-a1881cb358d7",
-        "story-e94f424068d7",
-        "story-70d463c7a058",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-150cfe2cbb81",
-        "story-1f69f5dac963"
+        "story-e010660d2a97"
       ],
       "comesAfter": [],
       "sequence": 57,
-      "phase": 3,
+      "phase": 6,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-1c028d791ec1.md",
-      "attachment": "attachments/story-1c028d791ec1.md"
+      "body": "bodies/story-b7e6f6fcd29d.md",
+      "attachment": null
     },
     {
-      "key": "story-bc5a07a01440",
-      "file": "story-bc5a07a01440",
+      "key": "story-b6494203c779",
+      "file": "story-b6494203c779",
       "kind": "story",
-      "title": "Enter list entries for a policy option",
+      "title": "Switch to the new definitions in one step",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-64744418053658352712",
-      "blockedBy": [],
+      "parent": "journey:tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
+      "blockedBy": [
+        "story-c7bf993b34b3",
+        "story-0fb110144cfb",
+        "story-e78f97aca7f1",
+        "story-4a7d49af64c0"
+      ],
       "comesAfter": [],
       "sequence": 58,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-bc5a07a01440.md",
-      "attachment": "attachments/story-bc5a07a01440.md"
+      "body": "bodies/story-b6494203c779.md",
+      "attachment": "attachments/story-b6494203c779.md"
     },
     {
-      "key": "story-7aceafab7f4d",
-      "file": "story-7aceafab7f4d",
+      "key": "story-8a81bb97e2b4",
+      "file": "story-8a81bb97e2b4",
       "kind": "story",
-      "title": "Fill in a policy's option values",
+      "title": "Reopen my last policy sources and show everything on start",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "functional"
       ],
-      "parent": "capability:capability-64744418053658352712",
+      "parent": "journey:tasks-using-the-product.open-the-workspace",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 59,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-7aceafab7f4d.md",
-      "attachment": "attachments/story-7aceafab7f4d.md"
+      "body": "bodies/story-8a81bb97e2b4.md",
+      "attachment": null
     },
     {
-      "key": "story-fd25c8e38472",
-      "file": "story-fd25c8e38472",
+      "key": "story-6aa4c0e7a72a",
+      "file": "story-6aa4c0e7a72a",
       "kind": "story",
-      "title": "Apply option values to a policy and keep the dialog open",
+      "title": "Load the policy definitions I last used and recover from trouble",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-64744418053658352712",
+      "parent": "journey:tasks-using-the-product.open-the-workspace",
       "blockedBy": [
-        "story-f35a43c9e5e3",
-        "story-8dfbc797cdf9",
-        "story-a8dd1d11e6d9",
-        "story-83ca938d8520",
-        "story-1f69f5dac963",
-        "story-8b2e2d3c7b29",
-        "story-aea620d35ed5",
-        "story-172c85be8ab9"
+        "story-4a7d49af64c0",
+        "story-0fb110144cfb",
+        "story-c7bf993b34b3"
       ],
       "comesAfter": [],
       "sequence": 60,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-fd25c8e38472.md",
-      "attachment": "attachments/story-fd25c8e38472.md"
+      "body": "bodies/story-6aa4c0e7a72a.md",
+      "attachment": "attachments/story-6aa4c0e7a72a.md"
     },
     {
-      "key": "story-947ccce09289",
-      "file": "story-947ccce09289",
+      "key": "story-523195ccfc81",
+      "file": "story-523195ccfc81",
       "kind": "story",
-      "title": "Save a policy's state with OK",
+      "title": "Prove the journey: Get back to the policy work where it was left: the...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-64744418053658352712",
+      "parent": "journey:tasks-using-the-product.open-the-workspace",
       "blockedBy": [
-        "story-f35a43c9e5e3",
-        "story-8dfbc797cdf9",
-        "story-a8dd1d11e6d9",
-        "story-fd25c8e38472",
-        "story-83ca938d8520",
-        "story-1f69f5dac963",
-        "story-8b2e2d3c7b29",
-        "story-aea620d35ed5",
-        "story-172c85be8ab9"
+        "story-8a81bb97e2b4",
+        "story-c8ba0a34efd1",
+        "story-6aa4c0e7a72a"
       ],
       "comesAfter": [],
       "sequence": 61,
       "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-947ccce09289.md",
-      "attachment": "attachments/story-947ccce09289.md"
+      "body": "bodies/story-523195ccfc81.md",
+      "attachment": null
     },
     {
-      "key": "story-f7227164e469",
-      "file": "story-f7227164e469",
+      "key": "story-0db9b3c34144",
+      "file": "story-0db9b3c34144",
       "kind": "story",
-      "title": "Close the policy setting dialog and report changes",
+      "title": "Set the language of the policy definition text",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-64744418053658352712",
-      "blockedBy": [],
+      "parent": "journey:tasks-using-the-product.set-definition-language",
+      "blockedBy": [
+        "story-0fb110144cfb",
+        "story-4a7d49af64c0",
+        "story-6aa4c0e7a72a",
+        "story-c7bf993b34b3"
+      ],
       "comesAfter": [],
       "sequence": 62,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-f7227164e469.md",
-      "attachment": "attachments/story-f7227164e469.md"
+      "body": "bodies/story-0db9b3c34144.md",
+      "attachment": "attachments/story-0db9b3c34144.md"
     },
     {
-      "key": "story-ade63aa4e1a8",
-      "file": "story-ade63aa4e1a8",
+      "key": "story-133418a19b1c",
+      "file": "story-133418a19b1c",
       "kind": "story",
-      "title": "Load a SPOL script into the import window",
+      "title": "Prove the journey: Choose the language in which policy definition tex...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-64744418053658352712",
-      "blockedBy": [],
+      "parent": "journey:tasks-using-the-product.set-definition-language",
+      "blockedBy": [
+        "story-0db9b3c34144"
+      ],
       "comesAfter": [],
       "sequence": 63,
-      "phase": 3,
+      "phase": 5,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-ade63aa4e1a8.md",
-      "attachment": "attachments/story-ade63aa4e1a8.md"
+      "body": "bodies/story-133418a19b1c.md",
+      "attachment": null
     },
     {
-      "key": "story-8d382fe4d110",
-      "file": "story-8d382fe4d110",
+      "key": "story-a073cfc41b43",
+      "file": "story-a073cfc41b43",
       "kind": "story",
-      "title": "Read, verify and apply SPOL text in the import window",
+      "title": "Release every open source when the person leaves the program",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-64744418053658352712",
-      "blockedBy": [],
+      "parent": "journey:tasks-using-the-product.leave-the-program",
+      "blockedBy": [
+        "story-d4abf716dbd3"
+      ],
       "comesAfter": [],
       "sequence": 64,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-8d382fe4d110.md",
-      "attachment": "attachments/story-8d382fe4d110.md"
+      "body": "bodies/story-a073cfc41b43.md",
+      "attachment": "attachments/story-a073cfc41b43.md"
     },
     {
-      "key": "story-a93d8f71fcc4",
-      "file": "story-a93d8f71fcc4",
+      "key": "story-db16b452fc76",
+      "file": "story-db16b452fc76",
       "kind": "story",
-      "title": "Inspect and copy a SPOL fragment",
+      "title": "Prove the journey: Finish the work and leave, releasing everything th...",
       "tags": [
         "story",
-        "functional"
+        "technical"
       ],
-      "parent": "capability:capability-64744418053658352712",
+      "parent": "journey:tasks-using-the-product.leave-the-program",
       "blockedBy": [
-        "story-2f850ed84290"
+        "story-a073cfc41b43"
       ],
       "comesAfter": [],
       "sequence": 65,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a93d8f71fcc4.md",
+      "body": "bodies/story-db16b452fc76.md",
       "attachment": null
     },
     {
-      "key": "story-112b738de150",
-      "file": "story-112b738de150",
+      "key": "story-5ce817bfefc2",
+      "file": "story-5ce817bfefc2",
       "kind": "story",
-      "title": "Import a semantic policy into the stored settings",
+      "title": "Show who made Policy Plus and which version is in use",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-64744418053658352712",
-      "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-947ccce09289",
-        "story-8ca51ca63ee6",
-        "story-f35a43c9e5e3",
-        "story-de84e9444933",
-        "story-8dfbc797cdf9",
-        "story-a8dd1d11e6d9",
-        "story-fd25c8e38472",
-        "story-83ca938d8520",
-        "story-762a4634aa04",
-        "story-1f69f5dac963",
-        "story-8b2e2d3c7b29",
-        "story-aea620d35ed5",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-9ad956ab7bf7",
-        "story-8e91072f4561"
-      ],
-      "comesAfter": [],
-      "sequence": 66,
-      "phase": 5,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-112b738de150.md",
-      "attachment": "attachments/story-112b738de150.md"
-    },
-    {
-      "key": "story-90a514c9c0b6",
-      "file": "story-90a514c9c0b6",
-      "kind": "story",
-      "title": "Ignore double-clicks on product ticks in the filter",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-using-the-product.see-about-information",
       "blockedBy": [],
       "comesAfter": [],
-      "sequence": 67,
+      "sequence": 66,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-90a514c9c0b6.md",
-      "attachment": "attachments/story-90a514c9c0b6.md"
+      "body": "bodies/story-5ce817bfefc2.md",
+      "attachment": "attachments/story-5ce817bfefc2.md"
     },
     {
-      "key": "story-88477ef9276f",
-      "file": "story-88477ef9276f",
+      "key": "story-465768297807",
+      "file": "story-465768297807",
       "kind": "story",
-      "title": "Choose the products a filter requires",
+      "title": "Prove the journey: Find out who made the program and which version is...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-using-the-product.see-about-information",
+      "blockedBy": [
+        "story-5ce817bfefc2"
+      ],
+      "comesAfter": [],
+      "sequence": 67,
+      "phase": 4,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-465768297807.md",
+      "attachment": null
+    },
+    {
+      "key": "story-cae5f345c683",
+      "file": "story-cae5f345c683",
+      "kind": "story",
+      "title": "Choose where user and computer policies are kept",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-choosing-and-saving-policy-sources.choose-policy-sources",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 68,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-88477ef9276f.md",
-      "attachment": "attachments/story-88477ef9276f.md"
+      "body": "bodies/story-cae5f345c683.md",
+      "attachment": "attachments/story-cae5f345c683.md"
     },
     {
-      "key": "story-410538037df7",
-      "file": "story-410538037df7",
+      "key": "story-1fa0d732c0b4",
+      "file": "story-1fa0d732c0b4",
       "kind": "story",
-      "title": "Apply the options chosen in the filter dialog",
+      "title": "Open the chosen policy sources and keep the view on a visible category",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-85379136702335736376",
-      "blockedBy": [],
+      "parent": "journey:tasks-choosing-and-saving-policy-sources.choose-policy-sources",
+      "blockedBy": [
+        "story-f91173538524"
+      ],
       "comesAfter": [],
       "sequence": 69,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-410538037df7.md",
-      "attachment": "attachments/story-410538037df7.md"
+      "body": "bodies/story-1fa0d732c0b4.md",
+      "attachment": "attachments/story-1fa0d732c0b4.md"
     },
     {
-      "key": "story-694a7645d7c7",
-      "file": "story-694a7645d7c7",
+      "key": "story-d0900558b6a1",
+      "file": "story-d0900558b6a1",
       "kind": "story",
-      "title": "Open, reset or cancel the filter dialog",
+      "title": "Prove the journey: Decide where the user and computer policies are ke...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-85379136702335736376",
-      "blockedBy": [],
+      "parent": "journey:tasks-choosing-and-saving-policy-sources.choose-policy-sources",
+      "blockedBy": [
+        "story-cae5f345c683",
+        "story-1fa0d732c0b4"
+      ],
       "comesAfter": [],
       "sequence": 70,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-694a7645d7c7.md",
-      "attachment": "attachments/story-694a7645d7c7.md"
+      "body": "bodies/story-d0900558b6a1.md",
+      "attachment": null
     },
     {
-      "key": "story-9febcfa4b919",
-      "file": "story-9febcfa4b919",
+      "key": "story-ba2b08c56e88",
+      "file": "story-ba2b08c56e88",
       "kind": "story",
-      "title": "Turn the filter on and change it from the main window",
+      "title": "Let a person leave the user entry without choosing a user",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-choosing-and-saving-policy-sources.identify-user-for-policy",
       "blockedBy": [
-        "story-694a7645d7c7",
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-9ad956ab7bf7",
-        "story-8e91072f4561",
-        "story-1f69f5dac963"
+        "story-564aa6c00071"
       ],
       "comesAfter": [],
       "sequence": 71,
-      "phase": 4,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-9febcfa4b919.md",
-      "attachment": "attachments/story-9febcfa4b919.md"
-    },
-    {
-      "key": "story-cf5006824d94",
-      "file": "story-cf5006824d94",
-      "kind": "story",
-      "title": "Look up an identifier as it is typed",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-85379136702335736376",
-      "blockedBy": [],
-      "comesAfter": [],
-      "sequence": 72,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-cf5006824d94.md",
-      "attachment": "attachments/story-cf5006824d94.md"
+      "body": "bodies/story-ba2b08c56e88.md",
+      "attachment": "attachments/story-ba2b08c56e88.md"
     },
     {
-      "key": "story-7a0530f6054b",
-      "file": "story-7a0530f6054b",
+      "key": "story-a7d8c21eba45",
+      "file": "story-a7d8c21eba45",
       "kind": "story",
-      "title": "Confirm Find by ID and limit the area and selection choices",
+      "title": "Prove the journey: Name the user account whose own Group Policy objec...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-choosing-and-saving-policy-sources.identify-user-for-policy",
+      "blockedBy": [
+        "story-ba2b08c56e88"
+      ],
+      "comesAfter": [],
+      "sequence": 72,
+      "phase": 4,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-a7d8c21eba45.md",
+      "attachment": null
+    },
+    {
+      "key": "story-6da3a0f5c369",
+      "file": "story-6da3a0f5c369",
+      "kind": "story",
+      "title": "Pick a user profile to use as the policy source",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 73,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-7a0530f6054b.md",
-      "attachment": "attachments/story-7a0530f6054b.md"
+      "body": "bodies/story-6da3a0f5c369.md",
+      "attachment": "attachments/story-6da3a0f5c369.md"
     },
     {
-      "key": "story-33e7eed6d9fe",
-      "file": "story-33e7eed6d9fe",
+      "key": "story-ae0539080dfc",
+      "file": "story-ae0539080dfc",
       "kind": "story",
-      "title": "Go to a policy, category, product or support definition by ID",
+      "title": "Prove the journey: Choose a user profile whose stored settings are to...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-97add99ab26c",
-        "story-762a4634aa04",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-8e91072f4561",
-        "story-9ad956ab7bf7",
-        "story-1f69f5dac963"
+        "story-6da3a0f5c369"
       ],
       "comesAfter": [],
       "sequence": 74,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-33e7eed6d9fe.md",
-      "attachment": "attachments/story-33e7eed6d9fe.md"
+      "body": "bodies/story-ae0539080dfc.md",
+      "attachment": null
     },
     {
-      "key": "story-7897513a5460",
-      "file": "story-7897513a5460",
+      "key": "story-3dcd1892c446",
+      "file": "story-3dcd1892c446",
       "kind": "story",
-      "title": "Refuse unusable text searches and cancel with Escape",
+      "title": "Save policy changes to every chosen source in one request",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-85379136702335736376",
-      "blockedBy": [],
+      "parent": "journey:tasks-choosing-and-saving-policy-sources.save-policy-changes",
+      "blockedBy": [
+        "story-e6db33a1af4e",
+        "story-9edaf3416e67",
+        "story-c7d1bf28a69c",
+        "story-ad1604c8286c",
+        "story-c2d313fd6e7e",
+        "story-f91173538524",
+        "story-c8ba0a34efd1"
+      ],
       "comesAfter": [],
       "sequence": 75,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-7897513a5460.md",
-      "attachment": "attachments/story-7897513a5460.md"
+      "body": "bodies/story-3dcd1892c446.md",
+      "attachment": "attachments/story-3dcd1892c446.md"
     },
     {
-      "key": "story-8265cde99e93",
-      "file": "story-8265cde99e93",
+      "key": "story-004ebb6c9ed8",
+      "file": "story-004ebb6c9ed8",
       "kind": "story",
-      "title": "Find policies by title, description or comment text",
+      "title": "Prove the journey: Save the policy settings and comments to their sou...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-choosing-and-saving-policy-sources.save-policy-changes",
       "blockedBy": [
-        "story-7897513a5460"
+        "story-3dcd1892c446"
       ],
       "comesAfter": [],
       "sequence": 76,
       "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-8265cde99e93.md",
-      "attachment": "attachments/story-8265cde99e93.md"
+      "body": "bodies/story-004ebb6c9ed8.md",
+      "attachment": null
     },
     {
-      "key": "story-aea25ef0111b",
-      "file": "story-aea25ef0111b",
+      "key": "story-e09b8e7cc409",
+      "file": "story-e09b8e7cc409",
       "kind": "story",
-      "title": "Refuse unusable registry searches and cancel with Escape",
+      "title": "Change the policy state and options within their limits",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-changing-policy-settings.set-policy-state",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 77,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-aea25ef0111b.md",
-      "attachment": "attachments/story-aea25ef0111b.md"
+      "body": "bodies/story-e09b8e7cc409.md",
+      "attachment": "attachments/story-e09b8e7cc409.md"
     },
     {
-      "key": "story-0fc938b61ebe",
-      "file": "story-0fc938b61ebe",
+      "key": "story-f14810c65ca2",
+      "file": "story-f14810c65ca2",
       "kind": "story",
-      "title": "Find policies by registry key and value",
+      "title": "Clear a policy's old settings and write its chosen state",
       "tags": [
         "story",
-        "functional",
+        "technical",
         "modernize"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-changing-policy-settings.set-policy-state",
       "blockedBy": [
-        "story-f35a43c9e5e3",
-        "story-8dfbc797cdf9",
-        "story-a8dd1d11e6d9",
-        "story-83ca938d8520",
-        "story-8b2e2d3c7b29",
-        "story-aea25ef0111b",
-        "story-aea620d35ed5"
+        "story-e1c57c0f14b7",
+        "story-3ae7cc203518"
       ],
       "comesAfter": [],
       "sequence": 78,
-      "phase": 4,
+      "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-0fc938b61ebe.md",
-      "attachment": "attachments/story-0fc938b61ebe.md"
+      "body": "bodies/story-f14810c65ca2.md",
+      "attachment": "attachments/story-f14810c65ca2.md"
     },
     {
-      "key": "story-e2c2153c119c",
-      "file": "story-e2c2153c119c",
+      "key": "story-edf918835552",
+      "file": "story-edf918835552",
       "kind": "story",
-      "title": "Search every policy and list the hits as they are found",
+      "title": "Bring in policy settings text and check it as i...: Semantic Text Reader",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-85379136702335736376",
-      "blockedBy": [
-        "story-f35a43c9e5e3",
-        "story-8dfbc797cdf9",
-        "story-a8dd1d11e6d9",
-        "story-8265cde99e93",
-        "story-0fc938b61ebe",
-        "story-83ca938d8520",
-        "story-8b2e2d3c7b29",
-        "story-aea620d35ed5"
-      ],
+      "parent": "journey:tasks-changing-policy-settings.import-policy-settings-from-text",
+      "blockedBy": [],
       "comesAfter": [],
       "sequence": 79,
-      "phase": 5,
+      "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-e2c2153c119c.md",
-      "attachment": "attachments/story-e2c2153c119c.md"
+      "body": "bodies/story-edf918835552.md",
+      "attachment": "attachments/story-edf918835552.md"
     },
     {
-      "key": "story-5c8271e6f633",
-      "file": "story-5c8271e6f633",
+      "key": "story-0dcb93aefef0",
+      "file": "story-0dcb93aefef0",
       "kind": "story",
-      "title": "Report how a search ended and let the person stop it",
+      "title": "Copy a policy's settings out as ready-to-use policy text",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "functional"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-changing-policy-settings.inspect-policy-settings-as-text",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 80,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-5c8271e6f633.md",
-      "attachment": "attachments/story-5c8271e6f633.md"
+      "body": "bodies/story-0dcb93aefef0.md",
+      "attachment": null
     },
     {
-      "key": "story-aa9b9dcd7ed2",
-      "file": "story-aa9b9dcd7ed2",
+      "key": "story-f8fafbed5ea8",
+      "file": "story-f8fafbed5ea8",
       "kind": "story",
-      "title": "Choose a search result and reopen the results",
+      "title": "Prove the journey: See policy settings as semantic policy text and co...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-85379136702335736376",
-      "blockedBy": [],
+      "parent": "journey:tasks-changing-policy-settings.inspect-policy-settings-as-text",
+      "blockedBy": [
+        "story-0dcb93aefef0"
+      ],
       "comesAfter": [],
       "sequence": 81,
-      "phase": 3,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-aa9b9dcd7ed2.md",
-      "attachment": "attachments/story-aa9b9dcd7ed2.md"
-    },
-    {
-      "key": "story-ac7bbe4423b8",
-      "file": "story-ac7bbe4423b8",
-      "kind": "story",
-      "title": "Start a text or registry search from the main window",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-85379136702335736376",
-      "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-33e7eed6d9fe",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-8e91072f4561",
-        "story-9ad956ab7bf7",
-        "story-1f69f5dac963"
-      ],
-      "comesAfter": [],
-      "sequence": 82,
       "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-ac7bbe4423b8.md",
-      "attachment": "attachments/story-ac7bbe4423b8.md"
+      "body": "bodies/story-f8fafbed5ea8.md",
+      "attachment": null
     },
     {
-      "key": "story-28430429f25c",
-      "file": "story-28430429f25c",
+      "key": "story-19b33784f008",
+      "file": "story-19b33784f008",
       "kind": "story",
-      "title": "Reopen the last search results",
+      "title": "Judge whether a support definition is met by the chosen products",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-finding-policies.find-policy-by-id",
+      "blockedBy": [],
+      "comesAfter": [],
+      "sequence": 82,
+      "phase": 3,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-19b33784f008.md",
+      "attachment": "attachments/story-19b33784f008.md"
+    },
+    {
+      "key": "story-2af61f6e37f6",
+      "file": "story-2af61f6e37f6",
+      "kind": "story",
+      "title": "Show each policy's state and comment and apply the filters",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-ac7bbe4423b8",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-33e7eed6d9fe",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-8e91072f4561",
-        "story-9ad956ab7bf7",
-        "story-1f69f5dac963"
+        "story-223b6fc37207",
+        "story-9edaf3416e67",
+        "story-19b33784f008"
       ],
       "comesAfter": [],
       "sequence": 83,
-      "phase": 5,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-28430429f25c.md",
-      "attachment": "attachments/story-28430429f25c.md"
+      "body": "bodies/story-2af61f6e37f6.md",
+      "attachment": "attachments/story-2af61f6e37f6.md"
     },
     {
-      "key": "story-7802b9b59793",
-      "file": "story-7802b9b59793",
+      "key": "story-0f4e3cb14fcc",
+      "file": "story-0f4e3cb14fcc",
       "kind": "story",
-      "title": "Step to the next search result",
+      "title": "Prove the journey: Make the newly downloaded policy definitions the o...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-85379136702335736376",
+      "parent": "journey:tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-e94f424068d7",
-        "story-33e7eed6d9fe",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-70d463c7a058",
-        "story-172c85be8ab9",
-        "story-9ad956ab7bf7",
-        "story-1f69f5dac963"
+        "story-e78f97aca7f1",
+        "story-f14b83e10f25",
+        "story-7d77b331e43a",
+        "story-4087415f3a6d",
+        "story-b6494203c779",
+        "story-2af61f6e37f6"
       ],
       "comesAfter": [],
       "sequence": 84,
-      "phase": 4,
+      "phase": 5,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-7802b9b59793.md",
-      "attachment": "attachments/story-7802b9b59793.md"
+      "body": "bodies/story-0f4e3cb14fcc.md",
+      "attachment": null
     },
     {
-      "key": "story-012c9bf5ea7e",
-      "file": "story-012c9bf5ea7e",
+      "key": "story-4a0907511692",
+      "file": "story-4a0907511692",
       "kind": "story",
-      "title": "Choose whether to work on user or computer policies",
+      "title": "Match policies to the registry key and value terms entered",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
+      "parent": "journey:tasks-finding-policies.find-policies-by-registry",
+      "blockedBy": [
+        "story-fd0811a4ba30"
+      ],
       "comesAfter": [],
       "sequence": 85,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-012c9bf5ea7e.md",
-      "attachment": "attachments/story-012c9bf5ea7e.md"
+      "body": "bodies/story-4a0907511692.md",
+      "attachment": "attachments/story-4a0907511692.md"
     },
     {
-      "key": "story-1acd3db19866",
-      "file": "story-1acd3db19866",
+      "key": "story-54d3e727ca58",
+      "file": "story-54d3e727ca58",
       "kind": "story",
-      "title": "See and select the keys and values of a policy file",
+      "title": "Reopen the last search results without a new search",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "functional"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-finding-policies.review-search-results",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 86,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-1acd3db19866.md",
-      "attachment": "attachments/story-1acd3db19866.md"
+      "body": "bodies/story-54d3e727ca58.md",
+      "attachment": null
     },
     {
-      "key": "story-28e2f3f14ef3",
-      "file": "story-28e2f3f14ef3",
+      "key": "story-545bc9f087a4",
+      "file": "story-545bc9f087a4",
       "kind": "story",
-      "title": "Close the raw editor with Done or Escape",
+      "title": "Reset the limit choices or cancel them with Escape",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-finding-policies.narrow-policy-list-by-filter",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 87,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-28e2f3f14ef3.md",
-      "attachment": "attachments/story-28e2f3f14ef3.md"
+      "body": "bodies/story-545bc9f087a4.md",
+      "attachment": "attachments/story-545bc9f087a4.md"
     },
     {
-      "key": "story-2c37ea03f0c4",
-      "file": "story-2c37ea03f0c4",
+      "key": "story-700f6fcd7114",
+      "file": "story-700f6fcd7114",
       "kind": "story",
-      "title": "Add a key to a policy file",
+      "title": "Open the raw policy editor and work on its entries",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.open-raw-policy-editor",
       "blockedBy": [
-        "story-a8dd1d11e6d9",
-        "story-1acd3db19866",
-        "story-aea620d35ed5",
-        "story-172c85be8ab9",
-        "story-f35a43c9e5e3"
+        "story-1fa0d732c0b4",
+        "story-c8ba0a34efd1",
+        "story-e1c57c0f14b7",
+        "story-ad1604c8286c"
       ],
       "comesAfter": [],
       "sequence": 88,
       "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-2c37ea03f0c4.md",
-      "attachment": "attachments/story-2c37ea03f0c4.md"
+      "body": "bodies/story-700f6fcd7114.md",
+      "attachment": "attachments/story-700f6fcd7114.md"
     },
     {
-      "key": "story-3c33c5a4548a",
-      "file": "story-3c33c5a4548a",
+      "key": "story-0fe4fed99a65",
+      "file": "story-0fe4fed99a65",
       "kind": "story",
-      "title": "Add a value to the selected key",
+      "title": "Prove the journey: Open a policy file for direct editing of its raw k...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.open-raw-policy-editor",
       "blockedBy": [
-        "story-a8dd1d11e6d9",
-        "story-1acd3db19866",
-        "story-aea620d35ed5",
-        "story-172c85be8ab9",
-        "story-f35a43c9e5e3"
+        "story-700f6fcd7114"
       ],
       "comesAfter": [],
       "sequence": 89,
-      "phase": 4,
+      "phase": 5,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-3c33c5a4548a.md",
-      "attachment": "attachments/story-3c33c5a4548a.md"
+      "body": "bodies/story-0fe4fed99a65.md",
+      "attachment": null
     },
     {
-      "key": "story-a3c9a8a4f183",
-      "file": "story-a3c9a8a4f183",
+      "key": "story-14d9fa56d4e2",
+      "file": "story-14d9fa56d4e2",
       "kind": "story",
-      "title": "Edit the data of a value",
+      "title": "Add a new key to a policy file with its name checked",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.add-policy-file-key-or-value",
       "blockedBy": [
-        "story-a8dd1d11e6d9",
-        "story-1acd3db19866",
-        "story-aea620d35ed5",
-        "story-172c85be8ab9",
-        "story-f35a43c9e5e3"
+        "story-e1c57c0f14b7"
       ],
       "comesAfter": [],
       "sequence": 90,
-      "phase": 4,
+      "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a3c9a8a4f183.md",
-      "attachment": "attachments/story-a3c9a8a4f183.md"
+      "body": "bodies/story-14d9fa56d4e2.md",
+      "attachment": "attachments/story-14d9fa56d4e2.md"
     },
     {
-      "key": "story-ab06a8a12911",
-      "file": "story-ab06a8a12911",
+      "key": "story-9b8bfa6bc723",
+      "file": "story-9b8bfa6bc723",
       "kind": "story",
-      "title": "Mark a value for deletion or clear a key",
+      "title": "Add a new value to a policy file by its name and data together",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.add-policy-file-key-or-value",
       "blockedBy": [
-        "story-f35a43c9e5e3",
-        "story-a8dd1d11e6d9",
-        "story-1acd3db19866",
-        "story-aea620d35ed5",
-        "story-172c85be8ab9"
+        "story-e1c57c0f14b7",
+        "story-3911953619fe"
       ],
       "comesAfter": [],
       "sequence": 91,
-      "phase": 4,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-ab06a8a12911.md",
-      "attachment": "attachments/story-ab06a8a12911.md"
-    },
-    {
-      "key": "story-58c66ca37578",
-      "file": "story-58c66ca37578",
-      "kind": "story",
-      "title": "Choose how to delete a key in the delete window",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
-      "comesAfter": [],
-      "sequence": 92,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-58c66ca37578.md",
-      "attachment": "attachments/story-58c66ca37578.md"
+      "body": "bodies/story-9b8bfa6bc723.md",
+      "attachment": "attachments/story-9b8bfa6bc723.md"
     },
     {
-      "key": "story-2cacd80a45c4",
-      "file": "story-2cacd80a45c4",
+      "key": "story-ecb2c7ed199c",
+      "file": "story-ecb2c7ed199c",
       "kind": "story",
-      "title": "Forget a key or a value without leaving a deletion mark",
+      "title": "Prove the journey: Add a new key, or a new value of a chosen kind, to...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.add-policy-file-key-or-value",
       "blockedBy": [
-        "story-f35a43c9e5e3",
-        "story-a8dd1d11e6d9",
-        "story-1acd3db19866",
-        "story-172c85be8ab9",
-        "story-aea620d35ed5"
+        "story-14d9fa56d4e2",
+        "story-9b8bfa6bc723"
       ],
       "comesAfter": [],
-      "sequence": 93,
+      "sequence": 92,
       "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-2cacd80a45c4.md",
-      "attachment": "attachments/story-2cacd80a45c4.md"
+      "body": "bodies/story-ecb2c7ed199c.md",
+      "attachment": null
     },
     {
-      "key": "story-269c02ce3860",
-      "file": "story-269c02ce3860",
+      "key": "story-5b5e64351274",
+      "file": "story-5b5e64351274",
       "kind": "story",
-      "title": "Start a registry file import from the raw editor",
+      "title": "Change the data of a value in a policy file in either number form",
       "tags": [
         "story",
         "functional"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.change-policy-file-value-data",
+      "blockedBy": [],
+      "comesAfter": [],
+      "sequence": 93,
+      "phase": 3,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-5b5e64351274.md",
+      "attachment": null
+    },
+    {
+      "key": "story-2a04fcca6c42",
+      "file": "story-2a04fcca6c42",
+      "kind": "story",
+      "title": "Prove the journey: Change the data of an existing value in a policy f...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-editing-policy-files-directly.change-policy-file-value-data",
       "blockedBy": [
-        "story-a8dd1d11e6d9",
-        "story-1acd3db19866",
-        "story-172c85be8ab9"
+        "story-5b5e64351274"
       ],
       "comesAfter": [],
       "sequence": 94,
       "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-269c02ce3860.md",
+      "body": "bodies/story-2a04fcca6c42.md",
       "attachment": null
     },
     {
-      "key": "story-7bfa2b53823b",
-      "file": "story-7bfa2b53823b",
+      "key": "story-225447b7128a",
+      "file": "story-225447b7128a",
       "kind": "story",
-      "title": "Start a registry file export of the selected key",
+      "title": "Remove a selected value or key by deletion entry or clearing",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
+      "parent": "journey:tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "blockedBy": [
+        "story-e1c57c0f14b7"
+      ],
       "comesAfter": [],
       "sequence": 95,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-7bfa2b53823b.md",
-      "attachment": "attachments/story-7bfa2b53823b.md"
+      "body": "bodies/story-225447b7128a.md",
+      "attachment": "attachments/story-225447b7128a.md"
     },
     {
-      "key": "story-f7bbfffdc027",
-      "file": "story-f7bbfffdc027",
+      "key": "story-d22434070306",
+      "file": "story-d22434070306",
       "kind": "story",
-      "title": "Name a new key in the key name window",
+      "title": "Forget a key or value entirely",
       "tags": [
         "story",
-        "functional"
+        "functional",
+        "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
+      "parent": "journey:tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "blockedBy": [
+        "story-e1c57c0f14b7"
+      ],
       "comesAfter": [],
       "sequence": 96,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-f7bbfffdc027.md",
-      "attachment": null
+      "body": "bodies/story-d22434070306.md",
+      "attachment": "attachments/story-d22434070306.md"
     },
     {
-      "key": "story-b543ab0d56d9",
-      "file": "story-b543ab0d56d9",
+      "key": "story-8d7ff69219c9",
+      "file": "story-8d7ff69219c9",
       "kind": "story",
-      "title": "Cancel the list-of-text window with Escape",
+      "title": "Prove the journey: Remove keys or values from a policy file, either l...",
       "tags": [
         "story",
-        "functional"
+        "technical"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
+      "parent": "journey:tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "blockedBy": [
+        "story-225447b7128a",
+        "story-d22434070306"
+      ],
       "comesAfter": [],
       "sequence": 97,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-b543ab0d56d9.md",
+      "body": "bodies/story-8d7ff69219c9.md",
       "attachment": null
     },
     {
-      "key": "story-894e47e65d4e",
-      "file": "story-894e47e65d4e",
+      "key": "story-846c871c0fec",
+      "file": "story-846c871c0fec",
       "kind": "story",
-      "title": "Switch the number box between decimal and hexadecimal",
+      "title": "Choose an exported settings file and have its key prefix worked out",
       "tags": [
         "story",
-        "functional"
+        "functional",
+        "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
+      "parent": "journey:tasks-editing-policy-files-directly.import-registry-file-into-policy-source",
+      "blockedBy": [
+        "story-e6db33a1af4e",
+        "story-1fa0d732c0b4",
+        "story-ba2b08c56e88"
+      ],
       "comesAfter": [],
       "sequence": 98,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-894e47e65d4e.md",
-      "attachment": null
+      "body": "bodies/story-846c871c0fec.md",
+      "attachment": "attachments/story-846c871c0fec.md"
     },
     {
-      "key": "story-9e59d3402749",
-      "file": "story-9e59d3402749",
+      "key": "story-4d860a5b8123",
+      "file": "story-4d860a5b8123",
       "kind": "story",
-      "title": "Cancel the text window with Escape",
+      "title": "Bring the exported settings into the chosen policy source",
       "tags": [
         "story",
-        "functional"
+        "functional",
+        "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
+      "parent": "journey:tasks-editing-policy-files-directly.import-registry-file-into-policy-source",
+      "blockedBy": [
+        "story-ad1604c8286c",
+        "story-e1c57c0f14b7"
+      ],
       "comesAfter": [],
       "sequence": 99,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-9e59d3402749.md",
-      "attachment": null
+      "body": "bodies/story-4d860a5b8123.md",
+      "attachment": "attachments/story-4d860a5b8123.md"
     },
     {
-      "key": "story-f46da0f180b3",
-      "file": "story-f46da0f180b3",
+      "key": "story-de540ad46df5",
+      "file": "story-de540ad46df5",
       "kind": "story",
-      "title": "Cancel the new value window with Escape",
+      "title": "Prove the journey: Bring the contents of an exported set of machine s...",
       "tags": [
         "story",
-        "functional"
+        "technical"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
+      "parent": "journey:tasks-editing-policy-files-directly.import-registry-file-into-policy-source",
+      "blockedBy": [
+        "story-846c871c0fec",
+        "story-4d860a5b8123"
+      ],
       "comesAfter": [],
       "sequence": 100,
-      "phase": 3,
+      "phase": 5,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-f46da0f180b3.md",
+      "body": "bodies/story-de540ad46df5.md",
       "attachment": null
     },
     {
-      "key": "story-dbf96b1cc9c9",
-      "file": "story-dbf96b1cc9c9",
+      "key": "story-462395dfc1a3",
+      "file": "story-462395dfc1a3",
       "kind": "story",
-      "title": "Choose the file for a registry export",
+      "title": "Import a policy file into the user or computer policy source",
       "tags": [
         "story",
-        "functional"
+        "functional",
+        "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
+      "parent": "journey:tasks-editing-policy-files-directly.import-policy-file",
+      "blockedBy": [
+        "story-c7d1bf28a69c",
+        "story-ad1604c8286c",
+        "story-e6db33a1af4e"
+      ],
       "comesAfter": [],
       "sequence": 101,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-dbf96b1cc9c9.md",
-      "attachment": null
+      "body": "bodies/story-462395dfc1a3.md",
+      "attachment": "attachments/story-462395dfc1a3.md"
     },
     {
-      "key": "story-1e8e6d9a3a7f",
-      "file": "story-1e8e6d9a3a7f",
+      "key": "story-eaee8bd2bdd8",
+      "file": "story-eaee8bd2bdd8",
       "kind": "story",
-      "title": "Export a branch of a policy file as a registry file",
+      "title": "Prove the journey: Load a policy file into the user or computer polic...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.import-policy-file",
       "blockedBy": [
-        "story-568f434469cc",
-        "story-f35a43c9e5e3",
-        "story-8dfbc797cdf9",
-        "story-a8dd1d11e6d9",
-        "story-1f69f5dac963",
-        "story-8b2e2d3c7b29",
-        "story-aea620d35ed5",
-        "story-172c85be8ab9"
+        "story-462395dfc1a3"
       ],
       "comesAfter": [],
       "sequence": 102,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-1e8e6d9a3a7f.md",
-      "attachment": "attachments/story-1e8e6d9a3a7f.md"
+      "body": "bodies/story-eaee8bd2bdd8.md",
+      "attachment": null
     },
     {
-      "key": "story-6287de51ff9a",
-      "file": "story-6287de51ff9a",
+      "key": "story-6310e7b1b918",
+      "file": "story-6310e7b1b918",
       "kind": "story",
-      "title": "Choose a registry file to import and guess its prefix",
+      "title": "Export a policy source as a registry settings file",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.export-policy-as-registry-file",
       "blockedBy": [
-        "story-172c85be8ab9"
+        "story-3886a097fde3",
+        "story-c2d313fd6e7e",
+        "story-c7d1bf28a69c",
+        "story-e6db33a1af4e"
       ],
       "comesAfter": [],
       "sequence": 103,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-6287de51ff9a.md",
-      "attachment": "attachments/story-6287de51ff9a.md"
+      "body": "bodies/story-6310e7b1b918.md",
+      "attachment": "attachments/story-6310e7b1b918.md"
     },
     {
-      "key": "story-da27877bf2de",
-      "file": "story-da27877bf2de",
+      "key": "story-f8244a741da1",
+      "file": "story-f8244a741da1",
       "kind": "story",
-      "title": "Import a registry file into a policy file",
+      "title": "Prove the journey: Write a policy source, or one branch of it, as an ...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.export-policy-as-registry-file",
       "blockedBy": [
-        "story-f35a43c9e5e3",
-        "story-a8dd1d11e6d9",
-        "story-8dfbc797cdf9",
-        "story-1f69f5dac963",
-        "story-8b2e2d3c7b29",
-        "story-aea620d35ed5",
-        "story-172c85be8ab9"
+        "story-6310e7b1b918"
       ],
       "comesAfter": [],
       "sequence": 104,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-da27877bf2de.md",
-      "attachment": "attachments/story-da27877bf2de.md"
+      "body": "bodies/story-f8244a741da1.md",
+      "attachment": null
     },
     {
-      "key": "story-2f10c90f9e4a",
-      "file": "story-2f10c90f9e4a",
+      "key": "story-488e8ce1ca22",
+      "file": "story-488e8ce1ca22",
       "kind": "story",
-      "title": "Cancel the registry import with Escape",
+      "title": "Save a policy source out as a policy file",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
+      "parent": "journey:tasks-editing-policy-files-directly.export-policy-file",
+      "blockedBy": [
+        "story-c7d1bf28a69c",
+        "story-e6db33a1af4e"
+      ],
       "comesAfter": [],
       "sequence": 105,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-2f10c90f9e4a.md",
-      "attachment": "attachments/story-2f10c90f9e4a.md"
+      "body": "bodies/story-488e8ce1ca22.md",
+      "attachment": "attachments/story-488e8ce1ca22.md"
     },
     {
-      "key": "story-fd1304d766c8",
-      "file": "story-fd1304d766c8",
+      "key": "story-b9e059bb19bc",
+      "file": "story-b9e059bb19bc",
       "kind": "story",
-      "title": "Import a POL file into the user or computer policies",
+      "title": "Prove the journey: Save a policy source out as a policy file.",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-editing-policy-files-directly.export-policy-file",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-568f434469cc",
-        "story-8ca51ca63ee6",
-        "story-f35a43c9e5e3",
-        "story-de84e9444933",
-        "story-8dfbc797cdf9",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-1f69f5dac963",
-        "story-172c85be8ab9",
-        "story-8b2e2d3c7b29",
-        "story-aea620d35ed5",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-9ad956ab7bf7",
-        "story-8e91072f4561",
-        "story-1e8e6d9a3a7f"
+        "story-488e8ce1ca22"
       ],
       "comesAfter": [],
       "sequence": 106,
       "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-fd1304d766c8.md",
-      "attachment": "attachments/story-fd1304d766c8.md"
+      "body": "bodies/story-b9e059bb19bc.md",
+      "attachment": null
     },
     {
-      "key": "story-6c76f6f99690",
-      "file": "story-6c76f6f99690",
+      "key": "story-9650519137fe",
+      "file": "story-9650519137fe",
       "kind": "story",
-      "title": "Export a policy area as a POL file",
+      "title": "Choose the folder of policy definitions to load",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [
-        "story-fd1304d766c8",
-        "story-aea620d35ed5",
-        "story-f35a43c9e5e3"
-      ],
+      "parent": "journey:tasks-browsing-policy-definitions.load-definitions-folder",
+      "blockedBy": [],
       "comesAfter": [],
       "sequence": 107,
-      "phase": 5,
+      "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-6c76f6f99690.md",
-      "attachment": "attachments/story-6c76f6f99690.md"
+      "body": "bodies/story-9650519137fe.md",
+      "attachment": "attachments/story-9650519137fe.md"
     },
     {
-      "key": "story-315d6f3467df",
-      "file": "story-315d6f3467df",
+      "key": "story-3e9002c9902b",
+      "file": "story-3e9002c9902b",
       "kind": "story",
-      "title": "Open the raw editor on a policy file after a warning",
+      "title": "Load the chosen folder, replacing or adding to what is loaded",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-browsing-policy-definitions.load-definitions-folder",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-fd1304d766c8",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-1acd3db19866",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-9ad956ab7bf7",
-        "story-8e91072f4561",
-        "story-1f69f5dac963"
+        "story-0fb110144cfb",
+        "story-c7bf993b34b3",
+        "story-4a7d49af64c0"
       ],
       "comesAfter": [],
       "sequence": 108,
-      "phase": 5,
+      "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-315d6f3467df.md",
-      "attachment": "attachments/story-315d6f3467df.md"
+      "body": "bodies/story-3e9002c9902b.md",
+      "attachment": "attachments/story-3e9002c9902b.md"
     },
     {
-      "key": "story-658443c17192",
-      "file": "story-658443c17192",
+      "key": "story-aee249b20bcf",
+      "file": "story-aee249b20bcf",
       "kind": "story",
-      "title": "Export a policy area as a registry file from the main screen",
+      "title": "Prove the journey: Load a folder of policy definitions into the works...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-browsing-policy-definitions.load-definitions-folder",
       "blockedBy": [
-        "story-7bfa2b53823b",
-        "story-fd1304d766c8",
-        "story-aea620d35ed5",
-        "story-6c76f6f99690",
-        "story-f35a43c9e5e3"
+        "story-9650519137fe",
+        "story-3e9002c9902b"
       ],
       "comesAfter": [],
       "sequence": 109,
-      "phase": 6,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-658443c17192.md",
-      "attachment": "attachments/story-658443c17192.md"
+      "body": "bodies/story-aee249b20bcf.md",
+      "attachment": null
     },
     {
-      "key": "story-ca0cf4f8270c",
-      "file": "story-ca0cf4f8270c",
+      "key": "story-d9d21711b924",
+      "file": "story-d9d21711b924",
       "kind": "story",
-      "title": "Import a registry file from the main screen",
+      "title": "Add several template files to the loaded policies at once",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-38063153752557655155",
+      "parent": "journey:tasks-browsing-policy-definitions.add-template-file",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-fd1304d766c8",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-9ad956ab7bf7",
-        "story-8e91072f4561",
-        "story-1f69f5dac963"
+        "story-0fb110144cfb"
       ],
       "comesAfter": [],
       "sequence": 110,
-      "phase": 5,
-      "builder": "shape-and-deliver",
-      "body": "bodies/story-ca0cf4f8270c.md",
-      "attachment": "attachments/story-ca0cf4f8270c.md"
-    },
-    {
-      "key": "story-6f0d02552b8f",
-      "file": "story-6f0d02552b8f",
-      "kind": "story",
-      "title": "Enter whole numbers in hexadecimal when editing a number value",
-      "tags": [
-        "story",
-        "functional",
-        "modernize"
-      ],
-      "parent": "capability:capability-38063153752557655155",
-      "blockedBy": [],
-      "comesAfter": [],
-      "sequence": 111,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-6f0d02552b8f.md",
-      "attachment": "attachments/story-6f0d02552b8f.md"
+      "body": "bodies/story-d9d21711b924.md",
+      "attachment": "attachments/story-d9d21711b924.md"
     },
     {
-      "key": "story-8f70906cce80",
-      "file": "story-8f70906cce80",
+      "key": "story-890dce6b458a",
+      "file": "story-890dce6b458a",
       "kind": "story",
-      "title": "Load policy definitions from a folder or a single file",
+      "title": "Prove the journey: Add a single policy template file to the policies ...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.add-template-file",
+      "blockedBy": [
+        "story-d9d21711b924"
+      ],
+      "comesAfter": [],
+      "sequence": 111,
+      "phase": 4,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-890dce6b458a.md",
+      "attachment": null
+    },
+    {
+      "key": "story-f0084d7cde1d",
+      "file": "story-f0084d7cde1d",
+      "kind": "story",
+      "title": "Review what each loaded template file contributes",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
-      "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-a0702af37a64",
-        "story-8ca51ca63ee6",
-        "story-5923b3f84201",
-        "story-de84e9444933",
-        "story-ad5a2f6c129f",
-        "story-a8dd1d11e6d9",
-        "story-a8ee9482f2c5",
-        "story-d4e9fbe4acd9",
-        "story-762a4634aa04",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-a6877efa14bb",
-        "story-9ad956ab7bf7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-036b775c5bc8",
-        "story-172c85be8ab9",
-        "story-1f69f5dac963"
-      ],
+      "parent": "journey:tasks-browsing-policy-definitions.review-loaded-template-files",
+      "blockedBy": [],
       "comesAfter": [],
       "sequence": 112,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-8f70906cce80.md",
-      "attachment": "attachments/story-8f70906cce80.md"
+      "body": "bodies/story-f0084d7cde1d.md",
+      "attachment": "attachments/story-f0084d7cde1d.md"
     },
     {
-      "key": "story-c4b4d4c78ed0",
-      "file": "story-c4b4d4c78ed0",
+      "key": "story-c99a6d8b51c2",
+      "file": "story-c99a6d8b51c2",
       "kind": "story",
-      "title": "Browse categories and policies and read their descriptions",
+      "title": "Prove the journey: See which policy template files are loaded and wha...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-browsing-policy-definitions.review-loaded-template-files",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-9ad956ab7bf7",
-        "story-1f69f5dac963",
-        "story-8e91072f4561"
+        "story-f0084d7cde1d"
       ],
       "comesAfter": [],
       "sequence": 113,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-c4b4d4c78ed0.md",
-      "attachment": "attachments/story-c4b4d4c78ed0.md"
+      "body": "bodies/story-c99a6d8b51c2.md",
+      "attachment": null
     },
     {
-      "key": "story-9681303fcbd4",
-      "file": "story-9681303fcbd4",
+      "key": "story-0be6bc27aff7",
+      "file": "story-0be6bc27aff7",
       "kind": "story",
-      "title": "Choose which categories and areas the list shows",
+      "title": "Choose which policies and categories the tree shows",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "functional"
       ],
-      "parent": "capability:capability-12186108826760133070",
-      "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-9ad956ab7bf7",
-        "story-8e91072f4561",
-        "story-1f69f5dac963"
-      ],
+      "parent": "journey:tasks-browsing-policy-definitions.browse-policy-tree",
+      "blockedBy": [],
       "comesAfter": [],
       "sequence": 114,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-9681303fcbd4.md",
-      "attachment": "attachments/story-9681303fcbd4.md"
+      "body": "bodies/story-0be6bc27aff7.md",
+      "attachment": null
     },
     {
-      "key": "story-4df39c971512",
-      "file": "story-4df39c971512",
+      "key": "story-fc60040000de",
+      "file": "story-fc60040000de",
       "kind": "story",
-      "title": "Merge identical user and computer policy pairs",
+      "title": "Read what a category or policy is for",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-browsing-policy-definitions.browse-policy-tree",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-762a4634aa04",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-9ad956ab7bf7",
-        "story-1f69f5dac963"
+        "story-223b6fc37207"
       ],
       "comesAfter": [],
       "sequence": 115,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-4df39c971512.md",
-      "attachment": "attachments/story-4df39c971512.md"
+      "body": "bodies/story-fc60040000de.md",
+      "attachment": "attachments/story-fc60040000de.md"
     },
     {
-      "key": "story-c2cc076fe863",
-      "file": "story-c2cc076fe863",
+      "key": "story-6cfcd96d26db",
+      "file": "story-6cfcd96d26db",
       "kind": "story",
-      "title": "Open the lists of loaded files, support rules and products",
+      "title": "Open an item and offer only the actions that fit it",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
-      "blockedBy": [],
+      "parent": "journey:tasks-browsing-policy-definitions.browse-policy-tree",
+      "blockedBy": [
+        "story-223b6fc37207",
+        "story-fc60040000de"
+      ],
       "comesAfter": [],
       "sequence": 116,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-c2cc076fe863.md",
-      "attachment": "attachments/story-c2cc076fe863.md"
+      "body": "bodies/story-6cfcd96d26db.md",
+      "attachment": "attachments/story-6cfcd96d26db.md"
     },
     {
-      "key": "story-a00ef8980b66",
-      "file": "story-a00ef8980b66",
+      "key": "story-d294783751e8",
+      "file": "story-d294783751e8",
       "kind": "story",
-      "title": "Use the right-click menu on categories and policies",
+      "title": "Prove the journey: Move through the categories and policies of the lo...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-browsing-policy-definitions.browse-policy-tree",
       "blockedBy": [
-        "story-be2ca86e91a5",
-        "story-a0702af37a64",
-        "story-8ca51ca63ee6",
-        "story-de84e9444933",
-        "story-a8dd1d11e6d9",
-        "story-a1881cb358d7",
-        "story-762a4634aa04",
-        "story-2f850ed84290",
-        "story-70d463c7a058",
-        "story-e94f424068d7",
-        "story-abfcd93404a2",
-        "story-94081f04c949",
-        "story-172c85be8ab9",
-        "story-8e91072f4561",
-        "story-9ad956ab7bf7",
-        "story-1f69f5dac963"
+        "story-0be6bc27aff7",
+        "story-fc60040000de",
+        "story-6cfcd96d26db"
       ],
       "comesAfter": [],
       "sequence": 117,
-      "phase": 3,
+      "phase": 5,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-a00ef8980b66.md",
-      "attachment": "attachments/story-a00ef8980b66.md"
+      "body": "bodies/story-d294783751e8.md",
+      "attachment": null
     },
     {
-      "key": "story-3f9bc93038c2",
-      "file": "story-3f9bc93038c2",
+      "key": "story-be9dd1487892",
+      "file": "story-be9dd1487892",
       "kind": "story",
-      "title": "Open a loaded template file's details from the file list",
+      "title": "Review and merge identical user and computer policies",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-browsing-policy-definitions.merge-duplicate-policies",
       "blockedBy": [],
       "comesAfter": [],
       "sequence": 118,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-3f9bc93038c2.md",
-      "attachment": "attachments/story-3f9bc93038c2.md"
+      "body": "bodies/story-be9dd1487892.md",
+      "attachment": "attachments/story-be9dd1487892.md"
     },
     {
-      "key": "story-7476d87babdd",
-      "file": "story-7476d87babdd",
+      "key": "story-b3c32db1c8a7",
+      "file": "story-b3c32db1c8a7",
       "kind": "story",
-      "title": "Browse products by version and open product details",
+      "title": "Prove the journey: Merge identical user and computer policies into si...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-browsing-policy-definitions.merge-duplicate-policies",
       "blockedBy": [
-        "story-97add99ab26c"
+        "story-be9dd1487892"
       ],
       "comesAfter": [],
       "sequence": 119,
-      "phase": 3,
+      "phase": 4,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-7476d87babdd.md",
-      "attachment": "attachments/story-7476d87babdd.md"
+      "body": "bodies/story-b3c32db1c8a7.md",
+      "attachment": null
     },
     {
-      "key": "story-201729a6f6bf",
-      "file": "story-201729a6f6bf",
+      "key": "story-bf2192b48b5a",
+      "file": "story-bf2192b48b5a",
       "kind": "story",
-      "title": "Filter the support rules list and open support rule details",
+      "title": "See a policy's section, category and support at a glance",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
-      "blockedBy": [
-        "story-97add99ab26c"
-      ],
+      "parent": "journey:tasks-browsing-policy-definitions.view-policy-details",
+      "blockedBy": [],
       "comesAfter": [],
       "sequence": 120,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-201729a6f6bf.md",
-      "attachment": "attachments/story-201729a6f6bf.md"
+      "body": "bodies/story-bf2192b48b5a.md",
+      "attachment": "attachments/story-bf2192b48b5a.md"
     },
     {
-      "key": "story-52aa6159de57",
-      "file": "story-52aa6159de57",
+      "key": "story-bd856b6bfcf4",
+      "file": "story-bd856b6bfcf4",
       "kind": "story",
-      "title": "Open details of a policy, category, product or support rule",
+      "title": "Open the policy dialog and finish it with OK, Apply or Cancel",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-changing-policy-settings.set-policy-state",
       "blockedBy": [
-        "story-97add99ab26c"
+        "story-94e69ddff5e9",
+        "story-3ae7cc203518",
+        "story-f14810c65ca2",
+        "story-bf2192b48b5a",
+        "story-2af61f6e37f6",
+        "story-9edaf3416e67"
       ],
       "comesAfter": [],
       "sequence": 121,
-      "phase": 3,
+      "phase": 5,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-52aa6159de57.md",
-      "attachment": "attachments/story-52aa6159de57.md"
+      "body": "bodies/story-bd856b6bfcf4.md",
+      "attachment": "attachments/story-bd856b6bfcf4.md"
     },
     {
-      "key": "story-53db3b22a5ef",
-      "file": "story-53db3b22a5ef",
+      "key": "story-e3fffd902a4c",
+      "file": "story-e3fffd902a4c",
       "kind": "story",
-      "title": "Move from a category to its parent category",
+      "title": "Prove the journey: Set one policy to Enabled, Disabled or Not configu...",
       "tags": [
         "story",
-        "functional"
+        "technical"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-changing-policy-settings.set-policy-state",
       "blockedBy": [
-        "story-52aa6159de57"
+        "story-3ae7cc203518",
+        "story-e09b8e7cc409",
+        "story-bd856b6bfcf4"
       ],
       "comesAfter": [],
       "sequence": 122,
-      "phase": 4,
+      "phase": 6,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-53db3b22a5ef.md",
+      "body": "bodies/story-e3fffd902a4c.md",
       "attachment": null
     },
     {
-      "key": "story-837b5de54681",
-      "file": "story-837b5de54681",
+      "key": "story-bcb2935d0d35",
+      "file": "story-bcb2935d0d35",
       "kind": "story",
-      "title": "Open category and support rule details from policy details",
+      "title": "Apply a checked semantic policy text to the policy sources",
       "tags": [
         "story",
-        "functional"
+        "functional",
+        "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-changing-policy-settings.import-policy-settings-from-text",
       "blockedBy": [
-        "story-97add99ab26c",
-        "story-52aa6159de57"
+        "story-f14810c65ca2",
+        "story-bd856b6bfcf4",
+        "story-edf918835552"
       ],
       "comesAfter": [],
       "sequence": 123,
-      "phase": 4,
+      "phase": 6,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-837b5de54681.md",
-      "attachment": null
+      "body": "bodies/story-bcb2935d0d35.md",
+      "attachment": "attachments/story-bcb2935d0d35.md"
     },
     {
-      "key": "story-85fe4c7b5154",
-      "file": "story-85fe4c7b5154",
+      "key": "story-ebef1912a263",
+      "file": "story-ebef1912a263",
       "kind": "story",
-      "title": "Walk a product's versions and parent in product details",
+      "title": "Bring in policy settings text and check...: Semantic Text Import Session",
       "tags": [
         "story",
-        "functional",
+        "technical",
         "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-changing-policy-settings.import-policy-settings-from-text",
       "blockedBy": [
-        "story-97add99ab26c"
+        "story-edf918835552",
+        "story-bcb2935d0d35"
       ],
       "comesAfter": [],
       "sequence": 124,
-      "phase": 3,
+      "phase": 7,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-85fe4c7b5154.md",
-      "attachment": "attachments/story-85fe4c7b5154.md"
+      "body": "bodies/story-ebef1912a263.md",
+      "attachment": "attachments/story-ebef1912a263.md"
     },
     {
-      "key": "story-ae78eeacfa1d",
-      "file": "story-ae78eeacfa1d",
+      "key": "story-997b2acb2c3b",
+      "file": "story-997b2acb2c3b",
       "kind": "story",
-      "title": "Open products and nested rules from support rule details",
+      "title": "Prove the journey: Bring a set of policy settings in from a semantic ...",
       "tags": [
         "story",
-        "functional",
-        "modernize"
+        "technical"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-changing-policy-settings.import-policy-settings-from-text",
       "blockedBy": [
-        "story-97add99ab26c"
+        "story-edf918835552",
+        "story-bcb2935d0d35"
       ],
       "comesAfter": [],
       "sequence": 125,
-      "phase": 3,
+      "phase": 7,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-ae78eeacfa1d.md",
-      "attachment": "attachments/story-ae78eeacfa1d.md"
+      "body": "bodies/story-997b2acb2c3b.md",
+      "attachment": null
     },
     {
-      "key": "story-fbdd46b57e19",
-      "file": "story-fbdd46b57e19",
+      "key": "story-34b60fa15525",
+      "file": "story-34b60fa15525",
       "kind": "story",
-      "title": "Inspect a policy's definition and its semantic policy text",
+      "title": "Pick a search hit to open and step to the next hit",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-finding-policies.review-search-results",
       "blockedBy": [
-        "story-52aa6159de57"
+        "story-5c7e7c63edf4",
+        "story-bd856b6bfcf4",
+        "story-1fa0d732c0b4",
+        "story-2af61f6e37f6"
       ],
       "comesAfter": [],
       "sequence": 126,
-      "phase": 4,
+      "phase": 6,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-fbdd46b57e19.md",
-      "attachment": "attachments/story-fbdd46b57e19.md"
+      "body": "bodies/story-34b60fa15525.md",
+      "attachment": "attachments/story-34b60fa15525.md"
     },
     {
-      "key": "story-74aa22060c0b",
-      "file": "story-74aa22060c0b",
+      "key": "story-cc7fad39e73e",
+      "file": "story-cc7fad39e73e",
       "kind": "story",
-      "title": "Choose where to add policy definitions from",
+      "title": "Prove the journey: See what a policy is, which section it applies to,...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.view-policy-details",
+      "blockedBy": [
+        "story-bf2192b48b5a"
+      ],
+      "comesAfter": [],
+      "sequence": 127,
+      "phase": 4,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-cc7fad39e73e.md",
+      "attachment": null
+    },
+    {
+      "key": "story-688c435b4f7f",
+      "file": "story-688c435b4f7f",
+      "kind": "story",
+      "title": "Show a category's parent and let people go up to it",
       "tags": [
         "story",
         "functional",
         "modernize"
       ],
-      "parent": "capability:capability-12186108826760133070",
+      "parent": "journey:tasks-browsing-policy-definitions.view-category-details",
       "blockedBy": [],
       "comesAfter": [],
-      "sequence": 127,
+      "sequence": 128,
       "phase": 3,
       "builder": "shape-and-deliver",
-      "body": "bodies/story-74aa22060c0b.md",
-      "attachment": "attachments/story-74aa22060c0b.md"
+      "body": "bodies/story-688c435b4f7f.md",
+      "attachment": "attachments/story-688c435b4f7f.md"
+    },
+    {
+      "key": "story-a13e3bf21a9b",
+      "file": "story-a13e3bf21a9b",
+      "kind": "story",
+      "title": "Prove the journey: See a category, its parent and how it relates to p...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.view-category-details",
+      "blockedBy": [
+        "story-688c435b4f7f"
+      ],
+      "comesAfter": [],
+      "sequence": 129,
+      "phase": 4,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-a13e3bf21a9b.md",
+      "attachment": null
+    },
+    {
+      "key": "story-726711d58b9b",
+      "file": "story-726711d58b9b",
+      "kind": "story",
+      "title": "Browse products, their versions and details in one view",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.browse-products",
+      "blockedBy": [],
+      "comesAfter": [],
+      "sequence": 130,
+      "phase": 3,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-726711d58b9b.md",
+      "attachment": "attachments/story-726711d58b9b.md"
+    },
+    {
+      "key": "story-836a74746201",
+      "file": "story-836a74746201",
+      "kind": "story",
+      "title": "Show the limit in force and switch it on or off",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-finding-policies.narrow-policy-list-by-filter",
+      "blockedBy": [
+        "story-2af61f6e37f6",
+        "story-726711d58b9b",
+        "story-1fa0d732c0b4"
+      ],
+      "comesAfter": [],
+      "sequence": 131,
+      "phase": 5,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-836a74746201.md",
+      "attachment": "attachments/story-836a74746201.md"
+    },
+    {
+      "key": "story-c0a1550b2bfa",
+      "file": "story-c0a1550b2bfa",
+      "kind": "story",
+      "title": "Narrow the policy list by type, state, comment and products",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-finding-policies.narrow-policy-list-by-filter",
+      "blockedBy": [
+        "story-2af61f6e37f6",
+        "story-726711d58b9b"
+      ],
+      "comesAfter": [],
+      "sequence": 132,
+      "phase": 5,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-c0a1550b2bfa.md",
+      "attachment": "attachments/story-c0a1550b2bfa.md"
+    },
+    {
+      "key": "story-214b93c55a5a",
+      "file": "story-214b93c55a5a",
+      "kind": "story",
+      "title": "Prove the journey: Limit the policy list to policies of a chosen type...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-finding-policies.narrow-policy-list-by-filter",
+      "blockedBy": [
+        "story-836a74746201",
+        "story-c0a1550b2bfa",
+        "story-545bc9f087a4"
+      ],
+      "comesAfter": [],
+      "sequence": 133,
+      "phase": 6,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-214b93c55a5a.md",
+      "attachment": null
+    },
+    {
+      "key": "story-1c3a79b0d3ab",
+      "file": "story-1c3a79b0d3ab",
+      "kind": "story",
+      "title": "Prove the journey: Browse the products and their versions that the lo...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.browse-products",
+      "blockedBy": [
+        "story-726711d58b9b"
+      ],
+      "comesAfter": [],
+      "sequence": 134,
+      "phase": 4,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-1c3a79b0d3ab.md",
+      "attachment": null
+    },
+    {
+      "key": "story-5ddd8ef27b6d",
+      "file": "story-5ddd8ef27b6d",
+      "kind": "story",
+      "title": "Browse the support rules and see which products they cover",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.browse-support-rules",
+      "blockedBy": [
+        "story-726711d58b9b"
+      ],
+      "comesAfter": [],
+      "sequence": 135,
+      "phase": 4,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-5ddd8ef27b6d.md",
+      "attachment": "attachments/story-5ddd8ef27b6d.md"
+    },
+    {
+      "key": "story-e234380a884c",
+      "file": "story-e234380a884c",
+      "kind": "story",
+      "title": "Prove the journey: Find the support rules and see which products they...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.browse-support-rules",
+      "blockedBy": [
+        "story-5ddd8ef27b6d"
+      ],
+      "comesAfter": [],
+      "sequence": 136,
+      "phase": 5,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-e234380a884c.md",
+      "attachment": null
+    },
+    {
+      "key": "story-48b8af747c3d",
+      "file": "story-48b8af747c3d",
+      "kind": "story",
+      "title": "Inspect a policy's stored setting and presentation, and copy a line",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.inspect-policy-technical-details",
+      "blockedBy": [
+        "story-291227533d1e"
+      ],
+      "comesAfter": [],
+      "sequence": 137,
+      "phase": 3,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-48b8af747c3d.md",
+      "attachment": "attachments/story-48b8af747c3d.md"
+    },
+    {
+      "key": "story-bbc9ead9f13a",
+      "file": "story-bbc9ead9f13a",
+      "kind": "story",
+      "title": "Arrive at an item by typing its identifier",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-finding-policies.find-policy-by-id",
+      "blockedBy": [
+        "story-19b33784f008",
+        "story-726711d58b9b",
+        "story-5ddd8ef27b6d",
+        "story-223b6fc37207",
+        "story-1fa0d732c0b4",
+        "story-48b8af747c3d",
+        "story-bd856b6bfcf4",
+        "story-bf2192b48b5a",
+        "story-688c435b4f7f"
+      ],
+      "comesAfter": [],
+      "sequence": 138,
+      "phase": 6,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-bbc9ead9f13a.md",
+      "attachment": "attachments/story-bbc9ead9f13a.md"
+    },
+    {
+      "key": "story-1f80ddf7592f",
+      "file": "story-1f80ddf7592f",
+      "kind": "story",
+      "title": "Prove the journey: Go straight to a known category, product, support ...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-finding-policies.find-policy-by-id",
+      "blockedBy": [
+        "story-bbc9ead9f13a",
+        "story-19b33784f008"
+      ],
+      "comesAfter": [],
+      "sequence": 139,
+      "phase": 7,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-1f80ddf7592f.md",
+      "attachment": null
+    },
+    {
+      "key": "story-4f240beb67ca",
+      "file": "story-4f240beb67ca",
+      "kind": "story",
+      "title": "Watch search hits arrive and stop the search when enough is found",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-finding-policies.review-search-results",
+      "blockedBy": [
+        "story-2af61f6e37f6",
+        "story-bbc9ead9f13a",
+        "story-5c7e7c63edf4"
+      ],
+      "comesAfter": [],
+      "sequence": 140,
+      "phase": 7,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-4f240beb67ca.md",
+      "attachment": "attachments/story-4f240beb67ca.md"
+    },
+    {
+      "key": "story-0f94c6fe2daa",
+      "file": "story-0f94c6fe2daa",
+      "kind": "story",
+      "title": "Find policies by the words you remember",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-finding-policies.find-policies-by-text",
+      "blockedBy": [
+        "story-9edaf3416e67",
+        "story-4f240beb67ca"
+      ],
+      "comesAfter": [],
+      "sequence": 141,
+      "phase": 8,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-0f94c6fe2daa.md",
+      "attachment": "attachments/story-0f94c6fe2daa.md"
+    },
+    {
+      "key": "story-50ca3a62ce4a",
+      "file": "story-50ca3a62ce4a",
+      "kind": "story",
+      "title": "Prove the journey: Find policies whose title, description or comments...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-finding-policies.find-policies-by-text",
+      "blockedBy": [
+        "story-0f94c6fe2daa"
+      ],
+      "comesAfter": [],
+      "sequence": 142,
+      "phase": 9,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-50ca3a62ce4a.md",
+      "attachment": null
+    },
+    {
+      "key": "story-a37867671c23",
+      "file": "story-a37867671c23",
+      "kind": "story",
+      "title": "Refuse unusable registry terms and start the search when asked",
+      "tags": [
+        "story",
+        "functional",
+        "modernize"
+      ],
+      "parent": "journey:tasks-finding-policies.find-policies-by-registry",
+      "blockedBy": [
+        "story-4f240beb67ca"
+      ],
+      "comesAfter": [],
+      "sequence": 143,
+      "phase": 8,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-a37867671c23.md",
+      "attachment": "attachments/story-a37867671c23.md"
+    },
+    {
+      "key": "story-3c71256fa05b",
+      "file": "story-3c71256fa05b",
+      "kind": "story",
+      "title": "Prove the journey: Find the policies that control a given system sett...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-finding-policies.find-policies-by-registry",
+      "blockedBy": [
+        "story-a37867671c23",
+        "story-4a0907511692"
+      ],
+      "comesAfter": [],
+      "sequence": 144,
+      "phase": 9,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-3c71256fa05b.md",
+      "attachment": null
+    },
+    {
+      "key": "story-0404fbcc0cff",
+      "file": "story-0404fbcc0cff",
+      "kind": "story",
+      "title": "Prove the journey: Work through the hits of a search and pick the pol...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-finding-policies.review-search-results",
+      "blockedBy": [
+        "story-4f240beb67ca",
+        "story-34b60fa15525",
+        "story-54d3e727ca58"
+      ],
+      "comesAfter": [],
+      "sequence": 145,
+      "phase": 8,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-0404fbcc0cff.md",
+      "attachment": null
+    },
+    {
+      "key": "story-3bcb6d4c6057",
+      "file": "story-3bcb6d4c6057",
+      "kind": "story",
+      "title": "Prove the journey: Inspect the technical makeup of a policy: its stor...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.inspect-policy-technical-details",
+      "blockedBy": [
+        "story-48b8af747c3d",
+        "story-291227533d1e"
+      ],
+      "comesAfter": [],
+      "sequence": 146,
+      "phase": 4,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-3bcb6d4c6057.md",
+      "attachment": null
+    },
+    {
+      "key": "story-482ebd1efc13",
+      "file": "story-482ebd1efc13",
+      "kind": "story",
+      "title": "Prove the journey: Remove all loaded policy definitions from the work...",
+      "tags": [
+        "story",
+        "technical"
+      ],
+      "parent": "journey:tasks-browsing-policy-definitions.clear-loaded-definitions",
+      "blockedBy": [
+        "story-c7bf993b34b3"
+      ],
+      "comesAfter": [],
+      "sequence": 147,
+      "phase": 3,
+      "builder": "shape-and-deliver",
+      "body": "bodies/story-482ebd1efc13.md",
+      "attachment": null
     }
   ]
 }

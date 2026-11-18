@@ -1,0 +1,367 @@
+{
+ "stories": [
+  {
+   "title": "Choose which policies and categories the tree shows",
+   "what": "A person narrows the loaded definitions to user policies, computer policies or both, and chooses whether categories with no visible policies are shown.",
+   "why": "So they see only the part of the definitions they want to read.",
+   "actions": [
+    "block-79379072249641546586",
+    "block-28869808154726861529"
+   ],
+   "terms": [
+    {
+     "name": "Area",
+     "means": "The part of the policies being read: user policies, computer policies or both; it is not the place a policy is saved."
+    },
+    {
+     "name": "Empty category",
+     "means": "A category that holds no visible policy and no visible subcategory; it is not a category with no policies at all."
+    }
+   ],
+   "journey": {
+    "name": "One place to explore",
+    "steps": [
+     "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#1",
+     "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#2"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the definitions are loaded, when the person chooses User as the area, then only user policies are shown.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given the definitions are loaded, when the person chooses Computer as the area, then only computer policies are shown.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given the person has chosen User or Computer, when they choose any other area choice, then user and computer policies are shown together.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given empty categories are hidden, when the person switches empty categories on from the Empty Categories menu, then categories with no visible policies appear in the tree.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given empty categories are shown, when the person switches them off from the Empty Categories menu, then they leave the tree and the view moves to the nearest visible category.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#1",
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#2"
+   ],
+   "components": [],
+   "open": [
+    "Which area is shown when the person first opens the definitions?",
+    "Which category is current when the person first opens the definitions?",
+    "Are empty categories shown or hidden when the person first opens the definitions?",
+    "Does the area choice also apply to the policies listed beside the tree, or only to the tree itself?"
+   ]
+  },
+  {
+   "title": "Read what a category or policy is for",
+   "what": "A person moves to a category or points at a policy or category and sees its contents and a description of what it is for, with one focus at a time.",
+   "why": "So they can move through the loaded definitions and understand each item without opening it.",
+   "actions": [
+    "block-38981877830602633388",
+    "block-62656188540901169217"
+   ],
+   "terms": [
+    {
+     "name": "Focus",
+     "means": "The single category or policy whose description is shown; it is not a record of both a highlighted policy and a highlighted category."
+    },
+    {
+     "name": "Parent row",
+     "means": "The first row of a category's contents, marked Parent, that leads up to the category above it."
+    }
+   ],
+   "journey": {
+    "name": "One place to explore",
+    "steps": [
+     "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#3",
+     "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#4"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the tree is shown, when the person selects a category, then it becomes the current category and no policy stays selected.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given a category is chosen, when its contents are listed, then an Up row marked Parent that names the parent comes first when the category has a parent, then visible subcategories by name, then visible policies by name.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-54518846821349856909"
+      }
+     ]
+    },
+    {
+     "says": "Given a category is chosen, when its policies are listed, then each policy row shows its state and its comment text.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-54518846821349856909"
+      }
+     ]
+    },
+    {
+     "says": "Given a category is selected or highlighted, when its description is shown, then it carries the category title, the line saying how many policies and subcategories it contains, and its explanation.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-55193519950925403263"
+      }
+     ]
+    },
+    {
+     "says": "Given a category is highlighted but not opened, when its description is shown, then the contents line says \"The selected category\" and the counts include every policy and subcategory, hidden or not.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-55193519950925403263"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy is selected, when its description is shown, then it carries the policy title, either \"Requirements:\" with the support name or \"(no requirements information)\", and its explanation.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-75568512748421119593"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy is a preference, when its description is shown, then a notice says so; for any other policy no such notice appears.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-75568512748421119593"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy is listed, when its icon is chosen, then a preference gets the preference icon, otherwise one with no configurable elements gets the plain icon, otherwise it gets the extra configuration icon.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-77153890827857678995"
+      }
+     ]
+    },
+    {
+     "says": "Given the person highlights a policy, when it is highlighted, then it becomes the selected policy and any highlighted category is cleared.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-29660896839160984241"
+      }
+     ]
+    },
+    {
+     "says": "Given the person highlights a category, when it is highlighted, then any selected policy is cleared and the category is the one highlighted.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-29660896839160984241"
+      }
+     ]
+    },
+    {
+     "says": "Given the person highlights nothing, when the highlight updates, then no policy and no category is highlighted.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-29660896839160984241"
+      }
+     ]
+    },
+    {
+     "says": "Given nothing is selected, when the description pane is shown, then the title and support lines are hidden and the pane reads \"Select an item to see its description.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-16229847440499672368"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#3",
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#4"
+   ],
+   "components": [
+    "Item description pane"
+   ],
+   "open": [
+    "Is a policy's description shown as soon as the policy is highlighted?"
+   ]
+  },
+  {
+   "title": "Open an item and offer only the actions that fit it",
+   "what": "A person opens a category as the current one or a policy for the area shown, by pointer, Enter or right-click menu, and the menu offers only the actions that fit the item.",
+   "why": "So the same opening works with and without a pointer and the menu offers only what fits the item.",
+   "actions": [
+    "block-20560369235271632336",
+    "block-69879767786914075914",
+    "block-25872160162253268719",
+    "block-65211679249909420884"
+   ],
+   "terms": [
+    {
+     "name": "Item menu",
+     "means": "The right-click menu of a category or policy, offering only the actions that fit it; it is not a menu for the whole screen."
+    }
+   ],
+   "journey": {
+    "name": "One place to explore",
+    "steps": [
+     "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#5"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given nothing is selected in the policy list, when the person opens an item, then nothing happens.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-68891329302657284154"
+      }
+     ]
+    },
+    {
+     "says": "Given a category is selected in the policy list, when the person opens it, then it becomes the current category.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-68891329302657284154"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy is selected in the policy list, when the person opens it, then its editor opens for the area currently shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-68891329302657284154"
+      }
+     ]
+    },
+    {
+     "says": "Given an item is selected in the policy list, when the person presses Enter, then it opens the same way as when opened directly.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-68891329302657284154"
+      }
+     ]
+    },
+    {
+     "says": "Given a category in the tree, when the person right-clicks it, then it becomes the selected category.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-57028469241171716582"
+      }
+     ]
+    },
+    {
+     "says": "Given a category in the tree, when the person left-clicks it, then the selection is left as it is.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-57028469241171716582"
+      }
+     ]
+    },
+    {
+     "says": "Given the menu is opened from the category tree with a category selected, when it appears, then it is shown for that category.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-36623707346851740456"
+      }
+     ]
+    },
+    {
+     "says": "Given the menu is opened from anywhere else with a row selected in the policy list, when it appears, then it is shown for that row.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-36623707346851740456"
+      }
+     ]
+    },
+    {
+     "says": "Given the menu is opened from anywhere else with no row selected, when the person asks for it, then it is not shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-36623707346851740456"
+      }
+     ]
+    },
+    {
+     "says": "Given the menu is shown for a category, when its actions are listed, then policy-only actions are hidden.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-25501360175578063856"
+      }
+     ]
+    },
+    {
+     "says": "Given the menu is shown for a policy, when its actions are listed, then category-only actions are hidden.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-25501360175578063856"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#5"
+   ],
+   "components": [
+    "Item action resolver"
+   ],
+   "open": [
+    "What should the person see when the menu is requested from the category tree with no category selected? The legacy program fails with an error."
+   ]
+  }
+ ]
+}

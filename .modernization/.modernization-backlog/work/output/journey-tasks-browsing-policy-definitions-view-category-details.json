@@ -1,0 +1,94 @@
+{
+  "stories": [
+    {
+      "title": "Show a category's parent and let people go up to it",
+      "what": "Open a category from the category list, or the category a policy sits in, and see its details with its parent's name and a way to go to the parent in the same window.",
+      "why": "People can see where a category belongs and move to its parent, and a parent that has gone missing is shown as such instead of leading nowhere.",
+      "actions": [
+        "block-66828128113828383962",
+        "block-84939599421744669029",
+        "block-33894596800557045530"
+      ],
+      "terms": [
+        {
+          "name": "Orphaned category",
+          "means": "A category whose named parent cannot be found among the loaded definitions; it is not a top-level category, which names no parent at all."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given a category whose parent exists, when the person opens its details from the category list or from the category a policy sits in, then the details show the parent's name.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88550832449331267612"
+            }
+          ]
+        },
+        {
+          "says": "Given a category whose parent exists, when the person looks at its details, then the button to go to the parent is available.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88550832449331267612"
+            }
+          ]
+        },
+        {
+          "says": "Given a category whose parent is named but missing from the loaded definitions, when the person opens its details, then the parent shows as \"<orphaned from <parent name>>\" instead of a name.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88550832449331267612"
+            }
+          ]
+        },
+        {
+          "says": "Given a category whose parent is named but missing, when the person looks at its details, then the button to go to the parent is disabled.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88550832449331267612"
+            }
+          ]
+        },
+        {
+          "says": "Given a top-level category, when the person opens its details, then no parent is shown.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88550832449331267612"
+            }
+          ]
+        },
+        {
+          "says": "Given the details of a category whose parent exists, when the person chooses to go to the parent, then the same window shows that parent's details.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88550832449331267612"
+            }
+          ]
+        }
+      ],
+      "journey": {
+        "name": "Whole ancestry at once",
+        "steps": [
+          "Open a category and see where it sits in the whole tree.",
+          "Jump to any parent in the chain."
+        ]
+      },
+      "steps": [
+        "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#1",
+        "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#2"
+      ],
+      "components": [
+        "Category details presenter"
+      ],
+      "open": [
+        "Should the details also list the policies the category holds?",
+        "Should the details show the whole chain of parents at once, instead of one parent at a time?"
+      ]
+    }
+  ]
+}

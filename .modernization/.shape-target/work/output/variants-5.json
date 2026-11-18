@@ -1,0 +1,718 @@
+{
+  "journeys": [
+    {
+      "task": "tasks-changing-policy-settings.set-policy-state",
+      "actor": "person",
+      "name": "Decide and save",
+      "strategy": "task first",
+      "idea": "Pick where the policy applies, decide its state, set only the options that matter, and save in one closing step.",
+      "tradeoff": "Still asks the person to walk the options one by one, so a policy with many options takes a while.",
+      "steps": [
+        {
+          "intent": "Choose the policy's scope and see what it is",
+          "system": "The system shows the policy's name, help and support text, the side it applies to (computer or user, fixed when the policy has one only), whether that side can be changed, and the state it is in today.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-22919299514571743135",
+            "businessrule-47264131679601828501",
+            "businessrule-23336067846798029987",
+            "businessrule-20408685392954236399",
+            "businessrule-33075335985104561108",
+            "businessrule-01560321201783674273",
+            "businessrule-59619098183313284576"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-49789533336413980059",
+              "block-51334849021361427410"
+            ],
+            "change": "merged",
+            "reason": "One step shows the policy and its scope and reloads the state when the side changes, instead of two separate moments.",
+            "keeps": [
+              "businessrule-22919299514571743135",
+              "businessrule-47264131679601828501",
+              "businessrule-23336067846798029987",
+              "businessrule-20408685392954236399",
+              "businessrule-33075335985104561108",
+              "businessrule-01560321201783674273",
+              "businessrule-59619098183313284576"
+            ]
+          }
+        },
+        {
+          "intent": "Decide the policy's state: on, off or not configured",
+          "system": "Options become editable only when on is chosen; the other two states need nothing more.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-59619098183313284576",
+            "businessrule-33075335985104561108"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-57992755110790680579"
+            ],
+            "change": "kept",
+            "reason": "The state decision comes first so the person is asked for options only when they matter.",
+            "keeps": [
+              "businessrule-59619098183313284576"
+            ]
+          }
+        },
+        {
+          "intent": "Fill in the options",
+          "system": "Each option shows the value stored today or its default, within its limits; numbers outside limits are brought back to the limit, text is capped, choices are sorted as the definition says.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-90485587050957154914",
+            "businessrule-24534399091993971891",
+            "businessrule-34769835898304277453",
+            "businessrule-37022902056569995834",
+            "businessrule-43638846001153509048",
+            "businessrule-47134496169701496073",
+            "businessrule-49179499449653183223",
+            "businessrule-90493804689850695370",
+            "businessrule-92057272745409912098",
+            "businessrule-47891883049575092611",
+            "businessrule-76476292137970655950",
+            "businessrule-95995013385384587600",
+            "businessrule-98958969318255528192",
+            "businessrule-11779280825123119273",
+            "businessrule-76178080166619590309"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-18703182669260421228",
+              "block-75724566670057728491"
+            ],
+            "change": "defaulted",
+            "reason": "Options start from what is stored so the person changes only what they want to change.",
+            "keeps": [
+              "businessrule-90485587050957154914",
+              "businessrule-24534399091993971891",
+              "businessrule-34769835898304277453",
+              "businessrule-37022902056569995834",
+              "businessrule-43638846001153509048",
+              "businessrule-47134496169701496073",
+              "businessrule-49179499449653183223",
+              "businessrule-90493804689850695370",
+              "businessrule-92057272745409912098",
+              "businessrule-47891883049575092611",
+              "businessrule-76476292137970655950",
+              "businessrule-95995013385384587600",
+              "businessrule-98958969318255528192",
+              "businessrule-11779280825123119273",
+              "businessrule-76178080166619590309"
+            ]
+          }
+        },
+        {
+          "intent": "Edit list entries where an option is a list",
+          "system": "The person adds, removes and names entries; the system refuses two entries with the same name and ignores the empty spare row.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-36860850025836880139",
+            "businessrule-67944280997214552078"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-89806020979547308639",
+              "block-48615537389470790613"
+            ],
+            "change": "merged",
+            "reason": "Entering and collecting list entries is one piece of work, not an editor opened and closed.",
+            "keeps": [
+              "businessrule-36860850025836880139",
+              "businessrule-67944280997214552078"
+            ]
+          }
+        },
+        {
+          "intent": "Add a comment on why",
+          "system": "Where the source keeps comments the person can record a reason; where it does not, the system says comments are unavailable.",
+          "confidence": "sure",
+          "touches": [
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-01560321201783674273"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-49789533336413980059"
+            ],
+            "change": "split",
+            "reason": "The reason for a change is asked for as its own small step, not hidden among options.",
+            "keeps": [
+              "businessrule-01560321201783674273"
+            ]
+          }
+        },
+        {
+          "intent": "Save and either carry on or finish",
+          "system": "The system forgets what the policy held, writes the chosen state, options and comment, and then keeps the person on the policy or leaves it, reporting a change if anything was saved earlier.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-04152128046162000583",
+            "businessrule-14958427259964761169",
+            "businessrule-19622432139142313215",
+            "businessrule-33456476599558212379",
+            "businessrule-46516041958192928718",
+            "businessrule-53178349170981485484",
+            "businessrule-55949208713495428877",
+            "businessrule-56832565542674334637",
+            "businessrule-60774486401252037450",
+            "businessrule-64524120751868809207",
+            "businessrule-66734059366331213205",
+            "businessrule-67842190900074642321",
+            "businessrule-75244076300039577548",
+            "businessrule-80911529766189561154",
+            "businessrule-84933301477035282498",
+            "businessrule-90058940824311429227",
+            "businessrule-97175686457081101132",
+            "businessrule-52553634867035971750",
+            "businessrule-30662593154265010717",
+            "businessrule-49955247469929977676",
+            "businessrule-60358450731077326247",
+            "businessrule-07359577675270518038",
+            "businessrule-37207468109369530089",
+            "businessrule-53979609002646144363",
+            "businessrule-65724709448091621197"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-38804446611751385293",
+              "block-96135191155885644109",
+              "block-29401732049948573203",
+              "block-06231454516231170585"
+            ],
+            "change": "merged",
+            "reason": "Saving, saving and leaving, and reporting the outcome are one decision.",
+            "keeps": [
+              "businessrule-04152128046162000583",
+              "businessrule-14958427259964761169",
+              "businessrule-19622432139142313215",
+              "businessrule-33456476599558212379",
+              "businessrule-46516041958192928718",
+              "businessrule-53178349170981485484",
+              "businessrule-55949208713495428877",
+              "businessrule-56832565542674334637",
+              "businessrule-60774486401252037450",
+              "businessrule-64524120751868809207",
+              "businessrule-66734059366331213205",
+              "businessrule-67842190900074642321",
+              "businessrule-75244076300039577548",
+              "businessrule-80911529766189561154",
+              "businessrule-84933301477035282498",
+              "businessrule-90058940824311429227",
+              "businessrule-97175686457081101132",
+              "businessrule-52553634867035971750",
+              "businessrule-30662593154265010717",
+              "businessrule-49955247469929977676",
+              "businessrule-60358450731077326247",
+              "businessrule-07359577675270518038",
+              "businessrule-37207468109369530089",
+              "businessrule-53979609002646144363",
+              "businessrule-65724709448091621197"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-77916892868646047596"
+          ],
+          "rules": [],
+          "reason": "How extra width is shared is a matter of presentation with no rule behind it; the target lays out its own space."
+        },
+        {
+          "actions": [],
+          "rules": [
+            "businessrule-92009750053258186072"
+          ],
+          "reason": "The old behaviour of leaving a policy half set when a chosen choice does not exist is a defect; the target writes a policy all together or not at all and refuses a choice that does not exist."
+        }
+      ]
+    },
+    {
+      "task": "tasks-changing-policy-settings.set-policy-state",
+      "actor": "person",
+      "name": "Review what will change",
+      "strategy": "automate first",
+      "idea": "The system loads the current state and every stored option, the person states what they want, and a forecast of exactly what will be written and removed is confirmed before saving.",
+      "tradeoff": "Needs the system to compute and show a forecast of changes before writing, which is extra work to build.",
+      "recommended": "Fewest steps, and the person sees every value that will be written or removed before it happens, which is where the old way surprised people (all options written, whole list keys cleared).",
+      "steps": [
+        {
+          "intent": "Open the policy with everything already worked out",
+          "system": "The system fills in the policy's description, applies to side, state and stored options, defaults and comment, and shows whether this side can be written to.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-22919299514571743135",
+            "businessrule-47264131679601828501",
+            "businessrule-23336067846798029987",
+            "businessrule-20408685392954236399",
+            "businessrule-33075335985104561108",
+            "businessrule-01560321201783674273",
+            "businessrule-59619098183313284576",
+            "businessrule-90485587050957154914",
+            "businessrule-24534399091993971891",
+            "businessrule-34769835898304277453",
+            "businessrule-37022902056569995834",
+            "businessrule-43638846001153509048",
+            "businessrule-47134496169701496073",
+            "businessrule-49179499449653183223",
+            "businessrule-90493804689850695370",
+            "businessrule-92057272745409912098",
+            "businessrule-47891883049575092611",
+            "businessrule-76476292137970655950",
+            "businessrule-95995013385384587600",
+            "businessrule-98958969318255528192"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-49789533336413980059",
+              "block-51334849021361427410"
+            ],
+            "change": "inferred",
+            "reason": "Nothing is asked that the system can read for itself.",
+            "keeps": [
+              "businessrule-22919299514571743135",
+              "businessrule-47264131679601828501",
+              "businessrule-23336067846798029987",
+              "businessrule-20408685392954236399",
+              "businessrule-33075335985104561108",
+              "businessrule-01560321201783674273",
+              "businessrule-59619098183313284576",
+              "businessrule-90485587050957154914",
+              "businessrule-24534399091993971891",
+              "businessrule-34769835898304277453",
+              "businessrule-37022902056569995834",
+              "businessrule-43638846001153509048",
+              "businessrule-47134496169701496073",
+              "businessrule-49179499449653183223",
+              "businessrule-90493804689850695370",
+              "businessrule-92057272745409912098",
+              "businessrule-47891883049575092611",
+              "businessrule-76476292137970655950",
+              "businessrule-95995013385384587600",
+              "businessrule-98958969318255528192"
+            ]
+          }
+        },
+        {
+          "intent": "Say what state it should be in and change only what differs",
+          "system": "The person picks on, off or not configured and edits only the options that need to change; the system keeps values within limits and refuses duplicate list names.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-11779280825123119273",
+            "businessrule-76178080166619590309",
+            "businessrule-36860850025836880139",
+            "businessrule-67944280997214552078",
+            "businessrule-59619098183313284576"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-57992755110790680579",
+              "block-18703182669260421228",
+              "block-75724566670057728491",
+              "block-89806020979547308639",
+              "block-48615537389470790613"
+            ],
+            "change": "merged",
+            "reason": "State, options and lists are changed in one place, with the options available only when on.",
+            "keeps": [
+              "businessrule-11779280825123119273",
+              "businessrule-76178080166619590309",
+              "businessrule-36860850025836880139",
+              "businessrule-67944280997214552078",
+              "businessrule-59619098183313284576"
+            ]
+          }
+        },
+        {
+          "intent": "Review the forecast of changes",
+          "system": "The system lists what will be forgotten, written and removed, including whole list keys and values taken away by Disabled, and what the comment will become.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-56832565542674334637",
+            "businessrule-60774486401252037450",
+            "businessrule-97175686457081101132",
+            "businessrule-52553634867035971750"
+          ],
+          "link": {
+            "_tag": "new",
+            "reason": "Showing the effect before it happens is new and prevents unintended writes."
+          }
+        },
+        {
+          "intent": "Confirm, then carry on or finish",
+          "system": "The system applies the forecast, reports the outcome as a change if anything was saved in this visit, and keeps the person on the policy or closes it.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-04152128046162000583",
+            "businessrule-14958427259964761169",
+            "businessrule-19622432139142313215",
+            "businessrule-33456476599558212379",
+            "businessrule-46516041958192928718",
+            "businessrule-53178349170981485484",
+            "businessrule-55949208713495428877",
+            "businessrule-56832565542674334637",
+            "businessrule-60774486401252037450",
+            "businessrule-64524120751868809207",
+            "businessrule-66734059366331213205",
+            "businessrule-67842190900074642321",
+            "businessrule-75244076300039577548",
+            "businessrule-80911529766189561154",
+            "businessrule-84933301477035282498",
+            "businessrule-90058940824311429227",
+            "businessrule-97175686457081101132",
+            "businessrule-52553634867035971750",
+            "businessrule-30662593154265010717",
+            "businessrule-49955247469929977676",
+            "businessrule-60358450731077326247",
+            "businessrule-07359577675270518038",
+            "businessrule-37207468109369530089",
+            "businessrule-53979609002646144363",
+            "businessrule-65724709448091621197"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-38804446611751385293",
+              "block-96135191155885644109",
+              "block-29401732049948573203",
+              "block-06231454516231170585"
+            ],
+            "change": "merged",
+            "reason": "One confirmation covers saving and leaving.",
+            "keeps": [
+              "businessrule-04152128046162000583",
+              "businessrule-14958427259964761169",
+              "businessrule-19622432139142313215",
+              "businessrule-33456476599558212379",
+              "businessrule-46516041958192928718",
+              "businessrule-53178349170981485484",
+              "businessrule-55949208713495428877",
+              "businessrule-56832565542674334637",
+              "businessrule-60774486401252037450",
+              "businessrule-64524120751868809207",
+              "businessrule-66734059366331213205",
+              "businessrule-67842190900074642321",
+              "businessrule-75244076300039577548",
+              "businessrule-80911529766189561154",
+              "businessrule-84933301477035282498",
+              "businessrule-90058940824311429227",
+              "businessrule-97175686457081101132",
+              "businessrule-52553634867035971750",
+              "businessrule-30662593154265010717",
+              "businessrule-49955247469929977676",
+              "businessrule-60358450731077326247",
+              "businessrule-07359577675270518038",
+              "businessrule-37207468109369530089",
+              "businessrule-53979609002646144363",
+              "businessrule-65724709448091621197"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-77916892868646047596"
+          ],
+          "rules": [],
+          "reason": "How extra width is shared is a matter of presentation with no rule behind it; the target lays out its own space."
+        },
+        {
+          "actions": [],
+          "rules": [
+            "businessrule-92009750053258186072"
+          ],
+          "reason": "The old behaviour of leaving a policy half set when a chosen choice does not exist is a defect; the target writes a policy all together or not at all and refuses a choice that does not exist."
+        }
+      ]
+    },
+    {
+      "task": "tasks-changing-policy-settings.set-policy-state",
+      "actor": "person",
+      "name": "Walk me through it",
+      "strategy": "guided",
+      "idea": "One prompted question at a time: where it applies, what state, each option in plain words, a reason, and a summary to confirm.",
+      "tradeoff": "More steps for people who do this often, who get no shortcut.",
+      "steps": [
+        {
+          "intent": "Say where the policy applies",
+          "system": "The system asks only when the policy applies to both computer and user; otherwise the side is set and noted.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-22919299514571743135",
+            "businessrule-47264131679601828501",
+            "businessrule-23336067846798029987"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-51334849021361427410"
+            ],
+            "change": "reordered",
+            "reason": "Scope is asked first because everything after it depends on it.",
+            "keeps": [
+              "businessrule-22919299514571743135",
+              "businessrule-47264131679601828501",
+              "businessrule-23336067846798029987"
+            ]
+          }
+        },
+        {
+          "intent": "Say what should happen to the policy",
+          "system": "The system explains the policy using its help and support text, shows today's state and asks whether to turn it on, off or leave it unset.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-20408685392954236399",
+            "businessrule-33075335985104561108",
+            "businessrule-01560321201783674273",
+            "businessrule-59619098183313284576"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-49789533336413980059"
+            ],
+            "change": "split",
+            "reason": "The question is asked in plain words with the explanation beside it.",
+            "keeps": [
+              "businessrule-20408685392954236399",
+              "businessrule-33075335985104561108",
+              "businessrule-01560321201783674273",
+              "businessrule-59619098183313284576"
+            ]
+          }
+        },
+        {
+          "intent": "Answer each option, one at a time",
+          "system": "Only when on is chosen the system asks each option in turn with today's value or default prefilled and applies limits, lengths and sorting.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-90485587050957154914",
+            "businessrule-24534399091993971891",
+            "businessrule-34769835898304277453",
+            "businessrule-37022902056569995834",
+            "businessrule-43638846001153509048",
+            "businessrule-47134496169701496073",
+            "businessrule-49179499449653183223",
+            "businessrule-90493804689850695370",
+            "businessrule-92057272745409912098",
+            "businessrule-47891883049575092611",
+            "businessrule-76476292137970655950",
+            "businessrule-95995013385384587600",
+            "businessrule-98958969318255528192",
+            "businessrule-11779280825123119273",
+            "businessrule-76178080166619590309"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-57992755110790680579",
+              "block-18703182669260421228",
+              "block-75724566670057728491"
+            ],
+            "change": "deferred",
+            "reason": "Options are asked only after the state and one at a time, so nothing is shown that is not needed.",
+            "keeps": [
+              "businessrule-90485587050957154914",
+              "businessrule-24534399091993971891",
+              "businessrule-34769835898304277453",
+              "businessrule-37022902056569995834",
+              "businessrule-43638846001153509048",
+              "businessrule-47134496169701496073",
+              "businessrule-49179499449653183223",
+              "businessrule-90493804689850695370",
+              "businessrule-92057272745409912098",
+              "businessrule-47891883049575092611",
+              "businessrule-76476292137970655950",
+              "businessrule-95995013385384587600",
+              "businessrule-98958969318255528192",
+              "businessrule-11779280825123119273",
+              "businessrule-76178080166619590309"
+            ]
+          }
+        },
+        {
+          "intent": "Fill in any list one entry at a time",
+          "system": "The system asks for each entry and, where entries are named, checks names are not repeated.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-36860850025836880139",
+            "businessrule-67944280997214552078"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-89806020979547308639",
+              "block-48615537389470790613"
+            ],
+            "change": "split",
+            "reason": "A list is built entry by entry instead of in a grid.",
+            "keeps": [
+              "businessrule-36860850025836880139",
+              "businessrule-67944280997214552078"
+            ]
+          }
+        },
+        {
+          "intent": "Leave a reason",
+          "system": "If comments are kept for this source the system asks for a reason, otherwise it says they are unavailable.",
+          "confidence": "sure",
+          "touches": [
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-01560321201783674273"
+          ],
+          "link": {
+            "_tag": "new",
+            "reason": "A guided path asks for the reason explicitly."
+          }
+        },
+        {
+          "intent": "Check the summary and confirm",
+          "system": "The system summarises the state, options and comment, then writes them and offers to carry on or finish, reporting a change if anything was saved.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-04152128046162000583",
+            "businessrule-14958427259964761169",
+            "businessrule-19622432139142313215",
+            "businessrule-33456476599558212379",
+            "businessrule-46516041958192928718",
+            "businessrule-53178349170981485484",
+            "businessrule-55949208713495428877",
+            "businessrule-56832565542674334637",
+            "businessrule-60774486401252037450",
+            "businessrule-64524120751868809207",
+            "businessrule-66734059366331213205",
+            "businessrule-67842190900074642321",
+            "businessrule-75244076300039577548",
+            "businessrule-80911529766189561154",
+            "businessrule-84933301477035282498",
+            "businessrule-90058940824311429227",
+            "businessrule-97175686457081101132",
+            "businessrule-52553634867035971750",
+            "businessrule-30662593154265010717",
+            "businessrule-49955247469929977676",
+            "businessrule-60358450731077326247",
+            "businessrule-07359577675270518038",
+            "businessrule-37207468109369530089",
+            "businessrule-53979609002646144363",
+            "businessrule-65724709448091621197"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-38804446611751385293",
+              "block-96135191155885644109",
+              "block-29401732049948573203",
+              "block-06231454516231170585"
+            ],
+            "change": "merged",
+            "reason": "The summary and the save are one confirmation.",
+            "keeps": [
+              "businessrule-04152128046162000583",
+              "businessrule-14958427259964761169",
+              "businessrule-19622432139142313215",
+              "businessrule-33456476599558212379",
+              "businessrule-46516041958192928718",
+              "businessrule-53178349170981485484",
+              "businessrule-55949208713495428877",
+              "businessrule-56832565542674334637",
+              "businessrule-60774486401252037450",
+              "businessrule-64524120751868809207",
+              "businessrule-66734059366331213205",
+              "businessrule-67842190900074642321",
+              "businessrule-75244076300039577548",
+              "businessrule-80911529766189561154",
+              "businessrule-84933301477035282498",
+              "businessrule-90058940824311429227",
+              "businessrule-97175686457081101132",
+              "businessrule-52553634867035971750",
+              "businessrule-30662593154265010717",
+              "businessrule-49955247469929977676",
+              "businessrule-60358450731077326247",
+              "businessrule-07359577675270518038",
+              "businessrule-37207468109369530089",
+              "businessrule-53979609002646144363",
+              "businessrule-65724709448091621197"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-77916892868646047596"
+          ],
+          "rules": [],
+          "reason": "How extra width is shared is a matter of presentation with no rule behind it; the target lays out its own space."
+        },
+        {
+          "actions": [],
+          "rules": [
+            "businessrule-92009750053258186072"
+          ],
+          "reason": "The old behaviour of leaving a policy half set when a chosen choice does not exist is a defect; the target writes a policy all together or not at all and refuses a choice that does not exist."
+        }
+      ]
+    }
+  ]
+}

@@ -177,6 +177,59 @@
         "minLength": 1
       }
     },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "intent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "change": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "intent",
+          "change",
+          "reason"
+        ],
+        "additionalProperties": true
+      },
+      "description": "The target journey's steps this story delivers, with how each differs from today and why."
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "module": {
+            "type": "string",
+            "minLength": 1
+          },
+          "layer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "module",
+          "layer"
+        ],
+        "additionalProperties": true
+      },
+      "description": "The components this story builds, with their module and the folder of the layer that holds them."
+    },
     "cited": {
       "type": "array",
       "items": {

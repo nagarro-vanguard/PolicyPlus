@@ -1,0 +1,11 @@
+{
+  "kind": "variants",
+  "tasks": [
+    "tasks-using-the-product.open-the-workspace",
+    "tasks-using-the-product.set-definition-language",
+    "tasks-using-the-product.leave-the-program",
+    "tasks-using-the-product.see-about-information",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources",
+    "tasks-choosing-and-saving-policy-sources.identify-user-for-policy"
+  ]
+}

@@ -1,0 +1,453 @@
+{
+ "components": [
+  {
+   "name": "Policy File Codec",
+   "domain": "Policy Source",
+   "responsibility": "Turns policy file bytes into entries and entries back into bytes: signature and version, text and number encodings, ordering and duplicate handling.",
+   "module": "policy-file-codec",
+   "uses": [],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+   ],
+   "enforces": [
+    "businessrule-70425663320377904356",
+    "businessrule-90470730563627765974",
+    "businessrule-39262656033285451423",
+    "businessrule-67456626752221980743",
+    "businessrule-75428533810997783570",
+    "businessrule-77499382636897144286",
+    "businessrule-48968387067309128566",
+    "businessrule-51421539020102170720",
+    "businessrule-71273978078040008855",
+    "businessrule-90527876062459953686",
+    "businessrule-98130638476370994041",
+    "businessrule-51554818045857630746"
+   ]
+  },
+  {
+   "name": "Policy File Entries",
+   "domain": "Policy Source",
+   "responsibility": "Holds the entries of one policy file in memory and answers presence, reading, setting, forgetting, deletion marking and key clearing.",
+   "module": "policy-file-entries",
+   "uses": [
+    "Policy File Codec"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4",
+    "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3"
+   ],
+   "enforces": [
+    "businessrule-17641776170698884064",
+    "businessrule-18230757898637060853",
+    "businessrule-29530054883116088403",
+    "businessrule-46824143239519073718",
+    "businessrule-56421390704826486738",
+    "businessrule-72149976207795359606",
+    "businessrule-86190343622453999219",
+    "businessrule-43613259767674592997",
+    "businessrule-09208070518455812303"
+   ]
+  },
+  {
+   "name": "Live Registry Values",
+   "domain": "Policy Source",
+   "responsibility": "Reads, writes, deletes and clears the live policy keys of the machine, checks root names and tests whether the keys can be written.",
+   "module": "live-registry-values",
+   "uses": [],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2"
+   ],
+   "enforces": [
+    "businessrule-28868424053274244047",
+    "businessrule-30168924374542565520",
+    "businessrule-97000243539037627331",
+    "businessrule-34447675520768722859",
+    "businessrule-95699184013424603885",
+    "businessrule-42987908693120337062",
+    "businessrule-48799510965890913669",
+    "businessrule-35899140497190862562",
+    "businessrule-51029550915449645879"
+   ],
+   "adapts": "external-97068941883605652538"
+  },
+  {
+   "name": "User Hive Mounter",
+   "domain": "Policy Source",
+   "responsibility": "Loads a user's stored settings file into the machine registry under a temporary name and unloads it when the source is released.",
+   "module": "user-hive-mounter",
+   "uses": [
+    "Live Registry Values"
+   ],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+    "tasks-using-the-product.leave-the-program:leave-and-let-go#1"
+   ],
+   "enforces": [
+    "businessrule-50808386816006011599",
+    "businessrule-46972642019161394212"
+   ]
+  },
+  {
+   "name": "Registry Export Source",
+   "domain": "Policy Source",
+   "responsibility": "Holds settings destined for an exported registry text file: branch-limited saving, deleting and clearing, and a refusal for every read or check.",
+   "module": "registry-export-source",
+   "uses": [],
+   "serves": [
+    "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+   ],
+   "enforces": [
+    "businessrule-67539343519248421601",
+    "businessrule-86313704517800761850",
+    "businessrule-96701855986906093783",
+    "businessrule-99096323836097983665",
+    "businessrule-17212723393144190896",
+    "businessrule-24034386628405619971",
+    "businessrule-25033115401021301399",
+    "businessrule-66651514909736203695"
+   ]
+  },
+  {
+   "name": "Policy Change Applier",
+   "domain": "Policy Source",
+   "responsibility": "Applies the changes of one policy file onto another source, including marker-style entries and the forgetting of dropped values.",
+   "module": "policy-change-applier",
+   "uses": [
+    "Policy File Entries",
+    "Live Registry Values"
+   ],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+    "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+   ],
+   "enforces": [
+    "businessrule-05545231242611046306",
+    "businessrule-28402048173344159866",
+    "businessrule-41013546429447756519",
+    "businessrule-67697422395860869033",
+    "businessrule-84817748081019740495",
+    "businessrule-91552597921533368557"
+   ]
+  },
+  {
+   "name": "Scratch Policy Store",
+   "domain": "Policy Source",
+   "responsibility": "An empty in-memory policy store that can be changed and is never saved.",
+   "module": "scratch-policy-store",
+   "uses": [
+    "Policy File Entries"
+   ],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2"
+   ],
+   "enforces": [
+    "businessrule-06218920206107794280"
+   ]
+  },
+  {
+   "name": "Computer File Access",
+   "domain": "Policy Source",
+   "responsibility": "Reads and writes policy files and their folders on the machine, creating missing policy files empty and opening them for reading and writing.",
+   "module": "computer-file-access",
+   "uses": [],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+   ],
+   "enforces": [
+    "businessrule-79173574861552738237",
+    "businessrule-49395771262191850050"
+   ],
+   "adapts": "external-90077838450756006603"
+  },
+  {
+   "name": "Group Policy Version Tracker",
+   "domain": "Policy Source",
+   "responsibility": "Creates and raises the version file that sits beside a policy file so the machine notices a change.",
+   "module": "group-policy-version-tracker",
+   "uses": [
+    "Computer File Access"
+   ],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+   ],
+   "enforces": [
+    "businessrule-00851565168679896073",
+    "businessrule-09176393040056781958",
+    "businessrule-26056926835272364672"
+   ]
+  },
+  {
+   "name": "Source Location Resolver",
+   "domain": "Policy Source",
+   "responsibility": "Works out where a source's policy file and comment file live from its kind and the detail given.",
+   "module": "source-location-resolver",
+   "uses": [],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#4",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4"
+   ],
+   "enforces": [
+    "businessrule-74412475215137182202",
+    "businessrule-62563112935081932578"
+   ]
+  },
+  {
+   "name": "Source Status Describer",
+   "domain": "Policy Source",
+   "responsibility": "Names each source, decides whether it is fully writable, can only be viewed or lives in memory, and words the readiness notice after opening.",
+   "module": "source-status-describer",
+   "uses": [],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#5"
+   ],
+   "enforces": [
+    "businessrule-84284160770896952745",
+    "businessrule-73847809349842629987",
+    "businessrule-98025569949322378254",
+    "businessrule-29585332630928853779"
+   ]
+  },
+  {
+   "name": "Source Opener",
+   "domain": "Policy Source",
+   "responsibility": "Closes the sources already open, opens the user and computer sources from a choice or from the default, and falls back when one cannot be opened.",
+   "module": "source-opener",
+   "uses": [
+    "Source Location Resolver",
+    "Computer File Access",
+    "Live Registry Values",
+    "User Hive Mounter",
+    "Scratch Policy Store",
+    "Policy File Codec",
+    "Policy Comment Catalog",
+    "Source Status Describer"
+   ],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#5",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4",
+    "tasks-using-the-product.leave-the-program:leave-and-let-go#1"
+   ],
+   "enforces": [
+    "businessrule-83542226215682203251",
+    "businessrule-27578488339642782673"
+   ]
+  },
+  {
+   "name": "Source Releaser",
+   "domain": "Policy Source",
+   "responsibility": "Releases each open source on leaving and tells the person when resources are still held elsewhere.",
+   "module": "source-releaser",
+   "uses": [
+    "User Hive Mounter"
+   ],
+   "serves": [
+    "tasks-using-the-product.leave-the-program:leave-and-let-go#1",
+    "tasks-using-the-product.leave-the-program:leave-and-let-go#2"
+   ],
+   "enforces": [
+    "businessrule-59631775004799082543"
+   ]
+  },
+  {
+   "name": "Source Memory",
+   "domain": "Policy Source",
+   "responsibility": "Remembers the chosen kinds and details of both sources and offers them again, replacing them with the defaults when they cannot be reached.",
+   "module": "source-memory",
+   "uses": [],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2"
+   ],
+   "enforces": [
+    "businessrule-72559528436656832979",
+    "businessrule-83248377690419919134"
+   ]
+  },
+  {
+   "name": "Source Saver",
+   "domain": "Policy Source",
+   "responsibility": "Saves comments, then each fully writable source by its kind, refreshes or applies the change, remembers the sources and reports one line per source.",
+   "module": "source-saver",
+   "uses": [
+    "Policy Comment Catalog",
+    "Policy File Codec",
+    "Computer File Access",
+    "Group Policy Version Tracker",
+    "Policy Change Applier",
+    "Live Registry Values",
+    "Source Memory",
+    "Source Status Describer"
+   ],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#2"
+   ],
+   "enforces": [
+    "businessrule-13724150063390760319",
+    "businessrule-19841193988434357732",
+    "businessrule-20632548312339129786",
+    "businessrule-24339552780845919468"
+   ]
+  },
+  {
+   "name": "Policy Comment Catalog",
+   "domain": "Policy Source",
+   "responsibility": "Keeps the comments of each source by policy and area, finds them when a comment is wanted and saves the whole list to the comment file location.",
+   "module": "policy-comment-catalog",
+   "uses": [
+    "Comment File Adapter",
+    "Source Location Resolver"
+   ],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#4",
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+    "tasks-finding-policies.find-policies-by-text:search-as-you-type#1",
+    "tasks-finding-policies.find-policies-by-text:search-as-you-type#2",
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#1",
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#2",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4",
+    "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2",
+    "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3"
+   ],
+   "enforces": [
+    "businessrule-40601471490811436933",
+    "businessrule-76710184957379543464",
+    "businessrule-87767421628061265824"
+   ]
+  },
+  {
+   "name": "Comment File Adapter",
+   "domain": "Policy Source",
+   "responsibility": "Reads and writes the comment files beside policy sources: validates their definitions and gives each comment its own text id and prefix.",
+   "module": "comment-file-adapter",
+   "uses": [
+    "Computer File Access"
+   ],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#4",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+   ],
+   "enforces": [
+    "businessrule-31889487085995982343",
+    "businessrule-93571958636080198306",
+    "businessrule-57614366266507799597",
+    "businessrule-39804924157705575084"
+   ],
+   "adapts": "external-08492831744411585027"
+  },
+  {
+   "name": "Directory Account Resolver",
+   "domain": "Policy Source",
+   "responsibility": "Turns a typed user name into the account's security identifier through the directory and checks that an identifier is valid.",
+   "module": "directory-account-resolver",
+   "uses": [],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#3",
+    "tasks-choosing-and-saving-policy-sources.identify-user-for-policy:give-a-name-or-an-identifier#1"
+   ],
+   "enforces": [
+    "businessrule-91379498462935455610",
+    "businessrule-88238619586671903040",
+    "businessrule-77474018484672211108"
+   ],
+   "adapts": "external-90078096462363044953"
+  },
+  {
+   "name": "Source Choice Builder",
+   "domain": "Policy Source",
+   "responsibility": "Creates the user and computer sources from the chosen kind and detail, naming which side failed and why.",
+   "module": "source-choice-builder",
+   "uses": [
+    "Source Opener"
+   ],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4"
+   ],
+   "enforces": [
+    "businessrule-36363277387876573326",
+    "businessrule-75533700456390778594"
+   ]
+  },
+  {
+   "name": "Source Choice Entry",
+   "domain": "Policy Source",
+   "responsibility": "Decides which details are open for the kind chosen, which files are accepted and how leaving without choosing ends.",
+   "module": "source-choice-entry",
+   "uses": [],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#5"
+   ],
+   "enforces": [
+    "businessrule-34260437212150300999",
+    "businessrule-58680491450946971024",
+    "businessrule-60819102502476341284",
+    "businessrule-66851330016699676430"
+   ]
+  },
+  {
+   "name": "User Identification Entry",
+   "domain": "Policy Source",
+   "responsibility": "Ends the naming of a user without a choice when the person leaves.",
+   "module": "user-identification-entry",
+   "uses": [
+    "Directory Account Resolver"
+   ],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.identify-user-for-policy:give-a-name-or-an-identifier#1"
+   ],
+   "enforces": [
+    "businessrule-26724904229141688759"
+   ]
+  },
+  {
+   "name": "User Profile Pick",
+   "domain": "Policy Source",
+   "responsibility": "Proposes the person's own profile, lists the others and returns the settings file path only once a profile is chosen.",
+   "module": "user-profile-pick",
+   "uses": [],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#1",
+    "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#2"
+   ],
+   "enforces": [
+    "businessrule-02848405191150173128",
+    "businessrule-37850254215893887157"
+   ]
+  },
+  {
+   "name": "Visible Category Follow",
+   "domain": "Policy Source",
+   "responsibility": "After sources open or a view setting changes, moves to the nearest visible category and drops a selection that is no longer shown.",
+   "module": "visible-category-follow",
+   "uses": [],
+   "serves": [
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4"
+   ],
+   "enforces": [
+    "businessrule-10464012301936997836",
+    "businessrule-84588009124214109370"
+   ]
+  }
+ ]
+}

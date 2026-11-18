@@ -1,0 +1,17 @@
+{
+  "read": 2,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The bracketed-setting criterion drops the rule's condition for a list setting (existing entries are removed unless the definition keeps other entries, and nothing is written) and instead says the empty value is \"allowed\", which the rule does not state."
+    },
+    {
+      "record": 0,
+      "says": "The final criterion (refusal with \"The SPOL text is invalid: \" when asking to apply) is about the apply step, which the story says happens outside it (\"Nothing is applied in this story\") and whose blocks sit in the second story, so it is misplaced."
+    },
+    {
+      "record": 1,
+      "says": "The empty-comment criterion has no cited rule though the sentence \"An empty comment leaves any existing comment alone\" is part of businessrule-78566706966921753288, so it should cite it, not stand uncited."
+    }
+  ]
+}

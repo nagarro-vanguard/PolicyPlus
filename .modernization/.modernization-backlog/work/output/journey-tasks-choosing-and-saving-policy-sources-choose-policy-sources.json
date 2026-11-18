@@ -1,0 +1,149 @@
+{
+ "stories": [
+  {
+   "title": "Choose where user and computer policies are kept",
+   "what": "The person says where the user policies live and where the computer policies live. For the user side they pick one of local files, the system settings store, a policy file, a particular user's policy, a user profile, or an empty scratch space. For the computer side they pick one of local files, the system settings store, a policy file, or an empty scratch space, because the per-user kinds belong to the user side only. Details are asked only for the kind chosen. They can also back out and leave everything as it was.",
+   "why": "So the person decides which policies they will read and edit before any work begins, without being asked for details that do not apply to their choice.",
+   "actions": [
+    "block-07013931817450395539",
+    "block-07841055713983147509",
+    "block-18882497527396093425",
+    "block-22676943268795169202",
+    "block-16593836685470314086",
+    "block-43495097990247728689",
+    "block-39062072014858771500"
+   ],
+   "terms": [
+    {
+     "name": "Policy source",
+     "means": "The place where one side's policies are kept and read from, such as local files or a policy file; it is not the template that describes what the policies mean."
+    },
+    {
+     "name": "Scratch space",
+     "means": "An empty source that keeps nothing beyond the session; it is not a saved policy file."
+    }
+   ],
+   "journey": {
+    "name": "Say where each side lives",
+    "steps": [
+     "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+     "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+     "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#3",
+     "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#5"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the person is choosing the user policy source, when they select a kind that needs a detail (registry path, policy file name, user, or profile file), then only the box and Browse button belonging to that kind can be used and the others stay unavailable.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-34260437212150300999"
+      }
+     ]
+    },
+    {
+     "says": "Given the person is choosing the computer policy source, when they select a kind that needs a detail (registry path or policy file name), then only the box and Browse button belonging to that kind can be used.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-58680491450946971024"
+      }
+     ]
+    },
+    {
+     "says": "Given the person browses for a policy file on either side, when the file picker opens, then it shows only policy files of the right type, lets them name a file that does not exist yet, and does not ask for confirmation when they pick an existing one.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-60819102502476341284"
+      }
+     ]
+    },
+    {
+     "says": "Given the person is choosing sources, when they press Escape, then the dialog closes as cancelled and the sources already open are left as they were.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-66851330016699676430"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#3",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#5"
+   ],
+   "components": [
+    "Source Choice Entry"
+   ],
+   "open": [
+    "When the person picks the per-user policy kind, which way do they name the user (type the user's identifier, or choose from a list of users), given that the rules only state the identifier is typed?"
+   ]
+  },
+  {
+   "title": "Open the chosen policy sources and keep the view on a visible category",
+   "what": "When the person confirms, both sources are created from their choices and opened, the result of opening is shown, and the view moves to the nearest category that is visible. The same keeping of the view on a visible category applies whenever a view setting changes: the selection that is no longer shown is dropped and the tree and list are rebuilt. If either source cannot be created, the person is told which side failed and why, and the dialog stays open.",
+   "why": "So the person starts working against exactly the policies they chose, learns at once, with the reason, when a choice cannot be used, and is never left looking at a category or policy that is no longer shown.",
+   "actions": [
+    "block-52519148395305522333",
+    "block-53684119065030568086"
+   ],
+   "terms": [],
+   "journey": {
+    "name": "Say where each side lives",
+    "steps": [
+     "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the person has chosen a kind for the user side, when they confirm, then the user source is created from it (local files, registry path, policy file, a user's own policy by identifier, a user profile file, or scratch space when nothing else is selected); and if it cannot be created they see \"The user policy loader could not be created.\" followed by the reason and the dialog stays open.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-36363277387876573326"
+      }
+     ]
+    },
+    {
+     "says": "Given the person has chosen a kind for the computer side, when they confirm, then the computer source is created from it (local files, registry path, policy file name, or scratch space when nothing else is selected); and if it cannot be created they see \"The computer policy loader could not be created.\" followed by the reason and the dialog stays open.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-75533700456390778594"
+      }
+     ]
+    },
+    {
+     "says": "Given both sources were created, when the person confirms, then the dialog closes as accepted, the sources are opened, the opening result is shown and the view moves to the nearest visible category.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-10464012301936997836"
+      }
+     ]
+    },
+    {
+     "says": "Given the person changes a view setting, when the view is refreshed, then it moves up to the nearest visible category, drops the selected policy if the move happened or the policy is now hidden, rebuilds the tree and list, and a policy kept appears in the information pane only, with its row not highlighted.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-84588009124214109370"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4"
+   ],
+   "components": [
+    "Source Choice Builder",
+    "Visible Category Follow"
+   ],
+   "open": []
+  }
+ ]
+}

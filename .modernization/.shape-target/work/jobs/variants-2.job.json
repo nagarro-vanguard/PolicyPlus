@@ -1,0 +1,6 @@
+{
+  "kind": "variants",
+  "tasks": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions"
+  ]
+}

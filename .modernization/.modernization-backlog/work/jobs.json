@@ -24,28 +24,9 @@
         "layers"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
-      "disputes": [
-        "Record 0: The reason rejects server disk access because it would leak across users, yet decision-4 assumes no sign-in so the uploaded files, templates and comments stored in Data are one shared pool for all users, which is the same leak; the decision must say whose files these are or state the shared-pool assumption.",
-        "Record 5: The reason states that the analysis shows no comment search, a fact that is not in the inputs given (context and job), so the choice rests on a claim the reviewer cannot trace to the analysis."
-      ]
-    },
-    {
-      "id": "scope",
-      "stage": "foundation",
-      "kind": "scope",
-      "title": "Decide which capabilities are carried, replaced or dropped",
-      "after": [
-        "integrations"
-      ],
-      "state": "decided",
-      "fixes": 1,
-      "feedback": "",
-      "disputes": [
-        "Record 5: The reason states that administrators locate policies mainly by search, a fact that appears nowhere in the analysis or the decisions, so it cannot carry the choice to carry the capability.",
-        "Record 7: The reason claims every other capability selects policies from these views, which the inputs do not show (building, getting Microsoft definitions, settings and raw file editing are not described as starting from these views), so it cannot carry the choice."
-      ]
+      "disputes": []
     },
     {
       "id": "base",
@@ -57,12 +38,9 @@
         "integrations"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
-      "disputes": [
-        "Record 0: It states that no library outside the stack is added, yet it adds fast-xml-parser and fflate, which the stack in the context does not list, so the decision contradicts itself.",
-        "Record 2: Its reason leans on decision-9 allowing no library outside the stack, but decision-9 itself adds two such libraries, so the grounds for excluding Testing Library and property testing do not hold as written."
-      ]
+      "disputes": []
     },
     {
       "id": "foundation-stories",
@@ -71,83 +49,304 @@
       "title": "Write the technical stories of the foundation",
       "after": [
         "integrations",
-        "scope",
         "base",
         "layers"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
-      "disputes": [
-        "Record 3: The Services criterion adds 'without starting a network server', which base.decision-11 does not say; it only names the HttpApi test client.",
-        "Record 3: The Storybook criterion says a component without a story is 'reported', but base.decision-24 only says each component has a story and names no check that reports a missing one.",
-        "Record 3: The CI criterion turns an assumption of base.decision-11 ('CI can run Docker and Playwright browsers') into a requirement, and no criterion carries the rule that a story is done only when its layer checks and its black-box test pass.",
-        "Record 1: The knip criterion repeats the one in the first story (both cite base.decision-14), so the same rule is covered twice rather than once.",
-        "Record 4: No story carries the layer conventions base.decision-19 to 23, 25 and 26 (file size limits in the contract, forward-only migrations, repositories returning Domain types, thin handlers, upload validation, Paraglide messages, generated client only), so a stated decision reaches no builder; the criterion on AGENTS.md says only that conventions are written, not which."
-      ]
+      "disputes": []
     },
     {
       "id": "shared-1",
       "stage": "stories",
-      "kind": "shared",
-      "title": "Write the stories of the shared rules, part 1",
+      "kind": "components",
+      "title": "Write the stories of the shared components, part 1",
       "after": [],
       "state": "decided",
       "fixes": 1,
-      "feedback": "the review says it read 11 records of 10",
+      "feedback": "",
       "disputes": [
-        "Record 2: The criterion for businessrule-25371901799273876158 drops the rule's condition that a start-up load also discards the workspace.",
-        "Record 4: The criterion that a policy option of an unknown kind is dropped without notice cites only the legacy rule, yet base.decision-16 says an unknown policy element is kept and reported, never silently dropped; the contradiction is neither resolved nor cited.",
-        "Record 5: The criterion that any other control is dropped without notice conflicts with base.decision-16 (unknown elements are kept and reported) and neither cites nor reconciles it.",
-        "Record 8: The criteria on an imported registry source restate rules that describe the live registry, but they do not cite integrations.decision-2 that turns the live registry into imported files, so the builder cannot see why the rule applies to imports.",
-        "Record 9: The story joins two unrelated rules, and its wording (an 'XML attribute' returning nothing, 'server rendered', 'decisions make the service...') is not something a product owner who never saw the code could follow."
+        "Record 0: The first criterion says the files are handed on as parsed documents, but integrations.decision-3 has the API hand the file text to the parsers in the domain, so parsing is not part of what the folder read hands on.",
+        "Record 1: The last criterion drops the cited rule's condition that the earlier top row is put back only when the policy is in the same category, and its stated consequence that the policy is not guaranteed to stay in view.",
+        "Record 1: A person who never saw the code cannot follow the undefined word \"orphaned\" in the icon criterion, nor \"the right pane\" and \"the information pane\".",
+        "Record 5: The first criterion states loading under a fresh temporary name after the backup and restore rights are switched on, which comes from businessrule-50808386816006011599, yet it cites only integrations.decision-2."
       ]
     },
     {
       "id": "shared-2",
       "stage": "stories",
-      "kind": "shared",
-      "title": "Write the stories of the shared rules, part 2",
+      "kind": "components",
+      "title": "Write the stories of the shared components, part 2",
       "after": [],
       "state": "decided",
       "fixes": 1,
       "feedback": "",
       "disputes": [
-        "Record 0: The criterion on the language falls back to \"the computer's own language\", which in a server-rendered product is the server's or is undefined; it cites no decision (integrations.decision-4 and base.decision-22 store the language in a settings row) and does not say whose language is used when none is saved.",
-        "Record 0: \"Namespace\" is used in the criteria (owned namespace, recorded under the template's namespace) but is not defined in the terms, so a product owner who never saw the code cannot follow it.",
-        "Record 4: The last criterion promises identical bytes on write-back, but the cited rule 70425663320377904356 truncates text at its first empty character and a multiple-string value at its first empty string on read, so bytes after the truncation cannot be written back; the criterion contradicts the rule it sits beside without saying which wins.",
-        "Record 4: base.decision-16 is about unknown policy elements in definitions, yet it is applied to a POL file as 'an unknown element is kept and reported'; the claim 'a value is written as the type it was read as' comes from no cited rule or decision.",
-        "Record 5: The 'Policy source' and 'SID' terms say a User hive source may show the SID in brackets, but the name criterion says the brackets hold the imported file name in place of a path or SID; the term and the criterion contradict.",
-        "Record 5: The criterion on sources that could not release their resources (rule 59631775004799082543) is kept as written, but with no hive mounted and no file held open (the story's own criteria say so) no source can fail to release, so the criterion can never be met or tested.",
-        "Record 5: The writability criterion says a registry source is always changeable, dropping the rule's read-only outcome, and the close criterion says closing a user hive always succeeds, dropping the rule's reported failure; these are changes in behaviour with no condition kept to say when they would differ.",
-        "Record 5: The criteria that read values from a registry source filled by an imported REG file contradict the next story, which says a REG file source fails every read with 'not implemented'; the two stories do not say how a REG import is held so that reading works here and fails there.",
-        "Record 6: Its rules describe a live REG file source that cannot be read, but integrations.decision-2 and scope.decision-15 turn REG into an import and export format whose content is read into stored sources, so it is unclear when this failure can still occur; the criterion cites no decision and does not say what carries the rule.",
-        "Record 5: Wording a product owner cannot follow: 'Registry.pol file', 'GPO', 'signed number with the same bits' and 'unsigned 32-bit or 64-bit number' are used in criteria without being explained in plain terms."
+        "Record 9: The why says typing mistakes never silently change a value, but the cited rule clamps a too-large hexadecimal number to the largest allowed value without any message, and the what adds \"decimal or marked hexadecimal\" that no cited rule states.",
+        "Record 0: The sixth criterion says \"the three policy branches of the registry\" without naming them, so a product owner who never saw the code cannot tell which values are forgotten.",
+        "Record 7: The story and its criterion use \"semantic policy text\" and \"the fragment\" without explaining either, which a person who never saw the code could not follow.",
+        "Record 6: The last criterion adds that the screens receive each policy state \"as plain facts\", which the cited rule does not say and a product owner cannot follow; the criteria also lean on undefined words such as \"element\" and \"switched-on effects\"."
       ]
     },
     {
       "id": "shared-3",
       "stage": "stories",
-      "kind": "shared",
-      "title": "Write the stories of the shared rules, part 3",
+      "kind": "components",
+      "title": "Write the stories of the shared components, part 3",
       "after": [],
       "state": "decided",
       "fixes": 1,
       "feedback": "",
       "disputes": [
-        "Record 0: The writability criterion ('no writing' when the write test failed, 'no commit' when the file could not be opened for writing) keeps legacy live-registry and disk-open conditions that integrations.decision-1 and decision-2 remove, cites no decision, and does not say what fails for an uploaded or stored source.",
-        "Record 1: The criterion that registry-style sources 'lose nothing' flattens the rule (a registry source applies changes at once, a user hive file when it is closed) and cites no decision although decision-2 drops the live registry, so what is lost for an imported registry or hive source is unstated.",
-        "Record 3: Criteria say 'when it is stored' for marking, forgetting and clearing, wording a product owner cannot follow; the rule describes the change made to the policy file's entries.",
-        "Record 4: The '**delvals' criterion drops the rule's sentence that clearing a live registry key removes only that key's own values.",
-        "Record 5: The forget and clear criteria describe the live registry's behaviour but do not cite integrations.decision-2 or say they apply to the imported registry source model the story is about.",
-        "Record 9: The edit-accepted criterion says 'nothing is written to disk until Save', which contradicts decision-1 (the service reads and writes no folder) and does not say what Save stores or downloads."
+        "Record 0: Criteria 2 to 5 (number box, multi-line box, unsupported kind refusal, cancel leaves value) state sentences of businessrule-87150598845683946147 but cite nothing, so only the first criterion carries that rule.",
+        "Record 1: The 'no choice of version' criterion restates businessrule-53408776186716933732 without citing it, and the open question on TLS 1.0 and 1.1 contradicts the rule-backed criterion that fixes exactly those protocols as allowed, with jargon a product owner may not follow.",
+        "Record 2: The criterion tying the version to the release workflow cites integrations.decision-5, which says nothing about the release workflow (that comes from the rule), and the no-tags and empty-committed-source criteria cite nothing; the decision also replaces the generated source file with an environment value, which the 'empty one in what the program reports' wording does not reflect.",
+        "Record 3: The criteria that changes are dropped and the person is not told when the store is unreachable cite nothing, and the rule they come from describes the old registry settings area, which decision-4 says is no longer used, so the unreachable-database behaviour is a stated fact the decision cannot carry.",
+        "Record 4: Decision integrations.decision-4 names only language, definitions folder and offers considered as stored rows, yet the criteria cite it for chosen sources and caution accepted, and for 'default returned when never saved' and 'carries on with defaults and tells no one', none of which that decision states."
       ]
     },
     {
-      "id": "surfaces-building-and-versioning-policy-plus-1",
+      "id": "journey-tasks-building-and-versioning-policy-plus-stamp-program-version",
       "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Building and versioning Policy Plus, part 1",
+      "kind": "journey",
+      "title": "Write the stories of the journey Every build stamps itself",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The story cites no rule (cite is empty) although its steps keep businessrule-12414618955963878773, and no criterion says why; every criterion cites only integrations.decision-5, which replaces the generated version file, so the rule's wording is not carried in the criteria.",
+        "Record 0: Criterion 4 (saved source still has an empty version) contradicts integrations.decision-5, which drops the generated version source file for a build-time environment value; it carries over the legacy rule's 'committed file holds an empty version' as behaviour no decision states for the target.",
+        "Record 0: Criterion 5 says 'the program reports the version' and criterion 3 says 'no one runs a separate stamping step'; the decision only says the API reports an environment value and the rule says the script runs when someone or the release workflow runs it, so both go beyond (and criterion 3 partly against) what is stated, and 'program' hides that it is the API."
+      ]
+    },
+    {
+      "id": "journey-tasks-getting-microsoft-policy-definitions-get-policy-definitions",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Install in one go",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The third criterion (cancelling the folder dialog leaves the destination unchanged) cites no rule although businessrule-78945520165872370051 states it, and it neither cites it nor says why it has none.",
+        "Record 1: No criterion carries the rule that the download always fetches one fixed Microsoft package (Windows 11 September 2026 Update 26H2 templates) into a scratch folder and the person cannot choose another version (businessrule-53408776186716933732), which step 1 of the journey keeps.",
+        "Record 1: The criterion for businessrule-16960626064100495277 drops that a standard user skips taking control and that a failure ends the download with \"Failed to take control of the destination.\" with nothing moved.",
+        "Record 1: The criterion for businessrule-24154317128059319852 drops that if the package has no en-US folder the download stops with \"Failed to move the ADMX files.\" after the destination files were already replaced.",
+        "Record 1: The criterion for businessrule-70392920399990339776 drops that a standard user changes no permissions and that a language folder created during the move inherits permissions while existing ones have ownership taken, and it does not state that this failure is reported as the move message, not the take-control message.",
+        "Record 1: The story's what repeats proposing the usual folder, which is the other story's behaviour and is not built by this story's cited rules, so the two stories overlap."
+      ]
+    },
+    {
+      "id": "journey-tasks-getting-microsoft-policy-definitions-accept-welcome-download-offer",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Offer once, keep it open",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The last criterion cites integrations.decision-8, which only says the API downloads the package from the Microsoft site and extracts it, so it cannot carry 'the download dialog opens'; that behaviour is stated only by rule businessrule-23603907625209300500 (Yes starts the download dialog), which the criterion should cite instead.",
+        "Record 0: The story promises that passing the offer over 'leaves the invitation available for later' and builds the Offer consideration record's 'standing invitation', yet no criterion states it and no rule or decision backs it (step 4 has no rule, and the story's own open questions admit nothing is specified), so the criteria must say this part is new and unspecified or the claim should be dropped from what, why and the component.",
+        "Record 0: The criterion on empty categories adds that an empty category is 'not counted towards the missing-parent total', which the cited rule (it only defines empty) does not state; that consequence comes from the offer rule's 'non-empty' wording and should be cited or phrased from it.",
+        "Record 0: The criteria never say what happens when the person answers No beyond the open question, although the what-line says passing it over keeps the invitation open, and the 'at most once' promise in why rests only on the record rule, not on any stated answer-No behaviour."
+      ]
+    },
+    {
+      "id": "journey-tasks-getting-microsoft-policy-definitions-use-downloaded-definitions",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Check, then switch",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 1: The second criterion is garbled (\"missing or with unreadable any of the required parts\") and is a long run-on list that drops the rule's wording (support and product display names, a support reference or range without its reference, the category parent entry) so the product owner cannot check it against the rule.",
+        "Record 1: The criteria on item unique names, prefixes and XML attributes giving defaults are written in developer terms (attribute, prefix, namespace colon form) that a product owner who never saw the code could not follow, and the attribute-default criterion reads as self-contradictory (absent gives nothing, absent gives the default).",
+        "Record 2: The preference criterion says the three policy branches are \"the machine and user policy locations of the system settings store\", which the rules do not state; they name software\\policies, software\\microsoft\\windows\\currentversion\\policies and system\\currentcontrolset\\policies.",
+        "Record 2: Some criteria drop conditions of the cited rules: the text option's \"overwrites existing values unless the template says otherwise\" is missing, and the number box defaults (1, spinner, step 1) omit \"unless the language file says otherwise\".",
+        "Record 3: The second and third criteria cite no rule (from is empty) and do not say in the criteria why, so they read as invented behaviour; they rest only on the step wording.",
+        "Record 3: The 'why' promises that the switch happens whole or not at all, which no rule states and which the story's own open question admits is unknown (undo when the folder cannot be remembered); the adoption rule only says the workspace is emptied, loaded, saved and rebuilt."
+      ]
+    },
+    {
+      "id": "journey-tasks-using-the-product-open-the-workspace",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Resume where I left off",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: None of the five criteria cites a rule and the criteria never say why, although the job's steps carry rules that state them (for example businessrule-27578488339642782673 first start, businessrule-83248377690419919134 fallback, businessrule-76710184957379543464 comments, businessrule-85204901615179220846 'User or Computer' at start, businessrule-25353365313977612083 settings fallback), so each criterion is uncited and unexplained.",
+        "Record 0: The fallback criterion drops what the rule states: both sources are reset to Local GPO and opened quietly, and the preferences criterion omits that the person is not told when settings cannot be kept.",
+        "Record 1: The first criterion is worded in internal terms ('write test failed', 'cannot be committed') the product owner could not follow, and it does not map them to the three states the person sees (fully writable, cannot be saved, cannot be modified) that the next criterion lists.",
+        "Record 1: The status-bar criterion uses the unexplained term 'SID' and describes the status bar, which is not the 'one notice' the title and what promise, so it sits outside the story's stated outcome.",
+        "Record 1: The last criterion folds in the 'both writable' confirmation as 'appears only if opening was not quiet, never at start' without saying what the confirmation is, which is confusing next to the title 'Tell me once'.",
+        "Record 2: The 'No' criterion for businessrule-41547680626150552574 says No discards the workspace with the message, but the rule says the failure goes into failed-load handling (the message is the reason shown in the following prompt); stated as a standalone message it misstates the behaviour.",
+        "Record 2: The last criterion drops the condition of businessrule-72200124994498270380 that the same notice also appears when the default folder fails to load after the person chose Yes, and 'when that happens' leaves the trigger vague."
+      ]
+    },
+    {
+      "id": "journey-tasks-using-the-product-set-definition-language",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Name the language, then reload",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Four criteria (one-hyphen text accepted unchecked, en-us counts as different from en-US, new code saved at once, and the no-answer to the reload question) cite no rule although the first three restate sentences of the cited rules and the last, that the workspace stays as is and the language applies at the next load, is stated by no rule or decision and is only inferred from the question's wording, so they should cite the rule they come from or say why none applies."
+      ]
+    },
+    {
+      "id": "journey-tasks-using-the-product-leave-the-program",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Leave and let go",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Criteria 1, 2 and 4 cite no rule and do not say in the criteria why (for example that they come from the journey's recorded actions, not from a rule), as the plan requires of uncited criteria.",
+        "Record 0: Criterion 4 (the other sources are still released when one fails) is not stated by any rule or decision; the only rule says the message appears when any source could not release, so this invents behaviour, and it also leans on the unanswered open question about what happens after the message.",
+        "Record 0: Criterion 1 drops the rule businessrule-46972642019161394212 that step 1 keeps: a mounted user hive is unloaded on release and the result says whether unloading succeeded, every other kind of source releasing successfully; no criterion covers it, so the condition on which the cleanup message depends is missing.",
+        "Record 0: Criterion 2 (no message at all when everything released) is only implied by the cited rule's 'when any source could not release', and the uncited claim should be tied to the rule or the step reason 'Silent on success' in the criterion itself."
+      ]
+    },
+    {
+      "id": "journey-tasks-using-the-product-see-about-information",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Ask who and which version",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The second and third criteria (version shown only when built in, nothing shown otherwise) state the condition of businessrule-59853527376948406586 but cite no rule and give no reason, so they should cite that rule.",
+        "Record 0: The third criterion adds 'no version line or empty version', which the rule does not state; it only says the version is added when one was built in."
+      ]
+    },
+    {
+      "id": "journey-tasks-choosing-and-saving-policy-sources-choose-policy-sources",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Say where each side lives",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The \"what\" offers all six kinds (including a particular user's policy and a user profile) for each side, but the computer side has only local files, the system settings store, a policy file or scratch space; the rules and step 2 say the per-user kinds are user-side only.",
+        "Record 1: Criterion 4 (rule 84588009124214109370) is about refreshing the view after a view setting changes, which is not part of confirming sources, yet the title, what and why of the story never mention it, so a criterion sits in the story with no stated purpose there."
+      ]
+    },
+    {
+      "id": "journey-tasks-choosing-and-saving-policy-sources-identify-user-for-policy",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Give a name or an identifier",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The title, what and why promise a single entry that takes a name or a security identifier, but the only component built (User Identification Entry) enforces just the Escape rule, so the story is a thin restatement of leaving and its criterion does not cover the entry that the title names; the name and identifier handling belongs to the Directory Account Resolver, which this story does not build, and the criteria do not say so.",
+        "Record 0: The criterion adds 'and nothing is changed', which the cited rule (Escape closes the user dialog as cancelled) does not state; also 'at any time' in the what is stronger than the rule, which names only Escape, and 'security identifier' is left unexplained for a product owner."
+      ]
+    },
+    {
+      "id": "journey-tasks-choosing-and-saving-policy-sources-pick-user-profile-for-policy",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Start from my own profile",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The Escape criterion adds that the current policy source is unchanged, which rule businessrule-37850254215893887157 does not state (it only says the dialog closes as cancelled); that comes from the journey step, not a rule.",
+        "Record 0: The story text (what and why) asserts as fact that the person is offered their own profile and sees the other profiles, yet no criterion or rule states this behaviour and the open note admits it is unstated, so the story is partly invented behaviour."
+      ]
+    },
+    {
+      "id": "journey-tasks-choosing-and-saving-policy-sources-save-policy-changes",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Save in one go",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The criteria for \"not writable\" and for \"Success.\" / \"Saving failed!\" cite only layer-api and layer-web, although businessrule-13724150063390760319 states both outcomes, so they should cite that rule.",
+        "Record 0: The criterion for a local Group Policy source on an edition without Group Policy cites only integrations.decision-2 and not businessrule-19841193988434357732, which is the rule that states the registry diff, the notification of all windows and the outcome text.",
+        "Record 0: The criterion on POL file, registry, user hive and scratch space outcomes is hard to follow: \"in that order of kind\" is unclear, \"scratch space\" is never explained to the product owner, and each outcome is not tied to its source kind as businessrule-24339552780845919468 does.",
+        "Record 0: The term \"Fully writable source\" adds a definition (can only be viewed or changed in memory) that no cited rule states; the rule only says a source is written if fully writable.",
+        "Record 0: The criterion for a local source on an edition with Group Policy drops the rule's condition that editions are decided by a fixed list of product edition codes, so the builder cannot tell how the edition is chosen."
+      ]
+    },
+    {
+      "id": "journey-tasks-changing-policy-settings-set-policy-state",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Review what will change",
       "after": [
         "shared-1",
         "shared-2",
@@ -157,210 +356,630 @@
       "fixes": 1,
       "feedback": "",
       "disputes": [
-        "Record 0: The second criterion adds a condition the cited rule does not state (\"when the commit is not itself tagged\") and uses the term \"describe command\", which a product owner who never saw the code cannot follow; the rule says only a tag, commit count and short commit name when tags exist, and a short commit name otherwise.",
-        "Record 0: The what and the term \"Build version\" say the version is shown or reported by the screens and the service, but the cited rule only stamps the version into a file and no reviewed input shows it displayed anywhere."
+        "Record 0: The Apply/OK/Cancel reporting, the list-refresh and 'nothing written until Save Policies' criteria (rules 53979609, 37207468, 65724709, 07359577, 75178338) and the 'forgotten first, then written' save criterion (84933301, 33456476) are about saving and closing, not opening, so they sit in the wrong story and duplicate what the 'Save the policy and carry on or finish' story promises.",
+        "Record 0: Several criteria bundle two or three unrelated rules with 'Also:' (supported-on text with state shown, reading choice with check box, list reading with the 'every value present' check), which makes them hard for a product owner to test as one criterion, and 'whole value list' and 'first item whose own value' are builder wording not owner wording.",
+        "Record 1: The number-box criterion drops rule 76178080's conditions that only typing is restricted to digits (pasted text is not) and that a negative number kept where the minimum is below zero is converted to an unsigned number when applied, and the unnamed-list criterion drops that a row whose value cell was never filled is returned as an empty entry; the open questions only partly cover these.",
+        "Record 2: No rule states a forecast: every criterion restates a write-time rule of the state writer as 'when the forecast is shown, then ... is listed', which invents a forecast listing the rules do not describe, while the open question admits its layout and confirmation are undecided.",
+        "Record 2: The criterion for Enabled combines rule 60774486 (every option is written, including options never filled in) with rule 97175686 (only supplied settings are written, an unsupplied one is left as it was) into one sentence that reads as self-contradictory, and the conflict between the two rules is neither resolved nor flagged.",
+        "Record 2: The REG file and policy file criteria use words a product owner would not follow ('key's clearance is forgotten', 'key-removal entry', 'clear-all marker', 'source branch') and describe storage internals rather than what the person sees.",
+        "Record 3: The story's what and why speak of confirming the forecast and of OK, Apply and closing, but none of its criteria says any of that, because they are all registry-writing rules of the option value writer (and rule 80911529's 'delete' value), so the criteria do not match the title and a story about carrying on or finishing has no criterion on carrying on or finishing.",
+        "Record 3: Criteria use technical wording a product owner could not follow ('32-bit number', 'expandable string', 'multiple-string value', 'defined as delete', 'extra values', 'registry key') without saying what the person gets."
       ]
     },
     {
-      "id": "surfaces-getting-microsoft-policy-definitions-1",
+      "id": "journey-tasks-changing-policy-settings-import-policy-settings-from-text",
       "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Getting Microsoft policy definitions, part 1",
+      "kind": "journey",
+      "title": "Write the stories of the journey Bring in with live check",
       "after": [
         "shared-1",
         "shared-2",
         "shared-3"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
       "disputes": [
-        "Record 0: The first criterion says more than businessrule-34650805596483639458, which only sets the destination to the Windows policy definitions folder and reports no new folder to the caller; it invents 'shows that Microsoft's package will be kept as the program's definitions' and an agreement step, and the story's 'names where the definitions go' contradicts its second criterion, where there is no folder to choose.",
-        "Record 2: The third criterion drops from businessrule-24154317128059319852 that the missing English folder stops the download only after the destination files were already replaced, and the second criterion says 'nothing is stored' on extraction failure while omitting that the package file is kept and, on success, deleted (businessrule-91358402464075338920).",
-        "Record 2: The second criterion promises that unpacking makes the files ready to store, citing no decision, although integrations.decision-8 and base.decision-9 assume an in-memory archive and the story's own open question admits the Windows installer package cannot be opened that way; the fact cannot carry the claim, and the criteria use 'service' wording a product owner has no use for.",
-        "Record 4: The criteria on remembering a policy-source choice, falling back from an unusable policy-source place, the raw POL editing warning and creating a missing policy file cite transitions that this story's action (the Acquire ADMX Files menu item) never performs, so they say things unrelated to the story's what and why and bury unrelated behaviour in it.",
-        "Record 4: The fallback criterion merges four transitions from different places (startup clearing, default templates folder, and chosen folder at Main.vb 517 which is not part of this action) into one 'cannot be loaded, uses default definitions' statement that none of the cited transitions alone says."
+        "Record 0: The bracketed-setting criterion drops the rule's condition for a list setting (existing entries are removed unless the definition keeps other entries, and nothing is written) and instead says the empty value is \"allowed\", which the rule does not state.",
+        "Record 0: The final criterion (refusal with \"The SPOL text is invalid: \" when asking to apply) is about the apply step, which the story says happens outside it (\"Nothing is applied in this story\") and whose blocks sit in the second story, so it is misplaced.",
+        "Record 1: The empty-comment criterion has no cited rule though the sentence \"An empty comment leaves any existing comment alone\" is part of businessrule-78566706966921753288, so it should cite it, not stand uncited."
       ]
     },
     {
-      "id": "surfaces-using-the-product-1",
+      "id": "journey-tasks-changing-policy-settings-inspect-policy-settings-as-text",
       "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Using the product, part 1",
+      "kind": "journey",
+      "title": "Write the stories of the journey Ready to take away",
       "after": [
         "shared-1",
         "shared-2",
         "shared-3"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
       "disputes": [
-        "Record 1: The first criterion cites the rule that settings which cannot be opened or created read as defaults silently and are not remembered, yet says only that settings are read from the shared row, so that rule's condition and outcome are neither carried nor stated as dropped, and the matching open question is not tied to it.",
-        "Record 1: The TLS criterion has no testable condition (\"the service will later download\") and cites scope.decision-10, which only carries the Microsoft download and says nothing about allowed protocol versions or about doing it at start, so the decision cannot carry a fixed TLS 1.0/1.1/1.2 allow-list on the server.",
-        "Record 1: The policy sources dialog criterion lists the kinds Local GPO, Registry, per-user GPO and user hive as remembered and shown, but scope.decision-12 drops the live system sources and the same story says the service reads no local Group Policy, so the criterion contradicts the decisions it cites and the story's own first-start criterion.",
-        "Record 4: The first criterion cites no rule, only layer-web, and says Exit makes the screens end the person's use, which no rule or decision defines in a web product (its own open question admits this), so a developer cannot build or test it."
+        "Record 0: Criteria 1-3 restate businessrule-47036476815425257305 (heading and blank line only when \"Include SPOL header\" is ticked, listed under the step's keeps) yet every criterion has \"from\": [], so the rule is uncited and no criterion says why.",
+        "Record 0: Criterion 5 invents behaviour: the code only focuses and selects the text when the dialog is shown (InspectSpolFragment.vb:30-33), while Copy merely selects all and copies (lines 26-29), so focus on Copy is not stated by any rule.",
+        "Record 0: Criteria 4 and 5 split one Copy action, and 5 ('ready to use') is vague; the dialog-open selection and the Ctrl+A select-all that the code does (lines 30-33, 44-46) are not stated as such, and the 'what' claims all settings are shown without any rule or criterion backing it."
       ]
     },
     {
-      "id": "surfaces-choosing-and-saving-policy-sources-1",
+      "id": "journey-tasks-finding-policies-find-policy-by-id",
       "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Choosing and saving policy sources, part 1",
+      "kind": "journey",
+      "title": "Write the stories of the journey Type and arrive",
       "after": [
         "shared-1",
         "shared-2",
         "shared-3"
       ],
       "state": "decided",
-      "fixes": 1,
-      "feedback": "the review says it read 6 records of 7",
-      "disputes": [
-        "Record 0: Criteria 1 and 2 promise that Search turns a typed account name into a SID, but decision 7 removes the directory connection and nothing in the inputs can carry that translation, so these criteria assert behaviour no decision supports (the open question admits it, the criteria still state it as fact).",
-        "Record 3: The user POL file Browse criterion drops the conditions of businessrule-60819102502476341284 (only '.pol' files, a file that does not exist yet may be named, no question before an existing file), which the computer-side story applies but this story never states for the user side.",
-        "Record 3: The words per-user GPO, user hive and Scratch space are used without a term in this story (terms is empty), so a product owner reading it alone cannot follow them.",
-        "Record 4: The criteria offer Local GPO as a choice for both sides, while the 'Open the chosen policy sources' story says the live system source is not offered and decisions 1, 2 and 12 give Local GPO no file-based replacement, so the stories contradict each other.",
-        "Record 5: The criterion says the live system source is not offered, contradicting stories 2 to 4 which still list Local GPO as a choice, and it cites decision 12 for a statement that decision only supports for the sources it names.",
-        "Record 6: businessrule-13724150063390760319 also says saving remembers the chosen source types and locations for the next start, but no criterion carries that condition; it is left only as an open question, and decision 4 gives no basis for what is remembered.",
-        "Record 6: Wording a product owner cannot follow: Registry.pol, CMTX and 'running number' are used without a term, and the story mixes file names of the legacy system into the outcomes."
-      ]
-    },
-    {
-      "id": "surfaces-changing-policy-settings-1",
-      "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Changing policy settings, part 1",
-      "after": [
-        "shared-1",
-        "shared-2",
-        "shared-3"
-      ],
-      "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
       "disputes": [
-        "Record 4: The Disabled criterion for businessrule-56832565542674334637 drops its conditions: a list loses all values under its key even when the definition says to keep other entries, and the values left in place are those of a chosen item, a checkbox's on list and the policy's own on list, not only 'extra on values'.",
-        "Record 3: The criteria use words a product owner who never saw the code cannot follow: 'presentation's default', 'spin box', 'expandable string', 'multiple-string value', '32-bit number', 'registry value' and 'extra values'.",
-        "Record 4: The criteria for 'Unknown' state and 'registry value' (and the policy's 'on value', 'off value') are unexplained jargon, and 'only supplied settings are written' sits beside 'every option is written whatever its value' with nothing saying when each applies, so the two read as contradictory.",
-        "Record 4: The last criterion cites decision-2 and scope.decision-13 for 'the write goes to the stored policy settings for the section', but decision-2 only says the registry source is modelled in Domain and filled from imported files, so neither decision carries that statement.",
-        "Record 0: The criterion that state and comment 'come from the stored settings, not from the registry' cites decisions that do not say where a section's state is read from, so the fact is not carried by what it cites.",
-        "Record 6: The Reset criterion cites layer-web although businessrule-27078270365699057081 owns the Reset behaviour (confirmation text and the restored header with blank lines), and the rule is cited only for Open File.",
-        "Record 8: The 'Include SPOL header' criterion cites scope.decision-13, which only says SPOL text in and out is carried; the heading-and-blank-line fact comes from the shared-story rule the surface relies on, which a decision cannot carry.",
-        "Record 3: The Apply story holds the option-saving rules while the state-writing rules (forget first, Enabled, Disabled) sit in the OK story, though both buttons run the same save; the split leaves Apply's own story depending on an unstated later story.",
-        "Record 9: The criterion for businessrule-70167687024707690035 says 'the view refreshes either way' and gives both messages, but the rule's 'all policies to both sources and comments' and the failure-count wording 'N out of M' do not state when the first message shows versus the second, leaving the success condition ambiguous."
+        "Record 0: The criterion on nothing found cites only the rule on not-found icons, but its closing sentence \"That object could not be found.\" comes from the arrival rule (businessrule-49582367227471127226), which is not cited there.",
+        "Record 0: The criterion on policy arrival says a policy opens in the editor and a product or support definition opens its details, but cites only businessrule-62209428351075007862, which states neither; that behaviour belongs to businessrule-49582367227471127226, and the category criterion drops that rule's clause that the list moves to the policy.",
+        "Record 0: The criterion on the area choice says the policy \"opens in the lower of the two\" with \"user lower than both\" and never says what an area is or what lower means for the person, so a product owner who has not seen the code cannot follow it, and no term is defined for it.",
+        "Record 1: The what and why invent a trigger (\"when a person arrives at a support definition or policy, the system works out whether the support definition is met\") and a purpose (\"read the details... with a correct answer\") that none of the cited rules state, which only describe how a definition is judged against chosen products.",
+        "Record 1: Criteria use terms a product owner cannot follow without explanation: \"matching of any is requested\", \"the caller\", \"chosen products\" and \"unlisted policies are allowed\" are code-level switches with no stated meaning, and no term defines them.",
+        "Record 1: The version range criterion says it applies to \"an entry with a version range\" only, dropping the cited rule's case of a plain entry for a parent product that is not itself chosen, so the condition is narrower than the rule."
       ]
     },
     {
-      "id": "surfaces-finding-policies-1",
+      "id": "journey-tasks-finding-policies-find-policies-by-text",
       "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Finding policies, part 1",
+      "kind": "journey",
+      "title": "Write the stories of the journey Search as you type",
       "after": [
         "shared-1",
         "shared-2",
         "shared-3"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
       "disputes": [
-        "Record 1: The third criterion cites scope.decision-14, which only says filters and search are carried in full; it cannot carry that the disabled product list 'looks unusable and readable' (and the wording is unclear to a product owner).",
-        "Record 5: The fourth criterion cites scope.decision-14 for status icons from the icon set and a focused, empty ID box; that decision says nothing of icons or focus, so the criterion has no support.",
-        "Record 8: The Escape criterion cites scope.decision-14, which cannot carry closing as cancelled; no rule is cited for it either.",
-        "Record 9: The fourth criterion cites only title or description and drops the comment condition of businessrule-51916167191556979448 (user or computer comment), and the open question points to a 'Decision 6' that is not named and, as integrations.decision-6, covers storing comments, not a ban on comment search.",
-        "Record 10: The Escape criterion cites scope.decision-14, which cannot carry closing as cancelled.",
-        "Record 12: The third criterion cites scope.decision-14 for a title column filling the list width and smooth drawing; that decision says nothing about either.",
-        "Record 7: The third criterion says 'lower-numbered' area, a code detail a product owner cannot follow; it should say Computer beats User, and both beats neither, in plain words."
+        "Record 0: The criterion on a phrase never closed being left out has no cited rule and gives no reason, although businessrule-63262725504588029346 states exactly that behaviour and should be cited.",
+        "Record 0: The criterion that In title, In description and In comment are all ticked when the screen opens has no cited rule and gives no reason, although businessrule-31790508764365764837 states that all three start ticked and should be cited."
       ]
     },
     {
-      "id": "surfaces-editing-policy-files-directly-1",
+      "id": "journey-tasks-finding-policies-find-policies-by-registry",
       "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Editing policy files directly, part 1",
+      "kind": "journey",
+      "title": "Write the stories of the journey One line, split for me",
       "after": [
         "shared-1",
         "shared-2",
         "shared-3"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
       "disputes": [
-        "Record 6: The Clear everything and Clear first criterion repeats the disputed wording of the rule (all values removed, deletion entries lost, sub-key values not put back), which the analysis review found misleading: clearing affects only the key's own direct values and markers, and sub-keys keep their values untouched.",
-        "Record 6: The 'what' sentence is not followable by a product owner: 'clears a key either completely, keeping its direct values' contradicts itself, and 'Clear first' versus 'Clear everything' is never explained in plain words.",
-        "Record 24: The criterion says the person is told what went wrong when the export cannot be produced, but rule 06090110 says the old program raised an unhandled error here; the told-the-person behaviour is a new decision that belongs only in the open question, not stated as a criterion.",
-        "Record 9: Both criteria cite only scope.decision-15, a carry decision that says nothing about opening the import window or rebuilding the list on success; the behaviour comes from the action's purpose, not from any cited rule or decision.",
-        "Record 11: The cursor-in-name-box and Escape criteria cite scope.decision-15 (and layer-web), which cannot carry them; they rest only on the actions' purposes.",
-        "Record 12: The Escape criterion cites scope.decision-15, which says nothing about Escape or leaving the value unchanged.",
-        "Record 13: The hexadecimal toggle and Escape criteria cite scope.decision-15, which cannot carry either behaviour; they rest only on the actions' purposes.",
-        "Record 14: The Escape criterion cites scope.decision-15, which says nothing about Escape or leaving the value unchanged.",
-        "Record 15: The Escape criterion cites scope.decision-15, which says nothing about Escape or adding no value.",
-        "Record 16: The 'chooses a file name, shown in the file box' and Escape criteria cite only integrations.decision-1 and scope.decision-15, neither of which states a file box or Escape behaviour; the 'download rather than written to a folder' claim also sits uneasily with a person still choosing a name, which the open question admits is unsettled.",
-        "Record 18: The criterion on data in an unrecognised form (rule 59618595) omits the rule's statement that applying it writes an empty value or fails, and rule 18627979's fact that a prefix always ends in a backslash is dropped, so the open question on unrecognised data is left under-informed.",
-        "Record 7: The fourth criterion (Escape closes the delete window as cancelled) cites only scope.decision-15, which cannot carry it; it rests on the action's purpose alone."
+        "Record 0: The first criterion (showing the key/value reading so it can be corrected) cites no rule and its wording does not say why; it states behaviour that no rule or decision gives, and the reason sits only in the open list, not in the criteria.",
+        "Record 0: The title and step say the terms are judged as the person types, but the empty-terms and root-key criteria (from the cited rules) fire only when the person asks to search, so the story promises more than its criteria deliver.",
+        "Record 1: The last criterion (matching policies are shown without a separate request step) cites no rule and does not say why it has none; it invents behaviour that no rule or decision states and contradicts the cited rule that a search starts when asked."
       ]
     },
     {
-      "id": "surfaces-editing-policy-files-directly-2",
+      "id": "journey-tasks-finding-policies-review-search-results",
       "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Editing policy files directly, part 2",
+      "kind": "journey",
+      "title": "Write the stories of the journey Results as they arrive",
       "after": [
         "shared-1",
         "shared-2",
         "shared-3"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
       "disputes": [
-        "Record 0: The second open question treats a typed minus sign as possibly setting the smallest value, but hexadecimal parsing rejects a sign with a format error that is silently ignored, so the value stays unchanged; the Minimum branch (EditPolNumericData.vb:47-48) is only reached on overflow, which a leading minus cannot cause, so the question misstates the current behaviour.",
-        "Record 0: The first open question asks about capitals and no prefix, but the code fixes this (String.Format \"{0:X}\", line 26) as a fact, not an open point, and criterion 1 does not state it; either state it in the criterion or drop the question.",
-        "Record 0: The second criterion (ordinary behaviour when hexadecimal mode is off) cites layer-web and base.decision-25 (messages, forms and queries), which say nothing about the field falling back to the standard control; the citation does not support the criterion.",
-        "Record 0: Criterion 4 and the rule leave out that empty text leaves the value unchanged and that text too large for the 32-bit field in a 32-bit value is clamped to that smaller maximum; the story only hints at this in the term, so the 32-bit versus 64-bit clamp is not testable from the criteria."
+        "Record 0: The cancelled-ending criterion says \"Search canceled\" with the counts, but the rule only says \"Search canceled: ...\" and states no counts, so the criterion adds detail the rule does not give.",
+        "Record 1: The criterion for rule 80544887789558031281 adds that the search dialog opens empty or running a new search, which is about starting a search, not picking a hit, and belongs to neither this story's title nor its steps.",
+        "Record 1: The last criterion (nothing is returned when no search has run or the last hit has been passed) restates an internal return value of the next-hit rule in terms a product owner cannot act on, and overlaps the previous criterion about Find Next.",
+        "Record 2: Every criterion has no cited rule (from is empty) and the criteria do not say why, yet each states behaviour no rule or decision gives: that no new search starts, that the earlier choice is reselected if still listed, and the exact \"No search has been run yet...\" message with nothing opening.",
+        "Record 2: The story has no components and reuses action block-64273399884973341208 already built by the first story, so it covers that action twice and has nothing of its own to build."
       ]
     },
     {
-      "id": "surfaces-browsing-policy-definitions-1",
+      "id": "journey-tasks-finding-policies-narrow-policy-list-by-filter",
       "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Browsing policy definitions, part 1",
+      "kind": "journey",
+      "title": "Write the stories of the journey Live filter",
       "after": [
         "shared-1",
         "shared-2",
         "shared-3"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
       "disputes": [
-        "Record 0: The criterion \"added to the policies already loaded and the structures are built\" uses builder wording a product owner cannot follow, and it overlaps the single ADMX file criterion without saying how a template file differs from an ADMX file.",
-        "Record 1: The resize criterion cites only layer-web and a scope decision, not a rule, so it states fit-to-pane behaviour (no horizontal scroll bar, labels fitting) that no cited sentence carries.",
-        "Record 14: The value-writing criterion drops parts of the cited rule: text lists have items double-quoted with quotes doubled, tables have double-quoted name: value lines, and text is single-quoted with no escaping, which is why quotes or line breaks cannot be read back."
+        "Record 1: Every criterion adds 'the list narrows now' / 'when the choice is made' where the cited rules say the new filter takes effect when OK is pressed, so the live, no-confirm behaviour is invented and no rule or decision states it.",
+        "Record 1: The criterion for rule 61457439461915744538 adds the condition 'Supported on is ticked' and turns 'changes made by the dialog itself do not spread' into 'when the limit is loaded for display', neither of which the rule states.",
+        "Record 1: The criterion for rule 90628240213834851721 (discarding ticks when Supported on is unticked) is applied 'when the person has chosen', not at OK as the rule says, and the story's own open question admits the moment is unknown.",
+        "Record 2: Both criteria invent conditions ('the limit is off', 'the limit has been set') and the phrase 'without being lost', none of which rules 85052319902195299547 and 36944318108231327872 state.",
+        "Record 3: Escape is recast as 'undo this round of changes' and the criterion says the limit is the one held when they began, whereas the rule only says Escape closes as cancelled with the filter unchanged; with live narrowing this meaning is unsettled, as the story's open question concedes.",
+        "Record 0: The journey step 'Be taken to the right place when the limit changes' is attached to the same action as showing the limit, yet this story's criteria cover only the opening display, so the shared action is built here without a rule for its other behaviour."
       ]
     },
     {
-      "id": "surfaces-browsing-policy-definitions-2",
+      "id": "journey-tasks-editing-policy-files-directly-open-raw-policy-editor",
       "stage": "stories",
-      "kind": "surfaces",
-      "title": "Write the stories of Browsing policy definitions, part 2",
+      "kind": "journey",
+      "title": "Write the stories of the journey The system picks the area",
       "after": [
         "shared-1",
         "shared-2",
         "shared-3"
       ],
       "state": "decided",
-      "fixes": 1,
+      "fixes": 0,
       "feedback": "",
       "disputes": [
-        "Record 0: Criterion 2 presumes 'another source choice is shown' and can be switched away from file picking, but criterion 3 says no folder or domain choice is offered at all, so the two contradict and the rule it cites (folder box enabled only with 'This folder') has no behaviour left to carry.",
-        "Record 0: Criterion 3 states as fact that no Windows-folder choice is offered, while the first open question asks whether to offer the Windows policy definitions folder or the stored package; the criterion settles what the story says is undecided.",
-        "Record 0: Criterion 6 cites base.decision-23, which only says uploads are checked for size and type before parsing; it cannot carry 'told what is missing' or the window staying open, which come from the dropped refusal part of the OK rule (businessrule-53176229115945924012), and the refusal text is left to an open question.",
-        "Record 0: Criterion 4 (names appear in a list, list unchanged when the dialog is closed without picking) rests on no cited rule or decision; decision-1 says nothing of a file list, so the behaviour is invented, and the Browse action's own reading of the rule is not cited.",
-        "Record 0: Criterion 1 cites businessrule-76226373219464614800 only for 'first choice selected' and drops its stated condition that the SYSVOL choice exists only when the computer is on a domain and the folder is found; that condition is not covered by any criterion (decision-7 is cited only for the Active Directory lookup of a GPO's POL file, not for definitions folders)."
+        "Record 0: The last criterion says the person sees a summary of what they changed on Done, Enter or Escape, but the only cited rule (businessrule-18574755515767742264) states that Done/Enter closes as accepted, Escape as cancelled, and changes stay on the loaded source until policies are saved; no rule or decision states a summary or a reminder, so this behaviour is invented from an action's description.",
+        "Record 0: The first criterion says that when only one area is backed by a policy file it is taken 'without asking', which the cited rule (businessrule-40441510620479008895) does not state (it only limits the area chosen to policy-file-backed sources and gives the 'Neither loaded source...' message).",
+        "Record 0: The second criterion says 'a choice the caller does not allow cannot be picked', and 'caller' is code language a product owner who never saw the code could not follow; it should say which choices are offered."
+      ]
+    },
+    {
+      "id": "journey-tasks-editing-policy-files-directly-add-policy-file-key-or-value",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Checked as you type",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The first criterion (cursor in the name box with its text selected) cites the 'name already taken' rule, which says nothing about the cursor or selection (that comes from the action block), while the 'name already taken' criterion that rule actually states is left with no citation.",
+        "Record 0: The last two criteria (create under the selected key, create at the top level and select) and the empty-name/cancel criterion split the single rule businessrule-94140234913184124479, but the create-and-select criteria are left uncited though that rule states them word for word.",
+        "Record 1: The story keeps the number-range rule (0 to 4,294,967,295 for 32-bit, 0 to 18,446,744,073,709,551,615 for 64-bit) and the 'unsupported kind is refused' rule in its step, but no criterion states the limits or the refusal, so a rule's conditions are dropped and neither is cited or explained as belonging elsewhere.",
+        "Record 1: Several criteria (typed name used as typed even if empty, starting data by kind, cancel returns neither, replace without warning) restate sentences of the cited rules businessrule-88605435114040098546 and businessrule-64891270751019389302 but carry no citation, while the first criterion cites both rules at once for only the choice of five kinds.",
+        "Record 1: The 'why' line 'Three questions become one' is not followable by a person who never saw the code: the three questions are never named in the story, and the 'stored only on confirming' criterion duplicates the cancel criterion."
+      ]
+    },
+    {
+      "id": "journey-tasks-editing-policy-files-directly-change-policy-file-value-data",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Either form accepted",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The criterion on text that is not a number leaves the value unchanged widens the kept rule, which states only that text that is not a hexadecimal number leaves the value unchanged, so decimal text that is not a number is a behaviour no rule or decision states.",
+        "Record 0: The story cites no rule (from is empty on every criterion) although it keeps two rules, and nothing in its criteria says why, so the criteria on too-large hexadecimal, unchanged value and kept name, kind and selection are not traceable to the rules they restate.",
+        "Record 0: The criteria on decimal entry, hexadecimal entry and showing both forms rest on no rule or decision (only the journey idea), and the story leaves open how a typed number is marked as hexadecimal while criterion 5 already assumes it can be, so the criterion states behaviour the story itself leaves undefined."
+      ]
+    },
+    {
+      "id": "journey-tasks-editing-policy-files-directly-remove-policy-file-entries",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Straight from the selection",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The story claims the action that enables the value name box only while delete-one-value is chosen (block-96284792383932228976, rule businessrule-30251051045932916641 in the step), yet none of its criteria states it; that behaviour is only covered in the second story, so the action is claimed twice or not covered here.",
+        "Record 0: The second and third criteria (removed on the machine when applied; represented by the deletion entry rather than erased) have empty 'from' although businessrule-27194812132584860836 states exactly this, and the third largely restates the first.",
+        "Record 0: 'Taken from the selection without asking' comes from the inferred step change and not from any cited rule or decision, so it is behaviour the rule does not state and the criteria give no reason for it.",
+        "Record 1: Most criteria (clear everything, clear first keeping ordinary values, loss of deletion entries and sub-key values, typed name accepted and replaced by a deletion entry, cancel or Escape changes nothing) have an empty 'from' although they are sentences of businessrule-63694206615951133419, so they are not traced to the rule they enforce.",
+        "Record 1: The wording 'existing direct values with ordinary content' and 'sub-keys' is carried over from the rule and is hard for a product owner who never saw the code to follow; it should be put in plain words or defined as a term.",
+        "Record 2: The title, 'what' and 'why' say the person is told what will go and that a value is removed after confirmation, but businessrule-04432638879352685329 only asks for confirmation when forgetting a key and says nothing of any confirmation or description for a value; the last criterion shows a value is forgotten with none.",
+        "Record 2: The second, third and fourth criteria have empty 'from' although businessrule-04432638879352685329 states them, so they are not traced to the rule."
+      ]
+    },
+    {
+      "id": "journey-tasks-editing-policy-files-directly-import-registry-file-into-policy-source",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Prefix worked out for you",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The 'what', 'why' and journey step 2 promise that the person is told what the file contains (keys, removals, deletions, values) and how its keys will be named, but no cited rule states any such report; only the default-values warning and the guess-failure warning exist.",
+        "Record 0: The story says the person chooses the policy source (user or computer) and can leave at any point without changing anything, yet no criterion covers the source choice and the only cited rule is Escape on the import step.",
+        "Record 0: The open questions state facts no rule gives (that the old program offered the prefix only after the file was chosen, and that a first key outside the policy branches is accepted silently); Prefix Guesser's rule says nothing about policy branches.",
+        "Record 0: Several criteria use words a product owner who never saw the code cannot follow: 'hive', 'user identifier', 'hexadecimal 32-bit number', 'typed by the number in brackets, or binary', and the quoted 'HKEY_USERS\\'; they are not explained in the terms.",
+        "Record 1: The third criterion says 'when the person confirms', but the rules say the import is applied straight to the chosen source with no confirmation step; it also adds no behaviour beyond the first criterion's apply-and-refresh."
+      ]
+    },
+    {
+      "id": "journey-tasks-editing-policy-files-directly-import-policy-file",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey One request",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The criteria about an unreadable file (\"The POL file could not be loaded.\", source unchanged) and about nothing reaching disk before saving cite no rule (from is empty) although businessrule-69354381130041181167 states exactly those sentences, and no reason is given for the missing citation.",
+        "Record 0: The last criterion adds the condition \"a source that already holds settings\", which businessrule-97686874157870392601 does not state, and its wording \"applied as the difference from an empty file\" is implementation language a product owner who never saw the code could not follow.",
+        "Record 0: The third criterion (imported settings visible but nothing on disk until saved) adds \"visible in the source\", which the rule does not say, and merely restates the story's \"held until the person saves\" and the Held change term rather than adding a distinct rule."
+      ]
+    },
+    {
+      "id": "journey-tasks-editing-policy-files-directly-export-policy-as-registry-file",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Export what is selected",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The criterion about rebuilding a registry-backed source from the three policy locations cites no rule although it is the second half of businessrule-62577216252619197563 (which another criterion cites for only the policy-file half), so it is uncited without saying why.",
+        "Record 0: The Escape criterion cites no rule and does not say it rests only on the action block that closes the dialog as cancelled; 'nothing is written' is an inference the action does not state.",
+        "Record 0: The value-format criterion for the product owner is written in code terms ('dword:', 'hex(n)', 'column 78', trailing backslash, hex bytes) that a person who never saw the code could not follow, and it packs several rules' worth of detail into one sentence."
+      ]
+    },
+    {
+      "id": "journey-tasks-editing-policy-files-directly-export-policy-file",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey One request",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The second and third criteria (the success and failure messages) have no cited rule and give no reason, although businessrule-57982804566984189207 states both messages, so they should cite that rule.",
+        "Record 0: The term \"Policy file\" adds \"not a registry export file\" and the \"what\" adds \"whatever holds it\", neither of which the cited rule or the step states as a rule, so they risk inventing behaviour."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-load-definitions-folder",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Load without questions",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Criteria 2 and 3 (domain folder selectable only when joined and the folder exists) and criterion 9 (missing typed folder refused with the exact message, dialog stays open) restate sentences of businessrule-76226373219464614800 and businessrule-53176229115945924012 but cite nothing, so their source is lost.",
+        "Record 0: Criterion 4 (\"no domain can be reached ... shown as a normal case and the other choices still work\") cites integrations.decision-7, a decision about how the API resolves accounts; no rule or decision states that the screen shows this, so it invents behaviour, and \"shown as a normal case\" is not wording a product owner can test.",
+        "Record 0: Criterion 7 (Browse picks a folder and it appears in the folder box) cites integrations.decision-1, which only says the local API reads folders instead of browser pickers and says nothing of a Browse dialog; the behaviour comes from an action with no rule, so the criterion should say it has no cited rule or cite the action's rule, not a decision that cannot carry it.",
+        "Record 0: The \"what\" says the person is told \"at once\" if the folder does not exist, but the rule only refuses the folder when OK is pressed; nothing states an immediate check.",
+        "Record 1: Criterion 1 (nothing loaded, so the person is not asked whether to replace, and the folder loads) cites businessrule-43765682097437166867, which only says the clear-workspace option is ticked by default and passed on when a folder was accepted; the not-asking behaviour comes from the journey step, not that rule, so the citation overstates it.",
+        "Record 1: Criteria 2, 3, 5, 6, 8 and 11 (replace proposed by default and add possible, no choice passed on when nothing accepted, adding joins the loaded set, problems reported and load carries on, workspace shows what was loaded and view rebuilt, remembered folder unchanged when adding) are sentences of businessrule-43765682097437166867, businessrule-06850078746756456273, businessrule-19671296259932138006 and businessrule-56221298079625729644 but cite nothing.",
+        "Record 1: Criterion 10 (replace chosen, no failure, so the folder is loaded again at the next start) cites integrations.decision-4, which only moves remembered choices to the Preference store, instead of businessrule-56221298079625729644 that states the remembering rule; the decision cannot carry it, and the rule says the folder is remembered, not that it is loaded at start."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-add-template-file",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Add several at once",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Criteria 1, 3 and 4 restate what businessrule-07200475892676201466 decides (ADMX files only, workspace not emptied, not remembered as the definitions folder) yet cite no rule, so only the failure-message criterion traces to it.",
+        "Record 0: Criterion 4 invents a timing (\"when the program next starts or reloads definitions\") that the rule does not state; the rule says only that the file is not remembered as the definitions folder.",
+        "Record 0: Criterion 6 says the other files are still added when some are refused, which no cited rule or step states (the steps say only that each file is added alone and each refusal is reported with its reason), and it is also left open whether failures are shown together.",
+        "Record 0: Criterion 1 and 2 cover several files, a change the journey step marks merged/inferred, but no criterion says this extends the single-file rule, and the used rule businessrule-61344191921921935952 (adds that file alone, builds the structures) is not reflected in any criterion."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-clear-loaded-definitions",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Clear with a way back",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Criterion 2 (the view is rebuilt and shows no loaded definitions) restates the second half of businessrule-83939170310206178732 (empties at once and rebuilds the view) but cites nothing, while criterion 1 drops that rebuild; its 'shows no loaded definitions' is also stated by no rule.",
+        "Record 0: Criteria 4 and 5 (says what was removed, undo loads the removed definitions again 'as they were') cite no rule and do not say in the criteria that they are new behaviour from the plan with no legacy rule; 'as they were' and what is reported are unstated by any rule or decision, and the open questions show even the scope of undo is undecided.",
+        "Record 0: Criterion 3 (closing or replacing the workspace discards definitions and previous search results) is the rule of Session discarder but is a different trigger than the story's clear action and title, and the story's term list defines only 'Loaded definitions' while 'workspace' and 'search results' are used undefined for a product owner."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-review-loaded-template-files",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Contribution at a glance",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Five of six criteria cite no rule and the story never says why: the empty-list case (\"nothing fails\"), the \"return to the list\" and \"other files and list stay unchanged\" behaviour state no rule or decision, so they are invented, and the name/folder/namespace columns and counts rest on nothing cited.",
+        "Record 0: The fifth criterion (\"nothing defined only by the other file appears\") only restates the fourth criterion and the cited rule's \"only ... defined in that file\", so it adds no behaviour, and the story as a whole is close to a restatement of its title with one rule behind it.",
+        "Record 0: The open question asks what happens with no file chosen, yet the third criterion states unconditionally that choosing a file opens its details and the legacy rule BR-61081361 (double-click does not check a selection, Enter does) is not reflected or cited, so the criteria and the open point do not agree."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-browse-policy-tree",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey One place to explore",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Every criterion cites only the web layer, yet the story cites no rule and its criteria never say why (the area and empty-category rules sit with the Category tree presenter, which another story builds), and the 'start with everything shown' reason plus the 'empty categories are hidden' precondition state a default that no rule or decision gives.",
+        "Record 1: Criteria 2, 3, 5, 7, 10 and 11 restate sentences of the rules for the Item description pane (the Up row, the listing order, the 'selected category' count line, the preference notice, highlighting a category) but cite layer-web instead of those rules, and criterion 1 cites the listing rule for 'becomes the current one and no policy stays chosen', which that rule does not say (it comes from the tree's selection rule).",
+        "Record 1: Criterion 9 adds that the policy description is shown on highlighting; the rule only says the policy becomes the selected policy and any highlighted category is cleared.",
+        "Record 2: Criteria 2, 3, 4, 6, 7, 8 and 10 restate the opening, right-click and menu rules but cite layer-web instead of the Item action resolver rules they come from, so the cited rules appear to cover only three criteria; the 'why' also promises that a missing choice never causes a failure while the legacy rule fails with an error and only an open question handles it."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-merge-duplicate-policies",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Review then merge",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Criteria 2 to 5 state the pairing conditions of businessrule-40351382289100643848 (same name, alone in category, one user and one computer, same explanation and registry key) but cite no rule and give no reason, so they read as invented behaviour.",
+        "Record 0: Criteria 1 and 6 (list for review before removal; declining changes nothing) come from the journey's confirm step, not from any rule (the legacy code merges at once with no review), yet the criteria do not say they are a new design decision rather than a rule.",
+        "Record 0: Criterion 9 (categories and policy information show the merged policies) is behaviour no cited rule or decision states, and it has no cited rule or stated reason.",
+        "Record 0: Criterion 7 says 'the first policy of each pair is removed and the second becomes a policy for both sections', but 'first' and 'second' mean nothing to a product owner who has not seen the code; the criterion should say which policy is kept in words they can follow."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-view-policy-details",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Everything at a glance",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The criterion for a policy that names no support definition says the support-details button is disabled, but rule businessrule-59317523370985833904 only says the text is blank for no code (the button is disabled only when the named definition does not exist), and the story's own open question admits the rules do not say; this invents behaviour and contradicts the open item.",
+        "Record 0: Seven criteria (computer-only and user-only section, orphaned category, uncategorized, missing support, no support, and the two details-button criteria) have empty 'from' although the first five restate parts of cited rules businessrule-89677004946923202726, 30888155476627040275 and 59317523370985833904, and the last two cite no rule and say nothing about why, so the criteria neither trace to their rules nor explain the absence."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-view-category-details",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Whole ancestry at once",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Criteria 2 and 3 (orphaned parent with disabled button, top-level shows nothing) state exactly what businessrule-88550832449331267612 says but cite no rule (from is empty) and give no reason, so the rule's other two conditions are left uncited.",
+        "Record 0: The story promises to reach any parent 'at any level, without climbing one step at a time' and to show the policies the category holds, yet criterion 4 has the person climb one parent at a time and no criterion or cited rule states the policies list or an at-once ancestry chain, so the title/what/why claim behaviour no rule or action states.",
+        "Record 0: Criterion 4 ('keep going up until a top-level category or a missing parent is reached') and the 'from a policy in it' opening path are only partly carried by the action blocks and rule, and with from empty and no stated reason it reads as invented behaviour."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-browse-products",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Product family in one view",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The story promises reading a parent's details in place (action block-94974939167069133577), yet the parent criterion only states the name and the button's enabled state, so what choosing the parent does is never stated as a criterion; and the criterion on double-click or Enter adds 'its details are shown', which its cited rule (only the nothing-selected case) does not say."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-browse-support-rules",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Start from the product",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The second and third criteria (open on double-click or Enter, nothing happens when nothing is chosen) cite no rule and do not say in their wording that they come from the screen's actions rather than a stated rule.",
+        "Record 0: The why and journey step 1 promise finding support rules by the product a person cares about, but no cited rule or criterion filters or lists rules by product coverage, only by name, so that promise is not backed by any rule."
+      ]
+    },
+    {
+      "id": "journey-tasks-browsing-policy-definitions-inspect-policy-technical-details",
+      "stage": "stories",
+      "kind": "journey",
+      "title": "Write the stories of the journey Plain words first, detail on demand",
+      "after": [
+        "shared-1",
+        "shared-2",
+        "shared-3"
+      ],
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The criterion about a stored comment appearing in the section has an empty citation and gives no reason, although businessrule-77000026808397550095 states exactly that (comment included only when one is stored), so it should cite it.",
+        "Record 0: The last criterion joins two unrelated behaviours (comment escaping of backslashes and line breaks, and copying a selected line with Ctrl+C) with 'Also:', so a tester cannot pass or fail each alone; each belongs in its own criterion.",
+        "Record 0: The option-value criterion drops parts of businessrule-10913365400690794412: text is written with no escaping so text holding a quote or line break cannot be read back, and quotes inside list-of-text items are doubled.",
+        "Record 0: The comment-escaping criterion drops the consequence stated in businessrule-78281155676242942940 (a lone line feed or carriage return splits the comment over two script lines and corrupts it when read back), which is the point of the rule.",
+        "Record 0: The criterion on choice names ('named as the file that defines the policy names it') is hard for a product owner to follow; it should say that choice names come from the definitions file that defines the policy."
       ]
     }
   ],
-  "batches": 27
+  "batches": 13,
+  "batch": {
+    "id": "batch-13",
+    "stage": "stories",
+    "jobs": [
+      {
+        "job": "journey-tasks-editing-policy-files-directly-open-raw-policy-editor",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-editing-policy-files-directly-add-policy-file-key-or-value",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-editing-policy-files-directly-change-policy-file-value-data",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-editing-policy-files-directly-remove-policy-file-entries",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-editing-policy-files-directly-import-registry-file-into-policy-source",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-editing-policy-files-directly-import-policy-file",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-editing-policy-files-directly-export-policy-as-registry-file",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-editing-policy-files-directly-export-policy-file",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-load-definitions-folder",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-add-template-file",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-clear-loaded-definitions",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-review-loaded-template-files",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-browse-policy-tree",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-merge-duplicate-policies",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-view-policy-details",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-view-category-details",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-browse-products",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-browse-support-rules",
+        "role": "writer",
+        "reported": true
+      },
+      {
+        "job": "journey-tasks-browsing-policy-definitions-inspect-policy-technical-details",
+        "role": "writer",
+        "reported": true
+      }
+    ]
+  }
 }

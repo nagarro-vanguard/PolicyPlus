@@ -1,9 +1,0 @@
-{"read":18,"challenges":[
-{"record":1,"says":"The third criterion cites scope.decision-14, which only says filters and search are carried in full; it cannot carry that the disabled product list 'looks unusable and readable' (and the wording is unclear to a product owner)."},
-{"record":5,"says":"The fourth criterion cites scope.decision-14 for status icons from the icon set and a focused, empty ID box; that decision says nothing of icons or focus, so the criterion has no support."},
-{"record":8,"says":"The Escape criterion cites scope.decision-14, which cannot carry closing as cancelled; no rule is cited for it either."},
-{"record":9,"says":"The fourth criterion cites only title or description and drops the comment condition of businessrule-51916167191556979448 (user or computer comment), and the open question points to a 'Decision 6' that is not named and, as integrations.decision-6, covers storing comments, not a ban on comment search."},
-{"record":10,"says":"The Escape criterion cites scope.decision-14, which cannot carry closing as cancelled."},
-{"record":12,"says":"The third criterion cites scope.decision-14 for a title column filling the list width and smooth drawing; that decision says nothing about either."},
-{"record":7,"says":"The third criterion says 'lower-numbered' area, a code detail a product owner cannot follow; it should say Computer beats User, and both beats neither, in plain words."}
-]}

@@ -1,0 +1,316 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "notes": [],
+  "tasks": [
+    {
+      "id": "tasks-finding-policies.find-policies-by-registry",
+      "outcome": "Find the policies that control a given system setting, named by its key or value.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-71047013454784114585",
+          "what": "Closes the dialog as cancelled when Escape is pressed"
+        },
+        {
+          "id": "block-80717492809988540545",
+          "what": "Checks the typed registry key and value terms and builds the policy search function"
+        },
+        {
+          "id": "block-83203327187612347635",
+          "what": "Asks for registry details and runs the search."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-27271850163543025066",
+          "statement": "A value-name term must match the whole value name; \"*\" and \"?\" act as wildcards, so without them the name must be equal."
+        },
+        {
+          "id": "businessrule-35545130062422334165",
+          "statement": "A key term containing a backslash but no wildcard matches policies whose key path starts with that text."
+        },
+        {
+          "id": "businessrule-54035538146675510973",
+          "statement": "A key term containing \"*\" or \"?\" must match the whole key path as a wildcard pattern."
+        },
+        {
+          "id": "businessrule-54588279423566663184",
+          "statement": "A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case."
+        },
+        {
+          "id": "businessrule-71024372746156766440",
+          "statement": "When the key text starts with HKLM\\, HKCU\\, HKEY_LOCAL_MACHINE\\ or HKEY_CURRENT_USER\\, the search is refused with \"Policies' root keys are determined only by their section. Remove the root key from the search terms and try again.\""
+        },
+        {
+          "id": "businessrule-73898787083077319907",
+          "statement": "When Search is pressed with both the key and the value empty, the search is refused and the person is told \"Please enter search terms.\""
+        },
+        {
+          "id": "businessrule-90661647574869686546",
+          "statement": "Find by registry starts a search with what the person entered."
+        },
+        {
+          "id": "businessrule-95826639622119629666",
+          "statement": "A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-97068941883605652538",
+          "name": "Windows registry policy keys and loaded user hives",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-finding-policies.review-search-results",
+      "outcome": "Work through the hits of a search and pick the policy to open.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-05405434344126500839",
+          "what": "Keeps the title column filling the width of the results list."
+        },
+        {
+          "id": "block-25728253727728310343",
+          "what": "Takes the selected search result as the chosen policy and closes the window with OK."
+        },
+        {
+          "id": "block-27516887165549303737",
+          "what": "Moves to the next visible policy in the search results."
+        },
+        {
+          "id": "block-36571577833746850164",
+          "what": "Asks the running search to stop."
+        },
+        {
+          "id": "block-37035950900396190507",
+          "what": "Turns on double-buffered drawing for the results list."
+        },
+        {
+          "id": "block-49062346851945682165",
+          "what": "Shows the search results window without starting a search."
+        },
+        {
+          "id": "block-57135383118787346557",
+          "what": "Stops the search when the results window is closed and settles the progress display."
+        },
+        {
+          "id": "block-64273399884973341208",
+          "what": "Starts the background search when one is waiting, otherwise restores the last selected result."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-15877826642522947109",
+          "statement": "Stop, or closing the results window, cancels the search; closing also leaves the label at \"Search canceled\" with the bar full if the search had not finished."
+        },
+        {
+          "id": "businessrule-17385510066480798684",
+          "statement": "When the results window is reopened, the previously selected result is selected again if it is still in the list."
+        },
+        {
+          "id": "businessrule-17430127230259081557",
+          "statement": "Find Next moves to the next result that is currently visible, skipping hidden ones, and tells the person \"There are no more results that match the filter.\" when none is left."
+        },
+        {
+          "id": "businessrule-35354684864210149934",
+          "statement": "Starting a search clears earlier results, sets the progress range to the number of policies, and begins on \"Starting search\"."
+        },
+        {
+          "id": "businessrule-38090025507732480917",
+          "statement": "When search results are opened from the main window and no search has been run (or it was cleared), the person is told \"No search has been run yet, so there are no results to display.\" and nothing opens."
+        },
+        {
+          "id": "businessrule-48840711587592938759",
+          "statement": "Go, or a double-click on a result, accepts only when a result is selected; the selected policy is passed back and its position remembered."
+        },
+        {
+          "id": "businessrule-53914450774482291886",
+          "statement": "Taking the next policy returns nothing when no search has run or when the last result has been passed; otherwise it returns the result after the last chosen one."
+        },
+        {
+          "id": "businessrule-57749472934040708163",
+          "statement": "When a search ends it reports \"Finished searching: checked N policies, found M hits\", or \"Search canceled: ...\" if stopped, and the Stop button is disabled."
+        },
+        {
+          "id": "businessrule-78338951417255409296",
+          "statement": "\"Search Results\" only reopens the last results and starts no new search."
+        },
+        {
+          "id": "businessrule-79288582532948770219",
+          "statement": "The search tests every policy in turn, and adds every hit to the list with its category name, in the order policies are held."
+        },
+        {
+          "id": "businessrule-80544887789558031281",
+          "statement": "A search dialog opens either empty or running a new search. When the person picks a result, its editor opens in the current area and the list moves to that policy."
+        },
+        {
+          "id": "businessrule-94342659396000502591",
+          "statement": "The list and progress are refreshed after every 20 policies: \"Searching: checked N policies so far, found M hits\"."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter",
+      "outcome": "Limit the policy list to policies of a chosen type, state, comment status and supported products, and switch that limit on or off.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-03044886867739368079",
+          "what": "Closes the dialog as cancelled when Escape is pressed"
+        },
+        {
+          "id": "block-26736796202907003543",
+          "what": "Enables the product requirements box only while Supported on is ticked"
+        },
+        {
+          "id": "block-27559849759497597302",
+          "what": "Sets the dialog back to a filter that matches everything"
+        },
+        {
+          "id": "block-40488572982447813355",
+          "what": "Switches whether the filter is applied to the lists."
+        },
+        {
+          "id": "block-44706239895339562170",
+          "what": "Applies the new tick to all child products"
+        },
+        {
+          "id": "block-55576298759886274598",
+          "what": "Drops the double-click message so the tree check state stays in step"
+        },
+        {
+          "id": "block-69596352550727046885",
+          "what": "Asks for filter settings and turns the filtered view on."
+        },
+        {
+          "id": "block-75494449832197867529",
+          "what": "Recolours the product tree so it looks right when disabled"
+        },
+        {
+          "id": "block-88991021756869656536",
+          "what": "Builds the filter from the chosen options and closes the dialog accepted"
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-01575097247784730570",
+          "statement": "When the current filter has a supported-on condition, the dialog opens with Supported on ticked, exactly the filter's products ticked and the two matching options set as the filter holds; product branches whose tick differs from their parent are opened."
+        },
+        {
+          "id": "businessrule-03237181236179074787",
+          "statement": "When OK is pressed, the new filter keeps only managed policies for Policy, only unmanaged ones for Preference, and no policy-type condition for Any."
+        },
+        {
+          "id": "businessrule-26561900736287578271",
+          "statement": "When the filter dialog opens, the Current state choice shows Any if the current filter has no state condition, otherwise Not Configured, Configured, Enabled or Disabled as the filter holds."
+        },
+        {
+          "id": "businessrule-32591775124677875588",
+          "statement": "When the filter dialog opens, the Policy type choice shows Any if the current filter has no policy-type condition, Policy if it keeps only managed policies, and Preference if it keeps only the others."
+        },
+        {
+          "id": "businessrule-36944318108231327872",
+          "statement": "The \"Only Filtered Policies\" menu switches the filter on or off and moves to the nearest visible category."
+        },
+        {
+          "id": "businessrule-57716378734614233724",
+          "statement": "Pressing Escape closes the filter dialog as cancelled and the current filter is unchanged."
+        },
+        {
+          "id": "businessrule-58048189688698008638",
+          "statement": "Double-clicking a product checkbox does nothing, so a tick shown always agrees with the tick kept."
+        },
+        {
+          "id": "businessrule-59209755491778300947",
+          "statement": "When the filter dialog opens, the Commented choice shows Any if the current filter has no comment condition, Yes if it keeps only commented policies and No if it keeps only uncommented ones."
+        },
+        {
+          "id": "businessrule-61457439461915744538",
+          "statement": "Ticking or unticking a product by hand ticks or unticks every product beneath it to match; changes made by the dialog itself do not spread."
+        },
+        {
+          "id": "businessrule-70906412717211463954",
+          "statement": "When OK is pressed, the new filter keeps only commented policies for Yes, only uncommented ones for No, and no comment condition for Any."
+        },
+        {
+          "id": "businessrule-76306981111385169671",
+          "statement": "When the current filter has no supported-on condition, the dialog opens with Supported on unticked, both \"Match a policy if at least one selected product is supported\" and \"Match policies with missing or blank support definitions\" ticked, and no product ticked."
+        },
+        {
+          "id": "businessrule-81055540068763556055",
+          "statement": "When OK is pressed, the new filter requires the chosen state: Not Configured, Configured, Enabled or Disabled; Any sets no state condition."
+        },
+        {
+          "id": "businessrule-81206266674090971597",
+          "statement": "Reset returns every choice to its default: Any for type, state and comment, Supported on unticked, both matching options ticked and no product ticked."
+        },
+        {
+          "id": "businessrule-85052319902195299547",
+          "statement": "Changing the filter options turns on \"Only Filtered Policies\" and moves to the nearest visible category."
+        },
+        {
+          "id": "businessrule-88807660791719489759",
+          "statement": "The product requirement box (the product tree and the two matching options) can be used only while Supported on is ticked; it starts unusable."
+        },
+        {
+          "id": "businessrule-90628240213834851721",
+          "statement": "When OK is pressed with Supported on ticked, the filter records every ticked product and both matching options; with it unticked, any ticks and options are discarded and no support condition applies. A filter with Supported on ticked and no product ticked is accepted."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        },
+        {
+          "id": "entity-52418278656387992812",
+          "name": "Policy comment",
+          "states": []
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    }
+  ]
+}

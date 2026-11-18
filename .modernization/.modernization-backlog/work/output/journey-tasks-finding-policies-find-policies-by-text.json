@@ -1,0 +1,134 @@
+{
+ "stories": [
+  {
+   "title": "Find policies by the words you remember",
+   "what": "A person types words or phrases they remember and the product finds the policies whose title, description or comments hold them, in both the user and the computer areas, with the option of narrowing where it looks.",
+   "why": "People often remember what a policy says but not its name or where it sits, so they find it from the words alone.",
+   "actions": [
+    "block-14507530008177660767",
+    "block-30919896261988592289"
+   ],
+   "terms": [
+    {
+     "name": "Plain word",
+     "means": "A typed word with no * or ?, which must appear as a whole word in a text; not a part of a longer word."
+    },
+    {
+     "name": "Wildcard word",
+     "means": "A typed word containing * or ? that stands for any matching word in a text; not a quoted phrase."
+    },
+    {
+     "name": "Phrase",
+     "means": "Words typed between double quotes that must appear together as whole words; not several separate plain words."
+    },
+    {
+     "name": "Searched place",
+     "means": "One of title, description or comment, which the person ticks to say where the words are looked for; not the user or computer area."
+    }
+   ],
+   "journey": {
+    "name": "Search as you type",
+    "steps": [
+     "Say the words or phrases remembered.",
+     "Narrow where the words are looked for, if wanted."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the person types words, wildcard words (with * or ?) and a quoted phrase separated by spaces, when the search starts, then the words are told apart as plain words, wildcard words and phrases, lowercased, trimmed and cleaned of the characters . , ' \" ; / ! ( ) { } [ ].",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-20714647401379544771"
+      }
+     ]
+    },
+    {
+     "says": "Given a phrase opens with a double quote, when a later word ends in a double quote, then everything between belongs to one phrase; a single quoted word such as \"abc\" does not close itself and also takes in the words after it.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-63262725504588029346"
+      }
+     ]
+    },
+    {
+     "says": "Given a phrase was opened with a double quote and never closed, when the search starts, then that phrase is left out and the search is wider than the person may expect.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-63262725504588029346"
+      }
+     ]
+    },
+    {
+     "says": "Given a text, when it is checked, then it is a hit only if it holds every plain word as a whole word, every wildcard word matches some word in it, and every phrase appears as whole words together.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-21915530910585082056"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy and the places chosen, when any one chosen place hits (its title, its description, or a comment on it from the user's or the computer's comments), then the policy is a match.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-51916167191556979448"
+      }
+     ]
+    },
+    {
+     "says": "Given the search text is empty, when the person starts the search, then no search runs and they are told \"Please enter search terms.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-73561308167207352856"
+      }
+     ]
+    },
+    {
+     "says": "Given the person has unticked In title, In description and In comment, when they start the search, then no search runs and they see \"At least one attribute must be searched. Check one of the boxes and try again.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-31790508764365764837"
+      }
+     ]
+    },
+    {
+     "says": "Given the person has not changed the places to search, when the search screen opens, then In title, In description and In comment are all ticked.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-31790508764365764837"
+      }
+     ]
+    },
+    {
+     "says": "Given words and at least one place are chosen, when the person starts the search, then one search starts with what they entered, over both the user and the computer areas, comments included.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-86305970842078630022"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.find-policies-by-text:search-as-you-type#1",
+    "tasks-finding-policies.find-policies-by-text:search-as-you-type#2"
+   ],
+   "components": [
+    "Text Terms Parser",
+    "Text Hit Matcher",
+    "Text Search Intake"
+   ],
+   "open": [
+    "The new design says a phrase never closed is told plainly to the person, but the old rule drops it without telling them; which should the product do?",
+    "The new design shows results as words are typed, but the old rule starts a search only when Search is pressed; should results appear while typing, and when are an empty text or no chosen place reported?"
+   ]
+  }
+ ]
+}

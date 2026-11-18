@@ -1,0 +1,37 @@
+{
+  "read": 3,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The save step says it writes the chosen state, every option and the comment, but drops that OK and Apply are available only when the chosen source can be written to, that an empty comment removes the stored comment, and that Disabled writes only each option's own removal and Not configured writes nothing beyond the forgetting."
+    },
+    {
+      "record": 0,
+      "says": "Leaving without saving (Cancel, with its reported-as-change-if-Apply-was-used rule) is folded into the save step, so the person has no step for cancelling, and Apply keeping the dialog open versus OK closing it is blurred."
+    },
+    {
+      "record": 0,
+      "says": "The option-filling step loses the quirks of the number rules: text a whole-number reading accepts (signs, spaces) is kept, pasted text is not restricted to digits, numbers above 2,147,483,647 revert to the default even when the policy maximum is higher, and a negative minimum is stored unsigned."
+    },
+    {
+      "record": 0,
+      "says": "Rules that decide how a REG file or policy file forgets a key's clearance (businessrule-49955247469929977676, businessrule-60358450731077326247) are placed in this task, but no step is about source files; they belong to the storage layer, not to what the person does here."
+    },
+    {
+      "record": 1,
+      "says": "The Escape key (block-02431696381301467584) is placed under accepting the text and described only as leaving passing nothing on, losing the rule that Escape closes the window only when no text in the box is selected."
+    },
+    {
+      "record": 1,
+      "says": "Select-all with Ctrl+A (block-98990608667721641067) is grouped under providing the policy text, where it does not belong, and no step covers the text format the checks enforce (signature line, CRLF line breaks, exact U for user, state words, value formats, comment escapes), so the person cannot write a valid text from these steps."
+    },
+    {
+      "record": 1,
+      "says": "The apply step says each policy is wiped then written with its comment, but drops that a failed policy leaves the new comment against a half-written policy, that an empty comment leaves an existing comment alone, and that the person is told only how many failed, not which."
+    },
+    {
+      "record": 2,
+      "says": "The outcome says the person sees policy settings as text, yet no action or step produces the text or says which settings it holds; only the fragment view, header toggle and copy are given, and there is no entry that opens it, so it reads as a surface of the old system rather than a task."
+    }
+  ]
+}

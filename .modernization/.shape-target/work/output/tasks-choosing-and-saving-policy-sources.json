@@ -1,0 +1,38 @@
+{"tasks":[
+{"id":"choose-policy-sources","outcome":"Decide where the user and computer policies are kept and start working against those sources.","actor":"person",
+"actions":["block-43495097990247728689","block-16593836685470314086","block-07841055713983147509","block-18882497527396093425","block-22676943268795169202","block-53684119065030568086","block-07013931817450395539","block-39062072014858771500","block-52519148395305522333"],
+"rules":["businessrule-58680491450946971024","businessrule-34260437212150300999","businessrule-60819102502476341284","businessrule-36363277387876573326","businessrule-75533700456390778594","businessrule-66851330016699676430","businessrule-10464012301936997836","businessrule-84588009124214109370"],
+"facts":["entity-40163170707735391190","entity-99683518011128701149"],
+"needs":["external-90077838450756006603","external-97068941883605652538","external-90078096462363044953"],
+"current":[
+{"intent":"Say which kind of source holds the computer policies and where it is.","system":"Makes available only the location detail that belongs to the chosen kind of computer source; for a policy file, offers files of the policy file type only, including one that does not exist yet.","from":["block-43495097990247728689","block-07841055713983147509"],"confidence":"sure"},
+{"intent":"Say which kind of source holds the user policies and where it is: a policy file, a registry location, a user's profile hive or a user's own Group Policy object.","system":"Makes available only the location detail that belongs to the chosen kind of user source; offers policy files of the policy file type, and hands the person on to pick a user profile or a user account when those kinds are chosen.","from":["block-16593836685470314086","block-18882497527396093425","block-22676943268795169202","block-07013931817450395539"],"confidence":"sure"},
+{"intent":"Confirm the choices.","system":"Creates the computer and user sources from the choices, falling back to a scratch space when none is chosen; if either cannot be created tells the person why and keeps the choice open, otherwise accepts both.","from":["block-53684119065030568086"],"confidence":"sure"},
+{"intent":"Abandon the choice without changing anything.","system":"Closes the choice as cancelled.","from":["block-39062072014858771500"],"confidence":"sure"},
+{"intent":"See the policies of the newly chosen sources.","system":"Opens the sources, shows the opening result, and moves the view to the nearest visible category, dropping a selected policy that moved or is now hidden.","from":["block-52519148395305522333"],"confidence":"sure"}]},
+{"id":"identify-user-for-policy","outcome":"Name the user account whose own Group Policy object is to be the user policy source.","actor":"person",
+"actions":["block-94740465332149589219","block-85480965507959714722","block-75399435004242266349"],
+"rules":["businessrule-91379498462935455610","businessrule-77474018484672211108","businessrule-88238619586671903040","businessrule-26724904229141688759"],
+"facts":[],"needs":["external-90078096462363044953"],
+"current":[
+{"intent":"Find the account's identifier from a name.","system":"Translates the typed account name to its security identifier and shows it, or says the name could not be translated.","from":["block-94740465332149589219"],"confidence":"sure"},
+{"intent":"Confirm the account.","system":"If only a name was given, looks it up first and keeps the choice open when nothing results; requires a valid identifier, otherwise explains what to enter, and returns it when valid.","from":["block-85480965507959714722"],"confidence":"sure"},
+{"intent":"Give up choosing an account.","system":"Closes the choice as cancelled.","from":["block-75399435004242266349"],"confidence":"sure"}]},
+{"id":"pick-user-profile-for-policy","outcome":"Choose a user profile whose stored settings are to be the user policy source.","actor":"person",
+"actions":["block-81482853098029816247","block-77449854280048805872"],
+"rules":["businessrule-02848405191150173128","businessrule-37850254215893887157"],
+"facts":[],"needs":["external-90077838450756006603","external-97068941883605652538"],
+"current":[
+{"intent":"Confirm the chosen profile.","system":"Does nothing until a profile is selected, then returns the location of that profile's settings file under the users folder.","from":["block-81482853098029816247"],"confidence":"sure"},
+{"intent":"Give up choosing a profile.","system":"Closes the choice as cancelled.","from":["block-77449854280048805872"],"confidence":"sure"}]},
+{"id":"save-policy-changes","outcome":"Save the policy settings and comments to their sources, make them take effect where possible, and remember the chosen sources for next time.","actor":"person",
+"actions":["block-66465089975119483214"],
+"rules":["businessrule-00851565168679896073","businessrule-05545231242611046306","businessrule-09176393040056781958","businessrule-09208070518455812303","businessrule-13724150063390760319","businessrule-17212723393144190896","businessrule-19841193988434357732","businessrule-20632548312339129786","businessrule-24034386628405619971","businessrule-24339552780845919468","businessrule-25033115401021301399","businessrule-26056926835272364672","businessrule-28402048173344159866","businessrule-39804924157705575084","businessrule-41013546429447756519","businessrule-42987908693120337062","businessrule-43613259767674592997","businessrule-48799510965890913669","businessrule-48968387067309128566","businessrule-51421539020102170720","businessrule-57614366266507799597","businessrule-66651514909736203695","businessrule-67697422395860869033","businessrule-71273978078040008855","businessrule-72149976207795359606","businessrule-84817748081019740495","businessrule-86190343622453999219","businessrule-87767421628061265824","businessrule-90527876062459953686","businessrule-91552597921533368557","businessrule-98130638476370994041"],
+"facts":["entity-99683518011128701149","entity-52418278656387992812","entity-40163170707735391190"],
+"needs":["external-90077838450756006603","external-97068941883605652538","external-08492831744411585027","external-45436197603688581519"],
+"current":[
+{"intent":"Keep the comments written on policies.","system":"Writes each source's comments, with generated text identifiers, replacing the earlier content of the comment file; sources without comment support are skipped.","from":["block-66465089975119483214"],"confidence":"sure"},
+{"intent":"Keep the policy settings in each source.","system":"Writes a source only if fully writable, otherwise reports it as not writable; stores values, deletions, clearances and forgotten values in the source's own form, with its numbers, texts and lists encoded.","from":["block-66465089975119483214"],"confidence":"sure"},
+{"intent":"Have the saved settings take effect.","system":"Depending on the kind of source, raises the policy version record and asks Windows to refresh, applies the difference to the running account's registry, or reports that it was already applied, will apply on closing, or was discarded.","from":["block-66465089975119483214"],"confidence":"sure"},
+{"intent":"Know the outcome and find the same sources next time.","system":"Remembers the chosen source kinds and locations, and tells the person Success with the user and computer outcomes, or that saving failed and why.","from":["block-66465089975119483214"],"confidence":"sure"}]}
+]}

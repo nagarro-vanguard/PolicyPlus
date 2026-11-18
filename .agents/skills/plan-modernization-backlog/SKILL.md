@@ -23,6 +23,12 @@ Goal: a plan people review step by step and later skills build from, complete (e
 4. `bun ${SKILL_ROOT}/cli/plan.ts build ${ROOT} --work-tracking <the workspace AGENTS.md>` derives the plan from the accepted records and checks every gate. On exit 1 it prints each failing gate; run the stage that owns the gap again with `prepare`. On success it writes `plan.json`, `prompts.json`, the manifest, the bodies, the attachments and the AGENTS.md previews.
 5. Tell the person what was written and where the plan's pages are (the app builds them).
 
+## With a confirmed target
+
+The target is confirmed when the person's four decisions hold (`target/choice-as-is.json`, `choice-journeys.json`, `choice-architecture.json`, `choice-components.json`: each is not older than the file it decides on, which was made after the decision before it). When `target/` exists and one does not hold, `prepare` and `plan.ts build` stop and name it; a run with no `target/` is planned from the analysis alone.
+
+When `${ROOT}/target/architecture.json` and `target/journeys.json` exist (the `shape-target` skill wrote them), the plan is made from them and the analysis supplies coverage only. Epics are the chosen journeys; a story is a slice of one journey with the components that carry it; a component is built by the journey that alone serves it, otherwise by a shared story in an earlier phase; each journey ends with an acceptance story the plan writes itself; phases are the levels of the component graph and blockers are the calls between components. The foundation stage then has no `scope` job (what is not carried was dropped, step by step, in the journeys), its layers must carry what the architecture is built with, and the stories stage has `shared` and one `journey` job per journey in place of the capability jobs. Without them the plan is made as described below.
+
 ## Stages
 
 - Foundation (`foundation`): `decide-foundation` for the layers, outside systems, scope, notes and base areas; `create-stories` for the technical stories of the foundation.

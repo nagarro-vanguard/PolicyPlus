@@ -1,0 +1,8 @@
+{"read":5,"challenges":[
+{"record":0,"says":"The rules include ones that do not belong here: Deduplicate Policies being hidden, only one list row being selectable, and the list refresh after an edit is accepted; none of them is about finding by identifier."},
+{"record":0,"says":"The journey drops what the old system does with the identifier: an \"@U\" or \"@C\" suffix picks the section (any other suffix is cut off and the policy applies to both), the policy opens in the lower-numbered of the shown area and the area found (Computer wins), and a policy hidden by the area or filter leaves the category shown with nothing selected and no message."},
+{"record":0,"says":"The \"See what was found\" step lumps the product and support-definition detail windows (parent button, child revisions, major/minor/top-level labels, match-all/any/none wording, missing-product display) into one clause, so the person could not tell what those windows must show; they are a separate outcome from locating something by its identifier."},
+{"record":1,"says":"The journey omits what makes a hit: words match as whole words, the characters . , ' \" ; / ! ( ) { } [ ] are stripped, and a single-quoted word does not close itself but absorbs the words after it."},
+{"record":3,"says":"The \"Pick a hit to open\" step drops the condition that Go or a double-click accepts only when a result is selected, and that the position is remembered for Find Next."},
+{"record":4,"says":"The journey omits that a filter with Supported on ticked and no product ticked is accepted, and that unticking Supported on discards the ticked products and matching options, and it does not say which choices the dialog shows when it reopens from an existing filter."}
+]}

@@ -1,0 +1,330 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "idea": {
+      "type": "string",
+      "minLength": 1
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "tradeoff": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recommended": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why this is the recommended variant; leave out on the others."
+    },
+    "integrations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "need": {
+            "type": "string",
+            "description": "The id of the outside system."
+          },
+          "domain": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the domain that owns the adapter."
+          },
+          "how": {
+            "type": "string",
+            "minLength": 1,
+            "description": "How the target reaches it, in one sentence."
+          }
+        },
+        "required": [
+          "need",
+          "domain",
+          "how"
+        ],
+        "additionalProperties": true,
+        "description": "How one outside system is reached in the target."
+      }
+    },
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "concept": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The business concept the domain is named for."
+          },
+          "facts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The fact's name in the words of the business."
+                },
+                "from": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "description": "The ids of the legacy kinds of data it carries."
+                },
+                "keys": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": "What identifies one of it."
+                },
+                "relates": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "to": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "The name of the fact it points to."
+                      },
+                      "how": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "to",
+                      "how"
+                    ],
+                    "additionalProperties": true
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "from",
+                "keys",
+                "relates"
+              ],
+              "additionalProperties": true,
+              "description": "A kind of data the target keeps."
+            }
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The ids of the rules the domain decides."
+          },
+          "dependsOn": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "The names of the domains it relies on."
+          },
+          "why": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name",
+          "concept",
+          "facts",
+          "rules",
+          "dependsOn",
+          "why"
+        ],
+        "additionalProperties": true,
+        "description": "A part of the business with its own data and rules."
+      },
+      "minItems": 1
+    },
+    "containers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "interface",
+              "service",
+              "job",
+              "store",
+              "library"
+            ],
+            "description": "interface: what people or other systems use, in any medium; service: runs logic; job: runs on a schedule or in the background; store: holds data; library: shared code."
+          },
+          "tech": {
+            "type": "string",
+            "minLength": 1,
+            "description": "A phrase quoted from the Target Stack naming what it is built with."
+          },
+          "holds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "The names of the domains it holds; for a `store`, the domains whose data it keeps, which are also held by the part that runs them. Every part but a store holds at least one domain."
+          }
+        },
+        "required": [
+          "name",
+          "kind",
+          "tech",
+          "holds"
+        ],
+        "additionalProperties": true,
+        "description": "A part of the system that is built and run as one."
+      },
+      "minItems": 1
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The component's name, unique in the architecture."
+          },
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "responsibility": {
+            "type": "string",
+            "minLength": 1
+          },
+          "module": {
+            "type": "string",
+            "minLength": 1,
+            "description": "A kebab-case module name; the plan decides the folder."
+          },
+          "uses": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "The names of the components it calls."
+          },
+          "serves": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The ids of the journey steps it carries out."
+          },
+          "enforces": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The ids of the rules it enforces."
+          },
+          "adapts": {
+            "type": "string",
+            "description": "The id of the outside system it adapts."
+          },
+          "platform": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Why it exists although it serves no step, such as sign-in."
+          }
+        },
+        "required": [
+          "name",
+          "domain",
+          "responsibility",
+          "module",
+          "uses",
+          "serves",
+          "enforces"
+        ],
+        "additionalProperties": true,
+        "description": "A part of a container that does one job for a domain."
+      }
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "stepsServed": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "rules": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "rulesAssigned": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "idleDomains": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "steps",
+        "stepsServed",
+        "rules",
+        "rulesAssigned",
+        "idleDomains"
+      ],
+      "additionalProperties": true,
+      "description": "What a variant scores at domain level against the chosen journeys; derived, never written."
+    }
+  },
+  "required": [
+    "name",
+    "idea",
+    "risks",
+    "tradeoff",
+    "integrations",
+    "domains",
+    "containers",
+    "score"
+  ],
+  "additionalProperties": true
+}

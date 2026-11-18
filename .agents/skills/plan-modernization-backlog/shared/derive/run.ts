@@ -7,6 +7,9 @@ import { ModernizationRequest } from "../model/request";
 import { readAnalysis } from "../read/analysis";
 import { checkPlan, type Gaps } from "./gates";
 import { buildPlan } from "./plan";
+import { loadTarget } from "../read/target";
+import { buildTargetPlan } from "./target-plan";
+import { splitCycles } from "./cycles";
 import { carriedFrom } from "./scope";
 import { deriveFacts } from "./facts";
 import { publishPlan } from "./publish";
@@ -57,19 +60,20 @@ export const evaluatePlan = (layout: Layout, entries: readonly Entry[] = loadRev
     const analysis = readAnalysis(layout.analysis);
     const records = loadRecords(layout);
     const { layers, decisions } = records;
-    const stories = applyAll(records.stories, entries);
+    const revised = applyAll(records.stories, entries);
+    const target = loadTarget(layout);
+    // A story caught in a cycle of waits is split by component, so every story can be ordered.
+    const stories = target === undefined ? revised : splitCycles(revised, target).stories;
+    // With a confirmed target every capability is planned: what is not carried was dropped there, step by step.
     const { ids } = carriedFrom(analysis, decisions);
-    const facts = deriveFacts(analysis, ids);
-    const { plan, problems } = buildPlan({
-        analysis: { root: analysis.root, fingerprint: analysis.fingerprint },
-        facts,
-        request,
-        layers,
-        decisions,
-        stories,
-    });
-    const gaps = checkPlan({ analysis, facts, request, layers, decisions, stories, plan, problems });
-    return { plan, facts, request, gaps, stories };
+    const facts = deriveFacts(analysis, target === undefined ? ids : undefined);
+    const stamp = { root: analysis.root, fingerprint: analysis.fingerprint };
+    const { plan, problems } =
+        target === undefined
+            ? buildPlan({ analysis: stamp, facts, request, layers, decisions, stories })
+            : buildTargetPlan({ analysis: stamp, facts, layers, decisions, stories, target });
+    const gaps = checkPlan({ analysis, facts, request, layers, decisions, stories, plan, problems, target });
+    return { plan, facts, request, gaps, stories, target };
 };
 
 /**
@@ -83,7 +87,7 @@ export const runBuild = (
     layout: Layout,
     workTrackingFrom?: string,
 ): { gaps: Gaps; written: boolean; stories: number } => {
-    const { plan, facts, request, gaps } = evaluatePlan(layout);
+    const { plan, facts, request, gaps, target } = evaluatePlan(layout);
     if (gaps.failing.length > 0) return { gaps, written: false, stories: plan.stories.length };
     const workTracking =
         workTrackingFrom && existsSync(workTrackingFrom)
@@ -96,6 +100,7 @@ export const runBuild = (
         request,
         workTracking === "" ? "(Written from the workspace's Work tracking section when scaffold runs.)" : workTracking,
         resolve(import.meta.dir, "../.."),
+        target,
     );
     return { gaps, written: true, stories: plan.stories.length };
 };

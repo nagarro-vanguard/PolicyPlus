@@ -1,0 +1,199 @@
+{
+ "stories": [
+  {
+   "title": "Add a new key to a policy file with its name checked",
+   "what": "A person adding a key to a policy file gives it a name and is told when the name cannot be used; a usable name creates an empty key under the selected key, or at the top level when nothing is selected, and selects it.",
+   "why": "The person learns that a name is refused before the key is added, and ends with the new key selected and ready to hold values.",
+   "actions": [
+    "block-54431974963440976475",
+    "block-56011203566573573100",
+    "block-33339374210388875839"
+   ],
+   "terms": [
+    {
+     "name": "Key",
+     "means": "A named folder in a policy file that holds values and other keys; not a value itself."
+    }
+   ],
+   "journey": {
+    "name": "Checked as you type",
+    "steps": [
+     "Give the new key a name and know at once whether it is usable",
+     "Have the key created and selected"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given a key of the same name, ignoring case, already exists under the same parent, when that name is proposed for a new key, then the person is told \"The key name is already taken.\" and no key is added.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-27239953863800337722"
+      }
+     ]
+    },
+    {
+     "says": "Given a name containing a backslash, when it is proposed for a new key, then the person is told \"The key name is not valid.\" and no key is added.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-65588006996628019814"
+      }
+     ]
+    },
+    {
+     "says": "Given the person confirms the name dialog, then the typed name is passed on exactly as typed, without being checked at that point.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-21846002666758208174"
+      }
+     ]
+    },
+    {
+     "says": "Given the person cancels the name dialog, then it is treated the same as an empty name.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-21846002666758208174"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-94140234913184124479"
+      }
+     ]
+    },
+    {
+     "says": "Given the name is left empty or the dialog is cancelled, when a key is being added, then nothing is added.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-94140234913184124479"
+      }
+     ]
+    },
+    {
+     "says": "Given a name is given and a key is selected, when the key is added, then an empty key of that name is created under the selected key and is selected in the list.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-94140234913184124479"
+      }
+     ]
+    },
+    {
+     "says": "Given a name is given and nothing is selected, when the key is added, then an empty key of that name is created at the top level and is selected in the list.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-94140234913184124479"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-editing-policy-files-directly.add-policy-file-key-or-value:checked-as-you-type#1",
+    "tasks-editing-policy-files-directly.add-policy-file-key-or-value:checked-as-you-type#2"
+   ],
+   "components": [
+    "Key Name Validator",
+    "Key Creator"
+   ],
+   "open": [
+    "Is a refused name shown while it is being typed, or only when the person confirms?",
+    "When the name box appears, should the cursor be in it with any text already there selected?",
+    "Should pressing Escape close the name box as a cancel?"
+   ]
+  },
+  {
+   "title": "Add a new value to a policy file by its name and data together",
+   "what": "A person adding a value to the selected key chooses its name and one of five kinds, then its data; the value is stored only when the data is confirmed.",
+   "why": "Today the person is asked for the name and kind in one dialog and then the data in another; this brings name, kind and data together in one pass.",
+   "actions": [
+    "block-73079666774281241997",
+    "block-12381913549521886903"
+   ],
+   "terms": [
+    {
+     "name": "Value kind",
+     "means": "The kind of data a value holds: string, expandable string, list of strings, 32-bit number or 64-bit number; not the value's name."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a key is selected, when the person adds a value, then they can choose a name and one of five kinds: String, Expandable string, List of strings, 32-bit DWord and 64-bit QWord, and the kind starts on String.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-88605435114040098546"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-64891270751019389302"
+      }
+     ]
+    },
+    {
+     "says": "Given the person confirms the name and kind, then the typed name is used exactly as typed, even if empty, together with the chosen kind.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-88605435114040098546"
+      }
+     ]
+    },
+    {
+     "says": "Given the person cancels, then no name and no kind are returned and no value is stored.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-88605435114040098546"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-64891270751019389302"
+      }
+     ]
+    },
+    {
+     "says": "Given a kind is chosen, when the data is first asked for, then the starting data is empty text for a text kind, zero for a number kind and an empty list for a list kind.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-64891270751019389302"
+      }
+     ]
+    },
+    {
+     "says": "Given a name and kind are chosen, when the person has not confirmed the data, then no value is stored; it is stored only once the data is confirmed.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-64891270751019389302"
+      }
+     ]
+    },
+    {
+     "says": "Given a value of the same name already exists in the selected key, when the person confirms the new one, then it is replaced without any warning.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-64891270751019389302"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-editing-policy-files-directly.add-policy-file-key-or-value:checked-as-you-type#3"
+   ],
+   "components": [
+    "Value Creator"
+   ],
+   "open": [
+    "Should the kind be suggested from the data (digits suggest a 32-bit number, several lines a list), stay visible and be changeable once name and data are asked together?",
+    "Should replacing a same-named value really happen without any warning?",
+    "The number limits (0 to 4,294,967,295 for 32-bit, 0 to 18,446,744,073,709,551,615 for 64-bit) and the refusal of unsupported kinds are stated by rules built with the number reader and value editing; does this story need to apply them to a new value's data?"
+   ]
+  }
+ ]
+}

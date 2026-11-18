@@ -10,27 +10,27 @@
 
 ## Acceptance criteria
 
-- Given a fresh checkout, when the check of the Tooling layer runs, then it passes and leaves its results where the delivery reads them.
-- Given a fresh checkout, when the check of the Domain layer runs, then it passes and leaves its results where the delivery reads them.
 - Given a fresh checkout, when the check of the Contracts layer runs, then it passes and leaves its results where the delivery reads them.
-- Given a fresh checkout, when the check of the Data layer runs, then it passes and leaves its results where the delivery reads them.
-- Given a fresh checkout, when the check of the Services layer runs, then it passes and leaves its results where the delivery reads them.
-- Given a fresh checkout, when the check of the Components layer runs, then it passes and leaves its results where the delivery reads them.
-- Given a fresh checkout, when the check of the Screens layer runs, then it passes and leaves its results where the delivery reads them.
-- Given a fresh checkout, when the check of the Black-box tests layer runs, then it passes and leaves its results where the delivery reads them.
+- Given a fresh checkout, when the check of the Domain layer runs, then it passes and leaves its results where the delivery reads them.
+- Given a fresh checkout, when the check of the Database layer runs, then it passes and leaves its results where the delivery reads them.
+- Given a fresh checkout, when the check of the API service layer runs, then it passes and leaves its results where the delivery reads them.
+- Given a fresh checkout, when the check of the UI components layer runs, then it passes and leaves its results where the delivery reads them.
+- Given a fresh checkout, when the check of the Web app layer runs, then it passes and leaves its results where the delivery reads them.
+- Given a fresh checkout, when the check of the End-to-end tests layer runs, then it passes and leaves its results where the delivery reads them.
+- Given a fresh checkout, when the check of the Tooling layer runs, then it passes and leaves its results where the delivery reads them.
 - Given the codebase, when its layers are listed, then every planned layer appears with its folder and the layers it may reach.
 
 ## Scope
 
 - the workspace root
-- packages/tooling (the Tooling layer)
-- packages/domain (the Domain layer)
 - packages/contracts (the Contracts layer)
-- packages/data (the Data layer)
-- apps/api (the Services layer)
-- packages/ui (the Components layer)
-- apps/web (the Screens layer)
-- apps/e2e (the Black-box tests layer)
+- packages/domain (the Domain layer)
+- packages/database (the Database layer)
+- apps/api (the API service layer)
+- packages/ui (the UI components layer)
+- apps/web (the Web app layer)
+- apps/e2e (the End-to-end tests layer)
+- packages/tooling (the Tooling layer)
 
 ## Out of scope
 

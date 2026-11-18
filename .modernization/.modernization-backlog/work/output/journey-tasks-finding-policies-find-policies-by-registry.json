@@ -1,0 +1,141 @@
+{
+ "stories": [
+  {
+   "title": "Refuse unusable registry terms and start the search when asked",
+   "what": "When the person asks to search by registry key and value, the system refuses empty terms and a key that begins with a root key, telling them why, and otherwise starts a search with exactly what they entered.",
+   "why": "People hear at once, with a clear message, why their terms cannot be searched, and usable terms are never altered.",
+   "actions": [
+    "block-83203327187612347635",
+    "block-80717492809988540545"
+   ],
+   "terms": [
+    {
+     "name": "Registry line",
+     "means": "The single line of text a person gives about a setting, such as a full path ending in a value name; it is not yet divided into key and value."
+    },
+    {
+     "name": "Registry key",
+     "means": "The path part of a setting that a policy reads or writes; it is not the name of the value held under it."
+    },
+    {
+     "name": "Registry value name",
+     "means": "The name of one setting held under a key; it is not the key path."
+    }
+   ],
+   "journey": {
+    "name": "One line, split for me",
+    "steps": [
+     "Give whatever is known about the setting",
+     "Be told when the terms cannot be used"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the key and the value are both empty, when the person asks to search, then no search runs and they are told \"Please enter search terms.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-73898787083077319907"
+      }
+     ]
+    },
+    {
+     "says": "Given the key text starts with HKLM\\, HKCU\\, HKEY_LOCAL_MACHINE\\ or HKEY_CURRENT_USER\\, when the person asks to search, then no search runs and they are told \"Policies' root keys are determined only by their section. Remove the root key from the search terms and try again.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-71024372746156766440"
+      }
+     ]
+    },
+    {
+     "says": "Given the terms are usable, when the person asks to search, then a search starts with exactly what they entered.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-90661647574869686546"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#1",
+    "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#2"
+   ],
+   "components": [
+    "Registry Line Splitter",
+    "Registry Terms Intake"
+   ],
+   "open": [
+    "Should the system split one pasted line into a key and a value, and show that reading so the person can correct it? No rule or decision states this.",
+    "Should the check for empty terms and a root key run while the person types, or only when they ask to search? The rules state it only when they ask."
+   ]
+  },
+  {
+   "title": "Match policies to the registry key and value terms entered",
+   "what": "A policy is shown as a match when at least one setting it reads or writes meets every term the person entered, using wildcard, prefix, whole-name and path-part matching.",
+   "why": "The person gets the policies that control the setting they named, whether they gave the key, the value name or both.",
+   "actions": [
+    "block-83203327187612347635",
+    "block-80717492809988540545"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a policy reads or writes several settings, when terms are entered, then the policy matches if at least one setting meets every term, and capital or small letters make no difference.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-54588279423566663184"
+      }
+     ]
+    },
+    {
+     "says": "Given a value-name term without \"*\" or \"?\", when policies are searched, then only policies with a setting whose value name equals the term as a whole match; with \"*\" or \"?\" those act as wildcards over the whole name.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-27271850163543025066"
+      }
+     ]
+    },
+    {
+     "says": "Given a key term with a backslash and no wildcard, when policies are searched, then policies whose key path starts with that text match.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-35545130062422334165"
+      }
+     ]
+    },
+    {
+     "says": "Given a key term with \"*\" or \"?\", when policies are searched, then policies whose whole key path fits that pattern match.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-54035538146675510973"
+      }
+     ]
+    },
+    {
+     "says": "Given a key term with no backslash and no wildcard, when policies are searched, then policies having a key path with a part equal to that text match.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-95826639622119629666"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#3"
+   ],
+   "components": [
+    "Registry Term Matcher"
+   ],
+   "open": [
+    "Should matching policies appear as soon as usable terms are entered, with no separate request to search? The rules state that a search starts when the person asks."
+   ]
+  }
+ ]
+}

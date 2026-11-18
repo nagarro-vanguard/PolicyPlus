@@ -1,0 +1,116 @@
+{
+  "stories": [
+    {
+      "title": "Offer the missing policy definitions once on first use",
+      "what": "On the first use of the program, record that the welcome offer has been considered, work out whether this Windows edition lacks the full set of policy definitions, and if so show a single welcome question offering to download them; Yes starts the download.",
+      "why": "People on editions without Group Policy support get the full set of policy definitions offered without having to notice they are missing, and the offer is considered only once.",
+      "actions": [
+        "block-31629065709184768465"
+      ],
+      "terms": [
+        {
+          "name": "Orphaned category",
+          "means": "A category with no parent among the loaded definitions although its definition names one; not a category that simply sits at the top."
+        },
+        {
+          "name": "Empty category",
+          "means": "A category holding no subcategories and no policies at all, hidden ones counted; not a category whose policies are all hidden."
+        },
+        {
+          "name": "Group Policy support",
+          "means": "Whether the computer's Windows edition is one of the fixed list of 59 editions that have the Group Policy infrastructure; not whether definitions are loaded."
+        },
+        {
+          "name": "Welcome offer",
+          "means": "The one question shown on first use offering to download the policy definitions; not the Acquire ADMX Files command in the Help menu."
+        },
+        {
+          "name": "Offer considered",
+          "means": "The remembered fact that the welcome offer has been weighed on a first use, whether or not it was shown; not the person's answer to it."
+        }
+      ],
+      "journey": {
+        "name": "Offer once, keep it open",
+        "steps": [
+          "Start using the program for the first time",
+          "Have missing definitions noticed without having to check",
+          "Accept or put off the definitions",
+          "Come back to the definitions later"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the program is shown for the first time, when the welcome offer is considered, then the program records that it has been considered, even when no offer is made, and never considers it again on later starts.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-68766858893219046657"
+            }
+          ]
+        },
+        {
+          "says": "Given a category whose definition names a parent that is not among the loaded definitions, when the program checks for missing definitions, then that category counts as orphaned.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-02030966310880796596"
+            }
+          ]
+        },
+        {
+          "says": "Given a category that holds no subcategories and no policies, even hidden ones, when the program checks for missing definitions, then it counts as empty.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-87097618083601098949"
+            }
+          ]
+        },
+        {
+          "says": "Given the Windows edition reported by the computer is one of the 59 fixed edition codes, then the computer counts as having Group Policy support; given the edition cannot be read, then it counts as having none.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-44390406872239414183"
+            }
+          ]
+        },
+        {
+          "says": "Given the offer is being considered, the edition has no Group Policy support and more than two non-empty categories name a missing parent, when the main window is shown, then the person sees \"Welcome to Policy Plus! Home editions do not come with the full set of policy definitions. Would you like to download them now? This can also be done later with Help | Acquire ADMX Files.\"; otherwise no offer is made.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-23603907625209300500"
+            }
+          ]
+        },
+        {
+          "says": "Given the welcome question is shown, when the person answers Yes, then the download dialog opens.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-23603907625209300500"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#1",
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#2",
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#3",
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#4"
+      ],
+      "components": [
+        "Missing definitions detector",
+        "Group Policy edition detector",
+        "Welcome offer",
+        "Offer consideration record"
+      ],
+      "open": [
+        "No rule says what happens when the person answers No beyond not downloading; should the program do or say anything more?",
+        "The journey asks for a standing invitation to get the definitions later, but no rule or decision states it and today the welcome text only mentions Help | Acquire ADMX Files; should a standing invitation be built, and if so what and where?",
+        "The earlier remembered choice lived in the Windows registry and is not carried to the new store; should people who already saw the offer be asked again once?"
+      ]
+    }
+  ]
+}

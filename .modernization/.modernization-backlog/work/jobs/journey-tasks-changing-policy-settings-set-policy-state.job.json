@@ -1,0 +1,1638 @@
+{
+  "kind": "journey",
+  "steps": [
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+  ],
+  "stepActions": {
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1": [
+      "block-49789533336413980059",
+      "block-51334849021361427410"
+    ],
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2": [
+      "block-57992755110790680579",
+      "block-18703182669260421228",
+      "block-75724566670057728491",
+      "block-89806020979547308639",
+      "block-48615537389470790613"
+    ],
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3": [],
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4": [
+      "block-38804446611751385293",
+      "block-96135191155885644109",
+      "block-29401732049948573203",
+      "block-06231454516231170585"
+    ]
+  },
+  "actions": [
+    "block-49789533336413980059",
+    "block-51334849021361427410",
+    "block-57992755110790680579",
+    "block-18703182669260421228",
+    "block-75724566670057728491",
+    "block-89806020979547308639",
+    "block-48615537389470790613",
+    "block-38804446611751385293",
+    "block-96135191155885644109",
+    "block-29401732049948573203",
+    "block-06231454516231170585"
+  ],
+  "components": [
+    "Option Value Reader",
+    "Policy Forgetter",
+    "Policy State Writer",
+    "Option Value Writer",
+    "Policy Comment Keeper",
+    "Policy Edit Session",
+    "Option Input Rules"
+  ],
+  "cite": [
+    "businessrule-24534399091993971891",
+    "businessrule-34769835898304277453",
+    "businessrule-37022902056569995834",
+    "businessrule-49179499449653183223",
+    "businessrule-90493804689850695370",
+    "businessrule-43638846001153509048",
+    "businessrule-92057272745409912098",
+    "businessrule-30662593154265010717",
+    "businessrule-52553634867035971750",
+    "businessrule-49955247469929977676",
+    "businessrule-60358450731077326247",
+    "businessrule-04152128046162000583",
+    "businessrule-14958427259964761169",
+    "businessrule-56832565542674334637",
+    "businessrule-66734059366331213205",
+    "businessrule-60774486401252037450",
+    "businessrule-97175686457081101132",
+    "businessrule-90058940824311429227",
+    "businessrule-19622432139142313215",
+    "businessrule-46516041958192928718",
+    "businessrule-53178349170981485484",
+    "businessrule-55949208713495428877",
+    "businessrule-64524120751868809207",
+    "businessrule-67842190900074642321",
+    "businessrule-75244076300039577548",
+    "businessrule-80911529766189561154",
+    "businessrule-01560321201783674273",
+    "businessrule-33456476599558212379",
+    "businessrule-07359577675270518038",
+    "businessrule-22919299514571743135",
+    "businessrule-23336067846798029987",
+    "businessrule-33075335985104561108",
+    "businessrule-37207468109369530089",
+    "businessrule-47264131679601828501",
+    "businessrule-53979609002646144363",
+    "businessrule-65724709448091621197",
+    "businessrule-59619098183313284576",
+    "businessrule-75178338270301910966",
+    "businessrule-90485587050957154914",
+    "businessrule-20408685392954236399",
+    "businessrule-84933301477035282498",
+    "businessrule-11779280825123119273",
+    "businessrule-47134496169701496073",
+    "businessrule-47891883049575092611",
+    "businessrule-76178080166619590309",
+    "businessrule-76476292137970655950",
+    "businessrule-95995013385384587600",
+    "businessrule-98958969318255528192",
+    "businessrule-36860850025836880139",
+    "businessrule-67944280997214552078"
+  ],
+  "componentRules": {
+    "Definition installation flow": [],
+    "Missing definitions detector": [
+      "businessrule-02030966310880796596",
+      "businessrule-87097618083601098949"
+    ],
+    "Template folder scanner": [
+      "businessrule-87686960346106148106"
+    ],
+    "Template file source adapter": [],
+    "Language file locator": [
+      "businessrule-92573318973236627036",
+      "businessrule-92965345094444319678",
+      "businessrule-69876963387177556361"
+    ],
+    "Language text reader": [
+      "businessrule-32910542149714942665",
+      "businessrule-09527630769674812053",
+      "businessrule-84649532972995606012",
+      "businessrule-93437714727587946479",
+      "businessrule-05284912414586135547",
+      "businessrule-58670284456856579605"
+    ],
+    "Definition language setting": [],
+    "Template validator": [
+      "businessrule-40646214351993665036",
+      "businessrule-98117161588141132501",
+      "businessrule-25371901799273876158",
+      "businessrule-80037556468037401208",
+      "businessrule-91228574547678345469",
+      "businessrule-83755288267226589422",
+      "businessrule-15417746115131960533",
+      "businessrule-41440459272484897081",
+      "businessrule-26805667514169896082",
+      "businessrule-59268653642646332356",
+      "businessrule-25143456587420753656",
+      "businessrule-89165707538784213793",
+      "businessrule-70397490486289456229"
+    ],
+    "Definition structure builder": [
+      "businessrule-24623125277050759553",
+      "businessrule-24413560949580370921",
+      "businessrule-39179467487447053337",
+      "businessrule-11459402502484833685",
+      "businessrule-66701495026848575269",
+      "businessrule-24269573875592969564",
+      "businessrule-90575686774382821065",
+      "businessrule-44253734408576510565",
+      "businessrule-68278299005201189825",
+      "businessrule-77397977946778263418",
+      "businessrule-93507723834804807958",
+      "businessrule-26710870928949391310",
+      "businessrule-97301799709818271508"
+    ],
+    "Policy option reader": [
+      "businessrule-20341522967469767562",
+      "businessrule-23440834431907337703",
+      "businessrule-27318854358145723180",
+      "businessrule-31892600882792899810",
+      "businessrule-35101409759930685557",
+      "businessrule-35659935925800526059",
+      "businessrule-40992022396445585276",
+      "businessrule-46883945724661990816",
+      "businessrule-48352716870696272616",
+      "businessrule-48999549165964538717",
+      "businessrule-50061101372023867676",
+      "businessrule-60385862679195390671",
+      "businessrule-25475639870526854331",
+      "businessrule-43452052995976839356",
+      "businessrule-62728858792696794889"
+    ],
+    "Support evaluator": [
+      "businessrule-99139491988760691407",
+      "businessrule-49748745950500666232",
+      "businessrule-52005709614722807804",
+      "businessrule-34301200927683901255",
+      "businessrule-81760746419124272603"
+    ],
+    "Definition load coordinator": [
+      "businessrule-34235271555130179948",
+      "businessrule-61344191921921935952"
+    ],
+    "Definition reset": [],
+    "Policy state presenter": [
+      "businessrule-11674597249570802702",
+      "businessrule-89513911810275647919",
+      "businessrule-35533060170265013329"
+    ],
+    "Category tree presenter": [
+      "businessrule-02094124658868396159",
+      "businessrule-09710935452747152124",
+      "businessrule-31928423765922463982",
+      "businessrule-53806388515964147870",
+      "businessrule-95679837516811308115",
+      "businessrule-03031297687036444400",
+      "businessrule-41685454348767959653",
+      "businessrule-75222346168306051090",
+      "businessrule-69364776950274199547"
+    ],
+    "Item description pane": [
+      "businessrule-16229847440499672368",
+      "businessrule-54518846821349856909",
+      "businessrule-55193519950925403263",
+      "businessrule-75568512748421119593",
+      "businessrule-77153890827857678995",
+      "businessrule-29660896839160984241"
+    ],
+    "Item action resolver": [
+      "businessrule-25501360175578063856",
+      "businessrule-36623707346851740456",
+      "businessrule-57028469241171716582",
+      "businessrule-68891329302657284154"
+    ],
+    "Duplicate policy merger": [
+      "businessrule-40351382289100643848",
+      "businessrule-92560631592608734086"
+    ],
+    "Policy details presenter": [
+      "businessrule-30888155476627040275",
+      "businessrule-59317523370985833904",
+      "businessrule-89677004946923202726"
+    ],
+    "Category details presenter": [
+      "businessrule-88550832449331267612"
+    ],
+    "Product browser": [
+      "businessrule-12357125815438552418",
+      "businessrule-52738497804454297244",
+      "businessrule-69465149169735487446",
+      "businessrule-77846110822300189675",
+      "businessrule-93683837313593251984",
+      "businessrule-27325316460229917481",
+      "businessrule-39702010276849006236",
+      "businessrule-86698236183201307158",
+      "businessrule-95233256539481592648"
+    ],
+    "Support rule browser": [
+      "businessrule-54625832347030556938",
+      "businessrule-82075493230431806208",
+      "businessrule-22485752927450345044",
+      "businessrule-97405551033143476269"
+    ],
+    "Policy inspector": [
+      "businessrule-43141523484770952437",
+      "businessrule-79057744450548393955",
+      "businessrule-80096613073902079124",
+      "businessrule-49549620435870223174",
+      "businessrule-94076713436940158385",
+      "businessrule-96393168223138786394",
+      "businessrule-57016400965631502733"
+    ],
+    "Semantic policy writer": [
+      "businessrule-01704207253788877148",
+      "businessrule-10913365400690794412",
+      "businessrule-20897965123834184786",
+      "businessrule-77000026808397550095",
+      "businessrule-78281155676242942940",
+      "businessrule-50694068263592934768"
+    ],
+    "Loaded file reviewer": [
+      "businessrule-52722053913285909842"
+    ],
+    "Policy lookup": [],
+    "Policy File Codec": [
+      "businessrule-70425663320377904356",
+      "businessrule-90470730563627765974",
+      "businessrule-39262656033285451423",
+      "businessrule-67456626752221980743",
+      "businessrule-75428533810997783570",
+      "businessrule-77499382636897144286",
+      "businessrule-48968387067309128566",
+      "businessrule-51421539020102170720",
+      "businessrule-71273978078040008855",
+      "businessrule-90527876062459953686",
+      "businessrule-98130638476370994041",
+      "businessrule-51554818045857630746"
+    ],
+    "Policy File Entries": [
+      "businessrule-17641776170698884064",
+      "businessrule-18230757898637060853",
+      "businessrule-29530054883116088403",
+      "businessrule-46824143239519073718",
+      "businessrule-56421390704826486738",
+      "businessrule-72149976207795359606",
+      "businessrule-86190343622453999219",
+      "businessrule-43613259767674592997",
+      "businessrule-09208070518455812303"
+    ],
+    "Live Registry Values": [
+      "businessrule-28868424053274244047",
+      "businessrule-30168924374542565520",
+      "businessrule-97000243539037627331",
+      "businessrule-34447675520768722859",
+      "businessrule-95699184013424603885",
+      "businessrule-42987908693120337062",
+      "businessrule-48799510965890913669",
+      "businessrule-35899140497190862562",
+      "businessrule-51029550915449645879"
+    ],
+    "User Hive Mounter": [
+      "businessrule-50808386816006011599",
+      "businessrule-46972642019161394212"
+    ],
+    "Registry Export Source": [
+      "businessrule-67539343519248421601",
+      "businessrule-86313704517800761850",
+      "businessrule-96701855986906093783",
+      "businessrule-99096323836097983665",
+      "businessrule-17212723393144190896",
+      "businessrule-24034386628405619971",
+      "businessrule-25033115401021301399",
+      "businessrule-66651514909736203695"
+    ],
+    "Policy Change Applier": [
+      "businessrule-05545231242611046306",
+      "businessrule-28402048173344159866",
+      "businessrule-41013546429447756519",
+      "businessrule-67697422395860869033",
+      "businessrule-84817748081019740495",
+      "businessrule-91552597921533368557"
+    ],
+    "Scratch Policy Store": [
+      "businessrule-06218920206107794280"
+    ],
+    "Computer File Access": [
+      "businessrule-79173574861552738237",
+      "businessrule-49395771262191850050"
+    ],
+    "Group Policy Version Tracker": [
+      "businessrule-00851565168679896073",
+      "businessrule-09176393040056781958",
+      "businessrule-26056926835272364672"
+    ],
+    "Source Location Resolver": [
+      "businessrule-74412475215137182202",
+      "businessrule-62563112935081932578"
+    ],
+    "Source Status Describer": [
+      "businessrule-84284160770896952745",
+      "businessrule-73847809349842629987",
+      "businessrule-98025569949322378254",
+      "businessrule-29585332630928853779"
+    ],
+    "Source Opener": [
+      "businessrule-83542226215682203251",
+      "businessrule-27578488339642782673"
+    ],
+    "Source Releaser": [
+      "businessrule-59631775004799082543"
+    ],
+    "Source Memory": [
+      "businessrule-72559528436656832979",
+      "businessrule-83248377690419919134"
+    ],
+    "Source Saver": [
+      "businessrule-13724150063390760319",
+      "businessrule-19841193988434357732",
+      "businessrule-20632548312339129786",
+      "businessrule-24339552780845919468"
+    ],
+    "Policy Comment Catalog": [
+      "businessrule-40601471490811436933",
+      "businessrule-76710184957379543464",
+      "businessrule-87767421628061265824"
+    ],
+    "Comment File Adapter": [
+      "businessrule-31889487085995982343",
+      "businessrule-93571958636080198306",
+      "businessrule-57614366266507799597",
+      "businessrule-39804924157705575084"
+    ],
+    "Directory Account Resolver": [
+      "businessrule-91379498462935455610",
+      "businessrule-88238619586671903040",
+      "businessrule-77474018484672211108"
+    ],
+    "Source Choice Builder": [
+      "businessrule-36363277387876573326",
+      "businessrule-75533700456390778594"
+    ],
+    "Source Choice Entry": [
+      "businessrule-34260437212150300999",
+      "businessrule-58680491450946971024",
+      "businessrule-60819102502476341284",
+      "businessrule-66851330016699676430"
+    ],
+    "User Identification Entry": [
+      "businessrule-26724904229141688759"
+    ],
+    "User Profile Pick": [
+      "businessrule-02848405191150173128",
+      "businessrule-37850254215893887157"
+    ],
+    "Visible Category Follow": [
+      "businessrule-10464012301936997836",
+      "businessrule-84588009124214109370"
+    ],
+    "Enablement Evidence Reader": [
+      "businessrule-07376289294643129633",
+      "businessrule-07554086131159240838",
+      "businessrule-22959538508130326801",
+      "businessrule-25766167090873157702",
+      "businessrule-29495869201116213931",
+      "businessrule-33872241894384295212",
+      "businessrule-46971412075927401870",
+      "businessrule-71909773168029429916",
+      "businessrule-92873738128602220135"
+    ],
+    "Option Value Reader": [
+      "businessrule-24534399091993971891",
+      "businessrule-34769835898304277453",
+      "businessrule-37022902056569995834",
+      "businessrule-49179499449653183223",
+      "businessrule-90493804689850695370",
+      "businessrule-43638846001153509048",
+      "businessrule-92057272745409912098"
+    ],
+    "Policy Forgetter": [
+      "businessrule-30662593154265010717",
+      "businessrule-52553634867035971750",
+      "businessrule-49955247469929977676",
+      "businessrule-60358450731077326247"
+    ],
+    "Policy State Writer": [
+      "businessrule-04152128046162000583",
+      "businessrule-14958427259964761169",
+      "businessrule-56832565542674334637",
+      "businessrule-66734059366331213205",
+      "businessrule-60774486401252037450",
+      "businessrule-97175686457081101132",
+      "businessrule-90058940824311429227"
+    ],
+    "Option Value Writer": [
+      "businessrule-19622432139142313215",
+      "businessrule-46516041958192928718",
+      "businessrule-53178349170981485484",
+      "businessrule-55949208713495428877",
+      "businessrule-64524120751868809207",
+      "businessrule-67842190900074642321",
+      "businessrule-75244076300039577548",
+      "businessrule-80911529766189561154"
+    ],
+    "Policy Comment Keeper": [
+      "businessrule-01560321201783674273",
+      "businessrule-33456476599558212379"
+    ],
+    "Policy Edit Session": [
+      "businessrule-07359577675270518038",
+      "businessrule-22919299514571743135",
+      "businessrule-23336067846798029987",
+      "businessrule-33075335985104561108",
+      "businessrule-37207468109369530089",
+      "businessrule-47264131679601828501",
+      "businessrule-53979609002646144363",
+      "businessrule-65724709448091621197",
+      "businessrule-59619098183313284576",
+      "businessrule-75178338270301910966",
+      "businessrule-90485587050957154914",
+      "businessrule-20408685392954236399",
+      "businessrule-84933301477035282498"
+    ],
+    "Option Input Rules": [
+      "businessrule-11779280825123119273",
+      "businessrule-47134496169701496073",
+      "businessrule-47891883049575092611",
+      "businessrule-76178080166619590309",
+      "businessrule-76476292137970655950",
+      "businessrule-95995013385384587600",
+      "businessrule-98958969318255528192",
+      "businessrule-36860850025836880139",
+      "businessrule-67944280997214552078"
+    ],
+    "Semantic Text Reader": [
+      "businessrule-17846007911557610465",
+      "businessrule-21688833916465491468",
+      "businessrule-37953448968627114950",
+      "businessrule-38078267378406118840",
+      "businessrule-49239739229069713399",
+      "businessrule-64894609785645160893",
+      "businessrule-82283321913472173436",
+      "businessrule-85959955505766938318",
+      "businessrule-91520515189249767580",
+      "businessrule-97058087218177971913",
+      "businessrule-14257585336729172869"
+    ],
+    "Semantic Text Applier": [
+      "businessrule-12966156302506777327",
+      "businessrule-45692609540846356884",
+      "businessrule-47001836867625969953",
+      "businessrule-78566706966921753288",
+      "businessrule-70167687024707690035"
+    ],
+    "Semantic Text Import Session": [
+      "businessrule-27078270365699057081",
+      "businessrule-30078789996227150580",
+      "businessrule-53070511165338807522"
+    ],
+    "Semantic Text Writer": [
+      "businessrule-47036476815425257305"
+    ],
+    "Policy State Provider": [],
+    "Visibility Judge": [
+      "businessrule-09965726926686583005",
+      "businessrule-12540995342195943001",
+      "businessrule-67323359061601595450",
+      "businessrule-70331897906623822249",
+      "businessrule-79960316131030112593",
+      "businessrule-97862941341357225531"
+    ],
+    "Area Scope Chooser": [
+      "businessrule-85204901615179220846",
+      "businessrule-81666786810242280110"
+    ],
+    "Identifier Kind Resolver": [
+      "businessrule-34818300362920325745",
+      "businessrule-73680018829588409732"
+    ],
+    "Identifier Arrival Router": [
+      "businessrule-49582367227471127226",
+      "businessrule-56645748073860464161",
+      "businessrule-62209428351075007862",
+      "businessrule-73292110340688125936"
+    ],
+    "Single Selection Guard": [
+      "businessrule-93221850558792273709"
+    ],
+    "Text Terms Parser": [
+      "businessrule-20714647401379544771",
+      "businessrule-63262725504588029346"
+    ],
+    "Text Hit Matcher": [
+      "businessrule-21915530910585082056",
+      "businessrule-51916167191556979448"
+    ],
+    "Text Search Intake": [
+      "businessrule-31790508764365764837",
+      "businessrule-73561308167207352856",
+      "businessrule-86305970842078630022"
+    ],
+    "Registry Line Splitter": [],
+    "Registry Terms Intake": [
+      "businessrule-73898787083077319907",
+      "businessrule-71024372746156766440",
+      "businessrule-90661647574869686546"
+    ],
+    "Registry Term Matcher": [
+      "businessrule-27271850163543025066",
+      "businessrule-35545130062422334165",
+      "businessrule-54035538146675510973",
+      "businessrule-54588279423566663184",
+      "businessrule-95826639622119629666"
+    ],
+    "Search Run Coordinator": [
+      "businessrule-35354684864210149934",
+      "businessrule-79288582532948770219",
+      "businessrule-94342659396000502591",
+      "businessrule-15877826642522947109",
+      "businessrule-57749472934040708163"
+    ],
+    "Result Picker": [
+      "businessrule-48840711587592938759",
+      "businessrule-80544887789558031281"
+    ],
+    "Result Stepper": [
+      "businessrule-17430127230259081557",
+      "businessrule-53914450774482291886"
+    ],
+    "Result Recall": [
+      "businessrule-38090025507732480917",
+      "businessrule-17385510066480798684",
+      "businessrule-78338951417255409296",
+      "businessrule-97390301066419776959"
+    ],
+    "Limit Draft Presenter": [
+      "businessrule-01575097247784730570",
+      "businessrule-26561900736287578271",
+      "businessrule-32591775124677875588",
+      "businessrule-59209755491778300947",
+      "businessrule-76306981111385169671"
+    ],
+    "Limit Draft Applier": [
+      "businessrule-03237181236179074787",
+      "businessrule-81055540068763556055",
+      "businessrule-70906412717211463954",
+      "businessrule-90628240213834851721"
+    ],
+    "Product Limit Selector": [
+      "businessrule-88807660791719489759",
+      "businessrule-61457439461915744538"
+    ],
+    "Limit Focus Mover": [
+      "businessrule-85052319902195299547",
+      "businessrule-36944318108231327872"
+    ],
+    "Limit Draft Session": [
+      "businessrule-81206266674090971597",
+      "businessrule-57716378734614233724"
+    ],
+    "Raw Editing Gate": [
+      "businessrule-40441510620479008895",
+      "businessrule-14969413888672404933",
+      "businessrule-64564273672622472190",
+      "businessrule-21403142511575039594",
+      "businessrule-98676109650316370626"
+    ],
+    "Entry Tree Lister": [
+      "businessrule-81365817698028227620",
+      "businessrule-67529938588779257243",
+      "businessrule-43194539708053716006",
+      "businessrule-44523725638753390545"
+    ],
+    "Entry Action Availability": [
+      "businessrule-13057335115870748705",
+      "businessrule-86296876237579429124",
+      "businessrule-32089237714667793315"
+    ],
+    "Editing Session Recap": [
+      "businessrule-18574755515767742264"
+    ],
+    "Key Name Validator": [
+      "businessrule-27239953863800337722",
+      "businessrule-65588006996628019814",
+      "businessrule-21846002666758208174"
+    ],
+    "Key Creator": [
+      "businessrule-94140234913184124479"
+    ],
+    "Value Creator": [
+      "businessrule-88605435114040098546",
+      "businessrule-64891270751019389302"
+    ],
+    "Number Text Reader": [
+      "businessrule-13220028854331489804",
+      "businessrule-85571919984782494727"
+    ],
+    "Value Data Editor": [
+      "businessrule-87150598845683946147",
+      "businessrule-05846735750774889498"
+    ],
+    "Deletion Marker Writer": [
+      "businessrule-27194812132584860836"
+    ],
+    "Key Clearing Chooser": [
+      "businessrule-63694206615951133419",
+      "businessrule-30359040357073744492",
+      "businessrule-30251051045932916641",
+      "businessrule-84404651755849490179"
+    ],
+    "Entry Forgetter": [
+      "businessrule-04432638879352685329"
+    ],
+    "Registry Script Intake": [
+      "businessrule-00824990257185597112",
+      "businessrule-97032716123610483497",
+      "businessrule-89009644626675244455",
+      "businessrule-59516130836014950967"
+    ],
+    "Registry Script Reader": [
+      "businessrule-52142616153788952070",
+      "businessrule-55584576559812010511",
+      "businessrule-57877192145861745927",
+      "businessrule-59618595788928559733",
+      "businessrule-23306400970907693227",
+      "businessrule-18921117498420510792"
+    ],
+    "Prefix Guesser": [
+      "businessrule-75481654180830858390",
+      "businessrule-17451417049747776074"
+    ],
+    "Registry Script Applier": [
+      "businessrule-18627979551357993299",
+      "businessrule-45318436042524755037",
+      "businessrule-61966293182360194116",
+      "businessrule-60060400053285241820"
+    ],
+    "Policy File Import": [
+      "businessrule-69354381130041181167",
+      "businessrule-97686874157870392601"
+    ],
+    "Export Branch Defaults": [
+      "businessrule-04261341694819838767",
+      "businessrule-60632388568264259103",
+      "businessrule-98458070891453225274",
+      "businessrule-38615217867457911992"
+    ],
+    "Export Source Preparer": [
+      "businessrule-62577216252619197563",
+      "businessrule-50297867320833369013"
+    ],
+    "Registry Script Writer": [
+      "businessrule-57163770116853325546",
+      "businessrule-78788630170323770129",
+      "businessrule-14603482078338141941"
+    ],
+    "Policy File Export": [
+      "businessrule-57982804566984189207"
+    ],
+    "Acquisition session": [
+      "businessrule-19284863828429321329",
+      "businessrule-75570169794845906057",
+      "businessrule-17840470067823720423",
+      "businessrule-84139143444339961851"
+    ],
+    "Destination chooser": [
+      "businessrule-34650805596483639458",
+      "businessrule-78945520165872370051"
+    ],
+    "Package fetcher": [
+      "businessrule-53408776186716933732",
+      "businessrule-15364695696024462204"
+    ],
+    "Package extractor": [
+      "businessrule-91358402464075338920"
+    ],
+    "Destination access controller": [
+      "businessrule-16960626064100495277",
+      "businessrule-70392920399990339776"
+    ],
+    "Template installer": [
+      "businessrule-24154317128059319852",
+      "businessrule-33969702428946021999"
+    ],
+    "Group Policy edition detector": [
+      "businessrule-44390406872239414183"
+    ],
+    "Welcome offer": [
+      "businessrule-23603907625209300500"
+    ],
+    "Acquired definitions adoption": [
+      "businessrule-94371671563498468562"
+    ],
+    "Version stamper": [
+      "businessrule-12414618955963878773"
+    ],
+    "Program identity presenter": [
+      "businessrule-59853527376948406586"
+    ],
+    "Preference store adapter": [
+      "businessrule-25353365313977612083"
+    ],
+    "Remembered choices keeper": [],
+    "Saved definitions folder resolver": [
+      "businessrule-40551856488084894130"
+    ],
+    "Start-up load recovery": [
+      "businessrule-41547680626150552574",
+      "businessrule-58877134447436981389",
+      "businessrule-72200124994498270380",
+      "businessrule-78253526822536661517"
+    ],
+    "Definitions folder choice validator": [
+      "businessrule-76226373219464614800",
+      "businessrule-88154451768954453608",
+      "businessrule-53176229115945924012",
+      "businessrule-98012095360980700253"
+    ],
+    "Replace option proposer": [
+      "businessrule-43765682097437166867"
+    ],
+    "Folder addition run": [
+      "businessrule-06850078746756456273",
+      "businessrule-19671296259932138006",
+      "businessrule-56221298079625729644"
+    ],
+    "Template file adder": [
+      "businessrule-07200475892676201466"
+    ],
+    "Session discarder": [
+      "businessrule-73782132825452925601",
+      "businessrule-83939170310206178732"
+    ],
+    "Language code checker": [
+      "businessrule-31456964891379452251",
+      "businessrule-93543924991745555552"
+    ],
+    "Language change applier": [
+      "businessrule-80947080049413275464"
+    ],
+    "Offer consideration record": [
+      "businessrule-68766858893219046657"
+    ],
+    "Acquired definitions switcher": []
+  },
+  "allow": [
+    "PolicyPlusWeb"
+  ],
+  "layerIds": [
+    "layer-contracts",
+    "layer-domain",
+    "layer-database",
+    "layer-api",
+    "layer-ui",
+    "layer-web",
+    "layer-e2e",
+    "layer-tooling"
+  ],
+  "decisionIds": [
+    "integrations.decision-1",
+    "integrations.decision-2",
+    "integrations.decision-3",
+    "integrations.decision-4",
+    "integrations.decision-5",
+    "integrations.decision-6",
+    "integrations.decision-7",
+    "integrations.decision-8",
+    "base.decision-1",
+    "base.decision-2",
+    "base.decision-3",
+    "base.decision-4",
+    "base.decision-5",
+    "base.decision-6",
+    "base.decision-7",
+    "base.decision-8",
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12",
+    "base.decision-13",
+    "base.decision-14",
+    "base.decision-15",
+    "base.decision-16",
+    "base.decision-17",
+    "base.decision-18",
+    "base.decision-19",
+    "base.decision-20",
+    "base.decision-21",
+    "base.decision-22",
+    "base.decision-23",
+    "base.decision-24",
+    "base.decision-25",
+    "base.decision-26",
+    "base.decision-27",
+    "base.decision-28",
+    "base.decision-29"
+  ],
+  "areaDecisionIds": [
+    "base.decision-1",
+    "base.decision-2",
+    "base.decision-3",
+    "base.decision-4"
+  ],
+  "journey": {
+    "name": "Review what will change",
+    "idea": "The system loads the current state and every stored option, the person states what they want, and a forecast of exactly what will be written and removed is confirmed before saving.",
+    "outcome": "Set one policy to Enabled, Disabled or Not configured, with its options and comment, for the computer or the user."
+  },
+  "stepDetails": [
+    {
+      "id": "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+      "intent": "Open the policy with everything already worked out",
+      "system": "The system fills in the policy's description, applies to side, state and stored options, defaults and comment, and shows whether this side can be written to.",
+      "change": "inferred",
+      "reason": "Nothing is asked that the system can read for itself.",
+      "today": [
+        {
+          "id": "block-49789533336413980059",
+          "what": "Fills in the policy name, help and support text and prepares the options and current state"
+        },
+        {
+          "id": "block-51334849021361427410",
+          "what": "Switches to the chosen policy source and reloads the state shown"
+        }
+      ],
+      "keeps": [
+        {
+          "id": "businessrule-22919299514571743135",
+          "says": "A policy that applies to both computer and user can be edited for either, starting on Computer when no section was given; a policy for one section is fixed to that section and the section choice is unavailable."
+        },
+        {
+          "id": "businessrule-47264131679601828501",
+          "says": "Choosing Computer or User in the dialog switches the source, its writability and its comments to that section, and reloads the chosen state (Enabled, Disabled or Not Configured) from it. Option values are replaced only for options the section stores when it is Enabled; other values typed earlier stay in the controls."
+        },
+        {
+          "id": "businessrule-23336067846798029987",
+          "says": "OK and Apply are available only when the chosen policy source can be written to."
+        },
+        {
+          "id": "businessrule-20408685392954236399",
+          "says": "The Supported on box shows the supported-on name of the policy and is empty when the policy names none."
+        },
+        {
+          "id": "businessrule-33075335985104561108",
+          "says": "The state shown when the dialog opens follows the policy's present state in the source being edited: Enabled, Disabled, or Not Configured for anything else, including an unclear state."
+        },
+        {
+          "id": "businessrule-01560321201783674273",
+          "says": "The comment box is disabled and reads \"Comments unavailable for this policy source\" when the source has no comments; otherwise it shows the policy's stored comment, or is empty when there is none."
+        },
+        {
+          "id": "businessrule-59619098183313284576",
+          "says": "Option controls can be edited only while Enabled is chosen; with Disabled or Not Configured they are greyed out."
+        },
+        {
+          "id": "businessrule-90485587050957154914",
+          "says": "When the policy is Enabled, each option control is set to the value found in the source: numbers into number boxes, text into text and combo boxes, the matching item in drop-downs, true or false into check boxes, lines into multi-line boxes and the stored list into the list editor."
+        },
+        {
+          "id": "businessrule-24534399091993971891",
+          "says": "A choice element is read as the position of the first item whose own value is present and, when the item has a value list, whose list is wholly present; when no item matches, the position is -1."
+        },
+        {
+          "id": "businessrule-34769835898304277453",
+          "says": "A list element whose entries have names the person provides is read as every stored name with its value, under the element's key."
+        },
+        {
+          "id": "businessrule-37022902056569995834",
+          "says": "A list of values counts as present only when every value in it is present."
+        },
+        {
+          "id": "businessrule-43638846001153509048",
+          "says": "The saved value of a multi-line text element is read as stored, without first checking that it exists."
+        },
+        {
+          "id": "businessrule-47134496169701496073",
+          "says": "A check box starts with the presentation's default state."
+        },
+        {
+          "id": "businessrule-49179499449653183223",
+          "says": "A checkbox is on when its on value (or all values of its on list) is present, or, with neither defined, when its value is 1; it is off in every other case, including when its off value is present."
+        },
+        {
+          "id": "businessrule-90493804689850695370",
+          "says": "A list element whose entry names do not matter is read as a list of values: when the list has a prefix, the stored values named prefix1, prefix2, and so on, in order, until the first number that is missing; otherwise every stored value name under the key."
+        },
+        {
+          "id": "businessrule-92057272745409912098",
+          "says": "The saved value of a number or text element is read as stored; the reading assumes the value exists and is of the right kind, and is not checked first. A checkbox is read by its own rule."
+        },
+        {
+          "id": "businessrule-47891883049575092611",
+          "says": "A plain text entry is limited to the maximum length the policy defines and starts with the presentation's default text."
+        },
+        {
+          "id": "businessrule-76476292137970655950",
+          "says": "A number entered with a spin box is limited to the minimum and maximum the policy defines, in steps the presentation sets, and starts at the presentation's default."
+        },
+        {
+          "id": "businessrule-95995013385384587600",
+          "says": "A drop-down list shows the policy's choices by their translated names, sorted unless the presentation turns sorting off, and preselects the default choice when the presentation names one; otherwise nothing is selected."
+        },
+        {
+          "id": "businessrule-98958969318255528192",
+          "says": "A text entry with suggestions is limited to the maximum length the policy defines, starts with the presentation's default text, and lists the presentation's suggestions, sorted unless the presentation turns sorting off."
+        }
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2",
+      "intent": "Say what state it should be in and change only what differs",
+      "system": "The person picks on, off or not configured and edits only the options that need to change; the system keeps values within limits and refuses duplicate list names.",
+      "change": "merged",
+      "reason": "State, options and lists are changed in one place, with the options available only when on.",
+      "today": [
+        {
+          "id": "block-57992755110790680579",
+          "what": "Enables the option controls only while Enabled is picked"
+        },
+        {
+          "id": "block-18703182669260421228",
+          "what": "Keeps a plain number box within its minimum and maximum"
+        },
+        {
+          "id": "block-75724566670057728491",
+          "what": "Rejects any key that is not a digit or control key"
+        },
+        {
+          "id": "block-89806020979547308639",
+          "what": "Opens the list editor and keeps what it returns"
+        },
+        {
+          "id": "block-48615537389470790613",
+          "what": "Collects the grid rows into a list or name-value map, rejecting duplicate names."
+        }
+      ],
+      "keeps": [
+        {
+          "id": "businessrule-11779280825123119273",
+          "says": "Keys other than digits and control keys are ignored in a numeric text box."
+        },
+        {
+          "id": "businessrule-76178080166619590309",
+          "says": "A plain number box keeps any text a whole-number reading accepts, including a leading sign or spaces; other text is replaced by the default. A number above the maximum or below the minimum is replaced by that limit. Numbers above 2,147,483,647 are replaced by the default even when the policy maximum is higher. Only typing is restricted to digits; pasted text is not. A negative number kept where the minimum is below zero is converted to an unsigned number when applied."
+        },
+        {
+          "id": "businessrule-36860850025836880139",
+          "says": "When the list editor is confirmed for a list where the person names each entry, and two entries have exactly the same name, it is refused with \"Multiple entries are named \"<name>\"! Remove or rename all but one.\" and nothing is returned. Names are compared exactly, so Run and run are accepted as two entries. A name cell never filled in stops the dialog with an unhandled error."
+        },
+        {
+          "id": "businessrule-67944280997214552078",
+          "says": "When the list editor is confirmed for a list without names, every row except the empty new row at the bottom is returned in the order shown, with no check that a cell has content; a row whose value cell was never filled is returned as an empty entry. For named lists the same new row is ignored."
+        },
+        {
+          "id": "businessrule-59619098183313284576",
+          "says": "Option controls can be edited only while Enabled is chosen; with Disabled or Not Configured they are greyed out."
+        }
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+      "intent": "Review the forecast of changes",
+      "system": "The system lists what will be forgotten, written and removed, including whole list keys and values taken away by Disabled, and what the comment will become.",
+      "change": "new",
+      "reason": "Showing the effect before it happens is new and prevents unintended writes.",
+      "today": [],
+      "keeps": []
+    },
+    {
+      "id": "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4",
+      "intent": "Confirm, then carry on or finish",
+      "system": "The system applies the forecast, reports the outcome as a change if anything was saved in this visit, and keeps the person on the policy or closes it.",
+      "change": "merged",
+      "reason": "One confirmation covers saving and leaving.",
+      "today": [
+        {
+          "id": "block-38804446611751385293",
+          "what": "Writes the chosen state to the policy source and keeps the dialog open"
+        },
+        {
+          "id": "block-96135191155885644109",
+          "what": "Writes the chosen state to the policy source and closes the dialog accepted"
+        },
+        {
+          "id": "block-29401732049948573203",
+          "what": "Closes the dialog, accepted if an Apply already changed something"
+        },
+        {
+          "id": "block-06231454516231170585",
+          "what": "Reports the dialog as accepted if changes were applied"
+        }
+      ],
+      "keeps": [
+        {
+          "id": "businessrule-04152128046162000583",
+          "says": "When a policy is set to Disabled and the definition gives no off value, its registry value is removed. A defined off value, with any extra off values, is saved instead."
+        },
+        {
+          "id": "businessrule-14958427259964761169",
+          "says": "When a policy is set to Enabled and the policy has a registry value name but defines no explicit on value, the value is saved as the number 1."
+        },
+        {
+          "id": "businessrule-19622432139142313215",
+          "says": "When a number setting is saved, it is written as text if the definition says to store it as text, otherwise as a 32-bit number."
+        },
+        {
+          "id": "businessrule-33456476599558212379",
+          "says": "When a policy is applied and the source supports comments, an empty comment box removes the policy's stored comment and any text replaces or adds it."
+        },
+        {
+          "id": "businessrule-46516041958192928718",
+          "says": "When a list setting is saved, entries that carry their own names are saved under those names. Otherwise each entry is numbered from 1, named with the definition's prefix plus its number, or named after its own text when the definition has no prefix."
+        },
+        {
+          "id": "businessrule-53178349170981485484",
+          "says": "A setting that names its own registry key is saved under that key. Otherwise it is saved under the policy's key."
+        },
+        {
+          "id": "businessrule-55949208713495428877",
+          "says": "When a multi-line text setting is saved, it is written as a multiple-string value."
+        },
+        {
+          "id": "businessrule-56832565542674334637",
+          "says": "When a policy is set to Disabled, each setting gets only its own removal. A list setting has all values under its key removed, even when its definition says to keep other entries. A checkbox with a defined off value or off list gets those saved, and every other setting has its single value removed. Extra values listed for a chosen item, a checkbox's on list and the policy's own on list are left in place."
+        },
+        {
+          "id": "businessrule-60774486401252037450",
+          "says": "When Enabled is chosen, applying writes every option of the policy whatever its value, including options never filled in."
+        },
+        {
+          "id": "businessrule-64524120751868809207",
+          "says": "When a text setting is saved, it is written as an expandable text string if the definition says so, otherwise as a plain text string."
+        },
+        {
+          "id": "businessrule-66734059366331213205",
+          "says": "When a policy is set to Enabled, its own on value is saved and any extra values listed for the on state are saved with it. A key left blank in a list falls back to the policy's key."
+        },
+        {
+          "id": "businessrule-67842190900074642321",
+          "says": "When a checkbox setting is saved, a ticked box with no defined on value first saves the number 1, and an unticked box with no defined off value first removes the value. The defined on or off value is then saved, with the extra values listed for that state, and overwrites the first step."
+        },
+        {
+          "id": "businessrule-75244076300039577548",
+          "says": "When a list setting is saved and the definition does not say to keep other entries, every existing value under the list's key is removed first. A list with no supplied entries then stays empty."
+        },
+        {
+          "id": "businessrule-80911529766189561154",
+          "says": "When a registry value is written for a policy, a value defined as 'delete' is removed, a numeric value is saved as a 32-bit number and a text value as a text string. A policy with no value defined writes nothing."
+        },
+        {
+          "id": "businessrule-84933301477035282498",
+          "says": "Applying a policy first forgets everything the source holds for it; Enabled then writes every option's current value, Disabled writes the disabled state, and Not Configured leaves the policy with no values."
+        },
+        {
+          "id": "businessrule-90058940824311429227",
+          "says": "When a policy is set to Not configured or Unknown, SetPolicyState writes and removes nothing. Callers forget the policy's old values first, so Not configured works by that removal alone."
+        },
+        {
+          "id": "businessrule-97175686457081101132",
+          "says": "When a policy is set to Enabled, only the settings the person supplied are written. A setting with no supplied value is left as it was."
+        },
+        {
+          "id": "businessrule-52553634867035971750",
+          "says": "The registry values a policy touches are its own value, those in its value lists, those of its elements (the whole key for list elements) and those of checkbox and choice sub-lists, each counted once."
+        },
+        {
+          "id": "businessrule-30662593154265010717",
+          "says": "When a policy is forgotten, the whole key of each of its list elements is cleared and every registry value it touches is dropped from the source, so it reads as Not configured."
+        },
+        {
+          "id": "businessrule-49955247469929977676",
+          "says": "When a key's clearance is forgotten in a REG file, the key-removal entry is dropped if it exists. The request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted."
+        },
+        {
+          "id": "businessrule-60358450731077326247",
+          "says": "When a key's clearance is forgotten in a policy file, every clear-all marker for that key is removed."
+        },
+        {
+          "id": "businessrule-07359577675270518038",
+          "says": "When the policy setting dialog is closed by any other means, it is still reported as a change if Apply was used earlier."
+        },
+        {
+          "id": "businessrule-37207468109369530089",
+          "says": "OK writes the policy to the source and closes the dialog as a change."
+        },
+        {
+          "id": "businessrule-53979609002646144363",
+          "says": "Apply writes the policy to the source, keeps the dialog open and records that a change was made."
+        },
+        {
+          "id": "businessrule-65724709448091621197",
+          "says": "Closing the policy setting dialog with Cancel is reported as a change when Apply was used earlier in that session, and as a cancel otherwise."
+        }
+      ]
+    }
+  ],
+  "ownComponents": [
+    {
+      "name": "Option Value Reader",
+      "domain": "Policy State",
+      "responsibility": "Reads the stored value of each option of a policy from a source: numbers, text, choices, ticks and lists.",
+      "module": "option-value-reader",
+      "uses": [
+        "Policy File Entries",
+        "Live Registry Values"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-24534399091993971891",
+          "says": "A choice element is read as the position of the first item whose own value is present and, when the item has a value list, whose list is wholly present; when no item matches, the position is -1."
+        },
+        {
+          "id": "businessrule-34769835898304277453",
+          "says": "A list element whose entries have names the person provides is read as every stored name with its value, under the element's key."
+        },
+        {
+          "id": "businessrule-37022902056569995834",
+          "says": "A list of values counts as present only when every value in it is present."
+        },
+        {
+          "id": "businessrule-49179499449653183223",
+          "says": "A checkbox is on when its on value (or all values of its on list) is present, or, with neither defined, when its value is 1; it is off in every other case, including when its off value is present."
+        },
+        {
+          "id": "businessrule-90493804689850695370",
+          "says": "A list element whose entry names do not matter is read as a list of values: when the list has a prefix, the stored values named prefix1, prefix2, and so on, in order, until the first number that is missing; otherwise every stored value name under the key."
+        },
+        {
+          "id": "businessrule-43638846001153509048",
+          "says": "The saved value of a multi-line text element is read as stored, without first checking that it exists."
+        },
+        {
+          "id": "businessrule-92057272745409912098",
+          "says": "The saved value of a number or text element is read as stored; the reading assumes the value exists and is of the right kind, and is not checked first. A checkbox is read by its own rule."
+        }
+      ]
+    },
+    {
+      "name": "Policy Forgetter",
+      "domain": "Policy State",
+      "responsibility": "Finds every value a policy touches and clears them, with key clearances, from a source.",
+      "module": "policy-forgetter",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-30662593154265010717",
+          "says": "When a policy is forgotten, the whole key of each of its list elements is cleared and every registry value it touches is dropped from the source, so it reads as Not configured."
+        },
+        {
+          "id": "businessrule-52553634867035971750",
+          "says": "The registry values a policy touches are its own value, those in its value lists, those of its elements (the whole key for list elements) and those of checkbox and choice sub-lists, each counted once."
+        },
+        {
+          "id": "businessrule-49955247469929977676",
+          "says": "When a key's clearance is forgotten in a REG file, the key-removal entry is dropped if it exists. The request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted."
+        },
+        {
+          "id": "businessrule-60358450731077326247",
+          "says": "When a key's clearance is forgotten in a policy file, every clear-all marker for that key is removed."
+        }
+      ]
+    },
+    {
+      "name": "Policy State Writer",
+      "domain": "Policy State",
+      "responsibility": "Writes the chosen state of a policy with its own on and off values and its options into a source.",
+      "module": "policy-state-writer",
+      "uses": [
+        "Policy File Entries",
+        "Option Value Writer",
+        "Policy Forgetter"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-04152128046162000583",
+          "says": "When a policy is set to Disabled and the definition gives no off value, its registry value is removed. A defined off value, with any extra off values, is saved instead."
+        },
+        {
+          "id": "businessrule-14958427259964761169",
+          "says": "When a policy is set to Enabled and the policy has a registry value name but defines no explicit on value, the value is saved as the number 1."
+        },
+        {
+          "id": "businessrule-56832565542674334637",
+          "says": "When a policy is set to Disabled, each setting gets only its own removal. A list setting has all values under its key removed, even when its definition says to keep other entries. A checkbox with a defined off value or off list gets those saved, and every other setting has its single value removed. Extra values listed for a chosen item, a checkbox's on list and the policy's own on list are left in place."
+        },
+        {
+          "id": "businessrule-66734059366331213205",
+          "says": "When a policy is set to Enabled, its own on value is saved and any extra values listed for the on state are saved with it. A key left blank in a list falls back to the policy's key."
+        },
+        {
+          "id": "businessrule-60774486401252037450",
+          "says": "When Enabled is chosen, applying writes every option of the policy whatever its value, including options never filled in."
+        },
+        {
+          "id": "businessrule-97175686457081101132",
+          "says": "When a policy is set to Enabled, only the settings the person supplied are written. A setting with no supplied value is left as it was."
+        },
+        {
+          "id": "businessrule-90058940824311429227",
+          "says": "When a policy is set to Not configured or Unknown, SetPolicyState writes and removes nothing. Callers forget the policy's old values first, so Not configured works by that removal alone."
+        }
+      ]
+    },
+    {
+      "name": "Option Value Writer",
+      "domain": "Policy State",
+      "responsibility": "Saves one option's value under the right key with the right kind of value.",
+      "module": "option-value-writer",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-19622432139142313215",
+          "says": "When a number setting is saved, it is written as text if the definition says to store it as text, otherwise as a 32-bit number."
+        },
+        {
+          "id": "businessrule-46516041958192928718",
+          "says": "When a list setting is saved, entries that carry their own names are saved under those names. Otherwise each entry is numbered from 1, named with the definition's prefix plus its number, or named after its own text when the definition has no prefix."
+        },
+        {
+          "id": "businessrule-53178349170981485484",
+          "says": "A setting that names its own registry key is saved under that key. Otherwise it is saved under the policy's key."
+        },
+        {
+          "id": "businessrule-55949208713495428877",
+          "says": "When a multi-line text setting is saved, it is written as a multiple-string value."
+        },
+        {
+          "id": "businessrule-64524120751868809207",
+          "says": "When a text setting is saved, it is written as an expandable text string if the definition says so, otherwise as a plain text string."
+        },
+        {
+          "id": "businessrule-67842190900074642321",
+          "says": "When a checkbox setting is saved, a ticked box with no defined on value first saves the number 1, and an unticked box with no defined off value first removes the value. The defined on or off value is then saved, with the extra values listed for that state, and overwrites the first step."
+        },
+        {
+          "id": "businessrule-75244076300039577548",
+          "says": "When a list setting is saved and the definition does not say to keep other entries, every existing value under the list's key is removed first. A list with no supplied entries then stays empty."
+        },
+        {
+          "id": "businessrule-80911529766189561154",
+          "says": "When a registry value is written for a policy, a value defined as 'delete' is removed, a numeric value is saved as a 32-bit number and a text value as a text string. A policy with no value defined writes nothing."
+        }
+      ]
+    },
+    {
+      "name": "Policy Comment Keeper",
+      "domain": "Policy State",
+      "responsibility": "Stores, replaces or removes a policy's comment and says when a source holds no comments.",
+      "module": "policy-comment-keeper",
+      "uses": [
+        "Policy Comment Catalog"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-01560321201783674273",
+          "says": "The comment box is disabled and reads \"Comments unavailable for this policy source\" when the source has no comments; otherwise it shows the policy's stored comment, or is empty when there is none."
+        },
+        {
+          "id": "businessrule-33456476599558212379",
+          "says": "When a policy is applied and the source supports comments, an empty comment box removes the policy's stored comment and any text replaces or adds it."
+        }
+      ]
+    },
+    {
+      "name": "Policy Edit Session",
+      "domain": "Policy State",
+      "responsibility": "Holds one open edit of a policy: the area, the writable check, the chosen state, the forecast, and how it ends as a change or a cancel.",
+      "module": "policy-edit-session",
+      "uses": [
+        "Enablement Evidence Reader",
+        "Option Value Reader",
+        "Policy State Writer",
+        "Policy Forgetter",
+        "Policy Comment Keeper",
+        "Policy details presenter",
+        "Policy state presenter"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-07359577675270518038",
+          "says": "When the policy setting dialog is closed by any other means, it is still reported as a change if Apply was used earlier."
+        },
+        {
+          "id": "businessrule-22919299514571743135",
+          "says": "A policy that applies to both computer and user can be edited for either, starting on Computer when no section was given; a policy for one section is fixed to that section and the section choice is unavailable."
+        },
+        {
+          "id": "businessrule-23336067846798029987",
+          "says": "OK and Apply are available only when the chosen policy source can be written to."
+        },
+        {
+          "id": "businessrule-33075335985104561108",
+          "says": "The state shown when the dialog opens follows the policy's present state in the source being edited: Enabled, Disabled, or Not Configured for anything else, including an unclear state."
+        },
+        {
+          "id": "businessrule-37207468109369530089",
+          "says": "OK writes the policy to the source and closes the dialog as a change."
+        },
+        {
+          "id": "businessrule-47264131679601828501",
+          "says": "Choosing Computer or User in the dialog switches the source, its writability and its comments to that section, and reloads the chosen state (Enabled, Disabled or Not Configured) from it. Option values are replaced only for options the section stores when it is Enabled; other values typed earlier stay in the controls."
+        },
+        {
+          "id": "businessrule-53979609002646144363",
+          "says": "Apply writes the policy to the source, keeps the dialog open and records that a change was made."
+        },
+        {
+          "id": "businessrule-65724709448091621197",
+          "says": "Closing the policy setting dialog with Cancel is reported as a change when Apply was used earlier in that session, and as a cancel otherwise."
+        },
+        {
+          "id": "businessrule-59619098183313284576",
+          "says": "Option controls can be edited only while Enabled is chosen; with Disabled or Not Configured they are greyed out."
+        },
+        {
+          "id": "businessrule-75178338270301910966",
+          "says": "After the edit dialog is accepted, which changes the open policy source in memory only, the list is refreshed in place if the current category is still visible; otherwise the program moves up to the nearest visible category. Nothing is written to disk until Save Policies."
+        },
+        {
+          "id": "businessrule-90485587050957154914",
+          "says": "When the policy is Enabled, each option control is set to the value found in the source: numbers into number boxes, text into text and combo boxes, the matching item in drop-downs, true or false into check boxes, lines into multi-line boxes and the stored list into the list editor."
+        },
+        {
+          "id": "businessrule-20408685392954236399",
+          "says": "The Supported on box shows the supported-on name of the policy and is empty when the policy names none."
+        },
+        {
+          "id": "businessrule-84933301477035282498",
+          "says": "Applying a policy first forgets everything the source holds for it; Enabled then writes every option's current value, Disabled writes the disabled state, and Not Configured leaves the policy with no values."
+        }
+      ]
+    },
+    {
+      "name": "Option Input Rules",
+      "domain": "Policy State",
+      "responsibility": "Decides what each option control accepts, starts with and offers.",
+      "module": "option-input-rules",
+      "uses": [],
+      "enforces": [
+        {
+          "id": "businessrule-11779280825123119273",
+          "says": "Keys other than digits and control keys are ignored in a numeric text box."
+        },
+        {
+          "id": "businessrule-47134496169701496073",
+          "says": "A check box starts with the presentation's default state."
+        },
+        {
+          "id": "businessrule-47891883049575092611",
+          "says": "A plain text entry is limited to the maximum length the policy defines and starts with the presentation's default text."
+        },
+        {
+          "id": "businessrule-76178080166619590309",
+          "says": "A plain number box keeps any text a whole-number reading accepts, including a leading sign or spaces; other text is replaced by the default. A number above the maximum or below the minimum is replaced by that limit. Numbers above 2,147,483,647 are replaced by the default even when the policy maximum is higher. Only typing is restricted to digits; pasted text is not. A negative number kept where the minimum is below zero is converted to an unsigned number when applied."
+        },
+        {
+          "id": "businessrule-76476292137970655950",
+          "says": "A number entered with a spin box is limited to the minimum and maximum the policy defines, in steps the presentation sets, and starts at the presentation's default."
+        },
+        {
+          "id": "businessrule-95995013385384587600",
+          "says": "A drop-down list shows the policy's choices by their translated names, sorted unless the presentation turns sorting off, and preselects the default choice when the presentation names one; otherwise nothing is selected."
+        },
+        {
+          "id": "businessrule-98958969318255528192",
+          "says": "A text entry with suggestions is limited to the maximum length the policy defines, starts with the presentation's default text, and lists the presentation's suggestions, sorted unless the presentation turns sorting off."
+        },
+        {
+          "id": "businessrule-36860850025836880139",
+          "says": "When the list editor is confirmed for a list where the person names each entry, and two entries have exactly the same name, it is refused with \"Multiple entries are named \"<name>\"! Remove or rename all but one.\" and nothing is returned. Names are compared exactly, so Run and run are accepted as two entries. A name cell never filled in stops the dialog with an unhandled error."
+        },
+        {
+          "id": "businessrule-67944280997214552078",
+          "says": "When the list editor is confirmed for a list without names, every row except the empty new row at the bottom is returned in the order shown, with no check that a cell has content; a row whose value cell was never filled is returned as an empty entry. For named lists the same new row is ignored."
+        }
+      ]
+    }
+  ],
+  "usedComponents": [
+    {
+      "name": "Policy File Entries",
+      "domain": "Policy Source",
+      "responsibility": "Holds the entries of one policy file in memory and answers presence, reading, setting, forgetting, deletion marking and key clearing.",
+      "module": "policy-file-entries",
+      "uses": [
+        "Policy File Codec"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-17641776170698884064",
+          "says": "A value in a policy file counts as marked for deletion when a deletion marker names it, when the key has a clear-all marker, or when a delete-values list for the key names it, regardless of case. Entries are examined in sorted order, and a value whose name sorts after the marker is stored as present and cancels the deletion, whenever it was written and whichever marker kind came before."
+        },
+        {
+          "id": "businessrule-18230757898637060853",
+          "says": "Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them."
+        },
+        {
+          "id": "businessrule-29530054883116088403",
+          "says": "Reading a value from a policy file gives nothing when the value is absent or marked for deletion."
+        },
+        {
+          "id": "businessrule-46824143239519073718",
+          "says": "A value in a policy file counts as present only if it is stored and not marked for deletion."
+        },
+        {
+          "id": "businessrule-56421390704826486738",
+          "says": "A value counts as present when: for a deletion marker, it is marked for deletion; for a number, it exists as a whole number and equals the expected number; for text, it exists as text and equals the expected text. A value of the wrong kind is not present."
+        },
+        {
+          "id": "businessrule-72149976207795359606",
+          "says": "When a value is marked for deletion in a policy file, any value or marker already held under that name is dropped first. A deletion marker holding the number 32, as Microsoft does, is added unless the value is already marked or its key is cleared."
+        },
+        {
+          "id": "businessrule-86190343622453999219",
+          "says": "When a value is set in a policy file, it replaces any value already held under that name. A deletion marker for the name is not removed."
+        },
+        {
+          "id": "businessrule-43613259767674592997",
+          "says": "When a value is forgotten in a policy file, both the value and its deletion marker are removed, so the policy reverts to not saying anything about it."
+        },
+        {
+          "id": "businessrule-09208070518455812303",
+          "says": "When a policy file is clearing a key, all values and markers under the key are dropped and a single clear-all marker is stored."
+        }
+      ]
+    },
+    {
+      "name": "Live Registry Values",
+      "domain": "Policy Source",
+      "responsibility": "Reads, writes, deletes and clears the live policy keys of the machine, checks root names and tests whether the keys can be written.",
+      "module": "live-registry-values",
+      "uses": [],
+      "adapts": "external-97068941883605652538",
+      "enforces": [
+        {
+          "id": "businessrule-28868424053274244047",
+          "says": "The live registry never reports a value as marked for deletion."
+        },
+        {
+          "id": "businessrule-30168924374542565520",
+          "says": "A value in the live registry counts as present when its key exists and, unless the value name is empty, the key lists a value of that name, regardless of case. An empty name means the key itself."
+        },
+        {
+          "id": "businessrule-97000243539037627331",
+          "says": "Reading a value from the live registry gives nothing when the key is missing. Signed numbers are returned as the unsigned numbers policies use, and environment variables in text are not expanded."
+        },
+        {
+          "id": "businessrule-34447675520768722859",
+          "says": "When a number is saved to the live registry, an unsigned 32-bit or 64-bit number is converted to the signed number the registry stores with the same bits, and the key is created if missing."
+        },
+        {
+          "id": "businessrule-95699184013424603885",
+          "says": "When a value is deleted in the live registry and its key does not exist, nothing happens. A missing value is not an error."
+        },
+        {
+          "id": "businessrule-42987908693120337062",
+          "says": "In the live registry, 'forgetting' a value deletes it, because the registry cannot remember a pending deletion."
+        },
+        {
+          "id": "businessrule-48799510965890913669",
+          "says": "Clearing a key in the live registry deletes every value in it but leaves the key and its subkeys. Forgetting a key's clearance does nothing."
+        },
+        {
+          "id": "businessrule-35899140497190862562",
+          "says": "A registry source counts as writable only when a test value can be written under Software\\Policies and removed again; otherwise it is read-only."
+        },
+        {
+          "id": "businessrule-51029550915449645879",
+          "says": "A registry source must start with HKCU, HKEY_CURRENT_USER, HKU, HKEY_USERS, HKLM or HKEY_LOCAL_MACHINE (any case); otherwise it is refused with \"The root key is not valid.\" A path after the root is opened, and created if missing."
+        }
+      ]
+    },
+    {
+      "name": "Policy Comment Catalog",
+      "domain": "Policy Source",
+      "responsibility": "Keeps the comments of each source by policy and area, finds them when a comment is wanted and saves the whole list to the comment file location.",
+      "module": "policy-comment-catalog",
+      "uses": [
+        "Comment File Adapter",
+        "Source Location Resolver"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-40601471490811436933",
+          "says": "A policy's comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text."
+        },
+        {
+          "id": "businessrule-76710184957379543464",
+          "says": "A source's comments are used only when it has a comment file location. The folder is created if missing; an existing file is loaded and a missing file gives no comments yet. Any failure leaves that source without comments."
+        },
+        {
+          "id": "businessrule-87767421628061265824",
+          "says": "A source's comment list is saved to its comment file location whenever the list exists, even when empty; a source without comment support has no list and is skipped."
+        }
+      ]
+    },
+    {
+      "name": "Enablement Evidence Reader",
+      "domain": "Policy State",
+      "responsibility": "Counts enabled and disabled evidence from the values and lists a source holds for a policy and its options, and settles the policy's state in an area.",
+      "module": "enablement-evidence-reader",
+      "uses": [
+        "Policy File Entries",
+        "Live Registry Values"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-07376289294643129633",
+          "says": "For a policy's list elements, a marked-for-deletion list counts as one deleted element, and a list that holds any values counts as a present element and cancels that deletion."
+        },
+        {
+          "id": "businessrule-07554086131159240838",
+          "says": "A policy's lists of on-values and off-values count as enabled or disabled evidence for each value in them that is present, using the list's own key when it names one."
+        },
+        {
+          "id": "businessrule-22959538508130326801",
+          "says": "A policy's switched-on and switched-off effects are read from its enabled and disabled values and lists; a list entry names a value and optionally its own key, falling back to the list's default key."
+        },
+        {
+          "id": "businessrule-25766167090873157702",
+          "says": "For any other element (number, text, choice, multi-line text), a value marked for deletion counts as a deleted element and a value that is present counts as a present element."
+        },
+        {
+          "id": "businessrule-29495869201116213931",
+          "says": "A policy with a registry value of its own counts as enabled evidence when that value holds its 'on' value, which is the number 1 when the template gives none, and as disabled evidence when it holds its 'off' value or is marked for deletion when the template gives none."
+        },
+        {
+          "id": "businessrule-33872241894384295212",
+          "says": "If any element is present, the elements add their count to the enabled evidence; only when none is present do deleted elements add to the disabled evidence."
+        },
+        {
+          "id": "businessrule-46971412075927401870",
+          "says": "A policy's state in one area reads \"Enabled\", \"Disabled\", \"Not Configured\" or \"Unknown\"; the computer source is read for the computer area and the user source for any other."
+        },
+        {
+          "id": "businessrule-71909773168029429916",
+          "says": "For a checkbox element: a value marked for deletion counts as one deleted element. Otherwise, each present off value (or off-list value) counts a tenth of a deleted element, and each present on value (or on-list value) counts one present element. A checkbox whose template declares no on value or on list adds no present evidence, even if it holds 1."
+        },
+        {
+          "id": "businessrule-92873738128602220135",
+          "says": "A policy is Enabled when enabled evidence exceeds disabled evidence, Disabled when disabled exceeds enabled, Not configured when there is no evidence either way, and Unclear when both are equal and above zero."
+        }
+      ]
+    },
+    {
+      "name": "Policy details presenter",
+      "domain": "Policy Definitions",
+      "responsibility": "Shows a policy's section, place and support with gaps flagged.",
+      "module": "policy-details-presenter",
+      "uses": [],
+      "enforces": [
+        {
+          "id": "businessrule-30888155476627040275",
+          "says": "When a policy sits in a category that exists, the category name is shown and the category-details button is enabled. A policy whose named category is unknown shows \"<orphaned from \" followed by that category code, and one with no category code shows \"<uncategorized>\"; the button is then disabled."
+        },
+        {
+          "id": "businessrule-59317523370985833904",
+          "says": "When a policy names a support definition that exists, its name is shown and the support-details button is enabled. When it does not exist, the button is disabled and the text reads \"<missing: \" followed by the code the policy names; with no code the text is blank."
+        },
+        {
+          "id": "businessrule-89677004946923202726",
+          "says": "The policy details window names the section a policy applies to: \"User or computer\" when it applies to both, \"Computer\" when machine-only, \"User\" when user-only."
+        }
+      ]
+    },
+    {
+      "name": "Policy state presenter",
+      "domain": "Policy Definitions",
+      "responsibility": "Works out each policy's state and comment for the shown area or both, with filters.",
+      "module": "policy-state-presenter",
+      "uses": [
+        "Category tree presenter"
+      ],
+      "enforces": [
+        {
+          "id": "businessrule-11674597249570802702",
+          "says": "With both areas shown, a policy that applies to both areas shows its common state followed by \"(2)\" when both match, the computer state followed by \"(C)\" when only the user is Not Configured, the user state followed by \"(U)\" when only the computer is Not Configured, and \"Mixed\" otherwise."
+        },
+        {
+          "id": "businessrule-89513911810275647919",
+          "says": "With both areas shown, a policy that applies to one area shows that area's state followed by \"(C)\" for computer or \"(U)\" for user. With a single area shown, only that area's state is shown, without a suffix."
+        },
+        {
+          "id": "businessrule-35533060170265013329",
+          "says": "With both areas shown, the comment column is empty when neither area has a comment, shows \"(multiple)\" when both have one, and otherwise shows the single comment."
+        }
+      ]
+    }
+  ],
+  "bundles": [
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-editsetting--changing-policy-settings.md",
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-listeditor--changing-policy-settings.md"
+  ]
+}

@@ -1,0 +1,713 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "domain": {
+    "name": "Policy Discovery",
+    "concept": "Finding the policy a person has in mind by name, words, setting or filter and reviewing what was found.",
+    "facts": [],
+    "rules": [
+      "businessrule-09965726926686583005",
+      "businessrule-12540995342195943001",
+      "businessrule-67323359061601595450",
+      "businessrule-70331897906623822249",
+      "businessrule-79960316131030112593",
+      "businessrule-97390301066419776959",
+      "businessrule-97862941341357225531",
+      "businessrule-85204901615179220846",
+      "businessrule-34818300362920325745",
+      "businessrule-49582367227471127226",
+      "businessrule-56645748073860464161",
+      "businessrule-62209428351075007862",
+      "businessrule-73292110340688125936",
+      "businessrule-73680018829588409732",
+      "businessrule-81666786810242280110",
+      "businessrule-93221850558792273709",
+      "businessrule-20714647401379544771",
+      "businessrule-21915530910585082056",
+      "businessrule-31790508764365764837",
+      "businessrule-51916167191556979448",
+      "businessrule-63262725504588029346",
+      "businessrule-73561308167207352856",
+      "businessrule-86305970842078630022",
+      "businessrule-27271850163543025066",
+      "businessrule-35545130062422334165",
+      "businessrule-54035538146675510973",
+      "businessrule-54588279423566663184",
+      "businessrule-71024372746156766440",
+      "businessrule-73898787083077319907",
+      "businessrule-90661647574869686546",
+      "businessrule-95826639622119629666",
+      "businessrule-15877826642522947109",
+      "businessrule-17385510066480798684",
+      "businessrule-17430127230259081557",
+      "businessrule-35354684864210149934",
+      "businessrule-38090025507732480917",
+      "businessrule-48840711587592938759",
+      "businessrule-53914450774482291886",
+      "businessrule-57749472934040708163",
+      "businessrule-78338951417255409296",
+      "businessrule-79288582532948770219",
+      "businessrule-80544887789558031281",
+      "businessrule-94342659396000502591",
+      "businessrule-01575097247784730570",
+      "businessrule-03237181236179074787",
+      "businessrule-26561900736287578271",
+      "businessrule-32591775124677875588",
+      "businessrule-36944318108231327872",
+      "businessrule-57716378734614233724",
+      "businessrule-59209755491778300947",
+      "businessrule-61457439461915744538",
+      "businessrule-70906412717211463954",
+      "businessrule-76306981111385169671",
+      "businessrule-81055540068763556055",
+      "businessrule-81206266674090971597",
+      "businessrule-85052319902195299547",
+      "businessrule-88807660791719489759",
+      "businessrule-90628240213834851721"
+    ],
+    "dependsOn": [
+      "Policy Definitions",
+      "Policy State",
+      "Policy Source"
+    ],
+    "why": "Narrowing and searching only read the others and change none of their facts. The browsing of products and support rules is catalogue knowledge and sits in Policy Definitions, so this domain holds only filters, search, lookup by identifier and results."
+  },
+  "container": {
+    "name": "Policy Plus application",
+    "kind": "interface",
+    "tech": "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "holds": [
+      "Policy Definitions",
+      "Policy Source",
+      "Policy State",
+      "Policy Discovery",
+      "Policy File Exchange",
+      "Definition Acquisition",
+      "Workspace"
+    ]
+  },
+  "integrations": [],
+  "rules": [
+    {
+      "id": "businessrule-09965726926686583005",
+      "statement": "A policy is visible only if it applies to a chosen area (user, computer or both). With \"Only Filtered Policies\" on, it must also pass the filter for a chosen area it applies to; passing for either one is enough."
+    },
+    {
+      "id": "businessrule-12540995342195943001",
+      "statement": "A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen."
+    },
+    {
+      "id": "businessrule-67323359061601595450",
+      "statement": "A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted."
+    },
+    {
+      "id": "businessrule-70331897906623822249",
+      "statement": "A policy passes the filter only when it passes every active part of it."
+    },
+    {
+      "id": "businessrule-79960316131030112593",
+      "statement": "A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen."
+    },
+    {
+      "id": "businessrule-97390301066419776959",
+      "statement": "Clearing the search forgets the results, so reopening them reports that no search has been run."
+    },
+    {
+      "id": "businessrule-97862941341357225531",
+      "statement": "A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support."
+    },
+    {
+      "id": "businessrule-85204901615179220846",
+      "statement": "The list of areas starts on \"User or Computer\", the first choice, so both user and computer policies are shown at start."
+    },
+    {
+      "id": "businessrule-34818300362920325745",
+      "statement": "Text typed in Find by ID is trimmed and looked up in this order: category, product, support definition, then policy. The first kind that matches is selected, with its own icon shown; a policy is looked up only when no other kind matches."
+    },
+    {
+      "id": "businessrule-49582367227471127226",
+      "statement": "After finding by identifier, a category opens if it is visible, otherwise the person is told \"The category is not currently visible. Change the view settings and try again.\"; a policy opens in the editor and the list moves to it; a product or support definition opens its details; anything else gives \"That object could not be found.\"."
+    },
+    {
+      "id": "businessrule-56645748073860464161",
+      "statement": "When the text matches nothing, nothing is selected and a \"not found\" icon is shown; when the text is empty a blank icon is shown instead. The section from an earlier match is not cleared when the text changes to a non-policy."
+    },
+    {
+      "id": "businessrule-62209428351075007862",
+      "statement": "Moving to a policy first shows its category, but only when that category is visible in the tree; otherwise nothing happens and the person is not told. The policy row is then selected only if the policy is listed there. A policy hidden by the area choice or the filter leaves the category shown with nothing selected and no message; find by text and by registry do not check this before opening the editor."
+    },
+    {
+      "id": "businessrule-73292110340688125936",
+      "statement": "A policy found by identifier opens in the lower-numbered of the area shown and the area found (computer is lower than user, user lower than both), so Computer wins over User."
+    },
+    {
+      "id": "businessrule-73680018829588409732",
+      "statement": "A policy ID may end with \"@U\" to mean the user section or \"@C\" to mean the computer section; without a suffix, or with any other suffix, the policy applies to both sections. The suffix is cut off before the policy lookup, so an unknown suffix still finds the policy."
+    },
+    {
+      "id": "businessrule-81666786810242280110",
+      "statement": "The area choice offers only \"User or Computer\", \"User\" and \"Computer\", with no free text."
+    },
+    {
+      "id": "businessrule-93221850558792273709",
+      "statement": "Only one item in the policy list can be selected at a time."
+    },
+    {
+      "id": "businessrule-20714647401379544771",
+      "statement": "Search text is split at spaces into plain words, wildcard words (containing \"*\" or \"?\") and quoted phrases. Words are lowercased and trimmed and lose the characters . , ' \" ; / ! ( ) { } [ ]."
+    },
+    {
+      "id": "businessrule-21915530910585082056",
+      "statement": "A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together."
+    },
+    {
+      "id": "businessrule-31790508764365764837",
+      "statement": "When none of In title, In description and In comment is ticked, the search is refused with \"At least one attribute must be searched. Check one of the boxes and try again.\"; all three start ticked."
+    },
+    {
+      "id": "businessrule-51916167191556979448",
+      "statement": "A policy matches when the ticked attributes hit: its title, its description, or a comment on it from any supplied comment source (user or computer). Any one hit is enough."
+    },
+    {
+      "id": "businessrule-63262725504588029346",
+      "statement": "A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as \"abc\" does not close itself, so it also absorbs the following words."
+    },
+    {
+      "id": "businessrule-73561308167207352856",
+      "statement": "When Search is pressed with the search text empty, the search is refused and the person is told \"Please enter search terms.\""
+    },
+    {
+      "id": "businessrule-86305970842078630022",
+      "statement": "Find by text starts a search with what the person entered, and can search both areas' comments."
+    },
+    {
+      "id": "businessrule-27271850163543025066",
+      "statement": "A value-name term must match the whole value name; \"*\" and \"?\" act as wildcards, so without them the name must be equal."
+    },
+    {
+      "id": "businessrule-35545130062422334165",
+      "statement": "A key term containing a backslash but no wildcard matches policies whose key path starts with that text."
+    },
+    {
+      "id": "businessrule-54035538146675510973",
+      "statement": "A key term containing \"*\" or \"?\" must match the whole key path as a wildcard pattern."
+    },
+    {
+      "id": "businessrule-54588279423566663184",
+      "statement": "A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case."
+    },
+    {
+      "id": "businessrule-71024372746156766440",
+      "statement": "When the key text starts with HKLM\\, HKCU\\, HKEY_LOCAL_MACHINE\\ or HKEY_CURRENT_USER\\, the search is refused with \"Policies' root keys are determined only by their section. Remove the root key from the search terms and try again.\""
+    },
+    {
+      "id": "businessrule-73898787083077319907",
+      "statement": "When Search is pressed with both the key and the value empty, the search is refused and the person is told \"Please enter search terms.\""
+    },
+    {
+      "id": "businessrule-90661647574869686546",
+      "statement": "Find by registry starts a search with what the person entered."
+    },
+    {
+      "id": "businessrule-95826639622119629666",
+      "statement": "A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text."
+    },
+    {
+      "id": "businessrule-15877826642522947109",
+      "statement": "Stop, or closing the results window, cancels the search; closing also leaves the label at \"Search canceled\" with the bar full if the search had not finished."
+    },
+    {
+      "id": "businessrule-17385510066480798684",
+      "statement": "When the results window is reopened, the previously selected result is selected again if it is still in the list."
+    },
+    {
+      "id": "businessrule-17430127230259081557",
+      "statement": "Find Next moves to the next result that is currently visible, skipping hidden ones, and tells the person \"There are no more results that match the filter.\" when none is left."
+    },
+    {
+      "id": "businessrule-35354684864210149934",
+      "statement": "Starting a search clears earlier results, sets the progress range to the number of policies, and begins on \"Starting search\"."
+    },
+    {
+      "id": "businessrule-38090025507732480917",
+      "statement": "When search results are opened from the main window and no search has been run (or it was cleared), the person is told \"No search has been run yet, so there are no results to display.\" and nothing opens."
+    },
+    {
+      "id": "businessrule-48840711587592938759",
+      "statement": "Go, or a double-click on a result, accepts only when a result is selected; the selected policy is passed back and its position remembered."
+    },
+    {
+      "id": "businessrule-53914450774482291886",
+      "statement": "Taking the next policy returns nothing when no search has run or when the last result has been passed; otherwise it returns the result after the last chosen one."
+    },
+    {
+      "id": "businessrule-57749472934040708163",
+      "statement": "When a search ends it reports \"Finished searching: checked N policies, found M hits\", or \"Search canceled: ...\" if stopped, and the Stop button is disabled."
+    },
+    {
+      "id": "businessrule-78338951417255409296",
+      "statement": "\"Search Results\" only reopens the last results and starts no new search."
+    },
+    {
+      "id": "businessrule-79288582532948770219",
+      "statement": "The search tests every policy in turn, and adds every hit to the list with its category name, in the order policies are held."
+    },
+    {
+      "id": "businessrule-80544887789558031281",
+      "statement": "A search dialog opens either empty or running a new search. When the person picks a result, its editor opens in the current area and the list moves to that policy."
+    },
+    {
+      "id": "businessrule-94342659396000502591",
+      "statement": "The list and progress are refreshed after every 20 policies: \"Searching: checked N policies so far, found M hits\"."
+    },
+    {
+      "id": "businessrule-01575097247784730570",
+      "statement": "When the current filter has a supported-on condition, the dialog opens with Supported on ticked, exactly the filter's products ticked and the two matching options set as the filter holds; product branches whose tick differs from their parent are opened."
+    },
+    {
+      "id": "businessrule-03237181236179074787",
+      "statement": "When OK is pressed, the new filter keeps only managed policies for Policy, only unmanaged ones for Preference, and no policy-type condition for Any."
+    },
+    {
+      "id": "businessrule-26561900736287578271",
+      "statement": "When the filter dialog opens, the Current state choice shows Any if the current filter has no state condition, otherwise Not Configured, Configured, Enabled or Disabled as the filter holds."
+    },
+    {
+      "id": "businessrule-32591775124677875588",
+      "statement": "When the filter dialog opens, the Policy type choice shows Any if the current filter has no policy-type condition, Policy if it keeps only managed policies, and Preference if it keeps only the others."
+    },
+    {
+      "id": "businessrule-36944318108231327872",
+      "statement": "The \"Only Filtered Policies\" menu switches the filter on or off and moves to the nearest visible category."
+    },
+    {
+      "id": "businessrule-57716378734614233724",
+      "statement": "Pressing Escape closes the filter dialog as cancelled and the current filter is unchanged."
+    },
+    {
+      "id": "businessrule-59209755491778300947",
+      "statement": "When the filter dialog opens, the Commented choice shows Any if the current filter has no comment condition, Yes if it keeps only commented policies and No if it keeps only uncommented ones."
+    },
+    {
+      "id": "businessrule-61457439461915744538",
+      "statement": "Ticking or unticking a product by hand ticks or unticks every product beneath it to match; changes made by the dialog itself do not spread."
+    },
+    {
+      "id": "businessrule-70906412717211463954",
+      "statement": "When OK is pressed, the new filter keeps only commented policies for Yes, only uncommented ones for No, and no comment condition for Any."
+    },
+    {
+      "id": "businessrule-76306981111385169671",
+      "statement": "When the current filter has no supported-on condition, the dialog opens with Supported on unticked, both \"Match a policy if at least one selected product is supported\" and \"Match policies with missing or blank support definitions\" ticked, and no product ticked."
+    },
+    {
+      "id": "businessrule-81055540068763556055",
+      "statement": "When OK is pressed, the new filter requires the chosen state: Not Configured, Configured, Enabled or Disabled; Any sets no state condition."
+    },
+    {
+      "id": "businessrule-81206266674090971597",
+      "statement": "Reset returns every choice to its default: Any for type, state and comment, Supported on unticked, both matching options ticked and no product ticked."
+    },
+    {
+      "id": "businessrule-85052319902195299547",
+      "statement": "Changing the filter options turns on \"Only Filtered Policies\" and moves to the nearest visible category."
+    },
+    {
+      "id": "businessrule-88807660791719489759",
+      "statement": "The product requirement box (the product tree and the two matching options) can be used only while Supported on is ticked; it starts unusable."
+    },
+    {
+      "id": "businessrule-90628240213834851721",
+      "statement": "When OK is pressed with Supported on ticked, the filter records every ticked product and both matching options; with it unticked, any ticks and options are discarded and no support condition applies. A filter with Supported on ticked and no product ticked is accepted."
+    }
+  ],
+  "steps": [
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#7",
+      "intent": "Start working with the new definitions.",
+      "system": "The system presents the category tree with nothing selected, the empty state in the information pane, and previous search results forgotten.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-02094124658868396159",
+        "businessrule-09710935452747152124",
+        "businessrule-31928423765922463982",
+        "businessrule-77153890827857678995",
+        "businessrule-95679837516811308115",
+        "businessrule-16229847440499672368",
+        "businessrule-53806388515964147870",
+        "businessrule-54518846821349856909",
+        "businessrule-55193519950925403263",
+        "businessrule-75568512748421119593",
+        "businessrule-69364776950274199547",
+        "businessrule-97390301066419776959"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+      "intent": "See each policy's setting and comment as before.",
+      "system": "The system works out each policy's state and comment in each area from the stored settings and the live ones, and applies the filters.",
+      "touches": [
+        "entity-92808062881922645840",
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-07376289294643129633",
+        "businessrule-07554086131159240838",
+        "businessrule-09965726926686583005",
+        "businessrule-11674597249570802702",
+        "businessrule-12540995342195943001",
+        "businessrule-17641776170698884064",
+        "businessrule-18230757898637060853",
+        "businessrule-25766167090873157702",
+        "businessrule-28868424053274244047",
+        "businessrule-29495869201116213931",
+        "businessrule-29530054883116088403",
+        "businessrule-30168924374542565520",
+        "businessrule-33872241894384295212",
+        "businessrule-34301200927683901255",
+        "businessrule-35533060170265013329",
+        "businessrule-40601471490811436933",
+        "businessrule-46824143239519073718",
+        "businessrule-46971412075927401870",
+        "businessrule-52005709614722807804",
+        "businessrule-49748745950500666232",
+        "businessrule-56421390704826486738",
+        "businessrule-67323359061601595450",
+        "businessrule-67539343519248421601",
+        "businessrule-70331897906623822249",
+        "businessrule-70425663320377904356",
+        "businessrule-71909773168029429916",
+        "businessrule-79960316131030112593",
+        "businessrule-81760746419124272603",
+        "businessrule-86313704517800761850",
+        "businessrule-89513911810275647919",
+        "businessrule-90470730563627765974",
+        "businessrule-92873738128602220135",
+        "businessrule-96701855986906093783",
+        "businessrule-97000243539037627331",
+        "businessrule-97862941341357225531",
+        "businessrule-99096323836097983665",
+        "businessrule-99139491988760691407"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#6",
+      "intent": "Browse everything",
+      "system": "Shows the categories with user and computer policies together.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-85204901615179220846"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policy-by-id:type-and-arrive#1",
+      "intent": "Name what is wanted by its identifier and arrive there.",
+      "system": "Trims the text, resolves the kind in order and any suffix, then opens it as the outcome rules say, or says it was not found.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-34818300362920325745",
+        "businessrule-73680018829588409732",
+        "businessrule-56645748073860464161",
+        "businessrule-81666786810242280110",
+        "businessrule-49582367227471127226",
+        "businessrule-62209428351075007862",
+        "businessrule-73292110340688125936",
+        "businessrule-93221850558792273709",
+        "businessrule-75178338270301910966"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-text:search-as-you-type#1",
+      "intent": "Say the words or phrases remembered.",
+      "system": "Searches title, description and comments of both areas by default, and shows results as words are given; says plainly when words are needed and when a quote was never closed.",
+      "touches": [
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-20714647401379544771",
+        "businessrule-21915530910585082056",
+        "businessrule-51916167191556979448",
+        "businessrule-86305970842078630022",
+        "businessrule-73561308167207352856",
+        "businessrule-63262725504588029346"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-text:search-as-you-type#2",
+      "intent": "Narrow where the words are looked for, if wanted.",
+      "system": "Limits the search to the chosen places and never allows none.",
+      "touches": [
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-31790508764365764837"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#1",
+      "intent": "Give whatever is known about the setting in one go, such as a path copied from documentation, a key, or a value name.",
+      "system": "Works out which part is the key and which the value, and shows the reading so it can be corrected.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-90661647574869686546"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#2",
+      "intent": "See at once whether the terms can be used.",
+      "system": "While the person types, says that nothing has been entered or that a root key must be removed, and does not search until the terms are usable.",
+      "touches": [],
+      "honours": [
+        "businessrule-73898787083077319907",
+        "businessrule-71024372746156766440"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#3",
+      "intent": "Get the policies that control the setting.",
+      "system": "Shows policies as soon as the terms are usable: a policy matches when one setting it reads or writes meets every term, ignoring case, with wildcard, prefix, whole-name and path-part rules for keys and values.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-27271850163543025066",
+        "businessrule-35545130062422334165",
+        "businessrule-54035538146675510973",
+        "businessrule-54588279423566663184",
+        "businessrule-95826639622119629666"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.review-search-results:results-as-they-arrive#1",
+      "intent": "Watch the policies that match appear as the search goes.",
+      "system": "Clears earlier results, starts with a start message, tests every policy in turn, adds each hit with its category in policy order and keeps progress current as it goes.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-35354684864210149934",
+        "businessrule-79288582532948770219",
+        "businessrule-94342659396000502591"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.review-search-results:results-as-they-arrive#2",
+      "intent": "Stop the search once enough has been found, or leave it.",
+      "system": "Cancels the search; leaving before it ends marks it as cancelled with progress full.",
+      "touches": [],
+      "honours": [
+        "businessrule-15877826642522947109"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.review-search-results:results-as-they-arrive#3",
+      "intent": "Know how the search ended.",
+      "system": "Reports checked policies and hits, or that the search was cancelled, and no longer offers stopping.",
+      "touches": [],
+      "honours": [
+        "businessrule-57749472934040708163"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.review-search-results:results-as-they-arrive#4",
+      "intent": "Pick the policy to open from the hits.",
+      "system": "Accepts only a chosen hit, remembers its position, opens that policy's editor in the current area and moves the policy list to it.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-48840711587592938759",
+        "businessrule-80544887789558031281"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.review-search-results:results-as-they-arrive#5",
+      "intent": "Move on to the next hit.",
+      "system": "Takes the next hit still shown after the last one chosen, says there are no more when none is left, and returns nothing when no search ran.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-17430127230259081557",
+        "businessrule-53914450774482291886"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.review-search-results:results-as-they-arrive#6",
+      "intent": "Come back to the last results later.",
+      "system": "Shows the previous results without a new search and selects the earlier choice if still present; tells the person when no search has been run.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-78338951417255409296",
+        "businessrule-17385510066480798684",
+        "businessrule-38090025507732480917"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#1",
+      "intent": "See the limit currently in force.",
+      "system": "Shows type, state, comment and products as the current limit holds, with Any and no products when it has no such condition and the support option off with both matching options on when it has no support condition.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-01575097247784730570",
+        "businessrule-76306981111385169671",
+        "businessrule-26561900736287578271",
+        "businessrule-32591775124677875588",
+        "businessrule-59209755491778300947"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#2",
+      "intent": "Choose a policy type, state and comment status.",
+      "system": "Keeps only managed for Policy, only unmanaged for Preference, the chosen state, and commented or uncommented as chosen; Any sets no condition. The list narrows now.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-03237181236179074787",
+        "businessrule-81055540068763556055",
+        "businessrule-70906412717211463954"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#3",
+      "intent": "Limit by supported products.",
+      "system": "Opens product choice only while a support limit is wanted; choosing a product by hand also chooses the products under it, but loading a limit does not spread; records chosen products and both matching options, and accepts a support limit with no product.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-88807660791719489759",
+        "businessrule-61457439461915744538",
+        "businessrule-90628240213834851721"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#4",
+      "intent": "Be taken to the right place when the limit changes.",
+      "system": "Turns the limit on and moves to the nearest category still shown.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-85052319902195299547"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#5",
+      "intent": "Switch the limit on or off without losing it.",
+      "system": "Applies or lifts the limit and moves to the nearest category still shown.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-36944318108231327872"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#6",
+      "intent": "Start again from nothing.",
+      "system": "Returns type, state and comment to Any, support off, both matching options on and no product.",
+      "touches": [],
+      "honours": [
+        "businessrule-81206266674090971597"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#7",
+      "intent": "Undo this round of changes.",
+      "system": "Puts back the limit held when the person began and leaves it unchanged.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-57716378734614233724"
+      ]
+    }
+  ],
+  "available": [
+    "Definition installation flow",
+    "Missing definitions detector",
+    "Template folder scanner",
+    "Template file source adapter",
+    "Language file locator",
+    "Language text reader",
+    "Definition language setting",
+    "Template validator",
+    "Definition structure builder",
+    "Policy option reader",
+    "Support evaluator",
+    "Definition load coordinator",
+    "Definition reset",
+    "Policy state presenter",
+    "Category tree presenter",
+    "Item description pane",
+    "Item action resolver",
+    "Duplicate policy merger",
+    "Policy details presenter",
+    "Category details presenter",
+    "Product browser",
+    "Support rule browser",
+    "Policy inspector",
+    "Semantic policy writer",
+    "Loaded file reviewer",
+    "Policy lookup",
+    "Enablement Evidence Reader",
+    "Option Value Reader",
+    "Policy Forgetter",
+    "Policy State Writer",
+    "Option Value Writer",
+    "Policy Comment Keeper",
+    "Policy Edit Session",
+    "Option Input Rules",
+    "Semantic Text Reader",
+    "Semantic Text Applier",
+    "Semantic Text Import Session",
+    "Semantic Text Writer",
+    "Policy File Codec",
+    "Policy File Entries",
+    "Live Registry Values",
+    "User Hive Mounter",
+    "Registry Export Source",
+    "Policy Change Applier",
+    "Scratch Policy Store",
+    "Computer File Access",
+    "Group Policy Version Tracker",
+    "Source Location Resolver",
+    "Source Status Describer",
+    "Source Opener",
+    "Source Releaser",
+    "Source Memory",
+    "Source Saver",
+    "Policy Comment Catalog",
+    "Comment File Adapter",
+    "Directory Account Resolver",
+    "Source Choice Builder",
+    "Source Choice Entry",
+    "User Identification Entry",
+    "User Profile Pick",
+    "Visible Category Follow"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "read": 1,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The criterion on text that is not a number leaves the value unchanged widens the kept rule, which states only that text that is not a hexadecimal number leaves the value unchanged, so decimal text that is not a number is a behaviour no rule or decision states."
+    },
+    {
+      "record": 0,
+      "says": "The story cites no rule (from is empty on every criterion) although it keeps two rules, and nothing in its criteria says why, so the criteria on too-large hexadecimal, unchanged value and kept name, kind and selection are not traceable to the rules they restate."
+    },
+    {
+      "record": 0,
+      "says": "The criteria on decimal entry, hexadecimal entry and showing both forms rest on no rule or decision (only the journey idea), and the story leaves open how a typed number is marked as hexadecimal while criterion 5 already assumes it can be, so the criterion states behaviour the story itself leaves undefined."
+    }
+  ]
+}

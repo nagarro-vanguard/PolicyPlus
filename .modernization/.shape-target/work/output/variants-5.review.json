@@ -1,0 +1,10 @@
+{
+  "read": 3,
+  "challenges": [
+    {"record": 0, "says": "\"Decide and save\" keeps today's dialog shape (scope, state, options, list editor, comment, save or save and stay) as six steps in new words, so it is not a better way of doing the task, and it also keeps the old Apply versus OK split."},
+    {"record": 1, "says": "No step lets the person choose Computer or User: step 1 only shows the side and whether it can be written, yet rules 22919 and 47264 (a policy for both sections is editable for either, switching reloads state and options) need a choice, and step 1 claims nothing is asked that the system can read although the side cannot be inferred."},
+    {"record": 1, "says": "The recommendation says the old way surprised people by writing all options and clearing list keys, which is not in the legacy words (rule 60774 conflicts with 97175 on what is written) and the 'fewest steps' claim is bought by bundling 25 rules, including cancel and unsaved-Apply reporting, into a single confirm step."},
+    {"record": 0, "says": "Step 3 says numbers outside limits are brought back to the limit, but rule 76178 also replaces text that is not a number, and numbers above 2,147,483,647, with the default, so the condition is lost in the rewording."},
+    {"record": 2, "says": "The guided variant asks for a 'reason' with link new yet the comment is only asked for where the source keeps comments, and nothing says a refusal for duplicate names or the digits-only rule (11779, 76178) is explained at the moment of the single question, so a person cannot fix a list entered one at a time after an error at the final summary."}
+  ]
+}

@@ -1,0 +1,329 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A plain imperative of 72 characters or fewer, no type prefix."
+    },
+    "what": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What the story delivers: the capability wanted, or the goal of a technical story."
+    },
+    "why": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The outcome it serves: the reason for the capability, or the problem a technical story solves."
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The legacy entry points this story ports; empty for a technical story."
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The term, in the product's words."
+          },
+          "means": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The sentence its definition will carry: what it is and the nearest meaning it is not."
+          },
+          "entity": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The analysis's kind of data it defines, when it defines one."
+          }
+        },
+        "required": [
+          "name",
+          "means"
+        ],
+        "additionalProperties": true,
+        "description": "A business word the story introduces."
+      }
+    },
+    "journey": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The journey's name in the product owner's words."
+        },
+        "steps": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ],
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "The steps as a person lives them, one each."
+        }
+      },
+      "required": [
+        "name",
+        "steps"
+      ],
+      "additionalProperties": true,
+      "description": "The journey the story adds; only when a person starts the work."
+    },
+    "criteria": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "object",
+          "properties": {
+            "says": {
+              "type": "string",
+              "minLength": 1,
+              "description": "One observable behaviour: given the state, when someone acts, then what they see."
+            },
+            "from": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "_tag": {
+                        "type": "string",
+                        "enum": [
+                          "rule"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "_tag",
+                      "id"
+                    ],
+                    "additionalProperties": true
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "_tag": {
+                        "type": "string",
+                        "enum": [
+                          "transition"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "_tag",
+                      "id"
+                    ],
+                    "additionalProperties": true
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "_tag": {
+                        "type": "string",
+                        "enum": [
+                          "decision"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "_tag",
+                      "id"
+                    ],
+                    "additionalProperties": true
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "_tag": {
+                        "type": "string",
+                        "enum": [
+                          "layer"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "_tag",
+                      "id"
+                    ],
+                    "additionalProperties": true
+                  }
+                ],
+                "description": "What a criterion rests on: a rule or a state change of the legacy system, a decision, or a layer."
+              },
+              "description": "What it rests on; a criterion may group related rules."
+            }
+          },
+          "required": [
+            "says",
+            "from"
+          ],
+          "additionalProperties": true,
+          "description": "One acceptance criterion."
+        }
+      ],
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "says": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One observable behaviour: given the state, when someone acts, then what they see."
+          },
+          "from": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "_tag": {
+                      "type": "string",
+                      "enum": [
+                        "rule"
+                      ]
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_tag",
+                    "id"
+                  ],
+                  "additionalProperties": true
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_tag": {
+                      "type": "string",
+                      "enum": [
+                        "transition"
+                      ]
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_tag",
+                    "id"
+                  ],
+                  "additionalProperties": true
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_tag": {
+                      "type": "string",
+                      "enum": [
+                        "decision"
+                      ]
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_tag",
+                    "id"
+                  ],
+                  "additionalProperties": true
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_tag": {
+                      "type": "string",
+                      "enum": [
+                        "layer"
+                      ]
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_tag",
+                    "id"
+                  ],
+                  "additionalProperties": true
+                }
+              ],
+              "description": "What a criterion rests on: a rule or a state change of the legacy system, a decision, or a layer."
+            },
+            "description": "What it rests on; a criterion may group related rules."
+          }
+        },
+        "required": [
+          "says",
+          "from"
+        ],
+        "additionalProperties": true,
+        "description": "One acceptance criterion."
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The ids of the target journey steps this story delivers; for a story of a confirmed target only."
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The names of the target components this story builds; for a story of a confirmed target only."
+    },
+    "open": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "What the decisions and the rules leave unsettled for this story, one question each, so the person can answer it; never invent the behaviour instead."
+    }
+  },
+  "required": [
+    "title",
+    "what",
+    "why",
+    "actions",
+    "terms",
+    "criteria"
+  ],
+  "additionalProperties": true,
+  "description": "One unit of work, written for its reader."
+}

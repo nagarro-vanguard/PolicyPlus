@@ -1,0 +1,497 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "notes": [],
+  "tasks": [
+    {
+      "id": "tasks-browsing-policy-definitions.browse-policy-tree",
+      "outcome": "Move through the categories and policies of the loaded definitions and read what each is for.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-20560369235271632336",
+          "what": "Opens the chosen category, or the edit window of the chosen policy."
+        },
+        {
+          "id": "block-25872160162253268719",
+          "what": "Selects the node under a right click."
+        },
+        {
+          "id": "block-28869808154726861529",
+          "what": "Switches whether categories with no visible policies are shown."
+        },
+        {
+          "id": "block-38981877830602633388",
+          "what": "Lists the chosen category's subcategories and policies and shows its description."
+        },
+        {
+          "id": "block-62656188540901169217",
+          "what": "Records the highlighted policy or category and shows its description."
+        },
+        {
+          "id": "block-65211679249909420884",
+          "what": "Shows only the menu items that apply to a category or a policy."
+        },
+        {
+          "id": "block-69879767786914075914",
+          "what": "Opens the highlighted item when Enter is pressed."
+        },
+        {
+          "id": "block-71012193977886609003",
+          "what": "Fits the description pane's labels to its width and hides its horizontal scroll bar."
+        },
+        {
+          "id": "block-79379072249641546586",
+          "what": "Switches the view between user, computer and both policy sections."
+        },
+        {
+          "id": "block-89406388478575619459",
+          "what": "Resizes the policy name column to fill the list."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-03031297687036444400",
+          "statement": "Selecting a category in the tree makes it the current category and clears any selected policy."
+        },
+        {
+          "id": "businessrule-25501360175578063856",
+          "statement": "The right-click menu shows only the actions that fit what was clicked: policy-only actions are hidden for a category, and category-only actions are hidden for a policy."
+        },
+        {
+          "id": "businessrule-29660896839160984241",
+          "statement": "Highlighting a policy makes it the selected policy and clears any highlighted category; highlighting a category does the reverse; highlighting nothing clears both."
+        },
+        {
+          "id": "businessrule-36623707346851740456",
+          "statement": "When the right-click menu is opened from the category tree, it is shown for the selected category, and a tree with no selected category is not handled (the program fails with an error). When opened from anywhere else with a row selected in the policy list, it is shown for that row. When opened from anywhere else with no row selected, it is not shown."
+        },
+        {
+          "id": "businessrule-41685454348767959653",
+          "statement": "The \"Empty Categories\" menu switches empty categories on or off and the view moves to the nearest visible category."
+        },
+        {
+          "id": "businessrule-57028469241171716582",
+          "statement": "When a category in the tree is right-clicked, it becomes the selected category, because a right-click alone does not select it; a left-click is left as is."
+        },
+        {
+          "id": "businessrule-68891329302657284154",
+          "statement": "Opening an item in the policy list does nothing with no selection, opens a category as the current one, or opens a policy's editor for the area currently shown; Enter does the same."
+        },
+        {
+          "id": "businessrule-75222346168306051090",
+          "statement": "The area choice \"User\" shows user policies, \"Computer\" shows computer policies and any other choice shows both."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        },
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.merge-duplicate-policies",
+      "outcome": "Merge identical user and computer policies into single policies that apply to both.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-52477240354082269436",
+          "what": "Merges identical user and computer policy pairs into single dual-section policies."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-40351382289100643848",
+          "statement": "Two policies are merged into one for both sections when they are alone in the same category under the same name, one is for users and the other for computers, and both have the same explanation text and the same registry key; the first is removed and the second becomes a both-sections policy."
+        },
+        {
+          "id": "businessrule-92560631592608734086",
+          "statement": "Policy deduplication merges otherwise identical user and computer policy pairs into single policies that apply to both and tells the person \"Deduplicated N policies.\"."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-policy-details",
+      "outcome": "See what a policy is, which section it applies to, where it sits and what it is supported on.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-42055154505610373837",
+          "what": "Opens the details window for the support definition the policy is supported on."
+        },
+        {
+          "id": "block-78252692403653225370",
+          "what": "Opens the detail window of the policy double-clicked in the policy list."
+        },
+        {
+          "id": "block-92180322422063221145",
+          "what": "Opens the policy details window for the inspected policy."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-30888155476627040275",
+          "statement": "When a policy sits in a category that exists, the category name is shown and the category-details button is enabled. A policy whose named category is unknown shows \"<orphaned from \" followed by that category code, and one with no category code shows \"<uncategorized>\"; the button is then disabled."
+        },
+        {
+          "id": "businessrule-59317523370985833904",
+          "statement": "When a policy names a support definition that exists, its name is shown and the support-details button is enabled. When it does not exist, the button is disabled and the text reads \"<missing: \" followed by the code the policy names; with no code the text is blank."
+        },
+        {
+          "id": "businessrule-89677004946923202726",
+          "statement": "The policy details window names the section a policy applies to: \"User or computer\" when it applies to both, \"Computer\" when machine-only, \"User\" when user-only."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        },
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-category-details",
+      "outcome": "See a category, its parent and how it relates to policies.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-33894596800557045530",
+          "what": "Shows the details of the parent category in the same window."
+        },
+        {
+          "id": "block-66828128113828383962",
+          "what": "Opens the detail window of the category double-clicked in the category list."
+        },
+        {
+          "id": "block-84939599421744669029",
+          "what": "Opens the details window for the category the policy sits in."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-88550832449331267612",
+          "statement": "The detail window of a category shows its parent's name and enables the parent button when the parent exists; when the parent is named but missing it shows \"<orphaned from <parent>>\" and the button is disabled; a top-level category shows nothing."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-products",
+      "outcome": "Browse the products and their versions that the loaded definitions cover, and see the details of each.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-08454163414443845831",
+          "what": "Lists every product in the workspace."
+        },
+        {
+          "id": "block-21250694452518135903",
+          "what": "Lists the minor versions of the selected major version."
+        },
+        {
+          "id": "block-27521638512866951547",
+          "what": "Opens the detail window of the product double-clicked in the product list."
+        },
+        {
+          "id": "block-68471089903278595698",
+          "what": "Shows the details of the chosen child product in this same window."
+        },
+        {
+          "id": "block-70438482535332396460",
+          "what": "Lists the major versions of the selected top-level product."
+        },
+        {
+          "id": "block-75890035579964781740",
+          "what": "Resizes the Name column so it fills the list beside the Version column."
+        },
+        {
+          "id": "block-78795492686610610516",
+          "what": "Opens the selected product's details when Enter is pressed."
+        },
+        {
+          "id": "block-85565043795242001799",
+          "what": "Opens the details window of the product double-clicked."
+        },
+        {
+          "id": "block-94974939167069133577",
+          "what": "Shows the details of the product's parent product in this same window."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-12357125815438552418",
+          "statement": "The major versions list shows the children of the selected top-level product ordered by version, with the heading naming that product; with no product selected it is empty and prompts the person to select one."
+        },
+        {
+          "id": "businessrule-52738497804454297244",
+          "statement": "Opening product details by double-click or Enter does nothing when no product is selected in that list."
+        },
+        {
+          "id": "businessrule-69465149169735487446",
+          "statement": "The minor versions list shows the children of the selected major version ordered by version, with the heading naming it; with no major version selected it is empty and prompts the person to select one."
+        },
+        {
+          "id": "businessrule-77846110822300189675",
+          "statement": "Double-clicking a child revision in the product details window shows that child in the same window; with nothing selected, nothing happens."
+        },
+        {
+          "id": "businessrule-93683837313593251984",
+          "statement": "The top-level products list shows every loaded product ordered by name, each with its number of children."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-support-rules",
+      "outcome": "Find the support rules and see which products they cover.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-33689568439379299743",
+          "what": "Opens the details window of the support definition double-clicked."
+        },
+        {
+          "id": "block-45462513891449541466",
+          "what": "Opens the detail window of the support rule double-clicked in the support-rule list."
+        },
+        {
+          "id": "block-53898486546586719743",
+          "what": "Opens the product details, or shows the referenced support definition in this window."
+        },
+        {
+          "id": "block-64431347962942436201",
+          "what": "Opens the selected support definition's details when Enter is pressed."
+        },
+        {
+          "id": "block-80435818182674952821",
+          "what": "Narrows the support definition list to names containing the typed text."
+        },
+        {
+          "id": "block-82164480679050137750",
+          "what": "Lists every support definition in the workspace."
+        },
+        {
+          "id": "block-82962493722270760078",
+          "what": "Resizes the Name column so it fills the list beside the version columns."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-54625832347030556938",
+          "statement": "The support definitions list shows only definitions whose name contains the typed filter text, ignoring upper or lower case; an empty filter shows all. Entries are ordered by name with leading spaces ignored and shown without them."
+        },
+        {
+          "id": "businessrule-82075493230431806208",
+          "statement": "Double-clicking an entry in the support details window opens the product details window for a product entry, and shows a nested support definition in the same window. An entry whose product is missing, or with nothing selected, does nothing."
+        },
+        {
+          "id": "businessrule-84991051448916998249",
+          "statement": "Double-clicking the support definitions list opens the definition details for the selected row without checking that a row is selected; pressing Enter does check."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.inspect-policy-technical-details",
+      "outcome": "Inspect the technical makeup of a policy: its stored setting, presentation, elements and semantic text, and copy it.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-01358626545675013383",
+          "what": "Copies the selected node text to the clipboard on Ctrl+C."
+        },
+        {
+          "id": "block-76908522554461045751",
+          "what": "Opens the category, edit window, details or inspection window for the chosen object."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-01704207253788877148",
+          "statement": "The Semantic Policy fragment shows one section per area the policy applies to: the machine section reads the computer source and its comments, the user section reads the user source and its comments; an area the policy does not cover is left out."
+        },
+        {
+          "id": "businessrule-10913365400690794412",
+          "statement": "In semantic policy text, a whole number is written with a leading #, an unsigned number as digits, and a yes/no value as True or False. Text is written between single quotes with no escaping, so text holding a quote or line break cannot be read back. An empty list is written as 'None'. A list of text is written in brackets, one double-quoted item per line with quotes doubled. A table is written in brackets as double-quoted name: value lines."
+        },
+        {
+          "id": "businessrule-20897965123834184786",
+          "statement": "When a policy is written as semantic policy text, its settings are listed only if the policy is Enabled."
+        },
+        {
+          "id": "businessrule-43141523484770952437",
+          "statement": "The policy inspector shows a \"Registry value\" line for the policy only when the policy names a registry value."
+        },
+        {
+          "id": "businessrule-49549620435870223174",
+          "statement": "Choice display names in the inspector are resolved through the definitions file that defines the policy, and choices are numbered from zero in file order."
+        },
+        {
+          "id": "businessrule-50694068263592934768",
+          "statement": "A semantic policy text line shows 'C' for a machine policy and 'U' for a user policy, followed by the identifier."
+        },
+        {
+          "id": "businessrule-57016400965631502733",
+          "statement": "The inspector copies the selected line to the clipboard only on Ctrl+C with a line selected."
+        },
+        {
+          "id": "businessrule-77000026808397550095",
+          "statement": "Within each section of the fragment, the policy comment is included only when one is stored for that policy, and the option values are included only when the policy is Enabled."
+        },
+        {
+          "id": "businessrule-78281155676242942940",
+          "statement": "When a policy is written as semantic policy text, backslashes in its comment are doubled and each carriage return plus line feed pair is written as '\\n'. A lone line feed or lone carriage return is written as it is, which splits the comment over two script lines and corrupts it when read back."
+        },
+        {
+          "id": "businessrule-79057744450548393955",
+          "statement": "The policy inspector shows a \"Client extension\" line for the policy only when the policy names a client extension."
+        },
+        {
+          "id": "businessrule-80096613073902079124",
+          "statement": "The policy inspector lists presentation details for the policy whenever it has both a presentation and elements, whatever the elements hold. Each presentation item with an ID is matched to the policy element with the same ID; items without an ID show no element details. When no element has that ID, the inspector stops with an unhandled error."
+        },
+        {
+          "id": "businessrule-94076713436940158385",
+          "statement": "For a list element the inspector states how value names are formed: \"User provides value names\" when the person names them, a prefix when the element has one, otherwise \"No prefix (values named for their data)\"."
+        },
+        {
+          "id": "businessrule-96393168223138786394",
+          "statement": "In the inspector, a group of affected registry settings with no on or off setting reads \"Left implicit\" when the policy names a registry value, and \"Left to elements\" when it names none. Inside a Yes/No element it always reads \"Left implicit\"."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        },
+        {
+          "id": "entity-52418278656387992812",
+          "name": "Policy comment",
+          "states": []
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-45436197603688581519",
+          "name": "Windows registry settings key of Policy Plus",
+          "kind": "dataStore"
+        },
+        {
+          "id": "external-25314431250146805945",
+          "name": "Administrative template files (ADMX and ADML)",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    }
+  ]
+}

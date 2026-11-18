@@ -1,0 +1,13 @@
+{
+  "read": 8,
+  "challenges": [
+    {"record": 0, "says": "The raw-edit entry says only that the person is told when neither source is POL-backed, but the rule also limits the chosen area to POL-backed sources, and the first-time warning loses that answering No cancels and asks again next time."},
+    {"record": 1, "says": "The rule that Edit refuses unsupported kinds such as binary with \"This value kind is not supported.\" is filed under this task's rules although it belongs to changing a value's data."},
+    {"record": 2, "says": "The step 'Choose a value to change' relies on the kind-refusal rule and the step 'Enter the new data' on the 0 to 4,294,967,295 / 18,446,744,073,709,551,615 number limits, yet both rules sit in the add task and not in this task's rules, so the task cites rules that do not carry its behaviour."},
+    {"record": 3, "says": "The key-delete choices lose their condition: Clear first drops deletion entries already in the key and does not put back sub-key values, and Delete one value on a key replaces any value of that name whether or not it exists; the step names the options without these consequences."},
+    {"record": 4, "says": "The steps drop what the import does with the file: a REG key header with a minus clears the key, a bare minus value deletes it, a key not starting with the prefix is applied with its full name, unreadable data is kept as an empty value without error, and a wrong first line is refused ('Incorrect REG signature')."},
+    {"record": 5, "says": "The step omits that a policy file is applied as the difference from an empty file so nothing is forgotten, a rule the task cites but never states."},
+    {"record": 6, "says": "The write step says only 'with deletion marks' and loses how values are written (64-bit, expandable text and multiple strings become hex bytes, trailing backslash removed from the branch, unsupported source or missing registry location ends in an unhandled error rather than a message)."},
+    {"record": 7, "says": "The step does not say that a registry-backed source is rebuilt from the three policy locations and that a missing location stops it, behaviour the task relies on through its need for the registry."}
+  ]
+}

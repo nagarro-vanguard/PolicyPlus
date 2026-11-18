@@ -1,0 +1,751 @@
+{
+  "capability": {
+    "id": "capability-74192280505907161455",
+    "name": "Choosing and saving policy sources",
+    "purpose": "Pick where the user and computer policies are kept (POL file, registry, a user's registry hive, a user's Group Policy object, or the live system) and save changes back to them."
+  },
+  "surfaces": [
+    {
+      "name": "Main",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-main--choosing-and-saving-policy-sources.md",
+      "actions": [
+        {
+          "id": "block-52519148395305522333",
+          "what": "Asks where user and computer policies live and opens those sources.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-10464012301936997836",
+            "businessrule-84588009124214109370"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 607,
+            "lastLine": 613
+          }
+        },
+        {
+          "id": "block-66465089975119483214",
+          "what": "Saves comments and policy settings to their sources and remembers the chosen sources.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-00851565168679896073",
+            "businessrule-05545231242611046306",
+            "businessrule-09176393040056781958",
+            "businessrule-09208070518455812303",
+            "businessrule-13724150063390760319",
+            "businessrule-17212723393144190896",
+            "businessrule-19841193988434357732",
+            "businessrule-20632548312339129786",
+            "businessrule-24034386628405619971",
+            "businessrule-24339552780845919468",
+            "businessrule-25033115401021301399",
+            "businessrule-26056926835272364672",
+            "businessrule-28402048173344159866",
+            "businessrule-39804924157705575084",
+            "businessrule-41013546429447756519",
+            "businessrule-42987908693120337062",
+            "businessrule-43613259767674592997",
+            "businessrule-48799510965890913669",
+            "businessrule-48968387067309128566",
+            "businessrule-51421539020102170720",
+            "businessrule-57614366266507799597",
+            "businessrule-66651514909736203695",
+            "businessrule-67697422395860869033",
+            "businessrule-71273978078040008855",
+            "businessrule-72149976207795359606",
+            "businessrule-84817748081019740495",
+            "businessrule-86190343622453999219",
+            "businessrule-87767421628061265824",
+            "businessrule-90527876062459953686",
+            "businessrule-91552597921533368557",
+            "businessrule-98130638476370994041"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 614,
+            "lastLine": 638
+          }
+        }
+      ]
+    },
+    {
+      "name": "OpenPol",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-openpol--choosing-and-saving-policy-sources.md",
+      "actions": [
+        {
+          "id": "block-43495097990247728689",
+          "what": "Enables the text box and browse button that belong to the chosen computer source",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-58680491450946971024"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenPol.vb",
+            "firstLine": 44,
+            "lastLine": 51
+          }
+        },
+        {
+          "id": "block-16593836685470314086",
+          "what": "Enables the text box and browse button that belong to the chosen user source",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-34260437212150300999"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenPol.vb",
+            "firstLine": 52,
+            "lastLine": 65
+          }
+        },
+        {
+          "id": "block-07841055713983147509",
+          "what": "Lets the person pick the computer POL file",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-60819102502476341284"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenPol.vb",
+            "firstLine": 66,
+            "lastLine": 68
+          }
+        },
+        {
+          "id": "block-18882497527396093425",
+          "what": "Lets the person pick the user POL file",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-60819102502476341284"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenPol.vb",
+            "firstLine": 69,
+            "lastLine": 71
+          }
+        },
+        {
+          "id": "block-22676943268795169202",
+          "what": "Lets the person pick a user profile whose ntuser.dat hive will be the user policy source",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/OpenPol.vb",
+            "firstLine": 72,
+            "lastLine": 75
+          }
+        },
+        {
+          "id": "block-53684119065030568086",
+          "what": "Creates the computer and user policy loaders from the chosen sources and closes the dialog as accepted",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-36363277387876573326",
+            "businessrule-75533700456390778594"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenPol.vb",
+            "firstLine": 76,
+            "lastLine": 111
+          }
+        },
+        {
+          "id": "block-07013931817450395539",
+          "what": "Lets the person pick the user whose per-user Group Policy object will be the user policy source",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/OpenPol.vb",
+            "firstLine": 112,
+            "lastLine": 115
+          }
+        },
+        {
+          "id": "block-39062072014858771500",
+          "what": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-66851330016699676430"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenPol.vb",
+            "firstLine": 116,
+            "lastLine": 118
+          }
+        }
+      ]
+    },
+    {
+      "name": "OpenUserGpo",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-openusergpo--choosing-and-saving-policy-sources.md",
+      "actions": [
+        {
+          "id": "block-94740465332149589219",
+          "what": "Looks up the typed account name and shows its SID",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-91379498462935455610"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenUserGpo.vb",
+            "firstLine": 4,
+            "lastLine": 13
+          }
+        },
+        {
+          "id": "block-85480965507959714722",
+          "what": "Checks the SID (looking it up from the name if needed) and closes the dialog as accepted",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-77474018484672211108",
+            "businessrule-88238619586671903040"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenUserGpo.vb",
+            "firstLine": 14,
+            "lastLine": 29
+          }
+        },
+        {
+          "id": "block-75399435004242266349",
+          "what": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-26724904229141688759"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenUserGpo.vb",
+            "firstLine": 34,
+            "lastLine": 36
+          }
+        }
+      ]
+    },
+    {
+      "name": "OpenUserRegistry",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-openuserregistry--choosing-and-saving-policy-sources.md",
+      "actions": [
+        {
+          "id": "block-81482853098029816247",
+          "what": "Reports the chosen profile ntuser.dat path and closes the dialog as accepted",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-02848405191150173128"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenUserRegistry.vb",
+            "firstLine": 31,
+            "lastLine": 35
+          }
+        },
+        {
+          "id": "block-77449854280048805872",
+          "what": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-37850254215893887157"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenUserRegistry.vb",
+            "firstLine": 36,
+            "lastLine": 38
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-91379498462935455610",
+      "statement": "A name typed in the user dialog is turned into the account's security identifier (SID) on Search; if the name cannot be translated, the person is told \"The name could not be translated to a SID.\"",
+      "place": {
+        "file": "PolicyPlus/OpenUserGpo.vb",
+        "firstLine": 4,
+        "lastLine": 13
+      }
+    },
+    {
+      "id": "businessrule-77474018484672211108",
+      "statement": "When OK is pressed, the SID text must be a valid SID or the person is told \"The SID is not valid. Enter a SID in the lower box, or enter a username in the top box and press Search to translate.\"; a valid SID is returned and the dialog closes.",
+      "place": {
+        "file": "PolicyPlus/OpenUserGpo.vb",
+        "firstLine": 20,
+        "lastLine": 29
+      }
+    },
+    {
+      "id": "businessrule-88238619586671903040",
+      "statement": "When OK is pressed with a name typed but no SID, the name is looked up first, and the dialog stays open if no SID results.",
+      "place": {
+        "file": "PolicyPlus/OpenUserGpo.vb",
+        "firstLine": 14,
+        "lastLine": 19
+      }
+    },
+    {
+      "id": "businessrule-02848405191150173128",
+      "statement": "In the user hive dialog, OK does nothing until a folder is selected; then it returns the path C:\\Users\\<folder>\\ntuser.dat and closes.",
+      "place": {
+        "file": "PolicyPlus/OpenUserRegistry.vb",
+        "firstLine": 31,
+        "lastLine": 35
+      }
+    },
+    {
+      "id": "businessrule-26724904229141688759",
+      "statement": "Pressing Escape closes the user dialog as cancelled.",
+      "place": {
+        "file": "PolicyPlus/OpenUserGpo.vb",
+        "firstLine": 34,
+        "lastLine": 36
+      }
+    },
+    {
+      "id": "businessrule-37850254215893887157",
+      "statement": "Pressing Escape closes the user hive dialog as cancelled.",
+      "place": {
+        "file": "PolicyPlus/OpenUserRegistry.vb",
+        "firstLine": 36,
+        "lastLine": 38
+      }
+    },
+    {
+      "id": "businessrule-58680491450946971024",
+      "statement": "The registry path, POL file name and Browse button for the computer side are usable only when their own choice is selected.",
+      "place": {
+        "file": "PolicyPlus/OpenPol.vb",
+        "firstLine": 44,
+        "lastLine": 51
+      }
+    },
+    {
+      "id": "businessrule-34260437212150300999",
+      "statement": "The registry path, POL file name, SID and hive path boxes (and their Browse buttons) for the user side are usable only when their own choice is selected.",
+      "place": {
+        "file": "PolicyPlus/OpenPol.vb",
+        "firstLine": 52,
+        "lastLine": 65
+      }
+    },
+    {
+      "id": "businessrule-60819102502476341284",
+      "statement": "The file picker for a POL file accepts only '.pol' files, allows choosing a file that does not exist yet, and does not ask before an existing file is chosen.",
+      "place": {
+        "file": "PolicyPlus/OpenPol.vb",
+        "firstLine": 36,
+        "lastLine": 43
+      }
+    },
+    {
+      "id": "businessrule-36363277387876573326",
+      "statement": "When OK is pressed, the user source is created from the selected choice: Local GPO, Registry, POL file, per-user GPO (SID typed), user hive (file path typed), or Scratch space otherwise. If it cannot be created, the person is told \"The user policy loader could not be created.\" followed by the reason, and the dialog stays open; the dialog closes as accepted only when both sources were created.",
+      "place": {
+        "file": "PolicyPlus/OpenPol.vb",
+        "firstLine": 92,
+        "lastLine": 110
+      }
+    },
+    {
+      "id": "businessrule-75533700456390778594",
+      "statement": "When OK is pressed, the computer source is created from the selected choice: Local GPO, Registry (path typed), POL file (name typed), or Scratch space when none of the others is selected. If it cannot be created, the person is told \"The computer policy loader could not be created.\" followed by the reason, and the dialog stays open.",
+      "place": {
+        "file": "PolicyPlus/OpenPol.vb",
+        "firstLine": 78,
+        "lastLine": 91
+      }
+    },
+    {
+      "id": "businessrule-66851330016699676430",
+      "statement": "Pressing Escape closes the policy sources dialog as cancelled.",
+      "place": {
+        "file": "PolicyPlus/OpenPol.vb",
+        "firstLine": 116,
+        "lastLine": 118
+      }
+    },
+    {
+      "id": "businessrule-10464012301936997836",
+      "statement": "After the person chooses policy sources, they are opened with the opening result shown, and the view moves to the nearest visible category.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 609,
+        "lastLine": 611
+      }
+    },
+    {
+      "id": "businessrule-84588009124214109370",
+      "statement": "When a view setting changes, the program moves up to the nearest visible category, drops the selected policy if the move happened or the policy is now hidden, then rebuilds the tree and list. A policy kept after the move appears in the information pane only: rebuilding the list reselects the category in the tree, which clears the selection, so its row is not highlighted.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 221,
+        "lastLine": 230
+      }
+    },
+    {
+      "id": "businessrule-00851565168679896073",
+      "statement": "When gpt.ini does not exist, a new one is written with the General section, both extension-name lines and Version 65537.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 198,
+        "lastLine": 205
+      }
+    },
+    {
+      "id": "businessrule-05545231242611046306",
+      "statement": "When a policy file's changes are applied to another source, an entry is saved only if it has a non-empty value name that does not start with '**'. Other marker-style entries and entries with an empty value name are skipped without notice. A saved value keeps its original letter case and type.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 169,
+        "lastLine": 172
+      }
+    },
+    {
+      "id": "businessrule-09176393040056781958",
+      "statement": "When gpt.ini is updated and already exists, its Version number is raised by 1 for a machine source and by 65536 for a user source; if no Version line exists, it is set to 65537 (both parts at 1).",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 177,
+        "lastLine": 194
+      }
+    },
+    {
+      "id": "businessrule-09208070518455812303",
+      "statement": "When a policy file is clearing a key, all values and markers under the key are dropped and a single clear-all marker is stored.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 183,
+        "lastLine": 189
+      }
+    },
+    {
+      "id": "businessrule-13724150063390760319",
+      "statement": "Saving writes each source's comments first, then writes a source only if it is fully writable (otherwise reported as \"not writable\"), then remembers the chosen source types and locations for the next start. The person sees \"Success.\" with the user and computer outcomes, or \"Saving failed!\" with the reason.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 625,
+        "lastLine": 637
+      }
+    },
+    {
+      "id": "businessrule-17212723393144190896",
+      "statement": "A REG file cannot be used as a source for forgetting a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 237,
+        "lastLine": 239
+      }
+    },
+    {
+      "id": "businessrule-19841193988434357732",
+      "statement": "Saving a local Group Policy source writes the Registry.pol file, raises the gpt.ini version, and then, on Windows editions that list as having Group Policy (decided by a fixed list of product edition codes), asks Windows to refresh policy (\"saved to disk and invoked policy refresh\"). On other editions, the difference between the file as last on disk (read at the moment of saving) and the new content is applied to the running account's own registry (the current user's for a user source, the machine's for a machine source) and all windows are notified (\"saved to disk and applied diff to Registry\").",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 119,
+        "lastLine": 133
+      }
+    },
+    {
+      "id": "businessrule-20632548312339129786",
+      "statement": "Saving a per-user GPO writes its Registry.pol file, raises its gpt.ini version and asks Windows to refresh user policy (\"saved to disk and invoked policy refresh\").",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 143,
+        "lastLine": 147
+      }
+    },
+    {
+      "id": "businessrule-24034386628405619971",
+      "statement": "When a value is saved into a REG file, it is ignored if a source branch is set and its key lies outside that branch. When no branch is set, every key is accepted. Any value already stored under that name is replaced.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 226,
+        "lastLine": 236
+      }
+    },
+    {
+      "id": "businessrule-24339552780845919468",
+      "statement": "Saving a POL file source writes the file only (\"saved to disk\"); a registry source reports \"already applied\" because it was changed live; a user hive reports \"will apply when policy source is closed\"; Scratch space reports \"discarded\".",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 134,
+        "lastLine": 142
+      }
+    },
+    {
+      "id": "businessrule-25033115401021301399",
+      "statement": "When a value is deleted in a REG file, the request is ignored if a source branch is set and the key lies outside it, or if the key is already marked for removal. When no branch is set, every key is accepted. Otherwise the value is recorded as deleted.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 240,
+        "lastLine": 247
+      }
+    },
+    {
+      "id": "businessrule-26056926835272364672",
+      "statement": "When gpt.ini is updated, the Machine and User extension-name lines for the registry policy are added if missing and left untouched if present.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 190,
+        "lastLine": 196
+      }
+    },
+    {
+      "id": "businessrule-28402048173344159866",
+      "statement": "When a policy file's changes are applied to another source, an entry starting '**deletekeys' clears each key named in its semicolon-separated list under the entry's key, using lower-case names. Clearing removes only that key's own values, not its subkeys.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 165,
+        "lastLine": 168
+      }
+    },
+    {
+      "id": "businessrule-39804924157705575084",
+      "statement": "When comments are saved, each comment gets its own text id built from the policy's namespace, policy name and a running number, and each distinct namespace gets a prefix made from its name (dots turned into underscores) and the running number.",
+      "place": {
+        "file": "PolicyPlus/CmtxFile.vb",
+        "firstLine": 50,
+        "lastLine": 63
+      }
+    },
+    {
+      "id": "businessrule-41013546429447756519",
+      "statement": "When a newer policy file is applied over an older one, values the old file held and the new one dropped are forgotten in the target, but only if they sit under the three policy branches of the registry.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 174,
+        "lastLine": 177
+      }
+    },
+    {
+      "id": "businessrule-42987908693120337062",
+      "statement": "In the live registry, 'forgetting' a value deletes it, because the registry cannot remember a pending deletion.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 371,
+        "lastLine": 373
+      }
+    },
+    {
+      "id": "businessrule-43613259767674592997",
+      "statement": "When a value is forgotten in a policy file, both the value and its deletion marker are removed, so the policy reverts to not saying anything about it.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 99,
+        "lastLine": 104
+      }
+    },
+    {
+      "id": "businessrule-48799510965890913669",
+      "statement": "Clearing a key in the live registry deletes every value in it but leaves the key and its subkeys. Forgetting a key's clearance does nothing.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 416,
+        "lastLine": 420
+      }
+    },
+    {
+      "id": "businessrule-48968387067309128566",
+      "statement": "A multiple-string value is stored as its strings each followed by an empty character, with one more empty character closing the list.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 296,
+        "lastLine": 311
+      }
+    },
+    {
+      "id": "businessrule-51421539020102170720",
+      "statement": "A 64-bit number is stored in a policy file as 8 bytes, lowest byte first.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 272,
+        "lastLine": 280
+      }
+    },
+    {
+      "id": "businessrule-57614366266507799597",
+      "statement": "Saving comments writes every comment and text held in memory into the target file, in schema version 1.0, replacing what the file held before.",
+      "place": {
+        "file": "PolicyPlus/CmtxFile.vb",
+        "firstLine": 83,
+        "lastLine": 122
+      }
+    },
+    {
+      "id": "businessrule-66651514909736203695",
+      "statement": "When a key is cleared in a REG file, the request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted. Otherwise the key's earlier entries are replaced by a key-removal entry.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 248,
+        "lastLine": 253
+      }
+    },
+    {
+      "id": "businessrule-67697422395860869033",
+      "statement": "When a policy file's changes are applied to another source, an entry named '**deletevalues' deletes each value in its semicolon-separated list, using lower-case names.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 161,
+        "lastLine": 164
+      }
+    },
+    {
+      "id": "businessrule-71273978078040008855",
+      "statement": "A 32-bit number is stored in a policy file as 4 bytes, lowest byte first.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 255,
+        "lastLine": 264
+      }
+    },
+    {
+      "id": "businessrule-72149976207795359606",
+      "statement": "When a value is marked for deletion in a policy file, any value or marker already held under that name is dropped first. A deletion marker holding the number 32, as Microsoft does, is added unless the value is already marked or its key is cleared.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 92,
+        "lastLine": 98
+      }
+    },
+    {
+      "id": "businessrule-84817748081019740495",
+      "statement": "When a policy file's changes are applied to another source, an entry named '**del.' plus a value name deletes that value, using the lower-case key and value names.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 157,
+        "lastLine": 158
+      }
+    },
+    {
+      "id": "businessrule-86190343622453999219",
+      "statement": "When a value is set in a policy file, it replaces any value already held under that name. A deletion marker for the name is not removed.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 105,
+        "lastLine": 109
+      }
+    },
+    {
+      "id": "businessrule-87767421628061265824",
+      "statement": "A source's comment list is saved to its comment file location whenever the list exists, even when empty; a source without comment support has no list and is skipped.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 618,
+        "lastLine": 620
+      }
+    },
+    {
+      "id": "businessrule-90527876062459953686",
+      "statement": "Text stored in a policy file is written in two-byte characters followed by a closing empty character.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 240,
+        "lastLine": 251
+      }
+    },
+    {
+      "id": "businessrule-91552597921533368557",
+      "statement": "When a policy file's changes are applied to another source, an entry starting '**delvals' clears the whole key, using the lower-case key name. Entries are applied in sorted order, so clear-all entries come before values. Clearing a live registry key removes only that key's own values.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 159,
+        "lastLine": 160
+      }
+    },
+    {
+      "id": "businessrule-98130638476370994041",
+      "statement": "A value written to a policy file is stored as text, expandable text, a 32-bit or 64-bit number or a multiple string by its stated type. Every other type is stored as raw bytes with that type.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 337,
+        "lastLine": 353
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "entity-99683518011128701149",
+      "name": "Policy setting",
+      "states": [
+        "Not configured",
+        "Enabled",
+        "Disabled",
+        "Unclear"
+      ]
+    },
+    {
+      "id": "entity-40163170707735391190",
+      "name": "Program preference",
+      "states": [
+        "Welcome download offer not yet considered",
+        "Welcome download offer considered",
+        "Raw POL editing warning not yet accepted",
+        "Raw POL editing warning accepted",
+        "Policy sources at default (Local GPO)",
+        "Policy sources remembered",
+        "Templates folder at Windows default",
+        "Templates folder chosen",
+        "Language follows the system",
+        "Language chosen"
+      ]
+    },
+    {
+      "id": "entity-92808062881922645840",
+      "name": "Administrative template",
+      "states": [
+        "Downloaded package",
+        "Unpacked",
+        "Installed in a template folder",
+        "Loaded into the workspace",
+        "Available as policy definitions",
+        "Cleared from the workspace"
+      ]
+    },
+    {
+      "id": "entity-52418278656387992812",
+      "name": "Policy comment",
+      "states": []
+    }
+  ],
+  "externals": [
+    {
+      "id": "external-90077838450756006603",
+      "name": "Computer file system folders",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-97068941883605652538",
+      "name": "Windows registry policy keys and loaded user hives",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-25314431250146805945",
+      "name": "Administrative template files (ADMX and ADML)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-45436197603688581519",
+      "name": "Windows registry settings key of Policy Plus",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-84087908423930356962",
+      "name": "Generated version source file",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-08492831744411585027",
+      "name": "Policy comment files (CMTX)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-90078096462363044953",
+      "name": "Active Directory domain",
+      "kind": "outsideService"
+    },
+    {
+      "id": "external-47673734579321187695",
+      "name": "Microsoft download site",
+      "kind": "outsideService"
+    }
+  ]
+}

@@ -31,6 +31,7 @@ export const Epic = Schema.Struct({
     outcome: Text,
     area: Schema.optionalKey(Text),
     capability: Schema.optionalKey(Text),
+    task: Schema.optionalKey(Text.annotate(about("The id of the target task whose journey this epic delivers."))),
     comesAfter: Schema.Array(Text).annotate(about("The epics that must be done first.")),
     stories: Schema.Array(StoryKey),
     sequence: Count,

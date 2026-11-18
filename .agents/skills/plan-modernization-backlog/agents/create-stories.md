@@ -5,7 +5,7 @@ description: Writes the user and technical stories of a modernization, each one 
 
 # Create Stories
 
-Goal: stories a product owner can groom and a developer can build, which together cover every action and every rule the job names exactly once. A rule missed is never built; a story in code words loses its reader.
+Goal: stories a product owner can groom and a developer can build, which together cover every action, step, component and rule the job names exactly once. A rule missed is never built; a story in code words loses its reader.
 Tools: `<scriptsCommand> check <jobId>`, `bun <this skill's folder>/cli/describe-shape.ts Story`, Read, Grep, Write.
 
 ## Arguments
@@ -15,13 +15,14 @@ Tools: `<scriptsCommand> check <jobId>`, `bun <this skill's folder>/cli/describe
 
 ## Work
 
-Read both files and, for `surfaces`, the bundles the job lists: reading material for you, never quoted.
+Read both files and, for `surfaces` and `journey`, the bundles the job lists: reading material for you, never quoted.
 
-- `surfaces`: group each surface's actions into tasks a person does; a task is a story, every action in exactly one, a story never crosses a surface. Write for the product owner: the product's own words, what changes for people, never a class, routine, file, path or id. Each rule to build is cited by exactly one criterion, `{"_tag":"rule","id":...}`; a criterion may group related rules, and a story has at most 12. Cite each listed state change `{"_tag":"transition"}`. Order stories so one relying on another's rules comes after it. `terms` are business words introduced; `journey` only when a person starts the work.
-- `shared`: technical stories, no actions, for the shared rules, grouped by what they do, each rule cited once.
-- `foundation-stories`: technical stories from the decisions: one or more per `area` decision, citing it `{"_tag":"decision"}`, with criteria a command can check, and how any assumption is proven.
+- `surfaces`: group each surface's actions into tasks a person does; a task is a story, every action in exactly one, a story never crosses a surface. Cite each rule to build once, `{"_tag":"rule","id":...}`, and each listed state change `{"_tag":"transition"}`. Order stories so one relying on another's rules comes after it.
+- `journey`: the job gives one journey's steps (`stepDetails`), the components built for it alone (`ownComponents`) and the shared ones it calls. Group the steps into stories of one task each: `steps` lists the step ids, `actions` exactly the entry points of those steps, `components` the components the story builds (each in exactly one story, none left out). Cite each rule those components enforce once. A story may build no component when all are shared; write its criteria from the steps.
+- `shared` and `components`: technical stories, no actions and no steps. For `components` (see `componentDetails`), `components` lists what each builds and its criteria cite the rules they enforce, each once. Group what belongs together.
+- `foundation-stories`: technical stories from the decisions: one or more per `area` decision, citing it `{"_tag":"decision"}`, with criteria a command can check.
 
-Where an integration or scope decision in the context replaces what a rule assumes (folders, the registry, the desktop), write the criterion for the replacement and cite the decision beside the rule. A criterion reads "Given ..., when ..., then ...", one observable behaviour. Never invent a behaviour no rule or decision states: write the criteria that hold without it and put the question in `open`, one sentence each, for the person to answer. A title is a plain imperative of 72 characters or fewer.
+Write for the product owner: the product's own words, what changes for people, never a class, routine, file, path or id. Where an integration decision replaces what a rule assumes, write the criterion for the replacement. A criterion reads "Given ..., when ..., then ...", one observable behaviour, at most 12 to a story. Never invent a behaviour no rule or decision states: put the question in `open`, one sentence each. A title is a plain imperative of 72 characters or fewer. `terms` are business words introduced; `journey` only when a person starts the work.
 
 ## Output
 

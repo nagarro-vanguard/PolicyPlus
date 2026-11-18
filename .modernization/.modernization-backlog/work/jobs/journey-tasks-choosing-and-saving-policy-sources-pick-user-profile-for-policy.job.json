@@ -1,0 +1,835 @@
+{
+  "kind": "journey",
+  "steps": [
+    "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#1",
+    "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#2"
+  ],
+  "stepActions": {
+    "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#1": [
+      "block-81482853098029816247"
+    ],
+    "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#2": [
+      "block-77449854280048805872"
+    ]
+  },
+  "actions": [
+    "block-81482853098029816247",
+    "block-77449854280048805872"
+  ],
+  "components": [
+    "User Profile Pick"
+  ],
+  "cite": [
+    "businessrule-02848405191150173128",
+    "businessrule-37850254215893887157"
+  ],
+  "componentRules": {
+    "Definition installation flow": [],
+    "Missing definitions detector": [
+      "businessrule-02030966310880796596",
+      "businessrule-87097618083601098949"
+    ],
+    "Template folder scanner": [
+      "businessrule-87686960346106148106"
+    ],
+    "Template file source adapter": [],
+    "Language file locator": [
+      "businessrule-92573318973236627036",
+      "businessrule-92965345094444319678",
+      "businessrule-69876963387177556361"
+    ],
+    "Language text reader": [
+      "businessrule-32910542149714942665",
+      "businessrule-09527630769674812053",
+      "businessrule-84649532972995606012",
+      "businessrule-93437714727587946479",
+      "businessrule-05284912414586135547",
+      "businessrule-58670284456856579605"
+    ],
+    "Definition language setting": [],
+    "Template validator": [
+      "businessrule-40646214351993665036",
+      "businessrule-98117161588141132501",
+      "businessrule-25371901799273876158",
+      "businessrule-80037556468037401208",
+      "businessrule-91228574547678345469",
+      "businessrule-83755288267226589422",
+      "businessrule-15417746115131960533",
+      "businessrule-41440459272484897081",
+      "businessrule-26805667514169896082",
+      "businessrule-59268653642646332356",
+      "businessrule-25143456587420753656",
+      "businessrule-89165707538784213793",
+      "businessrule-70397490486289456229"
+    ],
+    "Definition structure builder": [
+      "businessrule-24623125277050759553",
+      "businessrule-24413560949580370921",
+      "businessrule-39179467487447053337",
+      "businessrule-11459402502484833685",
+      "businessrule-66701495026848575269",
+      "businessrule-24269573875592969564",
+      "businessrule-90575686774382821065",
+      "businessrule-44253734408576510565",
+      "businessrule-68278299005201189825",
+      "businessrule-77397977946778263418",
+      "businessrule-93507723834804807958",
+      "businessrule-26710870928949391310",
+      "businessrule-97301799709818271508"
+    ],
+    "Policy option reader": [
+      "businessrule-20341522967469767562",
+      "businessrule-23440834431907337703",
+      "businessrule-27318854358145723180",
+      "businessrule-31892600882792899810",
+      "businessrule-35101409759930685557",
+      "businessrule-35659935925800526059",
+      "businessrule-40992022396445585276",
+      "businessrule-46883945724661990816",
+      "businessrule-48352716870696272616",
+      "businessrule-48999549165964538717",
+      "businessrule-50061101372023867676",
+      "businessrule-60385862679195390671",
+      "businessrule-25475639870526854331",
+      "businessrule-43452052995976839356",
+      "businessrule-62728858792696794889"
+    ],
+    "Support evaluator": [
+      "businessrule-99139491988760691407",
+      "businessrule-49748745950500666232",
+      "businessrule-52005709614722807804",
+      "businessrule-34301200927683901255",
+      "businessrule-81760746419124272603"
+    ],
+    "Definition load coordinator": [
+      "businessrule-34235271555130179948",
+      "businessrule-61344191921921935952"
+    ],
+    "Definition reset": [],
+    "Policy state presenter": [
+      "businessrule-11674597249570802702",
+      "businessrule-89513911810275647919",
+      "businessrule-35533060170265013329"
+    ],
+    "Category tree presenter": [
+      "businessrule-02094124658868396159",
+      "businessrule-09710935452747152124",
+      "businessrule-31928423765922463982",
+      "businessrule-53806388515964147870",
+      "businessrule-95679837516811308115",
+      "businessrule-03031297687036444400",
+      "businessrule-41685454348767959653",
+      "businessrule-75222346168306051090",
+      "businessrule-69364776950274199547"
+    ],
+    "Item description pane": [
+      "businessrule-16229847440499672368",
+      "businessrule-54518846821349856909",
+      "businessrule-55193519950925403263",
+      "businessrule-75568512748421119593",
+      "businessrule-77153890827857678995",
+      "businessrule-29660896839160984241"
+    ],
+    "Item action resolver": [
+      "businessrule-25501360175578063856",
+      "businessrule-36623707346851740456",
+      "businessrule-57028469241171716582",
+      "businessrule-68891329302657284154"
+    ],
+    "Duplicate policy merger": [
+      "businessrule-40351382289100643848",
+      "businessrule-92560631592608734086"
+    ],
+    "Policy details presenter": [
+      "businessrule-30888155476627040275",
+      "businessrule-59317523370985833904",
+      "businessrule-89677004946923202726"
+    ],
+    "Category details presenter": [
+      "businessrule-88550832449331267612"
+    ],
+    "Product browser": [
+      "businessrule-12357125815438552418",
+      "businessrule-52738497804454297244",
+      "businessrule-69465149169735487446",
+      "businessrule-77846110822300189675",
+      "businessrule-93683837313593251984",
+      "businessrule-27325316460229917481",
+      "businessrule-39702010276849006236",
+      "businessrule-86698236183201307158",
+      "businessrule-95233256539481592648"
+    ],
+    "Support rule browser": [
+      "businessrule-54625832347030556938",
+      "businessrule-82075493230431806208",
+      "businessrule-22485752927450345044",
+      "businessrule-97405551033143476269"
+    ],
+    "Policy inspector": [
+      "businessrule-43141523484770952437",
+      "businessrule-79057744450548393955",
+      "businessrule-80096613073902079124",
+      "businessrule-49549620435870223174",
+      "businessrule-94076713436940158385",
+      "businessrule-96393168223138786394",
+      "businessrule-57016400965631502733"
+    ],
+    "Semantic policy writer": [
+      "businessrule-01704207253788877148",
+      "businessrule-10913365400690794412",
+      "businessrule-20897965123834184786",
+      "businessrule-77000026808397550095",
+      "businessrule-78281155676242942940",
+      "businessrule-50694068263592934768"
+    ],
+    "Loaded file reviewer": [
+      "businessrule-52722053913285909842"
+    ],
+    "Policy lookup": [],
+    "Policy File Codec": [
+      "businessrule-70425663320377904356",
+      "businessrule-90470730563627765974",
+      "businessrule-39262656033285451423",
+      "businessrule-67456626752221980743",
+      "businessrule-75428533810997783570",
+      "businessrule-77499382636897144286",
+      "businessrule-48968387067309128566",
+      "businessrule-51421539020102170720",
+      "businessrule-71273978078040008855",
+      "businessrule-90527876062459953686",
+      "businessrule-98130638476370994041",
+      "businessrule-51554818045857630746"
+    ],
+    "Policy File Entries": [
+      "businessrule-17641776170698884064",
+      "businessrule-18230757898637060853",
+      "businessrule-29530054883116088403",
+      "businessrule-46824143239519073718",
+      "businessrule-56421390704826486738",
+      "businessrule-72149976207795359606",
+      "businessrule-86190343622453999219",
+      "businessrule-43613259767674592997",
+      "businessrule-09208070518455812303"
+    ],
+    "Live Registry Values": [
+      "businessrule-28868424053274244047",
+      "businessrule-30168924374542565520",
+      "businessrule-97000243539037627331",
+      "businessrule-34447675520768722859",
+      "businessrule-95699184013424603885",
+      "businessrule-42987908693120337062",
+      "businessrule-48799510965890913669",
+      "businessrule-35899140497190862562",
+      "businessrule-51029550915449645879"
+    ],
+    "User Hive Mounter": [
+      "businessrule-50808386816006011599",
+      "businessrule-46972642019161394212"
+    ],
+    "Registry Export Source": [
+      "businessrule-67539343519248421601",
+      "businessrule-86313704517800761850",
+      "businessrule-96701855986906093783",
+      "businessrule-99096323836097983665",
+      "businessrule-17212723393144190896",
+      "businessrule-24034386628405619971",
+      "businessrule-25033115401021301399",
+      "businessrule-66651514909736203695"
+    ],
+    "Policy Change Applier": [
+      "businessrule-05545231242611046306",
+      "businessrule-28402048173344159866",
+      "businessrule-41013546429447756519",
+      "businessrule-67697422395860869033",
+      "businessrule-84817748081019740495",
+      "businessrule-91552597921533368557"
+    ],
+    "Scratch Policy Store": [
+      "businessrule-06218920206107794280"
+    ],
+    "Computer File Access": [
+      "businessrule-79173574861552738237",
+      "businessrule-49395771262191850050"
+    ],
+    "Group Policy Version Tracker": [
+      "businessrule-00851565168679896073",
+      "businessrule-09176393040056781958",
+      "businessrule-26056926835272364672"
+    ],
+    "Source Location Resolver": [
+      "businessrule-74412475215137182202",
+      "businessrule-62563112935081932578"
+    ],
+    "Source Status Describer": [
+      "businessrule-84284160770896952745",
+      "businessrule-73847809349842629987",
+      "businessrule-98025569949322378254",
+      "businessrule-29585332630928853779"
+    ],
+    "Source Opener": [
+      "businessrule-83542226215682203251",
+      "businessrule-27578488339642782673"
+    ],
+    "Source Releaser": [
+      "businessrule-59631775004799082543"
+    ],
+    "Source Memory": [
+      "businessrule-72559528436656832979",
+      "businessrule-83248377690419919134"
+    ],
+    "Source Saver": [
+      "businessrule-13724150063390760319",
+      "businessrule-19841193988434357732",
+      "businessrule-20632548312339129786",
+      "businessrule-24339552780845919468"
+    ],
+    "Policy Comment Catalog": [
+      "businessrule-40601471490811436933",
+      "businessrule-76710184957379543464",
+      "businessrule-87767421628061265824"
+    ],
+    "Comment File Adapter": [
+      "businessrule-31889487085995982343",
+      "businessrule-93571958636080198306",
+      "businessrule-57614366266507799597",
+      "businessrule-39804924157705575084"
+    ],
+    "Directory Account Resolver": [
+      "businessrule-91379498462935455610",
+      "businessrule-88238619586671903040",
+      "businessrule-77474018484672211108"
+    ],
+    "Source Choice Builder": [
+      "businessrule-36363277387876573326",
+      "businessrule-75533700456390778594"
+    ],
+    "Source Choice Entry": [
+      "businessrule-34260437212150300999",
+      "businessrule-58680491450946971024",
+      "businessrule-60819102502476341284",
+      "businessrule-66851330016699676430"
+    ],
+    "User Identification Entry": [
+      "businessrule-26724904229141688759"
+    ],
+    "User Profile Pick": [
+      "businessrule-02848405191150173128",
+      "businessrule-37850254215893887157"
+    ],
+    "Visible Category Follow": [
+      "businessrule-10464012301936997836",
+      "businessrule-84588009124214109370"
+    ],
+    "Enablement Evidence Reader": [
+      "businessrule-07376289294643129633",
+      "businessrule-07554086131159240838",
+      "businessrule-22959538508130326801",
+      "businessrule-25766167090873157702",
+      "businessrule-29495869201116213931",
+      "businessrule-33872241894384295212",
+      "businessrule-46971412075927401870",
+      "businessrule-71909773168029429916",
+      "businessrule-92873738128602220135"
+    ],
+    "Option Value Reader": [
+      "businessrule-24534399091993971891",
+      "businessrule-34769835898304277453",
+      "businessrule-37022902056569995834",
+      "businessrule-49179499449653183223",
+      "businessrule-90493804689850695370",
+      "businessrule-43638846001153509048",
+      "businessrule-92057272745409912098"
+    ],
+    "Policy Forgetter": [
+      "businessrule-30662593154265010717",
+      "businessrule-52553634867035971750",
+      "businessrule-49955247469929977676",
+      "businessrule-60358450731077326247"
+    ],
+    "Policy State Writer": [
+      "businessrule-04152128046162000583",
+      "businessrule-14958427259964761169",
+      "businessrule-56832565542674334637",
+      "businessrule-66734059366331213205",
+      "businessrule-60774486401252037450",
+      "businessrule-97175686457081101132",
+      "businessrule-90058940824311429227"
+    ],
+    "Option Value Writer": [
+      "businessrule-19622432139142313215",
+      "businessrule-46516041958192928718",
+      "businessrule-53178349170981485484",
+      "businessrule-55949208713495428877",
+      "businessrule-64524120751868809207",
+      "businessrule-67842190900074642321",
+      "businessrule-75244076300039577548",
+      "businessrule-80911529766189561154"
+    ],
+    "Policy Comment Keeper": [
+      "businessrule-01560321201783674273",
+      "businessrule-33456476599558212379"
+    ],
+    "Policy Edit Session": [
+      "businessrule-07359577675270518038",
+      "businessrule-22919299514571743135",
+      "businessrule-23336067846798029987",
+      "businessrule-33075335985104561108",
+      "businessrule-37207468109369530089",
+      "businessrule-47264131679601828501",
+      "businessrule-53979609002646144363",
+      "businessrule-65724709448091621197",
+      "businessrule-59619098183313284576",
+      "businessrule-75178338270301910966",
+      "businessrule-90485587050957154914",
+      "businessrule-20408685392954236399",
+      "businessrule-84933301477035282498"
+    ],
+    "Option Input Rules": [
+      "businessrule-11779280825123119273",
+      "businessrule-47134496169701496073",
+      "businessrule-47891883049575092611",
+      "businessrule-76178080166619590309",
+      "businessrule-76476292137970655950",
+      "businessrule-95995013385384587600",
+      "businessrule-98958969318255528192",
+      "businessrule-36860850025836880139",
+      "businessrule-67944280997214552078"
+    ],
+    "Semantic Text Reader": [
+      "businessrule-17846007911557610465",
+      "businessrule-21688833916465491468",
+      "businessrule-37953448968627114950",
+      "businessrule-38078267378406118840",
+      "businessrule-49239739229069713399",
+      "businessrule-64894609785645160893",
+      "businessrule-82283321913472173436",
+      "businessrule-85959955505766938318",
+      "businessrule-91520515189249767580",
+      "businessrule-97058087218177971913",
+      "businessrule-14257585336729172869"
+    ],
+    "Semantic Text Applier": [
+      "businessrule-12966156302506777327",
+      "businessrule-45692609540846356884",
+      "businessrule-47001836867625969953",
+      "businessrule-78566706966921753288",
+      "businessrule-70167687024707690035"
+    ],
+    "Semantic Text Import Session": [
+      "businessrule-27078270365699057081",
+      "businessrule-30078789996227150580",
+      "businessrule-53070511165338807522"
+    ],
+    "Semantic Text Writer": [
+      "businessrule-47036476815425257305"
+    ],
+    "Policy State Provider": [],
+    "Visibility Judge": [
+      "businessrule-09965726926686583005",
+      "businessrule-12540995342195943001",
+      "businessrule-67323359061601595450",
+      "businessrule-70331897906623822249",
+      "businessrule-79960316131030112593",
+      "businessrule-97862941341357225531"
+    ],
+    "Area Scope Chooser": [
+      "businessrule-85204901615179220846",
+      "businessrule-81666786810242280110"
+    ],
+    "Identifier Kind Resolver": [
+      "businessrule-34818300362920325745",
+      "businessrule-73680018829588409732"
+    ],
+    "Identifier Arrival Router": [
+      "businessrule-49582367227471127226",
+      "businessrule-56645748073860464161",
+      "businessrule-62209428351075007862",
+      "businessrule-73292110340688125936"
+    ],
+    "Single Selection Guard": [
+      "businessrule-93221850558792273709"
+    ],
+    "Text Terms Parser": [
+      "businessrule-20714647401379544771",
+      "businessrule-63262725504588029346"
+    ],
+    "Text Hit Matcher": [
+      "businessrule-21915530910585082056",
+      "businessrule-51916167191556979448"
+    ],
+    "Text Search Intake": [
+      "businessrule-31790508764365764837",
+      "businessrule-73561308167207352856",
+      "businessrule-86305970842078630022"
+    ],
+    "Registry Line Splitter": [],
+    "Registry Terms Intake": [
+      "businessrule-73898787083077319907",
+      "businessrule-71024372746156766440",
+      "businessrule-90661647574869686546"
+    ],
+    "Registry Term Matcher": [
+      "businessrule-27271850163543025066",
+      "businessrule-35545130062422334165",
+      "businessrule-54035538146675510973",
+      "businessrule-54588279423566663184",
+      "businessrule-95826639622119629666"
+    ],
+    "Search Run Coordinator": [
+      "businessrule-35354684864210149934",
+      "businessrule-79288582532948770219",
+      "businessrule-94342659396000502591",
+      "businessrule-15877826642522947109",
+      "businessrule-57749472934040708163"
+    ],
+    "Result Picker": [
+      "businessrule-48840711587592938759",
+      "businessrule-80544887789558031281"
+    ],
+    "Result Stepper": [
+      "businessrule-17430127230259081557",
+      "businessrule-53914450774482291886"
+    ],
+    "Result Recall": [
+      "businessrule-38090025507732480917",
+      "businessrule-17385510066480798684",
+      "businessrule-78338951417255409296",
+      "businessrule-97390301066419776959"
+    ],
+    "Limit Draft Presenter": [
+      "businessrule-01575097247784730570",
+      "businessrule-26561900736287578271",
+      "businessrule-32591775124677875588",
+      "businessrule-59209755491778300947",
+      "businessrule-76306981111385169671"
+    ],
+    "Limit Draft Applier": [
+      "businessrule-03237181236179074787",
+      "businessrule-81055540068763556055",
+      "businessrule-70906412717211463954",
+      "businessrule-90628240213834851721"
+    ],
+    "Product Limit Selector": [
+      "businessrule-88807660791719489759",
+      "businessrule-61457439461915744538"
+    ],
+    "Limit Focus Mover": [
+      "businessrule-85052319902195299547",
+      "businessrule-36944318108231327872"
+    ],
+    "Limit Draft Session": [
+      "businessrule-81206266674090971597",
+      "businessrule-57716378734614233724"
+    ],
+    "Raw Editing Gate": [
+      "businessrule-40441510620479008895",
+      "businessrule-14969413888672404933",
+      "businessrule-64564273672622472190",
+      "businessrule-21403142511575039594",
+      "businessrule-98676109650316370626"
+    ],
+    "Entry Tree Lister": [
+      "businessrule-81365817698028227620",
+      "businessrule-67529938588779257243",
+      "businessrule-43194539708053716006",
+      "businessrule-44523725638753390545"
+    ],
+    "Entry Action Availability": [
+      "businessrule-13057335115870748705",
+      "businessrule-86296876237579429124",
+      "businessrule-32089237714667793315"
+    ],
+    "Editing Session Recap": [
+      "businessrule-18574755515767742264"
+    ],
+    "Key Name Validator": [
+      "businessrule-27239953863800337722",
+      "businessrule-65588006996628019814",
+      "businessrule-21846002666758208174"
+    ],
+    "Key Creator": [
+      "businessrule-94140234913184124479"
+    ],
+    "Value Creator": [
+      "businessrule-88605435114040098546",
+      "businessrule-64891270751019389302"
+    ],
+    "Number Text Reader": [
+      "businessrule-13220028854331489804",
+      "businessrule-85571919984782494727"
+    ],
+    "Value Data Editor": [
+      "businessrule-87150598845683946147",
+      "businessrule-05846735750774889498"
+    ],
+    "Deletion Marker Writer": [
+      "businessrule-27194812132584860836"
+    ],
+    "Key Clearing Chooser": [
+      "businessrule-63694206615951133419",
+      "businessrule-30359040357073744492",
+      "businessrule-30251051045932916641",
+      "businessrule-84404651755849490179"
+    ],
+    "Entry Forgetter": [
+      "businessrule-04432638879352685329"
+    ],
+    "Registry Script Intake": [
+      "businessrule-00824990257185597112",
+      "businessrule-97032716123610483497",
+      "businessrule-89009644626675244455",
+      "businessrule-59516130836014950967"
+    ],
+    "Registry Script Reader": [
+      "businessrule-52142616153788952070",
+      "businessrule-55584576559812010511",
+      "businessrule-57877192145861745927",
+      "businessrule-59618595788928559733",
+      "businessrule-23306400970907693227",
+      "businessrule-18921117498420510792"
+    ],
+    "Prefix Guesser": [
+      "businessrule-75481654180830858390",
+      "businessrule-17451417049747776074"
+    ],
+    "Registry Script Applier": [
+      "businessrule-18627979551357993299",
+      "businessrule-45318436042524755037",
+      "businessrule-61966293182360194116",
+      "businessrule-60060400053285241820"
+    ],
+    "Policy File Import": [
+      "businessrule-69354381130041181167",
+      "businessrule-97686874157870392601"
+    ],
+    "Export Branch Defaults": [
+      "businessrule-04261341694819838767",
+      "businessrule-60632388568264259103",
+      "businessrule-98458070891453225274",
+      "businessrule-38615217867457911992"
+    ],
+    "Export Source Preparer": [
+      "businessrule-62577216252619197563",
+      "businessrule-50297867320833369013"
+    ],
+    "Registry Script Writer": [
+      "businessrule-57163770116853325546",
+      "businessrule-78788630170323770129",
+      "businessrule-14603482078338141941"
+    ],
+    "Policy File Export": [
+      "businessrule-57982804566984189207"
+    ],
+    "Acquisition session": [
+      "businessrule-19284863828429321329",
+      "businessrule-75570169794845906057",
+      "businessrule-17840470067823720423",
+      "businessrule-84139143444339961851"
+    ],
+    "Destination chooser": [
+      "businessrule-34650805596483639458",
+      "businessrule-78945520165872370051"
+    ],
+    "Package fetcher": [
+      "businessrule-53408776186716933732",
+      "businessrule-15364695696024462204"
+    ],
+    "Package extractor": [
+      "businessrule-91358402464075338920"
+    ],
+    "Destination access controller": [
+      "businessrule-16960626064100495277",
+      "businessrule-70392920399990339776"
+    ],
+    "Template installer": [
+      "businessrule-24154317128059319852",
+      "businessrule-33969702428946021999"
+    ],
+    "Group Policy edition detector": [
+      "businessrule-44390406872239414183"
+    ],
+    "Welcome offer": [
+      "businessrule-23603907625209300500"
+    ],
+    "Acquired definitions adoption": [
+      "businessrule-94371671563498468562"
+    ],
+    "Version stamper": [
+      "businessrule-12414618955963878773"
+    ],
+    "Program identity presenter": [
+      "businessrule-59853527376948406586"
+    ],
+    "Preference store adapter": [
+      "businessrule-25353365313977612083"
+    ],
+    "Remembered choices keeper": [],
+    "Saved definitions folder resolver": [
+      "businessrule-40551856488084894130"
+    ],
+    "Start-up load recovery": [
+      "businessrule-41547680626150552574",
+      "businessrule-58877134447436981389",
+      "businessrule-72200124994498270380",
+      "businessrule-78253526822536661517"
+    ],
+    "Definitions folder choice validator": [
+      "businessrule-76226373219464614800",
+      "businessrule-88154451768954453608",
+      "businessrule-53176229115945924012",
+      "businessrule-98012095360980700253"
+    ],
+    "Replace option proposer": [
+      "businessrule-43765682097437166867"
+    ],
+    "Folder addition run": [
+      "businessrule-06850078746756456273",
+      "businessrule-19671296259932138006",
+      "businessrule-56221298079625729644"
+    ],
+    "Template file adder": [
+      "businessrule-07200475892676201466"
+    ],
+    "Session discarder": [
+      "businessrule-73782132825452925601",
+      "businessrule-83939170310206178732"
+    ],
+    "Language code checker": [
+      "businessrule-31456964891379452251",
+      "businessrule-93543924991745555552"
+    ],
+    "Language change applier": [
+      "businessrule-80947080049413275464"
+    ],
+    "Offer consideration record": [
+      "businessrule-68766858893219046657"
+    ],
+    "Acquired definitions switcher": []
+  },
+  "allow": [
+    "PolicyPlusWeb"
+  ],
+  "layerIds": [
+    "layer-contracts",
+    "layer-domain",
+    "layer-database",
+    "layer-api",
+    "layer-ui",
+    "layer-web",
+    "layer-e2e",
+    "layer-tooling"
+  ],
+  "decisionIds": [
+    "integrations.decision-1",
+    "integrations.decision-2",
+    "integrations.decision-3",
+    "integrations.decision-4",
+    "integrations.decision-5",
+    "integrations.decision-6",
+    "integrations.decision-7",
+    "integrations.decision-8",
+    "base.decision-1",
+    "base.decision-2",
+    "base.decision-3",
+    "base.decision-4",
+    "base.decision-5",
+    "base.decision-6",
+    "base.decision-7",
+    "base.decision-8",
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12",
+    "base.decision-13",
+    "base.decision-14",
+    "base.decision-15",
+    "base.decision-16",
+    "base.decision-17",
+    "base.decision-18",
+    "base.decision-19",
+    "base.decision-20",
+    "base.decision-21",
+    "base.decision-22",
+    "base.decision-23",
+    "base.decision-24",
+    "base.decision-25",
+    "base.decision-26",
+    "base.decision-27",
+    "base.decision-28",
+    "base.decision-29"
+  ],
+  "areaDecisionIds": [
+    "base.decision-1",
+    "base.decision-2",
+    "base.decision-3",
+    "base.decision-4"
+  ],
+  "journey": {
+    "name": "Start from my own profile",
+    "idea": "The system proposes the signed-in person's own profile and the person only confirms, or picks another.",
+    "outcome": "Choose a user profile whose stored settings are to be the user policy source."
+  },
+  "stepDetails": [
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#1",
+      "intent": "Accept or replace the proposed profile",
+      "system": "The system proposes the profile of the person using the program, lists the others, and does nothing until one is selected and confirmed.",
+      "change": "defaulted",
+      "reason": "Most people edit their own profile, so the common case needs one confirmation and no searching.",
+      "today": [
+        {
+          "id": "block-81482853098029816247",
+          "what": "Reports the chosen profile ntuser.dat path and closes the dialog as accepted"
+        }
+      ],
+      "keeps": [
+        {
+          "id": "businessrule-02848405191150173128",
+          "says": "In the user hive dialog, OK does nothing until a folder is selected; then it returns the path C:\\Users\\<folder>\\ntuser.dat and closes."
+        }
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#2",
+      "intent": "Leave without choosing",
+      "system": "The system closes the choice with nothing chosen and the current source unchanged.",
+      "change": "kept",
+      "reason": "Leaving is always possible and harmless.",
+      "today": [
+        {
+          "id": "block-77449854280048805872",
+          "what": "Closes the dialog as cancelled when Escape is pressed"
+        }
+      ],
+      "keeps": [
+        {
+          "id": "businessrule-37850254215893887157",
+          "says": "Pressing Escape closes the user hive dialog as cancelled."
+        }
+      ]
+    }
+  ],
+  "ownComponents": [
+    {
+      "name": "User Profile Pick",
+      "domain": "Policy Source",
+      "responsibility": "Proposes the person's own profile, lists the others and returns the settings file path only once a profile is chosen.",
+      "module": "user-profile-pick",
+      "uses": [],
+      "enforces": [
+        {
+          "id": "businessrule-02848405191150173128",
+          "says": "In the user hive dialog, OK does nothing until a folder is selected; then it returns the path C:\\Users\\<folder>\\ntuser.dat and closes."
+        },
+        {
+          "id": "businessrule-37850254215893887157",
+          "says": "Pressing Escape closes the user hive dialog as cancelled."
+        }
+      ]
+    }
+  ],
+  "usedComponents": [],
+  "bundles": [
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-openuserregistry--choosing-and-saving-policy-sources.md"
+  ]
+}

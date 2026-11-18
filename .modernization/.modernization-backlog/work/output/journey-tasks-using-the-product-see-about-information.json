@@ -1,0 +1,66 @@
+{
+  "stories": [
+    {
+      "title": "Show who made Policy Plus and which version is in use",
+      "what": "A person can ask the program about itself and is told who made it, where the project is published online and, when the program was built with one, which version it is.",
+      "why": "People can tell who is behind the program, find its project page, and say which version they run when they report a problem or compare with another copy.",
+      "actions": [
+        "block-07316532942246428672"
+      ],
+      "terms": [
+        {
+          "name": "About information",
+          "means": "The short message that names the author, the project address and, when known, the version; it is not the policy description shown for a selected setting."
+        },
+        {
+          "name": "Program version",
+          "means": "The release label stamped into the program when it was built; it is not the version of the policy definitions that are loaded."
+        }
+      ],
+      "journey": {
+        "name": "Ask who and which version",
+        "steps": [
+          "Find out who made this and which version I have"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the program is open, when the person asks for the About information, then a message appears that names the author of Policy Plus and the public address of the project.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-59853527376948406586"
+            }
+          ]
+        },
+        {
+          "says": "Given a version was built into the program, when the person asks for the About information, then the message also states that version.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-59853527376948406586"
+            }
+          ]
+        },
+        {
+          "says": "Given no version was built into the program, when the person asks for the About information, then the message names the author and the address and states no version.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-59853527376948406586"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        "tasks-using-the-product.see-about-information:ask-who-and-which-version#1"
+      ],
+      "components": [
+        "Program identity presenter"
+      ],
+      "open": [
+        "Should the version shown in the About information be the same stamp that the build records, with nothing shown when the build has none?"
+      ]
+    }
+  ]
+}

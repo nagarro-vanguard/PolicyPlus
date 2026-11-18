@@ -1,0 +1,226 @@
+{
+ "stories": [
+  {
+   "title": "Arrive at an item by typing its identifier",
+   "what": "A person types an identifier and is taken straight to the category, policy, product or support definition it names, or is told plainly that it could not be found. The text is trimmed, kinds are tried in a fixed order, and a policy identifier may carry a user or computer ending.",
+   "why": "Go straight to a known item by typing its identifier, instead of browsing for it.",
+   "actions": [
+    "block-00880488620958939962",
+    "block-16750935830546567218",
+    "block-61877977111665770759"
+   ],
+   "terms": [
+    {
+     "name": "Identifier",
+     "means": "The text a person types to name one category, product, support definition or policy; not its display name."
+    },
+    {
+     "name": "Section ending",
+     "means": "An optional \"@U\" or \"@C\" at the end of a policy identifier that limits it to the user or computer section; not part of the identifier itself."
+    }
+   ],
+   "journey": {
+    "name": "Type and arrive",
+    "steps": [
+     "Type an identifier and arrive at what it names"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given an identifier with spaces around it, when the person looks it up, then the spaces are ignored and the kinds are tried in the order category, product, support definition, then policy, with the first match chosen and shown with its own icon; a policy is looked up only when no other kind matches.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-34818300362920325745"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy identifier ending in \"@U\", when it is looked up, then it applies to the user section; given \"@C\", then the computer section; given no ending or any other ending, then both sections, and the ending is removed before the policy is searched so an unknown ending still finds the policy.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-73680018829588409732"
+      }
+     ]
+    },
+    {
+     "says": "Given an identifier that names a category, when the category is visible, then it opens; when it is not visible, then the person is told \"The category is not currently visible. Change the view settings and try again.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49582367227471127226"
+      }
+     ]
+    },
+    {
+     "says": "Given an identifier that names a policy, when the person arrives at it, then the policy opens in the editor and the policy list moves to it.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49582367227471127226"
+      }
+     ]
+    },
+    {
+     "says": "Given an identifier that names a product or a support definition, when the person arrives at it, then its details open.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49582367227471127226"
+      }
+     ]
+    },
+    {
+     "says": "Given an identifier of any other kind of object, when the person arrives at it, then the person is told \"That object could not be found.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49582367227471127226"
+      }
+     ]
+    },
+    {
+     "says": "Given text that matches nothing, when it is looked up, then nothing is selected and a \"not found\" icon is shown; given empty text, then a blank icon is shown instead; and given text that was a policy and changes to something that is not a policy, then the user or computer section found earlier is not cleared.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-56645748073860464161"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy whose category is visible in the category tree, when the person moves to the policy, then its category is shown and the policy row is selected only if the policy is listed there; given a category that is not visible in the tree, then nothing happens and the person is not told.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-62209428351075007862"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy hidden by the area choice (user, computer or both) or by the filter, when the person moves to it, then its category is shown with nothing selected and no message.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-62209428351075007862"
+      }
+     ]
+    },
+    {
+     "says": "Given the policy list is showing the user or the computer settings, and the policy found by identifier belongs to the user section, the computer section or both, when the policy opens in the editor, then it opens in the computer section if either of the two is computer, otherwise in the user section if either is user, otherwise in both, so Computer wins over User.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-73292110340688125936"
+      }
+     ]
+    },
+    {
+     "says": "Given the policy list, when the person selects an item, then only one item is selected at a time.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-93221850558792273709"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.find-policy-by-id:type-and-arrive#1"
+   ],
+   "components": [
+    "Policy lookup",
+    "Identifier Kind Resolver",
+    "Identifier Arrival Router",
+    "Single Selection Guard"
+   ],
+   "open": [
+    "Should a policy hidden by the area choice or the filter still be selected on arrival, given today it leaves the category shown with nothing selected and no message?"
+   ]
+  },
+  {
+   "title": "Judge whether a support definition is met by the chosen products",
+   "what": "A support definition lists the products a policy is supported on. The system judges whether a support entry or a whole support definition is met by the products a person has chosen, counting version ranges and nested definitions.",
+   "why": "Know whether the products a person has chosen are covered by a support definition.",
+   "actions": [
+    "block-16750935830546567218"
+   ],
+   "terms": [
+    {
+     "name": "Support definition",
+     "means": "A named list of products and nested definitions that says what a policy is supported on; not a single product."
+    },
+    {
+     "name": "Chosen products",
+     "means": "The products the person has ticked as the ones that matter when judging support."
+    },
+    {
+     "name": "Any-of matching",
+     "means": "A way of judging in which a definition that would normally need every entry needs only one; it applies only when it is asked for."
+    },
+    {
+     "name": "Unlisted policies allowed",
+     "means": "A choice that lets a policy count as supported when it lists no supported-on information."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a support entry for a product that is not a version range, when that exact product is among the chosen products, then the entry is met; given a product with versions beneath it, when any of those versions or their sub-products is chosen, then the entry is met even if the product itself is not chosen.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-99139491988760691407"
+      }
+     ]
+    },
+    {
+     "says": "Given a support entry for a product that has versions beneath it, whether a version range or a plain entry for a parent product that is not itself chosen, when any version in its range or a sub-product directly beneath one is chosen, then it is met, the range running from the entry's minimum (0 if none) to its maximum (the highest version if none); a range entry never matches on its own product, and a product with no versions beneath it never matches this way.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49748745950500666232"
+      }
+     ]
+    },
+    {
+     "says": "Given any-of matching is asked for, when a support definition requires all of its entries, then every entry must be met, and any other definition needs one entry met; given any-of matching is not asked for, then one met entry meets every definition, all-of included; a definition with no entries, or none met, is met only when all are required, and plain product entries are checked before nested definitions.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-52005709614722807804"
+      }
+     ]
+    },
+    {
+     "says": "Given a support definition that has already been met once in one judgement, when it comes up again, then it counts as not met, including when two entries point at the same definition with no cycle.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-34301200927683901255"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy that lists no supported-on information, or a support entry that names no known product, when it is judged, then it counts as supported only if unlisted policies are allowed.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-81760746419124272603"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.find-policy-by-id:type-and-arrive#2"
+   ],
+   "components": [
+    "Support evaluator"
+   ],
+   "open": [
+    "Is the rule that a definition met twice counts as not met intended, or an accident of today's code to carry over?",
+    "When in the person's journey is a support definition judged, and who chooses the products and whether any-of matching is asked for?"
+   ]
+  }
+ ]
+}

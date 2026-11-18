@@ -1,0 +1,244 @@
+{
+ "stories": [
+  {
+   "title": "Bring in policy settings text and check it as it arrives",
+   "what": "A person brings in a semantic policy text, from a file or typed in, and sees at once how many policy settings it holds or the line and reason of the first fault. Nothing is applied in this story.",
+   "why": "Administrators find out whether a text is good before they offer it to their computer or user policies, without asking for a separate check, and an earlier text or result never lingers.",
+   "actions": [
+    "block-27933278213709856376",
+    "block-70742542454119360952",
+    "block-92467440283303600855",
+    "block-20479299247601531941"
+   ],
+   "terms": [
+    {
+     "name": "Semantic policy text",
+     "means": "A plain text script that states, policy by policy, whether each is Enabled, Disabled or Not configured and its settings; it is not a registry file or a policy file."
+    },
+    {
+     "name": "Live check",
+     "means": "The reading of the text as soon as it arrives, reporting the count of policy settings or the first fault; it is not the apply step and changes nothing."
+    }
+   ],
+   "journey": {
+    "name": "Bring in with live check",
+    "steps": [
+     "Bring in the text, from a file or entered, and see the count or the first fault at once.",
+     "Apply what was read, offered only when the text read correctly."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the import window is opened, when it opens, then any earlier read result is dropped, so a closed window hands nothing back.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-53070511165338807522"
+      }
+     ]
+    },
+    {
+     "says": "Given the person picks a file, when it is chosen, then the whole file fills the text box, replacing what was there without asking; after a Yes to \"Are you sure you want to reset the text box?\", the text returns to the header \"Policy Plus Semantic Policy\" and blank lines.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-27078270365699057081"
+      }
+     ]
+    },
+    {
+     "says": "Given text has arrived, when it reads correctly, then the person sees \"Validation successful, N policy settings found.\" and nothing is applied; when it does not, they see \"SPOL validation failed: \" and the reason.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-14257585336729172869"
+      }
+     ]
+    },
+    {
+     "says": "Given a text whose first line is not 'Policy Plus Semantic Policy', or whose lines are separated by line feeds alone and so read as one line, when it is read, then it is refused with 'Incorrect signature.'.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-37953448968627114950"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-64894609785645160893"
+      }
+     ]
+    },
+    {
+     "says": "Given any fault in the text, when it is reported, then the message ends with '(Error found on line N.)' naming the line where reading stopped.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49239739229069713399"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy header line, when it starts with exactly 'U', then the policy is a user policy; any other first word, including 'u' or 'User', makes it a machine policy, and a header with no space after the first word is refused naming only the line.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-85959955505766938318"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy's state line, when it is 'Not configured', 'Enabled' or 'Disabled' in any letter case, then it is accepted; anything else is refused with 'Unknown policy state.'.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-38078267378406118840"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy that is Not configured or Disabled, when the text is read, then the lines after it are read as the next policy's header and not as settings; settings are read only under Enabled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-97058087218177971913"
+      }
+     ]
+    },
+    {
+     "says": "Given a setting value, when it is read, then # means a whole number (a non-whole value fails with a conversion message), a plain non-negative number is an unsigned number, 'True' or 'False' in any case is yes/no, single quotes are text, double quotes are a list of text, 'None' is an empty list, and anything else is refused with 'Unknown option data format.'.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-21688833916465491468"
+      }
+     ]
+    },
+    {
+     "says": "Given a bracketed setting, when it is read, then one line is one entry, one text per entry makes a list, two texts make a table of name and value, and no entries stores the setting with no value; for a list setting the existing entries are then removed unless the definition keeps other entries, and nothing is written, and for any other kind of setting the empty value makes the write fail.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-91520515189249767580"
+      }
+     ]
+    },
+    {
+     "says": "Given a comment line, when it is read, then it is recognised in any letter case, a double backslash is one backslash and a backslash followed by 'n' is a line break; a comment ending in a lone backslash is refused with 'Escape sequence started at end of comment.', and a backslash followed by any other character with 'Unknown comment escape sequence' naming it.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-17846007911557610465"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-82283321913472173436"
+      }
+     ]
+    },
+    {
+     "says": "Given the text did not read correctly, when the person asks to go on to apply it, then the import window refuses with \"The SPOL text is invalid: \" and the reason, and hands nothing on; only text that read correctly is passed on.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-30078789996227150580"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#1"
+   ],
+   "components": [
+    "Semantic Text Reader",
+    "Semantic Text Import Session"
+   ],
+   "open": [
+    "Should the live check also run again after every edit of the typed text, or only when text arrives from a file or is first entered?",
+    "Should a text with line feeds alone, which today fails with the signature message, be accepted or get a message that names the cause?",
+    "Should an empty bracketed setting be accepted for a list setting without any message, since today it silently removes the existing entries?",
+    "Should this refusal still appear when the apply is offered only after the text read correctly, or is the check on the window's own button redundant?"
+   ]
+  },
+  {
+   "title": "Apply a checked semantic policy text to the policy sources",
+   "what": "From a text that read correctly, the person applies its policies to the computer and user policy sources, and is told the outcome, including how many could not be applied.",
+   "why": "Administrators move a whole set of settings in at once, and one bad policy does not stop the rest.",
+   "actions": [
+    "block-91334952261881723533",
+    "block-34107094698830091312"
+   ],
+   "terms": [
+    {
+     "name": "Apply",
+     "means": "Writing the policies of a checked text into the computer and user policy sources, replacing each policy's earlier settings; it is not the check, which writes nothing."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a text that read correctly, when it is applied, then each policy goes to the computer source or the user source according to its section.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-47001836867625969953"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy is applied, when its earlier settings exist, then they are wiped first and then the stated state and settings are written.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-12966156302506777327"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy comes with a comment and the source keeps comments, when it is applied, then the comment is stored before the old settings are wiped and the new ones written; if the writing then fails, the new comment stays against the half-written policy.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-78566706966921753288"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy comes with an empty comment, when it is applied, then any existing comment is left alone.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-78566706966921753288"
+      }
+     ]
+    },
+    {
+     "says": "Given several policies, when one fails, then it is skipped and counted and the rest are still applied; only the number of failures is known, not which policy or why.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-45692609540846356884"
+      }
+     ]
+    },
+    {
+     "says": "Given the apply has finished, when every policy was written, then the person sees \"Semantic Policy successfully applied.\"; when some failed, they see \"N out of M could not be applied.\"; either way the view refreshes.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-70167687024707690035"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2"
+   ],
+   "components": [
+    "Semantic Text Applier"
+   ],
+   "open": [
+    "Should the person be told which policies failed and why, since today only the count is reported?",
+    "Should a comment stay against a half-written policy when its writing fails, as today?"
+   ]
+  }
+ ]
+}

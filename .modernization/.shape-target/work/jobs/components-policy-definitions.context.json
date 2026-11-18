@@ -1,0 +1,1281 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "domain": {
+    "name": "Policy Definitions",
+    "concept": "The catalogue of policy definitions a person can browse: categories, products, support rules and policies, and the text they are shown in.",
+    "facts": [
+      {
+        "name": "Policy definition set",
+        "from": [
+          "entity-92808062881922645840"
+        ],
+        "keys": [
+          "namespace",
+          "item name"
+        ],
+        "relates": [
+          {
+            "to": "Policy definition set",
+            "how": "categories, products and support rules refer to their parents and to each other by name"
+          }
+        ]
+      }
+    ],
+    "rules": [
+      "businessrule-02094124658868396159",
+      "businessrule-05284912414586135547",
+      "businessrule-09527630769674812053",
+      "businessrule-09710935452747152124",
+      "businessrule-11459402502484833685",
+      "businessrule-11674597249570802702",
+      "businessrule-15417746115131960533",
+      "businessrule-16229847440499672368",
+      "businessrule-20341522967469767562",
+      "businessrule-23440834431907337703",
+      "businessrule-24269573875592969564",
+      "businessrule-24413560949580370921",
+      "businessrule-24623125277050759553",
+      "businessrule-25143456587420753656",
+      "businessrule-25371901799273876158",
+      "businessrule-25475639870526854331",
+      "businessrule-26710870928949391310",
+      "businessrule-26805667514169896082",
+      "businessrule-27318854358145723180",
+      "businessrule-31892600882792899810",
+      "businessrule-31928423765922463982",
+      "businessrule-32910542149714942665",
+      "businessrule-34235271555130179948",
+      "businessrule-34301200927683901255",
+      "businessrule-35101409759930685557",
+      "businessrule-35533060170265013329",
+      "businessrule-35659935925800526059",
+      "businessrule-39179467487447053337",
+      "businessrule-40646214351993665036",
+      "businessrule-40992022396445585276",
+      "businessrule-41440459272484897081",
+      "businessrule-43452052995976839356",
+      "businessrule-44253734408576510565",
+      "businessrule-46883945724661990816",
+      "businessrule-48352716870696272616",
+      "businessrule-48999549165964538717",
+      "businessrule-49748745950500666232",
+      "businessrule-50061101372023867676",
+      "businessrule-52005709614722807804",
+      "businessrule-53806388515964147870",
+      "businessrule-54518846821349856909",
+      "businessrule-55193519950925403263",
+      "businessrule-58670284456856579605",
+      "businessrule-59268653642646332356",
+      "businessrule-60385862679195390671",
+      "businessrule-62728858792696794889",
+      "businessrule-66701495026848575269",
+      "businessrule-68278299005201189825",
+      "businessrule-69364776950274199547",
+      "businessrule-69876963387177556361",
+      "businessrule-70397490486289456229",
+      "businessrule-75568512748421119593",
+      "businessrule-77153890827857678995",
+      "businessrule-77397977946778263418",
+      "businessrule-80037556468037401208",
+      "businessrule-81760746419124272603",
+      "businessrule-83755288267226589422",
+      "businessrule-84649532972995606012",
+      "businessrule-87686960346106148106",
+      "businessrule-89165707538784213793",
+      "businessrule-89513911810275647919",
+      "businessrule-90575686774382821065",
+      "businessrule-91228574547678345469",
+      "businessrule-92573318973236627036",
+      "businessrule-92965345094444319678",
+      "businessrule-93437714727587946479",
+      "businessrule-93507723834804807958",
+      "businessrule-95679837516811308115",
+      "businessrule-97301799709818271508",
+      "businessrule-98117161588141132501",
+      "businessrule-99139491988760691407",
+      "businessrule-61344191921921935952",
+      "businessrule-52722053913285909842",
+      "businessrule-03031297687036444400",
+      "businessrule-25501360175578063856",
+      "businessrule-29660896839160984241",
+      "businessrule-36623707346851740456",
+      "businessrule-41685454348767959653",
+      "businessrule-57028469241171716582",
+      "businessrule-68891329302657284154",
+      "businessrule-75222346168306051090",
+      "businessrule-40351382289100643848",
+      "businessrule-92560631592608734086",
+      "businessrule-30888155476627040275",
+      "businessrule-59317523370985833904",
+      "businessrule-89677004946923202726",
+      "businessrule-88550832449331267612",
+      "businessrule-12357125815438552418",
+      "businessrule-52738497804454297244",
+      "businessrule-69465149169735487446",
+      "businessrule-77846110822300189675",
+      "businessrule-93683837313593251984",
+      "businessrule-54625832347030556938",
+      "businessrule-82075493230431806208",
+      "businessrule-01704207253788877148",
+      "businessrule-10913365400690794412",
+      "businessrule-20897965123834184786",
+      "businessrule-43141523484770952437",
+      "businessrule-49549620435870223174",
+      "businessrule-50694068263592934768",
+      "businessrule-57016400965631502733",
+      "businessrule-77000026808397550095",
+      "businessrule-78281155676242942940",
+      "businessrule-79057744450548393955",
+      "businessrule-80096613073902079124",
+      "businessrule-94076713436940158385",
+      "businessrule-96393168223138786394",
+      "businessrule-02030966310880796596",
+      "businessrule-87097618083601098949",
+      "businessrule-22485752927450345044",
+      "businessrule-27325316460229917481",
+      "businessrule-39702010276849006236",
+      "businessrule-86698236183201307158",
+      "businessrule-95233256539481592648",
+      "businessrule-97405551033143476269"
+    ],
+    "dependsOn": [],
+    "why": "Everything that says what a policy is, where it sits, what supports it and how a category or product is browsed changes together when Microsoft ships new definitions; it also decides which categories count as orphaned or empty, and none of it needs the stored settings."
+  },
+  "container": {
+    "name": "Policy Plus application",
+    "kind": "interface",
+    "tech": "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "holds": [
+      "Policy Definitions",
+      "Policy Source",
+      "Policy State",
+      "Policy Discovery",
+      "Policy File Exchange",
+      "Definition Acquisition",
+      "Workspace"
+    ]
+  },
+  "integrations": [
+    {
+      "need": "external-25314431250146805945",
+      "domain": "Policy Definitions",
+      "how": "A parser on the Windows machine reads the template and language files from the chosen folder into the definition set.",
+      "name": "Administrative template files (ADMX and ADML)"
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-02094124658868396159",
+      "statement": "A category's icon is chosen in this order: orphaned, then empty, then normal."
+    },
+    {
+      "id": "businessrule-05284912414586135547",
+      "statement": "A name or description written as \"$(string.<id>)\" shows the language file's text for that id; an unknown id shows the code itself; any other text is shown as written; an empty value stays empty."
+    },
+    {
+      "id": "businessrule-09527630769674812053",
+      "statement": "A language file's text table is read only from its first text table, and each text is kept under its id; when the same text id appears twice, the file is refused as invalid and its template file is not loaded."
+    },
+    {
+      "id": "businessrule-09710935452747152124",
+      "statement": "A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory."
+    },
+    {
+      "id": "businessrule-11459402502484833685",
+      "statement": "A policy shows the 'supported on' rule its reference names, found in this load or earlier ones; when none is found it has none."
+    },
+    {
+      "id": "businessrule-11674597249570802702",
+      "statement": "With both areas shown, a policy that applies to both areas shows its common state followed by \"(2)\" when both match, the computer state followed by \"(C)\" when only the user is Not Configured, the user state followed by \"(U)\" when only the computer is Not Configured, and \"Mixed\" otherwise."
+    },
+    {
+      "id": "businessrule-15417746115131960533",
+      "statement": "A category's explanation is optional. A category with any content inside it (even a comment) must contain a parent entry with a reference; otherwise the template is refused as invalid."
+    },
+    {
+      "id": "businessrule-16229847440499672368",
+      "statement": "When nothing is selected, the title and support lines are hidden and the pane reads \"Select an item to see its description.\"."
+    },
+    {
+      "id": "businessrule-20341522967469767562",
+      "statement": "A number box takes default value 1, shows its up-down spinner and steps by 1 unless the language file says otherwise; an unreadable attribute value falls back to the same defaults."
+    },
+    {
+      "id": "businessrule-23440834431907337703",
+      "statement": "A number option accepts 0 to 4,294,967,295 unless the template sets other limits, overwrites existing values unless marked soft, and is stored as a number unless marked as text; unreadable attribute values fall back to these defaults."
+    },
+    {
+      "id": "businessrule-24269573875592969564",
+      "statement": "A support rule entry is linked to the product its reference names; when no such product exists it is linked to the support rule of that name; when neither exists it stays unlinked."
+    },
+    {
+      "id": "businessrule-24413560949580370921",
+      "statement": "A policy takes its category and its 'supported on' rule from the references in its own content, and has options only when it contains an options section."
+    },
+    {
+      "id": "businessrule-24623125277050759553",
+      "statement": "A category whose parent is named is attached under that parent, found among items of this load or of files loaded earlier; when the parent is not found, the category has no parent but is still listed among the top-level categories."
+    },
+    {
+      "id": "businessrule-25143456587420753656",
+      "statement": "An XML attribute that is absent gives nothing."
+    },
+    {
+      "id": "businessrule-25371901799273876158",
+      "statement": "When a template declares no target namespace, loading the folder stops at once with an error: the files after it are not read, nothing is built, and the person sees the error text (a start-up load also discards the workspace)."
+    },
+    {
+      "id": "businessrule-25475639870526854331",
+      "statement": "A policy gets a settings screen layout only when the template names one, the name is written as \"$(presentation.<id>)\", and the language file holds a layout with that id; in every other case the policy has none."
+    },
+    {
+      "id": "businessrule-26710870928949391310",
+      "statement": "A registry key counts as a policy key when it is one of the three policy branches (software\\policies, software\\microsoft\\windows\\currentversion\\policies, system\\currentcontrolset\\policies) or lies below one, regardless of case."
+    },
+    {
+      "id": "businessrule-26805667514169896082",
+      "statement": "A reference containing a colon uses the namespace the template declared for its prefix; with an unknown prefix it is taken as already complete; a reference without a colon belongs to the template's own namespace."
+    },
+    {
+      "id": "businessrule-27318854358145723180",
+      "statement": "A check box starts unticked unless the language file marks it ticked."
+    },
+    {
+      "id": "businessrule-31892600882792899810",
+      "statement": "A policy option of any kind other than number, yes/no, text, list, choice or multi-line text is dropped without notice."
+    },
+    {
+      "id": "businessrule-31928423765922463982",
+      "statement": "A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted."
+    },
+    {
+      "id": "businessrule-32910542149714942665",
+      "statement": "When the chosen language file cannot be parsed as XML, the template is refused with \"The ADML XML couldn't be parsed: <detail>\"; any other read problem gives \"The ADML is invalid: <detail>\"."
+    },
+    {
+      "id": "businessrule-34235271555130179948",
+      "statement": "When loading definitions reports no problems nothing is shown; otherwise the person sees \"Errors were encountered while adding administrative templates to the workspace.\" with each problem, and, only where a choice is wanted, is asked \"Continue trying to use this workspace?\"."
+    },
+    {
+      "id": "businessrule-34301200927683901255",
+      "statement": "A support definition met a second time anywhere in one evaluation counts as not met, because the list of definitions seen is never emptied. Two entries that point at the same definition, with no cycle, make the second one not met."
+    },
+    {
+      "id": "businessrule-35101409759930685557",
+      "statement": "A yes/no option takes its registry effect for true and false from true and false values and lists."
+    },
+    {
+      "id": "businessrule-35533060170265013329",
+      "statement": "With both areas shown, the comment column is empty when neither area has a comment, shows \"(multiple)\" when both have one, and otherwise shows the single comment."
+    },
+    {
+      "id": "businessrule-35659935925800526059",
+      "statement": "A text option allows 255 characters, is optional, is stored as plain text and overwrites existing values unless the template says otherwise; unreadable attribute values fall back to these defaults."
+    },
+    {
+      "id": "businessrule-39179467487447053337",
+      "statement": "A policy is listed under the category its reference names, found in this load or earlier ones; when that category is not found the policy is kept in the policy list but belongs to no category."
+    },
+    {
+      "id": "businessrule-40646214351993665036",
+      "statement": "When a template file cannot be parsed as XML, it is refused with the message \"Couldn't load <path>: The ADMX XML couldn't be parsed: <detail>.\"; any other read problem is refused with \"The ADMX is invalid: <detail>\"."
+    },
+    {
+      "id": "businessrule-40992022396445585276",
+      "statement": "A drop-down list has a preselected item only when the language file names one; otherwise none is preselected."
+    },
+    {
+      "id": "businessrule-41440459272484897081",
+      "statement": "Products form three levels: a product, its major versions and their minor versions; deeper levels are not read, and each version must carry a version index or the file is refused as invalid."
+    },
+    {
+      "id": "businessrule-43452052995976839356",
+      "statement": "Only labels, number boxes, text boxes, check boxes, combo boxes, drop-down lists, list boxes and multi-line text boxes are kept in a screen layout; any other control in the language file is dropped without notice."
+    },
+    {
+      "id": "businessrule-44253734408576510565",
+      "statement": "When the structures are built, all new categories, products, support rules and policies join the final lists and the staged items are cleared, so loading further files adds to what is already available."
+    },
+    {
+      "id": "businessrule-46883945724661990816",
+      "statement": "A choice option is optional unless marked required. Each choice keeps whichever of a single registry value and a list of values it contains, both when both are present; a choice with neither is accepted and changes nothing."
+    },
+    {
+      "id": "businessrule-48352716870696272616",
+      "statement": "A registry value in a template is a delete marker, a number or a text, decided by the first of those it contains; a value with none of them is treated as a delete marker."
+    },
+    {
+      "id": "businessrule-48999549165964538717",
+      "statement": "Entries of a combo box or drop-down list are sorted unless the language file says not to sort them."
+    },
+    {
+      "id": "businessrule-49748745950500666232",
+      "statement": "A support entry for a product that has versions beneath it, whether a version range or a plain entry for a parent product that is not itself chosen, counts as met when any version in its range, or a sub-product directly beneath one, is chosen. The range runs from the entry's minimum (0 if none) to its maximum (the highest version if none). A range entry never matches on its own product, and a product with no versions beneath it never matches this way."
+    },
+    {
+      "id": "businessrule-50061101372023867676",
+      "statement": "An option's registry value name is taken from its own value name, except for a list option that has a value prefix attribute: the prefix is used and the own value name only when that prefix is empty. A list option counts as prefixed whenever the attribute is present, even if empty."
+    },
+    {
+      "id": "businessrule-52005709614722807804",
+      "statement": "When the caller asks for 'any' matching, a support definition whose logic is all-of needs every entry met, and any other definition needs one entry met. When the caller does not ask for 'any', every definition, all-of included, is met by one entry. A definition with no entries, or none met, is met only when all are required. Plain product entries are checked before nested definitions."
+    },
+    {
+      "id": "businessrule-53806388515964147870",
+      "statement": "The category tree selection follows the category shown in the right pane."
+    },
+    {
+      "id": "businessrule-54518846821349856909",
+      "statement": "The right pane lists the chosen category in this order: an \"Up: <parent name>\" row marked \"Parent\" when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text."
+    },
+    {
+      "id": "businessrule-55193519950925403263",
+      "statement": "For a selected or highlighted category the pane shows its title, \"This category contains N policies and M subcategories.\" (\"The selected category\" when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not."
+    },
+    {
+      "id": "businessrule-58670284456856579605",
+      "statement": "The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped."
+    },
+    {
+      "id": "businessrule-59268653642646332356",
+      "statement": "An item's unique name is its template's namespace, a colon and its own name, so equal names in different templates stay apart."
+    },
+    {
+      "id": "businessrule-60385862679195390671",
+      "statement": "A list option replaces other entries of its key unless marked additive, stores plain text unless marked expandable, numbers entries automatically unless the template says the person names them, and counts as prefixed only when a value prefix is given."
+    },
+    {
+      "id": "businessrule-62728858792696794889",
+      "statement": "A control keeps the reference id the language file gives it, which ties it to the matching setting option in the template file; a control without one has no id."
+    },
+    {
+      "id": "businessrule-66701495026848575269",
+      "statement": "A child product (major or minor version) is attached under its parent product, which must be defined in the same template file; only products without a parent are listed as top-level products."
+    },
+    {
+      "id": "businessrule-68278299005201189825",
+      "statement": "A policy applies to computers when its class is \"Machine\", to users when \"User\", and to both for any other class value."
+    },
+    {
+      "id": "businessrule-69364776950274199547",
+      "statement": "When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view."
+    },
+    {
+      "id": "businessrule-69876963387177556361",
+      "statement": "When no language file is found in any of those places, the template file is refused with \"The corresponding ADML is missing\" and none of its content is loaded."
+    },
+    {
+      "id": "businessrule-70397490486289456229",
+      "statement": "When a template file is refused with a reported failure (unparsable, invalid, namespace already owned, or no usable language file), it is skipped and the failure is listed; the other files in the folder still load and the structures are built from those that loaded."
+    },
+    {
+      "id": "businessrule-75568512748421119593",
+      "statement": "For a selected policy the information pane shows its title, \"(no requirements information)\" when it has no support rule or \"Requirements:\" plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences."
+    },
+    {
+      "id": "businessrule-77153890827857678995",
+      "statement": "A policy's icon is chosen in this order: preference, then plain when it has no configurable elements, then \"extra configuration\" when it has some."
+    },
+    {
+      "id": "businessrule-77397977946778263418",
+      "statement": "A policy applies to an area when its definition declares that area; a policy declared for both applies to each."
+    },
+    {
+      "id": "businessrule-80037556468037401208",
+      "statement": "When a template file's namespace is already held by a template file loaded earlier, it is refused with \"The <namespace> namespace is already owned by a different ADMX file\", so the same file cannot be added twice."
+    },
+    {
+      "id": "businessrule-81760746419124272603",
+      "statement": "When a policy lists no supported-on information, it counts as supported only if the caller allows unlisted policies. The same applies to a support entry that names no known product."
+    },
+    {
+      "id": "businessrule-83755288267226589422",
+      "statement": "A template's superseded-ADM file name and minimum language revision are read when present; a superseded entry without a file name, or a minimum revision that is missing or not a number, refuses the template as invalid."
+    },
+    {
+      "id": "businessrule-84649532972995606012",
+      "statement": "A language file's screen layouts are read only from its first presentation table; when the same layout id appears twice, the file is refused as invalid and its template file is not loaded."
+    },
+    {
+      "id": "businessrule-87686960346106148106",
+      "statement": "Only files directly in the chosen folder whose names end in .admx (in any letter case) are loaded as templates; subfolders and other files are ignored."
+    },
+    {
+      "id": "businessrule-89165707538784213793",
+      "statement": "An XML attribute that is absent, or whose text is not valid for the type of the stated default, gives that default."
+    },
+    {
+      "id": "businessrule-89513911810275647919",
+      "statement": "With both areas shown, a policy that applies to one area shows that area's state followed by \"(C)\" for computer or \"(U)\" for user. With a single area shown, only that area's state is shown, without a suffix."
+    },
+    {
+      "id": "businessrule-90575686774382821065",
+      "statement": "When both a template file and its language file load, the template's categories, products, support rules and policies are staged for the next build and the pair is recorded as loaded under the template's namespace."
+    },
+    {
+      "id": "businessrule-91228574547678345469",
+      "statement": "The namespace of a template is the one listed as its target; each prefix a template declares must be unique, and a repeated prefix refuses the file as invalid."
+    },
+    {
+      "id": "businessrule-92573318973236627036",
+      "statement": "The language file for a template is taken from the subfolder named exactly by the language code if it holds this template's file; else from the first subfolder whose name starts with the same language part (before the dash, compared with capital letters mattering) that holds this template's file; else from the en-US subfolder if it holds it. A folder lacking the file is skipped."
+    },
+    {
+      "id": "businessrule-92965345094444319678",
+      "statement": "The language for definition text is the saved language code, or the computer's own language when none is saved."
+    },
+    {
+      "id": "businessrule-93437714727587946479",
+      "statement": "When a language file has no policy resources section, or its revision is missing or not a number, the file is refused as invalid and its template file is not loaded."
+    },
+    {
+      "id": "businessrule-93507723834804807958",
+      "statement": "A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\\policies, software\\microsoft\\windows\\currentversion\\policies and system\\currentcontrolset\\policies."
+    },
+    {
+      "id": "businessrule-95679837516811308115",
+      "statement": "After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state."
+    },
+    {
+      "id": "businessrule-97301799709818271508",
+      "statement": "A support rule is 'any of' when its first logic element is \"or\", 'all of' when it is \"and\", and blank otherwise; only that first logic element is read, each reference or range in it becomes an entry, and a range may carry a minimum and maximum version."
+    },
+    {
+      "id": "businessrule-98117161588141132501",
+      "statement": "A template file is refused as invalid when any of these is missing or unreadable: the policy definitions section; a namespace entry's prefix or namespace; a superseded-ADM file name; a minimum revision (missing or not a number); a support rule's name or display name; a support reference or range without its reference, or a version bound that is not a whole number; a product's name, display name or version index; a category's name or display name; a category's parent entry or its reference when the category has content; a policy's name, display name, key or class; a policy's category or supported-on reference; a number value's value; a list item's value name; a choice item's display name; or an option's id."
+    },
+    {
+      "id": "businessrule-99139491988760691407",
+      "statement": "A support entry for a product counts as met in two cases. The entry is not a version range and that exact product is among the chosen products. Or the product has versions beneath it, and any of those versions or their sub-products is chosen, even when the product itself is not."
+    },
+    {
+      "id": "businessrule-61344191921921935952",
+      "statement": "Loading a single template file adds that file alone to the policies already loaded, builds the structures, and reports one failure when the file is refused."
+    },
+    {
+      "id": "businessrule-52722053913285909842",
+      "statement": "The detail window of a template file lists only the policies, categories (including sub-categories), products (including versions) and support rules that were defined in that file."
+    },
+    {
+      "id": "businessrule-03031297687036444400",
+      "statement": "Selecting a category in the tree makes it the current category and clears any selected policy."
+    },
+    {
+      "id": "businessrule-25501360175578063856",
+      "statement": "The right-click menu shows only the actions that fit what was clicked: policy-only actions are hidden for a category, and category-only actions are hidden for a policy."
+    },
+    {
+      "id": "businessrule-29660896839160984241",
+      "statement": "Highlighting a policy makes it the selected policy and clears any highlighted category; highlighting a category does the reverse; highlighting nothing clears both."
+    },
+    {
+      "id": "businessrule-36623707346851740456",
+      "statement": "When the right-click menu is opened from the category tree, it is shown for the selected category, and a tree with no selected category is not handled (the program fails with an error). When opened from anywhere else with a row selected in the policy list, it is shown for that row. When opened from anywhere else with no row selected, it is not shown."
+    },
+    {
+      "id": "businessrule-41685454348767959653",
+      "statement": "The \"Empty Categories\" menu switches empty categories on or off and the view moves to the nearest visible category."
+    },
+    {
+      "id": "businessrule-57028469241171716582",
+      "statement": "When a category in the tree is right-clicked, it becomes the selected category, because a right-click alone does not select it; a left-click is left as is."
+    },
+    {
+      "id": "businessrule-68891329302657284154",
+      "statement": "Opening an item in the policy list does nothing with no selection, opens a category as the current one, or opens a policy's editor for the area currently shown; Enter does the same."
+    },
+    {
+      "id": "businessrule-75222346168306051090",
+      "statement": "The area choice \"User\" shows user policies, \"Computer\" shows computer policies and any other choice shows both."
+    },
+    {
+      "id": "businessrule-40351382289100643848",
+      "statement": "Two policies are merged into one for both sections when they are alone in the same category under the same name, one is for users and the other for computers, and both have the same explanation text and the same registry key; the first is removed and the second becomes a both-sections policy."
+    },
+    {
+      "id": "businessrule-92560631592608734086",
+      "statement": "Policy deduplication merges otherwise identical user and computer policy pairs into single policies that apply to both and tells the person \"Deduplicated N policies.\"."
+    },
+    {
+      "id": "businessrule-30888155476627040275",
+      "statement": "When a policy sits in a category that exists, the category name is shown and the category-details button is enabled. A policy whose named category is unknown shows \"<orphaned from \" followed by that category code, and one with no category code shows \"<uncategorized>\"; the button is then disabled."
+    },
+    {
+      "id": "businessrule-59317523370985833904",
+      "statement": "When a policy names a support definition that exists, its name is shown and the support-details button is enabled. When it does not exist, the button is disabled and the text reads \"<missing: \" followed by the code the policy names; with no code the text is blank."
+    },
+    {
+      "id": "businessrule-89677004946923202726",
+      "statement": "The policy details window names the section a policy applies to: \"User or computer\" when it applies to both, \"Computer\" when machine-only, \"User\" when user-only."
+    },
+    {
+      "id": "businessrule-88550832449331267612",
+      "statement": "The detail window of a category shows its parent's name and enables the parent button when the parent exists; when the parent is named but missing it shows \"<orphaned from <parent>>\" and the button is disabled; a top-level category shows nothing."
+    },
+    {
+      "id": "businessrule-12357125815438552418",
+      "statement": "The major versions list shows the children of the selected top-level product ordered by version, with the heading naming that product; with no product selected it is empty and prompts the person to select one."
+    },
+    {
+      "id": "businessrule-52738497804454297244",
+      "statement": "Opening product details by double-click or Enter does nothing when no product is selected in that list."
+    },
+    {
+      "id": "businessrule-69465149169735487446",
+      "statement": "The minor versions list shows the children of the selected major version ordered by version, with the heading naming it; with no major version selected it is empty and prompts the person to select one."
+    },
+    {
+      "id": "businessrule-77846110822300189675",
+      "statement": "Double-clicking a child revision in the product details window shows that child in the same window; with nothing selected, nothing happens."
+    },
+    {
+      "id": "businessrule-93683837313593251984",
+      "statement": "The top-level products list shows every loaded product ordered by name, each with its number of children."
+    },
+    {
+      "id": "businessrule-54625832347030556938",
+      "statement": "The support definitions list shows only definitions whose name contains the typed filter text, ignoring upper or lower case; an empty filter shows all. Entries are ordered by name with leading spaces ignored and shown without them."
+    },
+    {
+      "id": "businessrule-82075493230431806208",
+      "statement": "Double-clicking an entry in the support details window opens the product details window for a product entry, and shows a nested support definition in the same window. An entry whose product is missing, or with nothing selected, does nothing."
+    },
+    {
+      "id": "businessrule-01704207253788877148",
+      "statement": "The Semantic Policy fragment shows one section per area the policy applies to: the machine section reads the computer source and its comments, the user section reads the user source and its comments; an area the policy does not cover is left out."
+    },
+    {
+      "id": "businessrule-10913365400690794412",
+      "statement": "In semantic policy text, a whole number is written with a leading #, an unsigned number as digits, and a yes/no value as True or False. Text is written between single quotes with no escaping, so text holding a quote or line break cannot be read back. An empty list is written as 'None'. A list of text is written in brackets, one double-quoted item per line with quotes doubled. A table is written in brackets as double-quoted name: value lines."
+    },
+    {
+      "id": "businessrule-20897965123834184786",
+      "statement": "When a policy is written as semantic policy text, its settings are listed only if the policy is Enabled."
+    },
+    {
+      "id": "businessrule-43141523484770952437",
+      "statement": "The policy inspector shows a \"Registry value\" line for the policy only when the policy names a registry value."
+    },
+    {
+      "id": "businessrule-49549620435870223174",
+      "statement": "Choice display names in the inspector are resolved through the definitions file that defines the policy, and choices are numbered from zero in file order."
+    },
+    {
+      "id": "businessrule-50694068263592934768",
+      "statement": "A semantic policy text line shows 'C' for a machine policy and 'U' for a user policy, followed by the identifier."
+    },
+    {
+      "id": "businessrule-57016400965631502733",
+      "statement": "The inspector copies the selected line to the clipboard only on Ctrl+C with a line selected."
+    },
+    {
+      "id": "businessrule-77000026808397550095",
+      "statement": "Within each section of the fragment, the policy comment is included only when one is stored for that policy, and the option values are included only when the policy is Enabled."
+    },
+    {
+      "id": "businessrule-78281155676242942940",
+      "statement": "When a policy is written as semantic policy text, backslashes in its comment are doubled and each carriage return plus line feed pair is written as '\\n'. A lone line feed or lone carriage return is written as it is, which splits the comment over two script lines and corrupts it when read back."
+    },
+    {
+      "id": "businessrule-79057744450548393955",
+      "statement": "The policy inspector shows a \"Client extension\" line for the policy only when the policy names a client extension."
+    },
+    {
+      "id": "businessrule-80096613073902079124",
+      "statement": "The policy inspector lists presentation details for the policy whenever it has both a presentation and elements, whatever the elements hold. Each presentation item with an ID is matched to the policy element with the same ID; items without an ID show no element details. When no element has that ID, the inspector stops with an unhandled error."
+    },
+    {
+      "id": "businessrule-94076713436940158385",
+      "statement": "For a list element the inspector states how value names are formed: \"User provides value names\" when the person names them, a prefix when the element has one, otherwise \"No prefix (values named for their data)\"."
+    },
+    {
+      "id": "businessrule-96393168223138786394",
+      "statement": "In the inspector, a group of affected registry settings with no on or off setting reads \"Left implicit\" when the policy names a registry value, and \"Left to elements\" when it names none. Inside a Yes/No element it always reads \"Left implicit\"."
+    },
+    {
+      "id": "businessrule-02030966310880796596",
+      "statement": "A category is orphaned when it has no parent among the loaded definitions although its definition names one."
+    },
+    {
+      "id": "businessrule-87097618083601098949",
+      "statement": "A category is empty when it holds no subcategories and no policies at all, counting hidden ones."
+    },
+    {
+      "id": "businessrule-22485752927450345044",
+      "statement": "Each entry of a support definition is listed by the name of the nested support definition when it is one, otherwise by the name of the product, otherwise as \"<missing: \" followed by the product code the entry names. Minimum and maximum versions are listed only for product entries that name a version range; a missing bound is shown blank."
+    },
+    {
+      "id": "businessrule-27325316460229917481",
+      "statement": "The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list."
+    },
+    {
+      "id": "businessrule-39702010276849006236",
+      "statement": "A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled."
+    },
+    {
+      "id": "businessrule-86698236183201307158",
+      "statement": "The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank."
+    },
+    {
+      "id": "businessrule-95233256539481592648",
+      "statement": "The product details window labels a product \"Major revision\", \"Minor revision\" or \"Top-level product\" from its type."
+    },
+    {
+      "id": "businessrule-97405551033143476269",
+      "statement": "The support details window states how a support definition matches products: \"Match all the referenced products\", \"Match any of the referenced products\", or \"Do not match products\" when it has no matching logic."
+    }
+  ],
+  "steps": [
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#1",
+      "intent": "Get the current policy definitions.",
+      "system": "Proposes the operating system's own policy definitions folder as the destination every time and fetches the one fixed Microsoft package.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-34650805596483639458",
+        "businessrule-53408776186716933732"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2",
+      "intent": "Wait while the definitions are installed.",
+      "system": "Locks the destination and the start, prevents leaving while it runs, takes control of an existing destination for an administrator, unpacks the package and removes it, then replaces files in the destination with the templates, the regional-format language files and the English fallback, resetting permissions.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-16960626064100495277",
+        "businessrule-19284863828429321329",
+        "businessrule-75570169794845906057",
+        "businessrule-91358402464075338920",
+        "businessrule-24154317128059319852",
+        "businessrule-33969702428946021999",
+        "businessrule-70392920399990339776"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#3",
+      "intent": "Learn the result and use the definitions.",
+      "system": "Tells which step failed if any, re-enables everything and reports no new folder; on success removes scratch files and asks whether to open them, reporting the folder only on yes.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-17840470067823720423",
+        "businessrule-84139143444339961851"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#2",
+      "intent": "Have missing definitions noticed without having to check.",
+      "system": "Works out whether the edition lacks Group Policy support and whether more than two non-empty categories name a missing parent.",
+      "touches": [],
+      "honours": [
+        "businessrule-44390406872239414183",
+        "businessrule-02030966310880796596",
+        "businessrule-87097618083601098949",
+        "businessrule-23603907625209300500"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1",
+      "intent": "Say that the downloaded definitions should become the ones in use.",
+      "system": "The system takes the downloaded folder and finds the template files in it, ignoring everything else.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-87686960346106148106",
+        "businessrule-94371671563498468562",
+        "businessrule-73782132825452925601",
+        "businessrule-92965345094444319678"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#2",
+      "intent": "Be sure each template comes with its text in my language.",
+      "system": "The system picks the language text for each template, preferring the person's language, then the same language family, then English, and refuses a template with none or with a flawed text.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-92573318973236627036",
+        "businessrule-69876963387177556361",
+        "businessrule-32910542149714942665",
+        "businessrule-09527630769674812053",
+        "businessrule-84649532972995606012",
+        "businessrule-93437714727587946479"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#3",
+      "intent": "Be sure the templates are sound.",
+      "system": "The system reads and validates every template beside the current definitions, skipping and listing the ones it refuses and stopping at once on a missing namespace.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-40646214351993665036",
+        "businessrule-98117161588141132501",
+        "businessrule-25371901799273876158",
+        "businessrule-80037556468037401208",
+        "businessrule-91228574547678345469",
+        "businessrule-83755288267226589422",
+        "businessrule-15417746115131960533",
+        "businessrule-41440459272484897081",
+        "businessrule-59268653642646332356",
+        "businessrule-26805667514169896082",
+        "businessrule-25143456587420753656",
+        "businessrule-89165707538784213793",
+        "businessrule-70397490486289456229"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#4",
+      "intent": "Understand what the policies, categories and products mean.",
+      "system": "The system works out the categories, products, support rules, policies, options and their layouts for entering values, with their names and descriptions in the language.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-05284912414586135547",
+        "businessrule-24413560949580370921",
+        "businessrule-24623125277050759553",
+        "businessrule-39179467487447053337",
+        "businessrule-11459402502484833685",
+        "businessrule-66701495026848575269",
+        "businessrule-97301799709818271508",
+        "businessrule-31892600882792899810",
+        "businessrule-43452052995976839356",
+        "businessrule-62728858792696794889",
+        "businessrule-25475639870526854331",
+        "businessrule-58670284456856579605",
+        "businessrule-68278299005201189825",
+        "businessrule-77397977946778263418",
+        "businessrule-93507723834804807958",
+        "businessrule-26710870928949391310",
+        "businessrule-48352716870696272616",
+        "businessrule-50061101372023867676",
+        "businessrule-60385862679195390671",
+        "businessrule-20341522967469767562",
+        "businessrule-23440834431907337703",
+        "businessrule-35659935925800526059",
+        "businessrule-27318854358145723180",
+        "businessrule-40992022396445585276",
+        "businessrule-46883945724661990816",
+        "businessrule-48999549165964538717",
+        "businessrule-35101409759930685557",
+        "businessrule-22959538508130326801",
+        "businessrule-24269573875592969564"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#5",
+      "intent": "Switch to the new definitions.",
+      "system": "The system empties the workspace, adds the staged definitions to the available ones, and remembers the folder as the definitions folder; with no new folder nothing changes.",
+      "touches": [
+        "entity-92808062881922645840",
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-90575686774382821065",
+        "businessrule-44253734408576510565"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#6",
+      "intent": "Know what went wrong.",
+      "system": "The system shows nothing when all loaded, otherwise lists each problem, and asks whether to continue only where a choice is wanted.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-34235271555130179948"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#7",
+      "intent": "Start working with the new definitions.",
+      "system": "The system presents the category tree with nothing selected, the empty state in the information pane, and previous search results forgotten.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-02094124658868396159",
+        "businessrule-09710935452747152124",
+        "businessrule-31928423765922463982",
+        "businessrule-77153890827857678995",
+        "businessrule-95679837516811308115",
+        "businessrule-16229847440499672368",
+        "businessrule-53806388515964147870",
+        "businessrule-54518846821349856909",
+        "businessrule-55193519950925403263",
+        "businessrule-75568512748421119593",
+        "businessrule-69364776950274199547",
+        "businessrule-97390301066419776959"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+      "intent": "See each policy's setting and comment as before.",
+      "system": "The system works out each policy's state and comment in each area from the stored settings and the live ones, and applies the filters.",
+      "touches": [
+        "entity-92808062881922645840",
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-07376289294643129633",
+        "businessrule-07554086131159240838",
+        "businessrule-09965726926686583005",
+        "businessrule-11674597249570802702",
+        "businessrule-12540995342195943001",
+        "businessrule-17641776170698884064",
+        "businessrule-18230757898637060853",
+        "businessrule-25766167090873157702",
+        "businessrule-28868424053274244047",
+        "businessrule-29495869201116213931",
+        "businessrule-29530054883116088403",
+        "businessrule-30168924374542565520",
+        "businessrule-33872241894384295212",
+        "businessrule-34301200927683901255",
+        "businessrule-35533060170265013329",
+        "businessrule-40601471490811436933",
+        "businessrule-46824143239519073718",
+        "businessrule-46971412075927401870",
+        "businessrule-52005709614722807804",
+        "businessrule-49748745950500666232",
+        "businessrule-56421390704826486738",
+        "businessrule-67323359061601595450",
+        "businessrule-67539343519248421601",
+        "businessrule-70331897906623822249",
+        "businessrule-70425663320377904356",
+        "businessrule-71909773168029429916",
+        "businessrule-79960316131030112593",
+        "businessrule-81760746419124272603",
+        "businessrule-86313704517800761850",
+        "businessrule-89513911810275647919",
+        "businessrule-90470730563627765974",
+        "businessrule-92873738128602220135",
+        "businessrule-96701855986906093783",
+        "businessrule-97000243539037627331",
+        "businessrule-97862941341357225531",
+        "businessrule-99096323836097983665",
+        "businessrule-99139491988760691407"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#3",
+      "intent": "Get the policy definitions I last used",
+      "system": "Loads the definitions from the remembered folder, or the system default, and offers the default when the remembered folder fails; when the problems found are minor, asks whether to keep the partly loaded set.",
+      "touches": [
+        "entity-40163170707735391190",
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-40551856488084894130",
+        "businessrule-41547680626150552574",
+        "businessrule-58877134447436981389",
+        "businessrule-72200124994498270380",
+        "businessrule-78253526822536661517"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#6",
+      "intent": "Browse everything",
+      "system": "Shows the categories with user and computer policies together.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-85204901615179220846"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.set-definition-language:name-the-language-then-reload#2",
+      "intent": "Have the language remembered and applied",
+      "system": "Saves the language at once and asks whether to reload the workspace now; if yes, clears it and reloads the definitions from the saved folder, otherwise it applies at the next load.",
+      "touches": [
+        "entity-40163170707735391190",
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-80947080049413275464"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policy-by-id:type-and-arrive#1",
+      "intent": "Name what is wanted by its identifier and arrive there.",
+      "system": "Trims the text, resolves the kind in order and any suffix, then opens it as the outcome rules say, or says it was not found.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-34818300362920325745",
+        "businessrule-73680018829588409732",
+        "businessrule-56645748073860464161",
+        "businessrule-81666786810242280110",
+        "businessrule-49582367227471127226",
+        "businessrule-62209428351075007862",
+        "businessrule-73292110340688125936",
+        "businessrule-93221850558792273709",
+        "businessrule-75178338270301910966"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policy-by-id:type-and-arrive#2",
+      "intent": "Read the details of a product or support definition reached.",
+      "system": "States the kind, parent, version, children, and how a support definition matches and lists its entries.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-22485752927450345044",
+        "businessrule-27325316460229917481",
+        "businessrule-39702010276849006236",
+        "businessrule-86698236183201307158",
+        "businessrule-95233256539481592648",
+        "businessrule-97405551033143476269"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#2",
+      "intent": "Say whether to replace what is already loaded, only when something is loaded.",
+      "system": "The system proposes replacing, and does not ask when nothing is loaded.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-43765682097437166867"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#3",
+      "intent": "Get the definitions loaded.",
+      "system": "The system empties the workspace first only when replacing, adds the folder, reports problems without stopping, and on failure says the folder could not be fully added with the reason; it remembers the folder only when replacing succeeded.",
+      "touches": [
+        "entity-92808062881922645840",
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-06850078746756456273",
+        "businessrule-19671296259932138006",
+        "businessrule-56221298079625729644"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.add-template-file:add-several-at-once#2",
+      "intent": "See what was added and what was refused.",
+      "system": "The system adds each file alone without emptying the workspace or remembering a folder, builds the structures once, and reports each refused file with its reason.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-61344191921921935952"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#1",
+      "intent": "Remove all loaded definitions.",
+      "system": "The system empties the workspace at once with no confirmation and rebuilds what is shown.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-83939170310206178732"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#2",
+      "intent": "Undo it if it was a mistake.",
+      "system": "The system says what was removed and restores it on request.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.review-loaded-template-files:contribution-at-a-glance#1",
+      "intent": "See which files are loaded and roughly what each contributes.",
+      "system": "The system lists the loaded files with the number of policies, categories, products and support rules each defines.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-52722053913285909842"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.review-loaded-template-files:contribution-at-a-glance#2",
+      "intent": "Look closer at one file.",
+      "system": "The system shows exactly what was defined in that file, for a chosen file only.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-52722053913285909842"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#1",
+      "intent": "Decide which area to read about: user policies, computer policies or both.",
+      "system": "Shows the policies of the chosen area; any other choice shows both, and starts with both.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-75222346168306051090"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#2",
+      "intent": "Decide whether categories that hold no visible policies should be shown.",
+      "system": "Shows or hides empty categories and moves the focus to the nearest visible category.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-41685454348767959653"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#3",
+      "intent": "Move to a category and see what it holds and what it is for.",
+      "system": "Makes it the current category, clears any chosen policy, lists its subcategories and policies and shows its description.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-03031297687036444400"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#4",
+      "intent": "Point at a policy or a category to read what it is for.",
+      "system": "Makes the pointed item the focus, clearing the other kind, and shows its description; pointing at nothing clears both.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-29660896839160984241"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#5",
+      "intent": "Act on an item: open a category as the current one or open a policy for the area shown.",
+      "system": "Offers only the actions that fit the item, takes an item chosen for an action as the focus first, does nothing when nothing is chosen, and the same opening is available without a pointer.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-68891329302657284154",
+        "businessrule-25501360175578063856",
+        "businessrule-36623707346851740456",
+        "businessrule-57028469241171716582"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#1",
+      "intent": "See which user and computer policies are identical.",
+      "system": "Lists each pair that is alone in the same category under the same name with the same explanation text and stored-setting location.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-40351382289100643848"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#2",
+      "intent": "Confirm the merge.",
+      "system": "Removes the first of each pair and makes the second apply to both sections, then states how many policies were deduplicated.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-40351382289100643848",
+        "businessrule-92560631592608734086"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#1",
+      "intent": "Open a policy and see its section, place and support in one view.",
+      "system": "Shows the section name, the category name or its orphaned/uncategorized marker, and the support definition name or its missing marker, flagging each gap.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-30888155476627040275",
+        "businessrule-59317523370985833904",
+        "businessrule-89677004946923202726"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#2",
+      "intent": "Go to the category or the support definition it names.",
+      "system": "Takes the person to the existing category or support definition; where it is unknown or missing, going there is unavailable.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-30888155476627040275",
+        "businessrule-59317523370985833904"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#1",
+      "intent": "Open a category and see where it sits in the whole tree.",
+      "system": "Shows the category with its chain of parents and the policies it holds; a missing parent shows \"<orphaned from <parent>>\" and ends the chain, a top-level category shows no parent.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-88550832449331267612"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#2",
+      "intent": "Jump to any parent in the chain.",
+      "system": "Shows that parent's details; a missing parent is not followable.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-88550832449331267612"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#1",
+      "intent": "See every product with how many children it has.",
+      "system": "Lists all products ordered by name with child counts.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-93683837313593251984"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#2",
+      "intent": "Open a product to see all its major and minor versions together.",
+      "system": "Shows major versions ordered by version, and under each its minor versions ordered by version, headed by the names; with nothing chosen, invites a choice.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-12357125815438552418",
+        "businessrule-69465149169735487446"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#3",
+      "intent": "Read the details of any product, version, child or parent.",
+      "system": "Shows the details of the chosen item in place, moving to children or parent as asked, and does nothing when none is chosen.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-52738497804454297244",
+        "businessrule-77846110822300189675"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#1",
+      "intent": "Say which product or name I care about.",
+      "system": "Narrows support definitions to names containing the text, ignoring case, and to those covering the product; empty shows all, ordered by name ignoring leading spaces.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-54625832347030556938"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#2",
+      "intent": "Open a support definition or rule and see which products it covers.",
+      "system": "Shows its details, doing nothing when none is chosen.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": []
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#3",
+      "intent": "Follow an entry to its product or nested definition.",
+      "system": "Opens a product entry's product, shows a nested definition in the same place; missing product or nothing chosen does nothing.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-82075493230431806208"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#1",
+      "intent": "Open a policy and get a plain summary of what it stores and where.",
+      "system": "Opens the inspection with a short summary drawn from the stored setting; the stored value and client extension are included only when the policy names them.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-43141523484770952437",
+        "businessrule-79057744450548393955"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#2",
+      "intent": "Ask for the presentation and element detail.",
+      "system": "Lists presentation details when there is both a presentation and elements, matching items to elements by ID and reporting a missing element; choice names from the defining file numbered from zero; list value naming stated; groups left implicit or to elements read as defined.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-80096613073902079124",
+        "businessrule-49549620435870223174",
+        "businessrule-94076713436940158385",
+        "businessrule-96393168223138786394"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3",
+      "intent": "Ask for the semantic text of the policy.",
+      "system": "Writes one section per area it applies to (C or U then identifier), comments only when stored, settings and options only when Enabled, in the semantic format with backslashes doubled and CR LF as \\n, flagging text that cannot be read back safely.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-01704207253788877148",
+        "businessrule-10913365400690794412",
+        "businessrule-20897965123834184786",
+        "businessrule-50694068263592934768",
+        "businessrule-77000026808397550095",
+        "businessrule-78281155676242942940"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#4",
+      "intent": "Copy a line.",
+      "system": "Copies the selected line only when one is selected.",
+      "touches": [
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-57016400965631502733"
+      ]
+    }
+  ],
+  "available": []
+}

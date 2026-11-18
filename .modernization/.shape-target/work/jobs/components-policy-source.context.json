@@ -1,0 +1,955 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "domain": {
+    "name": "Policy Source",
+    "concept": "Where policy settings and their comments are kept, how a place is opened, remembered, checked for writability and released.",
+    "facts": [
+      {
+        "name": "Policy comment",
+        "from": [
+          "entity-52418278656387992812"
+        ],
+        "keys": [
+          "policy name",
+          "area"
+        ],
+        "relates": [
+          {
+            "to": "Policy comment",
+            "how": "a comment belongs to one policy in one area of one source"
+          }
+        ]
+      }
+    ],
+    "rules": [
+      "businessrule-17641776170698884064",
+      "businessrule-18230757898637060853",
+      "businessrule-28868424053274244047",
+      "businessrule-29530054883116088403",
+      "businessrule-30168924374542565520",
+      "businessrule-40601471490811436933",
+      "businessrule-46824143239519073718",
+      "businessrule-56421390704826486738",
+      "businessrule-67539343519248421601",
+      "businessrule-70425663320377904356",
+      "businessrule-86313704517800761850",
+      "businessrule-90470730563627765974",
+      "businessrule-96701855986906093783",
+      "businessrule-97000243539037627331",
+      "businessrule-99096323836097983665",
+      "businessrule-06218920206107794280",
+      "businessrule-27578488339642782673",
+      "businessrule-29585332630928853779",
+      "businessrule-31889487085995982343",
+      "businessrule-34447675520768722859",
+      "businessrule-35899140497190862562",
+      "businessrule-39262656033285451423",
+      "businessrule-49395771262191850050",
+      "businessrule-50808386816006011599",
+      "businessrule-51029550915449645879",
+      "businessrule-51554818045857630746",
+      "businessrule-62563112935081932578",
+      "businessrule-67456626752221980743",
+      "businessrule-73847809349842629987",
+      "businessrule-74412475215137182202",
+      "businessrule-75428533810997783570",
+      "businessrule-76710184957379543464",
+      "businessrule-77499382636897144286",
+      "businessrule-79173574861552738237",
+      "businessrule-83248377690419919134",
+      "businessrule-83542226215682203251",
+      "businessrule-84284160770896952745",
+      "businessrule-93571958636080198306",
+      "businessrule-95699184013424603885",
+      "businessrule-10464012301936997836",
+      "businessrule-34260437212150300999",
+      "businessrule-36363277387876573326",
+      "businessrule-58680491450946971024",
+      "businessrule-60819102502476341284",
+      "businessrule-66851330016699676430",
+      "businessrule-75533700456390778594",
+      "businessrule-84588009124214109370",
+      "businessrule-26724904229141688759",
+      "businessrule-77474018484672211108",
+      "businessrule-88238619586671903040",
+      "businessrule-91379498462935455610",
+      "businessrule-02848405191150173128",
+      "businessrule-37850254215893887157",
+      "businessrule-00851565168679896073",
+      "businessrule-05545231242611046306",
+      "businessrule-09176393040056781958",
+      "businessrule-09208070518455812303",
+      "businessrule-13724150063390760319",
+      "businessrule-17212723393144190896",
+      "businessrule-19841193988434357732",
+      "businessrule-20632548312339129786",
+      "businessrule-24034386628405619971",
+      "businessrule-24339552780845919468",
+      "businessrule-25033115401021301399",
+      "businessrule-26056926835272364672",
+      "businessrule-28402048173344159866",
+      "businessrule-39804924157705575084",
+      "businessrule-41013546429447756519",
+      "businessrule-42987908693120337062",
+      "businessrule-43613259767674592997",
+      "businessrule-48799510965890913669",
+      "businessrule-48968387067309128566",
+      "businessrule-51421539020102170720",
+      "businessrule-57614366266507799597",
+      "businessrule-66651514909736203695",
+      "businessrule-67697422395860869033",
+      "businessrule-71273978078040008855",
+      "businessrule-72149976207795359606",
+      "businessrule-84817748081019740495",
+      "businessrule-86190343622453999219",
+      "businessrule-87767421628061265824",
+      "businessrule-90527876062459953686",
+      "businessrule-91552597921533368557",
+      "businessrule-98130638476370994041",
+      "businessrule-72559528436656832979",
+      "businessrule-98025569949322378254",
+      "businessrule-46972642019161394212",
+      "businessrule-59631775004799082543"
+    ],
+    "dependsOn": [],
+    "why": "Reading and writing stored values and comments, and the life of an opened place (the dialog's starting sources, the writability report, releasing a loaded user hive), are one set of decisions about the places people keep their policy."
+  },
+  "container": {
+    "name": "Policy Plus application",
+    "kind": "interface",
+    "tech": "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "holds": [
+      "Policy Definitions",
+      "Policy Source",
+      "Policy State",
+      "Policy Discovery",
+      "Policy File Exchange",
+      "Definition Acquisition",
+      "Workspace"
+    ]
+  },
+  "integrations": [
+    {
+      "need": "external-90077838450756006603",
+      "domain": "Policy Source",
+      "how": "A machine-side adapter reads and writes policy files and folders on the Windows machine through Bun's file APIs.",
+      "name": "Computer file system folders"
+    },
+    {
+      "need": "external-08492831744411585027",
+      "domain": "Policy Source",
+      "how": "A reader and writer on the Windows machine exchange comment files beside each policy source.",
+      "name": "Policy comment files (CMTX)"
+    },
+    {
+      "need": "external-97068941883605652538",
+      "domain": "Policy Source",
+      "how": "A machine-side adapter reads and writes the live policy keys and loaded user hives of the Windows machine it runs on.",
+      "name": "Windows registry policy keys and loaded user hives"
+    },
+    {
+      "need": "external-90078096462363044953",
+      "domain": "Policy Source",
+      "how": "A machine-side adapter on a domain-joined Windows machine asks the directory to resolve a user name or identifier to the account whose policy is wanted.",
+      "name": "Active Directory domain"
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-17641776170698884064",
+      "statement": "A value in a policy file counts as marked for deletion when a deletion marker names it, when the key has a clear-all marker, or when a delete-values list for the key names it, regardless of case. Entries are examined in sorted order, and a value whose name sorts after the marker is stored as present and cancels the deletion, whenever it was written and whichever marker kind came before."
+    },
+    {
+      "id": "businessrule-18230757898637060853",
+      "statement": "Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them."
+    },
+    {
+      "id": "businessrule-28868424053274244047",
+      "statement": "The live registry never reports a value as marked for deletion."
+    },
+    {
+      "id": "businessrule-29530054883116088403",
+      "statement": "Reading a value from a policy file gives nothing when the value is absent or marked for deletion."
+    },
+    {
+      "id": "businessrule-30168924374542565520",
+      "statement": "A value in the live registry counts as present when its key exists and, unless the value name is empty, the key lists a value of that name, regardless of case. An empty name means the key itself."
+    },
+    {
+      "id": "businessrule-40601471490811436933",
+      "statement": "A policy's comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text."
+    },
+    {
+      "id": "businessrule-46824143239519073718",
+      "statement": "A value in a policy file counts as present only if it is stored and not marked for deletion."
+    },
+    {
+      "id": "businessrule-56421390704826486738",
+      "statement": "A value counts as present when: for a deletion marker, it is marked for deletion; for a number, it exists as a whole number and equals the expected number; for text, it exists as text and equals the expected text. A value of the wrong kind is not present."
+    },
+    {
+      "id": "businessrule-67539343519248421601",
+      "statement": "A REG file cannot be used as a source for checking whether a value will be deleted: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch."
+    },
+    {
+      "id": "businessrule-70425663320377904356",
+      "statement": "Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string."
+    },
+    {
+      "id": "businessrule-86313704517800761850",
+      "statement": "A REG file cannot be used as a source for reading a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch."
+    },
+    {
+      "id": "businessrule-90470730563627765974",
+      "statement": "A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type."
+    },
+    {
+      "id": "businessrule-96701855986906093783",
+      "statement": "A REG file cannot be used as a source for listing a key's values: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch."
+    },
+    {
+      "id": "businessrule-97000243539037627331",
+      "statement": "Reading a value from the live registry gives nothing when the key is missing. Signed numbers are returned as the unsigned numbers policies use, and environment variables in text are not expanded."
+    },
+    {
+      "id": "businessrule-99096323836097983665",
+      "statement": "A REG file cannot be used as a source for asking whether a value is present: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch."
+    },
+    {
+      "id": "businessrule-06218920206107794280",
+      "statement": "A Scratch space source is an empty policy store that can be changed but is never saved anywhere."
+    },
+    {
+      "id": "businessrule-27578488339642782673",
+      "statement": "On first start, when no policy sources were saved, both the user source and the computer source open as the local Group Policy files (Local GPO) with no extra location."
+    },
+    {
+      "id": "businessrule-29585332630928853779",
+      "statement": "The source name shown in the status bar is Local GPO, Registry, File, User GPO, User hive or Scratch space, followed by the path or SID in brackets when there is one."
+    },
+    {
+      "id": "businessrule-31889487085995982343",
+      "statement": "No comment of a comment file can be read when any comment's policy reference has no colon or a prefix that is not declared, its text is not written as \"$(resource.<id>)\", its text id is missing, or two comments resolve to the same policy."
+    },
+    {
+      "id": "businessrule-34447675520768722859",
+      "statement": "When a number is saved to the live registry, an unsigned 32-bit or 64-bit number is converted to the signed number the registry stores with the same bits, and the key is created if missing."
+    },
+    {
+      "id": "businessrule-35899140497190862562",
+      "statement": "A registry source counts as writable only when a test value can be written under Software\\Policies and removed again; otherwise it is read-only."
+    },
+    {
+      "id": "businessrule-39262656033285451423",
+      "statement": "A policy file is refused when its format version is not 1, with the message 'Unknown (newer) version of POL format'."
+    },
+    {
+      "id": "businessrule-49395771262191850050",
+      "statement": "A source read through the file branch covers a POL file, the local Group Policy and a per-user Group Policy, each with a Registry.pol path. An existing file is loaded; it is writable only when it can be opened for reading and writing, otherwise it can be viewed but not committed."
+    },
+    {
+      "id": "businessrule-50808386816006011599",
+      "statement": "A user hive source is mounted by loading the hive file under a fresh temporary name in the machine registry, after the backup and restore privileges are switched on. If the hive cannot be opened afterwards, the source becomes an empty, read-only scratch source instead, without telling the person."
+    },
+    {
+      "id": "businessrule-51029550915449645879",
+      "statement": "A registry source must start with HKCU, HKEY_CURRENT_USER, HKU, HKEY_USERS, HKLM or HKEY_LOCAL_MACHINE (any case); otherwise it is refused with \"The root key is not valid.\" A path after the root is opened, and created if missing."
+    },
+    {
+      "id": "businessrule-51554818045857630746",
+      "statement": "When a policy file is read and the same key and value name occur twice, the later entry wins. Key and value names are matched without regard to letter case, and the first spelling seen is kept for saving."
+    },
+    {
+      "id": "businessrule-62563112935081932578",
+      "statement": "The comment file for a source sits beside its file: the POL file or hive path with the extension changed to .cmtx; for Local GPO or per-user GPO a file named comment.cmtx in the same folder; for the registry a file under the person's local application data folder (one for user, one for machine); Scratch space has none, so comments are unavailable."
+    },
+    {
+      "id": "businessrule-67456626752221980743",
+      "statement": "A policy file is refused when it does not start with the 'PReg' signature, with the message 'Missing PReg signature'."
+    },
+    {
+      "id": "businessrule-73847809349842629987",
+      "statement": "A policy source's writability is described as \"is fully writable\", \"cannot be saved\" (changes work in memory only) or \"cannot be modified\"; anything but fully writable counts as a problem."
+    },
+    {
+      "id": "businessrule-74412475215137182202",
+      "statement": "The path of a policy source is fixed by its kind: Local GPO uses the Registry.pol file of the system's local Group Policy (user or machine folder) and its gpt.ini; a per-user GPO uses the folder named by the person's SID under GroupPolicyUsers; a POL file and a user hive use the path given; Scratch space has none."
+    },
+    {
+      "id": "businessrule-75428533810997783570",
+      "statement": "When a policy file is read, an extra empty character after the value name, as Microsoft's documentation allows, is skipped."
+    },
+    {
+      "id": "businessrule-76710184957379543464",
+      "statement": "A source's comments are used only when it has a comment file location. The folder is created if missing; an existing file is loaded and a missing file gives no comments yet. Any failure leaves that source without comments."
+    },
+    {
+      "id": "businessrule-77499382636897144286",
+      "statement": "When a policy file is saved, entries are written in alphabetical order, so a key-clearing marker is always written before the values it clears."
+    },
+    {
+      "id": "businessrule-79173574861552738237",
+      "statement": "When the Registry.pol of a POL file source, the local Group Policy or a per-user Group Policy does not exist, it is created empty with its folder and treated as writable; a mistyped SID therefore creates a new folder and empty file under the per-user policy folder. If creation fails, an empty read-only source is used and no error is shown."
+    },
+    {
+      "id": "businessrule-83248377690419919134",
+      "statement": "When the previously saved policy sources cannot be opened, the person is told \"The previous policy sources are not accessible. The defaults will be loaded.\" and both sources are saved as Local GPO, then opened quietly. Only the source type is reset; any saved location text stays."
+    },
+    {
+      "id": "businessrule-83542226215682203251",
+      "statement": "Opening new policy sources first closes the ones already open. Unsaved changes are discarded for sources backed by a POL file (local Group Policy files, a chosen POL file, a per-user Group Policy object) and for the empty source. A registry source applies changes at once, and a user hive file is applied when it is closed, so those lose nothing."
+    },
+    {
+      "id": "businessrule-84284160770896952745",
+      "statement": "A source is writable by default for Scratch space; for a registry source it is 'no writing' when the write test failed; for others it is 'no commit' when the file or hive could not be opened for writing."
+    },
+    {
+      "id": "businessrule-93571958636080198306",
+      "statement": "A comment file is refused as unreadable when it has no comment-definitions section, a namespace entry without a prefix, a comment without a policy reference, a text without an id, or a repeated prefix, policy reference or text id. The comments of that source are then unavailable."
+    },
+    {
+      "id": "businessrule-95699184013424603885",
+      "statement": "When a value is deleted in the live registry and its key does not exist, nothing happens. A missing value is not an error."
+    },
+    {
+      "id": "businessrule-10464012301936997836",
+      "statement": "After the person chooses policy sources, they are opened with the opening result shown, and the view moves to the nearest visible category."
+    },
+    {
+      "id": "businessrule-34260437212150300999",
+      "statement": "The registry path, POL file name, SID and hive path boxes (and their Browse buttons) for the user side are usable only when their own choice is selected."
+    },
+    {
+      "id": "businessrule-36363277387876573326",
+      "statement": "When OK is pressed, the user source is created from the selected choice: Local GPO, Registry, POL file, per-user GPO (SID typed), user hive (file path typed), or Scratch space otherwise. If it cannot be created, the person is told \"The user policy loader could not be created.\" followed by the reason, and the dialog stays open; the dialog closes as accepted only when both sources were created."
+    },
+    {
+      "id": "businessrule-58680491450946971024",
+      "statement": "The registry path, POL file name and Browse button for the computer side are usable only when their own choice is selected."
+    },
+    {
+      "id": "businessrule-60819102502476341284",
+      "statement": "The file picker for a POL file accepts only '.pol' files, allows choosing a file that does not exist yet, and does not ask before an existing file is chosen."
+    },
+    {
+      "id": "businessrule-66851330016699676430",
+      "statement": "Pressing Escape closes the policy sources dialog as cancelled."
+    },
+    {
+      "id": "businessrule-75533700456390778594",
+      "statement": "When OK is pressed, the computer source is created from the selected choice: Local GPO, Registry (path typed), POL file (name typed), or Scratch space when none of the others is selected. If it cannot be created, the person is told \"The computer policy loader could not be created.\" followed by the reason, and the dialog stays open."
+    },
+    {
+      "id": "businessrule-84588009124214109370",
+      "statement": "When a view setting changes, the program moves up to the nearest visible category, drops the selected policy if the move happened or the policy is now hidden, then rebuilds the tree and list. A policy kept after the move appears in the information pane only: rebuilding the list reselects the category in the tree, which clears the selection, so its row is not highlighted."
+    },
+    {
+      "id": "businessrule-26724904229141688759",
+      "statement": "Pressing Escape closes the user dialog as cancelled."
+    },
+    {
+      "id": "businessrule-77474018484672211108",
+      "statement": "When OK is pressed, the SID text must be a valid SID or the person is told \"The SID is not valid. Enter a SID in the lower box, or enter a username in the top box and press Search to translate.\"; a valid SID is returned and the dialog closes."
+    },
+    {
+      "id": "businessrule-88238619586671903040",
+      "statement": "When OK is pressed with a name typed but no SID, the name is looked up first, and the dialog stays open if no SID results."
+    },
+    {
+      "id": "businessrule-91379498462935455610",
+      "statement": "A name typed in the user dialog is turned into the account's security identifier (SID) on Search; if the name cannot be translated, the person is told \"The name could not be translated to a SID.\""
+    },
+    {
+      "id": "businessrule-02848405191150173128",
+      "statement": "In the user hive dialog, OK does nothing until a folder is selected; then it returns the path C:\\Users\\<folder>\\ntuser.dat and closes."
+    },
+    {
+      "id": "businessrule-37850254215893887157",
+      "statement": "Pressing Escape closes the user hive dialog as cancelled."
+    },
+    {
+      "id": "businessrule-00851565168679896073",
+      "statement": "When gpt.ini does not exist, a new one is written with the General section, both extension-name lines and Version 65537."
+    },
+    {
+      "id": "businessrule-05545231242611046306",
+      "statement": "When a policy file's changes are applied to another source, an entry is saved only if it has a non-empty value name that does not start with '**'. Other marker-style entries and entries with an empty value name are skipped without notice. A saved value keeps its original letter case and type."
+    },
+    {
+      "id": "businessrule-09176393040056781958",
+      "statement": "When gpt.ini is updated and already exists, its Version number is raised by 1 for a machine source and by 65536 for a user source; if no Version line exists, it is set to 65537 (both parts at 1)."
+    },
+    {
+      "id": "businessrule-09208070518455812303",
+      "statement": "When a policy file is clearing a key, all values and markers under the key are dropped and a single clear-all marker is stored."
+    },
+    {
+      "id": "businessrule-13724150063390760319",
+      "statement": "Saving writes each source's comments first, then writes a source only if it is fully writable (otherwise reported as \"not writable\"), then remembers the chosen source types and locations for the next start. The person sees \"Success.\" with the user and computer outcomes, or \"Saving failed!\" with the reason."
+    },
+    {
+      "id": "businessrule-17212723393144190896",
+      "statement": "A REG file cannot be used as a source for forgetting a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch."
+    },
+    {
+      "id": "businessrule-19841193988434357732",
+      "statement": "Saving a local Group Policy source writes the Registry.pol file, raises the gpt.ini version, and then, on Windows editions that list as having Group Policy (decided by a fixed list of product edition codes), asks Windows to refresh policy (\"saved to disk and invoked policy refresh\"). On other editions, the difference between the file as last on disk (read at the moment of saving) and the new content is applied to the running account's own registry (the current user's for a user source, the machine's for a machine source) and all windows are notified (\"saved to disk and applied diff to Registry\")."
+    },
+    {
+      "id": "businessrule-20632548312339129786",
+      "statement": "Saving a per-user GPO writes its Registry.pol file, raises its gpt.ini version and asks Windows to refresh user policy (\"saved to disk and invoked policy refresh\")."
+    },
+    {
+      "id": "businessrule-24034386628405619971",
+      "statement": "When a value is saved into a REG file, it is ignored if a source branch is set and its key lies outside that branch. When no branch is set, every key is accepted. Any value already stored under that name is replaced."
+    },
+    {
+      "id": "businessrule-24339552780845919468",
+      "statement": "Saving a POL file source writes the file only (\"saved to disk\"); a registry source reports \"already applied\" because it was changed live; a user hive reports \"will apply when policy source is closed\"; Scratch space reports \"discarded\"."
+    },
+    {
+      "id": "businessrule-25033115401021301399",
+      "statement": "When a value is deleted in a REG file, the request is ignored if a source branch is set and the key lies outside it, or if the key is already marked for removal. When no branch is set, every key is accepted. Otherwise the value is recorded as deleted."
+    },
+    {
+      "id": "businessrule-26056926835272364672",
+      "statement": "When gpt.ini is updated, the Machine and User extension-name lines for the registry policy are added if missing and left untouched if present."
+    },
+    {
+      "id": "businessrule-28402048173344159866",
+      "statement": "When a policy file's changes are applied to another source, an entry starting '**deletekeys' clears each key named in its semicolon-separated list under the entry's key, using lower-case names. Clearing removes only that key's own values, not its subkeys."
+    },
+    {
+      "id": "businessrule-39804924157705575084",
+      "statement": "When comments are saved, each comment gets its own text id built from the policy's namespace, policy name and a running number, and each distinct namespace gets a prefix made from its name (dots turned into underscores) and the running number."
+    },
+    {
+      "id": "businessrule-41013546429447756519",
+      "statement": "When a newer policy file is applied over an older one, values the old file held and the new one dropped are forgotten in the target, but only if they sit under the three policy branches of the registry."
+    },
+    {
+      "id": "businessrule-42987908693120337062",
+      "statement": "In the live registry, 'forgetting' a value deletes it, because the registry cannot remember a pending deletion."
+    },
+    {
+      "id": "businessrule-43613259767674592997",
+      "statement": "When a value is forgotten in a policy file, both the value and its deletion marker are removed, so the policy reverts to not saying anything about it."
+    },
+    {
+      "id": "businessrule-48799510965890913669",
+      "statement": "Clearing a key in the live registry deletes every value in it but leaves the key and its subkeys. Forgetting a key's clearance does nothing."
+    },
+    {
+      "id": "businessrule-48968387067309128566",
+      "statement": "A multiple-string value is stored as its strings each followed by an empty character, with one more empty character closing the list."
+    },
+    {
+      "id": "businessrule-51421539020102170720",
+      "statement": "A 64-bit number is stored in a policy file as 8 bytes, lowest byte first."
+    },
+    {
+      "id": "businessrule-57614366266507799597",
+      "statement": "Saving comments writes every comment and text held in memory into the target file, in schema version 1.0, replacing what the file held before."
+    },
+    {
+      "id": "businessrule-66651514909736203695",
+      "statement": "When a key is cleared in a REG file, the request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted. Otherwise the key's earlier entries are replaced by a key-removal entry."
+    },
+    {
+      "id": "businessrule-67697422395860869033",
+      "statement": "When a policy file's changes are applied to another source, an entry named '**deletevalues' deletes each value in its semicolon-separated list, using lower-case names."
+    },
+    {
+      "id": "businessrule-71273978078040008855",
+      "statement": "A 32-bit number is stored in a policy file as 4 bytes, lowest byte first."
+    },
+    {
+      "id": "businessrule-72149976207795359606",
+      "statement": "When a value is marked for deletion in a policy file, any value or marker already held under that name is dropped first. A deletion marker holding the number 32, as Microsoft does, is added unless the value is already marked or its key is cleared."
+    },
+    {
+      "id": "businessrule-84817748081019740495",
+      "statement": "When a policy file's changes are applied to another source, an entry named '**del.' plus a value name deletes that value, using the lower-case key and value names."
+    },
+    {
+      "id": "businessrule-86190343622453999219",
+      "statement": "When a value is set in a policy file, it replaces any value already held under that name. A deletion marker for the name is not removed."
+    },
+    {
+      "id": "businessrule-87767421628061265824",
+      "statement": "A source's comment list is saved to its comment file location whenever the list exists, even when empty; a source without comment support has no list and is skipped."
+    },
+    {
+      "id": "businessrule-90527876062459953686",
+      "statement": "Text stored in a policy file is written in two-byte characters followed by a closing empty character."
+    },
+    {
+      "id": "businessrule-91552597921533368557",
+      "statement": "When a policy file's changes are applied to another source, an entry starting '**delvals' clears the whole key, using the lower-case key name. Entries are applied in sorted order, so clear-all entries come before values. Clearing a live registry key removes only that key's own values."
+    },
+    {
+      "id": "businessrule-98130638476370994041",
+      "statement": "A value written to a policy file is stored as text, expandable text, a 32-bit or 64-bit number or a multiple string by its stated type. Every other type is stored as raw bytes with that type."
+    },
+    {
+      "id": "businessrule-72559528436656832979",
+      "statement": "When the policy sources dialog opens with the last-used sources, each side is set to the remembered kind (Local GPO, Registry, POL file, Scratch space, and for users also per-user GPO or user hive), and the registry path, file name, SID or hive path is filled in only for the kinds that carry one."
+    },
+    {
+      "id": "businessrule-98025569949322378254",
+      "statement": "After opening, if either source is not fully writable the person is told \"Not all policy sources are fully writable.\" with the state of the user and the computer source; if both are fully writable, \"Both the user and computer policy sources are loaded and writable.\" appears only when opening was not quiet (never at start)."
+    },
+    {
+      "id": "businessrule-46972642019161394212",
+      "statement": "When a source is closed, a mounted user hive is unloaded and the result tells whether unloading succeeded; every other kind of source closes successfully."
+    },
+    {
+      "id": "businessrule-59631775004799082543",
+      "statement": "Closing the policy sources tells the person \"Cleanup did not complete fully because the loaded resources are open in other programs.\" when any source could not release its resources."
+    }
+  ],
+  "steps": [
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+      "intent": "See each policy's setting and comment as before.",
+      "system": "The system works out each policy's state and comment in each area from the stored settings and the live ones, and applies the filters.",
+      "touches": [
+        "entity-92808062881922645840",
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-07376289294643129633",
+        "businessrule-07554086131159240838",
+        "businessrule-09965726926686583005",
+        "businessrule-11674597249570802702",
+        "businessrule-12540995342195943001",
+        "businessrule-17641776170698884064",
+        "businessrule-18230757898637060853",
+        "businessrule-25766167090873157702",
+        "businessrule-28868424053274244047",
+        "businessrule-29495869201116213931",
+        "businessrule-29530054883116088403",
+        "businessrule-30168924374542565520",
+        "businessrule-33872241894384295212",
+        "businessrule-34301200927683901255",
+        "businessrule-35533060170265013329",
+        "businessrule-40601471490811436933",
+        "businessrule-46824143239519073718",
+        "businessrule-46971412075927401870",
+        "businessrule-52005709614722807804",
+        "businessrule-49748745950500666232",
+        "businessrule-56421390704826486738",
+        "businessrule-67323359061601595450",
+        "businessrule-67539343519248421601",
+        "businessrule-70331897906623822249",
+        "businessrule-70425663320377904356",
+        "businessrule-71909773168029429916",
+        "businessrule-79960316131030112593",
+        "businessrule-81760746419124272603",
+        "businessrule-86313704517800761850",
+        "businessrule-89513911810275647919",
+        "businessrule-90470730563627765974",
+        "businessrule-92873738128602220135",
+        "businessrule-96701855986906093783",
+        "businessrule-97000243539037627331",
+        "businessrule-97862941341357225531",
+        "businessrule-99096323836097983665",
+        "businessrule-99139491988760691407"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+      "intent": "Get back to the policy sources I used last",
+      "system": "Reopens the remembered user and computer sources, or the local Group Policy on first start; closes any sources already open, works out each source's location and whether it can be saved, and falls back to the defaults with a notice when the remembered ones cannot be reached.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-27578488339642782673",
+        "businessrule-83248377690419919134",
+        "businessrule-83542226215682203251",
+        "businessrule-72559528436656832979",
+        "businessrule-49395771262191850050",
+        "businessrule-79173574861552738237",
+        "businessrule-50808386816006011599",
+        "businessrule-51029550915449645879",
+        "businessrule-74412475215137182202",
+        "businessrule-06218920206107794280",
+        "businessrule-84284160770896952745",
+        "businessrule-35899140497190862562",
+        "businessrule-29585332630928853779",
+        "businessrule-39262656033285451423",
+        "businessrule-67456626752221980743",
+        "businessrule-51554818045857630746",
+        "businessrule-75428533810997783570",
+        "businessrule-77499382636897144286",
+        "businessrule-34447675520768722859",
+        "businessrule-95699184013424603885"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#4",
+      "intent": "Have my policy comments alongside",
+      "system": "Finds the comments that belong to each source; a source whose comments cannot be read simply has none.",
+      "touches": [
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-62563112935081932578",
+        "businessrule-76710184957379543464",
+        "businessrule-31889487085995982343",
+        "businessrule-93571958636080198306"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#5",
+      "intent": "Know whether the workspace is ready to change",
+      "system": "States once which sources can be fully changed and which can only be viewed or kept in memory, and names the sources; says nothing beyond the notice when everything is writable.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-73847809349842629987",
+        "businessrule-98025569949322378254"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.leave-the-program:leave-and-let-go#1",
+      "intent": "Finish and leave",
+      "system": "Releases each open source, unloading any mounted user hive, and ends the work.",
+      "touches": [],
+      "honours": [
+        "businessrule-46972642019161394212"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.leave-the-program:leave-and-let-go#2",
+      "intent": "Know if anything was left open",
+      "system": "Tells the person when resources are still open in other programs.",
+      "touches": [],
+      "honours": [
+        "businessrule-59631775004799082543"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+      "intent": "Say where the user policies are kept",
+      "system": "Offers local files, the system settings store, a policy file, a particular user's policy or a user profile, or an empty scratch space; asks for the detail only for the kind chosen and accepts only policy files of the right type, including one not yet created.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-34260437212150300999",
+        "businessrule-60819102502476341284"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+      "intent": "Say where the computer policies are kept",
+      "system": "Same, for the computer side, without the per-user kinds.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-58680491450946971024"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#3",
+      "intent": "Name the user whose own policy object is used, if I chose that",
+      "system": "Hands over to naming a user and returns that user's SID.",
+      "touches": [],
+      "honours": [
+        "businessrule-34260437212150300999"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4",
+      "intent": "Confirm and start working",
+      "system": "Creates both sources; if either cannot be created, says which and why and stays open; otherwise opens them, shows the outcome, and moves to the nearest visible category.",
+      "touches": [
+        "entity-40163170707735391190",
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-36363277387876573326",
+        "businessrule-75533700456390778594",
+        "businessrule-10464012301936997836",
+        "businessrule-84588009124214109370"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#5",
+      "intent": "Change my mind",
+      "system": "Leaves everything as it was.",
+      "touches": [],
+      "honours": [
+        "businessrule-66851330016699676430"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.identify-user-for-policy:give-a-name-or-an-identifier#1",
+      "intent": "Say which user I mean",
+      "system": "Takes a name or a security identifier; a name is translated at once and the person is told when it cannot be; a valid identifier is accepted; an invalid one is refused with a message saying what to enter; leaving without choosing is always possible.",
+      "touches": [],
+      "honours": [
+        "businessrule-91379498462935455610",
+        "businessrule-77474018484672211108",
+        "businessrule-88238619586671903040",
+        "businessrule-26724904229141688759"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#1",
+      "intent": "Accept or replace the proposed profile",
+      "system": "The system proposes the profile of the person using the program, lists the others, and does nothing until one is selected and confirmed.",
+      "touches": [],
+      "honours": [
+        "businessrule-02848405191150173128"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#2",
+      "intent": "Leave without choosing",
+      "system": "The system closes the choice with nothing chosen and the current source unchanged.",
+      "touches": [],
+      "honours": [
+        "businessrule-37850254215893887157"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+      "intent": "Save my changes",
+      "system": "The system saves comments, writes each fully writable source (otherwise reporting it is not writable), makes the changes take effect where possible, and remembers the chosen sources, using the same rules for every source kind and file encoding.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812",
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-39804924157705575084",
+        "businessrule-57614366266507799597",
+        "businessrule-87767421628061265824",
+        "businessrule-48968387067309128566",
+        "businessrule-51421539020102170720",
+        "businessrule-71273978078040008855",
+        "businessrule-90527876062459953686",
+        "businessrule-98130638476370994041",
+        "businessrule-86190343622453999219",
+        "businessrule-72149976207795359606",
+        "businessrule-43613259767674592997",
+        "businessrule-09208070518455812303",
+        "businessrule-05545231242611046306",
+        "businessrule-28402048173344159866",
+        "businessrule-67697422395860869033",
+        "businessrule-84817748081019740495",
+        "businessrule-91552597921533368557",
+        "businessrule-41013546429447756519",
+        "businessrule-17212723393144190896",
+        "businessrule-24034386628405619971",
+        "businessrule-25033115401021301399",
+        "businessrule-66651514909736203695",
+        "businessrule-42987908693120337062",
+        "businessrule-48799510965890913669",
+        "businessrule-00851565168679896073",
+        "businessrule-09176393040056781958",
+        "businessrule-26056926835272364672",
+        "businessrule-13724150063390760319",
+        "businessrule-24339552780845919468",
+        "businessrule-19841193988434357732",
+        "businessrule-20632548312339129786"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#2",
+      "intent": "Know the outcome of each source",
+      "system": "The system reports success with a line per source, such as saved, already applied, will apply later or discarded, or failure with the reason.",
+      "touches": [],
+      "honours": [
+        "businessrule-13724150063390760319",
+        "businessrule-24339552780845919468"
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+      "intent": "Open the policy with everything already worked out",
+      "system": "The system fills in the policy's description, applies to side, state and stored options, defaults and comment, and shows whether this side can be written to.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-22919299514571743135",
+        "businessrule-47264131679601828501",
+        "businessrule-23336067846798029987",
+        "businessrule-20408685392954236399",
+        "businessrule-33075335985104561108",
+        "businessrule-01560321201783674273",
+        "businessrule-59619098183313284576",
+        "businessrule-90485587050957154914",
+        "businessrule-24534399091993971891",
+        "businessrule-34769835898304277453",
+        "businessrule-37022902056569995834",
+        "businessrule-43638846001153509048",
+        "businessrule-47134496169701496073",
+        "businessrule-49179499449653183223",
+        "businessrule-90493804689850695370",
+        "businessrule-92057272745409912098",
+        "businessrule-47891883049575092611",
+        "businessrule-76476292137970655950",
+        "businessrule-95995013385384587600",
+        "businessrule-98958969318255528192"
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+      "intent": "Review the forecast of changes",
+      "system": "The system lists what will be forgotten, written and removed, including whole list keys and values taken away by Disabled, and what the comment will become.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-56832565542674334637",
+        "businessrule-60774486401252037450",
+        "businessrule-97175686457081101132",
+        "businessrule-52553634867035971750"
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4",
+      "intent": "Confirm, then carry on or finish",
+      "system": "The system applies the forecast, reports the outcome as a change if anything was saved in this visit, and keeps the person on the policy or closes it.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-04152128046162000583",
+        "businessrule-14958427259964761169",
+        "businessrule-19622432139142313215",
+        "businessrule-33456476599558212379",
+        "businessrule-46516041958192928718",
+        "businessrule-53178349170981485484",
+        "businessrule-55949208713495428877",
+        "businessrule-56832565542674334637",
+        "businessrule-60774486401252037450",
+        "businessrule-64524120751868809207",
+        "businessrule-66734059366331213205",
+        "businessrule-67842190900074642321",
+        "businessrule-75244076300039577548",
+        "businessrule-80911529766189561154",
+        "businessrule-84933301477035282498",
+        "businessrule-90058940824311429227",
+        "businessrule-97175686457081101132",
+        "businessrule-52553634867035971750",
+        "businessrule-30662593154265010717",
+        "businessrule-49955247469929977676",
+        "businessrule-60358450731077326247",
+        "businessrule-07359577675270518038",
+        "businessrule-37207468109369530089",
+        "businessrule-53979609002646144363",
+        "businessrule-65724709448091621197"
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2",
+      "intent": "Apply what was read.",
+      "system": "Offers apply only for a text that read correctly, then writes, skips and counts failures per policy and reports the outcome.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-30078789996227150580",
+        "businessrule-12966156302506777327",
+        "businessrule-78566706966921753288",
+        "businessrule-47001836867625969953",
+        "businessrule-45692609540846356884",
+        "businessrule-70167687024707690035"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-text:search-as-you-type#1",
+      "intent": "Say the words or phrases remembered.",
+      "system": "Searches title, description and comments of both areas by default, and shows results as words are given; says plainly when words are needed and when a quote was never closed.",
+      "touches": [
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-20714647401379544771",
+        "businessrule-21915530910585082056",
+        "businessrule-51916167191556979448",
+        "businessrule-86305970842078630022",
+        "businessrule-73561308167207352856",
+        "businessrule-63262725504588029346"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-text:search-as-you-type#2",
+      "intent": "Narrow where the words are looked for, if wanted.",
+      "system": "Limits the search to the chosen places and never allows none.",
+      "touches": [
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-31790508764365764837"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#1",
+      "intent": "See the limit currently in force.",
+      "system": "Shows type, state, comment and products as the current limit holds, with Any and no products when it has no such condition and the support option off with both matching options on when it has no support condition.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-01575097247784730570",
+        "businessrule-76306981111385169671",
+        "businessrule-26561900736287578271",
+        "businessrule-32591775124677875588",
+        "businessrule-59209755491778300947"
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#2",
+      "intent": "Choose a policy type, state and comment status.",
+      "system": "Keeps only managed for Policy, only unmanaged for Preference, the chosen state, and commented or uncommented as chosen; Any sets no condition. The list narrows now.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-03237181236179074787",
+        "businessrule-81055540068763556055",
+        "businessrule-70906412717211463954"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3",
+      "intent": "Ask for the semantic text of the policy.",
+      "system": "Writes one section per area it applies to (C or U then identifier), comments only when stored, settings and options only when Enabled, in the semantic format with backslashes doubled and CR LF as \\n, flagging text that cannot be read back safely.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "honours": [
+        "businessrule-01704207253788877148",
+        "businessrule-10913365400690794412",
+        "businessrule-20897965123834184786",
+        "businessrule-50694068263592934768",
+        "businessrule-77000026808397550095",
+        "businessrule-78281155676242942940"
+      ]
+    }
+  ],
+  "available": []
+}

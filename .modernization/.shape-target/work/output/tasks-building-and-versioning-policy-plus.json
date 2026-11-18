@@ -1,0 +1,33 @@
+{
+  "tasks": [
+    {
+      "id": "stamp-program-version",
+      "outcome": "Make each built copy of the program carry the version of the code it was built from.",
+      "actor": "person",
+      "actions": ["block-46722061090424791745"],
+      "rules": ["businessrule-12414618955963878773"],
+      "facts": [],
+      "needs": ["external-84087908423930356962"],
+      "current": [
+        {
+          "intent": "Build or release the program so it reports which version it is.",
+          "system": "The build script is run by someone, or by the release workflow, before the program is built.",
+          "from": ["block-46722061090424791745"],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Have the version reflect the exact code being built.",
+          "system": "The system asks git to describe the current commit: a tag, commit count and short commit name when tags exist, otherwise just a short commit name.",
+          "from": ["block-46722061090424791745"],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Get the program to carry that version.",
+          "system": "The system replaces the empty version in the generated source file with that description, so the built program carries it. The committed file keeps an empty version.",
+          "from": ["block-46722061090424791745"],
+          "confidence": "sure"
+        }
+      ]
+    }
+  ]
+}

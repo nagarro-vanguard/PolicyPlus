@@ -1,0 +1,1128 @@
+{
+  "journeys": [
+    {
+      "task": "tasks-editing-policy-files-directly.open-raw-policy-editor",
+      "actor": "person",
+      "name": "Straight to the file",
+      "strategy": "task first",
+      "idea": "The person says which policy file they want to edit, sees the warning once, works in the file, and leaves when done.",
+      "tradeoff": "It still asks the person to pick the area when both are file-backed, and the warning is a hard stop for first-time users.",
+      "steps": [
+        {
+          "intent": "Choose which policy file to edit directly",
+          "system": "Offers only the areas backed by a policy file, each only when the caller allows it; tells the person plainly when none is, and goes on only once an area is chosen; leaving the choice changes nothing.",
+          "confidence": "sure",
+          "touches": [
+            "entity-40163170707735391190"
+          ],
+          "honours": [
+            "businessrule-14969413888672404933",
+            "businessrule-64564273672622472190",
+            "businessrule-21403142511575039594",
+            "businessrule-40441510620479008895"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-91792378122287310099",
+              "block-74715625061692366925"
+            ],
+            "change": "kept",
+            "reason": "Choosing the area is the first thing the person must settle.",
+            "keeps": [
+              "businessrule-14969413888672404933",
+              "businessrule-64564273672622472190",
+              "businessrule-21403142511575039594",
+              "businessrule-40441510620479008895"
+            ]
+          }
+        },
+        {
+          "intent": "Accept, the first time, that direct editing is for advanced users",
+          "system": "Shows the caution; a yes is remembered so it is not asked again, a no leaves the editor closed and asks again next time.",
+          "confidence": "sure",
+          "touches": [
+            "entity-40163170707735391190"
+          ],
+          "honours": [
+            "businessrule-98676109650316370626"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-18043112458533276543"
+            ],
+            "change": "kept",
+            "reason": "The warning guards a risky action and must stay.",
+            "keeps": [
+              "businessrule-98676109650316370626"
+            ]
+          }
+        },
+        {
+          "intent": "See the keys and values of the file",
+          "system": "Lists keys alphabetically ignoring case, with sub-keys and values beneath, special deletion entries named as such, and ordinary values with their content.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-81365817698028227620",
+            "businessrule-67529938588779257243",
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-18043112458533276543"
+            ],
+            "change": "kept",
+            "reason": "The tree is the working view of the file.",
+            "keeps": [
+              "businessrule-81365817698028227620",
+              "businessrule-67529938588779257243",
+              "businessrule-43194539708053716006",
+              "businessrule-44523725638753390545"
+            ]
+          }
+        },
+        {
+          "intent": "Know what can be done with the item in front of me",
+          "system": "Allows only the actions that fit what is selected: a key, a value, a deletion entry or nothing.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-13057335115870748705",
+            "businessrule-32089237714667793315",
+            "businessrule-86296876237579429124"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-82351254846133371644"
+            ],
+            "change": "kept",
+            "reason": "Unavailable actions are never offered as choices.",
+            "keeps": [
+              "businessrule-13057335115870748705",
+              "businessrule-32089237714667793315",
+              "businessrule-86296876237579429124"
+            ]
+          }
+        },
+        {
+          "intent": "Finish editing",
+          "system": "Leaves the editor; every change already made stays on the loaded policy source and reaches disk only when policies are saved, whether the person finished or backed out.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-18574755515767742264"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-91089666300107221398",
+              "block-93573573421282575863"
+            ],
+            "change": "merged",
+            "reason": "Finishing and backing out do the same thing, so one way out is enough.",
+            "keeps": [
+              "businessrule-18574755515767742264"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.open-raw-policy-editor",
+      "actor": "person",
+      "name": "The system picks the area",
+      "strategy": "automate first",
+      "idea": "The system chooses the area when only one is backed by a policy file, shows the warning only to those who have not accepted it, and tells the person what has changed before they leave.",
+      "tradeoff": "Inferring the area hides the choice from a person who wanted the other area, and the review step is new.",
+      "steps": [
+        {
+          "intent": "Start editing the policy file, understanding the risk the first time",
+          "system": "Takes the one allowed area backed by a policy file, asking only when both are and saying plainly when none is; shows the caution only to a person who has not accepted it, remembering a yes and asking again after a no.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-40163170707735391190"
+          ],
+          "honours": [
+            "businessrule-14969413888672404933",
+            "businessrule-64564273672622472190",
+            "businessrule-21403142511575039594",
+            "businessrule-40441510620479008895",
+            "businessrule-98676109650316370626"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-91792378122287310099",
+              "block-74715625061692366925",
+              "block-18043112458533276543"
+            ],
+            "change": "merged",
+            "reason": "The choice of area and the warning become one start, with the common case needing no question.",
+            "keeps": [
+              "businessrule-14969413888672404933",
+              "businessrule-64564273672622472190",
+              "businessrule-21403142511575039594",
+              "businessrule-40441510620479008895",
+              "businessrule-98676109650316370626"
+            ]
+          }
+        },
+        {
+          "intent": "Find and work on entries in the file",
+          "system": "Shows the file as an ordered tree, and offers only the actions that fit the selected key, value or deletion entry.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-13057335115870748705",
+            "businessrule-32089237714667793315",
+            "businessrule-86296876237579429124",
+            "businessrule-81365817698028227620",
+            "businessrule-67529938588779257243",
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-82351254846133371644"
+            ],
+            "change": "merged",
+            "reason": "Showing the tree and the fitting actions together keeps the person from hunting.",
+            "keeps": [
+              "businessrule-13057335115870748705",
+              "businessrule-32089237714667793315",
+              "businessrule-86296876237579429124",
+              "businessrule-81365817698028227620",
+              "businessrule-67529938588779257243",
+              "businessrule-43194539708053716006",
+              "businessrule-44523725638753390545"
+            ]
+          }
+        },
+        {
+          "intent": "See what I have changed before leaving, then finish",
+          "system": "Summarises the changes made in this session and reminds the person that they reach disk only when policies are saved; leaving, however it is done, keeps the changes.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-18574755515767742264"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-91089666300107221398",
+              "block-93573573421282575863"
+            ],
+            "change": "merged",
+            "reason": "One way out instead of two that behave the same, with an account of what was changed that the old editor never gave.",
+            "keeps": [
+              "businessrule-18574755515767742264"
+            ]
+          }
+        }
+      ],
+      "drops": [],
+      "recommended": "Takes the one question out of the usual case, folds the warning into starting, and gives a risky tool a clear account of what was changed, while every rule stays."
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.open-raw-policy-editor",
+      "actor": "person",
+      "name": "Guided",
+      "strategy": "guided",
+      "idea": "A short prompted path for people who edit policy files rarely: accept the risk, choose the file, learn the vocabulary, then leave.",
+      "tradeoff": "More steps than the others, which a regular user would find slow.",
+      "steps": [
+        {
+          "intent": "Accept the risk before anything else",
+          "system": "Explains what direct editing of a policy file does and asks for acceptance the first time; a yes is remembered, a no asks next time.",
+          "confidence": "sure",
+          "touches": [
+            "entity-40163170707735391190"
+          ],
+          "honours": [
+            "businessrule-98676109650316370626"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-18043112458533276543"
+            ],
+            "change": "reordered",
+            "reason": "Warning comes before choosing, so nobody does work they may then decline.",
+            "keeps": [
+              "businessrule-98676109650316370626"
+            ]
+          }
+        },
+        {
+          "intent": "Choose which policy file",
+          "system": "Offers only the allowed areas that are backed by a policy file, tells the person when none is.",
+          "confidence": "sure",
+          "touches": [
+            "entity-40163170707735391190"
+          ],
+          "honours": [
+            "businessrule-14969413888672404933",
+            "businessrule-64564273672622472190",
+            "businessrule-21403142511575039594",
+            "businessrule-40441510620479008895"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-91792378122287310099",
+              "block-74715625061692366925"
+            ],
+            "change": "kept",
+            "reason": "Same choice, now after the warning.",
+            "keeps": [
+              "businessrule-14969413888672404933",
+              "businessrule-64564273672622472190",
+              "businessrule-21403142511575039594",
+              "businessrule-40441510620479008895"
+            ]
+          }
+        },
+        {
+          "intent": "Learn how to read the file",
+          "system": "Explains in plain words what keys, values and deletion entries are and how they are shown.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-43194539708053716006"
+          ],
+          "link": {
+            "_tag": "new",
+            "reason": "A person who rarely edits these files needs the vocabulary before the list makes sense."
+          }
+        },
+        {
+          "intent": "Browse and pick an item",
+          "system": "Shows the ordered tree with contents, and offers only the actions that fit the selection.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-13057335115870748705",
+            "businessrule-32089237714667793315",
+            "businessrule-86296876237579429124",
+            "businessrule-81365817698028227620",
+            "businessrule-67529938588779257243",
+            "businessrule-43194539708053716006",
+            "businessrule-44523725638753390545"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-82351254846133371644"
+            ],
+            "change": "kept",
+            "reason": "Same tree, with the fitting actions.",
+            "keeps": [
+              "businessrule-13057335115870748705",
+              "businessrule-32089237714667793315",
+              "businessrule-86296876237579429124",
+              "businessrule-81365817698028227620",
+              "businessrule-67529938588779257243",
+              "businessrule-43194539708053716006",
+              "businessrule-44523725638753390545"
+            ]
+          }
+        },
+        {
+          "intent": "Finish editing",
+          "system": "Leaves; changes already made stay on the loaded policy source until policies are saved.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-18574755515767742264"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-91089666300107221398",
+              "block-93573573421282575863"
+            ],
+            "change": "merged",
+            "reason": "Both ways out behave the same.",
+            "keeps": [
+              "businessrule-18574755515767742264"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.add-policy-file-key-or-value",
+      "actor": "person",
+      "name": "Name, then kind, then data",
+      "strategy": "task first",
+      "idea": "Adding a key is one name; adding a value is a name, a kind, then its data, each asked in turn.",
+      "tradeoff": "Several small questions for a value, and a name error appears only after confirming.",
+      "steps": [
+        {
+          "intent": "Give the new key a name",
+          "system": "Asks for a name, ready to type; an empty name or backing out adds nothing.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-94140234913184124479",
+            "businessrule-21846002666758208174"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-54431974963440976475",
+              "block-56011203566573573100",
+              "block-33339374210388875839"
+            ],
+            "change": "kept",
+            "reason": "Naming is all a key needs.",
+            "keeps": [
+              "businessrule-94140234913184124479",
+              "businessrule-21846002666758208174"
+            ]
+          }
+        },
+        {
+          "intent": "Have the key created in the right place",
+          "system": "Refuses a name with a backslash or one already used under the same parent, ignoring case; otherwise adds the empty key under the selected key, or at the top, and selects it.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-27239953863800337722",
+            "businessrule-65588006996628019814",
+            "businessrule-94140234913184124479"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-54431974963440976475"
+            ],
+            "change": "kept",
+            "reason": "The refusals keep the file consistent.",
+            "keeps": [
+              "businessrule-27239953863800337722",
+              "businessrule-65588006996628019814",
+              "businessrule-94140234913184124479"
+            ]
+          }
+        },
+        {
+          "intent": "Name the new value and choose its kind",
+          "system": "Offers string, expandable string, list of strings, 32-bit and 64-bit number, starting on string; backing out adds nothing.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-88605435114040098546"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-73079666774281241997",
+              "block-12381913549521886903"
+            ],
+            "change": "kept",
+            "reason": "The kind decides what data can be entered.",
+            "keeps": [
+              "businessrule-88605435114040098546"
+            ]
+          }
+        },
+        {
+          "intent": "Enter the value's data",
+          "system": "Starts from empty text, zero or an empty list by kind; numbers stay within the limits of their size; the value is stored under the selected key only on confirming, replacing a value of the same name without warning.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-64891270751019389302",
+            "businessrule-13220028854331489804",
+            "businessrule-87150598845683946147"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-73079666774281241997"
+            ],
+            "change": "kept",
+            "reason": "Data entry belongs with the value.",
+            "keeps": [
+              "businessrule-64891270751019389302",
+              "businessrule-13220028854331489804",
+              "businessrule-87150598845683946147"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.add-policy-file-key-or-value",
+      "actor": "person",
+      "name": "Checked as you type",
+      "strategy": "automate first",
+      "idea": "The system checks a key name while it is typed, and a value is added in one pass with its kind worked out from the data.",
+      "tradeoff": "Working out the kind may guess wrongly, so the person must be able to see and override it.",
+      "steps": [
+        {
+          "intent": "Give the new key a name and know at once whether it is usable",
+          "system": "Checks as the person types, refusing a backslash or a name already used under the same parent ignoring case; an empty name or backing out adds nothing.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-27239953863800337722",
+            "businessrule-65588006996628019814",
+            "businessrule-21846002666758208174"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-54431974963440976475",
+              "block-56011203566573573100",
+              "block-33339374210388875839"
+            ],
+            "change": "inferred",
+            "reason": "The person learns of a problem before confirming rather than after.",
+            "keeps": [
+              "businessrule-27239953863800337722",
+              "businessrule-65588006996628019814",
+              "businessrule-21846002666758208174"
+            ]
+          }
+        },
+        {
+          "intent": "Have the key created and selected",
+          "system": "Adds the empty key under the selected key or at the top and selects it.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-94140234913184124479"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-54431974963440976475"
+            ],
+            "change": "kept",
+            "reason": "Same outcome as today.",
+            "keeps": [
+              "businessrule-94140234913184124479"
+            ]
+          }
+        },
+        {
+          "intent": "Add a value by its name and data together",
+          "system": "Takes name and data in one pass; the kind starts as string and is suggested from the data (digits suggest a 32-bit number, several lines a list), stays visible and can be changed; the starting data is empty text, zero or an empty list; stored only on confirming, replacing a same-named value without warning.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-88605435114040098546",
+            "businessrule-64891270751019389302",
+            "businessrule-13220028854331489804",
+            "businessrule-87150598845683946147"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-73079666774281241997",
+              "block-12381913549521886903"
+            ],
+            "change": "merged",
+            "reason": "Three questions become one, and the kind is no longer asked before there is data.",
+            "keeps": [
+              "businessrule-88605435114040098546",
+              "businessrule-64891270751019389302",
+              "businessrule-13220028854331489804",
+              "businessrule-87150598845683946147"
+            ]
+          }
+        }
+      ],
+      "drops": [],
+      "recommended": "Cuts the value flow from three questions to one and shows errors early, with every rule still applied."
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.add-policy-file-key-or-value",
+      "actor": "person",
+      "name": "Ask what to add",
+      "strategy": "guided",
+      "idea": "One prompted path that first asks whether to add a key or a value, then asks one question at a time.",
+      "tradeoff": "Slowest for someone who already knows what they want.",
+      "steps": [
+        {
+          "intent": "Say whether to add a key or a value",
+          "system": "Asks which is wanted and where, defaulting to under the selected key.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-94140234913184124479"
+          ],
+          "link": {
+            "_tag": "new",
+            "reason": "The old editor splits this into different commands; a rare user may not know which one applies."
+          }
+        },
+        {
+          "intent": "Name the key",
+          "system": "Asks for a name; refuses a backslash or a taken name ignoring case; empty or backing out adds nothing; the key is added and selected.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-27239953863800337722",
+            "businessrule-65588006996628019814",
+            "businessrule-94140234913184124479",
+            "businessrule-21846002666758208174"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-54431974963440976475",
+              "block-56011203566573573100",
+              "block-33339374210388875839"
+            ],
+            "change": "kept",
+            "reason": "Same naming with the refusals explained in words.",
+            "keeps": [
+              "businessrule-27239953863800337722",
+              "businessrule-65588006996628019814",
+              "businessrule-94140234913184124479",
+              "businessrule-21846002666758208174"
+            ]
+          }
+        },
+        {
+          "intent": "Name the value and choose what kind of data it holds",
+          "system": "Describes each kind in plain words; starts on string; backing out adds nothing.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-88605435114040098546"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-73079666774281241997",
+              "block-12381913549521886903"
+            ],
+            "change": "split",
+            "reason": "Explanation helps a person who does not know the kinds.",
+            "keeps": [
+              "businessrule-88605435114040098546"
+            ]
+          }
+        },
+        {
+          "intent": "Enter the data",
+          "system": "Starts from the default for the kind, keeps numbers within their limits, and stores on confirming, replacing a same-named value without warning.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-64891270751019389302",
+            "businessrule-13220028854331489804",
+            "businessrule-87150598845683946147"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-73079666774281241997"
+            ],
+            "change": "kept",
+            "reason": "Same entry, after the kind is understood.",
+            "keeps": [
+              "businessrule-64891270751019389302",
+              "businessrule-13220028854331489804",
+              "businessrule-87150598845683946147"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.change-policy-file-value-data",
+      "actor": "person",
+      "name": "Edit in place by kind",
+      "strategy": "task first",
+      "idea": "The person selects a value, enters new data in the form that fits its kind, and chooses decimal or hexadecimal for numbers.",
+      "tradeoff": "The decimal or hexadecimal choice is still a separate decision.",
+      "steps": [
+        {
+          "intent": "Pick the value to change and see its current data",
+          "system": "Shows the selected value with its present data.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-05846735750774889498"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-04045695864978247457"
+            ],
+            "change": "kept",
+            "reason": "The change starts from what is there.",
+            "keeps": [
+              "businessrule-05846735750774889498"
+            ]
+          }
+        },
+        {
+          "intent": "Enter the new data",
+          "system": "Offers text, number or list entry to match the kind; backing out leaves the value as it was.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-05846735750774889498"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-93495413918984610841",
+              "block-72694376270340482080",
+              "block-80078734348197600769"
+            ],
+            "change": "kept",
+            "reason": "Entry follows the kind.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "Choose how to read a number",
+          "system": "Shows and accepts numbers in decimal or hexadecimal as chosen; a hexadecimal too large becomes the largest allowed value, text that is not hexadecimal leaves the value unchanged.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-85571919984782494727"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-20624708115873028291",
+              "block-50446188615114520824",
+              "block-89740736795318812041"
+            ],
+            "change": "kept",
+            "reason": "Hexadecimal is how policy authors often think of numbers.",
+            "keeps": [
+              "businessrule-85571919984782494727"
+            ]
+          }
+        },
+        {
+          "intent": "Keep the change",
+          "system": "Replaces the data, keeps name and kind, and leaves the value selected.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-05846735750774889498"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-04045695864978247457"
+            ],
+            "change": "kept",
+            "reason": "Same outcome as today.",
+            "keeps": [
+              "businessrule-05846735750774889498"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.change-policy-file-value-data",
+      "actor": "person",
+      "name": "Either form accepted",
+      "strategy": "automate first",
+      "idea": "The system accepts a number in decimal or hexadecimal as typed and shows both forms, so there is no mode to switch.",
+      "tradeoff": "Guessing the form from the text can be ambiguous for digits-only input, so a clear prefix is required for hexadecimal.",
+      "steps": [
+        {
+          "intent": "Pick the value and type its new data",
+          "system": "Shows current data, in both decimal and hexadecimal for numbers; text and lists are entered as such; backing out leaves it as it was.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-05846735750774889498"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-04045695864978247457",
+              "block-93495413918984610841",
+              "block-72694376270340482080",
+              "block-80078734348197600769",
+              "block-89740736795318812041"
+            ],
+            "change": "merged",
+            "reason": "One entry replaces a mode switch and the dialog that follows it.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "Let the system read the number, then keep the change",
+          "system": "Reads hexadecimal when marked as such and decimal otherwise; a hexadecimal too large becomes the largest allowed value; text that is not a number leaves the value unchanged; otherwise replaces the data, keeping name and kind and leaving the value selected.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-85571919984782494727",
+            "businessrule-05846735750774889498"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-20624708115873028291",
+              "block-50446188615114520824"
+            ],
+            "change": "inferred",
+            "reason": "The person no longer has to know which mode is on, and reading and saving become one step.",
+            "keeps": [
+              "businessrule-85571919984782494727",
+              "businessrule-05846735750774889498"
+            ]
+          }
+        }
+      ],
+      "drops": [],
+      "recommended": "Removes the mode switch while keeping every rule about size and unreadable input."
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.change-policy-file-value-data",
+      "actor": "person",
+      "name": "Preview then confirm",
+      "strategy": "guided",
+      "idea": "The person is shown what the value will become, with its kind and limits explained, and confirms.",
+      "tradeoff": "An extra confirmation for a small change.",
+      "steps": [
+        {
+          "intent": "Pick the value and learn what it can hold",
+          "system": "Shows the kind, the present data and the limits for that kind.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-05846735750774889498"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-04045695864978247457"
+            ],
+            "change": "split",
+            "reason": "A rare user sees the limits before typing.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "Enter the new data",
+          "system": "Offers entry to match the kind, in decimal or hexadecimal for numbers; a hexadecimal too large becomes the largest allowed; non-hexadecimal text leaves the value unchanged; backing out changes nothing.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-85571919984782494727",
+            "businessrule-05846735750774889498"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-93495413918984610841",
+              "block-72694376270340482080",
+              "block-80078734348197600769",
+              "block-20624708115873028291",
+              "block-50446188615114520824",
+              "block-89740736795318812041"
+            ],
+            "change": "kept",
+            "reason": "Same entry.",
+            "keeps": [
+              "businessrule-85571919984782494727",
+              "businessrule-05846735750774889498"
+            ]
+          }
+        },
+        {
+          "intent": "Review the result and confirm",
+          "system": "Shows old and new data side by side; on confirming replaces the data, keeps name and kind, leaves the value selected.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-05846735750774889498"
+          ],
+          "link": {
+            "_tag": "new",
+            "reason": "The result is shown before it is applied so a mistyped number is caught."
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "actor": "person",
+      "name": "Decide the outcome first",
+      "strategy": "task first",
+      "idea": "The person first says whether the machine should be told to remove it or the file should simply forget it, then answers what that needs.",
+      "tradeoff": "Two decisions are still asked of the person.",
+      "steps": [
+        {
+          "intent": "Choose between instructing the machine and forgetting",
+          "system": "Asks whether to leave a deletion instruction or remove it from this file with no trace; backing out changes nothing.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-04432638879352685329",
+            "businessrule-27194812132584860836"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-16970529596856009541",
+              "block-42642804897148691736",
+              "block-52241240840751807884"
+            ],
+            "change": "split",
+            "reason": "The real choice is made first, not hidden in a dialog.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "Say how a key is to be instructed",
+          "system": "For a key offers clear everything, clear then keep existing ordinary direct values, or delete one value; nothing is chosen at first, and confirming with none does nothing.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-63694206615951133419",
+            "businessrule-30359040357073744492"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-53120693124506724348"
+            ],
+            "change": "kept",
+            "reason": "Three real outcomes remain.",
+            "keeps": [
+              "businessrule-63694206615951133419",
+              "businessrule-30359040357073744492"
+            ]
+          }
+        },
+        {
+          "intent": "Name the value to delete",
+          "system": "The name can be entered only when delete-one is chosen; an empty name is refused; otherwise the value, whether or not it exists, is replaced by a deletion entry.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-30251051045932916641",
+            "businessrule-84404651755849490179",
+            "businessrule-27194812132584860836"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-96284792383932228976"
+            ],
+            "change": "kept",
+            "reason": "Only relevant inputs are open.",
+            "keeps": [
+              "businessrule-30251051045932916641",
+              "businessrule-84404651755849490179",
+              "businessrule-27194812132584860836"
+            ]
+          }
+        },
+        {
+          "intent": "Forget an entry entirely",
+          "system": "Asks for confirmation to remove a key with its sub-keys, values and clearing marks, or a value with its deletion entry, leaving nothing behind; no changes nothing.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-04432638879352685329"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-42642804897148691736"
+            ],
+            "change": "kept",
+            "reason": "Irreversible removal stays confirmed.",
+            "keeps": [
+              "businessrule-04432638879352685329"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "actor": "person",
+      "name": "Straight from the selection",
+      "strategy": "automate first",
+      "idea": "What is selected tells the system what to do: a value is marked for deletion straight away with its name known, and a key offers its choices.",
+      "tradeoff": "The default for a value assumes the person wants a deletion instruction, so forgetting needs a second route.",
+      "steps": [
+        {
+          "intent": "Mark the selected value for deletion",
+          "system": "Takes the value's name from the selection and replaces the value with a deletion entry named \"**del.\" and the name.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-27194812132584860836",
+            "businessrule-30251051045932916641"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-16970529596856009541",
+              "block-96284792383932228976"
+            ],
+            "change": "inferred",
+            "reason": "No dialog and no typing for the most common removal.",
+            "keeps": [
+              "businessrule-27194812132584860836",
+              "businessrule-30251051045932916641"
+            ]
+          }
+        },
+        {
+          "intent": "Choose what to do with a selected key",
+          "system": "Offers clear everything, clear then keep existing ordinary direct values, or delete one value by typed name; nothing is chosen at first, none chosen does nothing, an empty name is refused, and backing out changes nothing.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-63694206615951133419",
+            "businessrule-30359040357073744492",
+            "businessrule-30251051045932916641",
+            "businessrule-84404651755849490179"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-53120693124506724348",
+              "block-52241240840751807884"
+            ],
+            "change": "kept",
+            "reason": "The three outcomes for a key are genuinely different.",
+            "keeps": [
+              "businessrule-63694206615951133419",
+              "businessrule-30359040357073744492",
+              "businessrule-30251051045932916641",
+              "businessrule-84404651755849490179"
+            ]
+          }
+        },
+        {
+          "intent": "Forget an entry entirely",
+          "system": "Describes what will go and asks for confirmation; removes the key, sub-keys, values and clearing marks, or the value and its deletion entry, with nothing left behind.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-04432638879352685329"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-42642804897148691736"
+            ],
+            "change": "kept",
+            "reason": "Irreversible removal stays confirmed.",
+            "keeps": [
+              "businessrule-04432638879352685329"
+            ]
+          }
+        }
+      ],
+      "drops": [],
+      "recommended": "Makes the common case, marking a value, a single act, while keeping the confirmation on irreversible removal."
+    },
+    {
+      "task": "tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "actor": "person",
+      "name": "Ask about the machine",
+      "strategy": "guided",
+      "idea": "A plain question about what should happen on the machine leads to the right removal.",
+      "tradeoff": "More steps than the others.",
+      "steps": [
+        {
+          "intent": "Say what should happen on the computers",
+          "system": "Asks whether the setting should be taken away from machines that apply this file or just no longer be set by it; backing out changes nothing.",
+          "confidence": "inferred",
+          "touches": [],
+          "honours": [
+            "businessrule-04432638879352685329",
+            "businessrule-27194812132584860836"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-16970529596856009541",
+              "block-42642804897148691736",
+              "block-52241240840751807884"
+            ],
+            "change": "reordered",
+            "reason": "Frames the choice in business consequences.",
+            "keeps": []
+          }
+        },
+        {
+          "intent": "Tell the system how far to go",
+          "system": "For a key offers the three clearing choices described in plain words, none chosen at first; for a value takes its name from the selection or by typed name, refusing an empty one; a deletion entry replaces the value.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-63694206615951133419",
+            "businessrule-30359040357073744492",
+            "businessrule-30251051045932916641",
+            "businessrule-84404651755849490179",
+            "businessrule-27194812132584860836"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-53120693124506724348",
+              "block-96284792383932228976"
+            ],
+            "change": "kept",
+            "reason": "Choices shown with their effects.",
+            "keeps": [
+              "businessrule-63694206615951133419",
+              "businessrule-30359040357073744492",
+              "businessrule-30251051045932916641",
+              "businessrule-84404651755849490179",
+              "businessrule-27194812132584860836"
+            ]
+          }
+        },
+        {
+          "intent": "Confirm forgetting",
+          "system": "If it should simply no longer be set, asks for confirmation and removes the key with all its contents, or the value and its deletion entry, leaving nothing behind.",
+          "confidence": "sure",
+          "touches": [],
+          "honours": [
+            "businessrule-04432638879352685329"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-42642804897148691736"
+            ],
+            "change": "kept",
+            "reason": "Same confirmation.",
+            "keeps": [
+              "businessrule-04432638879352685329"
+            ]
+          }
+        }
+      ],
+      "drops": []
+    }
+  ]
+}

@@ -1,777 +1,563 @@
 {
-  "stories": [
+ "stories": [
+  {
+   "title": "Apply one policy file's changes onto another source",
+   "what": "When a policy file's changes are applied to another source, each entry is saved, deleted or cleared as the file says, and values a newer file dropped are forgotten.",
+   "why": "Administrators can bring one policy file's settings into another source and trust that deletions and removals carry over exactly.",
+   "actions": [],
+   "terms": [
     {
-      "title": "Load policy templates from an uploaded package with the right language",
-      "what": "Domain rules that take an uploaded template package (a set of named files, some in language subfolders) and pick its template files and the language file for each, load them as pairs and keep the loaded set apart from any earlier one. The service reads no folder of the person's machine; the package arrives by upload and its files are stored by Data.",
-      "why": "Every later story reads policies from the loaded definitions, so loading must be exact about what it takes, refuses and reports.",
-      "actions": [],
-      "terms": [
-        {
-          "name": "Template file",
-          "means": "An ADMX file that defines policies, categories, products and support rules; not the language file that carries their text."
-        },
-        {
-          "name": "Language file",
-          "means": "The ADML file that holds the text of one template in one language; not the template itself."
-        },
-        {
-          "name": "Template package",
-          "means": "The set of template files and language subfolders a person uploads (or the service downloads from Microsoft) to load definitions; not a single template file."
-        }
-      ],
-      "criteria": [
-        {
-          "says": "Given an uploaded template package holding files with names ending in .admx in any letter case at its top level, entries in subfolders and other files, when the package is loaded, then only the top-level .admx files are taken as templates; subfolder entries and other files are ignored.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-87686960346106148106"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-1"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-3"
-            }
-          ]
-        },
-        {
-          "says": "Given a template and the language subfolders of the uploaded package, when its language file is chosen, then the subfolder named exactly by the language code wins if it holds this template's file, else the first subfolder whose name starts with the same language part (before the dash, capital letters mattering) that holds it, else the en-US subfolder if it holds it; a subfolder lacking the file is skipped. The choice works on the names of the uploaded files, never on a folder of the machine.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-92573318973236627036"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-1"
-            },
-            {
-              "_tag": "decision",
-              "id": "base.decision-15"
-            }
-          ]
-        },
-        {
-          "says": "Given no language file in any of those places, when the template is loaded, then it is refused with \"The corresponding ADML is missing\" and none of its content is loaded.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-69876963387177556361"
-            }
-          ]
-        },
-        {
-          "says": "Given a template whose namespace an earlier template already holds, when it is loaded, then it is refused with \"The <namespace> namespace is already owned by a different ADMX file\", so one file cannot be added twice.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-80037556468037401208"
-            }
-          ]
-        },
-        {
-          "says": "Given an uploaded package where some templates are refused with a reported failure (unparsable, invalid, namespace already owned, or no usable language file), when it is loaded, then each failure is listed, the other templates still load and the structures are built from those that did.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-70397490486289456229"
-            }
-          ]
-        },
-        {
-          "says": "Given a template and its language file both load, when the build runs, then its categories, products, support rules and policies are staged and the pair is recorded as loaded under the template's namespace.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-90575686774382821065"
-            }
-          ]
-        },
-        {
-          "says": "Given no saved language code, when definition text is needed, then the computer's own language is used; otherwise the saved code is used.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-92965345094444319678"
-            }
-          ]
-        },
-        {
-          "says": "Given loaded definitions and earlier search results, when the workspace is closed or replaced, then all definitions and the previous search results are discarded.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-73782132825452925601"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Validate template and language files while reading them",
-      "what": "Domain parsing rules that read a template and its language file into typed definitions and refuse the file as invalid when required parts are missing or malformed.",
-      "why": "A malformed file must be refused with a reason instead of loading half of its content.",
-      "actions": [],
-      "terms": [],
-      "criteria": [
-        {
-          "says": "Given a template file, when it is read, then it is refused as invalid if any of these is missing or unreadable: the policy definitions section; a namespace entry's prefix or namespace; a superseded-ADM file name; a minimum revision (missing or not a number); a support rule's name or display name; a support reference or range without its reference, or a version bound that is not a whole number; a product's name, display name or version index; a category's name or display name; a category's parent entry, or the parent's reference when the category has content; a policy's name, display name, key or class; a policy's category or supported-on reference; a number value's value; a list item's value name; a choice item's display name; or an option's id.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-98117161588141132501"
-            }
-          ]
-        },
-        {
-          "says": "Given a superseded entry without a file name or a minimum revision that is absent or not a number, when the template is read, then it is refused as invalid; when present they are read.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-83755288267226589422"
-            }
-          ]
-        },
-        {
-          "says": "Given a template that lists a target namespace and declares prefixes, when it is read, then the namespace is the one listed as its target, and a prefix declared twice refuses the file as invalid.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-91228574547678345469"
-            }
-          ]
-        },
-        {
-          "says": "Given a language file with no policy resources section or a revision that is missing or not a number, when it is read, then it is refused as invalid and its template is not loaded.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-93437714727587946479"
-            }
-          ]
-        },
-        {
-          "says": "Given a language file with several presentation tables, when it is read, then screen layouts come only from the first table, and a layout id that appears twice refuses the file as invalid.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-84649532972995606012"
-            }
-          ]
-        },
-        {
-          "says": "Given a control in a language file, when it is read, then it keeps the reference id the file gives it, tying it to the matching option in the template, or has no id when none is given.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-62728858792696794889"
-            }
-          ]
-        },
-        {
-          "says": "Given an XML attribute that is absent or whose text is invalid for the type of its default, when it is read, then the default is used.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-89165707538784213793"
-            }
-          ]
-        },
-        {
-          "says": "Given items from two templates with equal names, when each is named, then its unique name is its namespace, a colon and its name, so they stay apart.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-59268653642646332356"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Read support rules, products, classes and list options from templates",
-      "what": "Domain rules that turn template content into support rules, a product tree, the computer or user area of each policy and list options.",
-      "why": "Support filtering and editing depend on these definitions being read the way the legacy product reads them.",
-      "actions": [],
-      "terms": [],
-      "criteria": [
-        {
-          "says": "Given a support rule, when it is read, then it is 'any of' for a first logic element \"or\", 'all of' for \"and\", blank otherwise, only that first element is read, and a range may carry a minimum and maximum version.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-97301799709818271508"
-            }
-          ]
-        },
-        {
-          "says": "Given child products attached to parents, when products are built, then each child sits under its parent defined in the same template and only parentless products are top-level.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-66701495026848575269"
-            }
-          ]
-        },
-        {
-          "says": "Given a policy class of \"Machine\", \"User\" or any other value, when it is read, then it applies to computers, users, or both respectively.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-68278299005201189825"
-            }
-          ]
-        },
-        {
-          "says": "Given a policy declared for an area or for both, when areas are checked, then it applies to the declared area and a policy declared for both applies to each.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-77397977946778263418"
-            }
-          ]
-        },
-        {
-          "says": "Given a list option, when it is read, then it replaces other entries of its key unless additive, stores plain text unless expandable, numbers entries automatically unless the template says the person names them, and is prefixed only when a value prefix is given.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-60385862679195390671"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Decide whether a policy is enabled, disabled or unsupported",
-      "what": "Domain rules that weigh the stored values of a policy to give its state, tell preferences from managed policies and check support against chosen products.",
-      "why": "People rely on the state shown for a policy; it must match what the legacy product reports.",
-      "actions": [],
-      "terms": [],
-      "criteria": [
-        {
-          "says": "Given enabled and disabled evidence, when the state is decided, then it is Enabled if enabled exceeds disabled, Disabled if the reverse, Not configured with none, and Unclear when both are equal and above zero.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-92873738128602220135"
-            }
-          ]
-        },
-        {
-          "says": "Given a checkbox element, when evidence is counted, then a value marked for deletion counts one deleted element; otherwise each present off value or off-list value counts a tenth of a deleted element and each present on value or on-list value counts one present element; a checkbox whose template declares no on value or on list adds no present evidence, even if it holds 1.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-71909773168029429916"
-            }
-          ]
-        },
-        {
-          "says": "Given a stored value, when it is checked as present, then a deletion marker must be marked for deletion, a number must be a whole number equal to the expected one, text must equal the expected text, and a value of the wrong kind is not present.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-56421390704826486738"
-            }
-          ]
-        },
-        {
-          "says": "Given a policy naming a registry key outside software\\policies, software\\microsoft\\windows\\currentversion\\policies and system\\currentcontrolset\\policies, when it is classified, then it is a preference, otherwise a managed policy.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-93507723834804807958"
-            }
-          ]
-        },
-        {
-          "says": "Given a policy listing no supported-on information or an entry naming no known product, when support is checked, then it counts as supported only if unlisted policies are allowed.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-81760746419124272603"
-            }
-          ]
-        },
-        {
-          "says": "Given a support entry for a product, when it is checked, then it is met if it is not a version range and that exact product is chosen, or if any version or sub-product beneath the product is chosen.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-99139491988760691407"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Read and write policy files with a byte-faithful round trip",
-      "what": "Domain parsing and writing of POL files, with the typing of stored values. A POL file arrives by upload and leaves as a download (integrations.decision-1).",
-      "why": "Policy files must be read and saved without loss or surprise, because people overwrite real policy files with the output.",
-      "actions": [],
-      "terms": [
-        {
-          "name": "POL file",
-          "means": "A Registry.pol policy file that holds registry keys and values for computers or users; not a REG file, which is text."
-        }
-      ],
-      "criteria": [
-        {
-          "says": "Given a policy file that does not start with the 'PReg' signature, when it is read, then it is refused with 'Missing PReg signature'.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-67456626752221980743"
-            }
-          ]
-        },
-        {
-          "says": "Given a policy file whose format version is not 1, when it is read, then it is refused with 'Unknown (newer) version of POL format'.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-39262656033285451423"
-            }
-          ]
-        },
-        {
-          "says": "Given the same key and value name twice, when the file is read, then the later entry wins, names match regardless of letter case and the first spelling seen is kept for saving.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-51554818045857630746"
-            }
-          ]
-        },
-        {
-          "says": "Given text or a multiple-string value, when it is read, then text stops at its first empty character and a multiple-string value ends at its first empty string.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-70425663320377904356"
-            }
-          ]
-        },
-        {
-          "says": "Given a stored value, when it is read back, then text and expandable text give text, numbers give 32-bit or 64-bit numbers, multiple strings give a list of strings and every other type gives raw bytes.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-90470730563627765974"
-            }
-          ]
-        },
-        {
-          "says": "Given a policy file read without change, when it is written back, then its bytes are identical wherever the legacy format allows; a value is written as the type it was read as, and an unknown element is kept and reported rather than dropped.",
-          "from": [
-            {
-              "_tag": "decision",
-              "id": "base.decision-17"
-            },
-            {
-              "_tag": "decision",
-              "id": "base.decision-16"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-1"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Open policy sources from imported files and describe them",
-      "what": "Domain rules (with the imported content stored by Data) for each kind of policy source: how it is opened from an uploaded POL or REG file, whether it can be changed, how it is named and how it is closed. Live registry access, loaded user hives and Active Directory are not carried; they become import and export of files (integrations.decision-2, integrations.decision-7, scope.decision-12).",
-      "why": "People choose where policies come from; each source must open, report and close predictably, with files in place of the Windows registry.",
-      "actions": [],
-      "terms": [
-        {
-          "name": "Policy source",
-          "means": "The place user or computer policy values are read from and saved to; in this product always an imported file or an empty working copy, not the live system."
-        },
-        {
-          "name": "Registry source",
-          "means": "A source filled from an imported REG file in place of the Windows registry; not a live view of the machine's registry."
-        },
-        {
-          "name": "Local GPO",
-          "means": "The computer's own Group Policy, brought in as its Registry.pol file by upload; not a domain policy."
-        },
-        {
-          "name": "User GPO",
-          "means": "A person's Group Policy object (a policy set held in the domain for that person), brought in as its Registry.pol file by upload (integrations.decision-7)."
-        },
-        {
-          "name": "User hive",
-          "means": "A person's saved registry settings file, brought in as a REG file; not a registry loaded into the machine."
-        },
-        {
-          "name": "SID",
-          "means": "The security identifier that names a person's account; a User hive source may show it in brackets."
-        },
-        {
-          "name": "Scratch space",
-          "means": "An empty working copy of policies that can be changed but is never saved anywhere; not any file."
-        }
-      ],
-      "criteria": [
-        {
-          "says": "Given an imported REG file whose keys do not start with HKCU, HKEY_CURRENT_USER, HKU, HKEY_USERS, HKLM or HKEY_LOCAL_MACHINE (any letter case), when it is opened as a registry source, then it is refused with \"The root key is not valid.\"; a path after the root is opened, and created in the working copy if missing. No live registry key is opened.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-51029550915449645879"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-2"
-            },
-            {
-              "_tag": "decision",
-              "id": "scope.decision-12"
-            }
-          ]
-        },
-        {
-          "says": "Given an uploaded POL file (a POL file, the local Group Policy or a user's Group Policy object, each as a Registry.pol file), when it is opened, then its content is loaded into a stored working copy that can be changed and is saved by download; the legacy check that the file on disk can be opened for reading and writing does not apply because no file on a machine is held open.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-49395771262191850050"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-1"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-7"
-            },
-            {
-              "_tag": "decision",
-              "id": "scope.decision-12"
-            }
-          ]
-        },
-        {
-          "says": "Given a user hive imported as a REG file, when it is opened, then its content is loaded as a source with no mounting, temporary name or privileges; if the file cannot be read, the source becomes an empty, read-only scratch source without telling the person.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-50808386816006011599"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-2"
-            },
-            {
-              "_tag": "decision",
-              "id": "scope.decision-12"
-            }
-          ]
-        },
-        {
-          "says": "Given a Scratch space source, when it is opened, then it is an empty store that can be changed and is never saved.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-06218920206107794280"
-            }
-          ]
-        },
-        {
-          "says": "Given a registry source filled from an imported file, when writability is checked, then it is changeable as a working copy and nothing is ever written to or removed from a machine registry; saving is an export of a REG or POL file.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-35899140497190862562"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-2"
-            }
-          ]
-        },
-        {
-          "says": "Given a source, when its name is shown, then it is Local GPO, Registry, File, User GPO, User hive or Scratch space, followed in brackets by the name of the imported file (in place of a path or SID) when there is one.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-29585332630928853779"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-1"
-            }
-          ]
-        },
-        {
-          "says": "Given a number or text in an imported REG file, when a value is read from the registry source, then a missing key gives nothing, a number is held as the unsigned number policies use and environment variables in text are not expanded; no live registry is read.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-97000243539037627331"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-2"
-            }
-          ]
-        },
-        {
-          "says": "Given an unsigned 32-bit or 64-bit number in a registry source, when it is exported to a REG or POL file, then it is written with the same bits the registry would store as its signed number and the key is created in the export if missing; no live registry is written.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-34447675520768722859"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-2"
-            }
-          ]
-        },
-        {
-          "says": "Given a source being closed, when it is a user hive source, then there is nothing to unload and closing succeeds, as it does for every other kind of source; no hive is mounted or unloaded.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-46972642019161394212"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-2"
-            },
-            {
-              "_tag": "decision",
-              "id": "scope.decision-12"
-            }
-          ]
-        },
-        {
-          "says": "Given sources closing where one could not release its resources, when closing ends, then the person is told \"Cleanup did not complete fully because the loaded resources are open in other programs.\"",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-59631775004799082543"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Refuse operations a REG file source cannot support",
-      "what": "Domain rules that make a REG file source fail every read-style request with 'not implemented'.",
-      "why": "Applying a newer policy file over an older one to a REG file must fail visibly rather than give wrong answers.",
-      "actions": [],
-      "terms": [],
-      "criteria": [
-        {
-          "says": "Given a REG file source, when a value is asked for presence, read, checked for deletion or a key's values are listed, then the request fails with 'not implemented'.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-99096323836097983665"
-            },
-            {
-              "_tag": "rule",
-              "id": "businessrule-86313704517800761850"
-            },
-            {
-              "_tag": "rule",
-              "id": "businessrule-67539343519248421601"
-            },
-            {
-              "_tag": "rule",
-              "id": "businessrule-96701855986906093783"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Keep policy comments with their source and read comment files",
-      "what": "Domain rules (with comments stored by Data next to the policy state they belong to) for where a source's comments live and when a comment file is unreadable; a comment file (CMTX) is only imported and exported (integrations.decision-6).",
-      "why": "Comments must stay with their source and a damaged file must not give partial comments.",
-      "actions": [],
-      "terms": [
-        {
-          "name": "Comment file",
-          "means": "A CMTX file holding the comments written on policies; here an import and export format, not where comments are kept."
-        }
-      ],
-      "criteria": [
-        {
-          "says": "Given a source, when its comments are kept, then they are stored with that source in Data and not in any file beside it; when exported as a comment file, it is named like the source's file with the extension .cmtx, or comment.cmtx for the local or a user's Group Policy source; a registry source has no beside-the-file location and its export name is chosen at download; Scratch space has no comments, so comments are unavailable.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-62563112935081932578"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-6"
-            },
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-1"
-            }
-          ]
-        },
-        {
-          "says": "Given a comment file where any policy reference has no colon or an undeclared prefix, text is not \"$(resource.<id>)\", a text id is missing or two comments resolve to the same policy, when it is read, then no comment is read.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-31889487085995982343"
-            }
-          ]
-        },
-        {
-          "says": "Given the comments of a source, when they are exported as a comment file and imported again, then the same comments come back and the text is byte-faithful where the format allows.",
-          "from": [
-            {
-              "_tag": "decision",
-              "id": "integrations.decision-6"
-            },
-            {
-              "_tag": "decision",
-              "id": "base.decision-17"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Show category and policy details and keep the list tidy",
-      "what": "Rules for what the information pane, icons and state column show, and how selection survives a rebuild.",
-      "why": "People browse the definitions by what the pane tells them.",
-      "actions": [],
-      "terms": [],
-      "criteria": [
-        {
-          "says": "Given a selected or highlighted category, when the pane shows it, then it gives the title, \"This category contains N policies and M subcategories.\" (\"The selected category\" when only highlighted) and its explanation, counting hidden items too.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-55193519950925403263"
-            }
-          ]
-        },
-        {
-          "says": "Given a selected policy, when the pane shows it, then it gives the title, \"(no requirements information)\" or \"Requirements:\" plus the support name, its explanation, and a preference notice only for preferences.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-75568512748421119593"
-            }
-          ]
-        },
-        {
-          "says": "Given a policy description, when it is shown, then leading and trailing spaces of every line are removed and trailing blank space is dropped.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-58670284456856579605"
-            }
-          ]
-        },
-        {
-          "says": "Given a policy, when its icon is chosen, then it is preference first, plain when it has no configurable elements, else \"extra configuration\".",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-77153890827857678995"
-            }
-          ]
-        },
-        {
-          "says": "Given both areas shown, when a policy's state is displayed, then a policy applying to one area shows its state followed by \"(C)\" or \"(U)\"; with a single area only the state is shown.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-89513911810275647919"
-            }
-          ]
-        },
-        {
-          "says": "Given the category tree rebuilt from loaded definitions, when it finishes, then nothing is selected and the pane shows the empty state.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-95679837516811308115"
-            }
-          ]
-        },
-        {
-          "says": "Given a rebuilt list, when the earlier policy is still in the category shown and passes the visibility rule, then it is selected and revealed, otherwise nothing is selected; the earlier top row is restored if the policy is in the same category and the list has that many rows.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-69364776950274199547"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Filter policies and keep search results",
-      "what": "Rules for the filters of the policy list and the life of the search results.",
-      "why": "People narrow a large list of policies by managed or preference, comment and product.",
-      "actions": [],
-      "terms": [],
-      "criteria": [
-        {
-          "says": "Given a filter on managed policies, when it is applied, then preferences are hidden when managed policies are wanted and managed policies are hidden when preferences are wanted.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-67323359061601595450"
-            }
-          ]
-        },
-        {
-          "says": "Given several active filter parts, when a policy is tested, then it passes only if it passes every active part.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-70331897906623822249"
-            }
-          ]
-        },
-        {
-          "says": "Given a filter on comments, when it is applied, then it keeps only policies with a non-empty comment in the checked area, or only those with none, as chosen.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-79960316131030112593"
-            }
-          ]
-        },
-        {
-          "says": "Given a filter on products, when it is applied, then it keeps only policies supported by the chosen products, honouring the options to match any product and to include blank support.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-97862941341357225531"
-            }
-          ]
-        },
-        {
-          "says": "Given search results, when the search is cleared, then the results are forgotten and reopening them reports that no search has been run.",
-          "from": [
-            {
-              "_tag": "rule",
-              "id": "businessrule-97390301066419776959"
-            }
-          ]
-        }
-      ]
+     "name": "Marker-style entry",
+     "means": "A policy file entry whose name starts with '**' and tells the program to delete or clear something instead of storing a value; it is not a stored setting."
     }
-  ]
+   ],
+   "criteria": [
+    {
+     "says": "Given a policy file with entries, when its changes are applied to another source, then an entry is saved only if it has a value name that is not empty and does not start with '**', and the saved value keeps its letter case and type; other marker-style entries and entries with an empty value name are skipped without a message.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-05545231242611046306"
+      }
+     ]
+    },
+    {
+     "says": "Given an entry starting '**deletekeys', when the changes are applied, then each key in its semicolon-separated list under the entry's key is cleared, using lower-case names, and only that key's own values go, not its subkeys.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-28402048173344159866"
+      }
+     ]
+    },
+    {
+     "says": "Given an entry named '**deletevalues', when the changes are applied, then each value in its semicolon-separated list is deleted, using lower-case names.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-67697422395860869033"
+      }
+     ]
+    },
+    {
+     "says": "Given an entry named '**del.' followed by a value name, when the changes are applied, then that value is deleted, using the lower-case key and value names.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-84817748081019740495"
+      }
+     ]
+    },
+    {
+     "says": "Given an entry starting '**delvals', when the changes are applied, then the whole key is cleared, using the lower-case key name; entries are applied in sorted order so clear-all entries come before values, and clearing a live registry key removes only that key's own values.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-91552597921533368557"
+      }
+     ]
+    },
+    {
+     "says": "Given a newer policy file applied over an older one, when the older file held values the newer one dropped, then those values are forgotten in the target, but only when they sit under the three policy branches of the registry.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-41013546429447756519"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Policy Change Applier"
+   ]
+  },
+  {
+   "title": "Provide an empty scratch source and policy files on the machine",
+   "what": "A Scratch space source starts empty and is never saved, and policy files and their folders on the computer are read, created empty when missing, and opened for reading and writing.",
+   "why": "People can practise or prepare changes without touching anything, and can point the program at real policy files without them having to exist first.",
+   "actions": [],
+   "terms": [
+    {
+     "name": "Scratch space",
+     "means": "A source that starts empty, can be changed and is never saved; it is not a file or the registry."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a Scratch space source is chosen, when the person works with it, then it starts empty, can be changed, and is never saved anywhere.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-06218920206107794280"
+      }
+     ]
+    },
+    {
+     "says": "Given the policy file of a POL file source, the local Group Policy or a per-user Group Policy does not exist, when the source is opened, then it is created empty with its folder and treated as writable, so a mistyped SID creates a new folder and empty file under the per-user policy folder; if creation fails, an empty read-only source is used and no error is shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-79173574861552738237"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given a POL file, the local Group Policy or a per-user Group Policy that already has a file, when the source is opened, then the file is loaded and is writable only when it can be opened for reading and writing; otherwise it can be viewed but its changes cannot be committed.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49395771262191850050"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Scratch Policy Store",
+    "Computer File Access"
+   ]
+  },
+  {
+   "title": "Work out where each source's policy and comment files live",
+   "what": "From a source's kind and the detail given, the program decides the location of its policy file and of its comment file.",
+   "why": "Every source reads and saves its settings and comments in the right place without the person having to type paths.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a source of a certain kind, when its policy file location is needed, then Local GPO uses the Registry.pol of the system's local Group Policy (user or machine folder) and its gpt.ini, a per-user GPO uses the folder named by the person's SID under GroupPolicyUsers, a POL file and a user hive use the path given, and Scratch space has none.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-74412475215137182202"
+      }
+     ]
+    },
+    {
+     "says": "Given a source, when its comment file location is needed, then it sits beside the source's file: the POL file or hive path with the extension changed to .cmtx; for Local GPO or a per-user GPO a file named comment.cmtx in the same folder; for the registry a file under the person's local application data folder (one for user, one for machine); and Scratch space has none, so comments are unavailable.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-62563112935081932578"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Source Location Resolver"
+   ]
+  },
+  {
+   "title": "Open the user and computer sources and remember them",
+   "what": "The program closes open sources, opens the user and computer sources from the person's choice or the defaults, remembers the last choice, and falls back to the defaults when the saved sources cannot be reached.",
+   "why": "People always return to the sources they were working with, and never end up stuck when those sources have gone.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given sources are already open, when new sources are opened, then the open ones are closed first; unsaved changes are discarded for sources backed by a POL file (local Group Policy files, a chosen POL file, a per-user Group Policy object) and for the empty source, while a registry source applies changes at once and a user hive file is applied when closed, so those lose nothing.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-83542226215682203251"
+      }
+     ]
+    },
+    {
+     "says": "Given first start with no saved policy sources, when the program opens, then both the user source and the computer source open as the local Group Policy files (Local GPO) with no extra location.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-27578488339642782673"
+      }
+     ]
+    },
+    {
+     "says": "Given the policy sources dialog opens with the last-used sources, when it shows, then each side is set to the remembered kind (Local GPO, Registry, POL file, Scratch space, and for users also per-user GPO or user hive), and the registry path, file name, SID or hive path is filled in only for kinds that carry one.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-72559528436656832979"
+      }
+     ]
+    },
+    {
+     "says": "Given the previously saved sources cannot be opened, when the program starts them, then the person is told \"The previous policy sources are not accessible. The defaults will be loaded.\", both sources are saved as Local GPO and opened quietly, and only the source type is reset while any saved location text stays.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-83248377690419919134"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Source Opener",
+    "Source Memory"
+   ]
+  },
+  {
+   "title": "Keep and save policy comments for each source",
+   "what": "Comments are kept per policy and area, found when wanted, and saved to the comment file beside the source, which is read and written with a text id and prefix for every comment.",
+   "why": "Administrators can leave notes on policies and trust them to be saved with the source and read back intact.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a policy and an area, when its comment is wanted, then it is empty when the source has no comment file or no comment for the policy, and otherwise the saved text.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-40601471490811436933"
+      }
+     ]
+    },
+    {
+     "says": "Given a source, when its comments are loaded, then they are used only if it has a comment file location; the folder is created if missing, an existing file is loaded, a missing file gives no comments yet, and any failure leaves that source without comments.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76710184957379543464"
+      }
+     ]
+    },
+    {
+     "says": "Given a source's comment list exists, when comments are saved, then the list is written to its comment file location even when empty, and a source without comment support has no list and is skipped.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-87767421628061265824"
+      }
+     ]
+    },
+    {
+     "says": "Given a comment file, when it is read, then it is refused as unreadable and the source's comments become unavailable if it has no comment-definitions section, a namespace entry without a prefix, a comment without a policy reference, a text without an id, or a repeated prefix, policy reference or text id.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-93571958636080198306"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given a comment file, when the comments are read, then none can be read if any comment's policy reference has no colon or a prefix that is not declared, its text is not written as \"$(resource.<id>)\", its text id is missing, or two comments resolve to the same policy.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-31889487085995982343"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given comments held in memory, when they are saved, then every comment and text is written into the target file in schema version 1.0, replacing what the file held before.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-57614366266507799597"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given comments being saved, when the file is written, then each comment gets its own text id built from the policy's namespace, policy name and a running number, and each distinct namespace gets a prefix made from its name (dots turned into underscores) and the running number.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-39804924157705575084"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Policy Comment Catalog",
+    "Comment File Adapter"
+   ]
+  },
+  {
+   "title": "Turn a typed user name into a valid account identifier",
+   "what": "A user name typed in the user dialog is looked up in the directory to give the account's security identifier (SID), and a typed SID is checked before the dialog closes.",
+   "why": "People can pick another user's policies by name instead of needing to know a SID, and cannot proceed with an invalid one.",
+   "actions": [],
+   "terms": [
+    {
+     "name": "SID",
+     "means": "The security identifier that names one account for Windows; it is not the account's typed user name."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a name typed in the user dialog, when the person presses Search, then it is turned into the account's SID; if it cannot be translated, they are told \"The name could not be translated to a SID.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-91379498462935455610"
+      }
+     ]
+    },
+    {
+     "says": "Given a name typed but no SID, when the person presses OK, then the name is looked up first and the dialog stays open if no SID results.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-88238619586671903040"
+      }
+     ]
+    },
+    {
+     "says": "Given a SID text, when the person presses OK, then it must be a valid SID or they are told \"The SID is not valid. Enter a SID in the lower box, or enter a username in the top box and press Search to translate.\"; a valid SID is returned and the dialog closes.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-77474018484672211108"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Directory Account Resolver"
+   ]
+  },
+  {
+   "title": "Settle each policy's state from the evidence in its source",
+   "what": "Enabled and disabled evidence is counted from the values and lists a source holds for a policy and its options, and each policy's state in an area is settled and given to the screens as plain facts.",
+   "why": "People see whether each policy is Enabled, Disabled or Not configured in the way Windows would read it.",
+   "actions": [],
+   "terms": [
+    {
+     "name": "Evidence",
+     "means": "The settings found in a source that point to a policy being on or off; it is not the policy's final state, which is settled from all of it."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a policy with a registry value of its own, when it is read, then it counts as enabled evidence when the value holds its 'on' value (the number 1 when the template gives none) and as disabled evidence when it holds its 'off' value or is marked for deletion when the template gives none.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-29495869201116213931"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy's switched-on and switched-off effects, when they are read, then they come from its enabled and disabled values and lists, where a list entry names a value and optionally its own key, falling back to the list's default key.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-22959538508130326801"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy's lists of on-values and off-values, when they are read, then each value present counts as enabled or disabled evidence, using the list's own key when it names one.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-07554086131159240838"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy's list elements, when they are read, then a list marked for deletion counts as one deleted element, and a list holding any values counts as a present element and cancels that deletion.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-07376289294643129633"
+      }
+     ]
+    },
+    {
+     "says": "Given a number, text, choice or multi-line text element, when it is read, then a value marked for deletion counts as a deleted element and a value that is present counts as a present element.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-25766167090873157702"
+      }
+     ]
+    },
+    {
+     "says": "Given a checkbox element, when it is read, then a value marked for deletion counts as one deleted element; otherwise each present off value (or off-list value) counts a tenth of a deleted element and each present on value (or on-list value) counts one present element, and a checkbox whose template declares no on value or on list adds no present evidence even if it holds 1.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-71909773168029429916"
+      }
+     ]
+    },
+    {
+     "says": "Given the elements of a policy, when evidence is added, then if any element is present the elements add their count to the enabled evidence, and only when none is present do deleted elements add to the disabled evidence.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-33872241894384295212"
+      }
+     ]
+    },
+    {
+     "says": "Given the enabled and disabled evidence, when the state is settled, then the policy is Enabled when enabled exceeds disabled, Disabled when disabled exceeds enabled, Not configured when there is no evidence either way, and Unclear when both are equal and above zero.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-92873738128602220135"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy and an area, when its state is shown, then it reads \"Enabled\", \"Disabled\", \"Not Configured\" or \"Unknown\", reading the computer source for the computer area and the user source for any other, and the screens receive the state of each policy in the area as plain facts.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-46971412075927401870"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Enablement Evidence Reader",
+    "Policy State Provider"
+   ],
+   "open": [
+    "The rules give the states Not Configured, Not configured, Unclear and Unknown in different places; which exact wording and when 'Unclear' is shown on screen is not settled."
+   ]
+  },
+  {
+   "title": "Show policy settings as semantic policy text with or without a heading",
+   "what": "A policy's settings are written as semantic policy text, with the heading 'Policy Plus Semantic Policy' only when the person ticks the option.",
+   "why": "People can copy just the fragment they need or a complete, labelled text to share.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a policy's settings shown as text, when \"Include SPOL header\" is ticked, then the text starts with the heading \"Policy Plus Semantic Policy\" and a blank line; when it is not ticked, only the fragment is shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-47036476815425257305"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Semantic Text Writer"
+   ]
+  },
+  {
+   "title": "Offer the area choice and reopen the last search results",
+   "what": "The area list offers exactly three choices and starts on both areas, and the last search results and chosen position can be reopened without a new search until the search is cleared.",
+   "why": "People start with every policy in view and can return to their results without searching again.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given the program starts, when the area list shows, then it starts on \"User or Computer\", the first choice, so both user and computer policies are shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-85204901615179220846"
+      }
+     ]
+    },
+    {
+     "says": "Given the area list, when the person opens it, then it offers only \"User or Computer\", \"User\" and \"Computer\", with no free text.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-81666786810242280110"
+      }
+     ]
+    },
+    {
+     "says": "Given no search has been run or it was cleared, when the person opens the results from the main window, then they are told \"No search has been run yet, so there are no results to display.\" and nothing opens.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-38090025507732480917"
+      }
+     ]
+    },
+    {
+     "says": "Given search results exist, when the person chooses \"Search Results\", then the last results are reopened and no new search starts.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-78338951417255409296"
+      }
+     ]
+    },
+    {
+     "says": "Given the results window is reopened, when the previously selected result is still in the list, then it is selected again.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-17385510066480798684"
+      }
+     ]
+    },
+    {
+     "says": "Given results are held, when the search is cleared, then the results are forgotten and reopening them reports that no search has been run.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-97390301066419776959"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Area Scope Chooser",
+    "Result Recall"
+   ]
+  },
+  {
+   "title": "Read typed numbers within the 32-bit and 64-bit limits",
+   "what": "Numbers typed for a registry value are read as decimal or marked hexadecimal and held to the range of a 32-bit or 64-bit value.",
+   "why": "People cannot store a number a registry value cannot hold, and typing mistakes never silently change a value.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a number entered for a registry value, when it is read, then it is limited to 0 to 4,294,967,295 for a 32-bit value and to 0 to 18,446,744,073,709,551,615 for a 64-bit value.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-13220028854331489804"
+      }
+     ]
+    },
+    {
+     "says": "Given a typed hexadecimal number, when it is too large to fit then the value is set to the largest allowed value, and when the text is not a hexadecimal number the value is left unchanged.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-85571919984782494727"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Number Text Reader"
+   ]
+  }
+ ]
 }

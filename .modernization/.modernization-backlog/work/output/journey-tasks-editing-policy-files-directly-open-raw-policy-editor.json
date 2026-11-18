@@ -1,0 +1,164 @@
+{
+ "stories": [
+  {
+   "title": "Open the raw policy editor and work on its entries",
+   "what": "A person can start editing a policy file directly: a caution is shown the first time, the file's keys and values appear as an ordered tree with only the fitting actions offered, and leaving keeps the changes.",
+   "why": "Advanced people can reach the raw keys and values of a policy file with a clear warning and a clear answer on whether their changes are kept.",
+   "actions": [
+    "block-91792378122287310099",
+    "block-74715625061692366925",
+    "block-18043112458533276543",
+    "block-82351254846133371644",
+    "block-91089666300107221398",
+    "block-93573573421282575863"
+   ],
+   "terms": [
+    {
+     "name": "Raw policy editing",
+     "means": "Working directly on the keys and values stored in a policy file; not choosing settings through the policy browser."
+    },
+    {
+     "name": "Deletion entry",
+     "means": "A special entry in a policy file that marks a value or all values of a key for removal; not an ordinary value."
+    }
+   ],
+   "journey": {
+    "name": "The system picks the area",
+    "steps": [
+     "Start editing the policy file, understanding the risk the first time",
+     "Find and work on entries in the file",
+     "See what I have changed before leaving, then finish"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given neither the user nor the computer policies come from a policy file, when a person tries to edit a policy file directly, then they are told \"Neither loaded source is backed by a POL file.\"; and given some are, then the area they can pick is limited to those backed by a policy file.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-40441510620479008895"
+      }
+     ]
+    },
+    {
+     "says": "Given the question of which policies to edit is open, when the person looks at the choices, then User and Computer can each be picked only when that choice is switched on for this question.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-14969413888672404933"
+      }
+     ]
+    },
+    {
+     "says": "Given the question of which policies to edit is open, when no choice has been made yet, then confirming does nothing; once User or Computer is chosen, confirming returns that choice and closes the question.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-64564273672622472190"
+      }
+     ]
+    },
+    {
+     "says": "Given the question of which policies to edit is open, when the person presses Escape, then it closes as cancelled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-21403142511575039594"
+      }
+     ]
+    },
+    {
+     "says": "Given a person has not yet accepted the caution, when they start editing directly, then they see \"Caution! This tool is for very advanced users. Improper modifications may result in inconsistencies in policies' states.\"; choosing Yes continues and remembers the acceptance, and choosing No cancels and asks again next time.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-98676109650316370626"
+      }
+     ]
+    },
+    {
+     "says": "Given the policy file is open, when the entries are shown, then keys appear in alphabetical order ignoring case, each followed by its indented sub-keys and then its values in alphabetical order, and a value with an empty name is not shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-81365817698028227620"
+      }
+     ]
+    },
+    {
+     "says": "Given a key has sub-keys, when they are shown, then each sub-key name appears only once regardless of case, and the key itself is never shown among them.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-67529938588779257243"
+      }
+     ]
+    },
+    {
+     "says": "Given the file holds special deletion entries, when they are shown, then \"**deletevalues\" appears as \"Delete values\" with its data, \"**del.<name>\" as \"Delete value\" with the name, and entries starting \"**delvals\" as \"Delete all values\", and none of them can be edited or deleted.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-43194539708053716006"
+      }
+     ]
+    },
+    {
+     "says": "Given the file holds ordinary values, when they are shown, then lists of text show joined by spaces, text as it is, 32-bit and 64-bit numbers in decimal and binary data as hexadecimal bytes separated by spaces, and other kinds show no content.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-44523725638753390545"
+      }
+     ]
+    },
+    {
+     "says": "Given nothing is selected in the list, when the person looks at the actions, then only Add key and Export are available.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-13057335115870748705"
+      }
+     ]
+    },
+    {
+     "says": "Given a key is selected, then Add key, Add value, Delete value, Forget and Export are available and Edit is not; given a value is selected, then Forget is available, Add key, Add value and Export are not, and Edit and Delete value are available only if the value is not already a deletion entry.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-86296876237579429124"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-32089237714667793315"
+      }
+     ]
+    },
+    {
+     "says": "Given the person is editing a policy file, when they press Done or Enter, then the editor closes as accepted, and when they press Escape, then it closes as cancelled; there is no Cancel button, and either way every change they made stays on the loaded policies and reaches disk only when policies are saved.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-18574755515767742264"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#1",
+    "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#2",
+    "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#3"
+   ],
+   "components": [
+    "Raw Editing Gate",
+    "Entry Tree Lister",
+    "Entry Action Availability",
+    "Editing Session Recap"
+   ],
+   "open": [
+    "When only one of User and Computer is backed by a policy file, is it taken without asking the person?",
+    "Is the person shown a summary of what they changed, or a reminder about saving, when they leave the editor?"
+   ]
+  }
+ ]
+}

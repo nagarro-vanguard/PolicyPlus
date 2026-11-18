@@ -1,0 +1,54 @@
+{
+  "stories": [
+    {
+      "title": "Copy a policy's settings out as ready-to-use policy text",
+      "what": "A person looking at a policy's text can choose whether it begins with the Policy Plus heading line and a blank line, or shows only the fragment.",
+      "why": "People need to take a policy's settings away as text, with the heading included when they want to import it back.",
+      "actions": [
+        "block-56021383816140036498",
+        "block-18241451168755948032",
+        "block-93851338452706207861"
+      ],
+      "terms": [
+        {
+          "name": "Semantic policy text",
+          "means": "The plain-text form of a policy's settings that can be copied out and imported back; it is not the policy's on-screen description."
+        },
+        {
+          "name": "Policy text heading",
+          "means": "The heading line \"Policy Plus Semantic Policy\" and a blank line at the top of the text that lets it be imported back; it is not part of the policy's settings."
+        }
+      ],
+      "journey": {
+        "name": "Ready to take away",
+        "steps": [
+          "tasks-changing-policy-settings.inspect-policy-settings-as-text:ready-to-take-away#1"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the policy text is shown, when \"Include SPOL header\" is ticked, then the text starts with the heading \"Policy Plus Semantic Policy\" and a blank line, followed by the fragment.",
+          "from": []
+        },
+        {
+          "says": "Given the policy text is shown, when \"Include SPOL header\" is not ticked, then only the fragment is shown, without the heading and blank line.",
+          "from": []
+        },
+        {
+          "says": "Given the text is shown without the heading, when the person ticks \"Include SPOL header\", then the heading and blank line appear at the top of the text.",
+          "from": []
+        }
+      ],
+      "steps": [
+        "tasks-changing-policy-settings.inspect-policy-settings-as-text:ready-to-take-away#1"
+      ],
+      "components": [],
+      "open": [
+        "When the person chooses Copy, is the whole text as shown (with or without the heading) selected and placed on the clipboard?",
+        "When the text window opens, should the text take focus with all of it selected so it can be copied straight away?",
+        "Should Ctrl+A select all the text in the box?",
+        "Is the heading ticked by default when the text window opens?"
+      ]
+    }
+  ]
+}

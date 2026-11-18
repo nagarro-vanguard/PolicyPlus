@@ -1,0 +1,505 @@
+{
+  "jobs": [
+    {
+      "id": "tasks-building-and-versioning-policy-plus",
+      "stage": "as-is",
+      "kind": "tasks",
+      "title": "Find the tasks of Building and versioning Policy Plus",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": []
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions",
+      "stage": "as-is",
+      "kind": "tasks",
+      "title": "Find the tasks of Getting Microsoft policy definitions",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The outcome promises Microsoft's \"current\" set, but the legacy rule says the program always fetches one fixed package (Windows 11 September 2026 Update 26H2) and the person cannot choose another version.",
+        "Record 0: The third current step drops the partial-failure outcomes: a failed cleanup still leaves all files installed yet reports \"Failed to remove temporary files.\" with no folder reported, a failed extraction keeps the package, and a failed move can leave some files replaced and others not with no backup.",
+        "Record 1: The first current step says \"many categories lack their parent\", losing the legacy condition that the offer is made only when more than two non-empty categories name a parent that is not loaded, and that group-policy support comes from a fixed list of edition codes where a failed lookup counts as no support.",
+        "Record 2: This task bundles about 100 rules covering the whole load and browse of the program (registry evaluation, support definitions, filters, comment columns, ADMX/ADML parsing errors) under one outcome, so it is the old Acquire menu handler rather than a task, and its first step repeats the Help-menu start already in get-policy-definitions.",
+        "Record 2: The browse step omits the load-problem path: errors are listed and, where a choice is wanted, the person is asked \"Continue trying to use this workspace?\"; failing files are skipped while the others load, so the step misstates what happens when the new definitions are partly bad."
+      ]
+    },
+    {
+      "id": "tasks-using-the-product",
+      "stage": "as-is",
+      "kind": "tasks",
+      "title": "Find the tasks of Using the product",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 1: The task includes action block-04864433854821115058 but drops five of the rules that action cites (40551856488084894130, 41547680626150552574, 58877134447436981389, 72200124994498270380, 78253526822536661517), so the reload step hides what happens when the new language's reload reports problems or fails: the keep-or-discard question, the offer to load the default folder, and the empty workspace.",
+        "Record 1: The step 'Enter the language wanted' loses that the same-code check is case-sensitive and compares the entered text (spaces trimmed) with the stored code untrimmed, so en-us counts as a change from en-US, and that text with path characters passes and is later used as a folder name.",
+        "Record 0: The step 'Know whether changes can be kept' omits that the all-writable confirmation is never shown at start, only the not-fully-writable warning (businessrule-98025569949322378254), and the first step omits that an unopenable settings area is carried past without telling the person, so settings are not remembered (businessrule-25353365313977612083)."
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources",
+      "stage": "as-is",
+      "kind": "tasks",
+      "title": "Find the tasks of Choosing and saving policy sources",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The intents name only some source kinds (computer: only the policy file is described; user: omits Local GPO and the scratch-space fallback is only in the confirm step), and the file picker line drops that choosing an existing policy file raises no overwrite question.",
+        "Record 0: The step to see the policies of the newly chosen sources folds in the view-setting rule (businessrule-84588009124214109370) but drops that a policy kept after moving up is shown in the information pane only and is not highlighted in the list.",
+        "Record 1: This is the old user-account dialog, not something a person sets out to do on their own: choosing the account is a step of choosing the user policy source, so the task is a surface of the old system.",
+        "Record 2: This is the old user-profile dialog, not a separate outcome: picking a profile hive is a step of choosing the user policy source, and the Escape-cancel and OK-does-nothing-until-selected behaviours are dialog mechanics.",
+        "Record 3: The Keep the policy settings sentence reduces about twenty rules to the source own form and loses refusals and conditions: a REG file source cannot forget a value (fails as not implemented), values outside a set source branch are ignored, forgetting applies only under the three policy branches, and entries without a value name or starting with ** are skipped silently.",
+        "Record 3: The take-effect sentence omits the POL-file case (saved to disk only) and does not state the condition that decides between asking Windows to refresh policy and applying the difference to the running account registry (Windows editions that have Group Policy), nor that the per-user GPO always asks for a user refresh."
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings",
+      "stage": "as-is",
+      "kind": "tasks",
+      "title": "Find the tasks of Changing policy settings",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The save step says it writes the chosen state, every option and the comment, but drops that OK and Apply are available only when the chosen source can be written to, that an empty comment removes the stored comment, and that Disabled writes only each option's own removal and Not configured writes nothing beyond the forgetting.",
+        "Record 0: Leaving without saving (Cancel, with its reported-as-change-if-Apply-was-used rule) is folded into the save step, so the person has no step for cancelling, and Apply keeping the dialog open versus OK closing it is blurred.",
+        "Record 0: The option-filling step loses the quirks of the number rules: text a whole-number reading accepts (signs, spaces) is kept, pasted text is not restricted to digits, numbers above 2,147,483,647 revert to the default even when the policy maximum is higher, and a negative minimum is stored unsigned.",
+        "Record 0: Rules that decide how a REG file or policy file forgets a key's clearance (businessrule-49955247469929977676, businessrule-60358450731077326247) are placed in this task, but no step is about source files; they belong to the storage layer, not to what the person does here.",
+        "Record 1: The Escape key (block-02431696381301467584) is placed under accepting the text and described only as leaving passing nothing on, losing the rule that Escape closes the window only when no text in the box is selected.",
+        "Record 1: Select-all with Ctrl+A (block-98990608667721641067) is grouped under providing the policy text, where it does not belong, and no step covers the text format the checks enforce (signature line, CRLF line breaks, exact U for user, state words, value formats, comment escapes), so the person cannot write a valid text from these steps.",
+        "Record 1: The apply step says each policy is wiped then written with its comment, but drops that a failed policy leaves the new comment against a half-written policy, that an empty comment leaves an existing comment alone, and that the person is told only how many failed, not which.",
+        "Record 2: The outcome says the person sees policy settings as text, yet no action or step produces the text or says which settings it holds; only the fragment view, header toggle and copy are given, and there is no entry that opens it, so it reads as a surface of the old system rather than a task."
+      ]
+    },
+    {
+      "id": "tasks-finding-policies",
+      "stage": "as-is",
+      "kind": "tasks",
+      "title": "Find the tasks of Finding policies",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The rules include ones that do not belong here: Deduplicate Policies being hidden, only one list row being selectable, and the list refresh after an edit is accepted; none of them is about finding by identifier.",
+        "Record 0: The journey drops what the old system does with the identifier: an \"@U\" or \"@C\" suffix picks the section (any other suffix is cut off and the policy applies to both), the policy opens in the lower-numbered of the shown area and the area found (Computer wins), and a policy hidden by the area or filter leaves the category shown with nothing selected and no message.",
+        "Record 0: The \"See what was found\" step lumps the product and support-definition detail windows (parent button, child revisions, major/minor/top-level labels, match-all/any/none wording, missing-product display) into one clause, so the person could not tell what those windows must show; they are a separate outcome from locating something by its identifier.",
+        "Record 1: The journey omits what makes a hit: words match as whole words, the characters . , ' \" ; / ! ( ) { } [ ] are stripped, and a single-quoted word does not close itself but absorbs the words after it.",
+        "Record 3: The \"Pick a hit to open\" step drops the condition that Go or a double-click accepts only when a result is selected, and that the position is remembered for Find Next.",
+        "Record 4: The journey omits that a filter with Supported on ticked and no product ticked is accepted, and that unticking Supported on discards the ticked products and matching options, and it does not say which choices the dialog shows when it reopens from an existing filter."
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly",
+      "stage": "as-is",
+      "kind": "tasks",
+      "title": "Find the tasks of Editing policy files directly",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The raw-edit entry says only that the person is told when neither source is POL-backed, but the rule also limits the chosen area to POL-backed sources, and the first-time warning loses that answering No cancels and asks again next time.",
+        "Record 1: The rule that Edit refuses unsupported kinds such as binary with \"This value kind is not supported.\" is filed under this task's rules although it belongs to changing a value's data.",
+        "Record 2: The step 'Choose a value to change' relies on the kind-refusal rule and the step 'Enter the new data' on the 0 to 4,294,967,295 / 18,446,744,073,709,551,615 number limits, yet both rules sit in the add task and not in this task's rules, so the task cites rules that do not carry its behaviour.",
+        "Record 3: The key-delete choices lose their condition: Clear first drops deletion entries already in the key and does not put back sub-key values, and Delete one value on a key replaces any value of that name whether or not it exists; the step names the options without these consequences.",
+        "Record 4: The steps drop what the import does with the file: a REG key header with a minus clears the key, a bare minus value deletes it, a key not starting with the prefix is applied with its full name, unreadable data is kept as an empty value without error, and a wrong first line is refused ('Incorrect REG signature').",
+        "Record 5: The step omits that a policy file is applied as the difference from an empty file so nothing is forgotten, a rule the task cites but never states.",
+        "Record 6: The write step says only 'with deletion marks' and loses how values are written (64-bit, expandable text and multiple strings become hex bytes, trailing backslash removed from the branch, unsupported source or missing registry location ends in an unhandled error rather than a message).",
+        "Record 7: The step does not say that a registry-backed source is rebuilt from the three policy locations and that a missing location stops it, behaviour the task relies on through its need for the registry."
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions",
+      "stage": "as-is",
+      "kind": "tasks",
+      "title": "Find the tasks of Browsing policy definitions",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The failure step drops that the workspace may already be emptied or partly filled and the remembered folder stays unchanged (businessrule-19671296259932138006), so the person is not told the old state is lost.",
+        "Record 6: The step says unknown or missing support definitions are flagged and disabled, but a policy with no support code shows blank text (not 'missing') per businessrule-59317523370985833904, and the category and support conditions are folded together.",
+        "Record 7: The outcome promises how a category 'relates to policies', but no rule or action in the legacy words shows any such relationship; the window shows only the category and its parent.",
+        "Record 4: The right-click step drops that a tree with no selected category is not handled and fails (businessrule-36623707346851740456), and that a right-click in the policy list with no row shows nothing is stated but the tree failure is lost.",
+        "Record 10: The first step 'Choose an inspection' is the Main menu that opens the category, edit, details or inspection view, so it mixes in category, details and editing and is not an inspection step on its own; those rules (details and category) belong to the other tasks.",
+        "Record 10: The 'Read how the policy is built' step loses the conditions: registry value and client extension lines appear only when named, comments only when stored, a section only for areas the policy covers, 'Left implicit' vs 'Left to elements', list value-name wording, and the inspector stops with an unhandled error when no element has a presentation item's ID (businessrule-80096613073902079124).",
+        "Record 10: Rules about writing semantic policy text (quote and line-break escaping, 'cannot be read back', C/U prefix, number formats) describe file output, not browsing, and no step states them, so they are claimed but not carried."
+      ]
+    },
+    {
+      "id": "merge",
+      "stage": "as-is",
+      "kind": "merge",
+      "title": "Join the tasks that were written twice",
+      "after": [
+        "tasks-building-and-versioning-policy-plus",
+        "tasks-getting-microsoft-policy-definitions",
+        "tasks-using-the-product",
+        "tasks-choosing-and-saving-policy-sources",
+        "tasks-changing-policy-settings",
+        "tasks-finding-policies",
+        "tasks-editing-policy-files-directly",
+        "tasks-browsing-policy-definitions"
+      ],
+      "review": false,
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": []
+    },
+    {
+      "id": "variants-1",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 1",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The tradeoff admits the rule that the stamp can also be run by hand must still be offered, yet no step offers it, so the 'when someone runs it' half of businessrule-12414618955963878773 is silently dropped; and since the release workflow already stamps today, 'automate first' adds little beyond today.",
+        "Record 1: This is today's script in new words (someone or the release asks, version is written) with a 'confirm what was stamped' step added, and that confirmation step honours the rule though it is a new behaviour; the variant is not a real alternative.",
+        "Record 2: Rewording lost conditions: the language fallback drops 'unless the regional language is en-US' and the failure when the package has no en-US folder after files were already replaced (businessrule-24154317128059319852), the take-control step omits that it applies to whatever folder text is typed and ends the download with nothing moved (businessrule-16960626064100495277), and the result step loses that a failed final cleanup leaves files installed yet reports failure and no new folder (businessrule-17840470067823720423).",
+        "Record 2: The step 'Install somewhere other than the usual folder' comes after the install has finished, so the person cannot choose a folder before it runs, and the person would also not be told that package is kept when extraction fails or that failures part-way leave some files replaced.",
+        "Record 3: It only splits today's single dialog into labelled stages and keeps the choose-then-start shape, so it repeats today rather than offering another way; the splitting into 'prepare' and 'put in place' also blurs which failure message applies (take-control versus move, businessrule-70392920399990339776), and the replace-with-no-backup and cleanup-failure outcomes are not stated.",
+        "Record 4: Step 'Come back to the definitions later' is marked new with the reason that today the text only says it can be done later, but today's Help | Acquire ADMX Files route already exists (businessrule-23603907625209300500), so the 'standing invitation' misstates the old system and duplicates the get-policy-definitions task; 'works out whether lacking without asking' is also exactly what happens today.",
+        "Record 5: The tradeoff says a person who declines must find the later route themselves, but the offer text names Help | Acquire ADMX Files today; the variant just restates today's first-run dialog, and its steps drop that the message names that route."
+      ]
+    },
+    {
+      "id": "variants-2",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 2",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Step 3 validates the templates 'beside the current definitions', but the legacy rule that refuses a namespace 'already owned by a different ADMX file' only works because the workspace was emptied first, so re-downloading the same templates would refuse every one of them unless the check is limited to the new set.",
+        "Record 0: The 'continue trying to use this workspace?' choice (legacy 'Errors were encountered...' rule) comes in step 5 after the switch in step 4, so the person is asked whether to continue after the old definitions are already gone, which contradicts the idea of keeping the current ones until the new ones are known usable.",
+        "Record 0: 'Ready' is never defined: legacy skips a refused template and still builds from the rest, yet stops with nothing built on a missing namespace; the journey switches in one step without saying that a partly loaded set replaces the current one, nor that a missing-namespace stop leaves the current definitions untouched.",
+        "Record 1: Today a successful download already empties the workspace, loads the folder and saves it with no request from the person, so this variant only repeats the legacy behaviour in new words, and its trade-off ('gives up the moment of control') names a control the person never had.",
+        "Record 1: Step 2 replaces the workspace 'when they are usable' and step 3 asks about continuing afterwards, losing the legacy ordering of the namespace-missing stop (nothing built, error shown) and the question to continue, which would arrive after the replacement is done.",
+        "Record 2: Step 4 ('Know what went wrong') comes after the confirmed replacement although step 2 already shows the refused templates, so the person is told problems twice, and the legacy 'continue trying to use this workspace?' question is asked after the old definitions were replaced instead of at the preview.",
+        "Record 2: The preview in step 2 does not say what the person sees when the template has no target namespace, where legacy stops at once and builds nothing, so counts of categories, products and policies cannot be shown and there is nothing to confirm."
+      ]
+    },
+    {
+      "id": "variants-3",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 3",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The step \"Have my preferences remembered\" honours the TLS rule (businessrule-15364695696024462204), which is about download protocols, not preferences, so that rule has no real home in the journey.",
+        "Record 0: The definitions step says the person is asked only when problems are \"minor\", but the rule asks whenever loading reports any problems, and the answer No (workspace thrown away, then the default offered, or told it could not be loaded) and the default-folder failure message (businessrule-72200124994498270380) are not carried.",
+        "Record 0: The journey claims every problem is reported once, but the sources step silently drops behaviour the rules fix as silent (a hive that cannot be opened becomes an empty read-only scratch source; a missing or uncreatable Registry.pol is created or replaced without any error) and describes only a notice on fallback, so that quiet behaviour is lost or hidden.",
+        "Record 1: The first step honours the definitions-failure rules (businessrule-41547680626150552574, 78253526822536661517, 58877134447436981389, 72200124994498270380) but its text only says it loads and shows categories, dropping the ask-to-keep prompt, the offer to load the default folder and the could-not-load message.",
+        "Record 2: The check says only that the code equals the stored language, losing that the comparison is case-sensitive (en-us differs from en-US) and trims the entered text but not the stored code (businessrule-93543924991745555552).",
+        "Record 7: Nothing in the steps shows the sources dialog opening with the remembered kinds and their paths preselected for each side (businessrule-72559528436656832979), so a first-time or returning person is not told what the starting choice is.",
+        "Record 7: The \"Confirm and start working\" step honours businessrule-84588009124214109370, a rule about changing view settings (hiding categories and selected policy), not about choosing sources; only businessrule-10464012301936997836 applies.",
+        "Record 8: The first step promises a note on whether each remembered source can be opened and changed before the person confirms, but sources are only created and opened at Go ahead, so the system cannot know this beforehand; the step also mis-honours businessrule-84588009124214109370, which concerns view settings.",
+        "Record 9: The step says a name is translated at once, but today the lookup happens on Search or on OK; it also lists businessrule-88238619586671903040 (dialog stays open when no SID results) without saying so in the step text.",
+        "Record 10: Picking from known accounts already yields an identifier, so the separate \"Check the chosen user\" step is largely redundant, and it is placed before \"Back out\" as if cancelling came after checking; the variant reads as today with a pick list added rather than a different way of doing the task."
+      ]
+    },
+    {
+      "id": "variants-4",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 4",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 1: It proposes a profile before the person selects one, yet claims to honour the rule that OK does nothing until a folder is selected; the recommendation's 'explicit-choice rule still enforced' is contradicted by a preselected default.",
+        "Record 3: Apart from an added preview step, it replays today's order (comments, sources, effect, remember, report) in new words, so it is barely a variant of the legacy shape, and its claim that people cannot see where changes land today is not in the legacy sentences.",
+        "Record 4: The step says the same rules apply for every source kind and file encoding, but the honoured rules differ by kind (REG files fail 'not implemented' when forgetting a value, branch limits only apply to REG, POL/registry/user hive/scratch report differently), so a REG failure and the per-kind outcomes are hidden behind the recommended wording.",
+        "Record 5: A check-first stage cannot say per source how the change will take effect, because the edition-dependent diff is computed from the file as last on disk at the moment of saving, and it adds a check-then-write gap the legacy 'write only if fully writable, else report not writable' rule does not have."
+      ]
+    },
+    {
+      "id": "variants-5",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 5",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: \"Decide and save\" keeps today's dialog shape (scope, state, options, list editor, comment, save or save and stay) as six steps in new words, so it is not a better way of doing the task, and it also keeps the old Apply versus OK split.",
+        "Record 1: No step lets the person choose Computer or User: step 1 only shows the side and whether it can be written, yet rules 22919 and 47264 (a policy for both sections is editable for either, switching reloads state and options) need a choice, and step 1 claims nothing is asked that the system can read although the side cannot be inferred.",
+        "Record 1: The recommendation says the old way surprised people by writing all options and clearing list keys, which is not in the legacy words (rule 60774 conflicts with 97175 on what is written) and the 'fewest steps' claim is bought by bundling 25 rules, including cancel and unsaved-Apply reporting, into a single confirm step.",
+        "Record 0: Step 3 says numbers outside limits are brought back to the limit, but rule 76178 also replaces text that is not a number, and numbers above 2,147,483,647, with the default, so the condition is lost in the rewording.",
+        "Record 2: The guided variant asks for a 'reason' with link new yet the comment is only asked for where the source keeps comments, and nothing says a refusal for duplicate names or the digits-only rule (11779, 76178) is explained at the moment of the single question, so a person cannot fix a list entered one at a time after an error at the final summary."
+      ]
+    },
+    {
+      "id": "variants-6",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 6",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Step 3 claims to keep the comment-first rule (businessrule-78566706966921753288) and the refresh-either-way rule (businessrule-70167687024707690035) but never says a comment is stored first, nor that the view refreshes after success or partial failure.",
+        "Record 0: This journey is today's Verify then Apply flow in new words; the only difference is the merged file/reset step, so it adds little as the task-first variant.",
+        "Record 1: The recommendation says text can never be applied unchecked, but Apply already refuses unreadable text (businessrule-30078789996227150580); the claimed benefit is not new.",
+        "Record 1: Step 1 honours businessrule-27078270365699057081, where Open File replaces the text 'without asking and without checking it', yet it now checks on arrival; it also drops the confirmed Reset (start again) from the intent and system, though block-20479299247601531941 is cited as merged in.",
+        "Record 1: Reading on arrival leaves unclear when typed or edited text is re-checked, since the step covers only 'a file or entered'; a person who edits the text after the check can see a stale count or fault.",
+        "Record 3: The step claims 'reading is possible but not required', but the system only provides the text to take and the person can no longer see what is being copied, which loses the read step and the focus-and-select behaviour (block-18241451168755948032).",
+        "Record 4: Step 2 changes rule businessrule-62209428351075007862 (a hidden policy leaves nothing happening and no message) and businessrule-73292110340688125936 (the area is the lower of the area shown and the area found) into 'tells the person when hidden' and 'computer in preference to user', yet marks both as kept.",
+        "Record 4: Step 1 does not mention the area choice (businessrule-81666786810242280110) or the stale-section behaviour (businessrule-56645748073860464161), and it honours businessrule-75178338270301910966, which is about the edit dialog refreshing and not about going to an identifier.",
+        "Record 5: Step 2 repeats details that step 1 already opens for a product or support definition (businessrule-49582367227471127226), and its claim that details are 'not a dialog every time' is not a change, because today only products and support definitions open one.",
+        "Record 7: Step 1 lists businessrule-63262725504588029346 as kept and honoured, but that rule is a silent drop of an unclosed quote, while the system now tells the person; the contradiction is not named as a change, and the single-quote absorbing behaviour is not addressed.",
+        "Record 7: Searching on every change contradicts the rule that Search is pressed to refuse empty text (businessrule-73561308167207352856): there is no press, and the person would see 'words are needed' constantly while typing the first character."
+      ]
+    },
+    {
+      "id": "variants-7",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 7",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: Step 2 is marked 'reordered' as sparing a wait that ends in a refusal, but the old system already checks the terms and refuses (empty search, root key) in the dialog before any search starts, so this variant repeats today's flow and its stated gain is false.",
+        "Record 1: The variant invites pasting 'a path copied from documentation', but such paths normally begin with HKLM\\ or HKCU\\, which businessrule-71024372746156766440 refuses, so the headline use case would be refused while typing and the variant never says how the inferred split treats a leading root key.",
+        "Record 3: Step 4 lets the person open a hit while the search is still running, but in the old system accepting a result closes the window, and closing stops the search (businessrule-15877826642522947109); the variant does not say whether opening a hit cancels the running search, nor does step 1 keep the 'refreshed after every 20 policies' progress wording it claims to honour.",
+        "Record 5: Step 3 lets the person move on from a hit without opening it, but businessrule-53914450774482291886 takes the next result after the last chosen one, so moving past an unopened hit cannot advance under the legacy rule; the variant's 'one decision per hit' silently changes what 'next' means.",
+        "Record 6: Step 7 says undo 'puts back the limit held when the person began and leaves it unchanged', which is self-contradictory and not what businessrule-57716378734614233724 says (cancel leaves the current filter untouched); with live changes, Escape would have to actively revert, and unticking Supported on never states that ticked products and options are discarded (businessrule-90628240213834851721).",
+        "Record 7: By its own trade-off this variant keeps the open, choose, confirm cycle with no fewer steps than today, so it only repeats the old dialog in new words, and step 4 never states that product ticks and options are discarded when Supported on is unticked (businessrule-90628240213834851721)."
+      ]
+    },
+    {
+      "id": "variants-8",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 8",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 3: The value-data step cites the rule that an unsupported kind such as binary is refused with \"This value kind is not supported.\" and nothing changes, but its sentence never says so, so that refusal is lost in the rewording.",
+        "Record 5: Asking \"whether to add a key or a value and where\" ignores that a value can only be added under the selected key (and is unavailable with nothing or a value selected, where only Add key exists), so the choice and the location question offer things the old system does not allow.",
+        "Record 6: Entering new data 'to match the kind' omits that editing a binary value is refused with \"This value kind is not supported.\" and that deletion entries cannot be edited, so the step implies every selected value can be changed.",
+        "Record 9: The journey has no path for a selected value being marked for deletion directly (its name taken from the selection, no typing); delete-one is only reachable by typed name from a key, so that legacy behaviour is dropped.",
+        "Record 9: \"Clear then keep existing ordinary direct values\" hides that deletion entries already in the key are lost and values of sub-keys are not put back, which is the data-losing part of the choice.",
+        "Record 10: The key choice \"clear then keep existing ordinary direct values\" omits that existing deletion entries are lost and sub-key values are not put back, so the person cannot see what that option discards."
+      ]
+    },
+    {
+      "id": "variants-9",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 9",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The prefix is asked only when the system could not decide one, so a wrongly guessed prefix (first key only; any non-HKEY_USERS key gives just the hive, and an empty file gets HKEY_LOCAL_MACHINE\\) can never be corrected, although the tradeoff says the person must read and fix it; today a typed prefix is kept and only an empty one is guessed.",
+        "Record 3: Nothing is previewed: the system only reads the file and reports a load failure, then applies, so this is the one-request journey split in two with an added confirming click, not a distinct 'preview then apply'.",
+        "Record 9: Replace-or-add is asked only when something is loaded, but today the clear option is always shown and ticked by default, and the 'remember folder only when workspace cleared' rule then depends on an unstated implied replace when nothing is loaded; the title 'without questions' also overstates it, and the failure outcome (workspace may be emptied or partly filled, view rebuilt anyway) is lost.",
+        "Record 11: 'Builds the structures once' changes today's behaviour, where loading a single file builds the structures and reports one failure per file, and the multi-file result list and partial-failure semantics are not backed by any legacy rule.",
+        "Record 13: The undo step has no legacy rule and does not say what is restored (the loaded files only, or also the view and the remembered definitions folder) or how long it stays available, so it cannot be done from these words.",
+        "Record 15: Per-file counts of policies, categories, products and support rules are new and ambiguous against the legacy rule that sub-categories and product versions are part of the contribution; the variant is the list-then-details journey with counts added.",
+        "Record 8: The failure step drops that the remembered folder stays unchanged on failure and the view is rebuilt anyway; only the message is kept."
+      ]
+    },
+    {
+      "id": "variants-10",
+      "stage": "journeys",
+      "kind": "variants",
+      "title": "Design ways of doing tasks, part 10",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 1: The variant reaches every category and policy only through typed words, so the outcome of moving through the tree and reading what each is for is no longer possible without knowing what to search for, and word search is the separate finding-policies task rather than browsing.",
+        "Record 5: It promises to flag each gap, but a policy with no support code is shown blank by the legacy rule (businessrule-59317523370985833904), so that gap is not flagged and the sentence contradicts the rule it honours.",
+        "Record 7: Showing the full parent chain and the policies a category holds is new behaviour, yet its steps are linked as legacy 'inferred' with the single parent-name rule, when they should be marked new.",
+        "Record 11: Narrowing support definitions by the product they cover and showing which products a definition covers is a reverse lookup the old system lacks, but the step is linked as legacy 'inferred' keeping the name-filter rule, and nothing states how coverage is worked out.",
+        "Record 13: The plain summary of what the policy stores is new content derived by the system, not in the legacy words, yet it is linked as legacy 'inferred' and cites only the registry-value and client-extension rules, hiding that it adds a capability."
+      ]
+    },
+    {
+      "id": "shape",
+      "stage": "architecture",
+      "kind": "shape",
+      "title": "Design the architecture",
+      "after": [],
+      "review": true,
+      "state": "decided",
+      "fixes": 1,
+      "feedback": "",
+      "disputes": [
+        "Record 0: The Policy Source and Workspace integrations read the machine's file folders, the live Windows registry, loaded user hives and Active Directory from a server-rendered web application on Bun, yet nothing says the server must be the person's own Windows machine, so a browser user would be editing the server's registry, not their own.",
+        "Record 1: Source services are split from the screens, and the registry, user-hive and directory adapters work only on the person's own Windows machine, so a networked service container with no stated placement cannot do what Policy Source's rules (mount hive, raise gpt.ini version, ask Windows to refresh policy) require.",
+        "Record 2: Policy Source and File Exchange run as a service while the engine holding Policy State is a library in the screens, so every state change must write through the service and the risk of an engine/source version mismatch is only half named; and the Workspace (which owns loaded definitions) is in a different container from Policy Definitions, which is not stated as a contract.",
+        "Record 0: The Workspace integration stores remembered choices as PostgreSQL preference rows, but no container in this or the other two architectures is a data store holding them, so the data layer of the Target Stack is used nowhere in the container list.",
+        "Record 0: Definition Acquisition holds the rules that a category is orphaned or empty, which describe the loaded catalogue and belong to Policy Definitions; the domain is also given the 'welcome offer considered once' rule that is really the Workspace remembering a choice.",
+        "Record 0: Workspace holds rules that Policy Source decides: the policy sources dialog opening with the last-used sources, 'not fully writable' reporting after opening, and unloading a mounted user hive when a source closes.",
+        "Record 0: Policy Discovery holds the product details, support details and parent-product window rules and 'refresh the list after the edit dialog is accepted', which are Policy Definitions (catalogue browsing) and Policy State rules; the domain is partly a screen layer in disguise.",
+        "Record 0: Policy Definitions holds loading-folder and language-dialog rules (workspace emptied on 'clear workspace', folder dialog defaults, language dialog text) that are the Workspace's session behaviour, blurring the Policy Definitions / Workspace line.",
+        "Record 0: Nine legacy rules are in no domain in any of the three architectures (Escape on Import SPOL and Find by ID, Go on Find by ID, the hidden Deduplicate menu entry, the product checkbox double-click, the Export REG unhandled error, the ADMX and support list double-click, the partial choice-setting write), and the architectures give no reason for leaving them out.",
+        "Record 0: The risks omit the largest one: the app depends on Windows-only capabilities (registry, user hives, Group Policy refresh, msiexec extraction, administrator file ownership), which Bun on a non-Windows server cannot provide, and the Target Stack does not say it targets Windows.",
+        "Record 1: The Definition installer job, which must take ownership of folders, run the Windows installer tool and write into the machine's PolicyDefinitions folder, is placed as its own job but the 'job' container has no stated trigger or host, and the legacy rule that downloads allow only TLS 1.0 to 1.2 is not addressed as a decision for the new stack.",
+        "Record 2: The variant differs from the second only by moving Definitions and State into a library and Discovery into the screens; Policy Discovery depends on state, comments and definitions across the container boundary, so the claimed 'thin services' trade-off omits that Discovery search needs comments from the Source service for every policy."
+      ]
+    },
+    {
+      "id": "components-policy-definitions",
+      "stage": "components",
+      "kind": "components",
+      "title": "Design the components of Policy Definitions",
+      "after": [],
+      "review": false,
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": []
+    },
+    {
+      "id": "components-policy-source",
+      "stage": "components",
+      "kind": "components",
+      "title": "Design the components of Policy Source",
+      "after": [],
+      "review": false,
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": []
+    },
+    {
+      "id": "components-policy-state",
+      "stage": "components",
+      "kind": "components",
+      "title": "Design the components of Policy State",
+      "after": [
+        "components-policy-definitions",
+        "components-policy-source"
+      ],
+      "review": false,
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": []
+    },
+    {
+      "id": "components-policy-discovery",
+      "stage": "components",
+      "kind": "components",
+      "title": "Design the components of Policy Discovery",
+      "after": [
+        "components-policy-definitions",
+        "components-policy-state",
+        "components-policy-source"
+      ],
+      "review": false,
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": []
+    },
+    {
+      "id": "components-policy-file-exchange",
+      "stage": "components",
+      "kind": "components",
+      "title": "Design the components of Policy File Exchange",
+      "after": [
+        "components-policy-source"
+      ],
+      "review": false,
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": []
+    },
+    {
+      "id": "components-definition-acquisition",
+      "stage": "components",
+      "kind": "components",
+      "title": "Design the components of Definition Acquisition",
+      "after": [
+        "components-policy-definitions"
+      ],
+      "review": false,
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": []
+    },
+    {
+      "id": "components-workspace",
+      "stage": "components",
+      "kind": "components",
+      "title": "Design the components of Workspace",
+      "after": [
+        "components-policy-definitions",
+        "components-policy-discovery",
+        "components-definition-acquisition"
+      ],
+      "review": false,
+      "state": "decided",
+      "fixes": 0,
+      "feedback": "",
+      "disputes": []
+    }
+  ],
+  "batches": 14,
+  "batch": {
+    "id": "batch-14",
+    "stage": "components",
+    "jobs": [
+      {
+        "job": "components-policy-state",
+        "role": "writer",
+        "reported": true
+      }
+    ]
+  }
+}

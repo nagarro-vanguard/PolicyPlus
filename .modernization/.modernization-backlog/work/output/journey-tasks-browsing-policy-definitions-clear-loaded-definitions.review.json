@@ -1,0 +1,8 @@
+{
+ "read": 1,
+ "challenges": [
+  {"record": 0, "says": "Criterion 2 (the view is rebuilt and shows no loaded definitions) restates the second half of businessrule-83939170310206178732 (empties at once and rebuilds the view) but cites nothing, while criterion 1 drops that rebuild; its 'shows no loaded definitions' is also stated by no rule."},
+  {"record": 0, "says": "Criteria 4 and 5 (says what was removed, undo loads the removed definitions again 'as they were') cite no rule and do not say in the criteria that they are new behaviour from the plan with no legacy rule; 'as they were' and what is reported are unstated by any rule or decision, and the open questions show even the scope of undo is undecided."},
+  {"record": 0, "says": "Criterion 3 (closing or replacing the workspace discards definitions and previous search results) is the rule of Session discarder but is a different trigger than the story's clear action and title, and the story's term list defines only 'Loaded definitions' while 'workspace' and 'search results' are used undefined for a product owner."}
+ ]
+}

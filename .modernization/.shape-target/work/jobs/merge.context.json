@@ -1,0 +1,277 @@
+{
+  "tasks": [
+    {
+      "id": "tasks-building-and-versioning-policy-plus.stamp-program-version",
+      "outcome": "Make each built copy of the program carry the version of the code it was built from.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 1
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions",
+      "outcome": "Obtain Microsoft's current set of policy definitions and install them in a folder the program can use.",
+      "actor": "person",
+      "actions": 4,
+      "rules": 12
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer",
+      "outcome": "Be offered the full set of policy definitions the first time the program is used on an edition that lacks them.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 5
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
+      "outcome": "Make the newly downloaded policy definitions the ones the program works with.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 104
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace",
+      "outcome": "Get back to the policy work where it was left: the last policy sources and policy definitions are ready to browse.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 34
+    },
+    {
+      "id": "tasks-using-the-product.set-definition-language",
+      "outcome": "Choose the language in which policy definition text is shown and have it applied.",
+      "actor": "person",
+      "actions": 2,
+      "rules": 3
+    },
+    {
+      "id": "tasks-using-the-product.leave-the-program",
+      "outcome": "Finish the work and leave, releasing everything that was opened.",
+      "actor": "person",
+      "actions": 2,
+      "rules": 2
+    },
+    {
+      "id": "tasks-using-the-product.see-about-information",
+      "outcome": "Find out who made the program and which version is in use.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 1
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources",
+      "outcome": "Decide where the user and computer policies are kept and start working against those sources.",
+      "actor": "person",
+      "actions": 9,
+      "rules": 8
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.identify-user-for-policy",
+      "outcome": "Name the user account whose own Group Policy object is to be the user policy source.",
+      "actor": "person",
+      "actions": 3,
+      "rules": 4
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy",
+      "outcome": "Choose a user profile whose stored settings are to be the user policy source.",
+      "actor": "person",
+      "actions": 2,
+      "rules": 2
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.save-policy-changes",
+      "outcome": "Save the policy settings and comments to their sources, make them take effect where possible, and remember the chosen sources for next time.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 31
+    },
+    {
+      "id": "tasks-changing-policy-settings.set-policy-state",
+      "outcome": "Set one policy to Enabled, Disabled or Not configured, with its options and comment, for the computer or the user.",
+      "actor": "person",
+      "actions": 12,
+      "rules": 50
+    },
+    {
+      "id": "tasks-changing-policy-settings.import-policy-settings-from-text",
+      "outcome": "Bring a set of policy settings in from a semantic policy text and apply them to the computer and user policy sources.",
+      "actor": "person",
+      "actions": 8,
+      "rules": 20
+    },
+    {
+      "id": "tasks-changing-policy-settings.inspect-policy-settings-as-text",
+      "outcome": "See policy settings as semantic policy text and copy it out to use elsewhere.",
+      "actor": "person",
+      "actions": 4,
+      "rules": 1
+    },
+    {
+      "id": "tasks-finding-policies.find-policy-by-id",
+      "outcome": "Go straight to a known category, product, support definition or policy by typing its identifier.",
+      "actor": "person",
+      "actions": 6,
+      "rules": 18
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-text",
+      "outcome": "Find policies whose title, description or comments contain words or phrases the person remembers.",
+      "actor": "person",
+      "actions": 3,
+      "rules": 7
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-registry",
+      "outcome": "Find the policies that control a given system setting, named by its key or value.",
+      "actor": "person",
+      "actions": 3,
+      "rules": 8
+    },
+    {
+      "id": "tasks-finding-policies.review-search-results",
+      "outcome": "Work through the hits of a search and pick the policy to open.",
+      "actor": "person",
+      "actions": 8,
+      "rules": 12
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter",
+      "outcome": "Limit the policy list to policies of a chosen type, state, comment status and supported products, and switch that limit on or off.",
+      "actor": "person",
+      "actions": 9,
+      "rules": 16
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.open-raw-policy-editor",
+      "outcome": "Open a policy file for direct editing of its raw keys and values, with a warning the first time, and leave the editor when done.",
+      "actor": "person",
+      "actions": 6,
+      "rules": 13
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.add-policy-file-key-or-value",
+      "outcome": "Add a new key, or a new value of a chosen kind, to a policy file.",
+      "actor": "person",
+      "actions": 5,
+      "rules": 8
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.change-policy-file-value-data",
+      "outcome": "Change the data of an existing value in a policy file.",
+      "actor": "person",
+      "actions": 7,
+      "rules": 2
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "outcome": "Remove keys or values from a policy file, either leaving a deletion instruction for the machine or forgetting them entirely.",
+      "actor": "person",
+      "actions": 5,
+      "rules": 6
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.import-registry-file-into-policy-source",
+      "outcome": "Bring the contents of an exported set of machine settings into a policy source.",
+      "actor": "person",
+      "actions": 5,
+      "rules": 16
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.import-policy-file",
+      "outcome": "Load a policy file into the user or computer policy source.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 2
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.export-policy-as-registry-file",
+      "outcome": "Write a policy source, or one branch of it, as an exported set of machine settings.",
+      "actor": "person",
+      "actions": 5,
+      "rules": 10
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.export-policy-file",
+      "outcome": "Save a policy source out as a policy file.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 1
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.load-definitions-folder",
+      "outcome": "Load a folder of policy definitions into the workspace so its policies can be browsed.",
+      "actor": "person",
+      "actions": 6,
+      "rules": 8
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.add-template-file",
+      "outcome": "Add a single policy template file to the policies already loaded.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 2
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.clear-loaded-definitions",
+      "outcome": "Remove all loaded policy definitions from the workspace.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 1
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.review-loaded-template-files",
+      "outcome": "See which policy template files are loaded and what each one contributes.",
+      "actor": "person",
+      "actions": 4,
+      "rules": 2
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-policy-tree",
+      "outcome": "Move through the categories and policies of the loaded definitions and read what each is for.",
+      "actor": "person",
+      "actions": 10,
+      "rules": 8
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.merge-duplicate-policies",
+      "outcome": "Merge identical user and computer policies into single policies that apply to both.",
+      "actor": "person",
+      "actions": 1,
+      "rules": 2
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-policy-details",
+      "outcome": "See what a policy is, which section it applies to, where it sits and what it is supported on.",
+      "actor": "person",
+      "actions": 3,
+      "rules": 3
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-category-details",
+      "outcome": "See a category, its parent and how it relates to policies.",
+      "actor": "person",
+      "actions": 3,
+      "rules": 1
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-products",
+      "outcome": "Browse the products and their versions that the loaded definitions cover, and see the details of each.",
+      "actor": "person",
+      "actions": 9,
+      "rules": 5
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-support-rules",
+      "outcome": "Find the support rules and see which products they cover.",
+      "actor": "person",
+      "actions": 7,
+      "rules": 3
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.inspect-policy-technical-details",
+      "outcome": "Inspect the technical makeup of a policy: its stored setting, presentation, elements and semantic text, and copy it.",
+      "actor": "person",
+      "actions": 2,
+      "rules": 13
+    }
+  ]
+}

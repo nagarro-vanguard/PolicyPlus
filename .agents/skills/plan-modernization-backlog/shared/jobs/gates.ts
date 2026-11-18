@@ -18,6 +18,12 @@ export type JobFile = {
     transitions?: string[];
     surfaces?: { key: string; name: string; actions: string[]; owned: readonly string[] }[];
     allow?: string[];
+    techs?: string[];
+    steps?: string[];
+    stepActions?: Record<string, string[]>;
+    components?: string[];
+    cite?: string[];
+    componentRules?: Record<string, string[]>;
     layerIds?: string[];
     decisionIds?: string[];
     areaDecisionIds?: string[];
@@ -61,6 +67,13 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
             for (const n of layer.carries)
                 if (n < 1 || n > request.stack.length)
                     gaps.push(`layer ${layer.name} carries stack line ${n}, which does not exist`);
+        }
+        for (const tech of job.techs ?? []) {
+            const lines = request.stack.flatMap((line, at) =>
+                line.toLowerCase().includes(tech.trim().toLowerCase()) ? [at + 1] : [],
+            );
+            if (lines.length === 0 || !lines.some((n) => carried.has(n)))
+                gaps.push(`no layer carries what the architecture builds with: "${short(tech)}"`);
         }
         const state = new Map<string, number>();
         const loops = (id: string): boolean => {
@@ -125,6 +138,7 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
     const parsed = decodeWith(Schema.Array(Story), output.stories);
     if (!parsed.ok) return [`stories do not match their shape: ${parsed.problem}`];
     const stories = parsed.value;
+    if (job.kind === "journey" || job.kind === "components") return targetStoryGaps(job, stories);
     const actions = new Set(job.actions ?? []);
     const owned = new Set(job.owned ?? []);
     const shared = new Set(job.shared ?? []);
@@ -207,6 +221,89 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
     void AGENTS_MD_MAX_LINES;
     void countedLines;
     void layerAgentsMd;
+    return [...new Set(gaps)];
+};
+
+const exactly = (label: string, wanted: readonly string[], lists: readonly (readonly string[])[], gaps: string[]) => {
+    const seen = new Map<string, number>();
+    for (const list of lists) for (const id of list) seen.set(id, (seen.get(id) ?? 0) + 1);
+    const lost = wanted.filter((id) => !seen.has(id));
+    if (lost.length > 0) gaps.push(`${lost.length} ${label} are in no story: ${lost.slice(0, 4).join(", ")}`);
+    const own = new Set(wanted);
+    for (const [id, count] of seen) {
+        if (!own.has(id)) gaps.push(`${label.replace(/s$/, "")} ${id} is not this job's to place`);
+        else if (count > 1) gaps.push(`${label.replace(/s$/, "")} ${id} is in ${count} stories, not one`);
+    }
+};
+
+/**
+ * The gate of a job that writes the stories of a confirmed target: its steps and components are split exactly among the
+ * stories, a story's entry points are those of its steps, and it cites the rules of the components it builds, each once.
+ */
+const targetStoryGaps = (job: JobFile, stories: readonly Story[]): string[] => {
+    const gaps: string[] = [];
+    const journey = job.kind === "journey";
+    exactly(
+        "steps",
+        job.steps ?? [],
+        stories.map((story) => story.steps ?? []),
+        gaps,
+    );
+    exactly(
+        "components",
+        job.components ?? [],
+        stories.map((story) => story.components ?? []),
+        gaps,
+    );
+    const cited = new Set<string>();
+    const decisions = new Set(job.decisionIds ?? []);
+    for (const story of stories) {
+        const label = `story "${short(story.title)}"`;
+        if (story.criteria.length > 12) gaps.push(`${label} has ${story.criteria.length} criteria, over 12`);
+        const wanted = new Set((story.steps ?? []).flatMap((id) => job.stepActions?.[id] ?? []));
+        const have = new Set<string>(story.actions);
+        if ([...wanted].some((id) => !have.has(id)) || [...have].some((id) => !wanted.has(id)))
+            gaps.push(`${label}: its entry points must be exactly those of its steps`);
+        if (!journey && (story.actions.length > 0 || (story.steps ?? []).length > 0))
+            gaps.push(`${label} is a technical story of shared components: no steps and no entry points`);
+        if (journey && (story.steps ?? []).length === 0) gaps.push(`${label} names no step of the journey`);
+        const enforced = new Set((story.components ?? []).flatMap((name) => job.componentRules?.[name] ?? []));
+        const rules = story.criteria.flatMap((criterion) =>
+            criterion.from.flatMap((ref) => (ref._tag === "rule" ? [ref.id as string] : [])),
+        );
+        // A rule may back several criteria of the story that builds it; two stories may not both cite it.
+        const mine = new Set<string>();
+        for (const id of rules) {
+            if (!enforced.has(id)) gaps.push(`${label} cites a rule of a component it does not build`);
+            if (cited.has(id) && !mine.has(id)) gaps.push("a rule is cited by two stories of this job");
+            cited.add(id);
+            mine.add(id);
+        }
+        for (const criterion of story.criteria)
+            for (const ref of criterion.from)
+                if (ref._tag === "decision" && !decisions.has(ref.id))
+                    gaps.push(`${label} cites a decision that does not exist`);
+        const missing = [...enforced].filter((id) => !rules.includes(id));
+        if (missing.length > 0)
+            gaps.push(`${label} builds components whose ${missing.length} rules no criterion cites`);
+        const mech = mechanicalProblems(story.title);
+        if (mech.length > 0) gaps.push(`${label}: ${mech.join(", ")}`);
+        const texts = [
+            story.title,
+            story.what,
+            story.why,
+            ...story.criteria.map((c) => c.says),
+            ...story.terms.flatMap((t) => [t.name, t.means]),
+            ...(story.journey ? [story.journey.name, ...story.journey.steps] : []),
+            ...(story.open ?? []),
+        ];
+        const found = texts.flatMap((text) =>
+            story.actions.length > 0 ? readerProblems(text, job.allow) : recordIdProblems(text),
+        );
+        if (found.length > 0)
+            gaps.push(`${label} shows the code or the analysis: ${[...new Set(found)].slice(0, 3).join("; ")}`);
+    }
+    exactly("rules", job.cite ?? [], [[...cited]], gaps);
     return [...new Set(gaps)];
 };
 

@@ -1,0 +1,25 @@
+{
+  "read": 1,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The criterion about a stored comment appearing in the section has an empty citation and gives no reason, although businessrule-77000026808397550095 states exactly that (comment included only when one is stored), so it should cite it."
+    },
+    {
+      "record": 0,
+      "says": "The last criterion joins two unrelated behaviours (comment escaping of backslashes and line breaks, and copying a selected line with Ctrl+C) with 'Also:', so a tester cannot pass or fail each alone; each belongs in its own criterion."
+    },
+    {
+      "record": 0,
+      "says": "The option-value criterion drops parts of businessrule-10913365400690794412: text is written with no escaping so text holding a quote or line break cannot be read back, and quotes inside list-of-text items are doubled."
+    },
+    {
+      "record": 0,
+      "says": "The comment-escaping criterion drops the consequence stated in businessrule-78281155676242942940 (a lone line feed or carriage return splits the comment over two script lines and corrupts it when read back), which is the point of the rule."
+    },
+    {
+      "record": 0,
+      "says": "The criterion on choice names ('named as the file that defines the policy names it') is hard for a product owner to follow; it should say that choice names come from the definitions file that defines the policy."
+    }
+  ]
+}

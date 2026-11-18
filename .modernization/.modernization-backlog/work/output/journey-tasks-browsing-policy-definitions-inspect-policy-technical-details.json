@@ -1,0 +1,205 @@
+{
+  "stories": [
+    {
+      "title": "Inspect a policy's stored setting and presentation, and copy a line",
+      "what": "Let someone open a policy and read a plain summary of what it stores and where, then ask for the presentation and element detail only when wanted, and copy a selected line of the inspection.",
+      "why": "Most readers want the gist of a policy before the detail, so the technical makeup stays one request away instead of in the way.",
+      "actions": [
+        "block-76908522554461045751",
+        "block-01358626545675013383"
+      ],
+      "terms": [
+        {
+          "name": "Inspection",
+          "means": "The technical view of one policy showing what it stores, its presentation and elements and its semantic text; it is not the plain description shown when browsing."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given a policy that names a registry value, when someone opens its inspection, then the summary shows a \"Registry value\" line; given it names none, then no such line appears.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-43141523484770952437"
+            }
+          ]
+        },
+        {
+          "says": "Given a policy that names a client extension, when someone opens its inspection, then the summary shows a \"Client extension\" line; given it names none, then no such line appears.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-79057744450548393955"
+            }
+          ]
+        },
+        {
+          "says": "Given a policy with both a presentation and elements, when someone asks for the presentation detail, then the details are listed whatever the elements hold, and each presentation item with an ID shows the details of the element with the same ID, while items without an ID show none.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-80096613073902079124"
+            }
+          ]
+        },
+        {
+          "says": "Given a choice element, when its detail is shown, then the choice names come from the definitions file that defines the policy, and the choices are numbered from zero in the order of that file.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-49549620435870223174"
+            }
+          ]
+        },
+        {
+          "says": "Given a list element, when its detail is shown, then it says \"User provides value names\" if the person names the values, the prefix if the element has one, and otherwise \"No prefix (values named for their data)\".",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-94076713436940158385"
+            }
+          ]
+        },
+        {
+          "says": "Given a group of affected registry settings with no on or off setting, when the detail is shown, then it reads \"Left implicit\" if the policy names a registry value and \"Left to elements\" if it names none; inside a Yes/No element it always reads \"Left implicit\".",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-96393168223138786394"
+            }
+          ]
+        },
+        {
+          "says": "Given a line is selected in the inspection, when someone presses Ctrl+C, then that line is placed on the clipboard.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57016400965631502733"
+            }
+          ]
+        },
+        {
+          "says": "Given no line is selected in the inspection, when someone presses Ctrl+C, then nothing is copied.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57016400965631502733"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#1",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#2",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#4"
+      ],
+      "components": [
+        "Policy inspector"
+      ],
+      "open": [
+        "What should the inspection show when a presentation item names an element ID that no element has, given the old program stopped with an unhandled error?"
+      ]
+    },
+    {
+      "title": "Show a policy's semantic text on request",
+      "what": "Let someone ask for the semantic text of a policy, written one section per area the policy applies to, only when they want it.",
+      "why": "The written form of a policy's settings is detail most readers do not need, so it is shown only on request.",
+      "actions": [
+        "block-76908522554461045751"
+      ],
+      "terms": [
+        {
+          "name": "Semantic text",
+          "means": "The written form of a policy's settings, one section per area, that can be moved in and out of the program; it is not the registry file form."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given a policy that applies to computers, users or both, when someone asks for its semantic text, then there is one section per area it applies to, reading that area's stored settings and comment, and an area the policy does not cover is left out.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-01704207253788877148"
+            }
+          ]
+        },
+        {
+          "says": "Given a section of semantic text, when it is written, then its heading line starts with C for a computer policy or U for a user policy, followed by the policy identifier.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-50694068263592934768"
+            }
+          ]
+        },
+        {
+          "says": "Given a policy that is not Enabled, when its semantic text is written, then its settings and option values are left out; given it is Enabled, then they are listed.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-20897965123834184786"
+            },
+            {
+              "_tag": "rule",
+              "id": "businessrule-77000026808397550095"
+            }
+          ]
+        },
+        {
+          "says": "Given a policy with a stored comment, when its semantic text is written, then the comment appears in that section; given none is stored, then no comment appears.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-77000026808397550095"
+            }
+          ]
+        },
+        {
+          "says": "Given option values in semantic text, when they are written, then a whole number has a leading #, an unsigned number is plain digits, yes/no is True or False, text sits between single quotes, an empty list reads 'None', a list of text is bracketed with one double-quoted item per line and any quote inside an item is doubled, and a table is bracketed as double-quoted name: value lines.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-10913365400690794412"
+            }
+          ]
+        },
+        {
+          "says": "Given text option values that hold a quote or a line break, when the semantic text is written, then the text is written between single quotes with no escaping, so it cannot be read back correctly.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-10913365400690794412"
+            }
+          ]
+        },
+        {
+          "says": "Given a comment with backslashes or Windows line breaks, when the semantic text is written, then each backslash is doubled and each carriage return plus line feed pair is written as \\n, while a lone line feed or lone carriage return is written as it is.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-78281155676242942940"
+            }
+          ]
+        },
+        {
+          "says": "Given a comment holding a lone line feed or a lone carriage return, when the semantic text is written, then the comment is split over two script lines and is corrupted when read back.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-78281155676242942940"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3"
+      ],
+      "components": [
+        "Semantic policy writer"
+      ],
+      "open": [
+        "Should semantic text that holds a quote or a line break that cannot be read back be flagged to the person, as the step describes, and in what words?"
+      ]
+    }
+  ]
+}

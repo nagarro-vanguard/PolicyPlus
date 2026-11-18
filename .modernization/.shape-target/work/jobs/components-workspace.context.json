@@ -1,0 +1,566 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "domain": {
+    "name": "Workspace",
+    "concept": "The person's working session: which definitions are loaded and from where, the language, what is remembered between visits, what is shown about the program and what is let go.",
+    "facts": [
+      {
+        "name": "Program preference",
+        "from": [
+          "entity-40163170707735391190"
+        ],
+        "keys": [
+          "preference name"
+        ],
+        "relates": []
+      }
+    ],
+    "rules": [
+      "businessrule-12414618955963878773",
+      "businessrule-73782132825452925601",
+      "businessrule-25353365313977612083",
+      "businessrule-40551856488084894130",
+      "businessrule-41547680626150552574",
+      "businessrule-58877134447436981389",
+      "businessrule-72200124994498270380",
+      "businessrule-78253526822536661517",
+      "businessrule-59853527376948406586",
+      "businessrule-68766858893219046657",
+      "businessrule-31456964891379452251",
+      "businessrule-80947080049413275464",
+      "businessrule-93543924991745555552",
+      "businessrule-06850078746756456273",
+      "businessrule-19671296259932138006",
+      "businessrule-43765682097437166867",
+      "businessrule-53176229115945924012",
+      "businessrule-56221298079625729644",
+      "businessrule-76226373219464614800",
+      "businessrule-88154451768954453608",
+      "businessrule-98012095360980700253",
+      "businessrule-07200475892676201466",
+      "businessrule-83939170310206178732"
+    ],
+    "dependsOn": [
+      "Policy Definitions",
+      "Policy Discovery",
+      "Definition Acquisition"
+    ],
+    "why": "Session start, loading and replacing definitions, the language choice, the remembered choices (including whether the welcome offer was already considered) and leaving tie the others together without owning their facts. It hands the remembered sources to Policy Source, which decides how they are used."
+  },
+  "container": {
+    "name": "Policy Plus application",
+    "kind": "interface",
+    "tech": "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "holds": [
+      "Policy Definitions",
+      "Policy Source",
+      "Policy State",
+      "Policy Discovery",
+      "Policy File Exchange",
+      "Definition Acquisition",
+      "Workspace"
+    ]
+  },
+  "integrations": [
+    {
+      "need": "external-84087908423930356962",
+      "domain": "Workspace",
+      "how": "The build writes the version into a generated source file that the workspace reads to tell which code a copy came from; it is a build-time file on any host.",
+      "name": "Generated version source file"
+    },
+    {
+      "need": "external-45436197603688581519",
+      "domain": "Workspace",
+      "how": "Remembered choices are kept as preference rows in the preference store (PostgreSQL through Drizzle) instead of the program's own settings key.",
+      "name": "Windows registry settings key of Policy Plus"
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-12414618955963878773",
+      "statement": "When the build script runs, it replaces the program's version in a generated source file with the text git gives for the current commit. That text is a tag, commit count and short commit name when tags exist, and a short commit name otherwise. The script runs when someone runs it or the release workflow does. The committed file holds an empty version."
+    },
+    {
+      "id": "businessrule-73782132825452925601",
+      "statement": "Closing the workspace or replacing it with a new one discards all loaded definitions and the previous search results."
+    },
+    {
+      "id": "businessrule-25353365313977612083",
+      "statement": "When the program's settings area in the registry cannot be opened or created, the program carries on without it: settings read as their defaults, changes are dropped, and the person is not told, so settings are not remembered between runs."
+    },
+    {
+      "id": "businessrule-40551856488084894130",
+      "statement": "The definitions folder to load is the one saved last time; when none is saved it is the Windows PolicyDefinitions folder."
+    },
+    {
+      "id": "businessrule-41547680626150552574",
+      "statement": "When loading the saved definitions reports problems, the person is asked whether to keep using the workspace. Yes keeps the partly loaded workspace. No raises the failure \"You decided to not use the problematic ADMX bundle.\", which goes into the failed-load handling: the workspace is thrown away, and for a non-default folder the person is asked to load the default, while for the default folder the person is told the definitions could not be loaded."
+    },
+    {
+      "id": "businessrule-58877134447436981389",
+      "statement": "When the person chooses to load the default location, the workspace is replaced by an empty one and the Windows default folder is loaded into it."
+    },
+    {
+      "id": "businessrule-72200124994498270380",
+      "statement": "When the Windows default folder itself fails to load, or fails to load after the person chose Yes, the person is told \"Policy definitions could not be loaded: <reason>\" and the workspace stays empty."
+    },
+    {
+      "id": "businessrule-78253526822536661517",
+      "statement": "When the saved folder is not the Windows default and fails to load, the person is told \"Policy definitions could not be loaded from \"<folder>\": <reason> Load from the default location?\". Yes saves the Windows default folder as the definitions folder; No leaves the workspace empty with no further message."
+    },
+    {
+      "id": "businessrule-59853527376948406586",
+      "statement": "The About box names the author and the GitHub address, and adds the version only when a version was built into the program."
+    },
+    {
+      "id": "businessrule-68766858893219046657",
+      "statement": "The welcome offer to download policy definitions is considered only once: the first time the window is shown the program records that it has been considered, even when no offer is made, and never considers it again."
+    },
+    {
+      "id": "businessrule-31456964891379452251",
+      "statement": "When the person confirms the language dialog with text that does not split into exactly two parts around a hyphen (for example \"en\" or \"en-US-x\"), it is refused with \"Please enter a valid language code.\" and stays open. Any text with exactly one hyphen passes, including \"-\", \"en-\" or text with path characters: it is not checked as a real language code. The code is later used as a folder name when looking for ADML files."
+    },
+    {
+      "id": "businessrule-80947080049413275464",
+      "statement": "Setting the language saves the new language code at once, then asks \"Language changes will take effect when ADML files are next loaded. Would you like to reload the workspace now?\". Yes empties the workspace and reloads the saved definitions folder."
+    },
+    {
+      "id": "businessrule-93543924991745555552",
+      "statement": "When the entered language code, spaces trimmed, is exactly equal (upper and lower case count as different, so en-us differs from en-US) to the stored code, taken without trimming, the dialog closes as cancelled. Otherwise the dialog returns the entered code as accepted; saving it is done elsewhere."
+    },
+    {
+      "id": "businessrule-06850078746756456273",
+      "statement": "When a definitions folder is opened, the workspace is emptied first only if \"clear workspace\" is chosen. Otherwise the folder's definitions are added to the current workspace. Problems found are reported but do not stop the load."
+    },
+    {
+      "id": "businessrule-19671296259932138006",
+      "statement": "When opening a definitions folder fails, the person is told \"The folder could not be fully added to the workspace.\" with the reason. The workspace may already be emptied or partly filled, the remembered folder is unchanged, and the view is rebuilt anyway."
+    },
+    {
+      "id": "businessrule-43765682097437166867",
+      "statement": "The option to clear the workspace before adding the folder is ticked by default, and its choice is passed on only when a folder that exists was accepted."
+    },
+    {
+      "id": "businessrule-53176229115945924012",
+      "statement": "When OK is pressed in the ADMX folder dialog, the folder is the system's Windows PolicyDefinitions folder, the domain SYSVOL folder, or the typed folder, as chosen. A folder that does not exist is refused with \"The folder you specified does not exist.\" and the dialog stays open."
+    },
+    {
+      "id": "businessrule-56221298079625729644",
+      "statement": "A definitions folder is remembered as the definitions folder for the next start only when \"clear workspace\" was chosen and the load did not fail; when the workspace is added to, the remembered folder is unchanged."
+    },
+    {
+      "id": "businessrule-76226373219464614800",
+      "statement": "When the ADMX folder dialog opens, 'This folder' is chosen first, and the 'The domain's SYSVOL' choice is available only if the computer is joined to a domain and the folder \\\\domain\\SYSVOL\\domain\\Policies\\PolicyDefinitions exists."
+    },
+    {
+      "id": "businessrule-88154451768954453608",
+      "statement": "The folder box and its Browse button are usable only when the 'This folder' choice is selected."
+    },
+    {
+      "id": "businessrule-98012095360980700253",
+      "statement": "Pressing Escape closes the ADMX folder dialog as cancelled, with no folder chosen."
+    },
+    {
+      "id": "businessrule-07200475892676201466",
+      "statement": "A single ADMX file picked from the file dialog (ADMX files only) is added to the current workspace without emptying it and is not remembered as the definitions folder; a failure shows \"The ADMX file could not be added to the workspace.\" with the reason."
+    },
+    {
+      "id": "businessrule-83939170310206178732",
+      "statement": "Closing the workspace from the menu empties it at once with no confirmation and rebuilds the view."
+    }
+  ],
+  "steps": [
+    {
+      "id": "tasks-building-and-versioning-policy-plus.stamp-program-version:every-build-stamps-itself#1",
+      "intent": "Build or release a copy of the program.",
+      "system": "Works out the version from the code the copy is built from: the tag, commit count and short commit name when tags exist, a short commit name otherwise.",
+      "touches": [],
+      "honours": [
+        "businessrule-12414618955963878773"
+      ]
+    },
+    {
+      "id": "tasks-building-and-versioning-policy-plus.stamp-program-version:every-build-stamps-itself#2",
+      "intent": "Know which code this copy came from.",
+      "system": "Records that version in the copy only; the committed source keeps an empty version.",
+      "touches": [],
+      "honours": [
+        "businessrule-12414618955963878773"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#1",
+      "intent": "Start using the program for the first time.",
+      "system": "Records that the offer has been considered, even if none is made, and never considers it again.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-68766858893219046657"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#4",
+      "intent": "Come back to the definitions later.",
+      "system": "Keeps a standing invitation to get the definitions available without repeating the offer.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": []
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1",
+      "intent": "Say that the downloaded definitions should become the ones in use.",
+      "system": "The system takes the downloaded folder and finds the template files in it, ignoring everything else.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-87686960346106148106",
+        "businessrule-94371671563498468562",
+        "businessrule-73782132825452925601",
+        "businessrule-92965345094444319678"
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#5",
+      "intent": "Switch to the new definitions.",
+      "system": "The system empties the workspace, adds the staged definitions to the available ones, and remembers the folder as the definitions folder; with no new folder nothing changes.",
+      "touches": [
+        "entity-92808062881922645840",
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-90575686774382821065",
+        "businessrule-44253734408576510565"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#1",
+      "intent": "Have my preferences remembered",
+      "system": "Recovers the remembered preferences; when they cannot be kept, carries on with defaults and does not stop the person.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-25353365313977612083",
+        "businessrule-15364695696024462204"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+      "intent": "Get back to the policy sources I used last",
+      "system": "Reopens the remembered user and computer sources, or the local Group Policy on first start; closes any sources already open, works out each source's location and whether it can be saved, and falls back to the defaults with a notice when the remembered ones cannot be reached.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-27578488339642782673",
+        "businessrule-83248377690419919134",
+        "businessrule-83542226215682203251",
+        "businessrule-72559528436656832979",
+        "businessrule-49395771262191850050",
+        "businessrule-79173574861552738237",
+        "businessrule-50808386816006011599",
+        "businessrule-51029550915449645879",
+        "businessrule-74412475215137182202",
+        "businessrule-06218920206107794280",
+        "businessrule-84284160770896952745",
+        "businessrule-35899140497190862562",
+        "businessrule-29585332630928853779",
+        "businessrule-39262656033285451423",
+        "businessrule-67456626752221980743",
+        "businessrule-51554818045857630746",
+        "businessrule-75428533810997783570",
+        "businessrule-77499382636897144286",
+        "businessrule-34447675520768722859",
+        "businessrule-95699184013424603885"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#3",
+      "intent": "Get the policy definitions I last used",
+      "system": "Loads the definitions from the remembered folder, or the system default, and offers the default when the remembered folder fails; when the problems found are minor, asks whether to keep the partly loaded set.",
+      "touches": [
+        "entity-40163170707735391190",
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-40551856488084894130",
+        "businessrule-41547680626150552574",
+        "businessrule-58877134447436981389",
+        "businessrule-72200124994498270380",
+        "businessrule-78253526822536661517"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#5",
+      "intent": "Know whether the workspace is ready to change",
+      "system": "States once which sources can be fully changed and which can only be viewed or kept in memory, and names the sources; says nothing beyond the notice when everything is writable.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-73847809349842629987",
+        "businessrule-98025569949322378254"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.set-definition-language:name-the-language-then-reload#1",
+      "intent": "Say which language the definition text should use",
+      "system": "Checks the language is two parts around a hyphen and refuses it with a plain message otherwise; closes without change when it equals the language already stored.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-31456964891379452251",
+        "businessrule-93543924991745555552"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.set-definition-language:name-the-language-then-reload#2",
+      "intent": "Have the language remembered and applied",
+      "system": "Saves the language at once and asks whether to reload the workspace now; if yes, clears it and reloads the definitions from the saved folder, otherwise it applies at the next load.",
+      "touches": [
+        "entity-40163170707735391190",
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-80947080049413275464"
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.see-about-information:ask-who-and-which-version#1",
+      "intent": "Find out who made this and which version I have",
+      "system": "Shows the author and the project address, and the version only when a version was built into the program.",
+      "touches": [],
+      "honours": [
+        "businessrule-59853527376948406586"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+      "intent": "Say where the user policies are kept",
+      "system": "Offers local files, the system settings store, a policy file, a particular user's policy or a user profile, or an empty scratch space; asks for the detail only for the kind chosen and accepts only policy files of the right type, including one not yet created.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-34260437212150300999",
+        "businessrule-60819102502476341284"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+      "intent": "Say where the computer policies are kept",
+      "system": "Same, for the computer side, without the per-user kinds.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-58680491450946971024"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4",
+      "intent": "Confirm and start working",
+      "system": "Creates both sources; if either cannot be created, says which and why and stays open; otherwise opens them, shows the outcome, and moves to the nearest visible category.",
+      "touches": [
+        "entity-40163170707735391190",
+        "entity-99683518011128701149"
+      ],
+      "honours": [
+        "businessrule-36363277387876573326",
+        "businessrule-75533700456390778594",
+        "businessrule-10464012301936997836",
+        "businessrule-84588009124214109370"
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+      "intent": "Save my changes",
+      "system": "The system saves comments, writes each fully writable source (otherwise reporting it is not writable), makes the changes take effect where possible, and remembers the chosen sources, using the same rules for every source kind and file encoding.",
+      "touches": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812",
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-39804924157705575084",
+        "businessrule-57614366266507799597",
+        "businessrule-87767421628061265824",
+        "businessrule-48968387067309128566",
+        "businessrule-51421539020102170720",
+        "businessrule-71273978078040008855",
+        "businessrule-90527876062459953686",
+        "businessrule-98130638476370994041",
+        "businessrule-86190343622453999219",
+        "businessrule-72149976207795359606",
+        "businessrule-43613259767674592997",
+        "businessrule-09208070518455812303",
+        "businessrule-05545231242611046306",
+        "businessrule-28402048173344159866",
+        "businessrule-67697422395860869033",
+        "businessrule-84817748081019740495",
+        "businessrule-91552597921533368557",
+        "businessrule-41013546429447756519",
+        "businessrule-17212723393144190896",
+        "businessrule-24034386628405619971",
+        "businessrule-25033115401021301399",
+        "businessrule-66651514909736203695",
+        "businessrule-42987908693120337062",
+        "businessrule-48799510965890913669",
+        "businessrule-00851565168679896073",
+        "businessrule-09176393040056781958",
+        "businessrule-26056926835272364672",
+        "businessrule-13724150063390760319",
+        "businessrule-24339552780845919468",
+        "businessrule-19841193988434357732",
+        "businessrule-20632548312339129786"
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#1",
+      "intent": "Start editing the policy file, understanding the risk the first time",
+      "system": "Takes the one allowed area backed by a policy file, asking only when both are and saying plainly when none is; shows the caution only to a person who has not accepted it, remembering a yes and asking again after a no.",
+      "touches": [
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-14969413888672404933",
+        "businessrule-64564273672622472190",
+        "businessrule-21403142511575039594",
+        "businessrule-40441510620479008895",
+        "businessrule-98676109650316370626"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#1",
+      "intent": "Choose the folder of definitions to load.",
+      "system": "The system lists the standard folder and, only when it exists on a joined domain, the domain folder, alongside the person's own; it checks the folder exists and refuses one that does not.",
+      "touches": [],
+      "honours": [
+        "businessrule-76226373219464614800",
+        "businessrule-88154451768954453608",
+        "businessrule-53176229115945924012"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#2",
+      "intent": "Say whether to replace what is already loaded, only when something is loaded.",
+      "system": "The system proposes replacing, and does not ask when nothing is loaded.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-43765682097437166867"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#3",
+      "intent": "Get the definitions loaded.",
+      "system": "The system empties the workspace first only when replacing, adds the folder, reports problems without stopping, and on failure says the folder could not be fully added with the reason; it remembers the folder only when replacing succeeded.",
+      "touches": [
+        "entity-92808062881922645840",
+        "entity-40163170707735391190"
+      ],
+      "honours": [
+        "businessrule-06850078746756456273",
+        "businessrule-19671296259932138006",
+        "businessrule-56221298079625729644"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#4",
+      "intent": "Cancel at any time.",
+      "system": "No folder is chosen.",
+      "touches": [],
+      "honours": [
+        "businessrule-98012095360980700253"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.add-template-file:add-several-at-once#1",
+      "intent": "Choose the policy template files to add.",
+      "system": "The system accepts only template files, one or several.",
+      "touches": [],
+      "honours": [
+        "businessrule-07200475892676201466"
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#1",
+      "intent": "Remove all loaded definitions.",
+      "system": "The system empties the workspace at once with no confirmation and rebuilds what is shown.",
+      "touches": [
+        "entity-92808062881922645840"
+      ],
+      "honours": [
+        "businessrule-83939170310206178732"
+      ]
+    }
+  ],
+  "available": [
+    "Definition installation flow",
+    "Missing definitions detector",
+    "Template folder scanner",
+    "Template file source adapter",
+    "Language file locator",
+    "Language text reader",
+    "Definition language setting",
+    "Template validator",
+    "Definition structure builder",
+    "Policy option reader",
+    "Support evaluator",
+    "Definition load coordinator",
+    "Definition reset",
+    "Policy state presenter",
+    "Category tree presenter",
+    "Item description pane",
+    "Item action resolver",
+    "Duplicate policy merger",
+    "Policy details presenter",
+    "Category details presenter",
+    "Product browser",
+    "Support rule browser",
+    "Policy inspector",
+    "Semantic policy writer",
+    "Loaded file reviewer",
+    "Policy lookup",
+    "Visibility Judge",
+    "Area Scope Chooser",
+    "Identifier Kind Resolver",
+    "Identifier Arrival Router",
+    "Single Selection Guard",
+    "Text Terms Parser",
+    "Text Hit Matcher",
+    "Text Search Intake",
+    "Registry Line Splitter",
+    "Registry Terms Intake",
+    "Registry Term Matcher",
+    "Search Run Coordinator",
+    "Result Picker",
+    "Result Stepper",
+    "Result Recall",
+    "Limit Draft Presenter",
+    "Limit Draft Applier",
+    "Product Limit Selector",
+    "Limit Focus Mover",
+    "Limit Draft Session",
+    "Acquisition session",
+    "Destination chooser",
+    "Package fetcher",
+    "Package extractor",
+    "Destination access controller",
+    "Template installer",
+    "Group Policy edition detector",
+    "Welcome offer",
+    "Acquired definitions adoption"
+  ]
+}

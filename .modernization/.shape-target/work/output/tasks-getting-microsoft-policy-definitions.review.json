@@ -1,0 +1,25 @@
+{
+  "read": 3,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The outcome promises Microsoft's \"current\" set, but the legacy rule says the program always fetches one fixed package (Windows 11 September 2026 Update 26H2) and the person cannot choose another version."
+    },
+    {
+      "record": 0,
+      "says": "The third current step drops the partial-failure outcomes: a failed cleanup still leaves all files installed yet reports \"Failed to remove temporary files.\" with no folder reported, a failed extraction keeps the package, and a failed move can leave some files replaced and others not with no backup."
+    },
+    {
+      "record": 1,
+      "says": "The first current step says \"many categories lack their parent\", losing the legacy condition that the offer is made only when more than two non-empty categories name a parent that is not loaded, and that group-policy support comes from a fixed list of edition codes where a failed lookup counts as no support."
+    },
+    {
+      "record": 2,
+      "says": "This task bundles about 100 rules covering the whole load and browse of the program (registry evaluation, support definitions, filters, comment columns, ADMX/ADML parsing errors) under one outcome, so it is the old Acquire menu handler rather than a task, and its first step repeats the Help-menu start already in get-policy-definitions."
+    },
+    {
+      "record": 2,
+      "says": "The browse step omits the load-problem path: errors are listed and, where a choice is wanted, the person is asked \"Continue trying to use this workspace?\"; failing files are skipped while the others load, so the step misstates what happens when the new definitions are partly bad."
+    }
+  ]
+}

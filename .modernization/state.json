@@ -1,0 +1,94 @@
+{
+  "request": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/request.md",
+  "settings": {
+    "worktrees": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization-worktrees",
+    "base": "master",
+    "parallel": 1
+  },
+  "steps": {
+    "request": {
+      "inputs": "e3b0c44298fc1c14",
+      "at": "2026-11-18T15:05:54.657Z"
+    },
+    "analysis-request": {
+      "inputs": "83d28f0b1e461019",
+      "at": "2026-11-18T16:35:09.104Z"
+    },
+    "analysis": {
+      "inputs": "d35684fb98f7e254",
+      "at": "2026-11-18T16:35:16.794Z"
+    },
+    "bundles": {
+      "inputs": "fe281fc08a554d69",
+      "at": "2026-11-18T16:35:16.918Z"
+    },
+    "derive-legacy": {
+      "inputs": "fe281fc08a554d69",
+      "at": "2026-11-18T16:35:17.018Z"
+    },
+    "target-as-is": {
+      "inputs": "7fd81776741131d2",
+      "at": "2026-11-18T16:35:17.122Z"
+    },
+    "target-as-is-choose": {
+      "inputs": "ae0cb0b7d29c4dbe",
+      "at": "2026-11-18T15:10:06.479Z"
+    },
+    "target-journeys": {
+      "inputs": "174f4ec376af83f4",
+      "at": "2026-11-18T16:35:17.319Z"
+    },
+    "target-journeys-choose": {
+      "inputs": "e073989a47d5ab88",
+      "at": "2026-11-18T15:19:37.957Z"
+    },
+    "target-architecture": {
+      "inputs": "09eeba6d72d9abdd",
+      "at": "2026-11-18T16:35:17.510Z"
+    },
+    "target-architecture-choose": {
+      "inputs": "33f03118492c1085",
+      "at": "2026-11-18T15:28:35.660Z"
+    },
+    "target-components": {
+      "inputs": "61ae2425ba568769",
+      "at": "2026-11-18T16:35:17.715Z"
+    },
+    "foundation": {
+      "inputs": "01ed6bc0693b8cd5",
+      "at": "2026-11-18T16:35:17.984Z"
+    },
+    "stories": {
+      "inputs": "e4a6d00a557bdc05",
+      "at": "2026-11-18T16:35:18.110Z"
+    },
+    "target-as-is-pages": {
+      "inputs": "174f4ec376af83f4",
+      "at": "2026-11-18T16:35:17.214Z"
+    },
+    "target-journeys-pages": {
+      "inputs": "b239a00310e02c4e",
+      "at": "2026-11-18T16:35:17.413Z"
+    },
+    "target-architecture-pages": {
+      "inputs": "1e85622fb99342da",
+      "at": "2026-11-18T16:35:17.606Z"
+    },
+    "target-components-pages": {
+      "inputs": "1256c5006112fba0",
+      "at": "2026-11-18T16:35:17.870Z"
+    },
+    "target-components-choose": {
+      "inputs": "0c5b9ad1342f1f6f",
+      "at": "2026-11-18T16:33:17.662Z"
+    },
+    "plan": {
+      "inputs": "8d7fdb18ecd12103",
+      "at": "2026-11-18T16:35:18.226Z"
+    },
+    "app": {
+      "inputs": "0f1772f5e21df718",
+      "at": "2026-11-18T16:35:18.413Z"
+    }
+  }
+}

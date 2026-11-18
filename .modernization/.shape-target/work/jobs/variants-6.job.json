@@ -1,0 +1,9 @@
+{
+  "kind": "variants",
+  "tasks": [
+    "tasks-changing-policy-settings.import-policy-settings-from-text",
+    "tasks-changing-policy-settings.inspect-policy-settings-as-text",
+    "tasks-finding-policies.find-policy-by-id",
+    "tasks-finding-policies.find-policies-by-text"
+  ]
+}

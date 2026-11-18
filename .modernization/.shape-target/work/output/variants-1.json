@@ -1,0 +1,501 @@
+{
+ "journeys": [
+  {
+   "task": "tasks-building-and-versioning-policy-plus.stamp-program-version",
+   "actor": "person",
+   "name": "Every build stamps itself",
+   "strategy": "automate first",
+   "idea": "The version is worked out from the code by the system every time a copy is built or released, so nobody has to remember to stamp it.",
+   "tradeoff": "Every build, even a throwaway one, now carries a version, so the rule that it can also be run by hand must still be offered.",
+   "recommended": "Removes a manual step that can be forgotten, so no released copy can carry an empty version, while keeping the committed record empty and every rule intact.",
+   "steps": [
+    {
+     "intent": "Build or release a copy of the program.",
+     "system": "Works out the version from the code the copy is built from: the tag, commit count and short commit name when tags exist, a short commit name otherwise.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-12414618955963878773"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-46722061090424791745"
+      ],
+      "change": "inferred",
+      "reason": "The system derives the version as part of building instead of waiting for someone to run a separate stamping step.",
+      "keeps": [
+       "businessrule-12414618955963878773"
+      ]
+     }
+    },
+    {
+     "intent": "Know which code this copy came from.",
+     "system": "Records that version in the copy only; the committed source keeps an empty version.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-12414618955963878773"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-46722061090424791745"
+      ],
+      "change": "split",
+      "reason": "Separating the recording from the deriving makes it clear the committed record is never changed.",
+      "keeps": [
+       "businessrule-12414618955963878773"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-building-and-versioning-policy-plus.stamp-program-version",
+   "actor": "person",
+   "name": "Stamp on request",
+   "strategy": "task first",
+   "idea": "Someone asks for the version to be stamped, either by hand or as part of releasing, and gets confirmation of what was recorded.",
+   "tradeoff": "Still depends on someone or the release process asking, so a hand-made build can carry an empty version.",
+   "steps": [
+    {
+     "intent": "Stamp the program with the current version.",
+     "system": "Replaces the empty version with the text for the current commit, tag-based when tags exist and short commit name otherwise.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-12414618955963878773"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-46722061090424791745"
+      ],
+      "change": "kept",
+      "reason": "Keeps the explicit stamp as the single place the version is written.",
+      "keeps": [
+       "businessrule-12414618955963878773"
+      ]
+     }
+    },
+    {
+     "intent": "Confirm what was stamped.",
+     "system": "Shows the version that was recorded.",
+     "confidence": "inferred",
+     "touches": [],
+     "honours": [
+      "businessrule-12414618955963878773"
+     ],
+     "link": {
+      "_tag": "new",
+      "reason": "Today nothing reports the result, so a wrong stamp goes unnoticed."
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-getting-microsoft-policy-definitions.get-policy-definitions",
+   "actor": "person",
+   "name": "Install in one go",
+   "strategy": "automate first",
+   "idea": "The person asks for the definitions and the system picks the usual folder, installs everything and reports; choosing another folder is an option, not a required step.",
+   "tradeoff": "People who want another folder take one extra, optional step before starting.",
+   "recommended": "The common case needs one request and one answer, and every rule on permissions, replacement, languages, locking and failure is kept.",
+   "steps": [
+    {
+     "intent": "Get the current policy definitions.",
+     "system": "Proposes the operating system's own policy definitions folder as the destination every time and fetches the one fixed Microsoft package.",
+     "confidence": "sure",
+     "touches": [
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-34650805596483639458",
+      "businessrule-53408776186716933732"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-36474692648442947336"
+      ],
+      "change": "defaulted",
+      "reason": "The destination is filled in so the person only has to ask.",
+      "keeps": [
+       "businessrule-34650805596483639458",
+       "businessrule-53408776186716933732"
+      ]
+     }
+    },
+    {
+     "intent": "Wait while the definitions are installed.",
+     "system": "Locks the destination and the start, prevents leaving while it runs, takes control of an existing destination for an administrator, unpacks the package and removes it, then replaces files in the destination with the templates, the regional-format language files and the English fallback, resetting permissions.",
+     "confidence": "sure",
+     "touches": [
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-16960626064100495277",
+      "businessrule-19284863828429321329",
+      "businessrule-75570169794845906057",
+      "businessrule-91358402464075338920",
+      "businessrule-24154317128059319852",
+      "businessrule-33969702428946021999",
+      "businessrule-70392920399990339776"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-36474692648442947336",
+       "block-71707654079332679729"
+      ],
+      "change": "merged",
+      "reason": "Unpacking, taking control and moving are one piece of work the person only waits for.",
+      "keeps": [
+       "businessrule-16960626064100495277",
+       "businessrule-19284863828429321329",
+       "businessrule-75570169794845906057",
+       "businessrule-91358402464075338920",
+       "businessrule-24154317128059319852",
+       "businessrule-33969702428946021999",
+       "businessrule-70392920399990339776"
+      ]
+     }
+    },
+    {
+     "intent": "Learn the result and use the definitions.",
+     "system": "Tells which step failed if any, re-enables everything and reports no new folder; on success removes scratch files and asks whether to open them, reporting the folder only on yes.",
+     "confidence": "sure",
+     "touches": [
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-17840470067823720423",
+      "businessrule-84139143444339961851"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-60182551583579953457"
+      ],
+      "change": "kept",
+      "reason": "The outcome is clear and the person decides whether to open the folder.",
+      "keeps": [
+       "businessrule-17840470067823720423",
+       "businessrule-84139143444339961851"
+      ]
+     }
+    },
+    {
+     "intent": "Install somewhere other than the usual folder, only when needed.",
+     "system": "Replaces the destination with the folder chosen; cancelling leaves it unchanged.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-78945520165872370051"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-03053454096779816382"
+      ],
+      "change": "deferred",
+      "reason": "Choosing a folder is rarely needed, so it is offered only when wanted.",
+      "keeps": [
+       "businessrule-78945520165872370051"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-getting-microsoft-policy-definitions.get-policy-definitions",
+   "actor": "person",
+   "name": "Choose, install, review",
+   "strategy": "task first",
+   "idea": "The person confirms where the definitions go, the system installs them in clearly separate stages, and then the person reviews the outcome.",
+   "tradeoff": "More steps and an explicit choice every time, even for the usual folder.",
+   "steps": [
+    {
+     "intent": "Decide where the definitions will live.",
+     "system": "Offers the operating system's own policy definitions folder as the starting destination every time; a chosen folder replaces it and cancelling leaves it unchanged.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-34650805596483639458",
+      "businessrule-78945520165872370051"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-03053454096779816382"
+      ],
+      "change": "kept",
+      "reason": "The destination is visible and confirmed before anything changes.",
+      "keeps": [
+       "businessrule-34650805596483639458",
+       "businessrule-78945520165872370051"
+      ]
+     }
+    },
+    {
+     "intent": "Start getting the definitions.",
+     "system": "Fetches the one fixed package, and from then on blocks a second start, changes to the destination and leaving.",
+     "confidence": "sure",
+     "touches": [
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-53408776186716933732",
+      "businessrule-19284863828429321329",
+      "businessrule-75570169794845906057"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-36474692648442947336",
+       "block-71707654079332679729"
+      ],
+      "change": "split",
+      "reason": "Starting is separate from choosing so the person commits knowingly.",
+      "keeps": [
+       "businessrule-53408776186716933732",
+       "businessrule-19284863828429321329",
+       "businessrule-75570169794845906057"
+      ]
+     }
+    },
+    {
+     "intent": "Prepare and unpack the definitions.",
+     "system": "For an administrator takes control of an existing destination; unpacks the package and removes it when successful.",
+     "confidence": "sure",
+     "touches": [
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-16960626064100495277",
+      "businessrule-91358402464075338920"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-36474692648442947336"
+      ],
+      "change": "split",
+      "reason": "Preparing the destination before moving makes failures easy to name.",
+      "keeps": [
+       "businessrule-16960626064100495277",
+       "businessrule-91358402464075338920"
+      ]
+     }
+    },
+    {
+     "intent": "Put the definitions in place.",
+     "system": "Replaces same-named files with the templates, the regional-format language files and the English fallback, and resets permissions.",
+     "confidence": "sure",
+     "touches": [
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-24154317128059319852",
+      "businessrule-33969702428946021999",
+      "businessrule-70392920399990339776"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-36474692648442947336"
+      ],
+      "change": "split",
+      "reason": "Installing is the one stage that changes the person's files, so it is shown on its own.",
+      "keeps": [
+       "businessrule-24154317128059319852",
+       "businessrule-33969702428946021999",
+       "businessrule-70392920399990339776"
+      ]
+     }
+    },
+    {
+     "intent": "Review the outcome.",
+     "system": "Reports any failed step and re-enables everything, or on success clears scratch files and asks whether to open the folder, reporting it only on yes.",
+     "confidence": "sure",
+     "touches": [
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-17840470067823720423",
+      "businessrule-84139143444339961851"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-60182551583579953457"
+      ],
+      "change": "kept",
+      "reason": "The result and next action are stated plainly.",
+      "keeps": [
+       "businessrule-17840470067823720423",
+       "businessrule-84139143444339961851"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer",
+   "actor": "person",
+   "name": "Offer once, keep it open",
+   "strategy": "automate first",
+   "idea": "On first use the system works out whether definitions are lacking and makes a single offer, and if it is passed over the invitation stays quietly available.",
+   "tradeoff": "Needs a standing invitation, which is more to design than a one-time question.",
+   "recommended": "The person is never lost if they decline once, the offer is still made only once, and the lack of definitions is worked out without asking.",
+   "steps": [
+    {
+     "intent": "Start using the program for the first time.",
+     "system": "Records that the offer has been considered, even if none is made, and never considers it again.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-68766858893219046657"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-31629065709184768465"
+      ],
+      "change": "split",
+      "reason": "Recording the consideration is separated so it holds whatever the outcome.",
+      "keeps": [
+       "businessrule-68766858893219046657"
+      ]
+     }
+    },
+    {
+     "intent": "Have missing definitions noticed without having to check.",
+     "system": "Works out whether the edition lacks Group Policy support and whether more than two non-empty categories name a missing parent.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-44390406872239414183",
+      "businessrule-02030966310880796596",
+      "businessrule-87097618083601098949",
+      "businessrule-23603907625209300500"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-31629065709184768465"
+      ],
+      "change": "inferred",
+      "reason": "The system decides on evidence so only people who need the offer see it.",
+      "keeps": [
+       "businessrule-44390406872239414183",
+       "businessrule-02030966310880796596",
+       "businessrule-87097618083601098949",
+       "businessrule-23603907625209300500"
+      ]
+     }
+    },
+    {
+     "intent": "Accept or put off the definitions.",
+     "system": "Makes the welcome offer; yes starts getting the definitions.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-23603907625209300500"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-31629065709184768465"
+      ],
+      "change": "kept",
+      "reason": "The person decides whether to download.",
+      "keeps": [
+       "businessrule-23603907625209300500"
+      ]
+     }
+    },
+    {
+     "intent": "Come back to the definitions later.",
+     "system": "Keeps a standing invitation to get the definitions available without repeating the offer.",
+     "confidence": "inferred",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [],
+     "link": {
+      "_tag": "new",
+      "reason": "Today the text only says it can be done later; a standing invitation makes that real."
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer",
+   "actor": "person",
+   "name": "First-run question",
+   "strategy": "task first",
+   "idea": "At first use, if definitions are lacking, one question asks whether to download them now.",
+   "tradeoff": "A person who declines is left to find the later route themselves.",
+   "steps": [
+    {
+     "intent": "Open the program for the first time.",
+     "system": "Records that the offer has been considered and does not consider it again.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-68766858893219046657"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-31629065709184768465"
+      ],
+      "change": "kept",
+      "reason": "Marks the offer as considered at once.",
+      "keeps": [
+       "businessrule-68766858893219046657"
+      ]
+     }
+    },
+    {
+     "intent": "Be offered the definitions only if they are missing.",
+     "system": "If the edition has no Group Policy support and more than two non-empty categories name a missing parent, asks the welcome question and starts the download on yes.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-44390406872239414183",
+      "businessrule-02030966310880796596",
+      "businessrule-87097618083601098949",
+      "businessrule-23603907625209300500"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-31629065709184768465"
+      ],
+      "change": "merged",
+      "reason": "Deciding and asking happen as one moment.",
+      "keeps": [
+       "businessrule-44390406872239414183",
+       "businessrule-02030966310880796596",
+       "businessrule-87097618083601098949",
+       "businessrule-23603907625209300500"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  }
+ ]
+}

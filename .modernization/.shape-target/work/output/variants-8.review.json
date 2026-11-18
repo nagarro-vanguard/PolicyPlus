@@ -1,0 +1,8 @@
+{"read":12,"challenges":[
+{"record":3,"says":"The value-data step cites the rule that an unsupported kind such as binary is refused with \"This value kind is not supported.\" and nothing changes, but its sentence never says so, so that refusal is lost in the rewording."},
+{"record":5,"says":"Asking \"whether to add a key or a value and where\" ignores that a value can only be added under the selected key (and is unavailable with nothing or a value selected, where only Add key exists), so the choice and the location question offer things the old system does not allow."},
+{"record":6,"says":"Entering new data 'to match the kind' omits that editing a binary value is refused with \"This value kind is not supported.\" and that deletion entries cannot be edited, so the step implies every selected value can be changed."},
+{"record":9,"says":"The journey has no path for a selected value being marked for deletion directly (its name taken from the selection, no typing); delete-one is only reachable by typed name from a key, so that legacy behaviour is dropped."},
+{"record":9,"says":"\"Clear then keep existing ordinary direct values\" hides that deletion entries already in the key are lost and values of sub-keys are not put back, which is the data-losing part of the choice."},
+{"record":10,"says":"The key choice \"clear then keep existing ordinary direct values\" omits that existing deletion entries are lost and sub-key values are not put back, so the person cannot see what that option discards."}
+]}

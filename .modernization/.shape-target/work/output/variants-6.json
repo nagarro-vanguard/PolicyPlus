@@ -1,0 +1,698 @@
+{
+  "journeys": [
+    {
+      "task": "tasks-changing-policy-settings.import-policy-settings-from-text",
+      "actor": "person",
+      "name": "Check, then apply",
+      "strategy": "task first",
+      "idea": "The person supplies the text, sees what it holds and any fault with its line, then confirms applying it.",
+      "tradeoff": "Three steps, so a person who only wants to apply a known-good text still passes a check step.",
+      "steps": [
+        {
+          "intent": "Provide the semantic policy text, from a stored file or by entering it, or start again from a blank one.",
+          "system": "Takes the whole text as given, replacing what was there; a fresh start asks for confirmation and restores the signature line and blanks. Anything parsed earlier is discarded.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-27078270365699057081",
+            "businessrule-53070511165338807522"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-27933278213709856376",
+              "block-20479299247601531941",
+              "block-92467440283303600855"
+            ],
+            "change": "merged",
+            "reason": "One step for every way of getting text in, and no leftover result from an earlier try.",
+            "keeps": [
+              "businessrule-27078270365699057081",
+              "businessrule-53070511165338807522"
+            ]
+          }
+        },
+        {
+          "intent": "Know whether the text is good before anything changes.",
+          "system": "Reads the text, and states the number of policy settings found or the reason and line it failed on; nothing is applied.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-14257585336729172869",
+            "businessrule-37953448968627114950",
+            "businessrule-38078267378406118840",
+            "businessrule-21688833916465491468",
+            "businessrule-17846007911557610465",
+            "businessrule-82283321913472173436",
+            "businessrule-85959955505766938318",
+            "businessrule-91520515189249767580",
+            "businessrule-97058087218177971913",
+            "businessrule-64894609785645160893",
+            "businessrule-49239739229069713399"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-70742542454119360952",
+              "block-34107094698830091312"
+            ],
+            "change": "kept",
+            "reason": "A fault is found and located before it can cost anything.",
+            "keeps": [
+              "businessrule-14257585336729172869",
+              "businessrule-37953448968627114950",
+              "businessrule-38078267378406118840",
+              "businessrule-21688833916465491468",
+              "businessrule-17846007911557610465",
+              "businessrule-82283321913472173436",
+              "businessrule-85959955505766938318",
+              "businessrule-91520515189249767580",
+              "businessrule-97058087218177971913",
+              "businessrule-64894609785645160893",
+              "businessrule-49239739229069713399"
+            ]
+          }
+        },
+        {
+          "intent": "Apply the settings.",
+          "system": "Accepts only text that reads correctly, writes each policy to the computer or user source by its section, skips and counts those that fail, and reports success or how many could not be applied.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-30078789996227150580",
+            "businessrule-12966156302506777327",
+            "businessrule-78566706966921753288",
+            "businessrule-47001836867625969953",
+            "businessrule-45692609540846356884",
+            "businessrule-70167687024707690035"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-91334952261881723533"
+            ],
+            "change": "kept",
+            "reason": "The one step that changes anything is separate and explicit.",
+            "keeps": [
+              "businessrule-30078789996227150580",
+              "businessrule-12966156302506777327",
+              "businessrule-78566706966921753288",
+              "businessrule-47001836867625969953",
+              "businessrule-45692609540846356884",
+              "businessrule-70167687024707690035"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-02431696381301467584",
+            "block-98990608667721641067"
+          ],
+          "rules": [
+            "businessrule-00415446495174126677"
+          ],
+          "reason": "Dismissing a window and selecting text in a box are ways of using a control; backing out is still free because nothing is applied until the person says so (the discard rule is kept)."
+        }
+      ]
+    },
+    {
+      "task": "tasks-changing-policy-settings.import-policy-settings-from-text",
+      "actor": "person",
+      "name": "Bring in with live check",
+      "strategy": "automate first",
+      "idea": "The system reads the text as soon as it arrives, shows the count or fault at once, and offers to apply only when the text is good.",
+      "tradeoff": "The person cannot apply a text the system has not already accepted, so there is no way to force a partly bad one through.",
+      "recommended": "Fewest steps and a text can never be applied unchecked, while every reading, applying and failure rule stays.",
+      "steps": [
+        {
+          "intent": "Bring in the text, from a file or entered.",
+          "system": "Reads it straight away and states the count of policy settings or the line and reason of the first fault; replaces earlier text, and drops any earlier result.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-27078270365699057081",
+            "businessrule-53070511165338807522",
+            "businessrule-14257585336729172869",
+            "businessrule-37953448968627114950",
+            "businessrule-38078267378406118840",
+            "businessrule-21688833916465491468",
+            "businessrule-17846007911557610465",
+            "businessrule-82283321913472173436",
+            "businessrule-85959955505766938318",
+            "businessrule-91520515189249767580",
+            "businessrule-97058087218177971913",
+            "businessrule-64894609785645160893",
+            "businessrule-49239739229069713399"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-27933278213709856376",
+              "block-70742542454119360952",
+              "block-92467440283303600855",
+              "block-20479299247601531941"
+            ],
+            "change": "merged",
+            "reason": "Check happens by default instead of being asked for, saving a step.",
+            "keeps": [
+              "businessrule-27078270365699057081",
+              "businessrule-53070511165338807522",
+              "businessrule-14257585336729172869",
+              "businessrule-37953448968627114950",
+              "businessrule-38078267378406118840",
+              "businessrule-21688833916465491468",
+              "businessrule-17846007911557610465",
+              "businessrule-82283321913472173436",
+              "businessrule-85959955505766938318",
+              "businessrule-91520515189249767580",
+              "businessrule-97058087218177971913",
+              "businessrule-64894609785645160893",
+              "businessrule-49239739229069713399"
+            ]
+          }
+        },
+        {
+          "intent": "Apply what was read.",
+          "system": "Offers apply only for a text that read correctly, then writes, skips and counts failures per policy and reports the outcome.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-30078789996227150580",
+            "businessrule-12966156302506777327",
+            "businessrule-78566706966921753288",
+            "businessrule-47001836867625969953",
+            "businessrule-45692609540846356884",
+            "businessrule-70167687024707690035"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-91334952261881723533",
+              "block-34107094698830091312"
+            ],
+            "change": "defaulted",
+            "reason": "Apply needs no separate check step before it.",
+            "keeps": [
+              "businessrule-30078789996227150580",
+              "businessrule-12966156302506777327",
+              "businessrule-78566706966921753288",
+              "businessrule-47001836867625969953",
+              "businessrule-45692609540846356884",
+              "businessrule-70167687024707690035"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-02431696381301467584",
+            "block-98990608667721641067"
+          ],
+          "rules": [
+            "businessrule-00415446495174126677"
+          ],
+          "reason": "Dismissing a window and selecting text in a box are ways of using a control; backing out is still free because nothing is applied until the person says so (the discard rule is kept)."
+        }
+      ]
+    },
+    {
+      "task": "tasks-changing-policy-settings.inspect-policy-settings-as-text",
+      "actor": "person",
+      "name": "Read, then copy",
+      "strategy": "task first",
+      "idea": "The person reads the settings as text, chooses whether the signature line is included, and copies it.",
+      "tradeoff": "Two steps where copying is separate from reading.",
+      "steps": [
+        {
+          "intent": "See the chosen policy settings as semantic policy text, with or without the signature line.",
+          "system": "Shows the text, starting with the heading and a blank line only when the signature line is wanted.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-47036476815425257305"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-18241451168755948032",
+              "block-93851338452706207861"
+            ],
+            "change": "kept",
+            "reason": "The choice of heading is made where the text is seen.",
+            "keeps": [
+              "businessrule-47036476815425257305"
+            ]
+          }
+        },
+        {
+          "intent": "Take a copy of the whole text to use elsewhere.",
+          "system": "Provides the whole text for use elsewhere.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-56021383816140036498"
+            ],
+            "change": "kept",
+            "reason": "Copying the whole text is the purpose of the task.",
+            "keeps": []
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-74794780607473579452"
+          ],
+          "rules": [],
+          "reason": "Selecting text is a control gesture; copying takes the whole text so it is not needed."
+        }
+      ]
+    },
+    {
+      "task": "tasks-changing-policy-settings.inspect-policy-settings-as-text",
+      "actor": "person",
+      "name": "Ready to take away",
+      "strategy": "automate first",
+      "idea": "The system gives the text in the form the person will use, ready to take, with the signature line included by default so it can be imported back.",
+      "tradeoff": "Assumes the common reason is to reuse the text; the heading choice is still offered but moves out of the way.",
+      "recommended": "One step to the outcome, and the text is importable by default.",
+      "steps": [
+        {
+          "intent": "Take the policy settings as semantic policy text.",
+          "system": "Provides the whole text ready to use elsewhere, with the heading and blank line by default, or without when the person asks for only the fragment.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149"
+          ],
+          "honours": [
+            "businessrule-47036476815425257305"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-56021383816140036498",
+              "block-18241451168755948032",
+              "block-93851338452706207861"
+            ],
+            "change": "merged",
+            "reason": "One step reaches the purpose; reading is possible but not required.",
+            "keeps": [
+              "businessrule-47036476815425257305"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-74794780607473579452"
+          ],
+          "rules": [],
+          "reason": "Selecting text is a control gesture; copying takes the whole text so it is not needed."
+        }
+      ]
+    },
+    {
+      "task": "tasks-finding-policies.find-policy-by-id",
+      "actor": "person",
+      "name": "Name it, then go",
+      "strategy": "task first",
+      "idea": "The person gives an identifier, sees what kind of thing it is, then goes to it.",
+      "tradeoff": "Recognition and going stay as two steps.",
+      "steps": [
+        {
+          "intent": "Give the identifier of a category, product, support definition or policy.",
+          "system": "Trims it and tries category, product, support definition then policy in that order, cutting a user or computer suffix first, and shows the kind found, nothing found, or nothing yet.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-34818300362920325745",
+            "businessrule-73680018829588409732",
+            "businessrule-56645748073860464161",
+            "businessrule-81666786810242280110"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-00880488620958939962",
+              "block-61877977111665770759"
+            ],
+            "change": "kept",
+            "reason": "The person sees what the identifier means before leaving.",
+            "keeps": [
+              "businessrule-34818300362920325745",
+              "businessrule-73680018829588409732",
+              "businessrule-56645748073860464161",
+              "businessrule-81666786810242280110"
+            ]
+          }
+        },
+        {
+          "intent": "Go to what was found.",
+          "system": "Opens a category if visible, else says it is not visible; opens a policy in the computer area in preference to user, within its visible category, and tells the person when it is hidden; shows a product or support definition with its details; says not found otherwise.",
+          "confidence": "sure",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-49582367227471127226",
+            "businessrule-62209428351075007862",
+            "businessrule-73292110340688125936",
+            "businessrule-93221850558792273709",
+            "businessrule-75178338270301910966",
+            "businessrule-22485752927450345044",
+            "businessrule-27325316460229917481",
+            "businessrule-39702010276849006236",
+            "businessrule-86698236183201307158",
+            "businessrule-95233256539481592648",
+            "businessrule-97405551033143476269"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-16750935830546567218"
+            ],
+            "change": "kept",
+            "reason": "Going is a deliberate step.",
+            "keeps": [
+              "businessrule-49582367227471127226",
+              "businessrule-62209428351075007862",
+              "businessrule-73292110340688125936",
+              "businessrule-93221850558792273709",
+              "businessrule-75178338270301910966",
+              "businessrule-22485752927450345044",
+              "businessrule-27325316460229917481",
+              "businessrule-39702010276849006236",
+              "businessrule-86698236183201307158",
+              "businessrule-95233256539481592648",
+              "businessrule-97405551033143476269"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-08747539546616381995",
+            "block-36457006871614893425"
+          ],
+          "rules": [
+            "businessrule-79420398091956863443"
+          ],
+          "reason": "Where the cursor starts and how a window is dismissed are control details; nothing changes unless the person goes to the thing."
+        },
+        {
+          "actions": [
+            "block-32698633467304016976"
+          ],
+          "rules": [
+            "businessrule-59811769233751713079",
+            "businessrule-49813083192336894297"
+          ],
+          "reason": "Confirming an identifier that matched nothing is replaced by telling the person it was not found; the hidden deduplicate entry could not be started and has nothing to carry."
+        }
+      ]
+    },
+    {
+      "task": "tasks-finding-policies.find-policy-by-id",
+      "actor": "person",
+      "name": "Type and arrive",
+      "strategy": "automate first",
+      "idea": "The system recognises the identifier and takes the person there in one step, telling them plainly when it cannot.",
+      "tradeoff": "A mistyped identifier that happens to match something takes the person there at once.",
+      "recommended": "One step from identifier to destination, and the person is told when a policy is hidden instead of nothing happening.",
+      "steps": [
+        {
+          "intent": "Name what is wanted by its identifier and arrive there.",
+          "system": "Trims the text, resolves the kind in order and any suffix, then opens it as the outcome rules say, or says it was not found.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-99683518011128701149",
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-34818300362920325745",
+            "businessrule-73680018829588409732",
+            "businessrule-56645748073860464161",
+            "businessrule-81666786810242280110",
+            "businessrule-49582367227471127226",
+            "businessrule-62209428351075007862",
+            "businessrule-73292110340688125936",
+            "businessrule-93221850558792273709",
+            "businessrule-75178338270301910966"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-00880488620958939962",
+              "block-16750935830546567218",
+              "block-61877977111665770759"
+            ],
+            "change": "merged",
+            "reason": "Recognising and going are one action, saving a step.",
+            "keeps": [
+              "businessrule-34818300362920325745",
+              "businessrule-73680018829588409732",
+              "businessrule-56645748073860464161",
+              "businessrule-81666786810242280110",
+              "businessrule-49582367227471127226",
+              "businessrule-62209428351075007862",
+              "businessrule-73292110340688125936",
+              "businessrule-93221850558792273709",
+              "businessrule-75178338270301910966"
+            ]
+          }
+        },
+        {
+          "intent": "Read the details of a product or support definition reached.",
+          "system": "States the kind, parent, version, children, and how a support definition matches and lists its entries.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-22485752927450345044",
+            "businessrule-27325316460229917481",
+            "businessrule-39702010276849006236",
+            "businessrule-86698236183201307158",
+            "businessrule-95233256539481592648",
+            "businessrule-97405551033143476269"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-16750935830546567218"
+            ],
+            "change": "split",
+            "reason": "Details are shown only for what has them, not as a dialog every time.",
+            "keeps": [
+              "businessrule-22485752927450345044",
+              "businessrule-27325316460229917481",
+              "businessrule-39702010276849006236",
+              "businessrule-86698236183201307158",
+              "businessrule-95233256539481592648",
+              "businessrule-97405551033143476269"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-08747539546616381995",
+            "block-36457006871614893425"
+          ],
+          "rules": [
+            "businessrule-79420398091956863443"
+          ],
+          "reason": "Where the cursor starts and how a window is dismissed are control details; nothing changes unless the person goes to the thing."
+        },
+        {
+          "actions": [
+            "block-32698633467304016976"
+          ],
+          "rules": [
+            "businessrule-59811769233751713079",
+            "businessrule-49813083192336894297"
+          ],
+          "reason": "Confirming an identifier that matched nothing is replaced by telling the person it was not found; the hidden deduplicate entry could not be started and has nothing to carry."
+        }
+      ]
+    },
+    {
+      "task": "tasks-finding-policies.find-policies-by-text",
+      "actor": "person",
+      "name": "Ask, then search",
+      "strategy": "task first",
+      "idea": "The person says which words and where to look, then sees the policies that match.",
+      "tradeoff": "Choosing where to look is always offered, even for the common all-three search.",
+      "steps": [
+        {
+          "intent": "State the words or phrases remembered and where to look: title, description or comments.",
+          "system": "Requires some words and at least one place to look, with all three chosen by default; understands plain words, wildcards and quoted phrases.",
+          "confidence": "sure",
+          "touches": [
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-20714647401379544771",
+            "businessrule-31790508764365764837",
+            "businessrule-73561308167207352856",
+            "businessrule-63262725504588029346"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-14507530008177660767",
+              "block-30919896261988592289"
+            ],
+            "change": "kept",
+            "reason": "Words and places are stated together.",
+            "keeps": [
+              "businessrule-20714647401379544771",
+              "businessrule-31790508764365764837",
+              "businessrule-73561308167207352856",
+              "businessrule-63262725504588029346"
+            ]
+          }
+        },
+        {
+          "intent": "See the policies that match.",
+          "system": "Lists a policy when any chosen place, including comments from both areas, contains every word, wildcard and phrase.",
+          "confidence": "sure",
+          "touches": [
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-21915530910585082056",
+            "businessrule-51916167191556979448",
+            "businessrule-86305970842078630022"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-14507530008177660767"
+            ],
+            "change": "split",
+            "reason": "Results are a clear outcome step.",
+            "keeps": [
+              "businessrule-21915530910585082056",
+              "businessrule-51916167191556979448",
+              "businessrule-86305970842078630022"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-47405947189671669922"
+          ],
+          "rules": [],
+          "reason": "Dismissing a window is a control detail; a search that is not started changes nothing."
+        }
+      ]
+    },
+    {
+      "task": "tasks-finding-policies.find-policies-by-text",
+      "actor": "person",
+      "name": "Search as you type",
+      "strategy": "automate first",
+      "idea": "The system looks in all three places as the words are given, and narrowing the places is an option.",
+      "tradeoff": "Searching on every change does more work and may show results for half-typed words.",
+      "recommended": "The usual search is one step and the person learns about an unclosed quote instead of silently getting wider results.",
+      "steps": [
+        {
+          "intent": "Say the words or phrases remembered.",
+          "system": "Searches title, description and comments of both areas by default, and shows results as words are given; says plainly when words are needed and when a quote was never closed.",
+          "confidence": "inferred",
+          "touches": [
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-20714647401379544771",
+            "businessrule-21915530910585082056",
+            "businessrule-51916167191556979448",
+            "businessrule-86305970842078630022",
+            "businessrule-73561308167207352856",
+            "businessrule-63262725504588029346"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-14507530008177660767",
+              "block-30919896261988592289"
+            ],
+            "change": "merged",
+            "reason": "No separate action to start, and the common case needs no settings.",
+            "keeps": [
+              "businessrule-20714647401379544771",
+              "businessrule-21915530910585082056",
+              "businessrule-51916167191556979448",
+              "businessrule-86305970842078630022",
+              "businessrule-73561308167207352856",
+              "businessrule-63262725504588029346"
+            ]
+          }
+        },
+        {
+          "intent": "Narrow where the words are looked for, if wanted.",
+          "system": "Limits the search to the chosen places and never allows none.",
+          "confidence": "sure",
+          "touches": [
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-31790508764365764837"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-30919896261988592289"
+            ],
+            "change": "deferred",
+            "reason": "Asked only when the person wants to narrow.",
+            "keeps": [
+              "businessrule-31790508764365764837"
+            ]
+          }
+        }
+      ],
+      "drops": [
+        {
+          "actions": [
+            "block-47405947189671669922"
+          ],
+          "rules": [],
+          "reason": "Dismissing a window is a control detail; a search that is not started changes nothing."
+        }
+      ]
+    }
+  ]
+}

@@ -7,6 +7,8 @@ import { Schema } from "effect";
 import { bundleName } from "../derive/publish";
 import { deriveFacts, type Facts, type Surface } from "../derive/facts";
 import { carriedFrom } from "../derive/scope";
+import { loadTarget, type Target } from "../read/target";
+import { componentOwners } from "../derive/target-plan";
 import { readAnalysis } from "../read/analysis";
 import type { JobFile } from "./gates";
 import { jobPaths, readJson, saveJobs, slug, writeJson, type Job, type Jobs, type Kind } from "./state";
@@ -38,7 +40,25 @@ export const acceptedSoFar = (layout: Layout, jobs: Jobs): Accepted => {
     return { layers, decisions };
 };
 
-const contextOf = (request: ModernizationRequest, facts: Facts, accepted: Accepted) => ({
+/** What a layers or base decision must know of the confirmed target: the parts, their technologies and their modules. */
+const architectureOf = (target: Target | undefined) =>
+    target === undefined
+        ? undefined
+        : {
+              containers: target.architecture.containers.map((container) => ({
+                  name: container.name,
+                  kind: container.kind,
+                  tech: container.tech,
+                  holds: container.holds,
+              })),
+              modules: target.architecture.components.map((component) => ({
+                  module: component.module,
+                  domain: component.domain,
+              })),
+          };
+
+const contextOf = (request: ModernizationRequest, facts: Facts, accepted: Accepted, target?: Target) => ({
+    ...(target === undefined ? {} : { architecture: architectureOf(target) }),
     purpose: facts.purpose,
     capabilities: facts.capabilities.map((c) => ({ name: c.name, purpose: c.purpose, actions: c.size })),
     outsideSystems: facts.externals.map((e) => e.name),
@@ -60,6 +80,120 @@ const chunk = <T>(items: readonly T[], size: number) =>
 
 type Draft = { id: string; kind: Kind; title: string; after: string[]; file: JobFile; extra?: Record<string, unknown> };
 
+/** The jobs that write the stories of a confirmed target: shared components first, then one job for each journey. */
+const targetStories = (layout: Layout, facts: Facts, target: Target, allow: string[]): Draft[] => {
+    const owners = componentOwners(target);
+    const says = (id: string) => facts.rules.get(id)?.says ?? "";
+    const detail = (name: string) => {
+        const component = target.architecture.components.find((each) => each.name === name);
+        return component === undefined
+            ? undefined
+            : {
+                  name,
+                  domain: component.domain,
+                  responsibility: component.responsibility,
+                  module: component.module,
+                  uses: component.uses,
+                  adapts: component.adapts,
+                  platform: component.platform,
+                  enforces: component.enforces.map((id) => ({ id, says: says(id) })),
+              };
+    };
+    const rulesOf = (names: readonly string[]) => [
+        ...new Set(
+            names.flatMap((name) => target.architecture.components.find((each) => each.name === name)?.enforces ?? []),
+        ),
+    ];
+    const componentRules = Object.fromEntries(
+        target.architecture.components.map((component) => [component.name, [...component.enforces]]),
+    );
+    const sharedNames = target.architecture.components
+        .filter((c) => owners.get(c.name) === "shared")
+        .map((c) => c.name);
+    const packs: string[][] = [];
+    let weight = 0;
+    for (const name of sharedNames) {
+        const cost = 1 + (componentRules[name]?.length ?? 0);
+        if (packs.length === 0 || weight + cost > 60) {
+            packs.push([]);
+            weight = 0;
+        }
+        packs.at(-1)?.push(name);
+        weight += cost;
+    }
+    const shared: Draft[] = packs.map((names, at) => ({
+        id: `shared-${at + 1}`,
+        kind: "components",
+        title: `Write the stories of the shared components, part ${at + 1}`,
+        after: [],
+        file: { kind: "components", components: names, cite: rulesOf(names), componentRules },
+        extra: { componentDetails: names.map(detail) },
+    }));
+    const journeys: Draft[] = target.journeys.map((journey) => {
+        const own = target.architecture.components.filter((c) => owners.get(c.name) === journey.id).map((c) => c.name);
+        const stepActions = Object.fromEntries(
+            journey.steps.map((step) => [step.id, step.link._tag === "legacy" ? [...step.link.from] : []]),
+        );
+        const sharedUsed = [
+            ...new Set(own.flatMap((name) => target.architecture.components.find((c) => c.name === name)?.uses ?? [])),
+        ].filter((name) => owners.get(name) !== journey.id);
+        const surfaces = new Set(
+            Object.values(stepActions)
+                .flat()
+                .flatMap((id) =>
+                    facts.capabilities.flatMap((c) =>
+                        c.surfaces
+                            .filter((s) => s.actions.some((a) => a.id === id))
+                            .map((s) => bundleName(s.name, c.name)),
+                    ),
+                ),
+        );
+        return {
+            id: `journey-${slug(journey.task)}`,
+            kind: "journey" as const,
+            title: `Write the stories of the journey ${journey.name}`,
+            after: shared.map((draft) => draft.id),
+            file: {
+                kind: "journey",
+                steps: journey.steps.map((step) => step.id),
+                stepActions,
+                actions: [...new Set(Object.values(stepActions).flat())],
+                components: own,
+                cite: rulesOf(own),
+                componentRules,
+                allow,
+            },
+            extra: {
+                journey: { name: journey.name, idea: journey.idea, outcome: target.outcomes.get(journey.task) ?? "" },
+                stepDetails: journey.steps.map((step) => ({
+                    id: step.id,
+                    intent: step.intent,
+                    system: step.system,
+                    change: step.link._tag === "legacy" ? step.link.change : "new",
+                    reason: step.link.reason,
+                    today:
+                        step.link._tag === "legacy"
+                            ? step.link.from.map((id) => ({
+                                  id,
+                                  what:
+                                      facts.capabilities
+                                          .flatMap((c) => c.surfaces.flatMap((s) => s.actions))
+                                          .find((a) => a.id === id)?.purpose ?? "",
+                              }))
+                            : [],
+                    keeps: step.link._tag === "legacy" ? step.link.keeps.map((id) => ({ id, says: says(id) })) : [],
+                })),
+                ownComponents: own.map(detail),
+                usedComponents: sharedUsed.map(detail),
+                bundles: [...surfaces]
+                    .map((name) => join(layout.analysisBundles, name))
+                    .filter((path) => existsSync(path)),
+            },
+        };
+    });
+    return [...shared, ...journeys];
+};
+
 /**
  * Makes the jobs of a stage, with their input files. Deterministic: the same request, analysis and accepted records give
  * the same jobs. The foundation stage needs only the request and the analysis; the stories stage needs the foundation's
@@ -76,8 +210,9 @@ export const prepareStage = (
 ): Jobs => {
     const analysis = readAnalysis(layout.analysis);
     const accepted = acceptedSoFar(layout, jobs);
+    const target = loadTarget(layout);
     const { ids } = carriedFrom(analysis, accepted.decisions);
-    const facts = deriveFacts(analysis, stage === "foundation" ? undefined : ids);
+    const facts = deriveFacts(analysis, stage === "foundation" || target !== undefined ? undefined : ids);
     const drafts: Draft[] = [];
     const layerIds = accepted.layers.map((l) => l.id as string);
     const allow = request.target.split("/").filter(Boolean).slice(-1);
@@ -87,7 +222,13 @@ export const prepareStage = (
             kind: "layers",
             title: "Decide the layers of the target codebase",
             after: [],
-            file: { kind: "layers", stack: [...request.stack] },
+            file: {
+                kind: "layers",
+                stack: [...request.stack],
+                ...(target === undefined
+                    ? {}
+                    : { techs: target.architecture.containers.map((container) => container.tech) }),
+            },
         });
         drafts.push({
             id: "integrations",
@@ -97,20 +238,22 @@ export const prepareStage = (
             file: { kind: "integrations", externals: facts.externals.map((e) => e.name) },
             extra: { externalSystems: facts.externals },
         });
-        drafts.push({
-            id: "scope",
-            kind: "scope",
-            title: "Decide which capabilities are carried, replaced or dropped",
-            after: ["integrations"],
-            file: { kind: "scope", capabilities: facts.capabilities.map((c) => c.name) },
-            extra: {
-                capabilityDetails: facts.capabilities.map((c) => ({
-                    name: c.name,
-                    purpose: c.purpose,
-                    actions: c.size,
-                })),
-            },
-        });
+        // With a confirmed target the scope is already decided, step by step, as what a journey drops.
+        if (target === undefined)
+            drafts.push({
+                id: "scope",
+                kind: "scope",
+                title: "Decide which capabilities are carried, replaced or dropped",
+                after: ["integrations"],
+                file: { kind: "scope", capabilities: facts.capabilities.map((c) => c.name) },
+                extra: {
+                    capabilityDetails: facts.capabilities.map((c) => ({
+                        name: c.name,
+                        purpose: c.purpose,
+                        actions: c.size,
+                    })),
+                },
+            });
         if (request.notes.length > 0)
             drafts.push({
                 id: "notes",
@@ -136,6 +279,8 @@ export const prepareStage = (
                 .concat("layers"),
             file: { kind: "foundation-stories" },
         });
+    } else if (target !== undefined) {
+        drafts.push(...targetStories(layout, facts, target, allow));
     } else {
         const shared = chunk(facts.shared, 60);
         shared.forEach((rules, at) =>
@@ -259,7 +404,7 @@ export const prepareStage = (
             areaDecisionIds: accepted.decisions.filter((d) => d.topic._tag === "area").map((d) => d.id as string),
         };
         writeJson(paths.job, { ...file, ...draft.extra });
-        writeJson(paths.context, contextOf(request, facts, accepted));
+        writeJson(paths.context, contextOf(request, facts, accepted, target));
     }
     const next: Jobs = {
         ...jobs,

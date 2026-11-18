@@ -1,0 +1,128 @@
+{
+ "stories": [
+  {
+   "title": "Browse products, their versions and details in one view",
+   "what": "Show every loaded product with its number of children, open a product to see its major and minor versions together, and read the details of any product, version, child or parent in place.",
+   "why": "People can see a whole product family and read each item without narrowing list by list.",
+   "actions": [
+    "block-08454163414443845831",
+    "block-70438482535332396460",
+    "block-21250694452518135903",
+    "block-27521638512866951547",
+    "block-85565043795242001799",
+    "block-78795492686610610516",
+    "block-68471089903278595698",
+    "block-94974939167069133577"
+   ],
+   "terms": [
+    {
+     "name": "Product family",
+     "means": "A product together with its major and minor versions; not a single version on its own."
+    }
+   ],
+   "journey": {
+    "name": "Product family in one view",
+    "steps": [
+     "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#1",
+     "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#2",
+     "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#3"
+    ]
+   },
+   "steps": [
+    "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#1",
+    "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#2",
+    "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#3"
+   ],
+   "components": [
+    "Product browser"
+   ],
+   "criteria": [
+    {
+     "says": "Given definitions are loaded, when the person opens the product browser, then every loaded product is listed ordered by name, each with its number of children.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-93683837313593251984"
+      }
+     ]
+    },
+    {
+     "says": "Given a product is selected, when the major versions are shown, then they are the children of that product ordered by version, under a heading naming the product; with none selected the list is empty and asks the person to select one.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-12357125815438552418"
+      }
+     ]
+    },
+    {
+     "says": "Given a major version is selected, when the minor versions are shown, then they are the children of that major version ordered by version, under a heading naming it; with none selected the list is empty and asks the person to select one.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-69465149169735487446"
+      }
+     ]
+    },
+    {
+     "says": "Given no product is selected in a list, when the person double-clicks or presses Enter, then nothing happens.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-52738497804454297244"
+      }
+     ]
+    },
+    {
+     "says": "Given a product with children is shown, when its details are read, then every child is listed with its version and name; a product with no children shows an empty list.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-27325316460229917481"
+      }
+     ]
+    },
+    {
+     "says": "Given a child is listed in the details, when the person double-clicks it, then that child's details replace the current ones in the same view; with nothing selected, nothing happens.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-77846110822300189675"
+      }
+     ]
+    },
+    {
+     "says": "Given a product has a parent, when its details are shown, then the parent name is shown and the button to go to the parent is enabled; given it has none, the parent is blank and the button is disabled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-39702010276849006236"
+      }
+     ]
+    },
+    {
+     "says": "Given a major or minor version is shown, then its version number is shown; given a top-level product is shown, then the version is blank.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-86698236183201307158"
+      }
+     ]
+    },
+    {
+     "says": "Given a product is shown, then it is labelled \"Major revision\", \"Minor revision\" or \"Top-level product\" according to its type.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-95233256539481592648"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "What happens when the person chooses the parent button: are the parent's details shown in the same window?",
+    "What happens when a product is selected and the person double-clicks it or presses Enter: are its details shown?"
+   ]
+  }
+ ]
+}

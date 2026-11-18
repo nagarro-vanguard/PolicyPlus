@@ -1,0 +1,98 @@
+{
+  "stories": [
+    {
+      "title": "Review and merge identical user and computer policies",
+      "what": "A person can see which user and computer policies are identical, confirm, and have each identical pair become one policy that applies to both, with the number merged reported back.",
+      "why": "Identical settings that appear twice clutter the list; merging them gives one entry per setting without the person losing anything unseen.",
+      "actions": [
+        "block-52477240354082269436"
+      ],
+      "terms": [
+        {
+          "name": "Identical pair",
+          "means": "A user policy and a computer policy that are alone in the same category under the same name, with the same explanation text and the same stored-setting location; not merely similar policies."
+        },
+        {
+          "name": "Both-sections policy",
+          "means": "A single policy that applies to both users and computers; not a policy of only one section."
+        }
+      ],
+      "journey": {
+        "name": "Review then merge",
+        "steps": [
+          "See which user and computer policies are identical.",
+          "Confirm the merge and see how many policies were merged."
+        ]
+      },
+      "steps": [
+        "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#1",
+        "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#2"
+      ],
+      "components": [
+        "Duplicate policy merger"
+      ],
+      "criteria": [
+        {
+          "says": "Given a user policy and a computer policy that are alone in the same category under the same name and have the same explanation text and the same stored-setting location, when the merge runs, then they become one policy that applies to both users and computers.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-40351382289100643848"
+            }
+          ]
+        },
+        {
+          "says": "Given policies with the same name in the same category whose explanation text or stored-setting location differ, when the merge runs, then they are left as they are.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-40351382289100643848"
+            }
+          ]
+        },
+        {
+          "says": "Given two policies with the same name and details that are both for users, or both for computers, when the merge runs, then they are left as they are.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-40351382289100643848"
+            }
+          ]
+        },
+        {
+          "says": "Given a category that holds more than one policy of that name for a section, when the merge runs, then those policies are left as they are.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-40351382289100643848"
+            }
+          ]
+        },
+        {
+          "says": "Given an identical pair, when the merge runs, then the policy that comes later in the loaded definitions is kept and now applies to both users and computers, and the one that comes earlier is removed.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-40351382289100643848"
+            }
+          ]
+        },
+        {
+          "says": "Given the merge has finished, when the person reads the result, then a message states \"Deduplicated N policies.\" with the number merged.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-92560631592608734086"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "The old program merges at once with no review; the target journey adds a review of the identical pairs and an explicit yes before removal, and a no that changes nothing. Is this confirmed as a new design decision, so it can become criteria?",
+        "Should a person be able to leave some listed pairs out of the merge, or is it all pairs or none?",
+        "What does the message say when no identical pairs are found: \"Deduplicated 0 policies.\" or no merge offered at all?",
+        "After the merge, should the categories and the policy information show the merged policies, and is anything else expected to change on screen?"
+      ]
+    }
+  ]
+}

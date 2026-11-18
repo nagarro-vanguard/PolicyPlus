@@ -1,0 +1,291 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "notes": [],
+  "tasks": [
+    {
+      "id": "tasks-editing-policy-files-directly.open-raw-policy-editor",
+      "outcome": "Open a policy file for direct editing of its raw keys and values, with a warning the first time, and leave the editor when done.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-18043112458533276543",
+          "what": "After a warning, opens the raw editor on a POL-backed policy source."
+        },
+        {
+          "id": "block-74715625061692366925",
+          "what": "Closes the dialog as cancelled when Escape is pressed"
+        },
+        {
+          "id": "block-82351254846133371644",
+          "what": "Turns the editor buttons on or off to match the kind of item selected in the list."
+        },
+        {
+          "id": "block-91089666300107221398",
+          "what": "Closes the editor window with an OK result; the changes were already applied to the policy source as each was made."
+        },
+        {
+          "id": "block-91792378122287310099",
+          "what": "Reports the chosen section (user or computer) and closes the dialog as accepted"
+        },
+        {
+          "id": "block-93573573421282575863",
+          "what": "Closes the editor window with a Cancel result when Escape is pressed; edits already made stay applied to the policy source."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-13057335115870748705",
+          "statement": "When nothing is selected in the policy file's list, only Add key and Export are available; Add value, Delete value, Edit and Forget are unavailable."
+        },
+        {
+          "id": "businessrule-14969413888672404933",
+          "statement": "The section dialog lets a person choose only the sections the caller allows: User and Computer are each usable only when enabled by the caller."
+        },
+        {
+          "id": "businessrule-18574755515767742264",
+          "statement": "Pressing Done (or Enter) closes the raw policy editor as accepted, and pressing Escape closes it as cancelled; there is no Cancel button. The caller ignores the answer, so every change made in the editor stays on the loaded policy source either way, to reach disk only when policies are saved."
+        },
+        {
+          "id": "businessrule-21403142511575039594",
+          "statement": "Pressing Escape closes the section dialog as cancelled."
+        },
+        {
+          "id": "businessrule-32089237714667793315",
+          "statement": "When a value is selected in the list, only Forget is always available; Add key, Add value and Export are unavailable, and Edit and Delete value are available only when the value is not already a delete marker."
+        },
+        {
+          "id": "businessrule-40441510620479008895",
+          "statement": "Raw POL editing is available only when the user or computer source is backed by a POL file, otherwise the person is told \"Neither loaded source is backed by a POL file.\"; the area chosen is limited to POL-backed sources."
+        },
+        {
+          "id": "businessrule-43194539708053716006",
+          "statement": "Special deletion entries in a policy file are listed as such: \"**deletevalues\" as \"Delete values\" with its data, \"**del.<name>\" as \"Delete value\" with the name, and entries starting \"**delvals\" as \"Delete all values\". They cannot be edited or deleted."
+        },
+        {
+          "id": "businessrule-44523725638753390545",
+          "statement": "Ordinary values are listed with their content: lists of text joined by spaces, text as it is, 32-bit and 64-bit numbers in decimal, binary data as hexadecimal bytes separated by spaces. Other kinds show no content."
+        },
+        {
+          "id": "businessrule-64564273672622472190",
+          "statement": "In the section dialog, OK does nothing until User or Computer is chosen; then it returns that section and closes."
+        },
+        {
+          "id": "businessrule-67529938588779257243",
+          "statement": "A key name in a policy file is listed as a subkey only once, regardless of case, and the requested key itself is never listed."
+        },
+        {
+          "id": "businessrule-81365817698028227620",
+          "statement": "The raw policy file editor lists keys in alphabetical order ignoring case, each followed by its sub-keys indented, then its values in alphabetical order; a value with an empty name (the marker that keeps an empty key) is not listed."
+        },
+        {
+          "id": "businessrule-86296876237579429124",
+          "statement": "When a key is selected in the list, Add key, Add value, Delete value, Forget and Export are available, and Edit is unavailable."
+        },
+        {
+          "id": "businessrule-98676109650316370626",
+          "statement": "The first time raw POL editing is used, the person must accept \"Caution! This tool is for very advanced users. Improper modifications may result in inconsistencies in policies' states.\" (Yes continues and records the acceptance; No cancels and asks again next time)."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-40163170707735391190",
+          "name": "Program preference",
+          "states": [
+            "Welcome download offer not yet considered",
+            "Welcome download offer considered",
+            "Raw POL editing warning not yet accepted",
+            "Raw POL editing warning accepted",
+            "Policy sources at default (Local GPO)",
+            "Policy sources remembered",
+            "Templates folder at Windows default",
+            "Templates folder chosen",
+            "Language follows the system",
+            "Language chosen"
+          ]
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-90077838450756006603",
+          "name": "Computer file system folders",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.add-policy-file-key-or-value",
+      "outcome": "Add a new key, or a new value of a chosen kind, to a policy file.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-12381913549521886903",
+          "what": "Closes the new value dialog as cancelled when Escape is pressed."
+        },
+        {
+          "id": "block-33339374210388875839",
+          "what": "Closes the key name dialog as cancelled when Escape is pressed."
+        },
+        {
+          "id": "block-54431974963440976475",
+          "what": "Asks for a new key name, checks it is valid and free, and adds the empty key to the policy file."
+        },
+        {
+          "id": "block-56011203566573573100",
+          "what": "Puts the cursor in the key name box with its text selected when the dialog appears."
+        },
+        {
+          "id": "block-73079666774281241997",
+          "what": "Asks for a value name and type, then its data, and adds the value under the selected key."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-13220028854331489804",
+          "statement": "A number entered for a registry value is limited to 0 to 4,294,967,295 for a 32-bit value and to 0 to 18,446,744,073,709,551,615 for a 64-bit value."
+        },
+        {
+          "id": "businessrule-21846002666758208174",
+          "statement": "When the key name dialog is confirmed, the typed name is returned unchecked; when it is cancelled, an empty name is returned, so an empty typed name and a cancel look the same to the caller."
+        },
+        {
+          "id": "businessrule-27239953863800337722",
+          "statement": "A new key name is refused with \"The key name is already taken.\" when a key of that name, ignoring case, already exists under the same parent."
+        },
+        {
+          "id": "businessrule-64891270751019389302",
+          "statement": "Adding a value to the selected key lets the person choose a name and one of five kinds; the starting data is empty text, zero, or an empty list by kind, and the value is stored only if the person then confirms its data. A value of the same name in that key is replaced without warning."
+        },
+        {
+          "id": "businessrule-65588006996628019814",
+          "statement": "A new key name is refused with \"The key name is not valid.\" when it contains a backslash."
+        },
+        {
+          "id": "businessrule-87150598845683946147",
+          "statement": "Editing a value offers a text, number or list-of-text dialog by kind: text kinds (plain and expandable) a text box, 32-bit and 64-bit numbers a number box, lists of text a multi-line box. Any other kind, such as binary, is refused with \"This value kind is not supported.\" and nothing changes. Cancelling the dialog leaves the value as it was."
+        },
+        {
+          "id": "businessrule-88605435114040098546",
+          "statement": "The new registry value dialog offers the types String, Expandable string, List of strings, 32-bit DWord and 64-bit QWord, and starts on String. Confirming returns the typed name, unchecked and possibly empty, with the chosen type; cancelling returns neither."
+        },
+        {
+          "id": "businessrule-94140234913184124479",
+          "statement": "Adding a key does nothing when the name is left empty or the dialog is cancelled; otherwise the key is created under the selected key, or at the top level when nothing is selected, as an empty key, and is selected in the list."
+        }
+      ],
+      "facts": [],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.change-policy-file-value-data",
+      "outcome": "Change the data of an existing value in a policy file.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-04045695864978247457",
+          "what": "Asks for new data for the selected value and stores it in the policy file."
+        },
+        {
+          "id": "block-20624708115873028291",
+          "what": "Reads typed hexadecimal text into the value in hexadecimal mode, otherwise leaves it to the standard control."
+        },
+        {
+          "id": "block-50446188615114520824",
+          "what": "Switches the number box between decimal and hexadecimal display."
+        },
+        {
+          "id": "block-72694376270340482080",
+          "what": "Closes the number dialog as cancelled when Escape is pressed."
+        },
+        {
+          "id": "block-80078734348197600769",
+          "what": "Closes the list-of-strings dialog as cancelled when Escape is pressed."
+        },
+        {
+          "id": "block-89740736795318812041",
+          "what": "Shows the value as hexadecimal text when hexadecimal mode is on, otherwise leaves display to the standard control."
+        },
+        {
+          "id": "block-93495413918984610841",
+          "what": "Closes the string dialog as cancelled when Escape is pressed."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-05846735750774889498",
+          "statement": "Editing a value replaces its data with the confirmed new data and keeps its name and kind; the value stays selected."
+        },
+        {
+          "id": "businessrule-85571919984782494727",
+          "statement": "When a typed hexadecimal number is too large to fit, the value is set to the largest allowed value; text that is not a hexadecimal number leaves the value unchanged."
+        }
+      ],
+      "facts": [],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "outcome": "Remove keys or values from a policy file, either leaving a deletion instruction for the machine or forgetting them entirely.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-16970529596856009541",
+          "what": "Marks a value for deletion, or clears or purges a selected key, as the person chooses."
+        },
+        {
+          "id": "block-42642804897148691736",
+          "what": "Removes a key with its contents, or one value, from the policy file without leaving a deletion mark."
+        },
+        {
+          "id": "block-52241240840751807884",
+          "what": "Closes the delete dialog as cancelled when Escape is pressed."
+        },
+        {
+          "id": "block-53120693124506724348",
+          "what": "Accepts the delete dialog when a choice is made and asks for a value name when deleting one value."
+        },
+        {
+          "id": "block-96284792383932228976",
+          "what": "Enables the value name box only while the delete-one-value option is chosen."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-04432638879352685329",
+          "statement": "Forgetting a key asks \"Are you sure you want to remove this key and all its contents?\" and, on Yes, removes the key, all its sub-keys, every value and every clearing mark from the file with no deletion left behind; No changes nothing. Forgetting a value removes the value and its deletion entry the same way."
+        },
+        {
+          "id": "businessrule-27194812132584860836",
+          "statement": "Deleting a single value from the list does not erase it from the file: it is replaced by a deletion entry named \"**del.\" followed by the value name, which removes the value on the machine when policies are applied."
+        },
+        {
+          "id": "businessrule-30251051045932916641",
+          "statement": "The value name box in the delete dialog can be typed in only while the option to delete one value is chosen."
+        },
+        {
+          "id": "businessrule-30359040357073744492",
+          "statement": "When Delete is confirmed with the option to clear the key or to delete all values under it, the choice is accepted without further input; no option is chosen when the dialog opens, and confirming with none chosen does nothing."
+        },
+        {
+          "id": "businessrule-63694206615951133419",
+          "statement": "Deleting a key offers three choices, and OK does nothing until one is chosen; cancelling or Escape changes nothing. Clear everything removes all values and marks the key cleared. Clear first marks the key cleared and puts back only its existing direct values with ordinary content; deletion entries already in that key are lost and values of sub-keys are not put back. Delete one value is refused with \"You must enter a value name.\" when the name is empty; otherwise any value of that name, whether or not it exists, is removed and replaced by a deletion entry."
+        },
+        {
+          "id": "businessrule-84404651755849490179",
+          "statement": "When Delete is confirmed with the option to delete one value and the value name is empty, it is refused and the person is told \"You must enter a value name.\"; with a name, the choice is accepted."
+        }
+      ],
+      "facts": [],
+      "needs": [],
+      "hurts": []
+    }
+  ]
+}

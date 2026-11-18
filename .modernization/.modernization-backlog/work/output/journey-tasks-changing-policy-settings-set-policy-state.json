@@ -1,0 +1,561 @@
+{
+ "stories": [
+  {
+   "title": "Show each option's stored value and save it in the right form",
+   "what": "A policy opens with each option showing the value stored for it, and when it is saved each option's value is stored in the form and place that suits it.",
+   "why": "The person sees what is really set today, and what they save behaves as the policy expects.",
+   "actions": [
+    "block-49789533336413980059",
+    "block-51334849021361427410"
+   ],
+   "terms": [],
+   "components": [
+    "Option Value Reader",
+    "Option Value Writer"
+   ],
+   "steps": [
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1"
+   ],
+   "criteria": [
+    {
+     "says": "Given a stored number, text or multi-line text is missing or of another kind, when the policy is opened, then it is taken as stored without being checked first.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-43638846001153509048"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-92057272745409912098"
+      }
+     ]
+    },
+    {
+     "says": "Given a drop-down choice option, when it is opened, then it shows the first item whose own value is stored and, if the item has a list of values, whose values are all stored; nothing is selected when no item matches.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-24534399091993971891"
+      }
+     ]
+    },
+    {
+     "says": "Given a list option, when it is opened, then a list whose entries are named by the person shows every stored name with its value; and a list whose names do not matter shows the stored values in order: with a name prefix, those named prefix1, prefix2 and so on until the first number that is missing, and without a prefix, every stored value under the list's key.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-34769835898304277453"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-90493804689850695370"
+      }
+     ]
+    },
+    {
+     "says": "Given a check box option, when it is opened, then it is ticked when its on value, or every value of its on list, is stored, or, when neither is defined, when its value is 1; otherwise it is unticked, including when its off value is stored.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49179499449653183223"
+      }
+     ]
+    },
+    {
+     "says": "Given a list of values is looked for in the stored values, when it is checked, then it counts as present only when every value in it is present.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-37022902056569995834"
+      }
+     ]
+    },
+    {
+     "says": "Given a number option is saved, when it is written, then it is stored as text if the definition says to store it as text, otherwise as a whole number.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-19622432139142313215"
+      }
+     ]
+    },
+    {
+     "says": "Given a text option is saved, when it is written, then it is stored as text that can contain variables if the definition says so, otherwise as plain text; and a multi-line text option is stored as a set of lines.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-64524120751868809207"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-55949208713495428877"
+      }
+     ]
+    },
+    {
+     "says": "Given a list option is saved, when it is written, then entries with their own names keep them; others are numbered from 1 with the definition's prefix, or named after their own text when there is no prefix.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-46516041958192928718"
+      }
+     ]
+    },
+    {
+     "says": "Given a list option is saved and the definition does not say to keep other entries, when it is written, then every existing value under the list's key is removed first, and a list with no entries stays empty.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-75244076300039577548"
+      }
+     ]
+    },
+    {
+     "says": "Given a check box is saved, when it is written, then a ticked box with no on value first saves 1 and an unticked box with no off value first removes the value; any defined on or off value is then saved with its extra values and replaces that first step.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-67842190900074642321"
+      }
+     ]
+    },
+    {
+     "says": "Given an option names its own location, when it is saved, then it is stored there, otherwise with the policy's other settings.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-53178349170981485484"
+      }
+     ]
+    },
+    {
+     "says": "Given a value is written for a policy and its definition says to delete, then it is removed; a number is saved as a whole number, text as text, and a policy with no value defined writes nothing.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-80911529766189561154"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "What should the person see when a stored number or text is missing or of the wrong kind, since today it is not checked (including multi-line text)?"
+   ],
+   "journey": {
+    "name": "Review what will change",
+    "steps": [
+     "Open the policy with everything already worked out",
+     "Say what state it should be in and change only what differs",
+     "Review the forecast of changes",
+     "Confirm, then carry on or finish"
+    ]
+   }
+  },
+  {
+   "title": "Change the policy state and options within their limits",
+   "what": "The person picks Enabled, Disabled or Not configured and edits the options of an enabled policy, with each control accepting only what it allows, and list editing refusing duplicate names.",
+   "why": "The person can set exactly the values they want and cannot save values the policy cannot hold.",
+   "actions": [
+    "block-57992755110790680579",
+    "block-18703182669260421228",
+    "block-75724566670057728491",
+    "block-89806020979547308639",
+    "block-48615537389470790613"
+   ],
+   "terms": [
+    {
+     "name": "List editor",
+     "means": "The grid in which the person adds, names and removes the entries of a list option; not the policy dialog itself."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a number box, when the person types, then only digits and control keys are accepted; other keys are ignored.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-11779280825123119273"
+      }
+     ]
+    },
+    {
+     "says": "Given a number box, when the text is kept, then any text a whole-number reading accepts stays, including a leading sign or spaces; a number over the maximum or under the minimum becomes that limit; other text becomes the default; and a number above 2,147,483,647 becomes the default even when the maximum is higher.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76178080166619590309"
+      }
+     ]
+    },
+    {
+     "says": "Given a number box, when text is pasted instead of typed, then it is not restricted to digits; and when a negative number is kept because the minimum is below zero, then it is converted to an unsigned number when the policy is applied.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76178080166619590309"
+      }
+     ]
+    },
+    {
+     "says": "Given a number entered with a spin box, when it is changed, then it stays within the policy's minimum and maximum, moves in the presentation's steps and starts at the presentation's default.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76476292137970655950"
+      }
+     ]
+    },
+    {
+     "says": "Given a plain text entry, when text is typed, then it is limited to the policy's maximum length and starts with the presentation's default text.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-47891883049575092611"
+      }
+     ]
+    },
+    {
+     "says": "Given a text entry with suggestions, when it is used, then it is limited to the policy's maximum length, starts with the default text and lists the suggestions, sorted unless the presentation turns sorting off.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-98958969318255528192"
+      }
+     ]
+    },
+    {
+     "says": "Given a drop-down list, when it is shown, then it lists the choices by their translated names, sorted unless sorting is off, and preselects the default choice when one is named, otherwise nothing.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-95995013385384587600"
+      }
+     ]
+    },
+    {
+     "says": "Given a check box, when it is first shown, then it starts in the presentation's default state.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-47134496169701496073"
+      }
+     ]
+    },
+    {
+     "says": "Given a list where the person names each entry, when the list editor is confirmed and two names are identical, then it is refused with \"Multiple entries are named \"<name>\"! Remove or rename all but one.\" and nothing is returned; Run and run count as different names.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-36860850025836880139"
+      }
+     ]
+    },
+    {
+     "says": "Given a list without names, when the list editor is confirmed, then every row except the empty new row at the bottom is returned in the order shown; for named lists the empty new row is also ignored.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-67944280997214552078"
+      }
+     ]
+    },
+    {
+     "says": "Given a list without names, when a row's value cell was never filled in and the list editor is confirmed, then that row is returned as an empty entry.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-67944280997214552078"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Option Input Rules"
+   ],
+   "steps": [
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2"
+   ],
+   "open": [
+    "What should the person see when a name cell in a named list was never filled in, which today stops the dialog with an unhandled error?",
+    "Should pasted text that is not a number, or a negative number where the minimum is below zero, be accepted as today or refused?",
+    "Should a list row with an empty value cell be refused rather than kept as an empty entry?"
+   ]
+  },
+  {
+   "title": "Clear a policy's old settings and write its chosen state",
+   "what": "When a policy is applied, its old settings are cleared and the chosen state is written: Enabled with its values, Disabled, or Not configured.",
+   "why": "The policy ends up exactly in the state the person chose, with no leftovers from before.",
+   "actions": [],
+   "terms": [
+    {
+     "name": "Not configured",
+     "means": "The policy has no settings in the chosen side; not the same as Disabled, which is a setting of its own."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a policy is applied, when its old settings are cleared, then every value it touches is removed from the source, counted once: its own value, its value lists, its options' values, those of check boxes and choices, and the whole key of each list option; the policy then reads as Not configured.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-52553634867035971750"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-30662593154265010717"
+      }
+     ]
+    },
+    {
+     "says": "Given the source is a REG file, when a list's whole key is cleared, then its removal entry is dropped if there is one; the request is ignored when a source branch is set and the key lies outside it, and every key is accepted when no branch is set.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49955247469929977676"
+      }
+     ]
+    },
+    {
+     "says": "Given the source is a policy file, when a list's whole key is cleared, then every \"clear all\" mark for that key is removed.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-60358450731077326247"
+      }
+     ]
+    },
+    {
+     "says": "Given Enabled is chosen, when the policy is applied, then its own on value is saved, with any extra on values; and when it has a value name but no on value, the number 1 is saved; a list key left blank uses the policy's key.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-66734059366331213205"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-14958427259964761169"
+      }
+     ]
+    },
+    {
+     "says": "Given Enabled is chosen, when the policy is applied, then every option of the policy is saved with its current value, including options never filled in.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-60774486401252037450"
+      }
+     ]
+    },
+    {
+     "says": "Given Enabled is chosen and a setting was given no value, when the policy is applied, then that setting is left as it was.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-97175686457081101132"
+      }
+     ]
+    },
+    {
+     "says": "Given Disabled is chosen and the definition gives no off value, when the policy is applied, then the policy's value is removed; a defined off value, with any extra off values, is saved instead.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-04152128046162000583"
+      }
+     ]
+    },
+    {
+     "says": "Given Disabled is chosen, when the policy is applied, then each setting gets only its own removal: all values under a list's key, the saved off value of a check box that has one, and the single value of every other setting; extra values for a chosen item, a check box's on list and the policy's own on list stay.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-56832565542674334637"
+      }
+     ]
+    },
+    {
+     "says": "Given Not configured or an unknown state is chosen, when the policy is applied, then nothing is written or removed beyond the clearing of its old settings.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-90058940824311429227"
+      }
+     ]
+    }
+   ],
+   "components": [
+    "Policy Forgetter",
+    "Policy State Writer"
+   ],
+   "steps": [
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3"
+   ],
+   "open": [
+    "Should the person see a forecast of what saving will change and confirm it before anything is written? No rule describes one, so its layout and whether it can be turned off are undecided.",
+    "When Enabled is chosen, which holds when one rule writes every option and another writes only the settings supplied: is a setting left as it was only when the person was never offered it?",
+    "Where should the person be told what will happen to the comment when the source holds no comments?"
+   ]
+  },
+  {
+   "title": "Open the policy dialog and finish it with OK, Apply or Cancel",
+   "what": "A person opens a policy and sees its side, state, supported-on text and comment; OK saves and closes, Apply saves and keeps the dialog open, and Cancel or any other closing still reports a change if anything was applied earlier.",
+   "why": "One dialog covers looking, saving and leaving, and the rest of the program knows whether anything changed.",
+   "actions": [
+    "block-38804446611751385293",
+    "block-96135191155885644109",
+    "block-29401732049948573203",
+    "block-06231454516231170585"
+   ],
+   "terms": [
+    {
+     "name": "Policy state",
+     "means": "Whether a policy is Enabled, Disabled or Not configured in the chosen side; not the values of its options."
+    },
+    {
+     "name": "Side",
+     "means": "Computer or User: the part of the system a policy setting applies to; not a category of policies."
+    },
+    {
+     "name": "Apply",
+     "means": "Saves the chosen state now and keeps the policy open; not OK, which also closes it."
+    },
+    {
+     "name": "Save Policies",
+     "means": "The command that writes all accepted changes to disk; not part of this dialog."
+    }
+   ],
+   "components": [
+    "Policy Edit Session",
+    "Policy Comment Keeper"
+   ],
+   "steps": [
+    "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+   ],
+   "criteria": [
+    {
+     "says": "Given a policy that applies to both computer and user, when it is opened without a side, then it can be edited for either and starts on Computer; given a policy for one side only, then it is fixed to that side and the side choice is unavailable. Switching between Computer and User moves the source, whether it can be written to and its comment to that side, and reloads the state from it; option values are replaced only for options that side stores while Enabled, and values typed earlier stay for the others.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-22919299514571743135"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-47264131679601828501"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy is opened, when the person looks at the dialog, then the Supported on box shows the policy's supported-on name, or is empty when it names none.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-20408685392954236399"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy is opened, when its present state in the side being edited is Enabled or Disabled, then that state is shown; for anything else, including an unclear state, Not configured is shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-33075335985104561108"
+      }
+     ]
+    },
+    {
+     "says": "Given the policy is Enabled, when it is opened, then each option shows what is stored: numbers in number boxes, text in text boxes and combo boxes, the matching item in drop-downs, ticked or unticked check boxes, lines in multi-line boxes and the stored list in the list editor.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-90485587050957154914"
+      }
+     ]
+    },
+    {
+     "says": "Given Disabled or Not configured is chosen, when the person looks at the options, then they are greyed out; they can be edited only while Enabled is chosen.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59619098183313284576"
+      }
+     ]
+    },
+    {
+     "says": "Given the source holds no comments, when the dialog opens, then the comment box is disabled and reads \"Comments unavailable for this policy source\"; otherwise it shows the stored comment, or is empty when there is none.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-01560321201783674273"
+      }
+     ]
+    },
+    {
+     "says": "Given the source cannot be written to, when the dialog is open, then OK and Apply are unavailable.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-23336067846798029987"
+      }
+     ]
+    },
+    {
+     "says": "Given the person presses Apply, when the policy is saved, then the dialog stays open and the visit records that a change was made; given the person presses OK, then the policy is saved and the dialog closes as a change.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-53979609002646144363"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-37207468109369530089"
+      }
+     ]
+    },
+    {
+     "says": "Given the person presses Cancel, when Apply was used earlier in the visit, then the dialog is reported as a change, and as a cancel otherwise; closing in any other way follows the same rule.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-65724709448091621197"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-07359577675270518038"
+      }
+     ]
+    },
+    {
+     "says": "Given a dialog was accepted, when the policy list refreshes, then it updates in place if the current category is still visible, otherwise the program moves up to the nearest visible category; nothing is written to disk until Save Policies.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-75178338270301910966"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy is applied, when it is saved, then everything the source holds for it is cleared first; Enabled then writes every option's current value, Disabled writes the disabled state, and Not configured leaves the policy with no values.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-84933301477035282498"
+      }
+     ]
+    },
+    {
+     "says": "Given the source supports comments, when the policy is applied, then an empty comment box removes the stored comment and any text replaces or adds it.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-33456476599558212379"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "Should leaving with unsaved edits ask the person first, since today Cancel simply discards them?"
+   ]
+  }
+ ]
+}

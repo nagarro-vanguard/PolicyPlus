@@ -1,0 +1,203 @@
+{
+  "tasks": [
+    {
+      "id": "open-the-workspace",
+      "outcome": "Get back to the policy work where it was left: the last policy sources and policy definitions are ready to browse.",
+      "actor": "person",
+      "actions": [
+        "block-92411706700308938260"
+      ],
+      "rules": [
+        "businessrule-06218920206107794280",
+        "businessrule-15364695696024462204",
+        "businessrule-25353365313977612083",
+        "businessrule-27578488339642782673",
+        "businessrule-29585332630928853779",
+        "businessrule-31889487085995982343",
+        "businessrule-34447675520768722859",
+        "businessrule-35899140497190862562",
+        "businessrule-39262656033285451423",
+        "businessrule-40551856488084894130",
+        "businessrule-41547680626150552574",
+        "businessrule-49395771262191850050",
+        "businessrule-50808386816006011599",
+        "businessrule-51029550915449645879",
+        "businessrule-51554818045857630746",
+        "businessrule-58877134447436981389",
+        "businessrule-62563112935081932578",
+        "businessrule-67456626752221980743",
+        "businessrule-72200124994498270380",
+        "businessrule-72559528436656832979",
+        "businessrule-73847809349842629987",
+        "businessrule-74412475215137182202",
+        "businessrule-75428533810997783570",
+        "businessrule-76710184957379543464",
+        "businessrule-77499382636897144286",
+        "businessrule-78253526822536661517",
+        "businessrule-79173574861552738237",
+        "businessrule-83248377690419919134",
+        "businessrule-83542226215682203251",
+        "businessrule-84284160770896952745",
+        "businessrule-85204901615179220846",
+        "businessrule-93571958636080198306",
+        "businessrule-95699184013424603885",
+        "businessrule-98025569949322378254"
+      ],
+      "facts": [
+        "entity-40163170707735391190",
+        "entity-92808062881922645840",
+        "entity-52418278656387992812"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538",
+        "external-25314431250146805945",
+        "external-45436197603688581519",
+        "external-08492831744411585027"
+      ],
+      "current": [
+        {
+          "intent": "Start working with the same sources as last time",
+          "system": "Reads the remembered preferences (carrying on with defaults if they cannot be kept), uses the local policy files for both user and computer on a first start, and if the saved sources cannot be opened tells the person and falls back to the local policy files.",
+          "from": [
+            "block-92411706700308938260"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Have the policy definitions available",
+          "system": "Loads the remembered definitions folder, or the Windows default one. If problems are found asks whether to keep the partly loaded set; if loading fails offers to use the default folder, or says the definitions could not be loaded and leaves the workspace empty.",
+          "from": [
+            "block-92411706700308938260"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Know whether changes can be kept",
+          "system": "Names each source, checks if it can be written, loads its comments if it has a comment location, and warns when a source is not fully writable.",
+          "from": [
+            "block-92411706700308938260"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Start browsing policies",
+          "system": "Shows the categories for both user and computer policies.",
+          "from": [
+            "block-92411706700308938260"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "set-definition-language",
+      "outcome": "Choose the language in which policy definition text is shown and have it applied.",
+      "actor": "person",
+      "actions": [
+        "block-14667094343185527716",
+        "block-04864433854821115058"
+      ],
+      "rules": [
+        "businessrule-31456964891379452251",
+        "businessrule-93543924991745555552",
+        "businessrule-80947080049413275464"
+      ],
+      "facts": [
+        "entity-40163170707735391190",
+        "entity-92808062881922645840"
+      ],
+      "needs": [
+        "external-45436197603688581519",
+        "external-25314431250146805945"
+      ],
+      "current": [
+        {
+          "intent": "Enter the language wanted",
+          "system": "Shows the current language and checks the entered code has two parts around a hyphen; it is not checked as a real language. Entering the same code as the stored one changes nothing.",
+          "from": [
+            "block-14667094343185527716"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Keep the choice",
+          "system": "Saves the new language at once.",
+          "from": [
+            "block-04864433854821115058"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "See the new language in the definitions",
+          "system": "Asks whether to reload now; if yes, empties the workspace and reloads the saved definitions folder, otherwise the language applies the next time definitions are loaded.",
+          "from": [
+            "block-04864433854821115058"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "leave-the-program",
+      "outcome": "Finish the work and leave, releasing everything that was opened.",
+      "actor": "person",
+      "actions": [
+        "block-64319035576012171282",
+        "block-07512317177811313080"
+      ],
+      "rules": [
+        "businessrule-46972642019161394212",
+        "businessrule-59631775004799082543"
+      ],
+      "facts": [],
+      "needs": [
+        "external-97068941883605652538",
+        "external-90077838450756006603"
+      ],
+      "current": [
+        {
+          "intent": "Finish and leave",
+          "system": "Closes the program window.",
+          "from": [
+            "block-64319035576012171282"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Leave nothing locked behind",
+          "system": "Closes the open policy sources, unloading any mounted user hive, and tells the person when something stayed open in other programs.",
+          "from": [
+            "block-07512317177811313080"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "see-about-information",
+      "outcome": "Find out who made the program and which version is in use.",
+      "actor": "person",
+      "actions": [
+        "block-07316532942246428672"
+      ],
+      "rules": [
+        "businessrule-59853527376948406586"
+      ],
+      "facts": [],
+      "needs": [
+        "external-84087908423930356962"
+      ],
+      "current": [
+        {
+          "intent": "Learn who made the program and its version",
+          "system": "Shows the author and the web address, and the version only when one was built in.",
+          "from": [
+            "block-07316532942246428672"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    }
+  ]
+}

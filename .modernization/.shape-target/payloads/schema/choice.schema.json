@@ -1,0 +1,81 @@
+{
+  "type": "object",
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": [
+        "as-is",
+        "journeys",
+        "architecture"
+      ]
+    },
+    "picks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "of": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variant": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "of",
+          "variant"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confirmedAt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "marks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "of": {
+            "type": "string",
+            "minLength": 1,
+            "description": "A step of a task's current journey, as `<task id>#<number>`."
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "hurts",
+              "unused",
+              "correct",
+              "wrong"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "of",
+          "verdict"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  "required": [
+    "decision",
+    "picks",
+    "reason",
+    "confirmedAt"
+  ],
+  "additionalProperties": true,
+  "description": "What the person decided, with the reason; the file's existence confirms the decision."
+}

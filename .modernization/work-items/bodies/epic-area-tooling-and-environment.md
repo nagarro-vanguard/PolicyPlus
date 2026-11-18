@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Developers have tooling and environment in place, as decided, before any capability is built on it.
+Developers have tooling and environment in place, as decided, before any journey is built on it.
 
 ## Scope
 
@@ -16,11 +16,11 @@ Out of scope: the product's own behaviour.
 
 ## What we found
 
-- Chose Docker Compose for the local database over requiring a locally installed PostgreSQL because every developer and the black-box tests get the same version. Chose validated environment variables over config files because the service and screens share one place that fails fast. Assumes Docker is available to developers and CI.
+- Chose Turborepo task names that every layer implements over per-layer ad hoc scripts so one command verifies any layer and CI stays uniform; chose Effect Config over reading process.env freely so missing values fail at start. Assumes developers can build on any OS but the registry and directory carriers only function on Windows, so those carriers sit behind ports with in-memory fakes elsewhere.
 
 ## Design
 
-- Bun is the package manager and runtime, pinned by a version file; Turborepo runs one task per layer (lint, typecheck, test, build) with declared inputs; local PostgreSQL runs from a Docker Compose file at the root; configuration is read from environment variables validated by Effect Schema at start-up, with an .env.example listing each; the Git version is a declared Turborepo input.
+- Bun runs scripts and the API, Turborepo orchestrates one task name per layer (lint, typecheck, test, build) cached by inputs, TypeScript is strict with project references, configuration comes from typed environment values read once through Effect Config, and the app targets Windows 10 and 11 only, run locally as api plus web.
 
 ## Data modelling
 

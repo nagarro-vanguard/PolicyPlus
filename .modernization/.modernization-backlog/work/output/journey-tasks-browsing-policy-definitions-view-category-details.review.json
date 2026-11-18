@@ -1,0 +1,17 @@
+{
+  "read": 1,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "Criteria 2 and 3 (orphaned parent with disabled button, top-level shows nothing) state exactly what businessrule-88550832449331267612 says but cite no rule (from is empty) and give no reason, so the rule's other two conditions are left uncited."
+    },
+    {
+      "record": 0,
+      "says": "The story promises to reach any parent 'at any level, without climbing one step at a time' and to show the policies the category holds, yet criterion 4 has the person climb one parent at a time and no criterion or cited rule states the policies list or an at-once ancestry chain, so the title/what/why claim behaviour no rule or action states."
+    },
+    {
+      "record": 0,
+      "says": "Criterion 4 ('keep going up until a top-level category or a missing parent is reached') and the 'from a policy in it' opening path are only partly carried by the action blocks and rule, and with from empty and no stated reason it reads as invented behaviour."
+    }
+  ]
+}

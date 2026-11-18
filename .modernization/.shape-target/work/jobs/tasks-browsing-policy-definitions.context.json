@@ -1,0 +1,1203 @@
+{
+  "capability": {
+    "id": "capability-12186108826760133070",
+    "name": "Browsing policy definitions",
+    "purpose": "Look through the loaded policy templates: categories, products, support rules, template files and policies, and open the details of each."
+  },
+  "surfaces": [
+    {
+      "name": "DetailAdmx",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-detailadmx--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-78252692403653225370",
+          "what": "Opens the detail window of the policy double-clicked in the policy list.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-30888155476627040275",
+            "businessrule-59317523370985833904",
+            "businessrule-89677004946923202726"
+          ],
+          "place": {
+            "file": "PolicyPlus/DetailAdmx.vb",
+            "firstLine": 21,
+            "lastLine": 23
+          }
+        },
+        {
+          "id": "block-66828128113828383962",
+          "what": "Opens the detail window of the category double-clicked in the category list.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-88550832449331267612"
+          ],
+          "place": {
+            "file": "PolicyPlus/DetailAdmx.vb",
+            "firstLine": 24,
+            "lastLine": 26
+          }
+        },
+        {
+          "id": "block-27521638512866951547",
+          "what": "Opens the detail window of the product double-clicked in the product list.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/DetailAdmx.vb",
+            "firstLine": 27,
+            "lastLine": 29
+          }
+        },
+        {
+          "id": "block-45462513891449541466",
+          "what": "Opens the detail window of the support rule double-clicked in the support-rule list.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/DetailAdmx.vb",
+            "firstLine": 30,
+            "lastLine": 32
+          }
+        }
+      ]
+    },
+    {
+      "name": "DetailCategory",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-detailcategory--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-33894596800557045530",
+          "what": "Shows the details of the parent category in the same window.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-88550832449331267612"
+          ],
+          "place": {
+            "file": "PolicyPlus/DetailCategory.vb",
+            "firstLine": 23,
+            "lastLine": 25
+          }
+        }
+      ]
+    },
+    {
+      "name": "DetailPolicy",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-detailpolicy--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-42055154505610373837",
+          "what": "Opens the details window for the support definition the policy is supported on.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/DetailPolicy.vb",
+            "firstLine": 37,
+            "lastLine": 39
+          }
+        },
+        {
+          "id": "block-84939599421744669029",
+          "what": "Opens the details window for the category the policy sits in.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-88550832449331267612"
+          ],
+          "place": {
+            "file": "PolicyPlus/DetailPolicy.vb",
+            "firstLine": 40,
+            "lastLine": 42
+          }
+        }
+      ]
+    },
+    {
+      "name": "DetailProduct",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-detailproduct--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-75890035579964781740",
+          "what": "Resizes the Name column so it fills the list beside the Version column.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/DetailProduct.vb",
+            "firstLine": 38,
+            "lastLine": 40
+          }
+        },
+        {
+          "id": "block-68471089903278595698",
+          "what": "Shows the details of the chosen child product in this same window.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-77846110822300189675"
+          ],
+          "place": {
+            "file": "PolicyPlus/DetailProduct.vb",
+            "firstLine": 41,
+            "lastLine": 44
+          }
+        },
+        {
+          "id": "block-94974939167069133577",
+          "what": "Shows the details of the product's parent product in this same window.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/DetailProduct.vb",
+            "firstLine": 45,
+            "lastLine": 47
+          }
+        }
+      ]
+    },
+    {
+      "name": "DetailSupport",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-detailsupport--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-82962493722270760078",
+          "what": "Resizes the Name column so it fills the list beside the version columns.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/DetailSupport.vb",
+            "firstLine": 38,
+            "lastLine": 40
+          }
+        },
+        {
+          "id": "block-53898486546586719743",
+          "what": "Opens the product details, or shows the referenced support definition in this window.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-82075493230431806208"
+          ],
+          "place": {
+            "file": "PolicyPlus/DetailSupport.vb",
+            "firstLine": 41,
+            "lastLine": 49
+          }
+        }
+      ]
+    },
+    {
+      "name": "InspectPolicyElements",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-inspectpolicyelements--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-01358626545675013383",
+          "what": "Copies the selected node text to the clipboard on Ctrl+C.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-57016400965631502733"
+          ],
+          "place": {
+            "file": "PolicyPlus/InspectPolicyElements.vb",
+            "firstLine": 187,
+            "lastLine": 191
+          }
+        },
+        {
+          "id": "block-92180322422063221145",
+          "what": "Opens the policy details window for the inspected policy.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-30888155476627040275",
+            "businessrule-59317523370985833904",
+            "businessrule-89677004946923202726"
+          ],
+          "place": {
+            "file": "PolicyPlus/InspectPolicyElements.vb",
+            "firstLine": 192,
+            "lastLine": 194
+          }
+        }
+      ]
+    },
+    {
+      "name": "LoadedAdmx",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-loadedadmx--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-55650905820560115513",
+          "what": "Opens the details window of the ADMX file double-clicked in the list.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-31675843578661081361",
+            "businessrule-52722053913285909842"
+          ],
+          "place": {
+            "file": "PolicyPlus/LoadedAdmx.vb",
+            "firstLine": 16,
+            "lastLine": 18
+          }
+        },
+        {
+          "id": "block-04424586335392218217",
+          "what": "Keeps the namespace column filling the width left over when the window changes size.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/LoadedAdmx.vb",
+            "firstLine": 19,
+            "lastLine": 21
+          }
+        },
+        {
+          "id": "block-39318096240988456545",
+          "what": "Opens the selected ADMX file's details when Enter is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/LoadedAdmx.vb",
+            "firstLine": 22,
+            "lastLine": 24
+          }
+        }
+      ]
+    },
+    {
+      "name": "LoadedProducts",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-loadedproducts--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-70438482535332396460",
+          "what": "Lists the major versions of the selected top-level product.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-12357125815438552418"
+          ],
+          "place": {
+            "file": "PolicyPlus/LoadedProducts.vb",
+            "firstLine": 23,
+            "lastLine": 40
+          }
+        },
+        {
+          "id": "block-21250694452518135903",
+          "what": "Lists the minor versions of the selected major version.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-69465149169735487446"
+          ],
+          "place": {
+            "file": "PolicyPlus/LoadedProducts.vb",
+            "firstLine": 41,
+            "lastLine": 56
+          }
+        },
+        {
+          "id": "block-85565043795242001799",
+          "what": "Opens the details window of the product double-clicked.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-52738497804454297244"
+          ],
+          "place": {
+            "file": "PolicyPlus/LoadedProducts.vb",
+            "firstLine": 57,
+            "lastLine": 62
+          }
+        },
+        {
+          "id": "block-78795492686610610516",
+          "what": "Opens the selected product's details when Enter is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/LoadedProducts.vb",
+            "firstLine": 63,
+            "lastLine": 68
+          }
+        }
+      ]
+    },
+    {
+      "name": "LoadedSupportDefinitions",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-loadedsupportdefinitions--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-33689568439379299743",
+          "what": "Opens the details window of the support definition double-clicked.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-84991051448916998249"
+          ],
+          "place": {
+            "file": "PolicyPlus/LoadedSupportDefinitions.vb",
+            "firstLine": 20,
+            "lastLine": 22
+          }
+        },
+        {
+          "id": "block-80435818182674952821",
+          "what": "Narrows the support definition list to names containing the typed text.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-54625832347030556938"
+          ],
+          "place": {
+            "file": "PolicyPlus/LoadedSupportDefinitions.vb",
+            "firstLine": 23,
+            "lastLine": 26
+          }
+        },
+        {
+          "id": "block-64431347962942436201",
+          "what": "Opens the selected support definition's details when Enter is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/LoadedSupportDefinitions.vb",
+            "firstLine": 27,
+            "lastLine": 29
+          }
+        }
+      ]
+    },
+    {
+      "name": "Main",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-main--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-38981877830602633388",
+          "what": "Lists the chosen category's subcategories and policies and shows its description.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-03031297687036444400"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 480,
+            "lastLine": 486
+          }
+        },
+        {
+          "id": "block-89406388478575619459",
+          "what": "Resizes the policy name column to fill the list.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 487,
+            "lastLine": 490
+          }
+        },
+        {
+          "id": "block-62656188540901169217",
+          "what": "Records the highlighted policy or category and shows its description.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-29660896839160984241"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 491,
+            "lastLine": 506
+          }
+        },
+        {
+          "id": "block-13558804890992588767",
+          "what": "Asks for a folder of policy definitions and loads it into the workspace.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-06850078746756456273",
+            "businessrule-19671296259932138006",
+            "businessrule-56221298079625729644"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 510,
+            "lastLine": 523
+          }
+        },
+        {
+          "id": "block-95818603562143517431",
+          "what": "Asks for one ADMX file and adds it to the workspace.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-07200475892676201466",
+            "businessrule-61344191921921935952"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 524,
+            "lastLine": 537
+          }
+        },
+        {
+          "id": "block-61070195191480277301",
+          "what": "Clears all loaded policy definitions.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-83939170310206178732"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 538,
+            "lastLine": 542
+          }
+        },
+        {
+          "id": "block-28869808154726861529",
+          "what": "Switches whether categories with no visible policies are shown.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-41685454348767959653"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 543,
+            "lastLine": 548
+          }
+        },
+        {
+          "id": "block-79379072249641546586",
+          "what": "Switches the view between user, computer and both policy sections.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-75222346168306051090"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 549,
+            "lastLine": 560
+          }
+        },
+        {
+          "id": "block-20560369235271632336",
+          "what": "Opens the chosen category, or the edit window of the chosen policy.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-68891329302657284154"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 561,
+            "lastLine": 571
+          }
+        },
+        {
+          "id": "block-52477240354082269436",
+          "what": "Merges identical user and computer policy pairs into single dual-section policies.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-40351382289100643848",
+            "businessrule-92560631592608734086"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 572,
+            "lastLine": 579
+          }
+        },
+        {
+          "id": "block-71012193977886609003",
+          "what": "Fits the description pane's labels to its width and hides its horizontal scroll bar.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 672,
+            "lastLine": 684
+          }
+        },
+        {
+          "id": "block-69879767786914075914",
+          "what": "Opens the highlighted item when Enter is pressed.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 688,
+            "lastLine": 691
+          }
+        },
+        {
+          "id": "block-64668818041164253976",
+          "what": "Lists the ADMX files loaded in the workspace.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 767,
+            "lastLine": 769
+          }
+        },
+        {
+          "id": "block-82164480679050137750",
+          "what": "Lists every support definition in the workspace.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-54625832347030556938"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 770,
+            "lastLine": 772
+          }
+        },
+        {
+          "id": "block-08454163414443845831",
+          "what": "Lists every product in the workspace.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-93683837313593251984"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 773,
+            "lastLine": 775
+          }
+        },
+        {
+          "id": "block-65211679249909420884",
+          "what": "Shows only the menu items that apply to a category or a policy.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-25501360175578063856",
+            "businessrule-36623707346851740456"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 817,
+            "lastLine": 838
+          }
+        },
+        {
+          "id": "block-76908522554461045751",
+          "what": "Opens the category, edit window, details or inspection window for the chosen object.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-01704207253788877148",
+            "businessrule-10913365400690794412",
+            "businessrule-20897965123834184786",
+            "businessrule-30888155476627040275",
+            "businessrule-43141523484770952437",
+            "businessrule-49549620435870223174",
+            "businessrule-50694068263592934768",
+            "businessrule-59317523370985833904",
+            "businessrule-77000026808397550095",
+            "businessrule-78281155676242942940",
+            "businessrule-79057744450548393955",
+            "businessrule-80096613073902079124",
+            "businessrule-88550832449331267612",
+            "businessrule-89677004946923202726",
+            "businessrule-94076713436940158385",
+            "businessrule-96393168223138786394"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 839,
+            "lastLine": 858
+          }
+        },
+        {
+          "id": "block-25872160162253268719",
+          "what": "Selects the node under a right click.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-57028469241171716582"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 859,
+            "lastLine": 862
+          }
+        }
+      ]
+    },
+    {
+      "name": "OpenAdmxFolder",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-openadmxfolder--browsing-policy-definitions.md",
+      "actions": [
+        {
+          "id": "block-13117547435582731450",
+          "what": "Enables the folder box and Browse button only when the custom folder choice is selected.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-88154451768954453608"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 6,
+            "lastLine": 10
+          }
+        },
+        {
+          "id": "block-59255999245406242607",
+          "what": "Looks for the domain's SYSVOL policy definitions folder and enables that choice only if it exists.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-76226373219464614800"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 11,
+            "lastLine": 26
+          }
+        },
+        {
+          "id": "block-30537692166592904451",
+          "what": "Takes the chosen folder, checks it exists and closes the window with OK.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-43765682097437166867",
+            "businessrule-53176229115945924012"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 27,
+            "lastLine": 41
+          }
+        },
+        {
+          "id": "block-20168653063977540452",
+          "what": "Lets the person pick a folder in a folder dialog and puts it in the folder box.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 42,
+            "lastLine": 47
+          }
+        },
+        {
+          "id": "block-73356074458344317029",
+          "what": "Closes the window as cancelled when Escape is pressed.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-98012095360980700253"
+          ],
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 48,
+            "lastLine": 50
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-88154451768954453608",
+      "statement": "The folder box and its Browse button are usable only when the 'This folder' choice is selected.",
+      "place": {
+        "file": "PolicyPlus/OpenAdmxFolder.vb",
+        "firstLine": 6,
+        "lastLine": 10
+      }
+    },
+    {
+      "id": "businessrule-76226373219464614800",
+      "statement": "When the ADMX folder dialog opens, 'This folder' is chosen first, and the 'The domain's SYSVOL' choice is available only if the computer is joined to a domain and the folder \\\\domain\\SYSVOL\\domain\\Policies\\PolicyDefinitions exists.",
+      "place": {
+        "file": "PolicyPlus/OpenAdmxFolder.vb",
+        "firstLine": 11,
+        "lastLine": 26
+      }
+    },
+    {
+      "id": "businessrule-31675843578661081361",
+      "statement": "Double-clicking the loaded ADMX files list opens the file details for the selected row without checking that a row is selected; pressing Enter does check.",
+      "place": {
+        "file": "PolicyPlus/LoadedAdmx.vb",
+        "firstLine": 16,
+        "lastLine": 18
+      }
+    },
+    {
+      "id": "businessrule-52722053913285909842",
+      "statement": "The detail window of a template file lists only the policies, categories (including sub-categories), products (including versions) and support rules that were defined in that file.",
+      "place": {
+        "file": "PolicyPlus/DetailAdmx.vb",
+        "firstLine": 15,
+        "lastLine": 18
+      }
+    },
+    {
+      "id": "businessrule-84991051448916998249",
+      "statement": "Double-clicking the support definitions list opens the definition details for the selected row without checking that a row is selected; pressing Enter does check.",
+      "place": {
+        "file": "PolicyPlus/LoadedSupportDefinitions.vb",
+        "firstLine": 20,
+        "lastLine": 22
+      }
+    },
+    {
+      "id": "businessrule-30888155476627040275",
+      "statement": "When a policy sits in a category that exists, the category name is shown and the category-details button is enabled. A policy whose named category is unknown shows \"<orphaned from \" followed by that category code, and one with no category code shows \"<uncategorized>\"; the button is then disabled.",
+      "place": {
+        "file": "PolicyPlus/DetailPolicy.vb",
+        "firstLine": 27,
+        "lastLine": 34
+      }
+    },
+    {
+      "id": "businessrule-59317523370985833904",
+      "statement": "When a policy names a support definition that exists, its name is shown and the support-details button is enabled. When it does not exist, the button is disabled and the text reads \"<missing: \" followed by the code the policy names; with no code the text is blank.",
+      "place": {
+        "file": "PolicyPlus/DetailPolicy.vb",
+        "firstLine": 19,
+        "lastLine": 26
+      }
+    },
+    {
+      "id": "businessrule-89677004946923202726",
+      "statement": "The policy details window names the section a policy applies to: \"User or computer\" when it applies to both, \"Computer\" when machine-only, \"User\" when user-only.",
+      "place": {
+        "file": "PolicyPlus/DetailPolicy.vb",
+        "firstLine": 11,
+        "lastLine": 18
+      }
+    },
+    {
+      "id": "businessrule-88550832449331267612",
+      "statement": "The detail window of a category shows its parent's name and enables the parent button when the parent exists; when the parent is named but missing it shows \"<orphaned from <parent>>\" and the button is disabled; a top-level category shows nothing.",
+      "place": {
+        "file": "PolicyPlus/DetailCategory.vb",
+        "firstLine": 14,
+        "lastLine": 21
+      }
+    },
+    {
+      "id": "businessrule-12357125815438552418",
+      "statement": "The major versions list shows the children of the selected top-level product ordered by version, with the heading naming that product; with no product selected it is empty and prompts the person to select one.",
+      "place": {
+        "file": "PolicyPlus/LoadedProducts.vb",
+        "firstLine": 23,
+        "lastLine": 40
+      }
+    },
+    {
+      "id": "businessrule-54625832347030556938",
+      "statement": "The support definitions list shows only definitions whose name contains the typed filter text, ignoring upper or lower case; an empty filter shows all. Entries are ordered by name with leading spaces ignored and shown without them.",
+      "place": {
+        "file": "PolicyPlus/LoadedSupportDefinitions.vb",
+        "firstLine": 10,
+        "lastLine": 19
+      }
+    },
+    {
+      "id": "businessrule-43765682097437166867",
+      "statement": "The option to clear the workspace before adding the folder is ticked by default, and its choice is passed on only when a folder that exists was accepted.",
+      "place": {
+        "file": "PolicyPlus/OpenAdmxFolder.vb",
+        "firstLine": 36,
+        "lastLine": 36
+      }
+    },
+    {
+      "id": "businessrule-53176229115945924012",
+      "statement": "When OK is pressed in the ADMX folder dialog, the folder is the system's Windows PolicyDefinitions folder, the domain SYSVOL folder, or the typed folder, as chosen. A folder that does not exist is refused with \"The folder you specified does not exist.\" and the dialog stays open.",
+      "place": {
+        "file": "PolicyPlus/OpenAdmxFolder.vb",
+        "firstLine": 27,
+        "lastLine": 41
+      }
+    },
+    {
+      "id": "businessrule-77846110822300189675",
+      "statement": "Double-clicking a child revision in the product details window shows that child in the same window; with nothing selected, nothing happens.",
+      "place": {
+        "file": "PolicyPlus/DetailProduct.vb",
+        "firstLine": 41,
+        "lastLine": 44
+      }
+    },
+    {
+      "id": "businessrule-82075493230431806208",
+      "statement": "Double-clicking an entry in the support details window opens the product details window for a product entry, and shows a nested support definition in the same window. An entry whose product is missing, or with nothing selected, does nothing.",
+      "place": {
+        "file": "PolicyPlus/DetailSupport.vb",
+        "firstLine": 42,
+        "lastLine": 48
+      }
+    },
+    {
+      "id": "businessrule-69465149169735487446",
+      "statement": "The minor versions list shows the children of the selected major version ordered by version, with the heading naming it; with no major version selected it is empty and prompts the person to select one.",
+      "place": {
+        "file": "PolicyPlus/LoadedProducts.vb",
+        "firstLine": 41,
+        "lastLine": 56
+      }
+    },
+    {
+      "id": "businessrule-98012095360980700253",
+      "statement": "Pressing Escape closes the ADMX folder dialog as cancelled, with no folder chosen.",
+      "place": {
+        "file": "PolicyPlus/OpenAdmxFolder.vb",
+        "firstLine": 48,
+        "lastLine": 50
+      }
+    },
+    {
+      "id": "businessrule-52738497804454297244",
+      "statement": "Opening product details by double-click or Enter does nothing when no product is selected in that list.",
+      "place": {
+        "file": "PolicyPlus/LoadedProducts.vb",
+        "firstLine": 57,
+        "lastLine": 62
+      }
+    },
+    {
+      "id": "businessrule-57016400965631502733",
+      "statement": "The inspector copies the selected line to the clipboard only on Ctrl+C with a line selected.",
+      "place": {
+        "file": "PolicyPlus/InspectPolicyElements.vb",
+        "firstLine": 188,
+        "lastLine": 190
+      }
+    },
+    {
+      "id": "businessrule-03031297687036444400",
+      "statement": "Selecting a category in the tree makes it the current category and clears any selected policy.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 482,
+        "lastLine": 485
+      }
+    },
+    {
+      "id": "businessrule-29660896839160984241",
+      "statement": "Highlighting a policy makes it the selected policy and clears any highlighted category; highlighting a category does the reverse; highlighting nothing clears both.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 493,
+        "lastLine": 504
+      }
+    },
+    {
+      "id": "businessrule-06850078746756456273",
+      "statement": "When a definitions folder is opened, the workspace is emptied first only if \"clear workspace\" is chosen. Otherwise the folder's definitions are added to the current workspace. Problems found are reported but do not stop the load.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 512,
+        "lastLine": 516
+      }
+    },
+    {
+      "id": "businessrule-19671296259932138006",
+      "statement": "When opening a definitions folder fails, the person is told \"The folder could not be fully added to the workspace.\" with the reason. The workspace may already be emptied or partly filled, the remembered folder is unchanged, and the view is rebuilt anyway.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 518,
+        "lastLine": 521
+      }
+    },
+    {
+      "id": "businessrule-56221298079625729644",
+      "statement": "A definitions folder is remembered as the definitions folder for the next start only when \"clear workspace\" was chosen and the load did not fail; when the workspace is added to, the remembered folder is unchanged.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 517,
+        "lastLine": 517
+      }
+    },
+    {
+      "id": "businessrule-07200475892676201466",
+      "statement": "A single ADMX file picked from the file dialog (ADMX files only) is added to the current workspace without emptying it and is not remembered as the definitions folder; a failure shows \"The ADMX file could not be added to the workspace.\" with the reason.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 526,
+        "lastLine": 535
+      }
+    },
+    {
+      "id": "businessrule-61344191921921935952",
+      "statement": "Loading a single template file adds that file alone to the policies already loaded, builds the structures, and reports one failure when the file is refused.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 30,
+        "lastLine": 32
+      }
+    },
+    {
+      "id": "businessrule-83939170310206178732",
+      "statement": "Closing the workspace from the menu empties it at once with no confirmation and rebuilds the view.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 540,
+        "lastLine": 541
+      }
+    },
+    {
+      "id": "businessrule-41685454348767959653",
+      "statement": "The \"Empty Categories\" menu switches empty categories on or off and the view moves to the nearest visible category.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 545,
+        "lastLine": 547
+      }
+    },
+    {
+      "id": "businessrule-75222346168306051090",
+      "statement": "The area choice \"User\" shows user policies, \"Computer\" shows computer policies and any other choice shows both.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 551,
+        "lastLine": 558
+      }
+    },
+    {
+      "id": "businessrule-68891329302657284154",
+      "statement": "Opening an item in the policy list does nothing with no selection, opens a category as the current one, or opens a policy's editor for the area currently shown; Enter does the same.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 563,
+        "lastLine": 570
+      }
+    },
+    {
+      "id": "businessrule-40351382289100643848",
+      "statement": "Two policies are merged into one for both sections when they are alone in the same category under the same name, one is for users and the other for computers, and both have the same explanation text and the same registry key; the first is removed and the second becomes a both-sections policy.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 114,
+        "lastLine": 132
+      }
+    },
+    {
+      "id": "businessrule-92560631592608734086",
+      "statement": "Policy deduplication merges otherwise identical user and computer policy pairs into single policies that apply to both and tells the person \"Deduplicated N policies.\".",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 574,
+        "lastLine": 578
+      }
+    },
+    {
+      "id": "businessrule-93683837313593251984",
+      "statement": "The top-level products list shows every loaded product ordered by name, each with its number of children.",
+      "place": {
+        "file": "PolicyPlus/LoadedProducts.vb",
+        "firstLine": 6,
+        "lastLine": 10
+      }
+    },
+    {
+      "id": "businessrule-25501360175578063856",
+      "statement": "The right-click menu shows only the actions that fit what was clicked: policy-only actions are hidden for a category, and category-only actions are hidden for a policy.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 831,
+        "lastLine": 837
+      }
+    },
+    {
+      "id": "businessrule-36623707346851740456",
+      "statement": "When the right-click menu is opened from the category tree, it is shown for the selected category, and a tree with no selected category is not handled (the program fails with an error). When opened from anywhere else with a row selected in the policy list, it is shown for that row. When opened from anywhere else with no row selected, it is not shown.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 820,
+        "lastLine": 830
+      }
+    },
+    {
+      "id": "businessrule-01704207253788877148",
+      "statement": "The Semantic Policy fragment shows one section per area the policy applies to: the machine section reads the computer source and its comments, the user section reads the user source and its comments; an area the policy does not cover is left out.",
+      "place": {
+        "file": "PolicyPlus/InspectSpolFragment.vb",
+        "firstLine": 7,
+        "lastLine": 21
+      }
+    },
+    {
+      "id": "businessrule-10913365400690794412",
+      "statement": "In semantic policy text, a whole number is written with a leading #, an unsigned number as digits, and a yes/no value as True or False. Text is written between single quotes with no escaping, so text holding a quote or line break cannot be read back. An empty list is written as 'None'. A list of text is written in brackets, one double-quoted item per line with quotes doubled. A table is written in brackets as double-quoted name: value lines.",
+      "place": {
+        "file": "PolicyPlus/SpolFile.vb",
+        "firstLine": 150,
+        "lastLine": 181
+      }
+    },
+    {
+      "id": "businessrule-20897965123834184786",
+      "statement": "When a policy is written as semantic policy text, its settings are listed only if the policy is Enabled.",
+      "place": {
+        "file": "PolicyPlus/SpolFile.vb",
+        "firstLine": 145,
+        "lastLine": 183
+      }
+    },
+    {
+      "id": "businessrule-43141523484770952437",
+      "statement": "The policy inspector shows a \"Registry value\" line for the policy only when the policy names a registry value.",
+      "place": {
+        "file": "PolicyPlus/InspectPolicyElements.vb",
+        "firstLine": 9,
+        "lastLine": 9
+      }
+    },
+    {
+      "id": "businessrule-49549620435870223174",
+      "statement": "Choice display names in the inspector are resolved through the definitions file that defines the policy, and choices are numbered from zero in file order.",
+      "place": {
+        "file": "PolicyPlus/InspectPolicyElements.vb",
+        "firstLine": 157,
+        "lastLine": 170
+      }
+    },
+    {
+      "id": "businessrule-50694068263592934768",
+      "statement": "A semantic policy text line shows 'C' for a machine policy and 'U' for a user policy, followed by the identifier.",
+      "place": {
+        "file": "PolicyPlus/SpolFile.vb",
+        "firstLine": 130,
+        "lastLine": 131
+      }
+    },
+    {
+      "id": "businessrule-77000026808397550095",
+      "statement": "Within each section of the fragment, the policy comment is included only when one is stored for that policy, and the option values are included only when the policy is Enabled.",
+      "place": {
+        "file": "PolicyPlus/InspectSpolFragment.vb",
+        "firstLine": 14,
+        "lastLine": 16
+      }
+    },
+    {
+      "id": "businessrule-78281155676242942940",
+      "statement": "When a policy is written as semantic policy text, backslashes in its comment are doubled and each carriage return plus line feed pair is written as '\\n'. A lone line feed or lone carriage return is written as it is, which splits the comment over two script lines and corrupts it when read back.",
+      "place": {
+        "file": "PolicyPlus/SpolFile.vb",
+        "firstLine": 132,
+        "lastLine": 135
+      }
+    },
+    {
+      "id": "businessrule-79057744450548393955",
+      "statement": "The policy inspector shows a \"Client extension\" line for the policy only when the policy names a client extension.",
+      "place": {
+        "file": "PolicyPlus/InspectPolicyElements.vb",
+        "firstLine": 10,
+        "lastLine": 10
+      }
+    },
+    {
+      "id": "businessrule-80096613073902079124",
+      "statement": "The policy inspector lists presentation details for the policy whenever it has both a presentation and elements, whatever the elements hold. Each presentation item with an ID is matched to the policy element with the same ID; items without an ID show no element details. When no element has that ID, the inspector stops with an unhandled error.",
+      "place": {
+        "file": "PolicyPlus/InspectPolicyElements.vb",
+        "firstLine": 63,
+        "lastLine": 67
+      }
+    },
+    {
+      "id": "businessrule-94076713436940158385",
+      "statement": "For a list element the inspector states how value names are formed: \"User provides value names\" when the person names them, a prefix when the element has one, otherwise \"No prefix (values named for their data)\".",
+      "place": {
+        "file": "PolicyPlus/InspectPolicyElements.vb",
+        "firstLine": 143,
+        "lastLine": 149
+      }
+    },
+    {
+      "id": "businessrule-96393168223138786394",
+      "statement": "In the inspector, a group of affected registry settings with no on or off setting reads \"Left implicit\" when the policy names a registry value, and \"Left to elements\" when it names none. Inside a Yes/No element it always reads \"Left implicit\".",
+      "place": {
+        "file": "PolicyPlus/InspectPolicyElements.vb",
+        "firstLine": 58,
+        "lastLine": 58
+      }
+    },
+    {
+      "id": "businessrule-57028469241171716582",
+      "statement": "When a category in the tree is right-clicked, it becomes the selected category, because a right-click alone does not select it; a left-click is left as is.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 861,
+        "lastLine": 861
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "entity-99683518011128701149",
+      "name": "Policy setting",
+      "states": [
+        "Not configured",
+        "Enabled",
+        "Disabled",
+        "Unclear"
+      ]
+    },
+    {
+      "id": "entity-40163170707735391190",
+      "name": "Program preference",
+      "states": [
+        "Welcome download offer not yet considered",
+        "Welcome download offer considered",
+        "Raw POL editing warning not yet accepted",
+        "Raw POL editing warning accepted",
+        "Policy sources at default (Local GPO)",
+        "Policy sources remembered",
+        "Templates folder at Windows default",
+        "Templates folder chosen",
+        "Language follows the system",
+        "Language chosen"
+      ]
+    },
+    {
+      "id": "entity-92808062881922645840",
+      "name": "Administrative template",
+      "states": [
+        "Downloaded package",
+        "Unpacked",
+        "Installed in a template folder",
+        "Loaded into the workspace",
+        "Available as policy definitions",
+        "Cleared from the workspace"
+      ]
+    },
+    {
+      "id": "entity-52418278656387992812",
+      "name": "Policy comment",
+      "states": []
+    }
+  ],
+  "externals": [
+    {
+      "id": "external-90077838450756006603",
+      "name": "Computer file system folders",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-97068941883605652538",
+      "name": "Windows registry policy keys and loaded user hives",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-25314431250146805945",
+      "name": "Administrative template files (ADMX and ADML)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-45436197603688581519",
+      "name": "Windows registry settings key of Policy Plus",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-84087908423930356962",
+      "name": "Generated version source file",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-08492831744411585027",
+      "name": "Policy comment files (CMTX)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-90078096462363044953",
+      "name": "Active Directory domain",
+      "kind": "outsideService"
+    },
+    {
+      "id": "external-47673734579321187695",
+      "name": "Microsoft download site",
+      "kind": "outsideService"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "read": 5,
+  "challenges": [
+    {"record": 1, "says": "The second criterion is garbled (\"missing or with unreadable any of the required parts\") and is a long run-on list that drops the rule's wording (support and product display names, a support reference or range without its reference, the category parent entry) so the product owner cannot check it against the rule."},
+    {"record": 1, "says": "The criteria on item unique names, prefixes and XML attributes giving defaults are written in developer terms (attribute, prefix, namespace colon form) that a product owner who never saw the code could not follow, and the attribute-default criterion reads as self-contradictory (absent gives nothing, absent gives the default)."},
+    {"record": 2, "says": "The preference criterion says the three policy branches are \"the machine and user policy locations of the system settings store\", which the rules do not state; they name software\\policies, software\\microsoft\\windows\\currentversion\\policies and system\\currentcontrolset\\policies."},
+    {"record": 2, "says": "Some criteria drop conditions of the cited rules: the text option's \"overwrites existing values unless the template says otherwise\" is missing, and the number box defaults (1, spinner, step 1) omit \"unless the language file says otherwise\"."},
+    {"record": 3, "says": "The second and third criteria cite no rule (from is empty) and do not say in the criteria why, so they read as invented behaviour; they rest only on the step wording."},
+    {"record": 3, "says": "The 'why' promises that the switch happens whole or not at all, which no rule states and which the story's own open question admits is unknown (undo when the folder cannot be remembered); the adoption rule only says the workspace is emptied, loaded, saved and rebuilt."}
+  ]
+}

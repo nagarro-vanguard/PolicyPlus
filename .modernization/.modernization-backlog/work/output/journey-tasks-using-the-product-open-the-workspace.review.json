@@ -1,0 +1,33 @@
+{
+  "read": 3,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "None of the five criteria cites a rule and the criteria never say why, although the job's steps carry rules that state them (for example businessrule-27578488339642782673 first start, businessrule-83248377690419919134 fallback, businessrule-76710184957379543464 comments, businessrule-85204901615179220846 'User or Computer' at start, businessrule-25353365313977612083 settings fallback), so each criterion is uncited and unexplained."
+    },
+    {
+      "record": 0,
+      "says": "The fallback criterion drops what the rule states: both sources are reset to Local GPO and opened quietly, and the preferences criterion omits that the person is not told when settings cannot be kept."
+    },
+    {
+      "record": 1,
+      "says": "The first criterion is worded in internal terms ('write test failed', 'cannot be committed') the product owner could not follow, and it does not map them to the three states the person sees (fully writable, cannot be saved, cannot be modified) that the next criterion lists."
+    },
+    {
+      "record": 1,
+      "says": "The status-bar criterion uses the unexplained term 'SID' and describes the status bar, which is not the 'one notice' the title and what promise, so it sits outside the story's stated outcome."
+    },
+    {
+      "record": 1,
+      "says": "The last criterion folds in the 'both writable' confirmation as 'appears only if opening was not quiet, never at start' without saying what the confirmation is, which is confusing next to the title 'Tell me once'."
+    },
+    {
+      "record": 2,
+      "says": "The 'No' criterion for businessrule-41547680626150552574 says No discards the workspace with the message, but the rule says the failure goes into failed-load handling (the message is the reason shown in the following prompt); stated as a standalone message it misstates the behaviour."
+    },
+    {
+      "record": 2,
+      "says": "The last criterion drops the condition of businessrule-72200124994498270380 that the same notice also appears when the default folder fails to load after the person chose Yes, and 'when that happens' leaves the trigger vague."
+    }
+  ]
+}

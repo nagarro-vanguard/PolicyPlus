@@ -1,18 +1,18 @@
 {
  "stories": [
   {
-   "title": "Set up the workspace, runtime and shared tooling",
-   "what": "A Bun and Turborepo workspace with one package or app per layer, a pinned Bun version, shared TypeScript, ESLint, Prettier, knip, markdownlint, commitlint and lefthook configuration that each layer extends, and a root check command.",
-   "why": "Every later story starts from the same checked, repeatable workspace, so a rule change happens in one place and developers get the same results locally and in CI.",
+   "title": "Set up the shared workspace and the approved libraries",
+   "what": "One workspace in which every part of Policy Plus is built, with only the approved libraries for reading policy template text, unpacking the Microsoft package and wiring services.",
+   "why": "Without one agreed set of tools and libraries each part drifts and the program cannot be built and checked the same way everywhere.",
    "actions": [],
    "terms": [],
    "criteria": [
     {
-     "says": "Given a fresh checkout, when a developer runs `bun install` and `bun run check` at the root, then Turborepo runs lint, typecheck, test and build for every layer and exits with code 0.",
+     "says": "Given a fresh checkout, when a developer runs the install and the verify command for any layer, then the same task names (lint, typecheck, test, build) exist and succeed for every layer.",
      "from": [
       {
        "_tag": "decision",
-       "id": "base.decision-10"
+       "id": "base.decision-2"
       },
       {
        "_tag": "layer",
@@ -21,57 +21,327 @@
      ]
     },
     {
-     "says": "Given the repository, when a developer lists the workspace, then the layers tooling, domain, contracts, data, api, ui, web and e2e each exist at their planned path and each extends the shared configuration without copying it.",
+     "says": "Given the workspace is checked on a machine that is not Windows, when the build and tests run, then they succeed using the stand-in versions of the Windows-only carriers.",
      "from": [
       {
        "_tag": "decision",
-       "id": "base.decision-28"
+       "id": "base.decision-2"
+      }
+     ]
+    },
+    {
+     "says": "Given a required setting is missing, when the service or the web app starts, then it stops at start with a message naming the missing setting.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-2"
+      }
+     ]
+    },
+    {
+     "says": "Given the dependency list, when it is checked, then it holds only the stack's libraries plus the approved XML reader and zip reader, and no second state or validation library.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy template file with well-formed text, when it is read with the approved XML reader, then its values come back and are checked against a schema afterwards.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given the Microsoft template package as a standard zip, when it is unpacked with the approved zip reader, then its files are listed and readable without any native build step.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-1"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "Should existing registry settings of the old program be imported once into the new preference store?"
+   ]
+  },
+  {
+   "title": "Set up the test approach with fixtures and a real database",
+   "what": "The way every part is tested: fixture text for template, policy and registry files, a real PostgreSQL for data tests, stand-ins for Windows carriers and tests named after the legacy rule.",
+   "why": "Rules and stories are only trusted if they can be proven the same way on any machine.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given the test command for domain, contracts, database or service, when it runs, then it uses fixture text for ADMX, ADML, POL and REG files.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-3"
+      }
+     ]
+    },
+    {
+     "says": "Given a database test, when it runs, then a real PostgreSQL is started by the test task and no mocked client is used.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-3"
       },
       {
-       "_tag": "layer",
-       "id": "layer-tooling"
+       "_tag": "decision",
+       "id": "base.decision-13"
+      }
+     ]
+    },
+    {
+     "says": "Given a test of a Windows-only carrier, when it runs on a machine that is not Windows, then it runs against the stand-in behind its port and the few Windows-gated tests are skipped with a stated reason.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-3"
+      }
+     ]
+    },
+    {
+     "says": "Given a rule or story that is built, when its test is listed, then the title names the legacy rule it proves.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-3"
+      }
+     ]
+    },
+    {
+     "says": "Given an end-to-end test, when it is written for a story, then it exists and fails before the code it tests is added.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-3"
       },
       {
-       "_tag": "layer",
-       "id": "layer-domain"
+       "_tag": "decision",
+       "id": "base.decision-24"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Keep behaviour in code, tests and short agent notes",
+   "what": "A place for each kind of knowledge: behaviour in typed code and tests, rationale in the plan, and only what tools do not show in the agent notes of each layer.",
+   "why": "Knowledge kept in checked code cannot silently drift from the product.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a contract schema, when the OpenAPI document is generated, then the documentation text on the schema appears in it.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-4"
+      },
+      {
+       "_tag": "decision",
+       "id": "base.decision-5"
+      }
+     ]
+    },
+    {
+     "says": "Given a domain folder, when it is opened, then it offers a typed index of what it exports and no prose readme.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-4"
+      }
+     ]
+    },
+    {
+     "says": "Given a test title, when it is read, then it cites the legacy rule it proves.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-4"
+      }
+     ]
+    },
+    {
+     "says": "Given the agent notes of a layer, when they are checked, then they hold only what code and tools do not show and copy no decision rationale from the plan.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-4"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Define the contract schemas and generate the interface document",
+   "what": "Every request, answer and failure between the screens and the service is described once as a schema, and the interface document is generated from it.",
+   "why": "Screens and service cannot disagree about what is exchanged when there is one source.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given any request, response or error, when the contracts are inspected, then it is defined once as a schema and not written by hand elsewhere.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-5"
       },
       {
        "_tag": "layer",
        "id": "layer-contracts"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-data"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-api"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-ui"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-web"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-e2e"
       }
      ]
     },
     {
-     "says": "Given a layer that imports a layer above it or leaves an export unused, when `bun run check` runs, then the check fails and names the import or export.",
+     "says": "Given the service contract, when the build runs, then the OpenAPI document is generated from it and no hand-written copy exists.",
      "from": [
       {
        "_tag": "decision",
-       "id": "base.decision-14"
+       "id": "base.decision-5"
       }
      ]
     },
     {
-     "says": "Given a commit with staged files that fail lint, format or typecheck, or a message that is not a conventional commit, when the developer commits, then lefthook rejects the commit and shows the failing check.",
+     "says": "Given a missing domain, no network or no administrator rights, when the service answers, then the answer is a named outcome in the schema and not an error response.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-6"
+      }
+     ]
+    },
+    {
+     "says": "Given the contracts package, when its dependencies are checked, then it depends only on the effect library and imports no other workspace package.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-7"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Build the policy rules as a pure layer with named ports",
+   "what": "The policy rules live in one folder per capability, take data in and return data, and meet the outside world only through named ports.",
+   "why": "Rules that touch no disk, clock or registry can be tested with fixture text anywhere.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given any function in the domain layer, when it runs in a test, then it reads no file, clock, random value or environment and returns data or an Effect of data.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-8"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-domain"
+      }
+     ]
+    },
+    {
+     "says": "Given an outside system the rules need, when the domain is inspected, then it is declared as a port there and implemented only in the service.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-8"
+      }
+     ]
+    },
+    {
+     "says": "Given the domain layer, when its folders are listed, then there is one folder per capability named as in the plan, and shared helpers sit in folders named for what they do, never utils or common.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-9"
+      }
+     ]
+    },
+    {
+     "says": "Given ADMX, ADML, CMTX, POL or REG text, when it enters the domain, then it is parsed at the edge into schema-checked values and later rules never see raw text or bytes.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-10"
+      }
+     ]
+    },
+    {
+     "says": "Given malformed input, when it is parsed, then it is refused at the edge with a named failure and nothing downstream runs.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-10"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Set up the preference store with committed migrations",
+   "what": "A PostgreSQL store for remembered choices (language, definitions folder, offers considered), changed only through committed migrations and reached through query functions.",
+   "why": "The old program remembered choices in a Windows registry key; the new one needs a store that fits the confirmed architecture and keeps history of every change.",
+   "actions": [],
+   "terms": [
+    {
+     "name": "Preference store",
+     "means": "The place where Policy Plus remembers a person's own choices, such as language and definitions folder; it is not where policy settings themselves are kept."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a remembered choice such as the language or the definitions folder, when it is saved and the program restarts, then the same choice is read back from the preference store.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-4"
+      }
+     ]
+    },
+    {
+     "says": "Given the program runs, when it starts, then it neither reads nor writes the old registry settings key.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-4"
+      }
+     ]
+    },
+    {
+     "says": "Given a change to the data layout, when it is made, then it exists as a committed migration and no merged migration is edited afterwards.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-11"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-database"
+      }
+     ]
+    },
+    {
+     "says": "Given a query function, when it returns, then it gives plain data in the contract's shape and never a table object.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-12"
+      }
+     ]
+    },
+    {
+     "says": "Given an empty database, when the migrations are applied and the database tests run, then they pass against a real PostgreSQL.",
      "from": [
       {
        "_tag": "decision",
@@ -82,171 +352,18 @@
    ]
   },
   {
-   "title": "Fix the libraries every layer may use",
-   "what": "The agreed libraries installed: Effect 4 with Schema, HttpApi, HttpClient and SQL; Drizzle ORM and Kit; fast-xml-parser; fflate; TanStack Query and Form; and the rule, written in AGENTS.md, that no library outside this stack is added without a story that needs it.",
-   "why": "One schema language and a small, I/O-free parser set keep the Domain testable and avoid duplicate types, and nothing enters without a story that needs it.",
+   "title": "Serve the HTTP interface with thin handlers",
+   "what": "A local service on the person's machine that answers the screens through the contract, deciding nothing itself.",
+   "why": "Keeping rules out of handlers keeps them in the tested pure layer.",
    "actions": [],
    "terms": [],
    "criteria": [
     {
-     "says": "Given the workspace after `bun install`, when a developer lists the installed dependencies, then Effect 4, Drizzle ORM, Drizzle Kit, fast-xml-parser, fflate, TanStack Query and TanStack Form are present and Zod is absent.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-9"
-      }
-     ]
-    },
-    {
-     "says": "Given a dependency that is listed in a layer but never imported, or an export that nothing uses, when `bun run check` runs, then knip fails and names it.",
+     "says": "Given a request, when a handler runs, then it only decodes with the contract, calls domain functions and carriers, and encodes the answer.",
      "from": [
       {
        "_tag": "decision",
        "id": "base.decision-14"
-      }
-     ]
-    },
-    {
-     "says": "Given the root AGENTS.md, when a developer reads it, then it states that no library outside the agreed stack is added without a story that needs it.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-9"
-      },
-      {
-       "_tag": "decision",
-       "id": "base.decision-12"
-      }
-     ]
-    },
-    {
-     "says": "Given a small sample ADMX file and a small zip archive, when a Domain test parses the first with fast-xml-parser and unpacks the second with fflate in memory under Bun, then both succeed with no file, network or database access.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-9"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-domain"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Configure environments, local database and the build version",
-   "what": "Validated environment configuration with an .env.example, a Docker Compose file for local PostgreSQL, and a build step that reads the Git version and passes it to the services and screens as a declared Turborepo input.",
-   "why": "Developers and the black-box tests run against the same database version, a missing setting stops the product at start-up, and the displayed version is never a stale committed file.",
-   "actions": [],
-   "terms": [],
-   "criteria": [
-    {
-     "says": "Given Docker is available, when a developer runs the documented compose command, then a PostgreSQL database starts and accepts a connection with the address given in .env.example.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-10"
-      }
-     ]
-    },
-    {
-     "says": "Given an environment variable listed in .env.example is missing or invalid, when the service or the screens start, then they stop at start-up with a message naming the variable.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-10"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-tooling"
-      }
-     ]
-    },
-    {
-     "says": "Given a Git checkout, when the product is built, then the Git version is available to the services and screens as a build-time value and no generated version file is added to the repository.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "integrations.decision-5"
-      },
-      {
-       "_tag": "decision",
-       "id": "scope.decision-9"
-      }
-     ]
-    },
-    {
-     "says": "Given the Git version changes, when Turborepo builds again, then the affected tasks rerun instead of reusing a cached result.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-10"
-      },
-      {
-       "_tag": "decision",
-       "id": "integrations.decision-5"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Set up the test tooling for every layer",
-   "what": "Vitest in each code layer, a real PostgreSQL test database for the Data layer, the HttpApi test client for the Services layer, Storybook stories for the components, Vitest tests of pure logic in the Screens layer, and Playwright with axe in the black-box layer.",
-   "why": "A story can be called done only when its layer checks and its black-box test pass, and the tests catch what can really break: migrations, SQL behaviour and what a user sees.",
-   "actions": [],
-   "terms": [],
-   "criteria": [
-    {
-     "says": "Given a layer with a Vitest test, when `bun run test` runs, then Turborepo runs that layer's tests and reports a failing test as a failed task.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-11"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-tooling"
-      }
-     ]
-    },
-    {
-     "says": "Given a table of sample ADMX, ADML, POL, REG, CMTX and SPOL files and a round-trip test for a parser and its writer, when the Domain tests run, then each sample is checked by an example-based test and the round-trip test passes.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-11"
-      },
-      {
-       "_tag": "decision",
-       "id": "base.decision-17"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-domain"
-      }
-     ]
-    },
-    {
-     "says": "Given the local database is running, when the Data tests run, then they connect to a real PostgreSQL test database, apply the migrations and use no in-memory fake.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-11"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-data"
-      }
-     ]
-    },
-    {
-     "says": "Given a handler of the contract, when a Services test calls it through the HttpApi test client, then the test receives the handler's response without starting a network server.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-11"
       },
       {
        "_tag": "layer",
@@ -255,98 +372,52 @@
      ]
     },
     {
-     "says": "Given a component, when Storybook is built, then the component's story renders and a component without a story is reported.",
+     "says": "Given a request that breaks a rule, when it is answered, then the decision comes from the domain layer and no rule is found in the handler.",
      "from": [
       {
        "_tag": "decision",
-       "id": "base.decision-11"
-      },
-      {
-       "_tag": "decision",
-       "id": "base.decision-24"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-ui"
+       "id": "base.decision-14"
       }
      ]
     },
     {
-     "says": "Given a pure function in the Screens layer, when the Screens tests run, then a Vitest test of that function runs and passes.",
+     "says": "Given each outside system (file system, registry, directory, download), when the service is assembled, then each is one layer implementing a domain port.",
      "from": [
       {
        "_tag": "decision",
-       "id": "base.decision-11"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-web"
+       "id": "base.decision-15"
       }
      ]
     },
     {
-     "says": "Given the running product and a seeded database, when Playwright runs a screen test, then axe checks that screen and any violation fails the test.",
+     "says": "Given a test run or a machine that is not Windows, when the service starts, then the stand-in for each Windows carrier is used.",
      "from": [
       {
        "_tag": "decision",
-       "id": "base.decision-11"
-      },
-      {
-       "_tag": "decision",
-       "id": "base.decision-27"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-e2e"
-      }
-     ]
-    },
-    {
-     "says": "Given the project's CI, when it runs the Data tests and one Playwright test, then PostgreSQL starts under Docker and the Playwright browsers are available, and both tests run.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-11"
+       "id": "base.decision-15"
       }
      ]
     }
    ]
   },
   {
-   "title": "Set the pattern for rules written as tested code",
-   "what": "One worked example in the Domain layer: a named, pure rule function with a test named after the rule, domain terms taken from the analysis wording, typed errors, and a round-trip test, plus the AGENTS.md lines that record the pattern; and the OpenAPI document and client generated from hand-written Contracts.",
-   "why": "The legacy rules live as code and tests that cannot go stale silently, so every later story copies one proven pattern instead of inventing its own.",
+   "title": "Read and write folders and policy files on the person's machine",
+   "what": "The service reads, lists and writes folders and files (policy files, template folders, export targets) directly so the browser never touches the disk.",
+   "why": "The program must edit real policy files at fixed Windows paths, which a browser cannot do.",
    "actions": [],
    "terms": [],
    "criteria": [
     {
-     "says": "Given the example rule, when a developer reads the Domain layer, then the rule is one named pure function and its test carries the rule's name.",
+     "says": "Given a chosen folder, when the screen asks for its contents, then the service lists and reads them and the web app never reads the disk itself.",
      "from": [
       {
        "_tag": "decision",
-       "id": "base.decision-12"
-      },
-      {
-       "_tag": "decision",
-       "id": "base.decision-15"
-      },
-      {
-       "_tag": "layer",
-       "id": "layer-domain"
+       "id": "integrations.decision-1"
       }
      ]
     },
     {
-     "says": "Given malformed input to the example parser, when it runs, then it returns a typed Effect error and an unknown element is kept and reported, not dropped.",
-     "from": [
-      {
-       "_tag": "decision",
-       "id": "base.decision-16"
-      }
-     ]
-    },
-    {
-     "says": "Given text the example writer produced from the example parser's result, when it is compared with the original text, then the two match byte for byte where the format allows.",
+     "says": "Given a save of a policy file, when it runs, then the content goes to a temporary file that is renamed over the target.",
      "from": [
       {
        "_tag": "decision",
@@ -355,28 +426,376 @@
      ]
     },
     {
-     "says": "Given a hand-written schema and HttpApi group in Contracts, when the generate script runs, then the OpenAPI document and the client are written from them, and CI fails if the committed OpenAPI document differs from the generated one.",
+     "says": "Given a save that fails part way, when the person looks at the target, then the earlier file is unchanged and the failure is reported.",
      "from": [
       {
        "_tag": "decision",
-       "id": "base.decision-12"
+       "id": "base.decision-17"
+      }
+     ]
+    },
+    {
+     "says": "Given ADMX and ADML files in the chosen folders, when the definitions are loaded, then the service reads their text and passes it to the domain parsers, which return schema-checked values.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-3"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy source with a comment file beside it, when comments are read or saved, then the service reads and writes the CMTX file in place and the domain encodes and decodes it.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-6"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Read and write registry policies and user hives safely",
+   "what": "The service reads and writes policy keys, and loads and unloads user hives, through one registry port that the rules see only as plain data.",
+   "why": "Registry editing must work on Home editions without a compiled add-on and must not allow typed keys to run commands.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a policy key, when it is read or written, then the service uses the built-in Windows tools behind one registry port and the domain sees only data.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-2"
+      }
+     ]
+    },
+    {
+     "says": "Given a user hive that is not loaded, when the person chooses it, then it is loaded and later unloaded through the same port.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-2"
+      }
+     ]
+    },
+    {
+     "says": "Given a typed key path or account name, when it is used, then it is checked against the contract schema first and passed to the tool as separate arguments, never as a built command string.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-16"
+      }
+     ]
+    },
+    {
+     "says": "Given machine policy is written without administrator rights, when the write is refused, then the answer is a named no-rights outcome.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-2"
       },
+      {
+       "_tag": "decision",
+       "id": "base.decision-6"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Look up accounts and policy locations in the Active Directory domain",
+   "what": "The service resolves user and group accounts and their profile and policy-object locations from the machine's own directory tools, or says the domain is unavailable.",
+   "why": "Only the person's machine is joined to the domain with their credentials, and a missing domain is a normal outcome.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a reachable domain, when an account is looked up, then its profile and policy-object locations are returned as plain data.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-7"
+      }
+     ]
+    },
+    {
+     "says": "Given no reachable domain, when an account is looked up, then the answer is a named unavailable outcome and not an error.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-7"
+      },
+      {
+       "_tag": "decision",
+       "id": "base.decision-6"
+      }
+     ]
+    },
+    {
+     "says": "Given a typed account name, when the lookup runs, then the name is validated first and passed as separate arguments.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-16"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Download and unpack the Microsoft policy template package",
+   "what": "The service downloads the package from the Microsoft download site, unpacks it into the chosen folder and reports progress and failure.",
+   "why": "The package must be unpacked into a Windows folder, which a browser cannot do, and having no internet is a normal outcome.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given internet access, when a download starts, then the service fetches the package, unpacks it into the chosen folder and reports progress to the screen.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-8"
+      }
+     ]
+    },
+    {
+     "says": "Given no internet access or a refused download, when it is attempted, then the answer is a named failure outcome and the folder is left as it was.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-8"
+      },
+      {
+       "_tag": "decision",
+       "id": "base.decision-6"
+      }
+     ]
+    },
+    {
+     "says": "Given the web app, when a download is wanted, then it asks the service and never calls the Microsoft site itself.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-8"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Build the shared interface components with Storybook",
+   "what": "A library of shared screen components that take data and callbacks only, shown in Storybook, using the approved design tokens.",
+   "why": "One visual language and proven accessibility across all screens.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a component, when it is used, then it takes data and callbacks only and never calls the service or the router.",
+     "from": [
       {
        "_tag": "decision",
        "id": "base.decision-18"
       },
       {
        "_tag": "layer",
-       "id": "layer-contracts"
+       "id": "layer-ui"
       }
      ]
     },
     {
-     "says": "Given the AGENTS.md of each layer, when a developer reads it, then it states the layer's conventions and the reasons of the decisions that apply, and no separate wiki is needed.",
+     "says": "Given a component, when Storybook is opened, then a story covers each of its states and an accessibility scan of it passes.",
      "from": [
       {
        "_tag": "decision",
-       "id": "base.decision-12"
+       "id": "base.decision-18"
+      }
+     ]
+    },
+    {
+     "says": "Given a style, when it is added, then it uses the Tailwind 4 tokens and shadcn on Base UI primitives and adds no new colour, spacing or icon set.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-19"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Build the web app shell, data access, messages and forms",
+   "what": "The screens' frame: server-rendered routes that fetch through the generated client, show every visible text as a translatable message, and validate forms with the contract.",
+   "why": "Screens must stay unprivileged, speak the person's chosen language and reject the same input as the service.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a screen, when it fetches data, then it uses a client generated from the contract through TanStack Query with no hand-written calls or copied response types.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-20"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given the product language is switched, when a screen is shown, then every visible text changes and policy text from definitions stays as data, untranslated.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-21"
+      }
+     ]
+    },
+    {
+     "says": "Given a form with invalid input, when it is submitted, then the client rejects it with the same rules the service would apply.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-22"
+      }
+     ]
+    },
+    {
+     "says": "Given a page is rendered on the server, when it loads data, then it asks the service over HTTP and itself reads no disk or registry.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-23"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Set up end-to-end tests with accessibility scans",
+   "what": "A Playwright suite that drives the running product with stand-in Windows carriers, scans every page and finds elements the way a person does.",
+   "why": "Stories are proven by behaviour, accessibility is a gate and tests stay deterministic without Windows.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a story's acceptance criteria, when its test is committed, then it is committed before the code and fails first.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-24"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-e2e"
+      }
+     ]
+    },
+    {
+     "says": "Given the suite runs, when it starts, then it uses the real service with the stand-in Windows carriers.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-24"
+      }
+     ]
+    },
+    {
+     "says": "Given any page visited in a test, when it is scanned for accessibility, then any violation fails the test.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-25"
+      }
+     ]
+    },
+    {
+     "says": "Given an element a test uses, when it is found, then it is selected by role and accessible name and not by style class or test id unless it has no role.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-26"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Stamp the program with its Git version at build time",
+   "what": "The build records the current Git version in a value the service reports, in place of generating a version source file.",
+   "why": "The new build has no compile step needing a generated file, and a committed generated file goes stale.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a build from a Git commit, when the service is asked for its version, then it reports that commit's version.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-5"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-tooling"
+      }
+     ]
+    },
+    {
+     "says": "Given the repository, when it is checked, then no generated version source file is committed.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-5"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Share one set of code checks and commit rules across layers",
+   "what": "One shared setup for linting, formatting, unused-code checks, markdown checks and commit messages, run before every commit.",
+   "why": "One policy for every layer, and early failure beats failing in CI.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a layer, when its checks are configured, then it extends the shared setup and adds no local lint or format rule.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-27"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-tooling"
+      }
+     ]
+    },
+    {
+     "says": "Given a commit message that is not a conventional commit, when the commit is made, then it is refused.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-28"
+      }
+     ]
+    },
+    {
+     "says": "Given a commit, when it is made, then the hooks run lint, format and the checks of the affected layers, and skipping hooks is not allowed.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-28"
+      }
+     ]
+    },
+    {
+     "says": "Given any layer, when the unused-code check runs, then it reports no unused files, exports or dependencies.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-29"
       }
      ]
     }

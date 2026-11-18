@@ -1,14 +1,14 @@
 {
   "kind": "foundation-stories",
   "layerIds": [
-    "layer-tooling",
-    "layer-domain",
     "layer-contracts",
-    "layer-data",
+    "layer-domain",
+    "layer-database",
     "layer-api",
     "layer-ui",
     "layer-web",
-    "layer-e2e"
+    "layer-e2e",
+    "layer-tooling"
   ],
   "decisionIds": [
     "integrations.decision-1",
@@ -19,14 +19,14 @@
     "integrations.decision-6",
     "integrations.decision-7",
     "integrations.decision-8",
-    "scope.decision-9",
-    "scope.decision-10",
-    "scope.decision-11",
-    "scope.decision-12",
-    "scope.decision-13",
-    "scope.decision-14",
-    "scope.decision-15",
-    "scope.decision-16",
+    "base.decision-1",
+    "base.decision-2",
+    "base.decision-3",
+    "base.decision-4",
+    "base.decision-5",
+    "base.decision-6",
+    "base.decision-7",
+    "base.decision-8",
     "base.decision-9",
     "base.decision-10",
     "base.decision-11",
@@ -46,12 +46,13 @@
     "base.decision-25",
     "base.decision-26",
     "base.decision-27",
-    "base.decision-28"
+    "base.decision-28",
+    "base.decision-29"
   ],
   "areaDecisionIds": [
-    "base.decision-9",
-    "base.decision-10",
-    "base.decision-11",
-    "base.decision-12"
+    "base.decision-1",
+    "base.decision-2",
+    "base.decision-3",
+    "base.decision-4"
   ]
 }

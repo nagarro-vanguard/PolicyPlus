@@ -5,6 +5,8 @@ import type { Plan } from "../model/plan";
 import { AGENTS_MD_MAX_LINES, countedLines, layerAgentsMd } from "./agents-md";
 import { SHARED, type Facts } from "./facts";
 import { mechanicalProblems, readerProblems, recordIdProblems } from "./language";
+import type { Target } from "../read/target";
+import { targetGaps } from "./target-gates";
 
 export type Gaps = { readonly failing: string[]; readonly advisory: string[] };
 
@@ -18,6 +20,8 @@ type Input = {
     readonly plan: Plan;
     readonly problems: readonly string[];
     readonly allow?: readonly string[];
+    /** The confirmed target, when the plan is made from one. */
+    readonly target?: Target | undefined;
 };
 
 const some = (items: readonly string[], limit = 3) =>
@@ -37,7 +41,8 @@ export const checkPlan = (input: Input): Gaps => {
     // Decisions: scope, integrations, notes, layers.
     const scoped = new Set(decisions.flatMap((d) => (d.topic._tag === "scope" ? [d.topic.capability] : [])));
     const unscoped = analysis.capabilities.map((c) => c.capability.name).filter((name) => !scoped.has(name));
-    if (unscoped.length > 0) failing.push(`no scope decision (carry, replace or drop) for: ${some(unscoped)}`);
+    if (unscoped.length > 0 && input.target === undefined)
+        failing.push(`no scope decision (carry, replace or drop) for: ${some(unscoped)}`);
     const integrated = new Set(decisions.flatMap((d) => (d.topic._tag === "integration" ? [d.topic.system] : [])));
     const missingSystems = analysis.system.externals.map((e) => e.name).filter((name) => !integrated.has(name));
     if (missingSystems.length > 0)
@@ -81,63 +86,71 @@ export const checkPlan = (input: Input): Gaps => {
             failing.push(`the AGENTS.md of layer ${layer.name} is ${lines} lines, over ${AGENTS_MD_MAX_LINES}`);
     }
 
-    // Coverage: actions, rules, transitions.
-    const actionStories = new Map<string, number>();
-    const surfaceOfAction = new Map(
-        facts.capabilities.flatMap((c) => c.surfaces.flatMap((s) => s.actions.map((a) => [a.id, s.key] as const))),
-    );
-    for (const story of stories) {
-        for (const id of story.actions) actionStories.set(id, (actionStories.get(id) ?? 0) + 1);
-        const unknown = story.actions.filter((id) => !surfaceOfAction.has(id));
-        if (unknown.length > 0)
-            failing.push(`story "${short(story.title)}" names ${unknown.length} actions the plan does not carry`);
-        if (new Set(story.actions.map((id) => surfaceOfAction.get(id))).size > 1)
-            failing.push(`story "${short(story.title)}" spans more than one surface`);
-        if (story.criteria.length > 12)
-            failing.push(`story "${short(story.title)}" has ${story.criteria.length} criteria, over 12`);
-    }
-    const unplannedActions = [...surfaceOfAction.keys()].filter((id) => (actionStories.get(id) ?? 0) === 0);
-    if (unplannedActions.length > 0) failing.push(`${unplannedActions.length} actions are in no story`);
-    const twice = [...actionStories.entries()].filter(([, n]) => n > 1);
-    if (twice.length > 0) failing.push(`${twice.length} actions are in more than one story`);
+    if (input.target !== undefined) {
+        const found = targetGaps({ plan, facts, target: input.target, layers, request });
+        failing.push(...found.failing);
+        advisory.push(...found.advisory);
+    } else {
+        // Coverage: actions, rules, transitions.
+        const actionStories = new Map<string, number>();
+        const surfaceOfAction = new Map(
+            facts.capabilities.flatMap((c) => c.surfaces.flatMap((s) => s.actions.map((a) => [a.id, s.key] as const))),
+        );
+        for (const story of stories) {
+            for (const id of story.actions) actionStories.set(id, (actionStories.get(id) ?? 0) + 1);
+            const unknown = story.actions.filter((id) => !surfaceOfAction.has(id));
+            if (unknown.length > 0)
+                failing.push(`story "${short(story.title)}" names ${unknown.length} actions the plan does not carry`);
+            if (new Set(story.actions.map((id) => surfaceOfAction.get(id))).size > 1)
+                failing.push(`story "${short(story.title)}" spans more than one surface`);
+            if (story.criteria.length > 12)
+                failing.push(`story "${short(story.title)}" has ${story.criteria.length} criteria, over 12`);
+        }
+        const unplannedActions = [...surfaceOfAction.keys()].filter((id) => (actionStories.get(id) ?? 0) === 0);
+        if (unplannedActions.length > 0) failing.push(`${unplannedActions.length} actions are in no story`);
+        const twice = [...actionStories.entries()].filter(([, n]) => n > 1);
+        if (twice.length > 0) failing.push(`${twice.length} actions are in more than one story`);
 
-    const ownerSurface = new Map(
-        facts.capabilities.flatMap((c) => c.surfaces.flatMap((s) => s.owned.map((rule) => [rule, s.key] as const))),
-    );
-    const sharedRules = new Set(facts.shared);
-    const built = new Set<string>();
-    for (const view of plan.stories) {
-        const surface = view.actions.length > 0 ? surfaceOfAction.get(view.actions[0] as string) : undefined;
-        for (const rule of view.builds) {
-            built.add(rule);
-            if (!facts.rules.has(rule)) {
-                failing.push(`story "${short(view.title)}" cites a rule the plan does not carry`);
-            } else if (
-                view.kind === "functional" &&
-                (ownerSurface.get(rule) ?? "").split("/")[0] !==
-                    facts.capabilities.find((c) => c.name === view.capability)?.id
-            ) {
-                failing.push(
-                    `story "${short(view.title)}" builds a rule that belongs to ${sharedRules.has(rule) ? SHARED : "another surface"}: "${short(facts.rules.get(rule)?.says ?? "")}"`,
-                );
-            } else if (view.kind === "technical" && !sharedRules.has(rule)) {
-                failing.push(`technical story "${short(view.title)}" builds a rule only one capability reaches`);
+        const ownerSurface = new Map(
+            facts.capabilities.flatMap((c) => c.surfaces.flatMap((s) => s.owned.map((rule) => [rule, s.key] as const))),
+        );
+        const sharedRules = new Set(facts.shared);
+        const built = new Set<string>();
+        for (const view of plan.stories) {
+            const surface = view.actions.length > 0 ? surfaceOfAction.get(view.actions[0] as string) : undefined;
+            for (const rule of view.builds) {
+                built.add(rule);
+                if (!facts.rules.has(rule)) {
+                    failing.push(`story "${short(view.title)}" cites a rule the plan does not carry`);
+                } else if (
+                    view.kind === "functional" &&
+                    (ownerSurface.get(rule) ?? "").split("/")[0] !==
+                        facts.capabilities.find((c) => c.name === view.capability)?.id
+                ) {
+                    failing.push(
+                        `story "${short(view.title)}" builds a rule that belongs to ${sharedRules.has(rule) ? SHARED : "another surface"}: "${short(facts.rules.get(rule)?.says ?? "")}"`,
+                    );
+                } else if (view.kind === "technical" && !sharedRules.has(rule)) {
+                    failing.push(`technical story "${short(view.title)}" builds a rule only one capability reaches`);
+                }
             }
         }
-    }
-    const unbuilt = [...facts.rules.values()].filter((rule) => !built.has(rule.id));
-    if (unbuilt.length > 0)
-        failing.push(`${unbuilt.length} rules are built by no story, for example "${short(unbuilt[0]?.says ?? "")}"`);
-    const citedTransitions = new Set(
-        stories.flatMap((s) =>
-            s.criteria.flatMap((c) => c.from.flatMap((r) => (r._tag === "transition" ? [r.id as string] : []))),
-        ),
-    );
-    const missingTransitions = facts.transitions.filter((t) => !citedTransitions.has(t.id));
-    if (missingTransitions.length > 0)
-        failing.push(
-            `${missingTransitions.length} changes of state are cited by no criterion, for example ${missingTransitions[0]?.entityName} to "${missingTransitions[0]?.to}"`,
+        const unbuilt = [...facts.rules.values()].filter((rule) => !built.has(rule.id));
+        if (unbuilt.length > 0)
+            failing.push(
+                `${unbuilt.length} rules are built by no story, for example "${short(unbuilt[0]?.says ?? "")}"`,
+            );
+        const citedTransitions = new Set(
+            stories.flatMap((s) =>
+                s.criteria.flatMap((c) => c.from.flatMap((r) => (r._tag === "transition" ? [r.id as string] : []))),
+            ),
         );
+        const missingTransitions = facts.transitions.filter((t) => !citedTransitions.has(t.id));
+        if (missingTransitions.length > 0)
+            failing.push(
+                `${missingTransitions.length} changes of state are cited by no criterion, for example ${missingTransitions[0]?.entityName} to "${missingTransitions[0]?.to}"`,
+            );
+    }
 
     // Reader text: functional stories for the product owner, technical stories for a developer.
     for (const view of plan.stories) {

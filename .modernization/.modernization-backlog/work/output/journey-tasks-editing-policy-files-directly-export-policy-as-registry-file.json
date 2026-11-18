@@ -1,0 +1,161 @@
+{
+ "stories": [
+  {
+   "title": "Export a policy source as a registry settings file",
+   "what": "A person names a file and the system exports the policy source being edited, or just the selected branch of it, as a registry settings file. The branch and the prefix are proposed from what is being edited and can be changed. The person is told whether the export worked.",
+   "why": "People can carry the settings they edited to machines and tools that read registry settings files, naming only the file in the usual case.",
+   "actions": [
+    "block-00156606002660817029",
+    "block-60201373498704616545",
+    "block-04644155608109103956",
+    "block-37048128904866618877",
+    "block-25624747884727551547"
+   ],
+   "terms": [
+    {
+     "name": "Registry settings file",
+     "means": "A text file of registry keys and values that can be imported on a machine; it is not the binary policy file the person edits."
+    },
+    {
+     "name": "Export branch",
+     "means": "The part of the policy source that is exported, starting from a key; it is not the whole file unless left empty."
+    },
+    {
+     "name": "Registry prefix",
+     "means": "The root name written in front of each exported key, such as the current-user or local-machine root; it is not the branch."
+    }
+   ],
+   "journey": {
+    "name": "Export what is selected",
+    "steps": [
+     "Say where to write the exported settings; the branch and prefix are already filled in.",
+     "Change the branch or prefix only if the proposed one is not wanted.",
+     "Receive the settings file and be told it worked, or back out."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the export dialog opens, when it shows its proposals, then the prefix is the current-user root if the user policy source is being edited and the local-machine root otherwise, the branch is the selected key (empty when nothing is selected), and the person can type over either and the text is used as typed; an empty branch exports the whole policy file.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-04261341694819838767"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-60632388568264259103"
+      }
+     ]
+    },
+    {
+     "says": "Given no file name is given, when the person asks to export, then the export is refused and they are told \"Please specify a filename and path for the exported REG.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-98458070891453225274"
+      }
+     ]
+    },
+    {
+     "says": "Given a branch ending in a backslash is typed, when the export runs, then the trailing backslash is removed before the branch is used.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-38615217867457911992"
+      }
+     ]
+    },
+    {
+     "says": "Given the source is backed by a policy file, when it is exported, then the file is used as it is.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-62577216252619197563"
+      }
+     ]
+    },
+    {
+     "says": "Given the source is backed by the registry (a chosen registry key or a loaded user hive file), when it is exported, then it is rebuilt as a new policy file from the three policy locations of the machine: the policies, the current-version policies and the current-control-set policies.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-62577216252619197563"
+      }
+     ]
+    },
+    {
+     "says": "Given a registry-backed source, when the policy file is rebuilt, then every value and sub-key under each of the three locations is copied with its own data type and environment variables are left unexpanded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-50297867320833369013"
+      }
+     ]
+    },
+    {
+     "says": "Given keys are marked for removal and values for deletion, when the file is written, then a removed key has a leading minus sign and a deleted value is a bare minus sign.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-57163770116853325546"
+      }
+     ]
+    },
+    {
+     "says": "Given a value with the default name, when the file is written, then it is shown as an at sign; quotes and backslashes in names and text are escaped.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-78788630170323770129"
+      }
+     ]
+    },
+    {
+     "says": "Given values to write, when the file is written, then text is quoted, a 32-bit number is eight hexadecimal digits marked as a number, and any other type (including a 64-bit number, expandable text or multiple strings) is a series of hexadecimal byte values labelled with its type number, except plain binary which has no type number.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-78788630170323770129"
+      }
+     ]
+    },
+    {
+     "says": "Given a line that would run past the 78th character, when the file is written, then it is broken before that point and each broken line ends with a backslash.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-78788630170323770129"
+      }
+     ]
+    },
+    {
+     "says": "Given the file is written, when the export ends, then the person is told \"REG exported successfully.\" and the dialog closes; on any failure they are told only \"Failed to export REG!\" and the dialog stays open so they can retry.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-14603482078338141941"
+      }
+     ]
+    },
+    {
+     "says": "Given the dialog is open, when the person presses Escape, then the dialog closes as cancelled. This rests only on the action that closes the dialog as cancelled; no rule states what is or is not written.",
+     "from": []
+    }
+   ],
+   "steps": [
+    "tasks-editing-policy-files-directly.export-policy-as-registry-file:export-what-is-selected#1",
+    "tasks-editing-policy-files-directly.export-policy-as-registry-file:export-what-is-selected#2",
+    "tasks-editing-policy-files-directly.export-policy-as-registry-file:export-what-is-selected#3"
+   ],
+   "components": [
+    "Export Branch Defaults",
+    "Export Source Preparer",
+    "Registry Script Writer"
+   ],
+   "open": [
+    "What should happen when one of the three policy locations does not exist in the registry, given today the copy stops with an unhandled error?",
+    "When the person presses Escape and the dialog closes as cancelled, is anything written to the chosen file?"
+   ]
+  }
+ ]
+}

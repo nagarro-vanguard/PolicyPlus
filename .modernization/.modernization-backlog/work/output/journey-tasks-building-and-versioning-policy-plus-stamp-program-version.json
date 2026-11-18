@@ -1,0 +1,75 @@
+{
+  "stories": [
+    {
+      "title": "Stamp every built copy with the version of its code",
+      "what": "When someone runs the build script or the release workflow does, the version is worked out from the code and recorded as a value the Policy Plus API reports, instead of in a generated source file.",
+      "why": "People can tell which code a copy came from without anyone keeping a version file up to date.",
+      "actions": [
+        "block-46722061090424791745"
+      ],
+      "terms": [
+        {
+          "name": "Program version",
+          "means": "The text git gives for the current commit: a tag, commit count and short commit name when tags exist, a short commit name otherwise; it is not the Windows file version or a release name."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given the code has tags, when the build script runs, then the version is the tag, the commit count and the short commit name that git gives for the current commit.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-5"
+            }
+          ]
+        },
+        {
+          "says": "Given the code has no tags, when the build script runs, then the version is the short commit name that git gives for the current commit.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-5"
+            }
+          ]
+        },
+        {
+          "says": "Given someone runs the build script or the release workflow runs it, when it runs, then the version is worked out from the current commit at that moment.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-5"
+            }
+          ]
+        },
+        {
+          "says": "Given the build script has run, when it finishes, then the version is held as a build-time value rather than written into a generated version source file.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-5"
+            }
+          ]
+        },
+        {
+          "says": "Given the version has been recorded, when the API is asked for its version, then it reports that recorded value.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-5"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        "tasks-building-and-versioning-policy-plus.stamp-program-version:every-build-stamps-itself#1",
+        "tasks-building-and-versioning-policy-plus.stamp-program-version:every-build-stamps-itself#2"
+      ],
+      "components": [],
+      "open": [
+        "Should the committed code keep any version value, since the old rule says the committed file holds an empty version but the decision drops the generated file?",
+        "When the code is exactly at a tag, is the version the tag alone, as git reports it?",
+        "Is the build script run automatically with every build, or only when someone or the release workflow runs it?"
+      ]
+    }
+  ]
+}

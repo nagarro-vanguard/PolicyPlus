@@ -1,0 +1,70 @@
+{
+ "stories": [
+  {
+   "title": "Pick a user profile to use as the policy source",
+   "what": "A person choosing a user policy source confirms one user profile and gets back the location of that profile's stored settings. They can also leave without choosing.",
+   "why": "Most people edit their own profile, so the common case needs one confirmation and no searching, while leaving is always possible.",
+   "actions": [
+    "block-81482853098029816247",
+    "block-77449854280048805872"
+   ],
+   "terms": [
+    {
+     "name": "User profile",
+     "means": "A person's own stored settings on the computer, which can serve as the user policy source; not the machine-wide policy settings."
+    },
+    {
+     "name": "Profile settings file",
+     "means": "The file holding a user profile's stored settings, whose location is returned once a profile is chosen; not the policy source itself."
+    }
+   ],
+   "journey": {
+    "name": "Start from my own profile",
+    "steps": [
+     "Accept or replace the proposed profile",
+     "Leave without choosing"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the choice of a user profile is open, when the person confirms with no profile selected, then nothing happens.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-02848405191150173128"
+      }
+     ]
+    },
+    {
+     "says": "Given the choice of a user profile is open and a profile is selected, when the person confirms, then the choice closes as accepted and returns the location of that profile's settings file.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-02848405191150173128"
+      }
+     ]
+    },
+    {
+     "says": "Given the choice of a user profile is open, when the person presses Escape, then the choice closes as cancelled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-37850254215893887157"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#1",
+    "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#2"
+   ],
+   "components": [
+    "User Profile Pick"
+   ],
+   "open": [
+    "Should the person's own profile be proposed first and the other profiles on the computer be listed, with whether each can be opened now, as the old dialog did? No rule states this.",
+    "Should leaving without choosing leave the current policy source unchanged? No rule states this beyond the choice closing as cancelled."
+   ]
+  }
+ ]
+}

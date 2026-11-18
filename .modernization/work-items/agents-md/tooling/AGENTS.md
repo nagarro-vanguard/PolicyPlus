@@ -1,9 +1,11 @@
-# Tooling: the shared TypeScript, ESLint, Prettier, knip, markdownlint, commitlint and lefthook configuration every layer extends, on Bun and Turborepo
+# Tooling: the shared ESLint, Prettier, knip, markdownlint, commitlint and lefthook configuration
 
-Stack: language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps; checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook.
+Stack: checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook.
 
-- Shared configuration is extended by each layer and not copied; changing a rule happens here only.
+- Layers extend the shared configs here and add no local lint or format rules; a rule change is made here once.
+- Commits follow conventional commits and lefthook runs lint, format and the affected layers' checks before commit; skipping hooks is not allowed.
+- knip must pass with no unused files, exports or dependencies in any layer.
 
 ## Verify
 
-- `bun run lint && bun run typecheck`
+- `bunx eslint . && bunx prettier --check . && bunx knip`

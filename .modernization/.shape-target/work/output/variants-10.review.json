@@ -1,0 +1,25 @@
+{
+  "read": 14,
+  "challenges": [
+    {
+      "record": 1,
+      "says": "The variant reaches every category and policy only through typed words, so the outcome of moving through the tree and reading what each is for is no longer possible without knowing what to search for, and word search is the separate finding-policies task rather than browsing."
+    },
+    {
+      "record": 5,
+      "says": "It promises to flag each gap, but a policy with no support code is shown blank by the legacy rule (businessrule-59317523370985833904), so that gap is not flagged and the sentence contradicts the rule it honours."
+    },
+    {
+      "record": 7,
+      "says": "Showing the full parent chain and the policies a category holds is new behaviour, yet its steps are linked as legacy 'inferred' with the single parent-name rule, when they should be marked new."
+    },
+    {
+      "record": 11,
+      "says": "Narrowing support definitions by the product they cover and showing which products a definition covers is a reverse lookup the old system lacks, but the step is linked as legacy 'inferred' keeping the name-filter rule, and nothing states how coverage is worked out."
+    },
+    {
+      "record": 13,
+      "says": "The plain summary of what the policy stores is new content derived by the system, not in the legacy words, yet it is linked as legacy 'inferred' and cites only the registry-value and client-extension rules, hiding that it adds a capability."
+    }
+  ]
+}

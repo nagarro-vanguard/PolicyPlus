@@ -291,6 +291,22 @@
         "description": "One acceptance criterion."
       }
     },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The ids of the target journey steps this story delivers; for a story of a confirmed target only."
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The names of the target components this story builds; for a story of a confirmed target only."
+    },
     "open": {
       "type": "array",
       "items": {

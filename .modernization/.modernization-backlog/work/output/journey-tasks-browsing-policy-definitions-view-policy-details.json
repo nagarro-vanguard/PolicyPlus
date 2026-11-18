@@ -1,0 +1,133 @@
+{
+ "stories": [
+  {
+   "title": "See a policy's section, category and support at a glance",
+   "what": "Opening a policy shows, in one view, the section it applies to, the category it sits in and the support definition it is supported on, with gaps flagged up front. From there the person can go to the category or the support definition it names.",
+   "why": "People see what a policy is, where it sits and what it is supported on without searching, and problems such as an orphaned category or missing support are visible immediately.",
+   "actions": [
+    "block-78252692403653225370",
+    "block-92180322422063221145",
+    "block-42055154505610373837"
+   ],
+   "terms": [
+    {
+     "name": "Orphaned policy",
+     "means": "A policy whose named category does not exist in the loaded definitions; it is not the same as an uncategorized policy, which names no category at all."
+    },
+    {
+     "name": "Missing support",
+     "means": "A policy that names a support definition which is not in the loaded definitions; it is not the same as a policy with no support named."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a policy that applies to both users and computers, when the person opens it, then the section shows \"User or computer\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-89677004946923202726"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy that applies to computers only, when the person opens it, then the section shows \"Computer\"; given one for users only, then it shows \"User\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-89677004946923202726"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy in a category that exists, when the person opens it, then the category name is shown and the button to open that category's details is enabled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-30888155476627040275"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy whose named category does not exist, when the person opens it, then the category reads \"<orphaned from \" followed by that category code and the category-details button is disabled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-30888155476627040275"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy with no category code, when the person opens it, then the category reads \"<uncategorized>\" and the category-details button is disabled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-30888155476627040275"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy naming a support definition that exists, when the person opens it, then the support definition's name is shown and the support-details button is enabled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59317523370985833904"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy naming a support definition that does not exist, when the person opens it, then the support text reads \"<missing: \" followed by the code the policy names and the support-details button is disabled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59317523370985833904"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy that names no support definition, when the person opens it, then the support text is blank.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59317523370985833904"
+      }
+     ]
+    },
+    {
+     "says": "Given the policy view with an existing category, when the person chooses the category-details button, then the details of that category open.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-30888155476627040275"
+      }
+     ]
+    },
+    {
+     "says": "Given the policy view with an existing support definition, when the person chooses the support-details button, then the details of that support definition open.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59317523370985833904"
+      }
+     ]
+    }
+   ],
+   "journey": {
+    "name": "Everything at a glance",
+    "steps": [
+     "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#1",
+     "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#2"
+    ]
+   },
+   "steps": [
+    "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#1",
+    "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#2"
+   ],
+   "components": [
+    "Policy details presenter"
+   ],
+   "open": [
+    "The rules do not say whether the support-details button is enabled or disabled when a policy names no support definition; which should it be?"
+   ]
+  }
+ ]
+}

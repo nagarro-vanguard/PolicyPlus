@@ -1,0 +1,1056 @@
+{
+ "journeys": [
+  {
+   "task": "tasks-using-the-product.open-the-workspace",
+   "actor": "person",
+   "name": "Resume where I left off",
+   "strategy": "task first",
+   "idea": "Everything the person last worked with is brought back in the order they care about, and anything wrong is reported once, in one place.",
+   "tradeoff": "The person waits for all sources and the definitions to be ready before the first view appears.",
+   "recommended": "Keeps every rule, removes the scattered notices by reporting the state of the workspace once, and is the simplest to explain: what you left is what you get.",
+   "steps": [
+    {
+     "intent": "Have my preferences remembered",
+     "system": "Recovers the remembered preferences; when they cannot be kept, carries on with defaults and does not stop the person.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-25353365313977612083",
+      "businessrule-15364695696024462204"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "kept",
+      "reason": "Preferences are the base for everything that follows and keep their quiet fallback.",
+      "keeps": [
+       "businessrule-25353365313977612083",
+       "businessrule-15364695696024462204"
+      ]
+     }
+    },
+    {
+     "intent": "Get back to the policy sources I used last",
+     "system": "Reopens the remembered user and computer sources, or the local Group Policy on first start; closes any sources already open, works out each source's location and whether it can be saved, and falls back to the defaults with a notice when the remembered ones cannot be reached.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-27578488339642782673",
+      "businessrule-83248377690419919134",
+      "businessrule-83542226215682203251",
+      "businessrule-72559528436656832979",
+      "businessrule-49395771262191850050",
+      "businessrule-79173574861552738237",
+      "businessrule-50808386816006011599",
+      "businessrule-51029550915449645879",
+      "businessrule-74412475215137182202",
+      "businessrule-06218920206107794280",
+      "businessrule-84284160770896952745",
+      "businessrule-35899140497190862562",
+      "businessrule-29585332630928853779",
+      "businessrule-39262656033285451423",
+      "businessrule-67456626752221980743",
+      "businessrule-51554818045857630746",
+      "businessrule-75428533810997783570",
+      "businessrule-77499382636897144286",
+      "businessrule-34447675520768722859",
+      "businessrule-95699184013424603885"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "merged",
+      "reason": "Choosing, opening and checking the sources is one outcome, so it is one step with no questions.",
+      "keeps": [
+       "businessrule-27578488339642782673",
+       "businessrule-83248377690419919134",
+       "businessrule-83542226215682203251",
+       "businessrule-72559528436656832979",
+       "businessrule-49395771262191850050",
+       "businessrule-79173574861552738237",
+       "businessrule-50808386816006011599",
+       "businessrule-51029550915449645879",
+       "businessrule-74412475215137182202",
+       "businessrule-06218920206107794280",
+       "businessrule-84284160770896952745",
+       "businessrule-35899140497190862562",
+       "businessrule-29585332630928853779",
+       "businessrule-39262656033285451423",
+       "businessrule-67456626752221980743",
+       "businessrule-51554818045857630746",
+       "businessrule-75428533810997783570",
+       "businessrule-77499382636897144286",
+       "businessrule-34447675520768722859",
+       "businessrule-95699184013424603885"
+      ]
+     }
+    },
+    {
+     "intent": "Get the policy definitions I last used",
+     "system": "Loads the definitions from the remembered folder, or the system default, and offers the default when the remembered folder fails; when the problems found are minor, asks whether to keep the partly loaded set.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190",
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-40551856488084894130",
+      "businessrule-41547680626150552574",
+      "businessrule-58877134447436981389",
+      "businessrule-72200124994498270380",
+      "businessrule-78253526822536661517"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "kept",
+      "reason": "Definitions decide what can be browsed, so they are loaded before anything is shown.",
+      "keeps": [
+       "businessrule-40551856488084894130",
+       "businessrule-41547680626150552574",
+       "businessrule-58877134447436981389",
+       "businessrule-72200124994498270380",
+       "businessrule-78253526822536661517"
+      ]
+     }
+    },
+    {
+     "intent": "Have my policy comments alongside",
+     "system": "Finds the comments that belong to each source; a source whose comments cannot be read simply has none.",
+     "confidence": "sure",
+     "touches": [
+      "entity-52418278656387992812"
+     ],
+     "honours": [
+      "businessrule-62563112935081932578",
+      "businessrule-76710184957379543464",
+      "businessrule-31889487085995982343",
+      "businessrule-93571958636080198306"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "split",
+      "reason": "Comments are separate from the sources and their failure no longer hides inside the sources step.",
+      "keeps": [
+       "businessrule-62563112935081932578",
+       "businessrule-76710184957379543464",
+       "businessrule-31889487085995982343",
+       "businessrule-93571958636080198306"
+      ]
+     }
+    },
+    {
+     "intent": "Know whether the workspace is ready to change",
+     "system": "States once which sources can be fully changed and which can only be viewed or kept in memory, and names the sources; says nothing beyond the notice when everything is writable.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-73847809349842629987",
+      "businessrule-98025569949322378254"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "merged",
+      "reason": "One summary replaces separate notices per source.",
+      "keeps": [
+       "businessrule-73847809349842629987",
+       "businessrule-98025569949322378254"
+      ]
+     }
+    },
+    {
+     "intent": "Browse everything",
+     "system": "Shows the categories with user and computer policies together.",
+     "confidence": "sure",
+     "touches": [
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-85204901615179220846"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "kept",
+      "reason": "Starting on the broadest view means nothing is hidden at first.",
+      "keeps": [
+       "businessrule-85204901615179220846"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-using-the-product.open-the-workspace",
+   "actor": "person",
+   "name": "Open now, settle in the background",
+   "strategy": "automate first",
+   "idea": "The person can browse the definitions at once while sources and comments are opened, checked and reported as they become ready.",
+   "tradeoff": "Changing policy has to wait until the sources are confirmed, so the person may start browsing before they can edit.",
+   "steps": [
+    {
+     "intent": "Browse the policy definitions immediately",
+     "system": "Recovers preferences (continuing with defaults if they cannot be kept), loads the definitions from the remembered folder or the system default, and shows all categories of user and computer policy.",
+     "confidence": "inferred",
+     "touches": [
+      "entity-40163170707735391190",
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-25353365313977612083",
+      "businessrule-15364695696024462204",
+      "businessrule-85204901615179220846",
+      "businessrule-40551856488084894130",
+      "businessrule-41547680626150552574",
+      "businessrule-58877134447436981389",
+      "businessrule-72200124994498270380",
+      "businessrule-78253526822536661517"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "reordered",
+      "reason": "Definitions are the one thing browsing needs, so they come first.",
+      "keeps": [
+       "businessrule-25353365313977612083",
+       "businessrule-15364695696024462204",
+       "businessrule-85204901615179220846",
+       "businessrule-40551856488084894130",
+       "businessrule-41547680626150552574",
+       "businessrule-58877134447436981389",
+       "businessrule-72200124994498270380",
+       "businessrule-78253526822536661517"
+      ]
+     }
+    },
+    {
+     "intent": "Have my sources ready without asking",
+     "system": "In the background, reopens the remembered sources, works out their locations and whether they can be saved, and uses the defaults with a notice if the remembered ones cannot be reached.",
+     "confidence": "inferred",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-27578488339642782673",
+      "businessrule-83248377690419919134",
+      "businessrule-83542226215682203251",
+      "businessrule-72559528436656832979",
+      "businessrule-49395771262191850050",
+      "businessrule-79173574861552738237",
+      "businessrule-50808386816006011599",
+      "businessrule-51029550915449645879",
+      "businessrule-74412475215137182202",
+      "businessrule-06218920206107794280",
+      "businessrule-84284160770896952745",
+      "businessrule-35899140497190862562",
+      "businessrule-29585332630928853779",
+      "businessrule-39262656033285451423",
+      "businessrule-67456626752221980743",
+      "businessrule-51554818045857630746",
+      "businessrule-75428533810997783570",
+      "businessrule-77499382636897144286",
+      "businessrule-34447675520768722859",
+      "businessrule-95699184013424603885"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "inferred",
+      "reason": "The system already knows what was used last, so the person is not asked.",
+      "keeps": [
+       "businessrule-27578488339642782673",
+       "businessrule-83248377690419919134",
+       "businessrule-83542226215682203251",
+       "businessrule-72559528436656832979",
+       "businessrule-49395771262191850050",
+       "businessrule-79173574861552738237",
+       "businessrule-50808386816006011599",
+       "businessrule-51029550915449645879",
+       "businessrule-74412475215137182202",
+       "businessrule-06218920206107794280",
+       "businessrule-84284160770896952745",
+       "businessrule-35899140497190862562",
+       "businessrule-29585332630928853779",
+       "businessrule-39262656033285451423",
+       "businessrule-67456626752221980743",
+       "businessrule-51554818045857630746",
+       "businessrule-75428533810997783570",
+       "businessrule-77499382636897144286",
+       "businessrule-34447675520768722859",
+       "businessrule-95699184013424603885"
+      ]
+     }
+    },
+    {
+     "intent": "See my comments when I open a policy",
+     "system": "Finds comments for the sources only when a policy with comments is first needed; unreadable comment files leave that source without comments.",
+     "confidence": "inferred",
+     "touches": [
+      "entity-52418278656387992812"
+     ],
+     "honours": [
+      "businessrule-62563112935081932578",
+      "businessrule-76710184957379543464",
+      "businessrule-31889487085995982343",
+      "businessrule-93571958636080198306"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "deferred",
+      "reason": "Comments are not needed to browse, so reading them is put off.",
+      "keeps": [
+       "businessrule-62563112935081932578",
+       "businessrule-76710184957379543464",
+       "businessrule-31889487085995982343",
+       "businessrule-93571958636080198306"
+      ]
+     }
+    },
+    {
+     "intent": "Be told what I cannot yet change",
+     "system": "Shows, as soon as the sources are open, which can be fully changed and which not.",
+     "confidence": "inferred",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-73847809349842629987",
+      "businessrule-98025569949322378254"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-92411706700308938260"
+      ],
+      "change": "merged",
+      "reason": "A state that appears when it becomes known replaces a notice at start.",
+      "keeps": [
+       "businessrule-73847809349842629987",
+       "businessrule-98025569949322378254"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-using-the-product.set-definition-language",
+   "actor": "person",
+   "name": "Name the language, then reload",
+   "strategy": "task first",
+   "idea": "The person states the language, the system checks it is well formed and changed, saves it, and offers to apply it now.",
+   "tradeoff": "The person still has to know the code of the language.",
+   "recommended": "Smallest change that keeps every rule while making the apply-now choice part of the same moment.",
+   "steps": [
+    {
+     "intent": "Say which language the definition text should use",
+     "system": "Checks the language is two parts around a hyphen and refuses it with a plain message otherwise; closes without change when it equals the language already stored.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-31456964891379452251",
+      "businessrule-93543924991745555552"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-04864433854821115058",
+       "block-14667094343185527716"
+      ],
+      "change": "merged",
+      "reason": "Entry and checking are one request.",
+      "keeps": [
+       "businessrule-31456964891379452251",
+       "businessrule-93543924991745555552"
+      ]
+     }
+    },
+    {
+     "intent": "Have the language remembered and applied",
+     "system": "Saves the language at once and asks whether to reload the workspace now; if yes, clears it and reloads the definitions from the saved folder, otherwise it applies at the next load.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190",
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-80947080049413275464"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-04864433854821115058",
+       "block-14667094343185527716"
+      ],
+      "change": "kept",
+      "reason": "The person decides when the cost of reloading is paid.",
+      "keeps": [
+       "businessrule-80947080049413275464"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-using-the-product.set-definition-language",
+   "actor": "person",
+   "name": "Pick from the languages I have",
+   "strategy": "automate first",
+   "idea": "The system shows the languages it finds among the installed definitions, preselects the current one, and applies the choice after confirmation.",
+   "tradeoff": "A language whose files are not installed must be entered by hand, which keeps the free entry path alive.",
+   "steps": [
+    {
+     "intent": "Choose a language from those available",
+     "system": "Lists languages the installed definitions carry, marks the current one, and still accepts a typed language; refuses a typed language not made of two parts around a hyphen; picking the current one changes nothing.",
+     "confidence": "inferred",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-31456964891379452251",
+      "businessrule-93543924991745555552"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-04864433854821115058",
+       "block-14667094343185527716"
+      ],
+      "change": "inferred",
+      "reason": "Offering the known languages saves knowing codes and prevents typos.",
+      "keeps": [
+       "businessrule-31456964891379452251",
+       "businessrule-93543924991745555552"
+      ]
+     }
+    },
+    {
+     "intent": "Apply it",
+     "system": "Saves the language, then offers to reload now or at the next load.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190",
+      "entity-92808062881922645840"
+     ],
+     "honours": [
+      "businessrule-80947080049413275464"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-04864433854821115058",
+       "block-14667094343185527716"
+      ],
+      "change": "kept",
+      "reason": "Same moment for choice and result, with the person's say on reloading.",
+      "keeps": [
+       "businessrule-80947080049413275464"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-using-the-product.leave-the-program",
+   "actor": "person",
+   "name": "Leave and let go",
+   "strategy": "task first",
+   "idea": "Leaving releases every source on its own and says so only when something could not be released.",
+   "tradeoff": "Nothing is offered to the person when a resource is busy beyond the notice.",
+   "recommended": "Matches the outcome exactly: leave, with everything released and nothing to do in the normal case.",
+   "steps": [
+    {
+     "intent": "Finish and leave",
+     "system": "Releases each open source, unloading any mounted user hive, and ends the work.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-46972642019161394212"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07512317177811313080",
+       "block-64319035576012171282"
+      ],
+      "change": "merged",
+      "reason": "Cleaning up and closing are one leaving, not two.",
+      "keeps": [
+       "businessrule-46972642019161394212"
+      ]
+     }
+    },
+    {
+     "intent": "Know if anything was left open",
+     "system": "Tells the person when resources are still open in other programs.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-59631775004799082543"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07512317177811313080",
+       "block-64319035576012171282"
+      ],
+      "change": "kept",
+      "reason": "Silent on success, specific on failure.",
+      "keeps": [
+       "businessrule-59631775004799082543"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-using-the-product.leave-the-program",
+   "actor": "person",
+   "name": "Leave with a retry",
+   "strategy": "guided",
+   "idea": "If a source cannot be released, the person is shown which and chooses to retry or leave anyway.",
+   "tradeoff": "An extra decision in a rare case, and the person may be kept from leaving.",
+   "steps": [
+    {
+     "intent": "Ask to leave",
+     "system": "Releases each open source, unloading any mounted user hive, and records which succeeded.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-46972642019161394212"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07512317177811313080",
+       "block-64319035576012171282"
+      ],
+      "change": "kept",
+      "reason": "Same cleanup.",
+      "keeps": [
+       "businessrule-46972642019161394212"
+      ]
+     }
+    },
+    {
+     "intent": "Decide what to do about anything still held",
+     "system": "Tells the person that resources are still open in other programs and which; lets them retry or leave anyway.",
+     "confidence": "inferred",
+     "touches": [],
+     "honours": [
+      "businessrule-59631775004799082543"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07512317177811313080",
+       "block-64319035576012171282"
+      ],
+      "change": "split",
+      "reason": "A held source is a real decision the old notice gave no way to act on.",
+      "keeps": [
+       "businessrule-59631775004799082543"
+      ]
+     }
+    },
+    {
+     "intent": "Leave",
+     "system": "Ends the work.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-46972642019161394212"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07512317177811313080",
+       "block-64319035576012171282"
+      ],
+      "change": "kept",
+      "reason": "The program ends once the person has decided.",
+      "keeps": []
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-using-the-product.see-about-information",
+   "actor": "person",
+   "name": "Ask who and which version",
+   "strategy": "task first",
+   "idea": "On request the person sees the author, the address and, when known, the version.",
+   "tradeoff": "The version is only seen when asked for.",
+   "recommended": "Enough for a one-fact task; nothing is added that the person did not ask for.",
+   "steps": [
+    {
+     "intent": "Find out who made this and which version I have",
+     "system": "Shows the author and the project address, and the version only when a version was built into the program.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-59853527376948406586"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07316532942246428672"
+      ],
+      "change": "kept",
+      "reason": "Already a single step.",
+      "keeps": [
+       "businessrule-59853527376948406586"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-using-the-product.see-about-information",
+   "actor": "person",
+   "name": "Version always in sight",
+   "strategy": "automate first",
+   "idea": "The version is shown wherever the person is working, with the author and address a step away.",
+   "tradeoff": "Takes a little room on the main view all the time.",
+   "steps": [
+    {
+     "intent": "See which version I am using without asking",
+     "system": "Shows the version beside the person's work when a version was built into the program.",
+     "confidence": "inferred",
+     "touches": [],
+     "honours": [
+      "businessrule-59853527376948406586"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07316532942246428672"
+      ],
+      "change": "defaulted",
+      "reason": "Support questions start with the version, so it need not be requested.",
+      "keeps": [
+       "businessrule-59853527376948406586"
+      ]
+     }
+    },
+    {
+     "intent": "Learn more about the maker",
+     "system": "Shows the author and project address.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-59853527376948406586"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07316532942246428672"
+      ],
+      "change": "split",
+      "reason": "Author details are needed rarely.",
+      "keeps": []
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-choosing-and-saving-policy-sources.choose-policy-sources",
+   "actor": "person",
+   "name": "Say where each side lives",
+   "strategy": "task first",
+   "idea": "The person states the home of the user policies and of the computer policies, giving details only for the kinds that need them, and the system opens both.",
+   "tradeoff": "Both choices are made together, so a failure on one side blocks the other until it is fixed.",
+   "recommended": "Closest to the outcome: decide the two homes and begin, with the system asking for nothing that the choice does not need.",
+   "steps": [
+    {
+     "intent": "Say where the user policies are kept",
+     "system": "Offers local files, the system settings store, a policy file, a particular user's policy or a user profile, or an empty scratch space; asks for the detail only for the kind chosen and accepts only policy files of the right type, including one not yet created.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-34260437212150300999",
+      "businessrule-60819102502476341284"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07013931817450395539",
+       "block-07841055713983147509",
+       "block-18882497527396093425",
+       "block-22676943268795169202",
+       "block-16593836685470314086",
+       "block-43495097990247728689"
+      ],
+      "change": "merged",
+      "reason": "Choice and its detail are one request, shown only when relevant.",
+      "keeps": [
+       "businessrule-34260437212150300999",
+       "businessrule-60819102502476341284"
+      ]
+     }
+    },
+    {
+     "intent": "Say where the computer policies are kept",
+     "system": "Same, for the computer side, without the per-user kinds.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-58680491450946971024"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07013931817450395539",
+       "block-07841055713983147509",
+       "block-18882497527396093425",
+       "block-22676943268795169202",
+       "block-16593836685470314086",
+       "block-43495097990247728689"
+      ],
+      "change": "merged",
+      "reason": "Same shape as the user side.",
+      "keeps": [
+       "businessrule-58680491450946971024"
+      ]
+     }
+    },
+    {
+     "intent": "Name the user whose own policy object is used, if I chose that",
+     "system": "Hands over to naming a user and returns that user's SID.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-34260437212150300999"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07013931817450395539",
+       "block-07841055713983147509",
+       "block-18882497527396093425",
+       "block-22676943268795169202",
+       "block-16593836685470314086",
+       "block-43495097990247728689"
+      ],
+      "change": "kept",
+      "reason": "A per-user policy needs a named user.",
+      "keeps": []
+     }
+    },
+    {
+     "intent": "Confirm and start working",
+     "system": "Creates both sources; if either cannot be created, says which and why and stays open; otherwise opens them, shows the outcome, and moves to the nearest visible category.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190",
+      "entity-99683518011128701149"
+     ],
+     "honours": [
+      "businessrule-36363277387876573326",
+      "businessrule-75533700456390778594",
+      "businessrule-10464012301936997836",
+      "businessrule-84588009124214109370"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-52519148395305522333",
+       "block-53684119065030568086"
+      ],
+      "change": "merged",
+      "reason": "Creating and opening happen when the person confirms, with one report.",
+      "keeps": [
+       "businessrule-36363277387876573326",
+       "businessrule-75533700456390778594",
+       "businessrule-10464012301936997836",
+       "businessrule-84588009124214109370"
+      ]
+     }
+    },
+    {
+     "intent": "Change my mind",
+     "system": "Leaves everything as it was.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-66851330016699676430"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-39062072014858771500"
+      ],
+      "change": "kept",
+      "reason": "Cancelling is always free.",
+      "keeps": [
+       "businessrule-66851330016699676430"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-choosing-and-saving-policy-sources.choose-policy-sources",
+   "actor": "person",
+   "name": "Accept what is proposed",
+   "strategy": "automate first",
+   "idea": "The system proposes the remembered sources, checks they can be opened, and the person only changes a side that is wrong.",
+   "tradeoff": "People who always want something different pay one extra look.",
+   "steps": [
+    {
+     "intent": "See the sources I would be working against",
+     "system": "Shows the remembered user and computer sources, or local Group Policy first time, with a note whether each can be opened and changed.",
+     "confidence": "inferred",
+     "touches": [
+      "entity-40163170707735391190"
+     ],
+     "honours": [
+      "businessrule-34260437212150300999",
+      "businessrule-58680491450946971024"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-52519148395305522333"
+      ],
+      "change": "defaulted",
+      "reason": "Most visits want the same sources.",
+      "keeps": [
+       "businessrule-34260437212150300999",
+       "businessrule-58680491450946971024"
+      ]
+     }
+    },
+    {
+     "intent": "Change one side only if it is wrong",
+     "system": "For the side to change, offers the same kinds as today, asking the detail only for the kind chosen, including a policy file that does not exist yet and a named user's policy or user profile.",
+     "confidence": "inferred",
+     "touches": [],
+     "honours": [
+      "businessrule-60819102502476341284"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-07013931817450395539",
+       "block-07841055713983147509",
+       "block-18882497527396093425",
+       "block-22676943268795169202",
+       "block-16593836685470314086",
+       "block-43495097990247728689"
+      ],
+      "change": "deferred",
+      "reason": "Detail is asked only for the side that changes.",
+      "keeps": [
+       "businessrule-60819102502476341284"
+      ]
+     }
+    },
+    {
+     "intent": "Go ahead",
+     "system": "Creates and opens both sources; says which failed and why when not possible, then shows the result and the nearest visible category.",
+     "confidence": "sure",
+     "touches": [
+      "entity-40163170707735391190",
+      "entity-99683518011128701149"
+     ],
+     "honours": [
+      "businessrule-36363277387876573326",
+      "businessrule-75533700456390778594",
+      "businessrule-10464012301936997836",
+      "businessrule-84588009124214109370"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-53684119065030568086"
+      ],
+      "change": "merged",
+      "reason": "A single confirm replaces separate acceptance and opening.",
+      "keeps": [
+       "businessrule-36363277387876573326",
+       "businessrule-75533700456390778594",
+       "businessrule-10464012301936997836",
+       "businessrule-84588009124214109370"
+      ]
+     }
+    },
+    {
+     "intent": "Back out",
+     "system": "Leaves everything as it was.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-66851330016699676430"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-39062072014858771500"
+      ],
+      "change": "kept",
+      "reason": "Cancelling is always free.",
+      "keeps": [
+       "businessrule-66851330016699676430"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-choosing-and-saving-policy-sources.identify-user-for-policy",
+   "actor": "person",
+   "name": "Give a name or an identifier",
+   "strategy": "task first",
+   "idea": "One entry for either a user name or an identifier; the system works out which it is, translates a name itself and confirms the account in one go.",
+   "tradeoff": "Relies on the directory being reachable to turn names into identifiers.",
+   "recommended": "Collapses look-up, check and confirmation into one request while keeping every message the person can meet.",
+   "steps": [
+    {
+     "intent": "Say which user I mean",
+     "system": "Takes a name or a security identifier; a name is translated at once and the person is told when it cannot be; a valid identifier is accepted; an invalid one is refused with a message saying what to enter; leaving without choosing is always possible.",
+     "confidence": "inferred",
+     "touches": [],
+     "honours": [
+      "businessrule-91379498462935455610",
+      "businessrule-77474018484672211108",
+      "businessrule-88238619586671903040",
+      "businessrule-26724904229141688759"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-75399435004242266349",
+       "block-85480965507959714722",
+       "block-94740465332149589219"
+      ],
+      "change": "merged",
+      "reason": "Search, check and cancel need no separate steps.",
+      "keeps": [
+       "businessrule-91379498462935455610",
+       "businessrule-77474018484672211108",
+       "businessrule-88238619586671903040",
+       "businessrule-26724904229141688759"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  },
+  {
+   "task": "tasks-choosing-and-saving-policy-sources.identify-user-for-policy",
+   "actor": "person",
+   "name": "Choose from known accounts",
+   "strategy": "guided",
+   "idea": "The system offers the accounts it knows and the person picks one, with typing as the fallback.",
+   "tradeoff": "Needs the directory to list accounts, and long lists must be searched.",
+   "steps": [
+    {
+     "intent": "Pick the user from the accounts available",
+     "system": "Offers known accounts for choosing, and also accepts a typed name or identifier.",
+     "confidence": "inferred",
+     "touches": [],
+     "honours": [
+      "businessrule-91379498462935455610"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-94740465332149589219"
+      ],
+      "change": "inferred",
+      "reason": "Choosing is easier than remembering a name.",
+      "keeps": []
+     }
+    },
+    {
+     "intent": "Check the chosen user",
+     "system": "Translates a name to an identifier and tells the person when it cannot; refuses an invalid identifier with a message; stays open if no identifier results.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-91379498462935455610",
+      "businessrule-77474018484672211108",
+      "businessrule-88238619586671903040"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-85480965507959714722"
+      ],
+      "change": "kept",
+      "reason": "Same checks as today.",
+      "keeps": [
+       "businessrule-91379498462935455610",
+       "businessrule-77474018484672211108",
+       "businessrule-88238619586671903040"
+      ]
+     }
+    },
+    {
+     "intent": "Back out",
+     "system": "Leaves without choosing.",
+     "confidence": "sure",
+     "touches": [],
+     "honours": [
+      "businessrule-26724904229141688759"
+     ],
+     "link": {
+      "_tag": "legacy",
+      "from": [
+       "block-75399435004242266349"
+      ],
+      "change": "kept",
+      "reason": "Cancelling is always free.",
+      "keeps": [
+       "businessrule-26724904229141688759"
+      ]
+     }
+    }
+   ],
+   "drops": []
+  }
+ ]
+}

@@ -1,0 +1,5 @@
+{"read":1,"challenges":[
+{"record":0,"says":"The criterion about rebuilding a registry-backed source from the three policy locations cites no rule although it is the second half of businessrule-62577216252619197563 (which another criterion cites for only the policy-file half), so it is uncited without saying why."},
+{"record":0,"says":"The Escape criterion cites no rule and does not say it rests only on the action block that closes the dialog as cancelled; 'nothing is written' is an inference the action does not state."},
+{"record":0,"says":"The value-format criterion for the product owner is written in code terms ('dword:', 'hex(n)', 'column 78', trailing backslash, hex bytes) that a person who never saw the code could not follow, and it packs several rules' worth of detail into one sentence."}
+]}

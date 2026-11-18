@@ -1,0 +1,148 @@
+{
+  "components": [
+    {
+      "name": "Acquisition session",
+      "domain": "Definition Acquisition",
+      "responsibility": "Runs one acquisition from start to result: locks the start, close and destination controls while it runs, refuses leaving mid-run, reports the failed step, re-enables everything, and after success asks whether to open the definitions and reports the folder only on yes.",
+      "module": "acquisition-session",
+      "uses": [
+        "Destination chooser",
+        "Package fetcher",
+        "Package extractor",
+        "Destination access controller",
+        "Template installer"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2",
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#3"
+      ],
+      "enforces": [
+        "businessrule-19284863828429321329",
+        "businessrule-75570169794845906057",
+        "businessrule-17840470067823720423",
+        "businessrule-84139143444339961851"
+      ]
+    },
+    {
+      "name": "Destination chooser",
+      "domain": "Definition Acquisition",
+      "responsibility": "Proposes the operating system's policy definitions folder each time an acquisition opens, reports no new folder, and replaces the destination with a chosen folder while a cancelled choice changes nothing.",
+      "module": "destination-chooser",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#1",
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#4"
+      ],
+      "enforces": [
+        "businessrule-34650805596483639458",
+        "businessrule-78945520165872370051"
+      ]
+    },
+    {
+      "name": "Package fetcher",
+      "domain": "Definition Acquisition",
+      "responsibility": "Downloads the one fixed Microsoft package into a scratch folder under local application data, allowing no version choice and only the permitted secure protocols.",
+      "module": "package-fetcher",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#1"
+      ],
+      "enforces": [
+        "businessrule-53408776186716933732",
+        "businessrule-15364695696024462204"
+      ],
+      "adapts": "external-47673734579321187695"
+    },
+    {
+      "name": "Package extractor",
+      "domain": "Definition Acquisition",
+      "responsibility": "Unpacks the downloaded package with the operating system's installer tool, stops on a failure keeping the package, and deletes the package on success.",
+      "module": "package-extractor",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2"
+      ],
+      "enforces": [
+        "businessrule-91358402464075338920"
+      ]
+    },
+    {
+      "name": "Destination access controller",
+      "domain": "Definition Acquisition",
+      "responsibility": "Takes ownership and gives Administrators full control of an existing destination before any move for administrators, and resets ownership and inherited permissions on folders and moved files; standard users change nothing.",
+      "module": "destination-access-controller",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2"
+      ],
+      "enforces": [
+        "businessrule-16960626064100495277",
+        "businessrule-70392920399990339776"
+      ]
+    },
+    {
+      "name": "Template installer",
+      "domain": "Definition Acquisition",
+      "responsibility": "Replaces files in the destination with the templates, then the language files of the regional format language, and the English fallback when that language is not English (United States), creating folders and deleting same-named files first.",
+      "module": "template-installer",
+      "uses": [
+        "Destination access controller"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2"
+      ],
+      "enforces": [
+        "businessrule-24154317128059319852",
+        "businessrule-33969702428946021999"
+      ]
+    },
+    {
+      "name": "Group Policy edition detector",
+      "domain": "Definition Acquisition",
+      "responsibility": "Asks the operating system for its edition and decides from a fixed list of codes whether Group Policy infrastructure exists, treating a failed query as none.",
+      "module": "group-policy-edition-detector",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#2"
+      ],
+      "enforces": [
+        "businessrule-44390406872239414183"
+      ]
+    },
+    {
+      "name": "Welcome offer",
+      "domain": "Definition Acquisition",
+      "responsibility": "Decides whether to offer the definitions once the edition lacks Group Policy and more than two non-empty categories name a missing parent, shows the welcome question, and starts an acquisition on yes.",
+      "module": "welcome-offer",
+      "uses": [
+        "Group Policy edition detector",
+        "Missing definitions detector",
+        "Acquisition session"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#2",
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#3"
+      ],
+      "enforces": [
+        "businessrule-23603907625209300500"
+      ]
+    },
+    {
+      "name": "Acquired definitions adoption",
+      "domain": "Definition Acquisition",
+      "responsibility": "After a successful acquisition, empties the workspace, loads the acquired folder, saves it as the definitions folder and rebuilds the view; with no new folder nothing changes.",
+      "module": "acquired-definitions-adoption",
+      "uses": [
+        "Definition reset",
+        "Definition load coordinator",
+        "Template folder scanner"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1"
+      ],
+      "enforces": [
+        "businessrule-94371671563498468562"
+      ]
+    }
+  ]
+}

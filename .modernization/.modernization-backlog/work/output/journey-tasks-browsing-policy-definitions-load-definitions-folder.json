@@ -1,0 +1,258 @@
+{
+ "stories": [
+  {
+   "title": "Choose the folder of policy definitions to load",
+   "what": "The person picks one folder of policy definitions from the standard Windows folder, the domain's shared folder when there is one, or a folder of their own. A folder that does not exist is refused when they confirm. They can back out without choosing anything.",
+   "why": "So that an administrator can point the workspace at the definitions they want to browse without a missing folder being accepted.",
+   "actions": [
+    "block-59255999245406242607",
+    "block-13117547435582731450",
+    "block-20168653063977540452",
+    "block-30537692166592904451",
+    "block-73356074458344317029"
+   ],
+   "terms": [
+    {
+     "name": "Definitions folder",
+     "means": "A folder holding policy definition files and their language texts that the workspace can load; not a policy file or a saved policy source."
+    },
+    {
+     "name": "Domain folder",
+     "means": "The shared policy definitions folder of the domain the computer has joined; not the standard Windows folder on the computer itself."
+    }
+   ],
+   "journey": {
+    "name": "Load without questions",
+    "steps": [
+     "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#1",
+     "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#4"
+    ]
+   },
+   "steps": [
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#1",
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#4"
+   ],
+   "components": [
+    "Definitions folder choice validator"
+   ],
+   "criteria": [
+    {
+     "says": "Given the person opens the choice of folder, when it appears, then their own folder choice is selected first.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76226373219464614800"
+      }
+     ]
+    },
+    {
+     "says": "Given the computer has joined a domain and the domain's policy definitions folder exists, when the choice appears, then the domain folder can be selected.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76226373219464614800"
+      }
+     ]
+    },
+    {
+     "says": "Given the computer has not joined a domain or the domain's policy definitions folder does not exist, when the choice appears, then the domain folder cannot be selected.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76226373219464614800"
+      }
+     ]
+    },
+    {
+     "says": "Given the standard Windows folder or the domain folder is selected, when the person looks at the folder box and its Browse button, then they cannot be used.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-88154451768954453608"
+      }
+     ]
+    },
+    {
+     "says": "Given the person's own folder choice is selected, when the person looks at the folder box and its Browse button, then they can be used.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-88154451768954453608"
+      }
+     ]
+    },
+    {
+     "says": "Given the person chose the standard Windows folder, the domain folder, or typed a folder, when they press OK, then the folder to load is the one chosen.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-53176229115945924012"
+      }
+     ]
+    },
+    {
+     "says": "Given the person typed a folder that does not exist, when they press OK, then they see \"The folder you specified does not exist.\" and the dialog stays open.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-53176229115945924012"
+      }
+     ]
+    },
+    {
+     "says": "Given the choice of folder is open, when the person presses Escape, then it closes as cancelled with no folder chosen.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-98012095360980700253"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "When the person presses Browse and picks a folder, does it appear in the folder box? No rule states this.",
+    "Should the choice show anything when no domain can be reached, beyond the domain folder not being selectable? No rule or decision states it.",
+    "Is a missing folder checked before the person presses OK? No rule states an earlier check."
+   ]
+  },
+  {
+   "title": "Load the chosen folder, replacing or adding to what is loaded",
+   "what": "Once a folder is accepted, the workspace empties itself first only when replacing, adds the folder without stopping for problems, tells the person if the load fails, and remembers the folder for the next start only when replacing succeeded.",
+   "why": "So that the person gets their definitions into the workspace in one go, with a sensible default and a clear account of anything that went wrong.",
+   "actions": [
+    "block-30537692166592904451",
+    "block-13558804890992588767"
+   ],
+   "terms": [
+    {
+     "name": "Replace",
+     "means": "Emptying the loaded definitions before loading a folder; not adding the folder to what is already loaded."
+    },
+    {
+     "name": "Remembered folder",
+     "means": "The definitions folder the workspace loads at the next start; not any folder added on top of the loaded set."
+    }
+   ],
+   "journey": {
+    "name": "Load without questions",
+    "steps": [
+     "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#2",
+     "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#3"
+    ]
+   },
+   "steps": [
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#2",
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#3"
+   ],
+   "components": [
+    "Replace option proposer",
+    "Folder addition run"
+   ],
+   "criteria": [
+    {
+     "says": "Given the replace option is shown in the dialog for loading a folder, when it first appears, then it is ticked by default.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-43765682097437166867"
+      }
+     ]
+    },
+    {
+     "says": "Given a folder that exists was accepted with OK, when the dialog closes, then the choice of replacing or not is passed on to the load.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-43765682097437166867"
+      }
+     ]
+    },
+    {
+     "says": "Given the person did not accept a folder that exists, when the dialog closes, then no replace choice is passed on.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-43765682097437166867"
+      }
+     ]
+    },
+    {
+     "says": "Given replacing was chosen, when the folder loads, then the workspace is emptied first and the folder's definitions are loaded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-06850078746756456273"
+      }
+     ]
+    },
+    {
+     "says": "Given replacing was not chosen, when the folder loads, then its definitions are added to the current workspace.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-06850078746756456273"
+      }
+     ]
+    },
+    {
+     "says": "Given the folder has problems, when it loads, then the problems are reported but the load does not stop.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-06850078746756456273"
+      }
+     ]
+    },
+    {
+     "says": "Given loading the folder fails, when the failure happens, then the person is told \"The folder could not be fully added to the workspace.\" with the reason.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-19671296259932138006"
+      }
+     ]
+    },
+    {
+     "says": "Given loading the folder fails, when the person looks at the workspace, then it may be emptied or partly filled and the view is rebuilt anyway.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-19671296259932138006"
+      }
+     ]
+    },
+    {
+     "says": "Given loading the folder fails, when the person next starts, then the remembered folder is unchanged.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-19671296259932138006"
+      }
+     ]
+    },
+    {
+     "says": "Given replacing was chosen and the load did not fail, when the load ends, then the folder is remembered as the definitions folder for the next start.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-56221298079625729644"
+      }
+     ]
+    },
+    {
+     "says": "Given definitions were added to the workspace rather than replaced, when the load ends, then the remembered folder is unchanged.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-56221298079625729644"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "When nothing is loaded, is the person not asked whether to replace? The journey says so, but no rule states it.",
+    "Is the replace choice proposed as the default only when something is loaded? No rule states this beyond the option being ticked by default."
+   ]
+  }
+ ]
+}

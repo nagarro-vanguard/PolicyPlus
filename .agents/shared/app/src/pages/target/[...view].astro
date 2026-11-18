@@ -1,0 +1,36 @@
+---
+// The pages of the target, one route for all kinds, so a build without a target makes none of them:
+// target/architecture.html, target/system.html, target/lineage.html, target/task/<task>.html, target/erd/<task>.html.
+import TargetTask from "../../components/TargetTask.astro";
+import TargetArchitecture from "../../components/TargetArchitecture.astro";
+import TargetSystem from "../../components/TargetSystem.astro";
+import TargetLineage from "../../components/TargetLineage.astro";
+import Page from "../../layouts/Page.astro";
+import { draw } from "../../lib/target-diagram";
+import { erd } from "../../lib/target-views";
+import { hasTarget, targetData } from "../../lib/target-data";
+import { architecturePath, chosenOf, lineagePath, systemPath, taskSlug } from "../../lib/target-text";
+
+export function getStaticPaths() {
+    if (!hasTarget()) return [];
+    const data = targetData();
+    return [
+        { params: { view: "architecture" }, props: { kind: "architecture", key: "" } },
+        ...(data.architecture ? [{ params: { view: "system" }, props: { kind: "system", key: "" } }] : []),
+        ...(data.journeys.length > 0 ? [{ params: { view: "lineage" }, props: { kind: "lineage", key: "" } }] : []),
+        ...data.tasks.map((task) => ({ params: { view: `task/${taskSlug(task)}` }, props: { kind: "task", key: task.id } })),
+        ...(data.architecture ? data.journeys.map((journey) => ({ params: { view: `erd/${taskSlug(data.tasks.find((task) => task.id === journey.task) ?? { id: journey.task, outcome: "", actor: "", actions: [], rules: [], facts: [], needs: [], current: [] })}` }, props: { kind: "erd", key: journey.task } })) : []),
+    ];
+}
+const { kind, key } = Astro.props;
+const data = targetData();
+const task = data.tasks.find((each) => each.id === key);
+const journey = data.journeys.find((each) => each.task === key);
+const svg = kind === "erd" && data.architecture && journey ? await draw(erd(data.architecture, journey)) : "";
+void architecturePath; void systemPath; void lineagePath;
+---
+{kind === "architecture" && <TargetArchitecture variants={data.architectureVariants} choice={data.choiceArchitecture} journeys={data.journeys} legacy={data.legacy} data={data} />}
+{kind === "system" && data.architecture && <TargetSystem architecture={data.architecture} tasks={data.tasks} journeys={data.journeys} legacy={data.legacy} data={data} />}
+{kind === "lineage" && <TargetLineage architecture={data.architecture} tasks={data.tasks} journeys={data.journeys} legacy={data.legacy} data={data} />}
+{kind === "task" && task && <TargetTask task={task} variants={data.variants.filter((variant) => variant.task === task.id)} chosen={data.gates.journeys.state === "confirmed" ? chosenOf(data.journeys, task) : undefined} legacy={data.legacy} choiceAsIs={data.choiceAsIs} hasArchitecture={data.architecture !== undefined} data={data} />}
+{kind === "erd" && task && journey && <Page title={`Data of ${task.outcome}`} lead={`The kinds of data the chosen way of doing this touches, and who owns each. Data of other domains is grey.`} depth={2} trail={[{ text: "Overview", href: "../../index.html" }, { text: "Target", href: "../../target.html" }, { text: task.outcome, href: `../task/${taskSlug(task)}.html` }, { text: "Data" }]}><Fragment set:html={svg} /></Page>}

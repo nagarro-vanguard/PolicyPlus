@@ -1,0 +1,17 @@
+{
+  "read": 1,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "Five of six criteria cite no rule and the story never says why: the empty-list case (\"nothing fails\"), the \"return to the list\" and \"other files and list stay unchanged\" behaviour state no rule or decision, so they are invented, and the name/folder/namespace columns and counts rest on nothing cited."
+    },
+    {
+      "record": 0,
+      "says": "The fifth criterion (\"nothing defined only by the other file appears\") only restates the fourth criterion and the cited rule's \"only ... defined in that file\", so it adds no behaviour, and the story as a whole is close to a restatement of its title with one rule behind it."
+    },
+    {
+      "record": 0,
+      "says": "The open question asks what happens with no file chosen, yet the third criterion states unconditionally that choosing a file opens its details and the legacy rule BR-61081361 (double-click does not check a selection, Enter does) is not reflected or cited, so the criteria and the open point do not agree."
+    }
+  ]
+}

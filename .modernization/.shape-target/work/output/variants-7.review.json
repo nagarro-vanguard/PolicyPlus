@@ -1,0 +1,11 @@
+{
+  "read": 9,
+  "challenges": [
+    {"record": 0, "says": "Step 2 is marked 'reordered' as sparing a wait that ends in a refusal, but the old system already checks the terms and refuses (empty search, root key) in the dialog before any search starts, so this variant repeats today's flow and its stated gain is false."},
+    {"record": 1, "says": "The variant invites pasting 'a path copied from documentation', but such paths normally begin with HKLM\\ or HKCU\\, which businessrule-71024372746156766440 refuses, so the headline use case would be refused while typing and the variant never says how the inferred split treats a leading root key."},
+    {"record": 3, "says": "Step 4 lets the person open a hit while the search is still running, but in the old system accepting a result closes the window, and closing stops the search (businessrule-15877826642522947109); the variant does not say whether opening a hit cancels the running search, nor does step 1 keep the 'refreshed after every 20 policies' progress wording it claims to honour."},
+    {"record": 5, "says": "Step 3 lets the person move on from a hit without opening it, but businessrule-53914450774482291886 takes the next result after the last chosen one, so moving past an unopened hit cannot advance under the legacy rule; the variant's 'one decision per hit' silently changes what 'next' means."},
+    {"record": 6, "says": "Step 7 says undo 'puts back the limit held when the person began and leaves it unchanged', which is self-contradictory and not what businessrule-57716378734614233724 says (cancel leaves the current filter untouched); with live changes, Escape would have to actively revert, and unticking Supported on never states that ticked products and options are discarded (businessrule-90628240213834851721)."},
+    {"record": 7, "says": "By its own trade-off this variant keeps the open, choose, confirm cycle with no fewer steps than today, so it only repeats the old dialog in new words, and step 4 never states that product ticks and options are discarded when Supported on is unticked (businessrule-90628240213834851721)."}
+  ]
+}

@@ -1,0 +1,4 @@
+{"read":1,"challenges":[
+{"record":0,"says":"The title, what and why promise a single entry that takes a name or a security identifier, but the only component built (User Identification Entry) enforces just the Escape rule, so the story is a thin restatement of leaving and its criterion does not cover the entry that the title names; the name and identifier handling belongs to the Directory Account Resolver, which this story does not build, and the criteria do not say so."},
+{"record":0,"says":"The criterion adds 'and nothing is changed', which the cited rule (Escape closes the user dialog as cancelled) does not state; also 'at any time' in the what is stronger than the rule, which names only Escape, and 'security identifier' is left unexplained for a product owner."}
+]}

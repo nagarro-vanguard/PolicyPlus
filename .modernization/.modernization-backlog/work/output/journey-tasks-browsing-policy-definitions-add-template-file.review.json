@@ -1,0 +1,21 @@
+{
+  "read": 1,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "Criteria 1, 3 and 4 restate what businessrule-07200475892676201466 decides (ADMX files only, workspace not emptied, not remembered as the definitions folder) yet cite no rule, so only the failure-message criterion traces to it."
+    },
+    {
+      "record": 0,
+      "says": "Criterion 4 invents a timing (\"when the program next starts or reloads definitions\") that the rule does not state; the rule says only that the file is not remembered as the definitions folder."
+    },
+    {
+      "record": 0,
+      "says": "Criterion 6 says the other files are still added when some are refused, which no cited rule or step states (the steps say only that each file is added alone and each refusal is reported with its reason), and it is also left open whether failures are shown together."
+    },
+    {
+      "record": 0,
+      "says": "Criterion 1 and 2 cover several files, a change the journey step marks merged/inferred, but no criterion says this extends the single-file rule, and the used rule businessrule-61344191921921935952 (adds that file alone, builds the structures) is not reflected in any criterion."
+    }
+  ]
+}

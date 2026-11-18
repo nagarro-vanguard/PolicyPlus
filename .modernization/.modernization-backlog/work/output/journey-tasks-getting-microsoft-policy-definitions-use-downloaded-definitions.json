@@ -1,0 +1,600 @@
+{
+ "stories": [
+  {
+   "title": "Find each template and its text in the person's language",
+   "what": "When downloaded definitions are to be used, find the template files in the chosen folder and, for each one, pick the language text that goes with it and read it, refusing flawed language text.",
+   "why": "A person gets definitions whose names and descriptions read in their own language, and a missing or flawed language is named instead of failing vaguely.",
+   "actions": [
+    "block-40092394967077955539"
+   ],
+   "terms": [
+    {
+     "name": "Template",
+     "means": "A definition file describing policies, categories and products; not the language text that names them."
+    },
+    {
+     "name": "Language text",
+     "means": "The file holding the names, descriptions and screen layouts of a template in one language; not the template itself."
+    }
+   ],
+   "journey": {
+    "name": "Check, then switch",
+    "steps": [
+     "Say that the downloaded definitions should become the ones in use",
+     "Be sure each template comes with its text in my language"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given a chosen folder holding template files in any letter case, subfolders and other files, when the definitions are scanned, then only files directly in the folder whose names end in .admx are taken as templates and the rest is ignored.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-87686960346106148106"
+      }
+     ]
+    },
+    {
+     "says": "Given a saved language code, when language text is needed, then that code is used; given none is saved, then the computer's own language is used.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-92965345094444319678"
+      }
+     ]
+    },
+    {
+     "says": "Given a template and several language subfolders, when its language text is chosen, then the subfolder named exactly by the language code is used if it holds this template's file, else the first subfolder of the same language family (compared with capital letters mattering) that holds it, else en-US; a folder lacking the file is skipped.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-92573318973236627036"
+      }
+     ]
+    },
+    {
+     "says": "Given no language file is found in any of those places, when the template is read, then it is refused with \"The corresponding ADML is missing\" and none of its content is loaded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-69876963387177556361"
+      }
+     ]
+    },
+    {
+     "says": "Given a language file that cannot be parsed as XML, when it is read, then the template is refused with \"The ADML XML couldn't be parsed: <detail>\"; given any other read problem, then it is refused with \"The ADML is invalid: <detail>\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-32910542149714942665"
+      }
+     ]
+    },
+    {
+     "says": "Given a language file, when its texts are read, then only its first text table is used and each text is kept under its id; given the same text id twice, then the file is refused as invalid and its template is not loaded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-09527630769674812053"
+      }
+     ]
+    },
+    {
+     "says": "Given a language file, when its screen layouts are read, then only its first presentation table is used; given the same layout id twice, then the file is refused as invalid and its template is not loaded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-84649532972995606012"
+      }
+     ]
+    },
+    {
+     "says": "Given a language file with no policy resources section, or whose revision is missing or not a number, when it is read, then it is refused as invalid and its template is not loaded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-93437714727587946479"
+      }
+     ]
+    },
+    {
+     "says": "Given a name or description written as \"$(string.<id>)\", when it is shown, then the language file's text for that id appears; an unknown id shows the code itself, any other text shows as written and an empty value stays empty.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-05284912414586135547"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy description, when it is prepared for display, then leading and trailing spaces are removed from every line and blank space at the end is dropped.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-58670284456856579605"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1",
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#2"
+   ],
+   "components": [
+    "Template folder scanner",
+    "Language file locator",
+    "Language text reader"
+   ],
+   "open": []
+  },
+  {
+   "title": "Check every template is sound before using it",
+   "what": "Read and validate every template beside the current definitions, skipping and listing the ones refused, and stopping at once when a template has no namespace.",
+   "why": "A bad download cannot spoil the definitions the person already has, and each refused template is named so the person knows what went wrong.",
+   "actions": [
+    "block-40092394967077955539"
+   ],
+   "terms": [
+    {
+     "name": "Namespace",
+     "means": "The unique name a template declares for itself so its items stay apart from other templates' items; not a short label, which is only a label inside one template."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a template that cannot be parsed as XML, when it is read, then it is refused with \"Couldn't load <path>: The ADMX XML couldn't be parsed: <detail>.\"; given any other read problem, then it is refused with \"The ADMX is invalid: <detail>\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-40646214351993665036"
+      }
+     ]
+    },
+    {
+     "says": "Given a template in which any of these is missing or unreadable, when it is checked, then it is refused as invalid: the policy definitions section; the short label or the unique name in a namespace entry; the file name of a superseded older definition; the minimum revision (missing or not a number); a support rule's name or display name; a support reference or range without its reference, or a version bound that is not a whole number; a product's name, display name or version index; a category's name or display name; a category's parent entry or its reference when the category has content; a policy's name, display name, key or class; a policy's category or supported-on reference; a number value's value; a list item's value name; a choice item's display name; or an option's id.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-98117161588141132501"
+      }
+     ]
+    },
+    {
+     "says": "Given a template that declares no target namespace, when the folder is loaded, then loading stops at once with an error, the files after it are not read, nothing is built and the person sees the error text.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-25371901799273876158"
+      }
+     ]
+    },
+    {
+     "says": "Given a template whose namespace is already held by a template loaded earlier, when it is checked, then it is refused with \"The <namespace> namespace is already owned by a different ADMX file\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-80037556468037401208"
+      }
+     ]
+    },
+    {
+     "says": "Given a template, when its unique name and short labels are read, then its unique name is the one listed as its target, and each short label it declares must be unique, so a repeated short label refuses the file as invalid.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-91228574547678345469"
+      }
+     ]
+    },
+    {
+     "says": "Given a template's superseded-ADM entry and minimum revision, when they are read, then they are kept when present; an entry without a file name or a minimum revision that is missing or not a number refuses the template as invalid.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-83755288267226589422"
+      }
+     ]
+    },
+    {
+     "says": "Given a category with any content inside it, even a comment, when it is checked, then it must contain a parent entry with a reference or the template is refused as invalid; its explanation is optional.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-15417746115131960533"
+      }
+     ]
+    },
+    {
+     "says": "Given products, when they are read, then three levels are kept (product, major versions, minor versions), deeper levels are not read and each version without a version index refuses the file as invalid.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-41440459272484897081"
+      }
+     ]
+    },
+    {
+     "says": "Given an item in a template, when it is named, then its unique name is the template's unique name, a colon and the item's own name, so equal names in different templates stay apart; given a reference to another item, then a reference containing a colon uses the unique name the template declared for the label before the colon, a label the template did not declare is taken as already complete, and a reference without a colon belongs to the template's own unique name.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59268653642646332356"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-26805667514169896082"
+      }
+     ]
+    },
+    {
+     "says": "Given a setting the template leaves out, when it is read, then it gives nothing; given a setting with a stated default that is left out or whose text is not valid for the kind of value expected, then that default is used.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-25143456587420753656"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-89165707538784213793"
+      }
+     ]
+    },
+    {
+     "says": "Given a template refused with a reported failure, when the folder is loaded, then it is skipped and the failure is listed, while the other files still load and the structures are built from those that loaded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-70397490486289456229"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#3"
+   ],
+   "components": [
+    "Template validator"
+   ],
+   "open": []
+  },
+  {
+   "title": "Work out categories, products, policies and their options",
+   "what": "From the validated templates, work out the categories, products, support rules, policies, their options and the screen layouts for entering values, ahead of use, with names and descriptions in the language.",
+   "why": "The person browses a ready, consistent set of categories and policies, where each policy shows what it applies to and how its options behave.",
+   "actions": [
+    "block-40092394967077955539"
+   ],
+   "terms": [
+    {
+     "name": "Preference",
+     "means": "A setting whose registry key lies outside the three policy locations; not a managed policy."
+    },
+    {
+     "name": "Support rule",
+     "means": "The statement of which products a policy works with; not the products themselves."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given categories, when they are built, then one with a named parent is attached under it, found in this load or earlier ones; if the parent is not found it has no parent but is still listed among the top-level categories.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-24623125277050759553"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy, when it is built, then it takes its category and 'supported on' rule from the references in its own content and has options only when it contains an options section; it is listed under its named category when found, and otherwise stays in the policy list with no category; it shows the 'supported on' rule its reference names when found, and otherwise none.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-24413560949580370921"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-39179467487447053337"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-11459402502484833685"
+      }
+     ]
+    },
+    {
+     "says": "Given products, when they are built, then a major or minor version is attached under its parent product defined in the same template, and only products without a parent are top-level.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-66701495026848575269"
+      }
+     ]
+    },
+    {
+     "says": "Given a support rule, when it is built, then it is 'any of' when its first logic element is \"or\", 'all of' when \"and\", and blank otherwise; only that first element is read, each reference or range becomes an entry and a range may carry a minimum and maximum version; an entry is linked to the product it names, else to the support rule of that name, else stays unlinked.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-97301799709818271508"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-24269573875592969564"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy class, when it is built, then it applies to computers for \"Machine\", to users for \"User\", and to both for any other value; a policy applies to an area when its definition declares it, and one declared for both applies to each.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-68278299005201189825"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-77397977946778263418"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy's registry key, when its kind is decided, then it is a preference, not a managed policy, when the key is outside the three policy locations (\"software, policies\", \"software, microsoft, windows, currentversion, policies\" and \"system, currentcontrolset, policies\"), and a key counts as a policy key when it is one of those three or lies below one, regardless of case.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-93507723834804807958"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-26710870928949391310"
+      }
+     ]
+    },
+    {
+     "says": "Given a registry value in a template, when it is read, then it is a delete marker, a number or a text by the first it contains, a value with none being a delete marker; an option's value name is its own, except a list option with a value prefix attribute (even empty) which uses the prefix, and the own name only when the prefix is empty.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-48352716870696272616"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-50061101372023867676"
+      }
+     ]
+    },
+    {
+     "says": "Given the options of a policy, when they are read, then kinds other than number, yes/no, text, list, choice or multi-line text are dropped without notice; a yes/no option takes its registry effect from true and false values and lists; a choice is optional unless marked required and keeps a single value, a list of values or both, and one with neither changes nothing.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-31892600882792899810"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-35101409759930685557"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-46883945724661990816"
+      }
+     ]
+    },
+    {
+     "says": "Given a number, text or list option, when it is read, then a number accepts 0 to 4,294,967,295 unless the template sets other limits, overwrites existing values unless marked soft and is stored as a number unless marked as text; a text allows 255 characters, is optional, is stored as plain text and overwrites existing values unless the template says otherwise; a list replaces other entries of its key unless marked additive, stores plain text unless marked expandable, numbers entries automatically unless the template says the person names them, and counts as prefixed only when a value prefix is given; unreadable attribute values fall back to these defaults.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-23440834431907337703"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-35659935925800526059"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-60385862679195390671"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy's settings screen, when it is built, then it has a layout only when the template names one written as \"$(presentation.<id>)\" and the language file holds that layout; only labels, number boxes, text boxes, check boxes, combo boxes, drop-down lists, list boxes and multi-line text boxes are kept and other controls are dropped without notice; a control keeps the reference id the language file gives it, or has none.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-25475639870526854331"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-43452052995976839356"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-62728858792696794889"
+      }
+     ]
+    },
+    {
+     "says": "Given the controls of a layout, when they are read, then a number box takes default value 1, shows its up-down spinner and steps by 1 unless the language file says otherwise (an unreadable value falls back to the same defaults), a check box starts unticked unless the language file marks it ticked, a drop-down list has a preselected item only when the language file names one, and combo box and drop-down entries are sorted unless the language file says not to sort them.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-20341522967469767562"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-27318854358145723180"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-40992022396445585276"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-48999549165964538717"
+      }
+     ]
+    },
+    {
+     "says": "Given loaded templates, when they are staged and built, then a template and its language file loaded together stage their categories, products, support rules and policies and are recorded under the template's namespace; when the structures are built the new items join the final lists and staged items are cleared, so loading more files adds to what is available.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-90575686774382821065"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-44253734408576510565"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#4"
+   ],
+   "components": [
+    "Definition structure builder",
+    "Policy option reader"
+   ],
+   "open": []
+  },
+  {
+   "title": "Switch to the new definitions in one step",
+   "what": "Once the new definitions are checked, empty the workspace, adopt the checked definitions, remember their folder as the definitions folder and present the category tree clean, with each problem listed.",
+   "why": "The person lands on a clean, predictable view of the new definitions, with the previous workspace emptied and the downloaded folder remembered.",
+   "actions": [
+    "block-40092394967077955539"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a successful download of definitions with a new folder, when the new definitions are adopted, then the workspace is emptied, the downloaded folder loaded and saved as the definitions folder, and the view rebuilt; given no new folder, then nothing changes.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-94371671563498468562"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#5",
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#6",
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#7"
+   ],
+   "components": [
+    "Acquired definitions adoption",
+    "Acquired definitions switcher"
+   ],
+   "open": [
+    "The rules do not say whether the switch is undone as a whole when the definitions folder cannot be remembered.",
+    "The rules do not say whether the person sees each problem found while loading, or is asked whether to continue.",
+    "The rules do not say that no category, policy or highlighted item is selected after the switch, that the information pane shows its empty message, or that earlier search results are forgotten."
+   ]
+  },
+  {
+   "title": "Show each policy's state and comment and apply the filters",
+   "what": "For each policy, work out its state and comment in the shown area or both, and decide whether it is listed, from the chosen area and every active part of the filter.",
+   "why": "The person sees each policy's setting and comment as before, and the filters keep only the policies they asked for.",
+   "actions": [
+    "block-40092394967077955539"
+   ],
+   "terms": [
+    {
+     "name": "Only Filtered Policies",
+     "means": "The switch that limits the list to policies passing the active filter; not the choice of area."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given both areas are shown and a policy applies to both, when its state is shown, then it reads the common state followed by \"(2)\" when both match, the computer state followed by \"(C)\" when only the user is Not Configured, the user state followed by \"(U)\" when only the computer is Not Configured, and \"Mixed\" otherwise.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-11674597249570802702"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy that applies to one area, when its state is shown with both areas shown, then it reads that area's state followed by \"(C)\" for computer or \"(U)\" for user; with a single area shown, only that area's state appears, without a suffix.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-89513911810275647919"
+      }
+     ]
+    },
+    {
+     "says": "Given both areas are shown, when the comment column is shown, then it is empty when neither area has a comment, shows \"(multiple)\" when both have one, and otherwise shows the single comment.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-35533060170265013329"
+      }
+     ]
+    },
+    {
+     "says": "Given a chosen area, when a policy is considered for the list, then it is visible only if it applies to a chosen area; with \"Only Filtered Policies\" on, it must also pass the filter for a chosen area it applies to, and passing for either is enough.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-09965726926686583005"
+      }
+     ]
+    },
+    {
+     "says": "Given a filter on state, when the list is built, then only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen, are kept.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-12540995342195943001"
+      }
+     ]
+    },
+    {
+     "says": "Given a filter on managed policies, when the list is built, then preferences are hidden when managed policies are wanted and managed policies are hidden when preferences are wanted.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-67323359061601595450"
+      }
+     ]
+    },
+    {
+     "says": "Given a filter on comments, when the list is built, then only policies with a non-empty comment in the checked area, or only those with none, are kept, as chosen.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-79960316131030112593"
+      }
+     ]
+    },
+    {
+     "says": "Given a filter on products, when the list is built, then only policies supported by the chosen products are kept, honouring the options to match any product and to include policies with blank support.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-97862941341357225531"
+      }
+     ]
+    },
+    {
+     "says": "Given several active parts of a filter, when a policy is judged, then it passes only when it passes every active part.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-70331897906623822249"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8"
+   ],
+   "components": [
+    "Policy state presenter",
+    "Visibility Judge"
+   ],
+   "open": []
+  }
+ ]
+}

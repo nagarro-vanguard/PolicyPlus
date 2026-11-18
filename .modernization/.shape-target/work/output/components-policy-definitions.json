@@ -1,0 +1,485 @@
+{
+ "components": [
+  {
+   "name": "Definition installation flow",
+   "domain": "Policy Definitions",
+   "responsibility": "Walks a person through getting the current definitions installed, reports which stage failed and hands the resulting folder over for loading.",
+   "module": "definition-installation-flow",
+   "uses": [
+    "Definition load coordinator"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#1",
+    "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2",
+    "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#3"
+   ],
+   "enforces": []
+  },
+  {
+   "name": "Missing definitions detector",
+   "domain": "Policy Definitions",
+   "responsibility": "Decides whether missing definitions should be offered to the person, from the share of non-empty categories that name a missing parent.",
+   "module": "missing-definitions-detector",
+   "uses": [],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#2"
+   ],
+   "enforces": [
+    "businessrule-02030966310880796596",
+    "businessrule-87097618083601098949"
+   ]
+  },
+  {
+   "name": "Template folder scanner",
+   "domain": "Policy Definitions",
+   "responsibility": "Finds the template files in a chosen folder and ignores everything else; reads them through the outside parser.",
+   "module": "template-folder-scanner",
+   "uses": [
+    "Template file source adapter"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1"
+   ],
+   "enforces": [
+    "businessrule-87686960346106148106"
+   ]
+  },
+  {
+   "name": "Template file source adapter",
+   "domain": "Policy Definitions",
+   "responsibility": "Reads template and language files from a folder and gives back their parsed documents.",
+   "module": "template-file-source-adapter",
+   "uses": [],
+   "serves": [],
+   "enforces": [],
+   "adapts": "external-25314431250146805945",
+   "platform": "Reads files of the machine the definitions live on, which no step names directly."
+  },
+  {
+   "name": "Language file locator",
+   "domain": "Policy Definitions",
+   "responsibility": "Chooses the language text file for each template: exact language, same family, then English.",
+   "module": "language-file-locator",
+   "uses": [
+    "Template file source adapter"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#2"
+   ],
+   "enforces": [
+    "businessrule-92573318973236627036",
+    "businessrule-92965345094444319678",
+    "businessrule-69876963387177556361"
+   ]
+  },
+  {
+   "name": "Language text reader",
+   "domain": "Policy Definitions",
+   "responsibility": "Reads a language file and refuses flawed ones; resolves text references into shown text.",
+   "module": "language-text-reader",
+   "uses": [
+    "Template file source adapter"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#2"
+   ],
+   "enforces": [
+    "businessrule-32910542149714942665",
+    "businessrule-09527630769674812053",
+    "businessrule-84649532972995606012",
+    "businessrule-93437714727587946479",
+    "businessrule-05284912414586135547",
+    "businessrule-58670284456856579605"
+   ]
+  },
+  {
+   "name": "Definition language setting",
+   "domain": "Policy Definitions",
+   "responsibility": "Remembers the person's language for definition text and offers to reload at once.",
+   "module": "definition-language-setting",
+   "uses": [
+    "Definition load coordinator"
+   ],
+   "serves": [
+    "tasks-using-the-product.set-definition-language:name-the-language-then-reload#2"
+   ],
+   "enforces": []
+  },
+  {
+   "name": "Template validator",
+   "domain": "Policy Definitions",
+   "responsibility": "Reads and validates each template, refuses or skips unsound ones and stops on a missing namespace.",
+   "module": "template-validator",
+   "uses": [
+    "Template file source adapter"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#3"
+   ],
+   "enforces": [
+    "businessrule-40646214351993665036",
+    "businessrule-98117161588141132501",
+    "businessrule-25371901799273876158",
+    "businessrule-80037556468037401208",
+    "businessrule-91228574547678345469",
+    "businessrule-83755288267226589422",
+    "businessrule-15417746115131960533",
+    "businessrule-41440459272484897081",
+    "businessrule-26805667514169896082",
+    "businessrule-59268653642646332356",
+    "businessrule-25143456587420753656",
+    "businessrule-89165707538784213793",
+    "businessrule-70397490486289456229"
+   ]
+  },
+  {
+   "name": "Definition structure builder",
+   "domain": "Policy Definitions",
+   "responsibility": "Builds categories, products, support rules and policies from the validated templates and joins them to the available set.",
+   "module": "definition-structure-builder",
+   "uses": [
+    "Template validator",
+    "Language text reader",
+    "Policy option reader"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#4",
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#5"
+   ],
+   "enforces": [
+    "businessrule-24623125277050759553",
+    "businessrule-24413560949580370921",
+    "businessrule-39179467487447053337",
+    "businessrule-11459402502484833685",
+    "businessrule-66701495026848575269",
+    "businessrule-24269573875592969564",
+    "businessrule-90575686774382821065",
+    "businessrule-44253734408576510565",
+    "businessrule-68278299005201189825",
+    "businessrule-77397977946778263418",
+    "businessrule-93507723834804807958",
+    "businessrule-26710870928949391310",
+    "businessrule-97301799709818271508"
+   ]
+  },
+  {
+   "name": "Policy option reader",
+   "domain": "Policy Definitions",
+   "responsibility": "Reads each policy option and its entry layout, with defaults and storage effects.",
+   "module": "policy-option-reader",
+   "uses": [
+    "Language text reader"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#4"
+   ],
+   "enforces": [
+    "businessrule-20341522967469767562",
+    "businessrule-23440834431907337703",
+    "businessrule-27318854358145723180",
+    "businessrule-31892600882792899810",
+    "businessrule-35101409759930685557",
+    "businessrule-35659935925800526059",
+    "businessrule-40992022396445585276",
+    "businessrule-46883945724661990816",
+    "businessrule-48352716870696272616",
+    "businessrule-48999549165964538717",
+    "businessrule-50061101372023867676",
+    "businessrule-60385862679195390671",
+    "businessrule-25475639870526854331",
+    "businessrule-43452052995976839356",
+    "businessrule-62728858792696794889"
+   ]
+  },
+  {
+   "name": "Support evaluator",
+   "domain": "Policy Definitions",
+   "responsibility": "Works out whether a support definition is met for chosen products.",
+   "module": "support-evaluator",
+   "uses": [],
+   "serves": [
+    "tasks-finding-policies.find-policy-by-id:type-and-arrive#2"
+   ],
+   "enforces": [
+    "businessrule-99139491988760691407",
+    "businessrule-49748745950500666232",
+    "businessrule-52005709614722807804",
+    "businessrule-34301200927683901255",
+    "businessrule-81760746419124272603"
+   ]
+  },
+  {
+   "name": "Definition load coordinator",
+   "domain": "Policy Definitions",
+   "responsibility": "Runs a load from folder or single files, replaces or adds, reports problems and remembers the folder.",
+   "module": "definition-load-coordinator",
+   "uses": [
+    "Template folder scanner",
+    "Language file locator",
+    "Definition structure builder",
+    "Definition reset"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#6",
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#3",
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#2",
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#3",
+    "tasks-browsing-policy-definitions.add-template-file:add-several-at-once#2"
+   ],
+   "enforces": [
+    "businessrule-34235271555130179948",
+    "businessrule-61344191921921935952"
+   ]
+  },
+  {
+   "name": "Definition reset",
+   "domain": "Policy Definitions",
+   "responsibility": "Empties the loaded definitions at once and restores them on request.",
+   "module": "definition-reset",
+   "uses": [],
+   "serves": [
+    "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#1",
+    "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#2"
+   ],
+   "enforces": []
+  },
+  {
+   "name": "Policy state presenter",
+   "domain": "Policy Definitions",
+   "responsibility": "Works out each policy's state and comment for the shown area or both, with filters.",
+   "module": "policy-state-presenter",
+   "uses": [
+    "Category tree presenter"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8"
+   ],
+   "enforces": [
+    "businessrule-11674597249570802702",
+    "businessrule-89513911810275647919",
+    "businessrule-35533060170265013329"
+   ]
+  },
+  {
+   "name": "Category tree presenter",
+   "domain": "Policy Definitions",
+   "responsibility": "Presents the category tree with visibility, icons, selection and area choice.",
+   "module": "category-tree-presenter",
+   "uses": [],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#7",
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#6",
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#1",
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#2",
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#3"
+   ],
+   "enforces": [
+    "businessrule-02094124658868396159",
+    "businessrule-09710935452747152124",
+    "businessrule-31928423765922463982",
+    "businessrule-53806388515964147870",
+    "businessrule-95679837516811308115",
+    "businessrule-03031297687036444400",
+    "businessrule-41685454348767959653",
+    "businessrule-75222346168306051090",
+    "businessrule-69364776950274199547"
+   ]
+  },
+  {
+   "name": "Item description pane",
+   "domain": "Policy Definitions",
+   "responsibility": "Lists the chosen category and shows the description of the focused item.",
+   "module": "item-description-pane",
+   "uses": [
+    "Category tree presenter"
+   ],
+   "serves": [
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#4"
+   ],
+   "enforces": [
+    "businessrule-16229847440499672368",
+    "businessrule-54518846821349856909",
+    "businessrule-55193519950925403263",
+    "businessrule-75568512748421119593",
+    "businessrule-77153890827857678995",
+    "businessrule-29660896839160984241"
+   ]
+  },
+  {
+   "name": "Item action resolver",
+   "domain": "Policy Definitions",
+   "responsibility": "Decides which actions fit the item and takes it as focus before acting.",
+   "module": "item-action-resolver",
+   "uses": [
+    "Category tree presenter",
+    "Item description pane"
+   ],
+   "serves": [
+    "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#5"
+   ],
+   "enforces": [
+    "businessrule-25501360175578063856",
+    "businessrule-36623707346851740456",
+    "businessrule-57028469241171716582",
+    "businessrule-68891329302657284154"
+   ]
+  },
+  {
+   "name": "Duplicate policy merger",
+   "domain": "Policy Definitions",
+   "responsibility": "Finds identical user and computer pairs and merges them after confirmation.",
+   "module": "duplicate-policy-merger",
+   "uses": [],
+   "serves": [
+    "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#1",
+    "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#2"
+   ],
+   "enforces": [
+    "businessrule-40351382289100643848",
+    "businessrule-92560631592608734086"
+   ]
+  },
+  {
+   "name": "Policy details presenter",
+   "domain": "Policy Definitions",
+   "responsibility": "Shows a policy's section, place and support with gaps flagged.",
+   "module": "policy-details-presenter",
+   "uses": [],
+   "serves": [
+    "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#1",
+    "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#2"
+   ],
+   "enforces": [
+    "businessrule-30888155476627040275",
+    "businessrule-59317523370985833904",
+    "businessrule-89677004946923202726"
+   ]
+  },
+  {
+   "name": "Category details presenter",
+   "domain": "Policy Definitions",
+   "responsibility": "Shows a category with its chain of parents and policies.",
+   "module": "category-details-presenter",
+   "uses": [],
+   "serves": [
+    "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#1",
+    "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#2"
+   ],
+   "enforces": [
+    "businessrule-88550832449331267612"
+   ]
+  },
+  {
+   "name": "Product browser",
+   "domain": "Policy Definitions",
+   "responsibility": "Lists products with child counts and shows versions and details.",
+   "module": "product-browser",
+   "uses": [],
+   "serves": [
+    "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#1",
+    "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#2",
+    "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#3"
+   ],
+   "enforces": [
+    "businessrule-12357125815438552418",
+    "businessrule-52738497804454297244",
+    "businessrule-69465149169735487446",
+    "businessrule-77846110822300189675",
+    "businessrule-93683837313593251984",
+    "businessrule-27325316460229917481",
+    "businessrule-39702010276849006236",
+    "businessrule-86698236183201307158",
+    "businessrule-95233256539481592648"
+   ]
+  },
+  {
+   "name": "Support rule browser",
+   "domain": "Policy Definitions",
+   "responsibility": "Filters support definitions and shows entries, with the products covered.",
+   "module": "support-rule-browser",
+   "uses": [
+    "Product browser"
+   ],
+   "serves": [
+    "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#1",
+    "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#2",
+    "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#3"
+   ],
+   "enforces": [
+    "businessrule-54625832347030556938",
+    "businessrule-82075493230431806208",
+    "businessrule-22485752927450345044",
+    "businessrule-97405551033143476269"
+   ]
+  },
+  {
+   "name": "Policy inspector",
+   "domain": "Policy Definitions",
+   "responsibility": "Gives a plain summary of a policy first and presentation and element detail on demand.",
+   "module": "policy-inspector",
+   "uses": [
+    "Semantic policy writer"
+   ],
+   "serves": [
+    "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#1",
+    "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#2",
+    "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#4"
+   ],
+   "enforces": [
+    "businessrule-43141523484770952437",
+    "businessrule-79057744450548393955",
+    "businessrule-80096613073902079124",
+    "businessrule-49549620435870223174",
+    "businessrule-94076713436940158385",
+    "businessrule-96393168223138786394",
+    "businessrule-57016400965631502733"
+   ]
+  },
+  {
+   "name": "Semantic policy writer",
+   "domain": "Policy Definitions",
+   "responsibility": "Writes a policy in the semantic text form per area.",
+   "module": "semantic-policy-writer",
+   "uses": [],
+   "serves": [
+    "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3"
+   ],
+   "enforces": [
+    "businessrule-01704207253788877148",
+    "businessrule-10913365400690794412",
+    "businessrule-20897965123834184786",
+    "businessrule-77000026808397550095",
+    "businessrule-78281155676242942940",
+    "businessrule-50694068263592934768"
+   ]
+  },
+  {
+   "name": "Loaded file reviewer",
+   "domain": "Policy Definitions",
+   "responsibility": "Lists loaded files with what each defines.",
+   "module": "loaded-file-reviewer",
+   "uses": [],
+   "serves": [
+    "tasks-browsing-policy-definitions.review-loaded-template-files:contribution-at-a-glance#1",
+    "tasks-browsing-policy-definitions.review-loaded-template-files:contribution-at-a-glance#2"
+   ],
+   "enforces": [
+    "businessrule-52722053913285909842"
+   ]
+  },
+  {
+   "name": "Policy lookup",
+   "domain": "Policy Definitions",
+   "responsibility": "Resolves an identifier to a policy, category, product or support definition and opens it.",
+   "module": "policy-lookup",
+   "uses": [
+    "Support evaluator"
+   ],
+   "serves": [
+    "tasks-finding-policies.find-policy-by-id:type-and-arrive#1",
+    "tasks-finding-policies.find-policy-by-id:type-and-arrive#2"
+   ],
+   "enforces": []
+  }
+ ]
+}

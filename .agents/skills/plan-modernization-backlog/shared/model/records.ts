@@ -67,6 +67,16 @@ export const Story = Schema.Struct({
         }).annotate(about("The journey the story adds; only when a person starts the work.")),
     ),
     criteria: Schema.NonEmptyArray(Criterion),
+    steps: Schema.optionalKey(
+        Schema.Array(Text).annotate(
+            about("The ids of the target journey steps this story delivers; for a story of a confirmed target only."),
+        ),
+    ),
+    components: Schema.optionalKey(
+        Schema.Array(Text).annotate(
+            about("The names of the target components this story builds; for a story of a confirmed target only."),
+        ),
+    ),
     open: Schema.optionalKey(
         Schema.Array(Text).annotate(
             about(

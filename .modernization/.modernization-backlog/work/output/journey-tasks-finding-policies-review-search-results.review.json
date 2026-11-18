@@ -1,0 +1,7 @@
+{"read": 3, "challenges": [
+{"record": 0, "says": "The cancelled-ending criterion says \"Search canceled\" with the counts, but the rule only says \"Search canceled: ...\" and states no counts, so the criterion adds detail the rule does not give."},
+{"record": 1, "says": "The criterion for rule 80544887789558031281 adds that the search dialog opens empty or running a new search, which is about starting a search, not picking a hit, and belongs to neither this story's title nor its steps."},
+{"record": 1, "says": "The last criterion (nothing is returned when no search has run or the last hit has been passed) restates an internal return value of the next-hit rule in terms a product owner cannot act on, and overlaps the previous criterion about Find Next."},
+{"record": 2, "says": "Every criterion has no cited rule (from is empty) and the criteria do not say why, yet each states behaviour no rule or decision gives: that no new search starts, that the earlier choice is reselected if still listed, and the exact \"No search has been run yet...\" message with nothing opening."},
+{"record": 2, "says": "The story has no components and reuses action block-64273399884973341208 already built by the first story, so it covers that action twice and has nothing of its own to build."}
+]}

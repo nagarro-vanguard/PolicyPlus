@@ -1,0 +1,12 @@
+{
+  "read": 3,
+  "challenges": [
+    {"record": 0, "says": "Step 3 validates the templates 'beside the current definitions', but the legacy rule that refuses a namespace 'already owned by a different ADMX file' only works because the workspace was emptied first, so re-downloading the same templates would refuse every one of them unless the check is limited to the new set."},
+    {"record": 0, "says": "The 'continue trying to use this workspace?' choice (legacy 'Errors were encountered...' rule) comes in step 5 after the switch in step 4, so the person is asked whether to continue after the old definitions are already gone, which contradicts the idea of keeping the current ones until the new ones are known usable."},
+    {"record": 0, "says": "'Ready' is never defined: legacy skips a refused template and still builds from the rest, yet stops with nothing built on a missing namespace; the journey switches in one step without saying that a partly loaded set replaces the current one, nor that a missing-namespace stop leaves the current definitions untouched."},
+    {"record": 1, "says": "Today a successful download already empties the workspace, loads the folder and saves it with no request from the person, so this variant only repeats the legacy behaviour in new words, and its trade-off ('gives up the moment of control') names a control the person never had."},
+    {"record": 1, "says": "Step 2 replaces the workspace 'when they are usable' and step 3 asks about continuing afterwards, losing the legacy ordering of the namespace-missing stop (nothing built, error shown) and the question to continue, which would arrive after the replacement is done."},
+    {"record": 2, "says": "Step 4 ('Know what went wrong') comes after the confirmed replacement although step 2 already shows the refused templates, so the person is told problems twice, and the legacy 'continue trying to use this workspace?' question is asked after the old definitions were replaced instead of at the preview."},
+    {"record": 2, "says": "The preview in step 2 does not say what the person sees when the template has no target namespace, where legacy stops at once and builds nothing, so counts of categories, products and policies cannot be shown and there is nothing to confirm."}
+  ]
+}

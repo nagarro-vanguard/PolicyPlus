@@ -1,0 +1,3002 @@
+{
+  "name": "One deployable on the person's Windows machine, a module per domain",
+  "idea": "A single server-rendered application holds every domain as an internal module with its own data and rules, talking to one another only through the modules' public contracts. It runs on the Windows machine whose policy is edited, as a program the person starts and uses in a browser on that machine, with the preference store beside it.",
+  "risks": [
+    "The target stack names no operating system, but the registry, loaded user hives, Group Policy refresh, the Windows installer tool, ownership of folders and the directory account lookup exist only on Windows, so the design is a Windows design and every part that reaches them must run on a Windows machine. Bun on any other system cannot provide them.",
+    "Placement: the application, the installer work and every machine adapter run in one process on the person's own Windows machine; the preference store (PostgreSQL) runs on that machine too, so each installation brings its own database to install and migrate. Placement: the outside systems tie the design to these platforms. The registry keys and loaded user hives, the directory (Active Directory), the template and comment folders and the machine's policy-definitions folder belong to the machine the policy is for, so they work only for the machine the part runs on: a person using a remote server would edit the server's policy, not their own. The Microsoft download site needs outbound access on any host. The build's version file is a build-time file and is host-neutral.",
+    "The installer is not a separate part here, only a module of the application, and it has a stated trigger and host: it is started only when the person asks to get definitions (or accepts the offer), never on a schedule, and it runs on the same Windows machine as the policy folders, in an administrator session, because it takes ownership of folders, runs the Windows installer tool and writes to the machine's policy-definitions folder.",
+    "Decision for the new stack: the rule keeps downloads to TLS 1.0 to 1.2. Bun does not offer 1.0 or 1.1 by default and 1.0 and 1.1 are retired, so the target proposes a floor of 1.2 and also accepts 1.3, a departure from the rule that the product owner must confirm.",
+    "Module boundaries are held by convention, so a careless import can quietly couple two domains. The whole application ships and scales as one, including the rarely used installer.",
+    "Alongside, the preference store holds the Workspace's remembered choices in PostgreSQL through Drizzle, replacing the old settings key; where the old key was unavailable the program carried on silently with defaults, so the store being down must degrade the same way."
+  ],
+  "tradeoff": "Simplest to build, run and test and the only cut where the machine's registry and folders are in the same process as the rules, at the price of discipline to keep domains apart and of a database per installation.",
+  "recommended": "One person edits one machine's policy, and every adapter has to run on that machine anyway; one deployable avoids network contracts, version mismatches and a second place to run on Windows.",
+  "integrations": [
+    {
+      "need": "external-84087908423930356962",
+      "domain": "Workspace",
+      "how": "The build writes the version into a generated source file that the workspace reads to tell which code a copy came from; it is a build-time file on any host."
+    },
+    {
+      "need": "external-47673734579321187695",
+      "domain": "Definition Acquisition",
+      "how": "A server-side adapter fetches the one fixed Microsoft package over a secure connection on the Windows machine that will receive the files."
+    },
+    {
+      "need": "external-90077838450756006603",
+      "domain": "Policy Source",
+      "how": "A machine-side adapter reads and writes policy files and folders on the Windows machine through Bun's file APIs."
+    },
+    {
+      "need": "external-25314431250146805945",
+      "domain": "Policy Definitions",
+      "how": "A parser on the Windows machine reads the template and language files from the chosen folder into the definition set."
+    },
+    {
+      "need": "external-45436197603688581519",
+      "domain": "Workspace",
+      "how": "Remembered choices are kept as preference rows in the preference store (PostgreSQL through Drizzle) instead of the program's own settings key."
+    },
+    {
+      "need": "external-08492831744411585027",
+      "domain": "Policy Source",
+      "how": "A reader and writer on the Windows machine exchange comment files beside each policy source."
+    },
+    {
+      "need": "external-97068941883605652538",
+      "domain": "Policy Source",
+      "how": "A machine-side adapter reads and writes the live policy keys and loaded user hives of the Windows machine it runs on."
+    },
+    {
+      "need": "external-90078096462363044953",
+      "domain": "Policy Source",
+      "how": "A machine-side adapter on a domain-joined Windows machine asks the directory to resolve a user name or identifier to the account whose policy is wanted."
+    }
+  ],
+  "domains": [
+    {
+      "name": "Policy Definitions",
+      "concept": "The catalogue of policy definitions a person can browse: categories, products, support rules and policies, and the text they are shown in.",
+      "facts": [
+        {
+          "name": "Policy definition set",
+          "from": [
+            "entity-92808062881922645840"
+          ],
+          "keys": [
+            "namespace",
+            "item name"
+          ],
+          "relates": [
+            {
+              "to": "Policy definition set",
+              "how": "categories, products and support rules refer to their parents and to each other by name"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        "businessrule-02094124658868396159",
+        "businessrule-05284912414586135547",
+        "businessrule-09527630769674812053",
+        "businessrule-09710935452747152124",
+        "businessrule-11459402502484833685",
+        "businessrule-11674597249570802702",
+        "businessrule-15417746115131960533",
+        "businessrule-16229847440499672368",
+        "businessrule-20341522967469767562",
+        "businessrule-23440834431907337703",
+        "businessrule-24269573875592969564",
+        "businessrule-24413560949580370921",
+        "businessrule-24623125277050759553",
+        "businessrule-25143456587420753656",
+        "businessrule-25371901799273876158",
+        "businessrule-25475639870526854331",
+        "businessrule-26710870928949391310",
+        "businessrule-26805667514169896082",
+        "businessrule-27318854358145723180",
+        "businessrule-31892600882792899810",
+        "businessrule-31928423765922463982",
+        "businessrule-32910542149714942665",
+        "businessrule-34235271555130179948",
+        "businessrule-34301200927683901255",
+        "businessrule-35101409759930685557",
+        "businessrule-35533060170265013329",
+        "businessrule-35659935925800526059",
+        "businessrule-39179467487447053337",
+        "businessrule-40646214351993665036",
+        "businessrule-40992022396445585276",
+        "businessrule-41440459272484897081",
+        "businessrule-43452052995976839356",
+        "businessrule-44253734408576510565",
+        "businessrule-46883945724661990816",
+        "businessrule-48352716870696272616",
+        "businessrule-48999549165964538717",
+        "businessrule-49748745950500666232",
+        "businessrule-50061101372023867676",
+        "businessrule-52005709614722807804",
+        "businessrule-53806388515964147870",
+        "businessrule-54518846821349856909",
+        "businessrule-55193519950925403263",
+        "businessrule-58670284456856579605",
+        "businessrule-59268653642646332356",
+        "businessrule-60385862679195390671",
+        "businessrule-62728858792696794889",
+        "businessrule-66701495026848575269",
+        "businessrule-68278299005201189825",
+        "businessrule-69364776950274199547",
+        "businessrule-69876963387177556361",
+        "businessrule-70397490486289456229",
+        "businessrule-75568512748421119593",
+        "businessrule-77153890827857678995",
+        "businessrule-77397977946778263418",
+        "businessrule-80037556468037401208",
+        "businessrule-81760746419124272603",
+        "businessrule-83755288267226589422",
+        "businessrule-84649532972995606012",
+        "businessrule-87686960346106148106",
+        "businessrule-89165707538784213793",
+        "businessrule-89513911810275647919",
+        "businessrule-90575686774382821065",
+        "businessrule-91228574547678345469",
+        "businessrule-92573318973236627036",
+        "businessrule-92965345094444319678",
+        "businessrule-93437714727587946479",
+        "businessrule-93507723834804807958",
+        "businessrule-95679837516811308115",
+        "businessrule-97301799709818271508",
+        "businessrule-98117161588141132501",
+        "businessrule-99139491988760691407",
+        "businessrule-61344191921921935952",
+        "businessrule-52722053913285909842",
+        "businessrule-03031297687036444400",
+        "businessrule-25501360175578063856",
+        "businessrule-29660896839160984241",
+        "businessrule-36623707346851740456",
+        "businessrule-41685454348767959653",
+        "businessrule-57028469241171716582",
+        "businessrule-68891329302657284154",
+        "businessrule-75222346168306051090",
+        "businessrule-40351382289100643848",
+        "businessrule-92560631592608734086",
+        "businessrule-30888155476627040275",
+        "businessrule-59317523370985833904",
+        "businessrule-89677004946923202726",
+        "businessrule-88550832449331267612",
+        "businessrule-12357125815438552418",
+        "businessrule-52738497804454297244",
+        "businessrule-69465149169735487446",
+        "businessrule-77846110822300189675",
+        "businessrule-93683837313593251984",
+        "businessrule-54625832347030556938",
+        "businessrule-82075493230431806208",
+        "businessrule-01704207253788877148",
+        "businessrule-10913365400690794412",
+        "businessrule-20897965123834184786",
+        "businessrule-43141523484770952437",
+        "businessrule-49549620435870223174",
+        "businessrule-50694068263592934768",
+        "businessrule-57016400965631502733",
+        "businessrule-77000026808397550095",
+        "businessrule-78281155676242942940",
+        "businessrule-79057744450548393955",
+        "businessrule-80096613073902079124",
+        "businessrule-94076713436940158385",
+        "businessrule-96393168223138786394",
+        "businessrule-02030966310880796596",
+        "businessrule-87097618083601098949",
+        "businessrule-22485752927450345044",
+        "businessrule-27325316460229917481",
+        "businessrule-39702010276849006236",
+        "businessrule-86698236183201307158",
+        "businessrule-95233256539481592648",
+        "businessrule-97405551033143476269"
+      ],
+      "dependsOn": [],
+      "why": "Everything that says what a policy is, where it sits, what supports it and how a category or product is browsed changes together when Microsoft ships new definitions; it also decides which categories count as orphaned or empty, and none of it needs the stored settings."
+    },
+    {
+      "name": "Policy Source",
+      "concept": "Where policy settings and their comments are kept, how a place is opened, remembered, checked for writability and released.",
+      "facts": [
+        {
+          "name": "Policy comment",
+          "from": [
+            "entity-52418278656387992812"
+          ],
+          "keys": [
+            "policy name",
+            "area"
+          ],
+          "relates": [
+            {
+              "to": "Policy comment",
+              "how": "a comment belongs to one policy in one area of one source"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        "businessrule-17641776170698884064",
+        "businessrule-18230757898637060853",
+        "businessrule-28868424053274244047",
+        "businessrule-29530054883116088403",
+        "businessrule-30168924374542565520",
+        "businessrule-40601471490811436933",
+        "businessrule-46824143239519073718",
+        "businessrule-56421390704826486738",
+        "businessrule-67539343519248421601",
+        "businessrule-70425663320377904356",
+        "businessrule-86313704517800761850",
+        "businessrule-90470730563627765974",
+        "businessrule-96701855986906093783",
+        "businessrule-97000243539037627331",
+        "businessrule-99096323836097983665",
+        "businessrule-06218920206107794280",
+        "businessrule-27578488339642782673",
+        "businessrule-29585332630928853779",
+        "businessrule-31889487085995982343",
+        "businessrule-34447675520768722859",
+        "businessrule-35899140497190862562",
+        "businessrule-39262656033285451423",
+        "businessrule-49395771262191850050",
+        "businessrule-50808386816006011599",
+        "businessrule-51029550915449645879",
+        "businessrule-51554818045857630746",
+        "businessrule-62563112935081932578",
+        "businessrule-67456626752221980743",
+        "businessrule-73847809349842629987",
+        "businessrule-74412475215137182202",
+        "businessrule-75428533810997783570",
+        "businessrule-76710184957379543464",
+        "businessrule-77499382636897144286",
+        "businessrule-79173574861552738237",
+        "businessrule-83248377690419919134",
+        "businessrule-83542226215682203251",
+        "businessrule-84284160770896952745",
+        "businessrule-93571958636080198306",
+        "businessrule-95699184013424603885",
+        "businessrule-10464012301936997836",
+        "businessrule-34260437212150300999",
+        "businessrule-36363277387876573326",
+        "businessrule-58680491450946971024",
+        "businessrule-60819102502476341284",
+        "businessrule-66851330016699676430",
+        "businessrule-75533700456390778594",
+        "businessrule-84588009124214109370",
+        "businessrule-26724904229141688759",
+        "businessrule-77474018484672211108",
+        "businessrule-88238619586671903040",
+        "businessrule-91379498462935455610",
+        "businessrule-02848405191150173128",
+        "businessrule-37850254215893887157",
+        "businessrule-00851565168679896073",
+        "businessrule-05545231242611046306",
+        "businessrule-09176393040056781958",
+        "businessrule-09208070518455812303",
+        "businessrule-13724150063390760319",
+        "businessrule-17212723393144190896",
+        "businessrule-19841193988434357732",
+        "businessrule-20632548312339129786",
+        "businessrule-24034386628405619971",
+        "businessrule-24339552780845919468",
+        "businessrule-25033115401021301399",
+        "businessrule-26056926835272364672",
+        "businessrule-28402048173344159866",
+        "businessrule-39804924157705575084",
+        "businessrule-41013546429447756519",
+        "businessrule-42987908693120337062",
+        "businessrule-43613259767674592997",
+        "businessrule-48799510965890913669",
+        "businessrule-48968387067309128566",
+        "businessrule-51421539020102170720",
+        "businessrule-57614366266507799597",
+        "businessrule-66651514909736203695",
+        "businessrule-67697422395860869033",
+        "businessrule-71273978078040008855",
+        "businessrule-72149976207795359606",
+        "businessrule-84817748081019740495",
+        "businessrule-86190343622453999219",
+        "businessrule-87767421628061265824",
+        "businessrule-90527876062459953686",
+        "businessrule-91552597921533368557",
+        "businessrule-98130638476370994041",
+        "businessrule-72559528436656832979",
+        "businessrule-98025569949322378254",
+        "businessrule-46972642019161394212",
+        "businessrule-59631775004799082543"
+      ],
+      "dependsOn": [],
+      "why": "Reading and writing stored values and comments, and the life of an opened place (the dialog's starting sources, the writability report, releasing a loaded user hive), are one set of decisions about the places people keep their policy."
+    },
+    {
+      "name": "Policy State",
+      "concept": "Whether a policy is on, off or unset in an area, and the change of that state with its options and comment.",
+      "facts": [
+        {
+          "name": "Policy setting",
+          "from": [
+            "entity-99683518011128701149"
+          ],
+          "keys": [
+            "policy name",
+            "area"
+          ],
+          "relates": [
+            {
+              "to": "Policy setting",
+              "how": "options belong to the policy they refine"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        "businessrule-07376289294643129633",
+        "businessrule-07554086131159240838",
+        "businessrule-22959538508130326801",
+        "businessrule-25766167090873157702",
+        "businessrule-29495869201116213931",
+        "businessrule-33872241894384295212",
+        "businessrule-46971412075927401870",
+        "businessrule-71909773168029429916",
+        "businessrule-92873738128602220135",
+        "businessrule-01560321201783674273",
+        "businessrule-04152128046162000583",
+        "businessrule-07359577675270518038",
+        "businessrule-11779280825123119273",
+        "businessrule-14958427259964761169",
+        "businessrule-19622432139142313215",
+        "businessrule-20408685392954236399",
+        "businessrule-22919299514571743135",
+        "businessrule-23336067846798029987",
+        "businessrule-24534399091993971891",
+        "businessrule-30662593154265010717",
+        "businessrule-33075335985104561108",
+        "businessrule-33456476599558212379",
+        "businessrule-34769835898304277453",
+        "businessrule-36860850025836880139",
+        "businessrule-37022902056569995834",
+        "businessrule-37207468109369530089",
+        "businessrule-43638846001153509048",
+        "businessrule-46516041958192928718",
+        "businessrule-47134496169701496073",
+        "businessrule-47264131679601828501",
+        "businessrule-47891883049575092611",
+        "businessrule-49179499449653183223",
+        "businessrule-49955247469929977676",
+        "businessrule-52553634867035971750",
+        "businessrule-53178349170981485484",
+        "businessrule-53979609002646144363",
+        "businessrule-55949208713495428877",
+        "businessrule-56832565542674334637",
+        "businessrule-59619098183313284576",
+        "businessrule-60358450731077326247",
+        "businessrule-60774486401252037450",
+        "businessrule-64524120751868809207",
+        "businessrule-65724709448091621197",
+        "businessrule-66734059366331213205",
+        "businessrule-67842190900074642321",
+        "businessrule-67944280997214552078",
+        "businessrule-75244076300039577548",
+        "businessrule-76178080166619590309",
+        "businessrule-76476292137970655950",
+        "businessrule-80911529766189561154",
+        "businessrule-84933301477035282498",
+        "businessrule-90058940824311429227",
+        "businessrule-90485587050957154914",
+        "businessrule-90493804689850695370",
+        "businessrule-92057272745409912098",
+        "businessrule-95995013385384587600",
+        "businessrule-97175686457081101132",
+        "businessrule-98958969318255528192",
+        "businessrule-12966156302506777327",
+        "businessrule-14257585336729172869",
+        "businessrule-17846007911557610465",
+        "businessrule-21688833916465491468",
+        "businessrule-27078270365699057081",
+        "businessrule-30078789996227150580",
+        "businessrule-37953448968627114950",
+        "businessrule-38078267378406118840",
+        "businessrule-45692609540846356884",
+        "businessrule-47001836867625969953",
+        "businessrule-49239739229069713399",
+        "businessrule-53070511165338807522",
+        "businessrule-64894609785645160893",
+        "businessrule-70167687024707690035",
+        "businessrule-78566706966921753288",
+        "businessrule-82283321913472173436",
+        "businessrule-85959955505766938318",
+        "businessrule-91520515189249767580",
+        "businessrule-97058087218177971913",
+        "businessrule-47036476815425257305",
+        "businessrule-75178338270301910966"
+      ],
+      "dependsOn": [
+        "Policy Definitions",
+        "Policy Source"
+      ],
+      "why": "Reading a state from evidence, writing the values that mean a state and refreshing what is shown after a change are halves of one decision, and all need the definitions and the sources."
+    },
+    {
+      "name": "Policy Discovery",
+      "concept": "Finding the policy a person has in mind by name, words, setting or filter and reviewing what was found.",
+      "facts": [],
+      "rules": [
+        "businessrule-09965726926686583005",
+        "businessrule-12540995342195943001",
+        "businessrule-67323359061601595450",
+        "businessrule-70331897906623822249",
+        "businessrule-79960316131030112593",
+        "businessrule-97390301066419776959",
+        "businessrule-97862941341357225531",
+        "businessrule-85204901615179220846",
+        "businessrule-34818300362920325745",
+        "businessrule-49582367227471127226",
+        "businessrule-56645748073860464161",
+        "businessrule-62209428351075007862",
+        "businessrule-73292110340688125936",
+        "businessrule-73680018829588409732",
+        "businessrule-81666786810242280110",
+        "businessrule-93221850558792273709",
+        "businessrule-20714647401379544771",
+        "businessrule-21915530910585082056",
+        "businessrule-31790508764365764837",
+        "businessrule-51916167191556979448",
+        "businessrule-63262725504588029346",
+        "businessrule-73561308167207352856",
+        "businessrule-86305970842078630022",
+        "businessrule-27271850163543025066",
+        "businessrule-35545130062422334165",
+        "businessrule-54035538146675510973",
+        "businessrule-54588279423566663184",
+        "businessrule-71024372746156766440",
+        "businessrule-73898787083077319907",
+        "businessrule-90661647574869686546",
+        "businessrule-95826639622119629666",
+        "businessrule-15877826642522947109",
+        "businessrule-17385510066480798684",
+        "businessrule-17430127230259081557",
+        "businessrule-35354684864210149934",
+        "businessrule-38090025507732480917",
+        "businessrule-48840711587592938759",
+        "businessrule-53914450774482291886",
+        "businessrule-57749472934040708163",
+        "businessrule-78338951417255409296",
+        "businessrule-79288582532948770219",
+        "businessrule-80544887789558031281",
+        "businessrule-94342659396000502591",
+        "businessrule-01575097247784730570",
+        "businessrule-03237181236179074787",
+        "businessrule-26561900736287578271",
+        "businessrule-32591775124677875588",
+        "businessrule-36944318108231327872",
+        "businessrule-57716378734614233724",
+        "businessrule-59209755491778300947",
+        "businessrule-61457439461915744538",
+        "businessrule-70906412717211463954",
+        "businessrule-76306981111385169671",
+        "businessrule-81055540068763556055",
+        "businessrule-81206266674090971597",
+        "businessrule-85052319902195299547",
+        "businessrule-88807660791719489759",
+        "businessrule-90628240213834851721"
+      ],
+      "dependsOn": [
+        "Policy Definitions",
+        "Policy State",
+        "Policy Source"
+      ],
+      "why": "Narrowing and searching only read the others and change none of their facts. The browsing of products and support rules is catalogue knowledge and sits in Policy Definitions, so this domain holds only filters, search, lookup by identifier and results."
+    },
+    {
+      "name": "Policy File Exchange",
+      "concept": "Direct work on the raw keys and values of a stored policy and the exchange of whole policy files.",
+      "facts": [],
+      "rules": [
+        "businessrule-13057335115870748705",
+        "businessrule-14969413888672404933",
+        "businessrule-18574755515767742264",
+        "businessrule-21403142511575039594",
+        "businessrule-32089237714667793315",
+        "businessrule-40441510620479008895",
+        "businessrule-43194539708053716006",
+        "businessrule-44523725638753390545",
+        "businessrule-64564273672622472190",
+        "businessrule-67529938588779257243",
+        "businessrule-81365817698028227620",
+        "businessrule-86296876237579429124",
+        "businessrule-98676109650316370626",
+        "businessrule-13220028854331489804",
+        "businessrule-21846002666758208174",
+        "businessrule-27239953863800337722",
+        "businessrule-64891270751019389302",
+        "businessrule-65588006996628019814",
+        "businessrule-87150598845683946147",
+        "businessrule-88605435114040098546",
+        "businessrule-94140234913184124479",
+        "businessrule-05846735750774889498",
+        "businessrule-85571919984782494727",
+        "businessrule-04432638879352685329",
+        "businessrule-27194812132584860836",
+        "businessrule-30251051045932916641",
+        "businessrule-30359040357073744492",
+        "businessrule-63694206615951133419",
+        "businessrule-84404651755849490179",
+        "businessrule-00824990257185597112",
+        "businessrule-17451417049747776074",
+        "businessrule-18627979551357993299",
+        "businessrule-18921117498420510792",
+        "businessrule-23306400970907693227",
+        "businessrule-45318436042524755037",
+        "businessrule-52142616153788952070",
+        "businessrule-55584576559812010511",
+        "businessrule-57877192145861745927",
+        "businessrule-59516130836014950967",
+        "businessrule-59618595788928559733",
+        "businessrule-60060400053285241820",
+        "businessrule-61966293182360194116",
+        "businessrule-75481654180830858390",
+        "businessrule-89009644626675244455",
+        "businessrule-97032716123610483497",
+        "businessrule-69354381130041181167",
+        "businessrule-97686874157870392601",
+        "businessrule-04261341694819838767",
+        "businessrule-14603482078338141941",
+        "businessrule-38615217867457911992",
+        "businessrule-50297867320833369013",
+        "businessrule-57163770116853325546",
+        "businessrule-60632388568264259103",
+        "businessrule-62577216252619197563",
+        "businessrule-78788630170323770129",
+        "businessrule-98458070891453225274",
+        "businessrule-57982804566984189207"
+      ],
+      "dependsOn": [
+        "Policy Source"
+      ],
+      "why": "Raw editing bypasses the meaning of policies and works on the stored form only, so it relies on the sources and on nothing else."
+    },
+    {
+      "name": "Definition Acquisition",
+      "concept": "Getting Microsoft's current policy definitions installed where the program can use them.",
+      "facts": [],
+      "rules": [
+        "businessrule-16960626064100495277",
+        "businessrule-17840470067823720423",
+        "businessrule-19284863828429321329",
+        "businessrule-24154317128059319852",
+        "businessrule-33969702428946021999",
+        "businessrule-34650805596483639458",
+        "businessrule-53408776186716933732",
+        "businessrule-70392920399990339776",
+        "businessrule-75570169794845906057",
+        "businessrule-78945520165872370051",
+        "businessrule-84139143444339961851",
+        "businessrule-91358402464075338920",
+        "businessrule-23603907625209300500",
+        "businessrule-44390406872239414183",
+        "businessrule-94371671563498468562",
+        "businessrule-15364695696024462204"
+      ],
+      "dependsOn": [
+        "Policy Definitions"
+      ],
+      "why": "A one-off, failure-prone journey across a network and the file system with its own rules, apart from how definitions are later read; it holds nothing about the loaded catalogue."
+    },
+    {
+      "name": "Workspace",
+      "concept": "The person's working session: which definitions are loaded and from where, the language, what is remembered between visits, what is shown about the program and what is let go.",
+      "facts": [
+        {
+          "name": "Program preference",
+          "from": [
+            "entity-40163170707735391190"
+          ],
+          "keys": [
+            "preference name"
+          ],
+          "relates": []
+        }
+      ],
+      "rules": [
+        "businessrule-12414618955963878773",
+        "businessrule-73782132825452925601",
+        "businessrule-25353365313977612083",
+        "businessrule-40551856488084894130",
+        "businessrule-41547680626150552574",
+        "businessrule-58877134447436981389",
+        "businessrule-72200124994498270380",
+        "businessrule-78253526822536661517",
+        "businessrule-59853527376948406586",
+        "businessrule-68766858893219046657",
+        "businessrule-31456964891379452251",
+        "businessrule-80947080049413275464",
+        "businessrule-93543924991745555552",
+        "businessrule-06850078746756456273",
+        "businessrule-19671296259932138006",
+        "businessrule-43765682097437166867",
+        "businessrule-53176229115945924012",
+        "businessrule-56221298079625729644",
+        "businessrule-76226373219464614800",
+        "businessrule-88154451768954453608",
+        "businessrule-98012095360980700253",
+        "businessrule-07200475892676201466",
+        "businessrule-83939170310206178732"
+      ],
+      "dependsOn": [
+        "Policy Definitions",
+        "Policy Discovery",
+        "Definition Acquisition"
+      ],
+      "why": "Session start, loading and replacing definitions, the language choice, the remembered choices (including whether the welcome offer was already considered) and leaving tie the others together without owning their facts. It hands the remembered sources to Policy Source, which decides how they are used."
+    }
+  ],
+  "containers": [
+    {
+      "name": "Policy Plus application",
+      "kind": "interface",
+      "tech": "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+      "holds": [
+        "Policy Definitions",
+        "Policy Source",
+        "Policy State",
+        "Policy Discovery",
+        "Policy File Exchange",
+        "Definition Acquisition",
+        "Workspace"
+      ]
+    },
+    {
+      "name": "Preference store",
+      "kind": "store",
+      "tech": "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+      "holds": [
+        "Workspace"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "name": "Definition installation flow",
+      "domain": "Policy Definitions",
+      "responsibility": "Walks a person through getting the current definitions installed, reports which stage failed and hands the resulting folder over for loading.",
+      "module": "definition-installation-flow",
+      "uses": [
+        "Definition load coordinator"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#1",
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2",
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#3"
+      ],
+      "enforces": []
+    },
+    {
+      "name": "Missing definitions detector",
+      "domain": "Policy Definitions",
+      "responsibility": "Decides whether missing definitions should be offered to the person, from the share of non-empty categories that name a missing parent.",
+      "module": "missing-definitions-detector",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#2"
+      ],
+      "enforces": [
+        "businessrule-02030966310880796596",
+        "businessrule-87097618083601098949"
+      ]
+    },
+    {
+      "name": "Template folder scanner",
+      "domain": "Policy Definitions",
+      "responsibility": "Finds the template files in a chosen folder and ignores everything else; reads them through the outside parser.",
+      "module": "template-folder-scanner",
+      "uses": [
+        "Template file source adapter"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1"
+      ],
+      "enforces": [
+        "businessrule-87686960346106148106"
+      ]
+    },
+    {
+      "name": "Template file source adapter",
+      "domain": "Policy Definitions",
+      "responsibility": "Reads template and language files from a folder and gives back their parsed documents.",
+      "module": "template-file-source-adapter",
+      "uses": [],
+      "serves": [],
+      "enforces": [],
+      "adapts": "external-25314431250146805945",
+      "platform": "Reads files of the machine the definitions live on, which no step names directly."
+    },
+    {
+      "name": "Language file locator",
+      "domain": "Policy Definitions",
+      "responsibility": "Chooses the language text file for each template: exact language, same family, then English.",
+      "module": "language-file-locator",
+      "uses": [
+        "Template file source adapter"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#2"
+      ],
+      "enforces": [
+        "businessrule-92573318973236627036",
+        "businessrule-92965345094444319678",
+        "businessrule-69876963387177556361"
+      ]
+    },
+    {
+      "name": "Language text reader",
+      "domain": "Policy Definitions",
+      "responsibility": "Reads a language file and refuses flawed ones; resolves text references into shown text.",
+      "module": "language-text-reader",
+      "uses": [
+        "Template file source adapter"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#2"
+      ],
+      "enforces": [
+        "businessrule-32910542149714942665",
+        "businessrule-09527630769674812053",
+        "businessrule-84649532972995606012",
+        "businessrule-93437714727587946479",
+        "businessrule-05284912414586135547",
+        "businessrule-58670284456856579605"
+      ]
+    },
+    {
+      "name": "Definition language setting",
+      "domain": "Policy Definitions",
+      "responsibility": "Remembers the person's language for definition text and offers to reload at once.",
+      "module": "definition-language-setting",
+      "uses": [
+        "Definition load coordinator"
+      ],
+      "serves": [
+        "tasks-using-the-product.set-definition-language:name-the-language-then-reload#2"
+      ],
+      "enforces": []
+    },
+    {
+      "name": "Template validator",
+      "domain": "Policy Definitions",
+      "responsibility": "Reads and validates each template, refuses or skips unsound ones and stops on a missing namespace.",
+      "module": "template-validator",
+      "uses": [
+        "Template file source adapter"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#3"
+      ],
+      "enforces": [
+        "businessrule-40646214351993665036",
+        "businessrule-98117161588141132501",
+        "businessrule-25371901799273876158",
+        "businessrule-80037556468037401208",
+        "businessrule-91228574547678345469",
+        "businessrule-83755288267226589422",
+        "businessrule-15417746115131960533",
+        "businessrule-41440459272484897081",
+        "businessrule-26805667514169896082",
+        "businessrule-59268653642646332356",
+        "businessrule-25143456587420753656",
+        "businessrule-89165707538784213793",
+        "businessrule-70397490486289456229"
+      ]
+    },
+    {
+      "name": "Definition structure builder",
+      "domain": "Policy Definitions",
+      "responsibility": "Builds categories, products, support rules and policies from the validated templates and joins them to the available set.",
+      "module": "definition-structure-builder",
+      "uses": [
+        "Template validator",
+        "Language text reader",
+        "Policy option reader"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#4",
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#5"
+      ],
+      "enforces": [
+        "businessrule-24623125277050759553",
+        "businessrule-24413560949580370921",
+        "businessrule-39179467487447053337",
+        "businessrule-11459402502484833685",
+        "businessrule-66701495026848575269",
+        "businessrule-24269573875592969564",
+        "businessrule-90575686774382821065",
+        "businessrule-44253734408576510565",
+        "businessrule-68278299005201189825",
+        "businessrule-77397977946778263418",
+        "businessrule-93507723834804807958",
+        "businessrule-26710870928949391310",
+        "businessrule-97301799709818271508"
+      ]
+    },
+    {
+      "name": "Policy option reader",
+      "domain": "Policy Definitions",
+      "responsibility": "Reads each policy option and its entry layout, with defaults and storage effects.",
+      "module": "policy-option-reader",
+      "uses": [
+        "Language text reader"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#4"
+      ],
+      "enforces": [
+        "businessrule-20341522967469767562",
+        "businessrule-23440834431907337703",
+        "businessrule-27318854358145723180",
+        "businessrule-31892600882792899810",
+        "businessrule-35101409759930685557",
+        "businessrule-35659935925800526059",
+        "businessrule-40992022396445585276",
+        "businessrule-46883945724661990816",
+        "businessrule-48352716870696272616",
+        "businessrule-48999549165964538717",
+        "businessrule-50061101372023867676",
+        "businessrule-60385862679195390671",
+        "businessrule-25475639870526854331",
+        "businessrule-43452052995976839356",
+        "businessrule-62728858792696794889"
+      ]
+    },
+    {
+      "name": "Support evaluator",
+      "domain": "Policy Definitions",
+      "responsibility": "Works out whether a support definition is met for chosen products.",
+      "module": "support-evaluator",
+      "uses": [],
+      "serves": [
+        "tasks-finding-policies.find-policy-by-id:type-and-arrive#2"
+      ],
+      "enforces": [
+        "businessrule-99139491988760691407",
+        "businessrule-49748745950500666232",
+        "businessrule-52005709614722807804",
+        "businessrule-34301200927683901255",
+        "businessrule-81760746419124272603"
+      ]
+    },
+    {
+      "name": "Definition load coordinator",
+      "domain": "Policy Definitions",
+      "responsibility": "Runs a load from folder or single files, replaces or adds, reports problems and remembers the folder.",
+      "module": "definition-load-coordinator",
+      "uses": [
+        "Template folder scanner",
+        "Language file locator",
+        "Definition structure builder",
+        "Definition reset"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#6",
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#3",
+        "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#2",
+        "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#3",
+        "tasks-browsing-policy-definitions.add-template-file:add-several-at-once#2"
+      ],
+      "enforces": [
+        "businessrule-34235271555130179948",
+        "businessrule-61344191921921935952"
+      ]
+    },
+    {
+      "name": "Definition reset",
+      "domain": "Policy Definitions",
+      "responsibility": "Empties the loaded definitions at once and restores them on request.",
+      "module": "definition-reset",
+      "uses": [],
+      "serves": [
+        "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#1",
+        "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#2"
+      ],
+      "enforces": []
+    },
+    {
+      "name": "Policy state presenter",
+      "domain": "Policy Definitions",
+      "responsibility": "Works out each policy's state and comment for the shown area or both, with filters.",
+      "module": "policy-state-presenter",
+      "uses": [
+        "Category tree presenter"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8"
+      ],
+      "enforces": [
+        "businessrule-11674597249570802702",
+        "businessrule-89513911810275647919",
+        "businessrule-35533060170265013329"
+      ]
+    },
+    {
+      "name": "Category tree presenter",
+      "domain": "Policy Definitions",
+      "responsibility": "Presents the category tree with visibility, icons, selection and area choice.",
+      "module": "category-tree-presenter",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#7",
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#6",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#1",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#2",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#3"
+      ],
+      "enforces": [
+        "businessrule-02094124658868396159",
+        "businessrule-09710935452747152124",
+        "businessrule-31928423765922463982",
+        "businessrule-53806388515964147870",
+        "businessrule-95679837516811308115",
+        "businessrule-03031297687036444400",
+        "businessrule-41685454348767959653",
+        "businessrule-75222346168306051090",
+        "businessrule-69364776950274199547"
+      ]
+    },
+    {
+      "name": "Item description pane",
+      "domain": "Policy Definitions",
+      "responsibility": "Lists the chosen category and shows the description of the focused item.",
+      "module": "item-description-pane",
+      "uses": [
+        "Category tree presenter"
+      ],
+      "serves": [
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#4"
+      ],
+      "enforces": [
+        "businessrule-16229847440499672368",
+        "businessrule-54518846821349856909",
+        "businessrule-55193519950925403263",
+        "businessrule-75568512748421119593",
+        "businessrule-77153890827857678995",
+        "businessrule-29660896839160984241"
+      ]
+    },
+    {
+      "name": "Item action resolver",
+      "domain": "Policy Definitions",
+      "responsibility": "Decides which actions fit the item and takes it as focus before acting.",
+      "module": "item-action-resolver",
+      "uses": [
+        "Category tree presenter",
+        "Item description pane"
+      ],
+      "serves": [
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#5"
+      ],
+      "enforces": [
+        "businessrule-25501360175578063856",
+        "businessrule-36623707346851740456",
+        "businessrule-57028469241171716582",
+        "businessrule-68891329302657284154"
+      ]
+    },
+    {
+      "name": "Duplicate policy merger",
+      "domain": "Policy Definitions",
+      "responsibility": "Finds identical user and computer pairs and merges them after confirmation.",
+      "module": "duplicate-policy-merger",
+      "uses": [],
+      "serves": [
+        "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#1",
+        "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#2"
+      ],
+      "enforces": [
+        "businessrule-40351382289100643848",
+        "businessrule-92560631592608734086"
+      ]
+    },
+    {
+      "name": "Policy details presenter",
+      "domain": "Policy Definitions",
+      "responsibility": "Shows a policy's section, place and support with gaps flagged.",
+      "module": "policy-details-presenter",
+      "uses": [],
+      "serves": [
+        "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#1",
+        "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#2"
+      ],
+      "enforces": [
+        "businessrule-30888155476627040275",
+        "businessrule-59317523370985833904",
+        "businessrule-89677004946923202726"
+      ]
+    },
+    {
+      "name": "Category details presenter",
+      "domain": "Policy Definitions",
+      "responsibility": "Shows a category with its chain of parents and policies.",
+      "module": "category-details-presenter",
+      "uses": [],
+      "serves": [
+        "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#1",
+        "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#2"
+      ],
+      "enforces": [
+        "businessrule-88550832449331267612"
+      ]
+    },
+    {
+      "name": "Product browser",
+      "domain": "Policy Definitions",
+      "responsibility": "Lists products with child counts and shows versions and details.",
+      "module": "product-browser",
+      "uses": [],
+      "serves": [
+        "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#1",
+        "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#2",
+        "tasks-browsing-policy-definitions.browse-products:product-family-in-one-view#3"
+      ],
+      "enforces": [
+        "businessrule-12357125815438552418",
+        "businessrule-52738497804454297244",
+        "businessrule-69465149169735487446",
+        "businessrule-77846110822300189675",
+        "businessrule-93683837313593251984",
+        "businessrule-27325316460229917481",
+        "businessrule-39702010276849006236",
+        "businessrule-86698236183201307158",
+        "businessrule-95233256539481592648"
+      ]
+    },
+    {
+      "name": "Support rule browser",
+      "domain": "Policy Definitions",
+      "responsibility": "Filters support definitions and shows entries, with the products covered.",
+      "module": "support-rule-browser",
+      "uses": [
+        "Product browser"
+      ],
+      "serves": [
+        "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#1",
+        "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#2",
+        "tasks-browsing-policy-definitions.browse-support-rules:start-from-the-product#3"
+      ],
+      "enforces": [
+        "businessrule-54625832347030556938",
+        "businessrule-82075493230431806208",
+        "businessrule-22485752927450345044",
+        "businessrule-97405551033143476269"
+      ]
+    },
+    {
+      "name": "Policy inspector",
+      "domain": "Policy Definitions",
+      "responsibility": "Gives a plain summary of a policy first and presentation and element detail on demand.",
+      "module": "policy-inspector",
+      "uses": [
+        "Semantic policy writer"
+      ],
+      "serves": [
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#1",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#2",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#4"
+      ],
+      "enforces": [
+        "businessrule-43141523484770952437",
+        "businessrule-79057744450548393955",
+        "businessrule-80096613073902079124",
+        "businessrule-49549620435870223174",
+        "businessrule-94076713436940158385",
+        "businessrule-96393168223138786394",
+        "businessrule-57016400965631502733"
+      ]
+    },
+    {
+      "name": "Semantic policy writer",
+      "domain": "Policy Definitions",
+      "responsibility": "Writes a policy in the semantic text form per area.",
+      "module": "semantic-policy-writer",
+      "uses": [],
+      "serves": [
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3"
+      ],
+      "enforces": [
+        "businessrule-01704207253788877148",
+        "businessrule-10913365400690794412",
+        "businessrule-20897965123834184786",
+        "businessrule-77000026808397550095",
+        "businessrule-78281155676242942940",
+        "businessrule-50694068263592934768"
+      ]
+    },
+    {
+      "name": "Loaded file reviewer",
+      "domain": "Policy Definitions",
+      "responsibility": "Lists loaded files with what each defines.",
+      "module": "loaded-file-reviewer",
+      "uses": [],
+      "serves": [
+        "tasks-browsing-policy-definitions.review-loaded-template-files:contribution-at-a-glance#1",
+        "tasks-browsing-policy-definitions.review-loaded-template-files:contribution-at-a-glance#2"
+      ],
+      "enforces": [
+        "businessrule-52722053913285909842"
+      ]
+    },
+    {
+      "name": "Policy lookup",
+      "domain": "Policy Definitions",
+      "responsibility": "Resolves an identifier to a policy, category, product or support definition and opens it.",
+      "module": "policy-lookup",
+      "uses": [
+        "Support evaluator"
+      ],
+      "serves": [
+        "tasks-finding-policies.find-policy-by-id:type-and-arrive#1",
+        "tasks-finding-policies.find-policy-by-id:type-and-arrive#2"
+      ],
+      "enforces": []
+    },
+    {
+      "name": "Policy File Codec",
+      "domain": "Policy Source",
+      "responsibility": "Turns policy file bytes into entries and entries back into bytes: signature and version, text and number encodings, ordering and duplicate handling.",
+      "module": "policy-file-codec",
+      "uses": [],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+      ],
+      "enforces": [
+        "businessrule-70425663320377904356",
+        "businessrule-90470730563627765974",
+        "businessrule-39262656033285451423",
+        "businessrule-67456626752221980743",
+        "businessrule-75428533810997783570",
+        "businessrule-77499382636897144286",
+        "businessrule-48968387067309128566",
+        "businessrule-51421539020102170720",
+        "businessrule-71273978078040008855",
+        "businessrule-90527876062459953686",
+        "businessrule-98130638476370994041",
+        "businessrule-51554818045857630746"
+      ]
+    },
+    {
+      "name": "Policy File Entries",
+      "domain": "Policy Source",
+      "responsibility": "Holds the entries of one policy file in memory and answers presence, reading, setting, forgetting, deletion marking and key clearing.",
+      "module": "policy-file-entries",
+      "uses": [
+        "Policy File Codec"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3"
+      ],
+      "enforces": [
+        "businessrule-17641776170698884064",
+        "businessrule-18230757898637060853",
+        "businessrule-29530054883116088403",
+        "businessrule-46824143239519073718",
+        "businessrule-56421390704826486738",
+        "businessrule-72149976207795359606",
+        "businessrule-86190343622453999219",
+        "businessrule-43613259767674592997",
+        "businessrule-09208070518455812303"
+      ]
+    },
+    {
+      "name": "Live Registry Values",
+      "domain": "Policy Source",
+      "responsibility": "Reads, writes, deletes and clears the live policy keys of the machine, checks root names and tests whether the keys can be written.",
+      "module": "live-registry-values",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2"
+      ],
+      "enforces": [
+        "businessrule-28868424053274244047",
+        "businessrule-30168924374542565520",
+        "businessrule-97000243539037627331",
+        "businessrule-34447675520768722859",
+        "businessrule-95699184013424603885",
+        "businessrule-42987908693120337062",
+        "businessrule-48799510965890913669",
+        "businessrule-35899140497190862562",
+        "businessrule-51029550915449645879"
+      ],
+      "adapts": "external-97068941883605652538"
+    },
+    {
+      "name": "User Hive Mounter",
+      "domain": "Policy Source",
+      "responsibility": "Loads a user's stored settings file into the machine registry under a temporary name and unloads it when the source is released.",
+      "module": "user-hive-mounter",
+      "uses": [
+        "Live Registry Values"
+      ],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+        "tasks-using-the-product.leave-the-program:leave-and-let-go#1"
+      ],
+      "enforces": [
+        "businessrule-50808386816006011599",
+        "businessrule-46972642019161394212"
+      ]
+    },
+    {
+      "name": "Registry Export Source",
+      "domain": "Policy Source",
+      "responsibility": "Holds settings destined for an exported registry text file: branch-limited saving, deleting and clearing, and a refusal for every read or check.",
+      "module": "registry-export-source",
+      "uses": [],
+      "serves": [
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+      ],
+      "enforces": [
+        "businessrule-67539343519248421601",
+        "businessrule-86313704517800761850",
+        "businessrule-96701855986906093783",
+        "businessrule-99096323836097983665",
+        "businessrule-17212723393144190896",
+        "businessrule-24034386628405619971",
+        "businessrule-25033115401021301399",
+        "businessrule-66651514909736203695"
+      ]
+    },
+    {
+      "name": "Policy Change Applier",
+      "domain": "Policy Source",
+      "responsibility": "Applies the changes of one policy file onto another source, including marker-style entries and the forgetting of dropped values.",
+      "module": "policy-change-applier",
+      "uses": [
+        "Policy File Entries",
+        "Live Registry Values"
+      ],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-05545231242611046306",
+        "businessrule-28402048173344159866",
+        "businessrule-41013546429447756519",
+        "businessrule-67697422395860869033",
+        "businessrule-84817748081019740495",
+        "businessrule-91552597921533368557"
+      ]
+    },
+    {
+      "name": "Scratch Policy Store",
+      "domain": "Policy Source",
+      "responsibility": "An empty in-memory policy store that can be changed and is never saved.",
+      "module": "scratch-policy-store",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2"
+      ],
+      "enforces": [
+        "businessrule-06218920206107794280"
+      ]
+    },
+    {
+      "name": "Computer File Access",
+      "domain": "Policy Source",
+      "responsibility": "Reads and writes policy files and their folders on the machine, creating missing policy files empty and opening them for reading and writing.",
+      "module": "computer-file-access",
+      "uses": [],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+      ],
+      "enforces": [
+        "businessrule-79173574861552738237",
+        "businessrule-49395771262191850050"
+      ],
+      "adapts": "external-90077838450756006603"
+    },
+    {
+      "name": "Group Policy Version Tracker",
+      "domain": "Policy Source",
+      "responsibility": "Creates and raises the version file that sits beside a policy file so the machine notices a change.",
+      "module": "group-policy-version-tracker",
+      "uses": [
+        "Computer File Access"
+      ],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+      ],
+      "enforces": [
+        "businessrule-00851565168679896073",
+        "businessrule-09176393040056781958",
+        "businessrule-26056926835272364672"
+      ]
+    },
+    {
+      "name": "Source Location Resolver",
+      "domain": "Policy Source",
+      "responsibility": "Works out where a source's policy file and comment file live from its kind and the detail given.",
+      "module": "source-location-resolver",
+      "uses": [],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#4",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4"
+      ],
+      "enforces": [
+        "businessrule-74412475215137182202",
+        "businessrule-62563112935081932578"
+      ]
+    },
+    {
+      "name": "Source Status Describer",
+      "domain": "Policy Source",
+      "responsibility": "Names each source, decides whether it is fully writable, can only be viewed or lives in memory, and words the readiness notice after opening.",
+      "module": "source-status-describer",
+      "uses": [],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#5"
+      ],
+      "enforces": [
+        "businessrule-84284160770896952745",
+        "businessrule-73847809349842629987",
+        "businessrule-98025569949322378254",
+        "businessrule-29585332630928853779"
+      ]
+    },
+    {
+      "name": "Source Opener",
+      "domain": "Policy Source",
+      "responsibility": "Closes the sources already open, opens the user and computer sources from a choice or from the default, and falls back when one cannot be opened.",
+      "module": "source-opener",
+      "uses": [
+        "Source Location Resolver",
+        "Computer File Access",
+        "Live Registry Values",
+        "User Hive Mounter",
+        "Scratch Policy Store",
+        "Policy File Codec",
+        "Policy Comment Catalog",
+        "Source Status Describer"
+      ],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#5",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4",
+        "tasks-using-the-product.leave-the-program:leave-and-let-go#1"
+      ],
+      "enforces": [
+        "businessrule-83542226215682203251",
+        "businessrule-27578488339642782673"
+      ]
+    },
+    {
+      "name": "Source Releaser",
+      "domain": "Policy Source",
+      "responsibility": "Releases each open source on leaving and tells the person when resources are still held elsewhere.",
+      "module": "source-releaser",
+      "uses": [
+        "User Hive Mounter"
+      ],
+      "serves": [
+        "tasks-using-the-product.leave-the-program:leave-and-let-go#1",
+        "tasks-using-the-product.leave-the-program:leave-and-let-go#2"
+      ],
+      "enforces": [
+        "businessrule-59631775004799082543"
+      ]
+    },
+    {
+      "name": "Source Memory",
+      "domain": "Policy Source",
+      "responsibility": "Remembers the chosen kinds and details of both sources and offers them again, replacing them with the defaults when they cannot be reached.",
+      "module": "source-memory",
+      "uses": [],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2"
+      ],
+      "enforces": [
+        "businessrule-72559528436656832979",
+        "businessrule-83248377690419919134"
+      ]
+    },
+    {
+      "name": "Source Saver",
+      "domain": "Policy Source",
+      "responsibility": "Saves comments, then each fully writable source by its kind, refreshes or applies the change, remembers the sources and reports one line per source.",
+      "module": "source-saver",
+      "uses": [
+        "Policy Comment Catalog",
+        "Policy File Codec",
+        "Computer File Access",
+        "Group Policy Version Tracker",
+        "Policy Change Applier",
+        "Live Registry Values",
+        "Source Memory",
+        "Source Status Describer"
+      ],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#2"
+      ],
+      "enforces": [
+        "businessrule-13724150063390760319",
+        "businessrule-19841193988434357732",
+        "businessrule-20632548312339129786",
+        "businessrule-24339552780845919468"
+      ]
+    },
+    {
+      "name": "Policy Comment Catalog",
+      "domain": "Policy Source",
+      "responsibility": "Keeps the comments of each source by policy and area, finds them when a comment is wanted and saves the whole list to the comment file location.",
+      "module": "policy-comment-catalog",
+      "uses": [
+        "Comment File Adapter",
+        "Source Location Resolver"
+      ],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#4",
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+        "tasks-finding-policies.find-policies-by-text:search-as-you-type#1",
+        "tasks-finding-policies.find-policies-by-text:search-as-you-type#2",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#1",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#2",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4",
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3"
+      ],
+      "enforces": [
+        "businessrule-40601471490811436933",
+        "businessrule-76710184957379543464",
+        "businessrule-87767421628061265824"
+      ]
+    },
+    {
+      "name": "Comment File Adapter",
+      "domain": "Policy Source",
+      "responsibility": "Reads and writes the comment files beside policy sources: validates their definitions and gives each comment its own text id and prefix.",
+      "module": "comment-file-adapter",
+      "uses": [
+        "Computer File Access"
+      ],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#4",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1"
+      ],
+      "enforces": [
+        "businessrule-31889487085995982343",
+        "businessrule-93571958636080198306",
+        "businessrule-57614366266507799597",
+        "businessrule-39804924157705575084"
+      ],
+      "adapts": "external-08492831744411585027"
+    },
+    {
+      "name": "Directory Account Resolver",
+      "domain": "Policy Source",
+      "responsibility": "Turns a typed user name into the account's security identifier through the directory and checks that an identifier is valid.",
+      "module": "directory-account-resolver",
+      "uses": [],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#3",
+        "tasks-choosing-and-saving-policy-sources.identify-user-for-policy:give-a-name-or-an-identifier#1"
+      ],
+      "enforces": [
+        "businessrule-91379498462935455610",
+        "businessrule-88238619586671903040",
+        "businessrule-77474018484672211108"
+      ],
+      "adapts": "external-90078096462363044953"
+    },
+    {
+      "name": "Source Choice Builder",
+      "domain": "Policy Source",
+      "responsibility": "Creates the user and computer sources from the chosen kind and detail, naming which side failed and why.",
+      "module": "source-choice-builder",
+      "uses": [
+        "Source Opener"
+      ],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4"
+      ],
+      "enforces": [
+        "businessrule-36363277387876573326",
+        "businessrule-75533700456390778594"
+      ]
+    },
+    {
+      "name": "Source Choice Entry",
+      "domain": "Policy Source",
+      "responsibility": "Decides which details are open for the kind chosen, which files are accepted and how leaving without choosing ends.",
+      "module": "source-choice-entry",
+      "uses": [],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#5"
+      ],
+      "enforces": [
+        "businessrule-34260437212150300999",
+        "businessrule-58680491450946971024",
+        "businessrule-60819102502476341284",
+        "businessrule-66851330016699676430"
+      ]
+    },
+    {
+      "name": "User Identification Entry",
+      "domain": "Policy Source",
+      "responsibility": "Ends the naming of a user without a choice when the person leaves.",
+      "module": "user-identification-entry",
+      "uses": [
+        "Directory Account Resolver"
+      ],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.identify-user-for-policy:give-a-name-or-an-identifier#1"
+      ],
+      "enforces": [
+        "businessrule-26724904229141688759"
+      ]
+    },
+    {
+      "name": "User Profile Pick",
+      "domain": "Policy Source",
+      "responsibility": "Proposes the person's own profile, lists the others and returns the settings file path only once a profile is chosen.",
+      "module": "user-profile-pick",
+      "uses": [],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#1",
+        "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy:start-from-my-own-profile#2"
+      ],
+      "enforces": [
+        "businessrule-02848405191150173128",
+        "businessrule-37850254215893887157"
+      ]
+    },
+    {
+      "name": "Visible Category Follow",
+      "domain": "Policy Source",
+      "responsibility": "After sources open or a view setting changes, moves to the nearest visible category and drops a selection that is no longer shown.",
+      "module": "visible-category-follow",
+      "uses": [],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4"
+      ],
+      "enforces": [
+        "businessrule-10464012301936997836",
+        "businessrule-84588009124214109370"
+      ]
+    },
+    {
+      "name": "Enablement Evidence Reader",
+      "domain": "Policy State",
+      "responsibility": "Counts enabled and disabled evidence from the values and lists a source holds for a policy and its options, and settles the policy's state in an area.",
+      "module": "enablement-evidence-reader",
+      "uses": [
+        "Policy File Entries",
+        "Live Registry Values"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#4",
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#1",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#2",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#3",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#4",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#5",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#7",
+        "tasks-browsing-policy-definitions.view-policy-details:everything-at-a-glance#1"
+      ],
+      "enforces": [
+        "businessrule-07376289294643129633",
+        "businessrule-07554086131159240838",
+        "businessrule-22959538508130326801",
+        "businessrule-25766167090873157702",
+        "businessrule-29495869201116213931",
+        "businessrule-33872241894384295212",
+        "businessrule-46971412075927401870",
+        "businessrule-71909773168029429916",
+        "businessrule-92873738128602220135"
+      ]
+    },
+    {
+      "name": "Option Value Reader",
+      "domain": "Policy State",
+      "responsibility": "Reads the stored value of each option of a policy from a source: numbers, text, choices, ticks and lists.",
+      "module": "option-value-reader",
+      "uses": [
+        "Policy File Entries",
+        "Live Registry Values"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1"
+      ],
+      "enforces": [
+        "businessrule-24534399091993971891",
+        "businessrule-34769835898304277453",
+        "businessrule-37022902056569995834",
+        "businessrule-49179499449653183223",
+        "businessrule-90493804689850695370",
+        "businessrule-43638846001153509048",
+        "businessrule-92057272745409912098"
+      ]
+    },
+    {
+      "name": "Policy Forgetter",
+      "domain": "Policy State",
+      "responsibility": "Finds every value a policy touches and clears them, with key clearances, from a source.",
+      "module": "policy-forgetter",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-30662593154265010717",
+        "businessrule-52553634867035971750",
+        "businessrule-49955247469929977676",
+        "businessrule-60358450731077326247"
+      ]
+    },
+    {
+      "name": "Policy State Writer",
+      "domain": "Policy State",
+      "responsibility": "Writes the chosen state of a policy with its own on and off values and its options into a source.",
+      "module": "policy-state-writer",
+      "uses": [
+        "Policy File Entries",
+        "Option Value Writer",
+        "Policy Forgetter"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-04152128046162000583",
+        "businessrule-14958427259964761169",
+        "businessrule-56832565542674334637",
+        "businessrule-66734059366331213205",
+        "businessrule-60774486401252037450",
+        "businessrule-97175686457081101132",
+        "businessrule-90058940824311429227"
+      ]
+    },
+    {
+      "name": "Option Value Writer",
+      "domain": "Policy State",
+      "responsibility": "Saves one option's value under the right key with the right kind of value.",
+      "module": "option-value-writer",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-19622432139142313215",
+        "businessrule-46516041958192928718",
+        "businessrule-53178349170981485484",
+        "businessrule-55949208713495428877",
+        "businessrule-64524120751868809207",
+        "businessrule-67842190900074642321",
+        "businessrule-75244076300039577548",
+        "businessrule-80911529766189561154"
+      ]
+    },
+    {
+      "name": "Policy Comment Keeper",
+      "domain": "Policy State",
+      "responsibility": "Stores, replaces or removes a policy's comment and says when a source holds no comments.",
+      "module": "policy-comment-keeper",
+      "uses": [
+        "Policy Comment Catalog"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-01560321201783674273",
+        "businessrule-33456476599558212379"
+      ]
+    },
+    {
+      "name": "Policy Edit Session",
+      "domain": "Policy State",
+      "responsibility": "Holds one open edit of a policy: the area, the writable check, the chosen state, the forecast, and how it ends as a change or a cancel.",
+      "module": "policy-edit-session",
+      "uses": [
+        "Enablement Evidence Reader",
+        "Option Value Reader",
+        "Policy State Writer",
+        "Policy Forgetter",
+        "Policy Comment Keeper",
+        "Policy details presenter",
+        "Policy state presenter"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#1",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#3",
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#4"
+      ],
+      "enforces": [
+        "businessrule-07359577675270518038",
+        "businessrule-22919299514571743135",
+        "businessrule-23336067846798029987",
+        "businessrule-33075335985104561108",
+        "businessrule-37207468109369530089",
+        "businessrule-47264131679601828501",
+        "businessrule-53979609002646144363",
+        "businessrule-65724709448091621197",
+        "businessrule-59619098183313284576",
+        "businessrule-75178338270301910966",
+        "businessrule-90485587050957154914",
+        "businessrule-20408685392954236399",
+        "businessrule-84933301477035282498"
+      ]
+    },
+    {
+      "name": "Option Input Rules",
+      "domain": "Policy State",
+      "responsibility": "Decides what each option control accepts, starts with and offers.",
+      "module": "option-input-rules",
+      "uses": [],
+      "serves": [
+        "tasks-changing-policy-settings.set-policy-state:review-what-will-change#2"
+      ],
+      "enforces": [
+        "businessrule-11779280825123119273",
+        "businessrule-47134496169701496073",
+        "businessrule-47891883049575092611",
+        "businessrule-76178080166619590309",
+        "businessrule-76476292137970655950",
+        "businessrule-95995013385384587600",
+        "businessrule-98958969318255528192",
+        "businessrule-36860850025836880139",
+        "businessrule-67944280997214552078"
+      ]
+    },
+    {
+      "name": "Semantic Text Reader",
+      "domain": "Policy State",
+      "responsibility": "Reads semantic policy text into policies, states and settings, and reports what is wrong and on which line.",
+      "module": "semantic-text-reader",
+      "uses": [],
+      "serves": [
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#1"
+      ],
+      "enforces": [
+        "businessrule-17846007911557610465",
+        "businessrule-21688833916465491468",
+        "businessrule-37953448968627114950",
+        "businessrule-38078267378406118840",
+        "businessrule-49239739229069713399",
+        "businessrule-64894609785645160893",
+        "businessrule-82283321913472173436",
+        "businessrule-85959955505766938318",
+        "businessrule-91520515189249767580",
+        "businessrule-97058087218177971913",
+        "businessrule-14257585336729172869"
+      ]
+    },
+    {
+      "name": "Semantic Text Applier",
+      "domain": "Policy State",
+      "responsibility": "Applies read policies to the right source, skipping and counting the ones that fail, and reports the outcome.",
+      "module": "semantic-text-applier",
+      "uses": [
+        "Policy State Writer",
+        "Policy Forgetter",
+        "Policy Comment Keeper",
+        "Semantic Text Reader"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2"
+      ],
+      "enforces": [
+        "businessrule-12966156302506777327",
+        "businessrule-45692609540846356884",
+        "businessrule-47001836867625969953",
+        "businessrule-78566706966921753288",
+        "businessrule-70167687024707690035"
+      ]
+    },
+    {
+      "name": "Semantic Text Import Session",
+      "domain": "Policy State",
+      "responsibility": "Holds the text being brought in, from a file or typed, and offers apply only for text that read correctly.",
+      "module": "semantic-text-import-session",
+      "uses": [
+        "Semantic Text Reader",
+        "Semantic Text Applier"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#1",
+        "tasks-changing-policy-settings.import-policy-settings-from-text:bring-in-with-live-check#2"
+      ],
+      "enforces": [
+        "businessrule-27078270365699057081",
+        "businessrule-30078789996227150580",
+        "businessrule-53070511165338807522"
+      ]
+    },
+    {
+      "name": "Semantic Text Writer",
+      "domain": "Policy State",
+      "responsibility": "Writes a policy's settings as semantic policy text, with or without the heading.",
+      "module": "semantic-text-writer",
+      "uses": [
+        "Enablement Evidence Reader",
+        "Option Value Reader",
+        "Semantic policy writer"
+      ],
+      "serves": [
+        "tasks-changing-policy-settings.inspect-policy-settings-as-text:ready-to-take-away#1",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#3"
+      ],
+      "enforces": [
+        "businessrule-47036476815425257305"
+      ]
+    },
+    {
+      "name": "Policy State Provider",
+      "domain": "Policy State",
+      "responsibility": "Gives the state of each policy in an area, and of the sources being worked on, to the screens that show them, by reading it through the evidence reader and returning it as plain facts.",
+      "module": "policy-state-provider",
+      "uses": [
+        "Enablement Evidence Reader"
+      ],
+      "serves": [
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#1",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#3",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#4",
+        "tasks-browsing-policy-definitions.browse-policy-tree:one-place-to-explore#5",
+        "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#1",
+        "tasks-browsing-policy-definitions.merge-duplicate-policies:review-then-merge#2",
+        "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#1",
+        "tasks-browsing-policy-definitions.view-category-details:whole-ancestry-at-once#2",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#1",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#2",
+        "tasks-browsing-policy-definitions.inspect-policy-technical-details:plain-words-first-detail-on-demand#4"
+      ],
+      "enforces": []
+    },
+    {
+      "name": "Visibility Judge",
+      "domain": "Policy Discovery",
+      "responsibility": "Decides whether a policy is listed, from the chosen area and, when the filter is on, from every active part of the limit: type, state, comment and products.",
+      "module": "visibility-judge",
+      "uses": [
+        "Policy state presenter",
+        "Policy Comment Catalog",
+        "Support evaluator"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#8"
+      ],
+      "enforces": [
+        "businessrule-09965726926686583005",
+        "businessrule-12540995342195943001",
+        "businessrule-67323359061601595450",
+        "businessrule-70331897906623822249",
+        "businessrule-79960316131030112593",
+        "businessrule-97862941341357225531"
+      ]
+    },
+    {
+      "name": "Area Scope Chooser",
+      "domain": "Policy Discovery",
+      "responsibility": "Offers exactly three area choices and starts on the first, so both areas are shown at the start.",
+      "module": "area-scope-chooser",
+      "uses": [],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#6",
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#7"
+      ],
+      "enforces": [
+        "businessrule-85204901615179220846",
+        "businessrule-81666786810242280110"
+      ]
+    },
+    {
+      "name": "Identifier Kind Resolver",
+      "domain": "Policy Discovery",
+      "responsibility": "Trims the typed identifier, cuts off a section suffix and looks the kind up in the fixed order, policy last.",
+      "module": "identifier-kind-resolver",
+      "uses": [
+        "Policy lookup",
+        "Product browser",
+        "Support rule browser",
+        "Category tree presenter"
+      ],
+      "serves": [
+        "tasks-finding-policies.find-policy-by-id:type-and-arrive#1"
+      ],
+      "enforces": [
+        "businessrule-34818300362920325745",
+        "businessrule-73680018829588409732"
+      ]
+    },
+    {
+      "name": "Identifier Arrival Router",
+      "domain": "Policy Discovery",
+      "responsibility": "Opens what was found as its kind requires, says when nothing is found, and shows the matching icon.",
+      "module": "identifier-arrival-router",
+      "uses": [
+        "Identifier Kind Resolver",
+        "Visible Category Follow",
+        "Policy inspector",
+        "Policy Edit Session",
+        "Policy details presenter",
+        "Category details presenter"
+      ],
+      "serves": [
+        "tasks-finding-policies.find-policy-by-id:type-and-arrive#1"
+      ],
+      "enforces": [
+        "businessrule-49582367227471127226",
+        "businessrule-56645748073860464161",
+        "businessrule-62209428351075007862",
+        "businessrule-73292110340688125936"
+      ]
+    },
+    {
+      "name": "Single Selection Guard",
+      "domain": "Policy Discovery",
+      "responsibility": "Keeps at most one item of the policy list selected.",
+      "module": "single-selection-guard",
+      "uses": [],
+      "serves": [
+        "tasks-finding-policies.find-policy-by-id:type-and-arrive#1"
+      ],
+      "enforces": [
+        "businessrule-93221850558792273709"
+      ]
+    },
+    {
+      "name": "Text Terms Parser",
+      "domain": "Policy Discovery",
+      "responsibility": "Splits the typed words into plain words, wildcard words and quoted phrases, cleaned of punctuation, dropping a phrase never closed.",
+      "module": "text-terms-parser",
+      "uses": [],
+      "serves": [
+        "tasks-finding-policies.find-policies-by-text:search-as-you-type#1"
+      ],
+      "enforces": [
+        "businessrule-20714647401379544771",
+        "businessrule-63262725504588029346"
+      ]
+    },
+    {
+      "name": "Text Hit Matcher",
+      "domain": "Policy Discovery",
+      "responsibility": "Decides whether a text holds every word, wildcard and phrase, and whether a policy hits through its title, description or comments.",
+      "module": "text-hit-matcher",
+      "uses": [
+        "Text Terms Parser",
+        "Policy Comment Catalog"
+      ],
+      "serves": [
+        "tasks-finding-policies.find-policies-by-text:search-as-you-type#1",
+        "tasks-finding-policies.find-policies-by-text:search-as-you-type#2"
+      ],
+      "enforces": [
+        "businessrule-21915530910585082056",
+        "businessrule-51916167191556979448"
+      ]
+    },
+    {
+      "name": "Text Search Intake",
+      "domain": "Policy Discovery",
+      "responsibility": "Accepts the typed words and the chosen places, refusing empty words or no place, and starts the search for both areas.",
+      "module": "text-search-intake",
+      "uses": [
+        "Text Terms Parser",
+        "Search Run Coordinator"
+      ],
+      "serves": [
+        "tasks-finding-policies.find-policies-by-text:search-as-you-type#1",
+        "tasks-finding-policies.find-policies-by-text:search-as-you-type#2"
+      ],
+      "enforces": [
+        "businessrule-31790508764365764837",
+        "businessrule-73561308167207352856",
+        "businessrule-86305970842078630022"
+      ]
+    },
+    {
+      "name": "Registry Line Splitter",
+      "domain": "Policy Discovery",
+      "responsibility": "Works out which part of a pasted line is the key and which the value, so the reading can be shown and corrected.",
+      "module": "registry-line-splitter",
+      "uses": [],
+      "serves": [
+        "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#1"
+      ],
+      "enforces": []
+    },
+    {
+      "name": "Registry Terms Intake",
+      "domain": "Policy Discovery",
+      "responsibility": "Judges at once whether the typed terms are usable, refusing empty terms and a root key, and starts the search when usable.",
+      "module": "registry-terms-intake",
+      "uses": [
+        "Registry Line Splitter",
+        "Search Run Coordinator"
+      ],
+      "serves": [
+        "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#1",
+        "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#2"
+      ],
+      "enforces": [
+        "businessrule-73898787083077319907",
+        "businessrule-71024372746156766440",
+        "businessrule-90661647574869686546"
+      ]
+    },
+    {
+      "name": "Registry Term Matcher",
+      "domain": "Policy Discovery",
+      "responsibility": "Decides whether one setting a policy reads or writes meets the key and value terms with wildcard, prefix, whole-name and path-part rules.",
+      "module": "registry-term-matcher",
+      "uses": [
+        "Policy option reader"
+      ],
+      "serves": [
+        "tasks-finding-policies.find-policies-by-registry:one-line-split-for-me#3"
+      ],
+      "enforces": [
+        "businessrule-27271850163543025066",
+        "businessrule-35545130062422334165",
+        "businessrule-54035538146675510973",
+        "businessrule-54588279423566663184",
+        "businessrule-95826639622119629666"
+      ]
+    },
+    {
+      "name": "Search Run Coordinator",
+      "domain": "Policy Discovery",
+      "responsibility": "Runs a search over every policy in order, adds hits with their category, reports progress every twenty policies, supports cancelling and reports how it ended.",
+      "module": "search-run-coordinator",
+      "uses": [
+        "Visibility Judge",
+        "Policy lookup",
+        "Result Recall"
+      ],
+      "serves": [
+        "tasks-finding-policies.review-search-results:results-as-they-arrive#1",
+        "tasks-finding-policies.review-search-results:results-as-they-arrive#2",
+        "tasks-finding-policies.review-search-results:results-as-they-arrive#3"
+      ],
+      "enforces": [
+        "businessrule-35354684864210149934",
+        "businessrule-79288582532948770219",
+        "businessrule-94342659396000502591",
+        "businessrule-15877826642522947109",
+        "businessrule-57749472934040708163"
+      ]
+    },
+    {
+      "name": "Result Picker",
+      "domain": "Policy Discovery",
+      "responsibility": "Accepts only a chosen hit, remembers its position and opens that policy's editor in the current area.",
+      "module": "result-picker",
+      "uses": [
+        "Result Recall",
+        "Policy Edit Session",
+        "Visible Category Follow"
+      ],
+      "serves": [
+        "tasks-finding-policies.review-search-results:results-as-they-arrive#4"
+      ],
+      "enforces": [
+        "businessrule-48840711587592938759",
+        "businessrule-80544887789558031281"
+      ]
+    },
+    {
+      "name": "Result Stepper",
+      "domain": "Policy Discovery",
+      "responsibility": "Takes the next hit still shown after the last one chosen, says when none is left, and returns nothing when no search ran.",
+      "module": "result-stepper",
+      "uses": [
+        "Result Recall",
+        "Visibility Judge"
+      ],
+      "serves": [
+        "tasks-finding-policies.review-search-results:results-as-they-arrive#5"
+      ],
+      "enforces": [
+        "businessrule-17430127230259081557",
+        "businessrule-53914450774482291886"
+      ]
+    },
+    {
+      "name": "Result Recall",
+      "domain": "Policy Discovery",
+      "responsibility": "Holds the last results and chosen position, reopens them without a new search, and forgets them when the search is cleared.",
+      "module": "result-recall",
+      "uses": [],
+      "serves": [
+        "tasks-finding-policies.review-search-results:results-as-they-arrive#6",
+        "tasks-finding-policies.review-search-results:results-as-they-arrive#1",
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#7"
+      ],
+      "enforces": [
+        "businessrule-38090025507732480917",
+        "businessrule-17385510066480798684",
+        "businessrule-78338951417255409296",
+        "businessrule-97390301066419776959"
+      ]
+    },
+    {
+      "name": "Limit Draft Presenter",
+      "domain": "Policy Discovery",
+      "responsibility": "Shows the limit in force as editable choices: type, state, comment and products, with the defaults when a condition is absent.",
+      "module": "limit-draft-presenter",
+      "uses": [
+        "Visibility Judge",
+        "Product browser"
+      ],
+      "serves": [
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#1"
+      ],
+      "enforces": [
+        "businessrule-01575097247784730570",
+        "businessrule-26561900736287578271",
+        "businessrule-32591775124677875588",
+        "businessrule-59209755491778300947",
+        "businessrule-76306981111385169671"
+      ]
+    },
+    {
+      "name": "Limit Draft Applier",
+      "domain": "Policy Discovery",
+      "responsibility": "Turns the chosen type, state, comment and products into the new limit's conditions.",
+      "module": "limit-draft-applier",
+      "uses": [
+        "Visibility Judge"
+      ],
+      "serves": [
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#2",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#3"
+      ],
+      "enforces": [
+        "businessrule-03237181236179074787",
+        "businessrule-81055540068763556055",
+        "businessrule-70906412717211463954",
+        "businessrule-90628240213834851721"
+      ]
+    },
+    {
+      "name": "Product Limit Selector",
+      "domain": "Policy Discovery",
+      "responsibility": "Opens product choice only while a support limit is wanted and spreads a hand choice to the products beneath.",
+      "module": "product-limit-selector",
+      "uses": [
+        "Product browser"
+      ],
+      "serves": [
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#3"
+      ],
+      "enforces": [
+        "businessrule-88807660791719489759",
+        "businessrule-61457439461915744538"
+      ]
+    },
+    {
+      "name": "Limit Focus Mover",
+      "domain": "Policy Discovery",
+      "responsibility": "Switches the limit on or off and moves to the nearest category still shown.",
+      "module": "limit-focus-mover",
+      "uses": [
+        "Visibility Judge",
+        "Visible Category Follow"
+      ],
+      "serves": [
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#4",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#5"
+      ],
+      "enforces": [
+        "businessrule-85052319902195299547",
+        "businessrule-36944318108231327872"
+      ]
+    },
+    {
+      "name": "Limit Draft Session",
+      "domain": "Policy Discovery",
+      "responsibility": "Returns every choice to its default and, when the round is abandoned, puts back the limit held at the start.",
+      "module": "limit-draft-session",
+      "uses": [],
+      "serves": [
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#6",
+        "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#7"
+      ],
+      "enforces": [
+        "businessrule-81206266674090971597",
+        "businessrule-57716378734614233724"
+      ]
+    },
+    {
+      "name": "Raw Editing Gate",
+      "domain": "Policy File Exchange",
+      "responsibility": "Decides whether raw editing may start: limits the area to sources backed by a policy file, tells the person plainly when none is, asks only when both are, and shows the caution to a person who has not accepted it, remembering a yes and asking again after a no.",
+      "module": "raw-editing-gate",
+      "uses": [
+        "Source Choice Builder",
+        "Source Status Describer"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#1"
+      ],
+      "enforces": [
+        "businessrule-40441510620479008895",
+        "businessrule-14969413888672404933",
+        "businessrule-64564273672622472190",
+        "businessrule-21403142511575039594",
+        "businessrule-98676109650316370626"
+      ]
+    },
+    {
+      "name": "Entry Tree Lister",
+      "domain": "Policy File Exchange",
+      "responsibility": "Lists the file's keys and values as an ordered tree, each key once ignoring case, with each value's content and the special deletion entries named as such.",
+      "module": "entry-tree-lister",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#2"
+      ],
+      "enforces": [
+        "businessrule-81365817698028227620",
+        "businessrule-67529938588779257243",
+        "businessrule-43194539708053716006",
+        "businessrule-44523725638753390545"
+      ]
+    },
+    {
+      "name": "Entry Action Availability",
+      "domain": "Policy File Exchange",
+      "responsibility": "Works out which actions fit the current selection: nothing, a key, an ordinary value or a deletion entry.",
+      "module": "entry-action-availability",
+      "uses": [],
+      "serves": [
+        "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#2"
+      ],
+      "enforces": [
+        "businessrule-13057335115870748705",
+        "businessrule-86296876237579429124",
+        "businessrule-32089237714667793315"
+      ]
+    },
+    {
+      "name": "Editing Session Recap",
+      "domain": "Policy File Exchange",
+      "responsibility": "Summarises the changes made in the session, reminds that they reach disk only on saving, and keeps them however editing is left.",
+      "module": "editing-session-recap",
+      "uses": [
+        "Policy Change Applier"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#3"
+      ],
+      "enforces": [
+        "businessrule-18574755515767742264"
+      ]
+    },
+    {
+      "name": "Key Name Validator",
+      "domain": "Policy File Exchange",
+      "responsibility": "Checks a typed key name as it is typed: refuses a backslash or a name already used under the same parent ignoring case, and treats an empty name or a back-out as adding nothing.",
+      "module": "key-name-validator",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.add-policy-file-key-or-value:checked-as-you-type#1"
+      ],
+      "enforces": [
+        "businessrule-27239953863800337722",
+        "businessrule-65588006996628019814",
+        "businessrule-21846002666758208174"
+      ]
+    },
+    {
+      "name": "Key Creator",
+      "domain": "Policy File Exchange",
+      "responsibility": "Adds the empty key under the selected key or at the top level and selects it.",
+      "module": "key-creator",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.add-policy-file-key-or-value:checked-as-you-type#2"
+      ],
+      "enforces": [
+        "businessrule-94140234913184124479"
+      ]
+    },
+    {
+      "name": "Value Creator",
+      "domain": "Policy File Exchange",
+      "responsibility": "Takes a value's name and data together, starts on string, suggests the kind from the data, sets starting data by kind, and stores only on confirmation, replacing a same-named value.",
+      "module": "value-creator",
+      "uses": [
+        "Policy File Entries",
+        "Number Text Reader"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.add-policy-file-key-or-value:checked-as-you-type#3"
+      ],
+      "enforces": [
+        "businessrule-88605435114040098546",
+        "businessrule-64891270751019389302"
+      ]
+    },
+    {
+      "name": "Number Text Reader",
+      "domain": "Policy File Exchange",
+      "responsibility": "Reads typed numbers as decimal or marked hexadecimal and limits them to the 32-bit or 64-bit range.",
+      "module": "number-text-reader",
+      "uses": [],
+      "serves": [
+        "tasks-editing-policy-files-directly.add-policy-file-key-or-value:checked-as-you-type#3",
+        "tasks-editing-policy-files-directly.change-policy-file-value-data:either-form-accepted#2"
+      ],
+      "enforces": [
+        "businessrule-13220028854331489804",
+        "businessrule-85571919984782494727"
+      ]
+    },
+    {
+      "name": "Value Data Editor",
+      "domain": "Policy File Exchange",
+      "responsibility": "Shows a value's current data in the form fitting its kind, refuses unsupported kinds, and replaces the data keeping name and kind and the value selected.",
+      "module": "value-data-editor",
+      "uses": [
+        "Policy File Entries",
+        "Number Text Reader"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.add-policy-file-key-or-value:checked-as-you-type#3",
+        "tasks-editing-policy-files-directly.change-policy-file-value-data:either-form-accepted#1",
+        "tasks-editing-policy-files-directly.change-policy-file-value-data:either-form-accepted#2"
+      ],
+      "enforces": [
+        "businessrule-87150598845683946147",
+        "businessrule-05846735750774889498"
+      ]
+    },
+    {
+      "name": "Deletion Marker Writer",
+      "domain": "Policy File Exchange",
+      "responsibility": "Replaces a selected value with a deletion entry named from the value, so it is removed on the machine when policies are applied.",
+      "module": "deletion-marker-writer",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.remove-policy-file-entries:straight-from-the-selection#1"
+      ],
+      "enforces": [
+        "businessrule-27194812132584860836"
+      ]
+    },
+    {
+      "name": "Key Clearing Chooser",
+      "domain": "Policy File Exchange",
+      "responsibility": "Offers clear everything, clear while keeping existing ordinary direct values, or delete one value by typed name; accepts no choice by default and refuses an empty name.",
+      "module": "key-clearing-chooser",
+      "uses": [
+        "Policy File Entries",
+        "Deletion Marker Writer"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.remove-policy-file-entries:straight-from-the-selection#1",
+        "tasks-editing-policy-files-directly.remove-policy-file-entries:straight-from-the-selection#2"
+      ],
+      "enforces": [
+        "businessrule-63694206615951133419",
+        "businessrule-30359040357073744492",
+        "businessrule-30251051045932916641",
+        "businessrule-84404651755849490179"
+      ]
+    },
+    {
+      "name": "Entry Forgetter",
+      "domain": "Policy File Exchange",
+      "responsibility": "Describes what will go, asks for confirmation, and removes a key with its contents or a value with its deletion entry, leaving nothing behind.",
+      "module": "entry-forgetter",
+      "uses": [
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.remove-policy-file-entries:straight-from-the-selection#3"
+      ],
+      "enforces": [
+        "businessrule-04432638879352685329"
+      ]
+    },
+    {
+      "name": "Registry Script Intake",
+      "domain": "Policy File Exchange",
+      "responsibility": "Accepts only exported-settings files, remembers the chosen source, refuses a missing file or prefix, warns about default values, and leaves without change on a back-out.",
+      "module": "registry-script-intake",
+      "uses": [
+        "Computer File Access",
+        "Source Choice Builder",
+        "Registry Script Reader",
+        "Prefix Guesser"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#1",
+        "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#2",
+        "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#3",
+        "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#5"
+      ],
+      "enforces": [
+        "businessrule-00824990257185597112",
+        "businessrule-97032716123610483497",
+        "businessrule-89009644626675244455",
+        "businessrule-59516130836014950967"
+      ]
+    },
+    {
+      "name": "Registry Script Reader",
+      "domain": "Policy File Exchange",
+      "responsibility": "Checks the file is a genuine export and reads keys, removals, deletions, default values and typed data, skipping blank and comment lines.",
+      "module": "registry-script-reader",
+      "uses": [],
+      "serves": [
+        "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#2"
+      ],
+      "enforces": [
+        "businessrule-52142616153788952070",
+        "businessrule-55584576559812010511",
+        "businessrule-57877192145861745927",
+        "businessrule-59618595788928559733",
+        "businessrule-23306400970907693227",
+        "businessrule-18921117498420510792"
+      ]
+    },
+    {
+      "name": "Prefix Guesser",
+      "domain": "Policy File Exchange",
+      "responsibility": "Works out the key prefix from the first key of the file, and warns while leaving it empty when that fails.",
+      "module": "prefix-guesser",
+      "uses": [
+        "User Identification Entry"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#2"
+      ],
+      "enforces": [
+        "businessrule-75481654180830858390",
+        "businessrule-17451417049747776074"
+      ]
+    },
+    {
+      "name": "Registry Script Applier",
+      "domain": "Policy File Exchange",
+      "responsibility": "Applies the read settings to the chosen source: clears removed keys, deletes marked values, saves the rest with the prefix removed, reports only failure, then refreshes the view.",
+      "module": "registry-script-applier",
+      "uses": [
+        "Policy Change Applier",
+        "Policy File Entries"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#4"
+      ],
+      "enforces": [
+        "businessrule-18627979551357993299",
+        "businessrule-45318436042524755037",
+        "businessrule-61966293182360194116",
+        "businessrule-60060400053285241820"
+      ]
+    },
+    {
+      "name": "Policy File Import",
+      "domain": "Policy File Exchange",
+      "responsibility": "Reads a policy file and applies it to the chosen source as the difference from an empty file, reporting a file that cannot be loaded and changing nothing; the result is held until saved.",
+      "module": "policy-file-import",
+      "uses": [
+        "Policy File Codec",
+        "Policy Change Applier",
+        "Computer File Access"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.import-policy-file:one-request#1",
+        "tasks-editing-policy-files-directly.import-policy-file:one-request#2"
+      ],
+      "enforces": [
+        "businessrule-69354381130041181167",
+        "businessrule-97686874157870392601"
+      ]
+    },
+    {
+      "name": "Export Branch Defaults",
+      "domain": "Policy File Exchange",
+      "responsibility": "Chooses the starting branch and prefix of an export, trims a trailing backslash from a branch, and refuses an export without a file name.",
+      "module": "export-branch-defaults",
+      "uses": [],
+      "serves": [
+        "tasks-editing-policy-files-directly.export-policy-as-registry-file:export-what-is-selected#1",
+        "tasks-editing-policy-files-directly.export-policy-as-registry-file:export-what-is-selected#2"
+      ],
+      "enforces": [
+        "businessrule-04261341694819838767",
+        "businessrule-60632388568264259103",
+        "businessrule-98458070891453225274",
+        "businessrule-38615217867457911992"
+      ]
+    },
+    {
+      "name": "Export Source Preparer",
+      "domain": "Policy File Exchange",
+      "responsibility": "Provides the policy file to export: a file-backed source as is, a registry-backed source rebuilt from the three policy locations with types kept.",
+      "module": "export-source-preparer",
+      "uses": [
+        "Registry Export Source",
+        "Live Registry Values",
+        "Policy File Codec"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.export-policy-as-registry-file:export-what-is-selected#3"
+      ],
+      "enforces": [
+        "businessrule-62577216252619197563",
+        "businessrule-50297867320833369013"
+      ]
+    },
+    {
+      "name": "Registry Script Writer",
+      "domain": "Policy File Exchange",
+      "responsibility": "Writes the chosen branch of the file as a settings script with removal and deletion marks, escaping and typed data, wrapped lines, and reports success or failure.",
+      "module": "registry-script-writer",
+      "uses": [
+        "Export Source Preparer",
+        "Computer File Access"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.export-policy-as-registry-file:export-what-is-selected#3"
+      ],
+      "enforces": [
+        "businessrule-57163770116853325546",
+        "businessrule-78788630170323770129",
+        "businessrule-14603482078338141941"
+      ]
+    },
+    {
+      "name": "Policy File Export",
+      "domain": "Policy File Exchange",
+      "responsibility": "Writes the chosen area's policy source as a policy file and reports success or failure.",
+      "module": "policy-file-export",
+      "uses": [
+        "Policy File Codec",
+        "Computer File Access"
+      ],
+      "serves": [
+        "tasks-editing-policy-files-directly.export-policy-file:one-request#1"
+      ],
+      "enforces": [
+        "businessrule-57982804566984189207"
+      ]
+    },
+    {
+      "name": "Acquisition session",
+      "domain": "Definition Acquisition",
+      "responsibility": "Runs one acquisition from start to result: locks the start, close and destination controls while it runs, refuses leaving mid-run, reports the failed step, re-enables everything, and after success asks whether to open the definitions and reports the folder only on yes.",
+      "module": "acquisition-session",
+      "uses": [
+        "Destination chooser",
+        "Package fetcher",
+        "Package extractor",
+        "Destination access controller",
+        "Template installer"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2",
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#3"
+      ],
+      "enforces": [
+        "businessrule-19284863828429321329",
+        "businessrule-75570169794845906057",
+        "businessrule-17840470067823720423",
+        "businessrule-84139143444339961851"
+      ]
+    },
+    {
+      "name": "Destination chooser",
+      "domain": "Definition Acquisition",
+      "responsibility": "Proposes the operating system's policy definitions folder each time an acquisition opens, reports no new folder, and replaces the destination with a chosen folder while a cancelled choice changes nothing.",
+      "module": "destination-chooser",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#1",
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#4"
+      ],
+      "enforces": [
+        "businessrule-34650805596483639458",
+        "businessrule-78945520165872370051"
+      ]
+    },
+    {
+      "name": "Package fetcher",
+      "domain": "Definition Acquisition",
+      "responsibility": "Downloads the one fixed Microsoft package into a scratch folder under local application data, allowing no version choice and only the permitted secure protocols.",
+      "module": "package-fetcher",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#1"
+      ],
+      "enforces": [
+        "businessrule-53408776186716933732",
+        "businessrule-15364695696024462204"
+      ],
+      "adapts": "external-47673734579321187695"
+    },
+    {
+      "name": "Package extractor",
+      "domain": "Definition Acquisition",
+      "responsibility": "Unpacks the downloaded package with the operating system's installer tool, stops on a failure keeping the package, and deletes the package on success.",
+      "module": "package-extractor",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2"
+      ],
+      "enforces": [
+        "businessrule-91358402464075338920"
+      ]
+    },
+    {
+      "name": "Destination access controller",
+      "domain": "Definition Acquisition",
+      "responsibility": "Takes ownership and gives Administrators full control of an existing destination before any move for administrators, and resets ownership and inherited permissions on folders and moved files; standard users change nothing.",
+      "module": "destination-access-controller",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2"
+      ],
+      "enforces": [
+        "businessrule-16960626064100495277",
+        "businessrule-70392920399990339776"
+      ]
+    },
+    {
+      "name": "Template installer",
+      "domain": "Definition Acquisition",
+      "responsibility": "Replaces files in the destination with the templates, then the language files of the regional format language, and the English fallback when that language is not English (United States), creating folders and deleting same-named files first.",
+      "module": "template-installer",
+      "uses": [
+        "Destination access controller"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.get-policy-definitions:install-in-one-go#2"
+      ],
+      "enforces": [
+        "businessrule-24154317128059319852",
+        "businessrule-33969702428946021999"
+      ]
+    },
+    {
+      "name": "Group Policy edition detector",
+      "domain": "Definition Acquisition",
+      "responsibility": "Asks the operating system for its edition and decides from a fixed list of codes whether Group Policy infrastructure exists, treating a failed query as none.",
+      "module": "group-policy-edition-detector",
+      "uses": [],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#2"
+      ],
+      "enforces": [
+        "businessrule-44390406872239414183"
+      ]
+    },
+    {
+      "name": "Welcome offer",
+      "domain": "Definition Acquisition",
+      "responsibility": "Decides whether to offer the definitions once the edition lacks Group Policy and more than two non-empty categories name a missing parent, shows the welcome question, and starts an acquisition on yes.",
+      "module": "welcome-offer",
+      "uses": [
+        "Group Policy edition detector",
+        "Missing definitions detector",
+        "Acquisition session"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#2",
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#3"
+      ],
+      "enforces": [
+        "businessrule-23603907625209300500"
+      ]
+    },
+    {
+      "name": "Acquired definitions adoption",
+      "domain": "Definition Acquisition",
+      "responsibility": "After a successful acquisition, empties the workspace, loads the acquired folder, saves it as the definitions folder and rebuilds the view; with no new folder nothing changes.",
+      "module": "acquired-definitions-adoption",
+      "uses": [
+        "Definition reset",
+        "Definition load coordinator",
+        "Template folder scanner"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1"
+      ],
+      "enforces": [
+        "businessrule-94371671563498468562"
+      ]
+    },
+    {
+      "name": "Version stamper",
+      "domain": "Workspace",
+      "responsibility": "At build time derives the program version from the source history (tag, commit count and short commit name, or a short commit name) and writes it into the generated version source; the committed source keeps an empty version.",
+      "module": "version-stamper",
+      "uses": [],
+      "serves": [
+        "tasks-building-and-versioning-policy-plus.stamp-program-version:every-build-stamps-itself#1",
+        "tasks-building-and-versioning-policy-plus.stamp-program-version:every-build-stamps-itself#2"
+      ],
+      "enforces": [
+        "businessrule-12414618955963878773"
+      ],
+      "adapts": "external-84087908423930356962"
+    },
+    {
+      "name": "Program identity presenter",
+      "domain": "Workspace",
+      "responsibility": "Provides the author, the project address and the version only when one was built in.",
+      "module": "program-identity-presenter",
+      "uses": [],
+      "serves": [
+        "tasks-using-the-product.see-about-information:ask-who-and-which-version#1"
+      ],
+      "enforces": [
+        "businessrule-59853527376948406586"
+      ]
+    },
+    {
+      "name": "Preference store adapter",
+      "domain": "Workspace",
+      "responsibility": "Reads and writes named preference rows in the preference store; when the store cannot be reached it yields defaults, drops changes and does not alert the person.",
+      "module": "preference-store-adapter",
+      "uses": [],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#1"
+      ],
+      "enforces": [
+        "businessrule-25353365313977612083"
+      ],
+      "adapts": "external-45436197603688581519"
+    },
+    {
+      "name": "Remembered choices keeper",
+      "domain": "Workspace",
+      "responsibility": "Gives typed access to the remembered choices (chosen sources, definitions folder, language, caution accepted, offer considered) over the preference adapter, for the other parts of the workspace.",
+      "module": "remembered-choices-keeper",
+      "uses": [
+        "Preference store adapter"
+      ],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#5",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+        "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4",
+        "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+        "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#1"
+      ],
+      "enforces": []
+    },
+    {
+      "name": "Saved definitions folder resolver",
+      "domain": "Workspace",
+      "responsibility": "Decides which definitions folder to load at start: the last saved one, else the system default folder.",
+      "module": "saved-definitions-folder-resolver",
+      "uses": [
+        "Remembered choices keeper"
+      ],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#3"
+      ],
+      "enforces": [
+        "businessrule-40551856488084894130"
+      ]
+    },
+    {
+      "name": "Start-up load recovery",
+      "domain": "Workspace",
+      "responsibility": "Loads the saved definitions at session start and handles trouble: asks whether to keep a partly loaded set, discards it on refusal, offers the default location for a failed non-default folder, saves the default on acceptance, and reports a failed default load leaving the set empty.",
+      "module": "start-up-load-recovery",
+      "uses": [
+        "Saved definitions folder resolver",
+        "Definition load coordinator",
+        "Definition reset",
+        "Remembered choices keeper"
+      ],
+      "serves": [
+        "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#3"
+      ],
+      "enforces": [
+        "businessrule-41547680626150552574",
+        "businessrule-58877134447436981389",
+        "businessrule-72200124994498270380",
+        "businessrule-78253526822536661517"
+      ]
+    },
+    {
+      "name": "Definitions folder choice validator",
+      "domain": "Workspace",
+      "responsibility": "Offers the standard folder, the domain folder only when joined to a domain and present, or a typed folder; makes the typed folder usable only when chosen; refuses a missing folder; treats cancellation as no choice.",
+      "module": "definitions-folder-choice-validator",
+      "uses": [],
+      "serves": [
+        "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#1",
+        "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#4"
+      ],
+      "enforces": [
+        "businessrule-76226373219464614800",
+        "businessrule-88154451768954453608",
+        "businessrule-53176229115945924012",
+        "businessrule-98012095360980700253"
+      ]
+    },
+    {
+      "name": "Replace option proposer",
+      "domain": "Workspace",
+      "responsibility": "Proposes replacing the loaded definitions by default, asks only when something is loaded, and passes the choice on only for an accepted existing folder.",
+      "module": "replace-option-proposer",
+      "uses": [],
+      "serves": [
+        "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#2"
+      ],
+      "enforces": [
+        "businessrule-43765682097437166867"
+      ]
+    },
+    {
+      "name": "Folder addition run",
+      "domain": "Workspace",
+      "responsibility": "Empties the set first only when replacing, adds the folder reporting problems without stopping, reports a failed addition with its reason, and remembers the folder only after a successful replace.",
+      "module": "folder-addition-run",
+      "uses": [
+        "Definition load coordinator",
+        "Definition reset",
+        "Remembered choices keeper"
+      ],
+      "serves": [
+        "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#3"
+      ],
+      "enforces": [
+        "businessrule-06850078746756456273",
+        "businessrule-19671296259932138006",
+        "businessrule-56221298079625729644"
+      ]
+    },
+    {
+      "name": "Template file adder",
+      "domain": "Workspace",
+      "responsibility": "Accepts one or several template files only and adds them to the current set without emptying it or remembering a folder; reports a failure with its reason.",
+      "module": "template-file-adder",
+      "uses": [
+        "Definition load coordinator"
+      ],
+      "serves": [
+        "tasks-browsing-policy-definitions.add-template-file:add-several-at-once#1"
+      ],
+      "enforces": [
+        "businessrule-07200475892676201466"
+      ]
+    },
+    {
+      "name": "Session discarder",
+      "domain": "Workspace",
+      "responsibility": "Empties the loaded definitions and previous search results at once, without confirmation, whenever the set is closed or replaced, and rebuilds what is shown.",
+      "module": "session-discarder",
+      "uses": [
+        "Definition reset"
+      ],
+      "serves": [
+        "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#1"
+      ],
+      "enforces": [
+        "businessrule-73782132825452925601",
+        "businessrule-83939170310206178732"
+      ]
+    },
+    {
+      "name": "Language code checker",
+      "domain": "Workspace",
+      "responsibility": "Accepts a language code only when it has exactly two parts around a hyphen, otherwise refuses it plainly; treats a code equal to the stored one as no change.",
+      "module": "language-code-checker",
+      "uses": [
+        "Remembered choices keeper"
+      ],
+      "serves": [
+        "tasks-using-the-product.set-definition-language:name-the-language-then-reload#1"
+      ],
+      "enforces": [
+        "businessrule-31456964891379452251",
+        "businessrule-93543924991745555552"
+      ]
+    },
+    {
+      "name": "Language change applier",
+      "domain": "Workspace",
+      "responsibility": "Saves the new language code at once, asks whether to reload now, and on yes empties the set and reloads from the saved folder.",
+      "module": "language-change-applier",
+      "uses": [
+        "Remembered choices keeper",
+        "Definition language setting",
+        "Saved definitions folder resolver",
+        "Definition reset",
+        "Definition load coordinator"
+      ],
+      "serves": [
+        "tasks-using-the-product.set-definition-language:name-the-language-then-reload#2"
+      ],
+      "enforces": [
+        "businessrule-80947080049413275464"
+      ]
+    },
+    {
+      "name": "Offer consideration record",
+      "domain": "Workspace",
+      "responsibility": "Records on first start that the welcome offer was considered, even if none is made, and never considers it again; keeps a standing invitation to get definitions.",
+      "module": "offer-consideration-record",
+      "uses": [
+        "Remembered choices keeper",
+        "Welcome offer"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#1",
+        "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#4"
+      ],
+      "enforces": [
+        "businessrule-68766858893219046657"
+      ]
+    },
+    {
+      "name": "Acquired definitions switcher",
+      "domain": "Workspace",
+      "responsibility": "Takes the staged definitions as the ones in use: empties the set, adds them, and remembers the folder; does nothing without a new folder.",
+      "module": "acquired-definitions-switcher",
+      "uses": [
+        "Acquired definitions adoption",
+        "Definition reset",
+        "Remembered choices keeper"
+      ],
+      "serves": [
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1",
+        "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#5"
+      ],
+      "enforces": []
+    }
+  ]
+}

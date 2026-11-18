@@ -1,0 +1,163 @@
+{
+  "decision": "journeys",
+  "picks": [
+    {
+      "of": "tasks-building-and-versioning-policy-plus.stamp-program-version",
+      "variant": "Every build stamps itself"
+    },
+    {
+      "of": "tasks-getting-microsoft-policy-definitions.get-policy-definitions",
+      "variant": "Install in one go"
+    },
+    {
+      "of": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer",
+      "variant": "Offer once, keep it open"
+    },
+    {
+      "of": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
+      "variant": "Check, then switch"
+    },
+    {
+      "of": "tasks-using-the-product.open-the-workspace",
+      "variant": "Resume where I left off"
+    },
+    {
+      "of": "tasks-using-the-product.set-definition-language",
+      "variant": "Name the language, then reload"
+    },
+    {
+      "of": "tasks-using-the-product.leave-the-program",
+      "variant": "Leave and let go"
+    },
+    {
+      "of": "tasks-using-the-product.see-about-information",
+      "variant": "Ask who and which version"
+    },
+    {
+      "of": "tasks-choosing-and-saving-policy-sources.choose-policy-sources",
+      "variant": "Say where each side lives"
+    },
+    {
+      "of": "tasks-choosing-and-saving-policy-sources.identify-user-for-policy",
+      "variant": "Give a name or an identifier"
+    },
+    {
+      "of": "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy",
+      "variant": "Start from my own profile"
+    },
+    {
+      "of": "tasks-choosing-and-saving-policy-sources.save-policy-changes",
+      "variant": "Save in one go"
+    },
+    {
+      "of": "tasks-changing-policy-settings.set-policy-state",
+      "variant": "Review what will change"
+    },
+    {
+      "of": "tasks-changing-policy-settings.import-policy-settings-from-text",
+      "variant": "Bring in with live check"
+    },
+    {
+      "of": "tasks-changing-policy-settings.inspect-policy-settings-as-text",
+      "variant": "Ready to take away"
+    },
+    {
+      "of": "tasks-finding-policies.find-policy-by-id",
+      "variant": "Type and arrive"
+    },
+    {
+      "of": "tasks-finding-policies.find-policies-by-text",
+      "variant": "Search as you type"
+    },
+    {
+      "of": "tasks-finding-policies.find-policies-by-registry",
+      "variant": "One line, split for me"
+    },
+    {
+      "of": "tasks-finding-policies.review-search-results",
+      "variant": "Results as they arrive"
+    },
+    {
+      "of": "tasks-finding-policies.narrow-policy-list-by-filter",
+      "variant": "Live filter"
+    },
+    {
+      "of": "tasks-editing-policy-files-directly.open-raw-policy-editor",
+      "variant": "The system picks the area"
+    },
+    {
+      "of": "tasks-editing-policy-files-directly.add-policy-file-key-or-value",
+      "variant": "Checked as you type"
+    },
+    {
+      "of": "tasks-editing-policy-files-directly.change-policy-file-value-data",
+      "variant": "Either form accepted"
+    },
+    {
+      "of": "tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "variant": "Straight from the selection"
+    },
+    {
+      "of": "tasks-editing-policy-files-directly.import-registry-file-into-policy-source",
+      "variant": "Prefix worked out for you"
+    },
+    {
+      "of": "tasks-editing-policy-files-directly.import-policy-file",
+      "variant": "One request"
+    },
+    {
+      "of": "tasks-editing-policy-files-directly.export-policy-as-registry-file",
+      "variant": "Export what is selected"
+    },
+    {
+      "of": "tasks-editing-policy-files-directly.export-policy-file",
+      "variant": "One request"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.load-definitions-folder",
+      "variant": "Load without questions"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.add-template-file",
+      "variant": "Add several at once"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.clear-loaded-definitions",
+      "variant": "Clear with a way back"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.review-loaded-template-files",
+      "variant": "Contribution at a glance"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.browse-policy-tree",
+      "variant": "One place to explore"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.merge-duplicate-policies",
+      "variant": "Review then merge"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.view-policy-details",
+      "variant": "Everything at a glance"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.view-category-details",
+      "variant": "Whole ancestry at once"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.browse-products",
+      "variant": "Product family in one view"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.browse-support-rules",
+      "variant": "Start from the product"
+    },
+    {
+      "of": "tasks-browsing-policy-definitions.inspect-policy-technical-details",
+      "variant": "Plain words first, detail on demand"
+    }
+  ],
+  "reason": "The person accepted the recommended way for all 39 tasks",
+  "confirmedAt": "2026-11-18T15:19:37.857Z"
+}

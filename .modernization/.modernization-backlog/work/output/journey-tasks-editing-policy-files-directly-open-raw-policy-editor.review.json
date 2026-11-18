@@ -1,0 +1,5 @@
+{"read":1,"challenges":[
+{"record":0,"says":"The last criterion says the person sees a summary of what they changed on Done, Enter or Escape, but the only cited rule (businessrule-18574755515767742264) states that Done/Enter closes as accepted, Escape as cancelled, and changes stay on the loaded source until policies are saved; no rule or decision states a summary or a reminder, so this behaviour is invented from an action's description."},
+{"record":0,"says":"The first criterion says that when only one area is backed by a policy file it is taken 'without asking', which the cited rule (businessrule-40441510620479008895) does not state (it only limits the area chosen to policy-file-backed sources and gives the 'Neither loaded source...' message)."},
+{"record":0,"says":"The second criterion says 'a choice the caller does not allow cannot be picked', and 'caller' is code language a product owner who never saw the code could not follow; it should say which choices are offered."}
+]}

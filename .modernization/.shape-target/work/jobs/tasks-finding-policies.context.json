@@ -1,0 +1,1120 @@
+{
+  "capability": {
+    "id": "capability-85379136702335736376",
+    "name": "Finding policies",
+    "purpose": "Narrow the policy list by filter and find policies by ID, text or registry key and value, then pick a result."
+  },
+  "surfaces": [
+    {
+      "name": "DoubleClickIgnoringTreeView",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-doubleclickignoringtreeview--finding-policies.md",
+      "actions": [
+        {
+          "id": "block-55576298759886274598",
+          "what": "Drops the double-click message so the tree check state stays in step",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-58048189688698008638"
+          ],
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 155,
+            "lastLine": 158
+          }
+        }
+      ]
+    },
+    {
+      "name": "FilterOptions",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-filteroptions--finding-policies.md",
+      "actions": [
+        {
+          "id": "block-26736796202907003543",
+          "what": "Enables the product requirements box only while Supported on is ticked",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-88807660791719489759"
+          ],
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 76,
+            "lastLine": 78
+          }
+        },
+        {
+          "id": "block-03044886867739368079",
+          "what": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-57716378734614233724"
+          ],
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 79,
+            "lastLine": 81
+          }
+        },
+        {
+          "id": "block-27559849759497597302",
+          "what": "Sets the dialog back to a filter that matches everything",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-01575097247784730570",
+            "businessrule-26561900736287578271",
+            "businessrule-32591775124677875588",
+            "businessrule-59209755491778300947",
+            "businessrule-76306981111385169671",
+            "businessrule-81206266674090971597"
+          ],
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 82,
+            "lastLine": 84
+          }
+        },
+        {
+          "id": "block-88991021756869656536",
+          "what": "Builds the filter from the chosen options and closes the dialog accepted",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-03237181236179074787",
+            "businessrule-70906412717211463954",
+            "businessrule-81055540068763556055",
+            "businessrule-90628240213834851721"
+          ],
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 85,
+            "lastLine": 120
+          }
+        },
+        {
+          "id": "block-75494449832197867529",
+          "what": "Recolours the product tree so it looks right when disabled",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 121,
+            "lastLine": 124
+          }
+        },
+        {
+          "id": "block-44706239895339562170",
+          "what": "Applies the new tick to all child products",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-61457439461915744538"
+          ],
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 125,
+            "lastLine": 129
+          }
+        }
+      ]
+    },
+    {
+      "name": "FindById",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-findbyid--finding-policies.md",
+      "actions": [
+        {
+          "id": "block-61877977111665770759",
+          "what": "Takes the status icons from the main window's icon list",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-49813083192336894297",
+            "businessrule-81666786810242280110",
+            "businessrule-93221850558792273709"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 14,
+            "lastLine": 21
+          }
+        },
+        {
+          "id": "block-00880488620958939962",
+          "what": "Looks the typed ID up among categories, products, support definitions and policies and shows what it found",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-34818300362920325745",
+            "businessrule-56645748073860464161",
+            "businessrule-73680018829588409732"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 22,
+            "lastLine": 53
+          }
+        },
+        {
+          "id": "block-08747539546616381995",
+          "what": "Clears the placeholder space and focuses the ID box",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 54,
+            "lastLine": 58
+          }
+        },
+        {
+          "id": "block-32698633467304016976",
+          "what": "Closes the dialog with the typed ID accepted",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-59811769233751713079"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 59,
+            "lastLine": 61
+          }
+        },
+        {
+          "id": "block-36457006871614893425",
+          "what": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-79420398091956863443"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 62,
+            "lastLine": 64
+          }
+        }
+      ]
+    },
+    {
+      "name": "FindByRegistry",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-findbyregistry--finding-policies.md",
+      "actions": [
+        {
+          "id": "block-71047013454784114585",
+          "what": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 3,
+            "lastLine": 5
+          }
+        },
+        {
+          "id": "block-80717492809988540545",
+          "what": "Checks the typed registry key and value terms and builds the policy search function",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-27271850163543025066",
+            "businessrule-35545130062422334165",
+            "businessrule-54035538146675510973",
+            "businessrule-54588279423566663184",
+            "businessrule-71024372746156766440",
+            "businessrule-73898787083077319907",
+            "businessrule-95826639622119629666"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 6,
+            "lastLine": 37
+          }
+        }
+      ]
+    },
+    {
+      "name": "FindByText",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-findbytext--finding-policies.md",
+      "actions": [
+        {
+          "id": "block-47405947189671669922",
+          "what": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 8,
+            "lastLine": 10
+          }
+        },
+        {
+          "id": "block-30919896261988592289",
+          "what": "Checks the typed search text and chosen attributes and builds the policy search function",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-20714647401379544771",
+            "businessrule-21915530910585082056",
+            "businessrule-31790508764365764837",
+            "businessrule-51916167191556979448",
+            "businessrule-63262725504588029346",
+            "businessrule-73561308167207352856"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 11,
+            "lastLine": 73
+          }
+        }
+      ]
+    },
+    {
+      "name": "FindResults",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-findresults--finding-policies.md",
+      "actions": [
+        {
+          "id": "block-64273399884973341208",
+          "what": "Starts the background search when one is waiting, otherwise restores the last selected result.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-17385510066480798684",
+            "businessrule-20714647401379544771",
+            "businessrule-21915530910585082056",
+            "businessrule-27271850163543025066",
+            "businessrule-35545130062422334165",
+            "businessrule-51916167191556979448",
+            "businessrule-54035538146675510973",
+            "businessrule-54588279423566663184",
+            "businessrule-57749472934040708163",
+            "businessrule-63262725504588029346",
+            "businessrule-79288582532948770219",
+            "businessrule-94342659396000502591",
+            "businessrule-95826639622119629666"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 95,
+            "lastLine": 105
+          }
+        },
+        {
+          "id": "block-36571577833746850164",
+          "what": "Asks the running search to stop.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-15877826642522947109"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 106,
+            "lastLine": 108
+          }
+        },
+        {
+          "id": "block-05405434344126500839",
+          "what": "Keeps the title column filling the width of the results list.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 109,
+            "lastLine": 111
+          }
+        },
+        {
+          "id": "block-57135383118787346557",
+          "what": "Stops the search when the results window is closed and settles the progress display.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-15877826642522947109"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 112,
+            "lastLine": 119
+          }
+        },
+        {
+          "id": "block-25728253727728310343",
+          "what": "Takes the selected search result as the chosen policy and closes the window with OK.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-48840711587592938759"
+          ],
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 120,
+            "lastLine": 125
+          }
+        },
+        {
+          "id": "block-37035950900396190507",
+          "what": "Turns on double-buffered drawing for the results list.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 126,
+            "lastLine": 130
+          }
+        }
+      ]
+    },
+    {
+      "name": "Main",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-main--finding-policies.md",
+      "actions": [
+        {
+          "id": "block-16750935830546567218",
+          "what": "Asks for an identifier and moves to, or opens, the matching category, policy, product or support definition.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-22485752927450345044",
+            "businessrule-27325316460229917481",
+            "businessrule-39702010276849006236",
+            "businessrule-49582367227471127226",
+            "businessrule-62209428351075007862",
+            "businessrule-73292110340688125936",
+            "businessrule-75178338270301910966",
+            "businessrule-86698236183201307158",
+            "businessrule-95233256539481592648",
+            "businessrule-97405551033143476269"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 580,
+            "lastLine": 606
+          }
+        },
+        {
+          "id": "block-14507530008177660767",
+          "what": "Asks for search text and runs the search.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-35354684864210149934",
+            "businessrule-38090025507732480917",
+            "businessrule-62209428351075007862",
+            "businessrule-75178338270301910966",
+            "businessrule-80544887789558031281",
+            "businessrule-86305970842078630022"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 645,
+            "lastLine": 650
+          }
+        },
+        {
+          "id": "block-49062346851945682165",
+          "what": "Shows the search results window without starting a search.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-35354684864210149934",
+            "businessrule-38090025507732480917",
+            "businessrule-62209428351075007862",
+            "businessrule-75178338270301910966",
+            "businessrule-78338951417255409296",
+            "businessrule-80544887789558031281"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 651,
+            "lastLine": 654
+          }
+        },
+        {
+          "id": "block-27516887165549303737",
+          "what": "Moves to the next visible policy in the search results.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-17430127230259081557",
+            "businessrule-53914450774482291886",
+            "businessrule-62209428351075007862"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 655,
+            "lastLine": 667
+          }
+        },
+        {
+          "id": "block-83203327187612347635",
+          "what": "Asks for registry details and runs the search.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-35354684864210149934",
+            "businessrule-38090025507732480917",
+            "businessrule-62209428351075007862",
+            "businessrule-75178338270301910966",
+            "businessrule-80544887789558031281",
+            "businessrule-90661647574869686546"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 668,
+            "lastLine": 671
+          }
+        },
+        {
+          "id": "block-69596352550727046885",
+          "what": "Asks for filter settings and turns the filtered view on.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-01575097247784730570",
+            "businessrule-26561900736287578271",
+            "businessrule-32591775124677875588",
+            "businessrule-59209755491778300947",
+            "businessrule-76306981111385169671",
+            "businessrule-85052319902195299547"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 692,
+            "lastLine": 700
+          }
+        },
+        {
+          "id": "block-40488572982447813355",
+          "what": "Switches whether the filter is applied to the lists.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-36944318108231327872"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 701,
+            "lastLine": 706
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-27271850163543025066",
+      "statement": "A value-name term must match the whole value name; \"*\" and \"?\" act as wildcards, so without them the name must be equal.",
+      "place": {
+        "file": "PolicyPlus/FindByRegistry.vb",
+        "firstLine": 20,
+        "lastLine": 22
+      }
+    },
+    {
+      "id": "businessrule-35545130062422334165",
+      "statement": "A key term containing a backslash but no wildcard matches policies whose key path starts with that text.",
+      "place": {
+        "file": "PolicyPlus/FindByRegistry.vb",
+        "firstLine": 26,
+        "lastLine": 27
+      }
+    },
+    {
+      "id": "businessrule-54035538146675510973",
+      "statement": "A key term containing \"*\" or \"?\" must match the whole key path as a wildcard pattern.",
+      "place": {
+        "file": "PolicyPlus/FindByRegistry.vb",
+        "firstLine": 24,
+        "lastLine": 25
+      }
+    },
+    {
+      "id": "businessrule-54588279423566663184",
+      "statement": "A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case.",
+      "place": {
+        "file": "PolicyPlus/FindByRegistry.vb",
+        "firstLine": 17,
+        "lastLine": 35
+      }
+    },
+    {
+      "id": "businessrule-71024372746156766440",
+      "statement": "When the key text starts with HKLM\\, HKCU\\, HKEY_LOCAL_MACHINE\\ or HKEY_CURRENT_USER\\, the search is refused with \"Policies' root keys are determined only by their section. Remove the root key from the search terms and try again.\"",
+      "place": {
+        "file": "PolicyPlus/FindByRegistry.vb",
+        "firstLine": 13,
+        "lastLine": 16
+      }
+    },
+    {
+      "id": "businessrule-73898787083077319907",
+      "statement": "When Search is pressed with both the key and the value empty, the search is refused and the person is told \"Please enter search terms.\"",
+      "place": {
+        "file": "PolicyPlus/FindByRegistry.vb",
+        "firstLine": 9,
+        "lastLine": 12
+      }
+    },
+    {
+      "id": "businessrule-95826639622119629666",
+      "statement": "A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text.",
+      "place": {
+        "file": "PolicyPlus/FindByRegistry.vb",
+        "firstLine": 28,
+        "lastLine": 29
+      }
+    },
+    {
+      "id": "businessrule-20714647401379544771",
+      "statement": "Search text is split at spaces into plain words, wildcard words (containing \"*\" or \"?\") and quoted phrases. Words are lowercased and trimmed and lose the characters . , ' \" ; / ! ( ) { } [ ].",
+      "place": {
+        "file": "PolicyPlus/FindByText.vb",
+        "firstLine": 25,
+        "lastLine": 49
+      }
+    },
+    {
+      "id": "businessrule-21915530910585082056",
+      "statement": "A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together.",
+      "place": {
+        "file": "PolicyPlus/FindByText.vb",
+        "firstLine": 51,
+        "lastLine": 58
+      }
+    },
+    {
+      "id": "businessrule-31790508764365764837",
+      "statement": "When none of In title, In description and In comment is ticked, the search is refused with \"At least one attribute must be searched. Check one of the boxes and try again.\"; all three start ticked.",
+      "place": {
+        "file": "PolicyPlus/FindByText.vb",
+        "firstLine": 17,
+        "lastLine": 23
+      }
+    },
+    {
+      "id": "businessrule-51916167191556979448",
+      "statement": "A policy matches when the ticked attributes hit: its title, its description, or a comment on it from any supplied comment source (user or computer). Any one hit is enough.",
+      "place": {
+        "file": "PolicyPlus/FindByText.vb",
+        "firstLine": 59,
+        "lastLine": 70
+      }
+    },
+    {
+      "id": "businessrule-63262725504588029346",
+      "statement": "A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as \"abc\" does not close itself, so it also absorbs the following words.",
+      "place": {
+        "file": "PolicyPlus/FindByText.vb",
+        "firstLine": 36,
+        "lastLine": 45
+      }
+    },
+    {
+      "id": "businessrule-73561308167207352856",
+      "statement": "When Search is pressed with the search text empty, the search is refused and the person is told \"Please enter search terms.\"",
+      "place": {
+        "file": "PolicyPlus/FindByText.vb",
+        "firstLine": 12,
+        "lastLine": 16
+      }
+    },
+    {
+      "id": "businessrule-49813083192336894297",
+      "statement": "The Deduplicate Policies menu entry is hidden, so the person cannot start it.",
+      "place": {
+        "file": "PolicyPlus/Main.Designer.vb",
+        "firstLine": 266,
+        "lastLine": 266
+      }
+    },
+    {
+      "id": "businessrule-81666786810242280110",
+      "statement": "The area choice offers only \"User or Computer\", \"User\" and \"Computer\", with no free text.",
+      "place": {
+        "file": "PolicyPlus/Main.Designer.vb",
+        "firstLine": 409,
+        "lastLine": 410
+      }
+    },
+    {
+      "id": "businessrule-93221850558792273709",
+      "statement": "Only one item in the policy list can be selected at a time.",
+      "place": {
+        "file": "PolicyPlus/Main.Designer.vb",
+        "firstLine": 534,
+        "lastLine": 534
+      }
+    },
+    {
+      "id": "businessrule-34818300362920325745",
+      "statement": "Text typed in Find by ID is trimmed and looked up in this order: category, product, support definition, then policy. The first kind that matches is selected, with its own icon shown; a policy is looked up only when no other kind matches.",
+      "place": {
+        "file": "PolicyPlus/FindById.vb",
+        "firstLine": 22,
+        "lastLine": 40
+      }
+    },
+    {
+      "id": "businessrule-56645748073860464161",
+      "statement": "When the text matches nothing, nothing is selected and a \"not found\" icon is shown; when the text is empty a blank icon is shown instead. The section from an earlier match is not cleared when the text changes to a non-policy.",
+      "place": {
+        "file": "PolicyPlus/FindById.vb",
+        "firstLine": 24,
+        "lastLine": 27
+      }
+    },
+    {
+      "id": "businessrule-73680018829588409732",
+      "statement": "A policy ID may end with \"@U\" to mean the user section or \"@C\" to mean the computer section; without a suffix, or with any other suffix, the policy applies to both sections. The suffix is cut off before the policy lookup, so an unknown suffix still finds the policy.",
+      "place": {
+        "file": "PolicyPlus/FindById.vb",
+        "firstLine": 39,
+        "lastLine": 48
+      }
+    },
+    {
+      "id": "businessrule-59811769233751713079",
+      "statement": "Go closes Find by ID as accepted whether or not the text matched anything, so the caller may receive no selection.",
+      "place": {
+        "file": "PolicyPlus/FindById.vb",
+        "firstLine": 59,
+        "lastLine": 61
+      }
+    },
+    {
+      "id": "businessrule-79420398091956863443",
+      "statement": "Pressing Escape closes Find by ID as cancelled.",
+      "place": {
+        "file": "PolicyPlus/FindById.vb",
+        "firstLine": 62,
+        "lastLine": 64
+      }
+    },
+    {
+      "id": "businessrule-88807660791719489759",
+      "statement": "The product requirement box (the product tree and the two matching options) can be used only while Supported on is ticked; it starts unusable.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 76,
+        "lastLine": 78
+      }
+    },
+    {
+      "id": "businessrule-57716378734614233724",
+      "statement": "Pressing Escape closes the filter dialog as cancelled and the current filter is unchanged.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 79,
+        "lastLine": 81
+      }
+    },
+    {
+      "id": "businessrule-01575097247784730570",
+      "statement": "When the current filter has a supported-on condition, the dialog opens with Supported on ticked, exactly the filter's products ticked and the two matching options set as the filter holds; product branches whose tick differs from their parent are opened.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 54,
+        "lastLine": 74
+      }
+    },
+    {
+      "id": "businessrule-26561900736287578271",
+      "statement": "When the filter dialog opens, the Current state choice shows Any if the current filter has no state condition, otherwise Not Configured, Configured, Enabled or Disabled as the filter holds.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 28,
+        "lastLine": 41
+      }
+    },
+    {
+      "id": "businessrule-32591775124677875588",
+      "statement": "When the filter dialog opens, the Policy type choice shows Any if the current filter has no policy-type condition, Policy if it keeps only managed policies, and Preference if it keeps only the others.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 23,
+        "lastLine": 27
+      }
+    },
+    {
+      "id": "businessrule-59209755491778300947",
+      "statement": "When the filter dialog opens, the Commented choice shows Any if the current filter has no comment condition, Yes if it keeps only commented policies and No if it keeps only uncommented ones.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 42,
+        "lastLine": 46
+      }
+    },
+    {
+      "id": "businessrule-76306981111385169671",
+      "statement": "When the current filter has no supported-on condition, the dialog opens with Supported on unticked, both \"Match a policy if at least one selected product is supported\" and \"Match policies with missing or blank support definitions\" ticked, and no product ticked.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 47,
+        "lastLine": 53
+      }
+    },
+    {
+      "id": "businessrule-81206266674090971597",
+      "statement": "Reset returns every choice to its default: Any for type, state and comment, Supported on unticked, both matching options ticked and no product ticked.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 82,
+        "lastLine": 84
+      }
+    },
+    {
+      "id": "businessrule-03237181236179074787",
+      "statement": "When OK is pressed, the new filter keeps only managed policies for Policy, only unmanaged ones for Preference, and no policy-type condition for Any.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 88,
+        "lastLine": 93
+      }
+    },
+    {
+      "id": "businessrule-70906412717211463954",
+      "statement": "When OK is pressed, the new filter keeps only commented policies for Yes, only uncommented ones for No, and no comment condition for Any.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 104,
+        "lastLine": 109
+      }
+    },
+    {
+      "id": "businessrule-81055540068763556055",
+      "statement": "When OK is pressed, the new filter requires the chosen state: Not Configured, Configured, Enabled or Disabled; Any sets no state condition.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 94,
+        "lastLine": 103
+      }
+    },
+    {
+      "id": "businessrule-90628240213834851721",
+      "statement": "When OK is pressed with Supported on ticked, the filter records every ticked product and both matching options; with it unticked, any ticks and options are discarded and no support condition applies. A filter with Supported on ticked and no product ticked is accepted.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 110,
+        "lastLine": 119
+      }
+    },
+    {
+      "id": "businessrule-17385510066480798684",
+      "statement": "When the results window is reopened, the previously selected result is selected again if it is still in the list.",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 95,
+        "lastLine": 105
+      }
+    },
+    {
+      "id": "businessrule-57749472934040708163",
+      "statement": "When a search ends it reports \"Finished searching: checked N policies, found M hits\", or \"Search canceled: ...\" if stopped, and the Stop button is disabled.",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 82,
+        "lastLine": 89
+      }
+    },
+    {
+      "id": "businessrule-79288582532948770219",
+      "statement": "The search tests every policy in turn, and adds every hit to the list with its category name, in the order policies are held.",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 63,
+        "lastLine": 73
+      }
+    },
+    {
+      "id": "businessrule-94342659396000502591",
+      "statement": "The list and progress are refreshed after every 20 policies: \"Searching: checked N policies so far, found M hits\".",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 74,
+        "lastLine": 80
+      }
+    },
+    {
+      "id": "businessrule-15877826642522947109",
+      "statement": "Stop, or closing the results window, cancels the search; closing also leaves the label at \"Search canceled\" with the bar full if the search had not finished.",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 91,
+        "lastLine": 94
+      }
+    },
+    {
+      "id": "businessrule-48840711587592938759",
+      "statement": "Go, or a double-click on a result, accepts only when a result is selected; the selected policy is passed back and its position remembered.",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 120,
+        "lastLine": 125
+      }
+    },
+    {
+      "id": "businessrule-61457439461915744538",
+      "statement": "Ticking or unticking a product by hand ticks or unticks every product beneath it to match; changes made by the dialog itself do not spread.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 125,
+        "lastLine": 129
+      }
+    },
+    {
+      "id": "businessrule-58048189688698008638",
+      "statement": "Double-clicking a product checkbox does nothing, so a tick shown always agrees with the tick kept.",
+      "place": {
+        "file": "PolicyPlus/FilterOptions.vb",
+        "firstLine": 155,
+        "lastLine": 158
+      }
+    },
+    {
+      "id": "businessrule-22485752927450345044",
+      "statement": "Each entry of a support definition is listed by the name of the nested support definition when it is one, otherwise by the name of the product, otherwise as \"<missing: \" followed by the product code the entry names. Minimum and maximum versions are listed only for product entries that name a version range; a missing bound is shown blank.",
+      "place": {
+        "file": "PolicyPlus/DetailSupport.vb",
+        "firstLine": 20,
+        "lastLine": 36
+      }
+    },
+    {
+      "id": "businessrule-27325316460229917481",
+      "statement": "The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list.",
+      "place": {
+        "file": "PolicyPlus/DetailProduct.vb",
+        "firstLine": 29,
+        "lastLine": 36
+      }
+    },
+    {
+      "id": "businessrule-39702010276849006236",
+      "statement": "A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled.",
+      "place": {
+        "file": "PolicyPlus/DetailProduct.vb",
+        "firstLine": 22,
+        "lastLine": 28
+      }
+    },
+    {
+      "id": "businessrule-49582367227471127226",
+      "statement": "After finding by identifier, a category opens if it is visible, otherwise the person is told \"The category is not currently visible. Change the view settings and try again.\"; a policy opens in the editor and the list moves to it; a product or support definition opens its details; anything else gives \"That object could not be found.\".",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 584,
+        "lastLine": 604
+      }
+    },
+    {
+      "id": "businessrule-62209428351075007862",
+      "statement": "Moving to a policy first shows its category, but only when that category is visible in the tree; otherwise nothing happens and the person is not told. The policy row is then selected only if the policy is listed there. A policy hidden by the area choice or the filter leaves the category shown with nothing selected and no message; find by text and by registry do not check this before opening the editor.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 396,
+        "lastLine": 407
+      }
+    },
+    {
+      "id": "businessrule-73292110340688125936",
+      "statement": "A policy found by identifier opens in the lower-numbered of the area shown and the area found (computer is lower than user, user lower than both), so Computer wins over User.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 596,
+        "lastLine": 596
+      }
+    },
+    {
+      "id": "businessrule-75178338270301910966",
+      "statement": "After the edit dialog is accepted, which changes the open policy source in memory only, the list is refreshed in place if the current category is still visible; otherwise the program moves up to the nearest visible category. Nothing is written to disk until Save Policies.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 300,
+        "lastLine": 303
+      }
+    },
+    {
+      "id": "businessrule-86698236183201307158",
+      "statement": "The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank.",
+      "place": {
+        "file": "PolicyPlus/DetailProduct.vb",
+        "firstLine": 21,
+        "lastLine": 21
+      }
+    },
+    {
+      "id": "businessrule-95233256539481592648",
+      "statement": "The product details window labels a product \"Major revision\", \"Minor revision\" or \"Top-level product\" from its type.",
+      "place": {
+        "file": "PolicyPlus/DetailProduct.vb",
+        "firstLine": 13,
+        "lastLine": 20
+      }
+    },
+    {
+      "id": "businessrule-97405551033143476269",
+      "statement": "The support details window states how a support definition matches products: \"Match all the referenced products\", \"Match any of the referenced products\", or \"Do not match products\" when it has no matching logic.",
+      "place": {
+        "file": "PolicyPlus/DetailSupport.vb",
+        "firstLine": 11,
+        "lastLine": 18
+      }
+    },
+    {
+      "id": "businessrule-35354684864210149934",
+      "statement": "Starting a search clears earlier results, sets the progress range to the number of policies, and begins on \"Starting search\".",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 11,
+        "lastLine": 26
+      }
+    },
+    {
+      "id": "businessrule-38090025507732480917",
+      "statement": "When search results are opened from the main window and no search has been run (or it was cleared), the person is told \"No search has been run yet, so there are no results to display.\" and nothing opens.",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 27,
+        "lastLine": 37
+      }
+    },
+    {
+      "id": "businessrule-80544887789558031281",
+      "statement": "A search dialog opens either empty or running a new search. When the person picks a result, its editor opens in the current area and the list moves to that policy.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 378,
+        "lastLine": 387
+      }
+    },
+    {
+      "id": "businessrule-86305970842078630022",
+      "statement": "Find by text starts a search with what the person entered, and can search both areas' comments.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 647,
+        "lastLine": 649
+      }
+    },
+    {
+      "id": "businessrule-78338951417255409296",
+      "statement": "\"Search Results\" only reopens the last results and starts no new search.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 653,
+        "lastLine": 653
+      }
+    },
+    {
+      "id": "businessrule-17430127230259081557",
+      "statement": "Find Next moves to the next result that is currently visible, skipping hidden ones, and tells the person \"There are no more results that match the filter.\" when none is left.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 657,
+        "lastLine": 666
+      }
+    },
+    {
+      "id": "businessrule-53914450774482291886",
+      "statement": "Taking the next policy returns nothing when no search has run or when the last result has been passed; otherwise it returns the result after the last chosen one.",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 42,
+        "lastLine": 46
+      }
+    },
+    {
+      "id": "businessrule-90661647574869686546",
+      "statement": "Find by registry starts a search with what the person entered.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 670,
+        "lastLine": 670
+      }
+    },
+    {
+      "id": "businessrule-85052319902195299547",
+      "statement": "Changing the filter options turns on \"Only Filtered Policies\" and moves to the nearest visible category.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 695,
+        "lastLine": 698
+      }
+    },
+    {
+      "id": "businessrule-36944318108231327872",
+      "statement": "The \"Only Filtered Policies\" menu switches the filter on or off and moves to the nearest visible category.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 703,
+        "lastLine": 705
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "entity-99683518011128701149",
+      "name": "Policy setting",
+      "states": [
+        "Not configured",
+        "Enabled",
+        "Disabled",
+        "Unclear"
+      ]
+    },
+    {
+      "id": "entity-40163170707735391190",
+      "name": "Program preference",
+      "states": [
+        "Welcome download offer not yet considered",
+        "Welcome download offer considered",
+        "Raw POL editing warning not yet accepted",
+        "Raw POL editing warning accepted",
+        "Policy sources at default (Local GPO)",
+        "Policy sources remembered",
+        "Templates folder at Windows default",
+        "Templates folder chosen",
+        "Language follows the system",
+        "Language chosen"
+      ]
+    },
+    {
+      "id": "entity-92808062881922645840",
+      "name": "Administrative template",
+      "states": [
+        "Downloaded package",
+        "Unpacked",
+        "Installed in a template folder",
+        "Loaded into the workspace",
+        "Available as policy definitions",
+        "Cleared from the workspace"
+      ]
+    },
+    {
+      "id": "entity-52418278656387992812",
+      "name": "Policy comment",
+      "states": []
+    }
+  ],
+  "externals": [
+    {
+      "id": "external-90077838450756006603",
+      "name": "Computer file system folders",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-97068941883605652538",
+      "name": "Windows registry policy keys and loaded user hives",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-25314431250146805945",
+      "name": "Administrative template files (ADMX and ADML)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-45436197603688581519",
+      "name": "Windows registry settings key of Policy Plus",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-84087908423930356962",
+      "name": "Generated version source file",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-08492831744411585027",
+      "name": "Policy comment files (CMTX)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-90078096462363044953",
+      "name": "Active Directory domain",
+      "kind": "outsideService"
+    },
+    {
+      "id": "external-47673734579321187695",
+      "name": "Microsoft download site",
+      "kind": "outsideService"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{"read":1,"challenges":[
+{"record":0,"says":"Criteria 1, 2 and 4 cite no rule and do not say in the criteria why (for example that they come from the journey's recorded actions, not from a rule), as the plan requires of uncited criteria."},
+{"record":0,"says":"Criterion 4 (the other sources are still released when one fails) is not stated by any rule or decision; the only rule says the message appears when any source could not release, so this invents behaviour, and it also leans on the unanswered open question about what happens after the message."},
+{"record":0,"says":"Criterion 1 drops the rule businessrule-46972642019161394212 that step 1 keeps: a mounted user hive is unloaded on release and the result says whether unloading succeeded, every other kind of source releasing successfully; no criterion covers it, so the condition on which the cleanup message depends is missing."},
+{"record":0,"says":"Criterion 2 (no message at all when everything released) is only implied by the cited rule's 'when any source could not release', and the uncited claim should be tied to the rule or the step reason 'Silent on success' in the criterion itself."}
+]}

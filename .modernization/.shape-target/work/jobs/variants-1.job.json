@@ -1,0 +1,8 @@
+{
+  "kind": "variants",
+  "tasks": [
+    "tasks-building-and-versioning-policy-plus.stamp-program-version",
+    "tasks-getting-microsoft-policy-definitions.get-policy-definitions",
+    "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer"
+  ]
+}

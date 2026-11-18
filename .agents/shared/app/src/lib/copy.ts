@@ -123,6 +123,7 @@ export const copy = {
         data: "Data and how it changes",
         risks: "What can go wrong",
         plan: "Modernization plan",
+        target: "Target",
     },
     glance: {
         heading: "At a glance",

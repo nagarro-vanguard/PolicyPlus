@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Developers have testing in place, as decided, before any capability is built on it.
+Developers have testing in place, as decided, before any journey is built on it.
 
 ## Scope
 
@@ -16,11 +16,11 @@ Out of scope: the product's own behaviour.
 
 ## What we found
 
-- Chose a real PostgreSQL in Data tests over in-memory fakes because migrations and SQL behaviour are what can break. Chose black-box Playwright for end-to-end rules over component-only tests because the legacy behaviour is user-visible, and chose table-driven Vitest tests over adding Testing Library or a property-testing library because neither is in the stack and decision-9 allows no library outside it without a story. Assumes CI can run Docker and Playwright browsers; no coverage threshold is set because the inputs give none.
+- Chose a real PostgreSQL over mocked queries because mocks hide migration and SQL faults, and chose port fakes over mocking reg.exe or PowerShell calls so domain and handler tests run anywhere; the trade-off is slower database tests and a Windows-gated subset. Assumes a Postgres instance is available locally or in CI via a container.
 
 ## Design
 
-- Vitest per layer: Domain with example-based unit tests, table-driven over sample ADMX, ADML, POL, REG, CMTX and SPOL files, plus a round-trip test per parser and writer; Data against a real PostgreSQL test database, no mocks; API through the HttpApi test client; Components with Storybook stories and Screens with Vitest tests of their pure logic. Playwright with axe in layer-e2e drives the running product, one accessibility check per screen. A story is done when its layer checks and its black-box test pass.
+- Vitest for domain, contracts, database and api with fixture text for ADMX, ADML, POL and REG files; database tests run against a real PostgreSQL started by the test task, never a mock; Windows-only carriers are tested against fakes behind their ports plus a few Windows-gated tests; e2e is Playwright with axe against the running product, written before the code it tests; every rule and story carries its legacy rule as a test name.
 
 ## Data modelling
 

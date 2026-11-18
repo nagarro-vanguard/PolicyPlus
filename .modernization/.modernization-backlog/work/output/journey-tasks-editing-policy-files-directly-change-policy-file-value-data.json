@@ -1,0 +1,59 @@
+{
+  "stories": [
+    {
+      "title": "Change the data of a value in a policy file in either number form",
+      "what": "A person picks an existing value in a policy file and types its new data. A number is shown and accepted in decimal or hexadecimal as typed, with both forms shown, so there is no mode to switch. Text and lists of text are entered as such.",
+      "why": "Administrators editing a policy file directly can correct a value's data without first knowing or switching which number form is on.",
+      "actions": [
+        "block-04045695864978247457",
+        "block-93495413918984610841",
+        "block-72694376270340482080",
+        "block-80078734348197600769",
+        "block-89740736795318812041",
+        "block-20624708115873028291",
+        "block-50446188615114520824"
+      ],
+      "terms": [
+        {
+          "name": "Value data",
+          "means": "The content stored in a named value of a policy file, such as a number, a text or a list of texts; it is not the value's name or its kind."
+        }
+      ],
+      "journey": {
+        "name": "Either form accepted",
+        "steps": [
+          "Pick the value and type its new data",
+          "Let the system read the number, then keep the change"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given a typed hexadecimal number that is too large to fit, when the person confirms, then the value is set to the largest allowed value.",
+          "from": []
+        },
+        {
+          "says": "Given typed text that is not a hexadecimal number, when the person confirms, then the value is left unchanged.",
+          "from": []
+        },
+        {
+          "says": "Given new data is confirmed for a value, when the change is kept, then the value's data is replaced by the confirmed data and its name and kind stay the same.",
+          "from": []
+        },
+        {
+          "says": "Given new data is confirmed for a value, when the change is kept, then the value stays selected.",
+          "from": []
+        }
+      ],
+      "steps": [
+        "tasks-editing-policy-files-directly.change-policy-file-value-data:either-form-accepted#1",
+        "tasks-editing-policy-files-directly.change-policy-file-value-data:either-form-accepted#2"
+      ],
+      "components": [],
+      "open": [
+        "How does a person mark a typed number as hexadecimal, and how is a number typed without that mark read?",
+        "How are the decimal and hexadecimal forms of a number's current data shown together when a value is opened for editing?",
+        "What does a person see when they back out of entering new data, and which kinds of value (number, text, list of texts) are entered how?"
+      ]
+    }
+  ]
+}

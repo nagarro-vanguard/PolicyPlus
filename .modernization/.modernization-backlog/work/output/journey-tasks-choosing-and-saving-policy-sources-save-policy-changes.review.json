@@ -1,0 +1,7 @@
+{"read": 1, "challenges": [
+{"record":0,"says":"The criteria for \"not writable\" and for \"Success.\" / \"Saving failed!\" cite only layer-api and layer-web, although businessrule-13724150063390760319 states both outcomes, so they should cite that rule."},
+{"record":0,"says":"The criterion for a local Group Policy source on an edition without Group Policy cites only integrations.decision-2 and not businessrule-19841193988434357732, which is the rule that states the registry diff, the notification of all windows and the outcome text."},
+{"record":0,"says":"The criterion on POL file, registry, user hive and scratch space outcomes is hard to follow: \"in that order of kind\" is unclear, \"scratch space\" is never explained to the product owner, and each outcome is not tied to its source kind as businessrule-24339552780845919468 does."},
+{"record":0,"says":"The term \"Fully writable source\" adds a definition (can only be viewed or changed in memory) that no cited rule states; the rule only says a source is written if fully writable."},
+{"record":0,"says":"The criterion for a local source on an edition with Group Policy drops the rule's condition that editions are decided by a fixed list of product edition codes, so the builder cannot tell how the edition is chosen."}
+]}

@@ -1,0 +1,76 @@
+{
+  "stories": [
+    {
+      "title": "Add several template files to the loaded policies at once",
+      "what": "The person chooses one or several policy template files and each is added in turn to the policies already loaded, then sees which were added and which were refused with the reason for each.",
+      "why": "People can bring extra policies into their workspace in one go without emptying it or changing the folder the program remembers.",
+      "actions": [
+        "block-95818603562143517431"
+      ],
+      "terms": [
+        {
+          "name": "Template file",
+          "means": "A single administrative template file (ADMX) holding policy definitions; it is not a folder of templates or a language file."
+        }
+      ],
+      "journey": {
+        "name": "Add several at once",
+        "steps": [
+          "Choose the policy template files to add",
+          "See what was added and what was refused"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the person is adding template files, when the file chooser opens, then it offers administrative template files only and lets them pick one or several (several files extend the single-file choice the program offers today).",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-07200475892676201466"
+            }
+          ]
+        },
+        {
+          "says": "Given policies are already loaded, when the person confirms one template file, then that file is added to the loaded policies, which are kept and not emptied (the same file is added alone and the structures are built, as for a single file today).",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-07200475892676201466"
+            }
+          ]
+        },
+        {
+          "says": "Given template files were added, when the additions finish, then the folder the program remembers for definitions is unchanged.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-07200475892676201466"
+            }
+          ]
+        },
+        {
+          "says": "Given a chosen file is refused, when the additions finish, then the person sees \"The ADMX file could not be added to the workspace.\" with the reason for that file.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-07200475892676201466"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        "tasks-browsing-policy-definitions.add-template-file:add-several-at-once#1",
+        "tasks-browsing-policy-definitions.add-template-file:add-several-at-once#2"
+      ],
+      "components": [
+        "Template file adder"
+      ],
+      "open": [
+        "Does picking several files extend the single-file rule so that each file is added alone, with one failure reported per refused file?",
+        "When several files are chosen and some are refused, are the other files still added?",
+        "When several files are refused, are the failures shown together in one message or one after another?",
+        "Are the structures built once after all files or after each file?"
+      ]
+    }
+  ]
+}

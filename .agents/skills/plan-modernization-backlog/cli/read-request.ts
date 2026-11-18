@@ -6,7 +6,7 @@ import { readRequest, requestHelp, RequestInvalid } from "../shared/model/reques
 const [path] = process.argv.slice(2);
 if (path === undefined || path === "--help" || path === "-h") {
     console.log(
-        `Usage: read-request.ts <request file>\n\nChecks a modernization request, writes <Output Root>/.modernization-backlog/work/request.json and prints the Output Root.\n${requestHelp}`,
+        `Usage: read-request.ts <request file>\n\nChecks a modernization request, writes <Output Root>/request.json and prints the Output Root.\n${requestHelp}`,
     );
     process.exit(path === undefined ? 2 : 0);
 }

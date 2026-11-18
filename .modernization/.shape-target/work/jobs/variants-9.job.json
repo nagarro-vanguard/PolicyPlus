@@ -1,0 +1,13 @@
+{
+  "kind": "variants",
+  "tasks": [
+    "tasks-editing-policy-files-directly.import-registry-file-into-policy-source",
+    "tasks-editing-policy-files-directly.import-policy-file",
+    "tasks-editing-policy-files-directly.export-policy-as-registry-file",
+    "tasks-editing-policy-files-directly.export-policy-file",
+    "tasks-browsing-policy-definitions.load-definitions-folder",
+    "tasks-browsing-policy-definitions.add-template-file",
+    "tasks-browsing-policy-definitions.clear-loaded-definitions",
+    "tasks-browsing-policy-definitions.review-loaded-template-files"
+  ]
+}

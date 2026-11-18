@@ -1,0 +1,412 @@
+{
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages, Playwright for e2e tests",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "notes": [],
+  "tasks": [
+    {
+      "id": "tasks-changing-policy-settings.import-policy-settings-from-text",
+      "outcome": "Bring a set of policy settings in from a semantic policy text and apply them to the computer and user policy sources.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-02431696381301467584",
+          "what": "Closes the window as cancelled when Escape is pressed and no text is selected."
+        },
+        {
+          "id": "block-20479299247601531941",
+          "what": "After confirmation, replaces the SPOL text with the empty header."
+        },
+        {
+          "id": "block-27933278213709856376",
+          "what": "Lets the person pick a SPOL file and shows its text for editing."
+        },
+        {
+          "id": "block-34107094698830091312",
+          "what": "Parses the SPOL text and hands it back to the caller to apply, or reports it as invalid."
+        },
+        {
+          "id": "block-70742542454119360952",
+          "what": "Checks the SPOL text and reports how many policy settings it holds."
+        },
+        {
+          "id": "block-91334952261881723533",
+          "what": "Asks for a semantic policy text and applies it to the policy sources."
+        },
+        {
+          "id": "block-92467440283303600855",
+          "what": "Clears any earlier SPOL result."
+        },
+        {
+          "id": "block-98990608667721641067",
+          "what": "Selects all text in the box on Ctrl+A."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-00415446495174126677",
+          "statement": "Pressing Escape closes Import SPOL as cancelled unless text in the box is selected; when it is, Escape closes nothing."
+        },
+        {
+          "id": "businessrule-12966156302506777327",
+          "statement": "When a semantic policy is applied, the policy's earlier settings are wiped first and then the stated state and settings are written."
+        },
+        {
+          "id": "businessrule-14257585336729172869",
+          "statement": "Verify reads the SPOL text and reports \"Validation successful, N policy settings found.\" or \"SPOL validation failed: \" followed by the reason; nothing is applied."
+        },
+        {
+          "id": "businessrule-17846007911557610465",
+          "statement": "A comment line in a semantic policy script is recognised without regard to letter case. A backslash followed by another backslash is one backslash, and a backslash followed by 'n' is a line break."
+        },
+        {
+          "id": "businessrule-21688833916465491468",
+          "statement": "A setting value in a semantic policy script is read in this order. Starting with # is a whole number, and a # value that is not a whole number fails with a conversion message. A plain non-negative number is an unsigned number. 'True' or 'False', in any letter case, is a yes/no value. Text in single quotes is text, and text in double quotes is a list of text. 'None' is an empty list. Anything else is refused with 'Unknown option data format.'."
+        },
+        {
+          "id": "businessrule-27078270365699057081",
+          "statement": "Open File puts the whole chosen file into the text box, replacing what was typed without asking and without checking it; Reset, after a Yes to \"Are you sure you want to reset the text box?\", restores the header \"Policy Plus Semantic Policy\" and blank lines."
+        },
+        {
+          "id": "businessrule-30078789996227150580",
+          "statement": "Apply accepts only SPOL text that reads correctly; the parsed file is passed back to the main window. Invalid text is refused with \"The SPOL text is invalid: \" and the reason."
+        },
+        {
+          "id": "businessrule-37953448968627114950",
+          "statement": "A semantic policy script is refused unless its first line is 'Policy Plus Semantic Policy', with the message 'Incorrect signature.'."
+        },
+        {
+          "id": "businessrule-38078267378406118840",
+          "statement": "The state in a semantic policy script must be 'Not configured', 'Enabled' or 'Disabled', regardless of case. Anything else is refused with 'Unknown policy state.'."
+        },
+        {
+          "id": "businessrule-45692609540846356884",
+          "statement": "When a semantic policy script is applied to many policies, a policy that fails is skipped and counted, and the rest are still applied. The caller gets only the number of failures, not which policy or why."
+        },
+        {
+          "id": "businessrule-47001836867625969953",
+          "statement": "A semantic policy script applies each policy to the machine source or the user source by its section."
+        },
+        {
+          "id": "businessrule-49239739229069713399",
+          "statement": "When a semantic policy script fails to load, the error gives the line it stopped at, in the form '(Error found on line N.)'."
+        },
+        {
+          "id": "businessrule-53070511165338807522",
+          "statement": "Opening Import SPOL discards any previously parsed SPOL so a cancelled session passes nothing back."
+        },
+        {
+          "id": "businessrule-64894609785645160893",
+          "statement": "A semantic policy script is read in lines separated by carriage return and line feed. A script using line feeds alone is read as one line, so it is refused with the signature message."
+        },
+        {
+          "id": "businessrule-70167687024707690035",
+          "statement": "Importing semantic policy applies all its policies to both sources and comments; the person sees \"Semantic Policy successfully applied.\" or \"N out of M could not be applied.\" when some failed, and the view refreshes either way."
+        },
+        {
+          "id": "businessrule-78566706966921753288",
+          "statement": "When a semantic policy is applied, a comment is stored for the policy first, only if one is given and a comment store exists, before the old settings are wiped and the new ones written. If the writing fails, the new comment stays against a half-written policy. An empty comment leaves any existing comment alone."
+        },
+        {
+          "id": "businessrule-82283321913472173436",
+          "statement": "A comment in a semantic policy script is refused when it ends with a lone backslash, with the message 'Escape sequence started at end of comment.'. A backslash followed by any other character is refused with 'Unknown comment escape sequence' naming it."
+        },
+        {
+          "id": "businessrule-85959955505766938318",
+          "statement": "A policy header line in a semantic policy script is a user policy only when its first word is exactly 'U'. Any other first word, including lowercase 'u' or 'User', is a machine policy. The rest of the line is the policy's identifier. A header with no space after the first word fails with a general index error, with the line number but no reason."
+        },
+        {
+          "id": "businessrule-91520515189249767580",
+          "statement": "A bracketed setting in a semantic policy script holds one line per entry. Entries with one text are a list, entries with two texts are a table of name and value. With no entries the setting is stored with no value. For a list setting, the existing entries are then removed unless the definition keeps other entries, and nothing is written. For any other kind of setting the empty value makes the write fail."
+        },
+        {
+          "id": "businessrule-97058087218177971913",
+          "statement": "Settings are read only for a policy that is Enabled. Lines under Not configured or Disabled are not read as settings but as the next policy's header."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        },
+        {
+          "id": "entity-52418278656387992812",
+          "name": "Policy comment",
+          "states": []
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-90077838450756006603",
+          "name": "Computer file system folders",
+          "kind": "dataStore"
+        },
+        {
+          "id": "external-97068941883605652538",
+          "name": "Windows registry policy keys and loaded user hives",
+          "kind": "dataStore"
+        },
+        {
+          "id": "external-08492831744411585027",
+          "name": "Policy comment files (CMTX)",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-changing-policy-settings.inspect-policy-settings-as-text",
+      "outcome": "See policy settings as semantic policy text and copy it out to use elsewhere.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-18241451168755948032",
+          "what": "Focuses the SPOL text and selects it."
+        },
+        {
+          "id": "block-56021383816140036498",
+          "what": "Selects and copies the whole SPOL text to the clipboard."
+        },
+        {
+          "id": "block-74794780607473579452",
+          "what": "Selects all text in the box on Ctrl+A."
+        },
+        {
+          "id": "block-93851338452706207861",
+          "what": "Shows or hides the SPOL header line in the text."
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-47036476815425257305",
+          "statement": "The fragment text starts with the heading \"Policy Plus Semantic Policy\" and a blank line only when \"Include SPOL header\" is ticked; otherwise only the fragment is shown."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        }
+      ],
+      "needs": [],
+      "hurts": []
+    },
+    {
+      "id": "tasks-finding-policies.find-policy-by-id",
+      "outcome": "Go straight to a known category, product, support definition or policy by typing its identifier.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-00880488620958939962",
+          "what": "Looks the typed ID up among categories, products, support definitions and policies and shows what it found"
+        },
+        {
+          "id": "block-08747539546616381995",
+          "what": "Clears the placeholder space and focuses the ID box"
+        },
+        {
+          "id": "block-16750935830546567218",
+          "what": "Asks for an identifier and moves to, or opens, the matching category, policy, product or support definition."
+        },
+        {
+          "id": "block-32698633467304016976",
+          "what": "Closes the dialog with the typed ID accepted"
+        },
+        {
+          "id": "block-36457006871614893425",
+          "what": "Closes the dialog as cancelled when Escape is pressed"
+        },
+        {
+          "id": "block-61877977111665770759",
+          "what": "Takes the status icons from the main window's icon list"
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-22485752927450345044",
+          "statement": "Each entry of a support definition is listed by the name of the nested support definition when it is one, otherwise by the name of the product, otherwise as \"<missing: \" followed by the product code the entry names. Minimum and maximum versions are listed only for product entries that name a version range; a missing bound is shown blank."
+        },
+        {
+          "id": "businessrule-27325316460229917481",
+          "statement": "The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list."
+        },
+        {
+          "id": "businessrule-34818300362920325745",
+          "statement": "Text typed in Find by ID is trimmed and looked up in this order: category, product, support definition, then policy. The first kind that matches is selected, with its own icon shown; a policy is looked up only when no other kind matches."
+        },
+        {
+          "id": "businessrule-39702010276849006236",
+          "statement": "A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled."
+        },
+        {
+          "id": "businessrule-49582367227471127226",
+          "statement": "After finding by identifier, a category opens if it is visible, otherwise the person is told \"The category is not currently visible. Change the view settings and try again.\"; a policy opens in the editor and the list moves to it; a product or support definition opens its details; anything else gives \"That object could not be found.\"."
+        },
+        {
+          "id": "businessrule-49813083192336894297",
+          "statement": "The Deduplicate Policies menu entry is hidden, so the person cannot start it."
+        },
+        {
+          "id": "businessrule-56645748073860464161",
+          "statement": "When the text matches nothing, nothing is selected and a \"not found\" icon is shown; when the text is empty a blank icon is shown instead. The section from an earlier match is not cleared when the text changes to a non-policy."
+        },
+        {
+          "id": "businessrule-59811769233751713079",
+          "statement": "Go closes Find by ID as accepted whether or not the text matched anything, so the caller may receive no selection."
+        },
+        {
+          "id": "businessrule-62209428351075007862",
+          "statement": "Moving to a policy first shows its category, but only when that category is visible in the tree; otherwise nothing happens and the person is not told. The policy row is then selected only if the policy is listed there. A policy hidden by the area choice or the filter leaves the category shown with nothing selected and no message; find by text and by registry do not check this before opening the editor."
+        },
+        {
+          "id": "businessrule-73292110340688125936",
+          "statement": "A policy found by identifier opens in the lower-numbered of the area shown and the area found (computer is lower than user, user lower than both), so Computer wins over User."
+        },
+        {
+          "id": "businessrule-73680018829588409732",
+          "statement": "A policy ID may end with \"@U\" to mean the user section or \"@C\" to mean the computer section; without a suffix, or with any other suffix, the policy applies to both sections. The suffix is cut off before the policy lookup, so an unknown suffix still finds the policy."
+        },
+        {
+          "id": "businessrule-75178338270301910966",
+          "statement": "After the edit dialog is accepted, which changes the open policy source in memory only, the list is refreshed in place if the current category is still visible; otherwise the program moves up to the nearest visible category. Nothing is written to disk until Save Policies."
+        },
+        {
+          "id": "businessrule-79420398091956863443",
+          "statement": "Pressing Escape closes Find by ID as cancelled."
+        },
+        {
+          "id": "businessrule-81666786810242280110",
+          "statement": "The area choice offers only \"User or Computer\", \"User\" and \"Computer\", with no free text."
+        },
+        {
+          "id": "businessrule-86698236183201307158",
+          "statement": "The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank."
+        },
+        {
+          "id": "businessrule-93221850558792273709",
+          "statement": "Only one item in the policy list can be selected at a time."
+        },
+        {
+          "id": "businessrule-95233256539481592648",
+          "statement": "The product details window labels a product \"Major revision\", \"Minor revision\" or \"Top-level product\" from its type."
+        },
+        {
+          "id": "businessrule-97405551033143476269",
+          "statement": "The support details window states how a support definition matches products: \"Match all the referenced products\", \"Match any of the referenced products\", or \"Do not match products\" when it has no matching logic."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-99683518011128701149",
+          "name": "Policy setting",
+          "states": [
+            "Not configured",
+            "Enabled",
+            "Disabled",
+            "Unclear"
+          ]
+        },
+        {
+          "id": "entity-92808062881922645840",
+          "name": "Administrative template",
+          "states": [
+            "Downloaded package",
+            "Unpacked",
+            "Installed in a template folder",
+            "Loaded into the workspace",
+            "Available as policy definitions",
+            "Cleared from the workspace"
+          ]
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-25314431250146805945",
+          "name": "Administrative template files (ADMX and ADML)",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-text",
+      "outcome": "Find policies whose title, description or comments contain words or phrases the person remembers.",
+      "actor": "person",
+      "actions": [
+        {
+          "id": "block-14507530008177660767",
+          "what": "Asks for search text and runs the search."
+        },
+        {
+          "id": "block-30919896261988592289",
+          "what": "Checks the typed search text and chosen attributes and builds the policy search function"
+        },
+        {
+          "id": "block-47405947189671669922",
+          "what": "Closes the dialog as cancelled when Escape is pressed"
+        }
+      ],
+      "rules": [
+        {
+          "id": "businessrule-20714647401379544771",
+          "statement": "Search text is split at spaces into plain words, wildcard words (containing \"*\" or \"?\") and quoted phrases. Words are lowercased and trimmed and lose the characters . , ' \" ; / ! ( ) { } [ ]."
+        },
+        {
+          "id": "businessrule-21915530910585082056",
+          "statement": "A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together."
+        },
+        {
+          "id": "businessrule-31790508764365764837",
+          "statement": "When none of In title, In description and In comment is ticked, the search is refused with \"At least one attribute must be searched. Check one of the boxes and try again.\"; all three start ticked."
+        },
+        {
+          "id": "businessrule-51916167191556979448",
+          "statement": "A policy matches when the ticked attributes hit: its title, its description, or a comment on it from any supplied comment source (user or computer). Any one hit is enough."
+        },
+        {
+          "id": "businessrule-63262725504588029346",
+          "statement": "A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as \"abc\" does not close itself, so it also absorbs the following words."
+        },
+        {
+          "id": "businessrule-73561308167207352856",
+          "statement": "When Search is pressed with the search text empty, the search is refused and the person is told \"Please enter search terms.\""
+        },
+        {
+          "id": "businessrule-86305970842078630022",
+          "statement": "Find by text starts a search with what the person entered, and can search both areas' comments."
+        }
+      ],
+      "facts": [
+        {
+          "id": "entity-52418278656387992812",
+          "name": "Policy comment",
+          "states": []
+        }
+      ],
+      "needs": [
+        {
+          "id": "external-08492831744411585027",
+          "name": "Policy comment files (CMTX)",
+          "kind": "dataStore"
+        }
+      ],
+      "hurts": []
+    }
+  ]
+}

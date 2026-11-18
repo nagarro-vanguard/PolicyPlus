@@ -1,0 +1,207 @@
+{
+ "stories": [
+  {
+   "title": "Remove a selected value or key by deletion entry or clearing",
+   "what": "Let a person mark the value they have selected for deletion, so the policy file keeps an instruction that removes it on the machine.",
+   "why": "The file keeps a deletion instruction the machine follows when policies are applied, instead of silently losing the value.",
+   "actions": [
+    "block-16970529596856009541",
+    "block-96284792383932228976",
+    "block-53120693124506724348",
+    "block-52241240840751807884"
+   ],
+   "terms": [
+    {
+     "name": "Deletion entry",
+     "means": "A value named \"**del.\" followed by the value name, which removes that value on the machine when policies are applied; it is not the same as forgetting the value, which leaves nothing in the file."
+    }
+   ],
+   "journey": {
+    "name": "Straight from the selection",
+    "steps": [
+     "Mark the selected value for deletion",
+     "Choose what to do with a selected key",
+     "Forget an entry entirely"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given a value is deleted from the list, when the person confirms, then the file does not erase it but replaces it with a deletion entry named \"**del.\" followed by the value's name.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-27194812132584860836"
+      }
+     ]
+    },
+    {
+     "says": "Given a value has been replaced by a deletion entry, when policies are applied on the machine, then the value is removed on that machine.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-27194812132584860836"
+      }
+     ]
+    },
+    {
+     "says": "Given the delete dialog for a key has just opened, when the person looks at the choices, then none is chosen, and confirming with none chosen does nothing.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-63694206615951133419"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-30359040357073744492"
+      }
+     ]
+    },
+    {
+     "says": "Given the person chooses to clear everything, when they confirm, then the choice is accepted without further input, all values of the key are removed and the key is marked cleared.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-63694206615951133419"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-30359040357073744492"
+      }
+     ]
+    },
+    {
+     "says": "Given the person chooses to clear first, when they confirm, then the key is marked cleared and only the direct values it already held are put back.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-63694206615951133419"
+      }
+     ]
+    },
+    {
+     "says": "Given the key holds deletion entries or keys inside it with values, when the person clears first, then those deletion entries are lost and the values of the keys inside it are not put back.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-63694206615951133419"
+      }
+     ]
+    },
+    {
+     "says": "Given the delete dialog is open, when the option to delete one value is chosen, then the value name box can be typed in; when any other option is chosen, then it cannot be typed in.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-30251051045932916641"
+      }
+     ]
+    },
+    {
+     "says": "Given the person chooses to delete one value and leaves the name empty, when they confirm, then it is refused and they are told \"You must enter a value name.\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-63694206615951133419"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-84404651755849490179"
+      }
+     ]
+    },
+    {
+     "says": "Given the person chooses to delete one value and types a name, when they confirm, then the choice is accepted and any value of that name, whether or not it exists, is removed and replaced by a deletion entry.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-63694206615951133419"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-84404651755849490179"
+      }
+     ]
+    },
+    {
+     "says": "Given the delete dialog is open, when the person cancels or presses Escape, then nothing in the file changes.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-63694206615951133419"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-editing-policy-files-directly.remove-policy-file-entries:straight-from-the-selection#1",
+    "tasks-editing-policy-files-directly.remove-policy-file-entries:straight-from-the-selection#2"
+   ],
+   "components": [
+    "Deletion Marker Writer",
+    "Key Clearing Chooser"
+   ],
+   "open": []
+  },
+  {
+   "title": "Forget a key or value entirely",
+   "what": "Let a person remove a key with all its contents, after confirming, or a single value with its deletion entry from the policy file, leaving nothing behind.",
+   "why": "The policy reverts to saying nothing about what was forgotten, and a whole key is never removed without being asked first.",
+   "actions": [
+    "block-42642804897148691736"
+   ],
+   "terms": [
+    {
+     "name": "Forget",
+     "means": "Remove an entry from the file with no deletion instruction left behind; it is not the same as marking a value for deletion."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a key is selected, when the person chooses to forget it, then they are asked \"Are you sure you want to remove this key and all its contents?\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-04432638879352685329"
+      }
+     ]
+    },
+    {
+     "says": "Given the person is asked to confirm forgetting a key, when they answer Yes, then the key, all keys inside it, every value and every clearing mark are removed from the file with no deletion left behind.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-04432638879352685329"
+      }
+     ]
+    },
+    {
+     "says": "Given the person is asked to confirm forgetting a key, when they answer No, then nothing in the file changes.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-04432638879352685329"
+      }
+     ]
+    },
+    {
+     "says": "Given a value is forgotten, then the value and its deletion entry are both removed from the file the same way.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-04432638879352685329"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-editing-policy-files-directly.remove-policy-file-entries:straight-from-the-selection#3"
+   ],
+   "components": [
+    "Entry Forgetter"
+   ],
+   "open": [
+    "Is anything described or confirmed before a single value is forgotten?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+{
+  "read": 1,
+  "challenges": [
+    { "record": 0, "says": "Criteria 2 to 5 state the pairing conditions of businessrule-40351382289100643848 (same name, alone in category, one user and one computer, same explanation and registry key) but cite no rule and give no reason, so they read as invented behaviour." },
+    { "record": 0, "says": "Criteria 1 and 6 (list for review before removal; declining changes nothing) come from the journey's confirm step, not from any rule (the legacy code merges at once with no review), yet the criteria do not say they are a new design decision rather than a rule." },
+    { "record": 0, "says": "Criterion 9 (categories and policy information show the merged policies) is behaviour no cited rule or decision states, and it has no cited rule or stated reason." },
+    { "record": 0, "says": "Criterion 7 says 'the first policy of each pair is removed and the second becomes a policy for both sections', but 'first' and 'second' mean nothing to a product owner who has not seen the code; the criterion should say which policy is kept in words they can follow." }
+  ]
+}

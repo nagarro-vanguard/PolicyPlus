@@ -1,0 +1,243 @@
+{
+ "stories": [
+  {
+   "title": "Show the limit in force and switch it on or off",
+   "what": "When a person opens the limit choices, they see the limit now in force: policy type, state, comment status and supported products, with a neutral value wherever the limit has no condition. Changing the limit options turns Only Filtered Policies on, and the person can switch it on or off from its menu; the view moves to the nearest category still shown.",
+   "why": "A person adjusting the limit starts from what is already narrowing their list instead of a blank form, and is never left looking at a category the limit has emptied.",
+   "actions": [
+    "block-69596352550727046885",
+    "block-40488572982447813355"
+   ],
+   "terms": [
+    {
+     "name": "Limit",
+     "means": "The set of conditions (type, state, comment status, supported products) that narrows the policy list; it is not the choice of user or computer area."
+    },
+    {
+     "name": "Only Filtered Policies",
+     "means": "The switch that applies or lifts the limit on the policy list; it is not the limit's contents."
+    }
+   ],
+   "journey": {
+    "name": "Live filter",
+    "steps": [
+     "See the limit currently in force.",
+     "Choose a policy type, state and comment status.",
+     "Limit by supported products.",
+     "Be taken to the right place when the limit changes.",
+     "Switch the limit on or off without losing it.",
+     "Start again from nothing.",
+     "Undo this round of changes."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the limit has no policy-type condition, when the limit choices open, then Policy type shows Any; given it keeps only managed policies, then it shows Policy; given it keeps only the others, then it shows Preference.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-32591775124677875588"
+      }
+     ]
+    },
+    {
+     "says": "Given the limit has no state condition, when the limit choices open, then Current state shows Any; otherwise it shows Not Configured, Configured, Enabled or Disabled as the limit holds.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-26561900736287578271"
+      }
+     ]
+    },
+    {
+     "says": "Given the limit has no comment condition, when the limit choices open, then Commented shows Any; given it keeps only commented policies, then it shows Yes; given only uncommented ones, then it shows No.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59209755491778300947"
+      }
+     ]
+    },
+    {
+     "says": "Given the limit has a supported-products condition, when the limit choices open, then Supported on is ticked, exactly the limit's products are ticked, both matching options are set as the limit holds, and product branches whose tick differs from their parent are opened.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-01575097247784730570"
+      }
+     ]
+    },
+    {
+     "says": "Given the limit has no supported-products condition, when the limit choices open, then Supported on is unticked, both \"Match a policy if at least one selected product is supported\" and \"Match policies with missing or blank support definitions\" are ticked, and no product is ticked.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76306981111385169671"
+      }
+     ]
+    },
+    {
+     "says": "Given a person changes the limit options, when the change is made, then Only Filtered Policies is turned on and the view moves to the nearest visible category.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-85052319902195299547"
+      }
+     ]
+    },
+    {
+     "says": "Given a person uses the Only Filtered Policies menu, when they switch it on or off, then the limit is applied or lifted and the view moves to the nearest visible category.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-36944318108231327872"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#1",
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#4",
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#5"
+   ],
+   "components": [
+    "Limit Draft Presenter",
+    "Limit Focus Mover"
+   ],
+   "open": []
+  },
+  {
+   "title": "Narrow the policy list by type, state, comment and products",
+   "what": "A person chooses a policy type, a state, a comment status and, if wanted, supported products, and when they press OK the new limit holds those choices.",
+   "why": "People find the policies they need by limiting the list to what they are looking for.",
+   "actions": [
+    "block-88991021756869656536",
+    "block-26736796202907003543",
+    "block-44706239895339562170",
+    "block-55576298759886274598"
+   ],
+   "terms": [
+    {
+     "name": "Supported on",
+     "means": "The wish to limit the list to policies supported by chosen products; it is not the policy's own list of supported products."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a person has chosen Policy, Preference or Any for type, when they press OK, then the new limit keeps only managed policies, only the others, or has no type condition.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-03237181236179074787"
+      }
+     ]
+    },
+    {
+     "says": "Given a person has chosen Not Configured, Configured, Enabled, Disabled or Any for state, when they press OK, then the new limit requires that state, or has no state condition for Any.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-81055540068763556055"
+      }
+     ]
+    },
+    {
+     "says": "Given a person has chosen Yes, No or Any for Commented, when they press OK, then the new limit keeps only commented policies, only uncommented ones, or has no comment condition.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-70906412717211463954"
+      }
+     ]
+    },
+    {
+     "says": "Given the limit choices are shown, when Supported on is unticked, then the product tree and both matching options cannot be used, and when it is ticked they can be used; they start out unusable.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-88807660791719489759"
+      }
+     ]
+    },
+    {
+     "says": "Given a person ticks or unticks a product by hand, when they do so, then every product beneath it is ticked or unticked to match; given a tick is changed by the choices themselves, then it does not spread.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-61457439461915744538"
+      }
+     ]
+    },
+    {
+     "says": "Given a person presses OK with Supported on ticked, when the new limit is made, then it records every ticked product and both matching options, and it is accepted even when no product is ticked.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-90628240213834851721"
+      }
+     ]
+    },
+    {
+     "says": "Given a person presses OK with Supported on unticked, when the new limit is made, then any ticks and options are discarded and no support condition applies.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-90628240213834851721"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#2",
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#3"
+   ],
+   "components": [
+    "Limit Draft Applier",
+    "Product Limit Selector"
+   ],
+   "open": [
+    "The plan says the list narrows as each choice is made with no confirming step, but the legacy rules apply the choices when OK is pressed; which moment is wanted?"
+   ]
+  },
+  {
+   "title": "Reset the limit choices or cancel them with Escape",
+   "what": "A person can return every limit choice to its default in one action, or press Escape to close the choices as cancelled with the current limit unchanged.",
+   "why": "People need a clean slate and a safe way out of the limit choices.",
+   "actions": [
+    "block-27559849759497597302",
+    "block-03044886867739368079"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given any limit choices are set, when the person resets, then type, state and comment return to Any, Supported on is unticked, both matching options are ticked and no product is ticked.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-81206266674090971597"
+      }
+     ]
+    },
+    {
+     "says": "Given the limit choices are open, when the person presses Escape, then the choices close as cancelled and the current limit is unchanged.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-57716378734614233724"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#6",
+    "tasks-finding-policies.narrow-policy-list-by-filter:live-filter#7"
+   ],
+   "components": [
+    "Limit Draft Session"
+   ],
+   "open": [
+    "The plan says undo puts back the limit held when the person began, but the legacy rule only closes as cancelled with the limit unchanged; if choices narrow the list live, what should undo restore?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,223 @@
+{
+  "type": "object",
+  "properties": {
+    "task": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A short name for the variant, unique within the task."
+    },
+    "strategy": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The approach, such as 'task first', 'automate first' or 'guided', never a closeness to the legacy."
+    },
+    "idea": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The idea of the variant in one sentence."
+    },
+    "tradeoff": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What the variant costs, in one sentence."
+    },
+    "recommended": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why this is the recommended variant; leave out on the others."
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "intent": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the person is trying to get done, in the words of the business; no controls, pages or commands."
+          },
+          "system": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the system does in response, with no mechanism and no medium."
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "sure",
+              "inferred"
+            ],
+            "description": "sure when the code states it, inferred when it was concluded from the code."
+          },
+          "touches": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The ids of the kinds of data the step reads or changes."
+          },
+          "honours": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The ids of the rules the system applies in this step."
+          },
+          "link": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "_tag": {
+                    "type": "string",
+                    "enum": [
+                      "legacy"
+                    ]
+                  },
+                  "from": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "description": "The legacy entry points this step replaces."
+                  },
+                  "change": {
+                    "type": "string",
+                    "enum": [
+                      "kept",
+                      "merged",
+                      "defaulted",
+                      "inferred",
+                      "deferred",
+                      "reordered",
+                      "split"
+                    ],
+                    "description": "How the step differs from today: kept as it is, merged, defaulted (the system fills it in), inferred (the system works it out), deferred (asked later), reordered or split."
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Why the step is better this way, in one sentence."
+                  },
+                  "keeps": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The ids of the rules this step must not break."
+                  }
+                },
+                "required": [
+                  "_tag",
+                  "from",
+                  "change",
+                  "reason",
+                  "keeps"
+                ],
+                "additionalProperties": true
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_tag": {
+                    "type": "string",
+                    "enum": [
+                      "new"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Why a step with no legacy counterpart is needed."
+                  }
+                },
+                "required": [
+                  "_tag",
+                  "reason"
+                ],
+                "additionalProperties": true
+              }
+            ],
+            "description": "How a step relates to the legacy: made from entry points, or new."
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "intent",
+          "system",
+          "confidence",
+          "touches",
+          "honours",
+          "link",
+          "id"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "drops": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The legacy entry points left out."
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The rules left out with them."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Why they are not carried."
+          }
+        },
+        "required": [
+          "actions",
+          "rules",
+          "reason"
+        ],
+        "additionalProperties": true,
+        "description": "What a variant leaves out, and why."
+      }
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "baseline": {
+      "type": "boolean",
+      "description": "True when the variant mirrors today's journey; derived, never written."
+    }
+  },
+  "required": [
+    "task",
+    "actor",
+    "name",
+    "strategy",
+    "idea",
+    "tradeoff",
+    "steps",
+    "drops",
+    "id",
+    "baseline"
+  ],
+  "additionalProperties": true
+}

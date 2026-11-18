@@ -1,0 +1,249 @@
+{
+ "components": [
+  {
+   "name": "Version stamper",
+   "domain": "Workspace",
+   "responsibility": "At build time derives the program version from the source history (tag, commit count and short commit name, or a short commit name) and writes it into the generated version source; the committed source keeps an empty version.",
+   "module": "version-stamper",
+   "uses": [],
+   "serves": [
+    "tasks-building-and-versioning-policy-plus.stamp-program-version:every-build-stamps-itself#1",
+    "tasks-building-and-versioning-policy-plus.stamp-program-version:every-build-stamps-itself#2"
+   ],
+   "enforces": [
+    "businessrule-12414618955963878773"
+   ],
+   "adapts": "external-84087908423930356962"
+  },
+  {
+   "name": "Program identity presenter",
+   "domain": "Workspace",
+   "responsibility": "Provides the author, the project address and the version only when one was built in.",
+   "module": "program-identity-presenter",
+   "uses": [],
+   "serves": [
+    "tasks-using-the-product.see-about-information:ask-who-and-which-version#1"
+   ],
+   "enforces": [
+    "businessrule-59853527376948406586"
+   ]
+  },
+  {
+   "name": "Preference store adapter",
+   "domain": "Workspace",
+   "responsibility": "Reads and writes named preference rows in the preference store; when the store cannot be reached it yields defaults, drops changes and does not alert the person.",
+   "module": "preference-store-adapter",
+   "uses": [],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#1"
+   ],
+   "enforces": [
+    "businessrule-25353365313977612083"
+   ],
+   "adapts": "external-45436197603688581519"
+  },
+  {
+   "name": "Remembered choices keeper",
+   "domain": "Workspace",
+   "responsibility": "Gives typed access to the remembered choices (chosen sources, definitions folder, language, caution accepted, offer considered) over the preference adapter, for the other parts of the workspace.",
+   "module": "remembered-choices-keeper",
+   "uses": [
+    "Preference store adapter"
+   ],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#2",
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#5",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#1",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#2",
+    "tasks-choosing-and-saving-policy-sources.choose-policy-sources:say-where-each-side-lives#4",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes:save-in-one-go#1",
+    "tasks-editing-policy-files-directly.open-raw-policy-editor:the-system-picks-the-area#1"
+   ],
+   "enforces": []
+  },
+  {
+   "name": "Saved definitions folder resolver",
+   "domain": "Workspace",
+   "responsibility": "Decides which definitions folder to load at start: the last saved one, else the system default folder.",
+   "module": "saved-definitions-folder-resolver",
+   "uses": [
+    "Remembered choices keeper"
+   ],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#3"
+   ],
+   "enforces": [
+    "businessrule-40551856488084894130"
+   ]
+  },
+  {
+   "name": "Start-up load recovery",
+   "domain": "Workspace",
+   "responsibility": "Loads the saved definitions at session start and handles trouble: asks whether to keep a partly loaded set, discards it on refusal, offers the default location for a failed non-default folder, saves the default on acceptance, and reports a failed default load leaving the set empty.",
+   "module": "start-up-load-recovery",
+   "uses": [
+    "Saved definitions folder resolver",
+    "Definition load coordinator",
+    "Definition reset",
+    "Remembered choices keeper"
+   ],
+   "serves": [
+    "tasks-using-the-product.open-the-workspace:resume-where-i-left-off#3"
+   ],
+   "enforces": [
+    "businessrule-41547680626150552574",
+    "businessrule-58877134447436981389",
+    "businessrule-72200124994498270380",
+    "businessrule-78253526822536661517"
+   ]
+  },
+  {
+   "name": "Definitions folder choice validator",
+   "domain": "Workspace",
+   "responsibility": "Offers the standard folder, the domain folder only when joined to a domain and present, or a typed folder; makes the typed folder usable only when chosen; refuses a missing folder; treats cancellation as no choice.",
+   "module": "definitions-folder-choice-validator",
+   "uses": [],
+   "serves": [
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#1",
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#4"
+   ],
+   "enforces": [
+    "businessrule-76226373219464614800",
+    "businessrule-88154451768954453608",
+    "businessrule-53176229115945924012",
+    "businessrule-98012095360980700253"
+   ]
+  },
+  {
+   "name": "Replace option proposer",
+   "domain": "Workspace",
+   "responsibility": "Proposes replacing the loaded definitions by default, asks only when something is loaded, and passes the choice on only for an accepted existing folder.",
+   "module": "replace-option-proposer",
+   "uses": [],
+   "serves": [
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#2"
+   ],
+   "enforces": [
+    "businessrule-43765682097437166867"
+   ]
+  },
+  {
+   "name": "Folder addition run",
+   "domain": "Workspace",
+   "responsibility": "Empties the set first only when replacing, adds the folder reporting problems without stopping, reports a failed addition with its reason, and remembers the folder only after a successful replace.",
+   "module": "folder-addition-run",
+   "uses": [
+    "Definition load coordinator",
+    "Definition reset",
+    "Remembered choices keeper"
+   ],
+   "serves": [
+    "tasks-browsing-policy-definitions.load-definitions-folder:load-without-questions#3"
+   ],
+   "enforces": [
+    "businessrule-06850078746756456273",
+    "businessrule-19671296259932138006",
+    "businessrule-56221298079625729644"
+   ]
+  },
+  {
+   "name": "Template file adder",
+   "domain": "Workspace",
+   "responsibility": "Accepts one or several template files only and adds them to the current set without emptying it or remembering a folder; reports a failure with its reason.",
+   "module": "template-file-adder",
+   "uses": [
+    "Definition load coordinator"
+   ],
+   "serves": [
+    "tasks-browsing-policy-definitions.add-template-file:add-several-at-once#1"
+   ],
+   "enforces": [
+    "businessrule-07200475892676201466"
+   ]
+  },
+  {
+   "name": "Session discarder",
+   "domain": "Workspace",
+   "responsibility": "Empties the loaded definitions and previous search results at once, without confirmation, whenever the set is closed or replaced, and rebuilds what is shown.",
+   "module": "session-discarder",
+   "uses": [
+    "Definition reset"
+   ],
+   "serves": [
+    "tasks-browsing-policy-definitions.clear-loaded-definitions:clear-with-a-way-back#1"
+   ],
+   "enforces": [
+    "businessrule-73782132825452925601",
+    "businessrule-83939170310206178732"
+   ]
+  },
+  {
+   "name": "Language code checker",
+   "domain": "Workspace",
+   "responsibility": "Accepts a language code only when it has exactly two parts around a hyphen, otherwise refuses it plainly; treats a code equal to the stored one as no change.",
+   "module": "language-code-checker",
+   "uses": [
+    "Remembered choices keeper"
+   ],
+   "serves": [
+    "tasks-using-the-product.set-definition-language:name-the-language-then-reload#1"
+   ],
+   "enforces": [
+    "businessrule-31456964891379452251",
+    "businessrule-93543924991745555552"
+   ]
+  },
+  {
+   "name": "Language change applier",
+   "domain": "Workspace",
+   "responsibility": "Saves the new language code at once, asks whether to reload now, and on yes empties the set and reloads from the saved folder.",
+   "module": "language-change-applier",
+   "uses": [
+    "Remembered choices keeper",
+    "Definition language setting",
+    "Saved definitions folder resolver",
+    "Definition reset",
+    "Definition load coordinator"
+   ],
+   "serves": [
+    "tasks-using-the-product.set-definition-language:name-the-language-then-reload#2"
+   ],
+   "enforces": [
+    "businessrule-80947080049413275464"
+   ]
+  },
+  {
+   "name": "Offer consideration record",
+   "domain": "Workspace",
+   "responsibility": "Records on first start that the welcome offer was considered, even if none is made, and never considers it again; keeps a standing invitation to get definitions.",
+   "module": "offer-consideration-record",
+   "uses": [
+    "Remembered choices keeper",
+    "Welcome offer"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#1",
+    "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer:offer-once-keep-it-open#4"
+   ],
+   "enforces": [
+    "businessrule-68766858893219046657"
+   ]
+  },
+  {
+   "name": "Acquired definitions switcher",
+   "domain": "Workspace",
+   "responsibility": "Takes the staged definitions as the ones in use: empties the set, adds them, and remembers the folder; does nothing without a new folder.",
+   "module": "acquired-definitions-switcher",
+   "uses": [
+    "Acquired definitions adoption",
+    "Definition reset",
+    "Remembered choices keeper"
+   ],
+   "serves": [
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#1",
+    "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions:check-then-switch#5"
+   ],
+   "enforces": []
+  }
+ ]
+}

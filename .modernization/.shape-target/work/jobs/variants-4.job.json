@@ -1,0 +1,7 @@
+{
+  "kind": "variants",
+  "tasks": [
+    "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy",
+    "tasks-choosing-and-saving-policy-sources.save-policy-changes"
+  ]
+}

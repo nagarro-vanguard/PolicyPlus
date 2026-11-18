@@ -1,0 +1,159 @@
+{
+ "stories": [
+  {
+   "title": "Watch search hits arrive and stop the search when enough is found",
+   "what": "While a search runs, the person sees each matching policy appear in the results with its category, sees progress as it goes, can stop the search or leave, and is told how the search ended.",
+   "why": "Review can begin at the first hit instead of after the whole search, and the person always knows whether the results are complete.",
+   "actions": [
+    "block-64273399884973341208",
+    "block-36571577833746850164",
+    "block-57135383118787346557"
+   ],
+   "terms": [
+    {
+     "name": "Search hit",
+     "means": "A policy that matches the search, shown in the results with its category; not every policy that was checked."
+    }
+   ],
+   "journey": {
+    "name": "Results as they arrive",
+    "steps": [
+     "Watch the policies that match appear as the search goes.",
+     "Stop the search once enough has been found, or leave it.",
+     "Know how the search ended."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given earlier results exist, when a new search starts, then the results are cleared, the progress range matches the number of policies and the status reads \"Starting search\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-35354684864210149934"
+      }
+     ]
+    },
+    {
+     "says": "Given a search is running, when it tests the policies, then every policy is tested in turn and each hit is added to the list with its category name, in the order policies are held.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-79288582532948770219"
+      }
+     ]
+    },
+    {
+     "says": "Given a search is running, when every 20 policies have been checked, then the list and progress are refreshed and the status reads \"Searching: checked N policies so far, found M hits\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-94342659396000502591"
+      }
+     ]
+    },
+    {
+     "says": "Given a search is running, when the person presses Stop or closes the results window, then the search is cancelled; closing before it finished leaves the status at \"Search canceled\" with the progress bar full.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-15877826642522947109"
+      }
+     ]
+    },
+    {
+     "says": "Given a search ends, when it ends, then the status reads \"Finished searching: checked N policies, found M hits\", or a \"Search canceled\" message if it was stopped, and the Stop button is disabled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-57749472934040708163"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#1",
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#2",
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#3"
+   ],
+   "components": [
+    "Search Run Coordinator"
+   ],
+   "open": []
+  },
+  {
+   "title": "Pick a search hit to open and step to the next hit",
+   "what": "From the hits, the person picks one to open its editor in the current area with the policy list moving to it, or moves on to the next hit still shown.",
+   "why": "Picking is the point of the search, and stepping through hits is how a list of hits is worked.",
+   "actions": [
+    "block-25728253727728310343",
+    "block-27516887165549303737"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a hit is selected, when the person presses Go or double-clicks it, then that policy is passed back and its position in the results is remembered; with no hit selected nothing is accepted.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-48840711587592938759"
+      }
+     ]
+    },
+    {
+     "says": "Given the person picks a hit, when the results close, then the policy's editor opens in the current area and the policy list moves to that policy.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-80544887789558031281"
+      }
+     ]
+    },
+    {
+     "says": "Given a hit was chosen earlier, when the person asks for the next one (Find Next), then the hit after the last one chosen that is currently shown is taken, skipping hidden ones; when none remains they are told \"There are no more results that match the filter.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-17430127230259081557"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-53914450774482291886"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#4",
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#5"
+   ],
+   "components": [
+    "Result Picker",
+    "Result Stepper"
+   ],
+   "open": []
+  },
+  {
+   "title": "Reopen the last search results without a new search",
+   "what": "The person can come back to the results of the last search without searching again.",
+   "why": "People return to the same hits later and should not wait for another search.",
+   "actions": [
+    "block-49062346851945682165",
+    "block-64273399884973341208"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a search has been run, when the person opens Search Results, then the earlier results are shown again.",
+     "from": []
+    }
+   ],
+   "steps": [
+    "tasks-finding-policies.review-search-results:results-as-they-arrive#6"
+   ],
+   "components": [],
+   "open": [
+    "Should reopening start no new search, reselect the earlier choice if it is still listed, and say \"No search has been run yet, so there are no results to display.\" with nothing opening when there are no results? No rule placed in this plan states these behaviours."
+   ]
+  }
+ ]
+}

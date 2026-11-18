@@ -1,0 +1,8 @@
+{
+  "read": 2,
+  "challenges": [
+    { "record": 0, "says": "The first criterion (showing the key/value reading so it can be corrected) cites no rule and its wording does not say why; it states behaviour that no rule or decision gives, and the reason sits only in the open list, not in the criteria." },
+    { "record": 0, "says": "The title and step say the terms are judged as the person types, but the empty-terms and root-key criteria (from the cited rules) fire only when the person asks to search, so the story promises more than its criteria deliver." },
+    { "record": 1, "says": "The last criterion (matching policies are shown without a separate request step) cites no rule and does not say why it has none; it invents behaviour that no rule or decision states and contradicts the cited rule that a search starts when asked." }
+  ]
+}

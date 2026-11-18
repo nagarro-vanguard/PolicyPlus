@@ -1,0 +1,5 @@
+{"read": 1, "challenges": [
+{"record": 0, "says": "The criteria about an unreadable file (\"The POL file could not be loaded.\", source unchanged) and about nothing reaching disk before saving cite no rule (from is empty) although businessrule-69354381130041181167 states exactly those sentences, and no reason is given for the missing citation."},
+{"record": 0, "says": "The last criterion adds the condition \"a source that already holds settings\", which businessrule-97686874157870392601 does not state, and its wording \"applied as the difference from an empty file\" is implementation language a product owner who never saw the code could not follow."},
+{"record": 0, "says": "The third criterion (imported settings visible but nothing on disk until saved) adds \"visible in the source\", which the rule does not say, and merely restates the story's \"held until the person saves\" and the Held change term rather than adding a distinct rule."}
+]}

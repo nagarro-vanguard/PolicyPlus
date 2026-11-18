@@ -1,0 +1,216 @@
+{
+ "stories": [
+  {
+   "title": "Choose an exported settings file and have its key prefix worked out",
+   "what": "A person starts an import by choosing an exported machine-settings file. The system checks the file is a genuine export, reads its keys, removals, deletions and values, works out the key prefix from the first key, and warns when the file holds default values or the prefix could not be worked out. The person gives a prefix only when none was worked out.",
+   "why": "The person brings settings from another machine without typing a prefix by hand, and learns at once when the file is not a genuine export or the prefix is unknown. The person can also close the import window with Escape.",
+   "actions": [
+    "block-89194191501498123777",
+    "block-42014485464934566054",
+    "block-13677197335497518185",
+    "block-37220153383335897650"
+   ],
+   "terms": [
+    {
+     "name": "Exported settings file",
+     "means": "A text file exported from the machine's settings editor that lists keys and their values; it is not a policy file."
+    },
+    {
+     "name": "Key prefix",
+     "means": "The leading part of every key name in an exported settings file that is left off when the settings are saved in the policy source; it always ends in a backslash and is not the policy source's own path."
+    },
+    {
+     "name": "Default value",
+     "means": "A value that belongs to a key but has no name; it is not an ordinary named setting."
+    },
+    {
+     "name": "Top-level section",
+     "means": "The first part of a key name, such as HKEY_USERS or HKEY_CURRENT_USER, that groups the keys of the machine's settings store; it is not a single key."
+    }
+   ],
+   "journey": {
+    "name": "Prefix worked out for you",
+    "steps": [
+     "Choose the exported settings file",
+     "Have the file checked and be warned about default values or an unknown prefix",
+     "Give a prefix only if the system could not decide one",
+     "Leave without importing"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the person is choosing the exported settings file, when the file chooser opens, then only exported settings files are offered.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-00824990257185597112"
+      }
+     ]
+    },
+    {
+     "says": "Given the first line of the chosen file is not the standard export header, when the file is read, then it is refused with the message \"Incorrect REG signature\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-52142616153788952070"
+      }
+     ]
+    },
+    {
+     "says": "Given a file with blank lines and lines starting with a semicolon, when it is read, then those lines are ignored.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-55584576559812010511"
+      }
+     ]
+    },
+    {
+     "says": "Given a key heading that starts with a minus sign, when the file is read, then the whole key is marked for removal; otherwise the heading opens a key whose values follow.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-57877192145861745927"
+      }
+     ]
+    },
+    {
+     "says": "Given a value line that starts with an at sign, when the file is read, then it is that key's default value with an empty name, and the file is reported as holding default values when any value has an empty name.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-23306400970907693227"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-18921117498420510792"
+      }
+     ]
+    },
+    {
+     "says": "Given a value written as a bare minus sign, as quoted text, as a number, or as raw bytes (whose kind is given in brackets, or plain binary when none is given), when the file is read, then it is read as a value to delete, as text, as a number or as bytes in turn; data in none of these forms is kept as a value with no data and no type, without an error.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59618595788928559733"
+      }
+     ]
+    },
+    {
+     "says": "Given a chosen file and an empty prefix, when the file is chosen, then the prefix is worked out from the first key only: for a first key that begins with HKEY_USERS it is that top-level section plus the next part of the key, which names a user account; for any other first key, including HKEY_CURRENT_USER, it is the top-level section alone; a first key with no further backslash gives an empty prefix; and a file with no keys gets HKEY_LOCAL_MACHINE followed by a backslash.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-75481654180830858390"
+      }
+     ]
+    },
+    {
+     "says": "Given the chosen file holds default values and the prefix was empty, when the prefix is worked out, then the person is warned \"This REG file contains data for default values, which cannot be applied to all policy sources.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-89009644626675244455"
+      }
+     ]
+    },
+    {
+     "says": "Given the prefix cannot be worked out, when the file is chosen, then the person is warned only \"An error occurred while trying to guess the prefix.\" and the prefix stays empty.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-17451417049747776074"
+      }
+     ]
+    },
+    {
+     "says": "Given no file is named or no prefix is given, when the person asks to import, then it is refused with \"Please specify a REG file to import.\" or \"Please specify the prefix used to fully qualify paths in the REG file.\" respectively.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-97032716123610483497"
+      }
+     ]
+    },
+    {
+     "says": "Given the import window is open, when the person presses Escape, then the window closes as cancelled.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59516130836014950967"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#1",
+    "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#2",
+    "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#3",
+    "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#5"
+   ],
+   "components": [
+    "Registry Script Intake",
+    "Registry Script Reader",
+    "Prefix Guesser"
+   ],
+   "open": [
+    "How does the person choose whether the settings go into the user or the computer policy source, and at which point of the import?",
+    "Does the person see a summary of what the file contains (keys, removals, deletions, values) and how its keys will be named, before the settings are applied?",
+    "Can the person leave in other ways than pressing Escape, and does leaving change anything?"
+   ]
+  },
+  {
+   "title": "Bring the exported settings into the chosen policy source",
+   "what": "Once a file and a prefix are settled, the person imports the settings into the chosen policy source: marked keys are cleared, marked values are deleted and the others are saved with the prefix left off their names, and what the person sees is refreshed.",
+   "why": "The settings from the exported file end up in the policy source the person chose, and a failure is reported plainly instead of leaving the person guessing.",
+   "actions": [
+    "block-13677197335497518185",
+    "block-61484076288336240425"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a file with a key marked for removal, a value marked for deletion and other values, when the import runs, then the key is cleared, the value is deleted and the other values are saved, in the policy source of the area the person chose, and the view is refreshed.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-45318436042524755037"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-60060400053285241820"
+      }
+     ]
+    },
+    {
+     "says": "Given a key name that starts with the prefix, whatever its letter case, when the import runs, then it is saved without the prefix; a key that does not start with the prefix is saved with its full original name.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-18627979551357993299"
+      }
+     ]
+    },
+    {
+     "says": "Given a file and a prefix, when the import runs, then the settings are applied straight to the chosen policy source with no further confirmation, and if anything fails the person is told only \"Failed to import the REG file.\"",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-61966293182360194116"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-editing-policy-files-directly.import-registry-file-into-policy-source:prefix-worked-out-for-you#4"
+   ],
+   "components": [
+    "Registry Script Applier"
+   ],
+   "open": [
+    "Should a key that does not start with the prefix be refused, or saved under its full name, and is any limit on which parts of the settings store may be written to applied?",
+    "A value of an unrecognised form is applied as an empty value or fails; which of the two should the new import do?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "stories": [
+  {
+   "title": "Review what each loaded template file contributes",
+   "what": "A person sees the policy template files loaded in the workspace with a summary of what each one defines, and can open one file to see exactly what it defines.",
+   "why": "So a person can tell which template files are in use and what each adds, without opening every file to find out.",
+   "actions": [
+    "block-64668818041164253976",
+    "block-39318096240988456545",
+    "block-55650905820560115513"
+   ],
+   "terms": [
+    {
+     "name": "Loaded template file",
+     "means": "A policy template file that has been read into the workspace and whose definitions are in use; not a file that is merely present in a folder."
+    },
+    {
+     "name": "File contribution",
+     "means": "The policies, categories, products and support rules that one template file defines; not what other loaded files define."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a file's details are open, when a person reads them, then they list only the policies, categories (including sub-categories), products (including versions) and support rules that were defined in that file.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-52722053913285909842"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-browsing-policy-definitions.review-loaded-template-files:contribution-at-a-glance#1",
+    "tasks-browsing-policy-definitions.review-loaded-template-files:contribution-at-a-glance#2"
+   ],
+   "components": [
+    "Loaded file reviewer"
+   ],
+   "open": [
+    "How does a person open a file's details: by double-clicking it, by pressing Enter on it, or both, and what happens when no file is selected in each case?",
+    "What should the list show for each file (name, folder, namespace, counts of policies, categories, products and support rules)?",
+    "What should the person see when no template file is loaded?",
+    "How does a person get back from a file's details to the list?"
+   ]
+  }
+ ]
+}

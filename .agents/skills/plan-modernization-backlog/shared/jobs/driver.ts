@@ -3,6 +3,7 @@ import { join } from "node:path";
 import type { Layout } from "../model/layout";
 import type { ModernizationRequest } from "../model/request";
 import { recordFiles } from "../derive/run";
+import { targetGaps } from "../read/confirmed";
 import { gateJob, gateReview, type JobFile, type Output } from "./gates";
 import { acceptedSoFar, prepareStage, refreshInputs } from "./stages";
 import { jobPaths, loadJobs, readJson, saveJobs, writeJson, type Job, type Jobs, type Role } from "./state";
@@ -47,6 +48,9 @@ export const checkJob = (layout: Layout, request: ModernizationRequest, id: stri
 };
 
 export const startStage = (layout: Layout, request: ModernizationRequest, stage: "foundation" | "stories"): string => {
+    const gaps = targetGaps(layout);
+    if (gaps.length > 0)
+        return `the target is not confirmed, so the plan cannot start:\n${gaps.map((gap) => `- ${gap}`).join("\n")}`;
     const jobs = loadJobs(layout);
     if (
         stage === "stories" &&
@@ -209,6 +213,28 @@ export const finish = (layout: Layout, stage: string): string => {
     const disputes = jobs.jobs.flatMap((job) => job.disputes.map((says) => ({ job: job.id, says })));
     writeJson(join(layout.records, "disputes.json"), disputes);
     return `${accepted.layers.length} layers, ${accepted.decisions.length} decisions, ${stories.length} stories accepted; ${disputes.length} challenges stayed disputed`;
+};
+
+/**
+ * Hands a decided job back to its writer with instructions, for a gap found after it was decided: the writer gets one
+ * more round.
+ * @param layout the run's folders
+ * @param id the job
+ * @param instructions what to change
+ * @returns what happened
+ */
+export const redo = (layout: Layout, id: string, instructions: string): string => {
+    const jobs = loadJobs(layout);
+    const job = jobs.jobs.find((each) => each.id === id);
+    if (job === undefined) return `no job ${id}`;
+    if (jobs.batch?.jobs.some((entry) => !entry.reported)) return "a batch is still open: report its agents first";
+    job.state = "toFix";
+    job.fixes = 0;
+    job.feedback = instructions;
+    job.disputes = [];
+    job.running = undefined;
+    saveJobs(layout, jobs);
+    return `${id}: handed back to its writer with the instructions`;
 };
 
 /**

@@ -1,0 +1,17 @@
+{
+  "read": 1,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The story cites no rule (cite is empty) although its steps keep businessrule-12414618955963878773, and no criterion says why; every criterion cites only integrations.decision-5, which replaces the generated version file, so the rule's wording is not carried in the criteria."
+    },
+    {
+      "record": 0,
+      "says": "Criterion 4 (saved source still has an empty version) contradicts integrations.decision-5, which drops the generated version source file for a build-time environment value; it carries over the legacy rule's 'committed file holds an empty version' as behaviour no decision states for the target."
+    },
+    {
+      "record": 0,
+      "says": "Criterion 5 says 'the program reports the version' and criterion 3 says 'no one runs a separate stamping step'; the decision only says the API reports an environment value and the rule says the script runs when someone or the release workflow runs it, so both go beyond (and criterion 3 partly against) what is stated, and 'program' hides that it is the API."
+    }
+  ]
+}

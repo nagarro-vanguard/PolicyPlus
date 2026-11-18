@@ -1,0 +1,9 @@
+{
+ "read": 3,
+ "challenges": [
+  {"record": 0, "says": "Every criterion cites only the web layer, yet the story cites no rule and its criteria never say why (the area and empty-category rules sit with the Category tree presenter, which another story builds), and the 'start with everything shown' reason plus the 'empty categories are hidden' precondition state a default that no rule or decision gives."},
+  {"record": 1, "says": "Criteria 2, 3, 5, 7, 10 and 11 restate sentences of the rules for the Item description pane (the Up row, the listing order, the 'selected category' count line, the preference notice, highlighting a category) but cite layer-web instead of those rules, and criterion 1 cites the listing rule for 'becomes the current one and no policy stays chosen', which that rule does not say (it comes from the tree's selection rule)."},
+  {"record": 1, "says": "Criterion 9 adds that the policy description is shown on highlighting; the rule only says the policy becomes the selected policy and any highlighted category is cleared."},
+  {"record": 2, "says": "Criteria 2, 3, 4, 6, 7, 8 and 10 restate the opening, right-click and menu rules but cite layer-web instead of the Item action resolver rules they come from, so the cited rules appear to cover only three criteria; the 'why' also promises that a missing choice never causes a failure while the legacy rule fails with an error and only an open question handles it."}
+ ]
+}

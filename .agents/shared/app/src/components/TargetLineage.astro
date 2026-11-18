@@ -1,0 +1,31 @@
+---
+import Page from "../layouts/Page.astro";
+import { actionSays, ruleSays } from "../lib/target-text";
+import { hasPlan, planData } from "../lib/plan-data";
+import { statusOf, storyPath } from "../lib/plan";
+import ConfirmBar from "./ConfirmBar.astro";
+import type { TargetData, Architecture, Journey, Legacy, Task } from "../lib/target-types";
+export interface Props { architecture: Architecture | undefined; tasks: readonly Task[]; journeys: readonly Journey[]; legacy: Legacy | undefined; data: TargetData; }
+const { architecture, tasks, journeys, legacy, data } = Astro.props;
+const plan = hasPlan() ? await planData() : undefined;
+const storyOf = (stepId: string) => plan?.plan.stories.find((story) => (story.steps ?? []).includes(stepId));
+---
+<Page title="Where each step comes from" lead="Each step of the chosen journeys, the old behaviour it takes the place of, and the components that carry it out." depth={1} trail={[{ text: "Overview", href: "../index.html" }, { text: "Target", href: "../target.html" }, { text: "Lineage" }]}>
+    <ConfirmBar data={data} show={["components"]} />
+    {journeys.map((journey) => {
+        const task = tasks.find((each) => each.id === journey.task);
+        return <section>
+            <h2>{task?.outcome ?? journey.task}</h2>
+            <p class="sub">{journey.name}</p>
+            <table class="data"><thead><tr><th>Step</th><th>Takes the place of</th><th>Rules it keeps</th><th>Carried by</th><th>Built by</th></tr></thead><tbody>
+                {journey.steps.map((step, i) => <tr>
+                    <td>{i + 1}. {step.intent}</td>
+                    <td>{step.link._tag === "legacy" ? <ul>{step.link.from.map((id) => <li>{actionSays(legacy, id)}</li>)}</ul> : "New: " + step.link.reason}</td>
+                    <td>{step.link._tag === "legacy" ? <ul>{step.link.keeps.map((id) => <li>{ruleSays(legacy, id)}</li>)}</ul> : ""}</td>
+                    <td>{(architecture?.components ?? []).filter((component) => component.serves.includes(step.id)).map((component) => component.name).join(", ") || "not decided yet"}</td>
+                    <td>{(() => { const story = storyOf(step.id); return story === undefined ? "not planned yet" : <><a href={`../${storyPath(story)}.html`}>{story.title}</a> <span class="sub">({statusOf(plan?.ledger, story.key)})</span></>; })()}</td>
+                </tr>)}
+            </tbody></table>
+        </section>;
+    })}
+</Page>

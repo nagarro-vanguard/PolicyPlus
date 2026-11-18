@@ -3,7 +3,16 @@ import { dirname, join } from "node:path";
 import type { Layout } from "../model/layout";
 
 export type Kind =
-    "layers" | "integrations" | "scope" | "notes" | "base" | "foundation-stories" | "shared" | "surfaces";
+    | "layers"
+    | "integrations"
+    | "scope"
+    | "notes"
+    | "base"
+    | "foundation-stories"
+    | "shared"
+    | "surfaces"
+    | "journey"
+    | "components";
 export type JobState = "toRun" | "toReview" | "toFix" | "decided" | "refused";
 export type Role = "writer" | "reviewer";
 

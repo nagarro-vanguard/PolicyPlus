@@ -1,11 +1,11 @@
-# Domain: the pure policy rules: reading policy definitions, resolving and editing policy state, with no I/O framework
+# Domain: the pure policy rules in TypeScript, with no I/O, one folder per capability
 
 Stack: language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps.
 
-- Pure code only: no file, network, database or clock access; take inputs as arguments and return typed results or Effect errors.
-- Model failure as typed Effect errors (for example malformed ADMX), never thrown exceptions or null; an unknown policy element is kept and reported, not silently dropped.
-- Policy values and POL, REG and CMTX text round-trip byte-faithfully where the legacy format allows; a round-trip test accompanies every parser and writer.
+- No I/O, clock, randomness or environment access: functions take data in and return data or Effect values of data; outside systems arrive as ports declared here and implemented in apps/api.
+- One folder per capability, named as in the plan; shared helpers go in a folder named for what they do, never utils or common.
+- Parse ADMX, ADML, CMTX, POL and REG text into schema-checked values at the edge; downstream rules never see raw XML or bytes.
 
 ## Verify
 
-- `bun run typecheck && bun run test`
+- `bunx tsc --noEmit && bunx vitest run --passWithNoTests`

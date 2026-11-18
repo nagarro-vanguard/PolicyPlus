@@ -1,0 +1,588 @@
+{
+  "capability": {
+    "id": "capability-56009572261677044081",
+    "name": "Using the product",
+    "purpose": "Product's own settings, such as the language of the policy text."
+  },
+  "surfaces": [
+    {
+      "name": "LanguageOptions",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-languageoptions--using-the-product.md",
+      "actions": [
+        {
+          "id": "block-14667094343185527716",
+          "what": "Validates the language code and returns it, or cancels when unchanged.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-31456964891379452251",
+            "businessrule-93543924991745555552"
+          ],
+          "place": {
+            "file": "PolicyPlus/LanguageOptions.vb",
+            "firstLine": 9,
+            "lastLine": 21
+          }
+        }
+      ]
+    },
+    {
+      "name": "Main",
+      "bundle": "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-main--using-the-product.md",
+      "actions": [
+        {
+          "id": "block-92411706700308938260",
+          "what": "Starts the program: restores the last definitions folder and policy sources, then fills the category tree.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-06218920206107794280",
+            "businessrule-15364695696024462204",
+            "businessrule-25353365313977612083",
+            "businessrule-27578488339642782673",
+            "businessrule-29585332630928853779",
+            "businessrule-31889487085995982343",
+            "businessrule-34447675520768722859",
+            "businessrule-35899140497190862562",
+            "businessrule-39262656033285451423",
+            "businessrule-40551856488084894130",
+            "businessrule-41547680626150552574",
+            "businessrule-46972642019161394212",
+            "businessrule-49395771262191850050",
+            "businessrule-50808386816006011599",
+            "businessrule-51029550915449645879",
+            "businessrule-51554818045857630746",
+            "businessrule-58877134447436981389",
+            "businessrule-59631775004799082543",
+            "businessrule-62563112935081932578",
+            "businessrule-67456626752221980743",
+            "businessrule-72200124994498270380",
+            "businessrule-72559528436656832979",
+            "businessrule-73847809349842629987",
+            "businessrule-74412475215137182202",
+            "businessrule-75428533810997783570",
+            "businessrule-76710184957379543464",
+            "businessrule-77499382636897144286",
+            "businessrule-78253526822536661517",
+            "businessrule-79173574861552738237",
+            "businessrule-83248377690419919134",
+            "businessrule-83542226215682203251",
+            "businessrule-84284160770896952745",
+            "businessrule-85204901615179220846",
+            "businessrule-93571958636080198306",
+            "businessrule-95699184013424603885",
+            "businessrule-98025569949322378254"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 18,
+            "lastLine": 45
+          }
+        },
+        {
+          "id": "block-64319035576012171282",
+          "what": "Closes the program window.",
+          "startedBy": "person",
+          "rules": [],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 507,
+            "lastLine": 509
+          }
+        },
+        {
+          "id": "block-07316532942246428672",
+          "what": "Shows author and version information.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-59853527376948406586"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 639,
+            "lastLine": 644
+          }
+        },
+        {
+          "id": "block-07512317177811313080",
+          "what": "Cleans up the open policy sources before the program ends.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-46972642019161394212",
+            "businessrule-59631775004799082543"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 685,
+            "lastLine": 687
+          }
+        },
+        {
+          "id": "block-04864433854821115058",
+          "what": "Chooses the language of the definition text and offers to reload the workspace.",
+          "startedBy": "person",
+          "rules": [
+            "businessrule-40551856488084894130",
+            "businessrule-41547680626150552574",
+            "businessrule-58877134447436981389",
+            "businessrule-72200124994498270380",
+            "businessrule-78253526822536661517",
+            "businessrule-80947080049413275464"
+          ],
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 807,
+            "lastLine": 816
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "businessrule-31456964891379452251",
+      "statement": "When the person confirms the language dialog with text that does not split into exactly two parts around a hyphen (for example \"en\" or \"en-US-x\"), it is refused with \"Please enter a valid language code.\" and stays open. Any text with exactly one hyphen passes, including \"-\", \"en-\" or text with path characters: it is not checked as a real language code. The code is later used as a folder name when looking for ADML files.",
+      "place": {
+        "file": "PolicyPlus/LanguageOptions.vb",
+        "firstLine": 10,
+        "lastLine": 14
+      }
+    },
+    {
+      "id": "businessrule-93543924991745555552",
+      "statement": "When the entered language code, spaces trimmed, is exactly equal (upper and lower case count as different, so en-us differs from en-US) to the stored code, taken without trimming, the dialog closes as cancelled. Otherwise the dialog returns the entered code as accepted; saving it is done elsewhere.",
+      "place": {
+        "file": "PolicyPlus/LanguageOptions.vb",
+        "firstLine": 15,
+        "lastLine": 20
+      }
+    },
+    {
+      "id": "businessrule-06218920206107794280",
+      "statement": "A Scratch space source is an empty policy store that can be changed but is never saved anywhere.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 80,
+        "lastLine": 81
+      }
+    },
+    {
+      "id": "businessrule-15364695696024462204",
+      "statement": "The program allows secure connections using TLS 1.0, 1.1 and 1.2 only, so downloads use no other protocol.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 20,
+        "lastLine": 20
+      }
+    },
+    {
+      "id": "businessrule-25353365313977612083",
+      "statement": "When the program's settings area in the registry cannot be opened or created, the program carries on without it: settings read as their defaults, changes are dropped, and the person is not told, so settings are not remembered between runs.",
+      "place": {
+        "file": "PolicyPlus/ConfigurationStorage.vb",
+        "firstLine": 5,
+        "lastLine": 9
+      }
+    },
+    {
+      "id": "businessrule-27578488339642782673",
+      "statement": "On first start, when no policy sources were saved, both the user source and the computer source open as the local Group Policy files (Local GPO) with no extra location.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 25,
+        "lastLine": 30
+      }
+    },
+    {
+      "id": "businessrule-29585332630928853779",
+      "statement": "The source name shown in the status bar is Local GPO, Registry, File, User GPO, User hive or Scratch space, followed by the path or SID in brackets when there is one.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 218,
+        "lastLine": 236
+      }
+    },
+    {
+      "id": "businessrule-31889487085995982343",
+      "statement": "No comment of a comment file can be read when any comment's policy reference has no colon or a prefix that is not declared, its text is not written as \"$(resource.<id>)\", its text id is missing, or two comments resolve to the same policy.",
+      "place": {
+        "file": "PolicyPlus/CmtxFile.vb",
+        "firstLine": 69,
+        "lastLine": 76
+      }
+    },
+    {
+      "id": "businessrule-34447675520768722859",
+      "statement": "When a number is saved to the live registry, an unsigned 32-bit or 64-bit number is converted to the signed number the registry stores with the same bits, and the key is created if missing.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 374,
+        "lastLine": 383
+      }
+    },
+    {
+      "id": "businessrule-35899140497190862562",
+      "statement": "A registry source counts as writable only when a test value can be written under Software\\Policies and removed again; otherwise it is read-only.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 52,
+        "lastLine": 61
+      }
+    },
+    {
+      "id": "businessrule-39262656033285451423",
+      "statement": "A policy file is refused when its format version is not 1, with the message 'Unknown (newer) version of POL format'.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 34,
+        "lastLine": 34
+      }
+    },
+    {
+      "id": "businessrule-40551856488084894130",
+      "statement": "The definitions folder to load is the one saved last time; when none is saved it is the Windows PolicyDefinitions folder.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 59,
+        "lastLine": 62
+      }
+    },
+    {
+      "id": "businessrule-41547680626150552574",
+      "statement": "When loading the saved definitions reports problems, the person is asked whether to keep using the workspace. Yes keeps the partly loaded workspace. No raises the failure \"You decided to not use the problematic ADMX bundle.\", which goes into the failed-load handling: the workspace is thrown away, and for a non-default folder the person is asked to load the default, while for the default folder the person is told the definitions could not be loaded.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 62,
+        "lastLine": 65
+      }
+    },
+    {
+      "id": "businessrule-46972642019161394212",
+      "statement": "When a source is closed, a mounted user hive is unloaded and the result tells whether unloading succeeded; every other kind of source closes successfully.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 109,
+        "lastLine": 116
+      }
+    },
+    {
+      "id": "businessrule-49395771262191850050",
+      "statement": "A source read through the file branch covers a POL file, the local Group Policy and a per-user Group Policy, each with a Registry.pol path. An existing file is loaded; it is writable only when it can be opened for reading and writing, otherwise it can be viewed but not committed.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 83,
+        "lastLine": 92
+      }
+    },
+    {
+      "id": "businessrule-50808386816006011599",
+      "statement": "A user hive source is mounted by loading the hive file under a fresh temporary name in the machine registry, after the backup and restore privileges are switched on. If the hive cannot be opened afterwards, the source becomes an empty, read-only scratch source instead, without telling the person.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 62,
+        "lastLine": 79
+      }
+    },
+    {
+      "id": "businessrule-51029550915449645879",
+      "statement": "A registry source must start with HKCU, HKEY_CURRENT_USER, HKU, HKEY_USERS, HKLM or HKEY_LOCAL_MACHINE (any case); otherwise it is refused with \"The root key is not valid.\" A path after the root is opened, and created if missing.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 20,
+        "lastLine": 37
+      }
+    },
+    {
+      "id": "businessrule-51554818045857630746",
+      "statement": "When a policy file is read and the same key and value name occur twice, the later entry wins. Key and value names are matched without regard to letter case, and the first spelling seen is kept for saving.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 59,
+        "lastLine": 59
+      }
+    },
+    {
+      "id": "businessrule-58877134447436981389",
+      "statement": "When the person chooses to load the default location, the workspace is replaced by an empty one and the Windows default folder is loaded into it.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 72,
+        "lastLine": 73
+      }
+    },
+    {
+      "id": "businessrule-59631775004799082543",
+      "statement": "Closing the policy sources tells the person \"Cleanup did not complete fully because the loaded resources are open in other programs.\" when any source could not release its resources.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 364,
+        "lastLine": 373
+      }
+    },
+    {
+      "id": "businessrule-62563112935081932578",
+      "statement": "The comment file for a source sits beside its file: the POL file or hive path with the extension changed to .cmtx; for Local GPO or per-user GPO a file named comment.cmtx in the same folder; for the registry a file under the person's local application data folder (one for user, one for machine); Scratch space has none, so comments are unavailable.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 151,
+        "lastLine": 162
+      }
+    },
+    {
+      "id": "businessrule-67456626752221980743",
+      "statement": "A policy file is refused when it does not start with the 'PReg' signature, with the message 'Missing PReg signature'.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 33,
+        "lastLine": 33
+      }
+    },
+    {
+      "id": "businessrule-72200124994498270380",
+      "statement": "When the Windows default folder itself fails to load, or fails to load after the person chose Yes, the person is told \"Policy definitions could not be loaded: <reason>\" and the workspace stays empty.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 72,
+        "lastLine": 81
+      }
+    },
+    {
+      "id": "businessrule-72559528436656832979",
+      "statement": "When the policy sources dialog opens with the last-used sources, each side is set to the remembered kind (Local GPO, Registry, POL file, Scratch space, and for users also per-user GPO or user hive), and the registry path, file name, SID or hive path is filled in only for the kinds that carry one.",
+      "place": {
+        "file": "PolicyPlus/OpenPol.vb",
+        "firstLine": 3,
+        "lastLine": 35
+      }
+    },
+    {
+      "id": "businessrule-73847809349842629987",
+      "statement": "A policy source's writability is described as \"is fully writable\", \"cannot be saved\" (changes work in memory only) or \"cannot be modified\"; anything but fully writable counts as a problem.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 318,
+        "lastLine": 327
+      }
+    },
+    {
+      "id": "businessrule-74412475215137182202",
+      "statement": "The path of a policy source is fixed by its kind: Local GPO uses the Registry.pol file of the system's local Group Policy (user or machine folder) and its gpt.ini; a per-user GPO uses the folder named by the person's SID under GroupPolicyUsers; a POL file and a user hive use the path given; Scratch space has none.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 16,
+        "lastLine": 19
+      }
+    },
+    {
+      "id": "businessrule-75428533810997783570",
+      "statement": "When a policy file is read, an extra empty character after the value name, as Microsoft's documentation allows, is skipped.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 50,
+        "lastLine": 50
+      }
+    },
+    {
+      "id": "businessrule-76710184957379543464",
+      "statement": "A source's comments are used only when it has a comment file location. The folder is created if missing; an existing file is loaded and a missing file gives no comments yet. Any failure leaves that source without comments.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 330,
+        "lastLine": 344
+      }
+    },
+    {
+      "id": "businessrule-77499382636897144286",
+      "statement": "When a policy file is saved, entries are written in alphabetical order, so a key-clearing marker is always written before the values it clears.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 77,
+        "lastLine": 90
+      }
+    },
+    {
+      "id": "businessrule-78253526822536661517",
+      "statement": "When the saved folder is not the Windows default and fails to load, the person is told \"Policy definitions could not be loaded from \"<folder>\": <reason> Load from the default location?\". Yes saves the Windows default folder as the definitions folder; No leaves the workspace empty with no further message.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 67,
+        "lastLine": 71
+      }
+    },
+    {
+      "id": "businessrule-79173574861552738237",
+      "statement": "When the Registry.pol of a POL file source, the local Group Policy or a per-user Group Policy does not exist, it is created empty with its folder and treated as writable; a mistyped SID therefore creates a new folder and empty file under the per-user policy folder. If creation fails, an empty read-only source is used and no error is shown.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 93,
+        "lastLine": 105
+      }
+    },
+    {
+      "id": "businessrule-83248377690419919134",
+      "statement": "When the previously saved policy sources cannot be opened, the person is told \"The previous policy sources are not accessible. The defaults will be loaded.\" and both sources are saved as Local GPO, then opened quietly. Only the source type is reset; any saved location text stays.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 31,
+        "lastLine": 36
+      }
+    },
+    {
+      "id": "businessrule-83542226215682203251",
+      "statement": "Opening new policy sources first closes the ones already open. Unsaved changes are discarded for sources backed by a POL file (local Group Policy files, a chosen POL file, a per-user Group Policy object) and for the empty source. A registry source applies changes at once, and a user hive file is applied when it is closed, so those lose nothing.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 311,
+        "lastLine": 315
+      }
+    },
+    {
+      "id": "businessrule-84284160770896952745",
+      "statement": "A source is writable by default for Scratch space; for a registry source it is 'no writing' when the write test failed; for others it is 'no commit' when the file or hive could not be opened for writing.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 163,
+        "lastLine": 172
+      }
+    },
+    {
+      "id": "businessrule-85204901615179220846",
+      "statement": "The list of areas starts on \"User or Computer\", the first choice, so both user and computer policies are shown at start.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 39,
+        "lastLine": 39
+      }
+    },
+    {
+      "id": "businessrule-93571958636080198306",
+      "statement": "A comment file is refused as unreadable when it has no comment-definitions section, a namespace entry without a prefix, a comment without a policy reference, a text without an id, or a repeated prefix, policy reference or text id. The comments of that source are then unavailable.",
+      "place": {
+        "file": "PolicyPlus/CmtxFile.vb",
+        "firstLine": 13,
+        "lastLine": 44
+      }
+    },
+    {
+      "id": "businessrule-95699184013424603885",
+      "statement": "When a value is deleted in the live registry and its key does not exist, nothing happens. A missing value is not an error.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 365,
+        "lastLine": 370
+      }
+    },
+    {
+      "id": "businessrule-98025569949322378254",
+      "statement": "After opening, if either source is not fully writable the person is told \"Not all policy sources are fully writable.\" with the state of the user and the computer source; if both are fully writable, \"Both the user and computer policy sources are loaded and writable.\" appears only when opening was not quiet (never at start).",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 352,
+        "lastLine": 360
+      }
+    },
+    {
+      "id": "businessrule-59853527376948406586",
+      "statement": "The About box names the author and the GitHub address, and adds the version only when a version was built into the program.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 641,
+        "lastLine": 643
+      }
+    },
+    {
+      "id": "businessrule-80947080049413275464",
+      "statement": "Setting the language saves the new language code at once, then asks \"Language changes will take effect when ADML files are next loaded. Would you like to reload the workspace now?\". Yes empties the workspace and reloads the saved definitions folder.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 809,
+        "lastLine": 813
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "entity-99683518011128701149",
+      "name": "Policy setting",
+      "states": [
+        "Not configured",
+        "Enabled",
+        "Disabled",
+        "Unclear"
+      ]
+    },
+    {
+      "id": "entity-40163170707735391190",
+      "name": "Program preference",
+      "states": [
+        "Welcome download offer not yet considered",
+        "Welcome download offer considered",
+        "Raw POL editing warning not yet accepted",
+        "Raw POL editing warning accepted",
+        "Policy sources at default (Local GPO)",
+        "Policy sources remembered",
+        "Templates folder at Windows default",
+        "Templates folder chosen",
+        "Language follows the system",
+        "Language chosen"
+      ]
+    },
+    {
+      "id": "entity-92808062881922645840",
+      "name": "Administrative template",
+      "states": [
+        "Downloaded package",
+        "Unpacked",
+        "Installed in a template folder",
+        "Loaded into the workspace",
+        "Available as policy definitions",
+        "Cleared from the workspace"
+      ]
+    },
+    {
+      "id": "entity-52418278656387992812",
+      "name": "Policy comment",
+      "states": []
+    }
+  ],
+  "externals": [
+    {
+      "id": "external-90077838450756006603",
+      "name": "Computer file system folders",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-97068941883605652538",
+      "name": "Windows registry policy keys and loaded user hives",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-25314431250146805945",
+      "name": "Administrative template files (ADMX and ADML)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-45436197603688581519",
+      "name": "Windows registry settings key of Policy Plus",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-84087908423930356962",
+      "name": "Generated version source file",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-08492831744411585027",
+      "name": "Policy comment files (CMTX)",
+      "kind": "dataStore"
+    },
+    {
+      "id": "external-90078096462363044953",
+      "name": "Active Directory domain",
+      "kind": "outsideService"
+    },
+    {
+      "id": "external-47673734579321187695",
+      "name": "Microsoft download site",
+      "kind": "outsideService"
+    }
+  ]
+}

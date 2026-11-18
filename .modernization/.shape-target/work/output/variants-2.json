@@ -1,0 +1,1051 @@
+{
+  "journeys": [
+    {
+      "task": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
+      "actor": "person",
+      "drops": [],
+      "name": "Check, then switch",
+      "strategy": "task first",
+      "idea": "The new definitions are fully checked beside the current ones, and only when they are ready do they replace the current ones in one step.",
+      "tradeoff": "The system must hold two sets of definitions for a moment, and what the person sees only changes at the end.",
+      "recommended": "It keeps the person's working definitions untouched until the new ones are known to be usable, and still needs no decision from the person when all goes well.",
+      "steps": [
+        {
+          "intent": "Say that the downloaded definitions should become the ones in use.",
+          "system": "The system takes the downloaded folder and finds the template files in it, ignoring everything else.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-87686960346106148106",
+            "businessrule-94371671563498468562",
+            "businessrule-73782132825452925601",
+            "businessrule-92965345094444319678"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "merged",
+            "reason": "Choosing the folder and loading it become one request instead of a window followed by a load.",
+            "keeps": [
+              "businessrule-87686960346106148106",
+              "businessrule-94371671563498468562",
+              "businessrule-73782132825452925601",
+              "businessrule-92965345094444319678"
+            ]
+          }
+        },
+        {
+          "intent": "Be sure each template comes with its text in my language.",
+          "system": "The system picks the language text for each template, preferring the person's language, then the same language family, then English, and refuses a template with none or with a flawed text.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-92573318973236627036",
+            "businessrule-69876963387177556361",
+            "businessrule-32910542149714942665",
+            "businessrule-09527630769674812053",
+            "businessrule-84649532972995606012",
+            "businessrule-93437714727587946479"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "split",
+            "reason": "Finding the language text is its own visible stage so a missing language is named rather than left to a vague failure.",
+            "keeps": [
+              "businessrule-92573318973236627036",
+              "businessrule-69876963387177556361",
+              "businessrule-32910542149714942665",
+              "businessrule-09527630769674812053",
+              "businessrule-84649532972995606012",
+              "businessrule-93437714727587946479"
+            ]
+          }
+        },
+        {
+          "intent": "Be sure the templates are sound.",
+          "system": "The system reads and validates every template beside the current definitions, skipping and listing the ones it refuses and stopping at once on a missing namespace.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-40646214351993665036",
+            "businessrule-98117161588141132501",
+            "businessrule-25371901799273876158",
+            "businessrule-80037556468037401208",
+            "businessrule-91228574547678345469",
+            "businessrule-83755288267226589422",
+            "businessrule-15417746115131960533",
+            "businessrule-41440459272484897081",
+            "businessrule-59268653642646332356",
+            "businessrule-26805667514169896082",
+            "businessrule-25143456587420753656",
+            "businessrule-89165707538784213793",
+            "businessrule-70397490486289456229"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "reordered",
+            "reason": "Checking comes before replacing, so a bad download cannot spoil what the person has.",
+            "keeps": [
+              "businessrule-40646214351993665036",
+              "businessrule-98117161588141132501",
+              "businessrule-25371901799273876158",
+              "businessrule-80037556468037401208",
+              "businessrule-91228574547678345469",
+              "businessrule-83755288267226589422",
+              "businessrule-15417746115131960533",
+              "businessrule-41440459272484897081",
+              "businessrule-59268653642646332356",
+              "businessrule-26805667514169896082",
+              "businessrule-25143456587420753656",
+              "businessrule-89165707538784213793",
+              "businessrule-70397490486289456229"
+            ]
+          }
+        },
+        {
+          "intent": "Understand what the policies, categories and products mean.",
+          "system": "The system works out the categories, products, support rules, policies, options and their layouts for entering values, with their names and descriptions in the language.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-05284912414586135547",
+            "businessrule-24413560949580370921",
+            "businessrule-24623125277050759553",
+            "businessrule-39179467487447053337",
+            "businessrule-11459402502484833685",
+            "businessrule-66701495026848575269",
+            "businessrule-97301799709818271508",
+            "businessrule-31892600882792899810",
+            "businessrule-43452052995976839356",
+            "businessrule-62728858792696794889",
+            "businessrule-25475639870526854331",
+            "businessrule-58670284456856579605",
+            "businessrule-68278299005201189825",
+            "businessrule-77397977946778263418",
+            "businessrule-93507723834804807958",
+            "businessrule-26710870928949391310",
+            "businessrule-48352716870696272616",
+            "businessrule-50061101372023867676",
+            "businessrule-60385862679195390671",
+            "businessrule-20341522967469767562",
+            "businessrule-23440834431907337703",
+            "businessrule-35659935925800526059",
+            "businessrule-27318854358145723180",
+            "businessrule-40992022396445585276",
+            "businessrule-46883945724661990816",
+            "businessrule-48999549165964538717",
+            "businessrule-35101409759930685557",
+            "businessrule-22959538508130326801",
+            "businessrule-24269573875592969564"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "inferred",
+            "reason": "Everything is worked out from the template once, ahead of use, rather than as the person browses.",
+            "keeps": [
+              "businessrule-05284912414586135547",
+              "businessrule-24413560949580370921",
+              "businessrule-24623125277050759553",
+              "businessrule-39179467487447053337",
+              "businessrule-11459402502484833685",
+              "businessrule-66701495026848575269",
+              "businessrule-97301799709818271508",
+              "businessrule-31892600882792899810",
+              "businessrule-43452052995976839356",
+              "businessrule-62728858792696794889",
+              "businessrule-25475639870526854331",
+              "businessrule-58670284456856579605",
+              "businessrule-68278299005201189825",
+              "businessrule-77397977946778263418",
+              "businessrule-93507723834804807958",
+              "businessrule-26710870928949391310",
+              "businessrule-48352716870696272616",
+              "businessrule-50061101372023867676",
+              "businessrule-60385862679195390671",
+              "businessrule-20341522967469767562",
+              "businessrule-23440834431907337703",
+              "businessrule-35659935925800526059",
+              "businessrule-27318854358145723180",
+              "businessrule-40992022396445585276",
+              "businessrule-46883945724661990816",
+              "businessrule-48999549165964538717",
+              "businessrule-35101409759930685557",
+              "businessrule-22959538508130326801",
+              "businessrule-24269573875592969564"
+            ]
+          }
+        },
+        {
+          "intent": "Switch to the new definitions.",
+          "system": "The system empties the workspace, adds the staged definitions to the available ones, and remembers the folder as the definitions folder; with no new folder nothing changes.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840",
+            "entity-40163170707735391190"
+          ],
+          "honours": [
+            "businessrule-90575686774382821065",
+            "businessrule-44253734408576510565"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "merged",
+            "reason": "Emptying, loading and remembering are one switch that either happens whole or not at all.",
+            "keeps": [
+              "businessrule-90575686774382821065",
+              "businessrule-44253734408576510565"
+            ]
+          }
+        },
+        {
+          "intent": "Know what went wrong.",
+          "system": "The system shows nothing when all loaded, otherwise lists each problem, and asks whether to continue only where a choice is wanted.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-34235271555130179948"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "Problems stay visible and the question is asked only when it matters.",
+            "keeps": [
+              "businessrule-34235271555130179948"
+            ]
+          }
+        },
+        {
+          "intent": "Start working with the new definitions.",
+          "system": "The system presents the category tree with nothing selected, the empty state in the information pane, and previous search results forgotten.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-02094124658868396159",
+            "businessrule-09710935452747152124",
+            "businessrule-31928423765922463982",
+            "businessrule-77153890827857678995",
+            "businessrule-95679837516811308115",
+            "businessrule-16229847440499672368",
+            "businessrule-53806388515964147870",
+            "businessrule-54518846821349856909",
+            "businessrule-55193519950925403263",
+            "businessrule-75568512748421119593",
+            "businessrule-69364776950274199547",
+            "businessrule-97390301066419776959"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "The person lands on a clean, predictable view.",
+            "keeps": [
+              "businessrule-02094124658868396159",
+              "businessrule-09710935452747152124",
+              "businessrule-31928423765922463982",
+              "businessrule-77153890827857678995",
+              "businessrule-95679837516811308115",
+              "businessrule-16229847440499672368",
+              "businessrule-53806388515964147870",
+              "businessrule-54518846821349856909",
+              "businessrule-55193519950925403263",
+              "businessrule-75568512748421119593",
+              "businessrule-69364776950274199547",
+              "businessrule-97390301066419776959"
+            ]
+          }
+        },
+        {
+          "intent": "See each policy's setting and comment as before.",
+          "system": "The system works out each policy's state and comment in each area from the stored settings and the live ones, and applies the filters.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840",
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-07376289294643129633",
+            "businessrule-07554086131159240838",
+            "businessrule-09965726926686583005",
+            "businessrule-11674597249570802702",
+            "businessrule-12540995342195943001",
+            "businessrule-17641776170698884064",
+            "businessrule-18230757898637060853",
+            "businessrule-25766167090873157702",
+            "businessrule-28868424053274244047",
+            "businessrule-29495869201116213931",
+            "businessrule-29530054883116088403",
+            "businessrule-30168924374542565520",
+            "businessrule-33872241894384295212",
+            "businessrule-34301200927683901255",
+            "businessrule-35533060170265013329",
+            "businessrule-40601471490811436933",
+            "businessrule-46824143239519073718",
+            "businessrule-46971412075927401870",
+            "businessrule-52005709614722807804",
+            "businessrule-49748745950500666232",
+            "businessrule-56421390704826486738",
+            "businessrule-67323359061601595450",
+            "businessrule-67539343519248421601",
+            "businessrule-70331897906623822249",
+            "businessrule-70425663320377904356",
+            "businessrule-71909773168029429916",
+            "businessrule-79960316131030112593",
+            "businessrule-81760746419124272603",
+            "businessrule-86313704517800761850",
+            "businessrule-89513911810275647919",
+            "businessrule-90470730563627765974",
+            "businessrule-92873738128602220135",
+            "businessrule-96701855986906093783",
+            "businessrule-97000243539037627331",
+            "businessrule-97862941341357225531",
+            "businessrule-99096323836097983665",
+            "businessrule-99139491988760691407"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "The rules of states and filters stay exactly as they are, with no change for the person.",
+            "keeps": [
+              "businessrule-07376289294643129633",
+              "businessrule-07554086131159240838",
+              "businessrule-09965726926686583005",
+              "businessrule-11674597249570802702",
+              "businessrule-12540995342195943001",
+              "businessrule-17641776170698884064",
+              "businessrule-18230757898637060853",
+              "businessrule-25766167090873157702",
+              "businessrule-28868424053274244047",
+              "businessrule-29495869201116213931",
+              "businessrule-29530054883116088403",
+              "businessrule-30168924374542565520",
+              "businessrule-33872241894384295212",
+              "businessrule-34301200927683901255",
+              "businessrule-35533060170265013329",
+              "businessrule-40601471490811436933",
+              "businessrule-46824143239519073718",
+              "businessrule-46971412075927401870",
+              "businessrule-52005709614722807804",
+              "businessrule-49748745950500666232",
+              "businessrule-56421390704826486738",
+              "businessrule-67323359061601595450",
+              "businessrule-67539343519248421601",
+              "businessrule-70331897906623822249",
+              "businessrule-70425663320377904356",
+              "businessrule-71909773168029429916",
+              "businessrule-79960316131030112593",
+              "businessrule-81760746419124272603",
+              "businessrule-86313704517800761850",
+              "businessrule-89513911810275647919",
+              "businessrule-90470730563627765974",
+              "businessrule-92873738128602220135",
+              "businessrule-96701855986906093783",
+              "businessrule-97000243539037627331",
+              "businessrule-97862941341357225531",
+              "businessrule-99096323836097983665",
+              "businessrule-99139491988760691407"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "task": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
+      "actor": "person",
+      "drops": [],
+      "name": "Hand over on arrival",
+      "strategy": "automate first",
+      "idea": "The moment a download is complete the system checks it, switches to it and only speaks up about problems.",
+      "tradeoff": "The person gives up the moment of control over when the switch happens, which may surprise someone mid-work.",
+      "steps": [
+        {
+          "intent": "Get the download done.",
+          "system": "The system treats a finished download as the request to use it, finding the template files and the matching language text without being asked.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-87686960346106148106",
+            "businessrule-94371671563498468562",
+            "businessrule-73782132825452925601",
+            "businessrule-92965345094444319678",
+            "businessrule-92573318973236627036",
+            "businessrule-69876963387177556361",
+            "businessrule-32910542149714942665",
+            "businessrule-09527630769674812053",
+            "businessrule-84649532972995606012",
+            "businessrule-93437714727587946479"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "inferred",
+            "reason": "The person asks for nothing beyond the download itself.",
+            "keeps": [
+              "businessrule-87686960346106148106",
+              "businessrule-94371671563498468562",
+              "businessrule-73782132825452925601",
+              "businessrule-92965345094444319678",
+              "businessrule-92573318973236627036",
+              "businessrule-69876963387177556361",
+              "businessrule-32910542149714942665",
+              "businessrule-09527630769674812053",
+              "businessrule-84649532972995606012",
+              "businessrule-93437714727587946479"
+            ]
+          }
+        },
+        {
+          "intent": "Trust the result.",
+          "system": "The system validates, reads and builds the definitions, and replaces the workspace and remembers the folder when they are usable.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840",
+            "entity-40163170707735391190"
+          ],
+          "honours": [
+            "businessrule-40646214351993665036",
+            "businessrule-98117161588141132501",
+            "businessrule-25371901799273876158",
+            "businessrule-80037556468037401208",
+            "businessrule-91228574547678345469",
+            "businessrule-83755288267226589422",
+            "businessrule-15417746115131960533",
+            "businessrule-41440459272484897081",
+            "businessrule-59268653642646332356",
+            "businessrule-26805667514169896082",
+            "businessrule-25143456587420753656",
+            "businessrule-89165707538784213793",
+            "businessrule-70397490486289456229",
+            "businessrule-90575686774382821065",
+            "businessrule-44253734408576510565",
+            "businessrule-05284912414586135547",
+            "businessrule-24413560949580370921",
+            "businessrule-24623125277050759553",
+            "businessrule-39179467487447053337",
+            "businessrule-11459402502484833685",
+            "businessrule-66701495026848575269",
+            "businessrule-97301799709818271508",
+            "businessrule-31892600882792899810",
+            "businessrule-43452052995976839356",
+            "businessrule-62728858792696794889",
+            "businessrule-25475639870526854331",
+            "businessrule-58670284456856579605",
+            "businessrule-68278299005201189825",
+            "businessrule-77397977946778263418",
+            "businessrule-93507723834804807958",
+            "businessrule-26710870928949391310",
+            "businessrule-48352716870696272616",
+            "businessrule-50061101372023867676",
+            "businessrule-60385862679195390671",
+            "businessrule-20341522967469767562",
+            "businessrule-23440834431907337703",
+            "businessrule-35659935925800526059",
+            "businessrule-27318854358145723180",
+            "businessrule-40992022396445585276",
+            "businessrule-46883945724661990816",
+            "businessrule-48999549165964538717",
+            "businessrule-35101409759930685557",
+            "businessrule-22959538508130326801",
+            "businessrule-24269573875592969564"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "defaulted",
+            "reason": "Everything that used to need a separate load is done as the default.",
+            "keeps": [
+              "businessrule-40646214351993665036",
+              "businessrule-98117161588141132501",
+              "businessrule-25371901799273876158",
+              "businessrule-80037556468037401208",
+              "businessrule-91228574547678345469",
+              "businessrule-83755288267226589422",
+              "businessrule-15417746115131960533",
+              "businessrule-41440459272484897081",
+              "businessrule-59268653642646332356",
+              "businessrule-26805667514169896082",
+              "businessrule-25143456587420753656",
+              "businessrule-89165707538784213793",
+              "businessrule-70397490486289456229",
+              "businessrule-90575686774382821065",
+              "businessrule-44253734408576510565",
+              "businessrule-05284912414586135547",
+              "businessrule-24413560949580370921",
+              "businessrule-24623125277050759553",
+              "businessrule-39179467487447053337",
+              "businessrule-11459402502484833685",
+              "businessrule-66701495026848575269",
+              "businessrule-97301799709818271508",
+              "businessrule-31892600882792899810",
+              "businessrule-43452052995976839356",
+              "businessrule-62728858792696794889",
+              "businessrule-25475639870526854331",
+              "businessrule-58670284456856579605",
+              "businessrule-68278299005201189825",
+              "businessrule-77397977946778263418",
+              "businessrule-93507723834804807958",
+              "businessrule-26710870928949391310",
+              "businessrule-48352716870696272616",
+              "businessrule-50061101372023867676",
+              "businessrule-60385862679195390671",
+              "businessrule-20341522967469767562",
+              "businessrule-23440834431907337703",
+              "businessrule-35659935925800526059",
+              "businessrule-27318854358145723180",
+              "businessrule-40992022396445585276",
+              "businessrule-46883945724661990816",
+              "businessrule-48999549165964538717",
+              "businessrule-35101409759930685557",
+              "businessrule-22959538508130326801",
+              "businessrule-24269573875592969564"
+            ]
+          }
+        },
+        {
+          "intent": "Hear only about problems.",
+          "system": "The system says nothing when all loaded, otherwise lists the problems and asks about continuing only where a choice is wanted.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-34235271555130179948"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "Silence means success.",
+            "keeps": [
+              "businessrule-34235271555130179948"
+            ]
+          }
+        },
+        {
+          "intent": "Carry on from a fresh view.",
+          "system": "The system shows the category tree with nothing selected and the empty state, and forgets earlier search results.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-02094124658868396159",
+            "businessrule-09710935452747152124",
+            "businessrule-31928423765922463982",
+            "businessrule-77153890827857678995",
+            "businessrule-95679837516811308115",
+            "businessrule-16229847440499672368",
+            "businessrule-53806388515964147870",
+            "businessrule-54518846821349856909",
+            "businessrule-55193519950925403263",
+            "businessrule-75568512748421119593",
+            "businessrule-69364776950274199547",
+            "businessrule-97390301066419776959"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "The new definitions are ready at once.",
+            "keeps": [
+              "businessrule-02094124658868396159",
+              "businessrule-09710935452747152124",
+              "businessrule-31928423765922463982",
+              "businessrule-77153890827857678995",
+              "businessrule-95679837516811308115",
+              "businessrule-16229847440499672368",
+              "businessrule-53806388515964147870",
+              "businessrule-54518846821349856909",
+              "businessrule-55193519950925403263",
+              "businessrule-75568512748421119593",
+              "businessrule-69364776950274199547",
+              "businessrule-97390301066419776959"
+            ]
+          }
+        },
+        {
+          "intent": "See each policy's setting and comment as before.",
+          "system": "The system works out each policy's state and comment and applies the filters.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840",
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-07376289294643129633",
+            "businessrule-07554086131159240838",
+            "businessrule-09965726926686583005",
+            "businessrule-11674597249570802702",
+            "businessrule-12540995342195943001",
+            "businessrule-17641776170698884064",
+            "businessrule-18230757898637060853",
+            "businessrule-25766167090873157702",
+            "businessrule-28868424053274244047",
+            "businessrule-29495869201116213931",
+            "businessrule-29530054883116088403",
+            "businessrule-30168924374542565520",
+            "businessrule-33872241894384295212",
+            "businessrule-34301200927683901255",
+            "businessrule-35533060170265013329",
+            "businessrule-40601471490811436933",
+            "businessrule-46824143239519073718",
+            "businessrule-46971412075927401870",
+            "businessrule-52005709614722807804",
+            "businessrule-49748745950500666232",
+            "businessrule-56421390704826486738",
+            "businessrule-67323359061601595450",
+            "businessrule-67539343519248421601",
+            "businessrule-70331897906623822249",
+            "businessrule-70425663320377904356",
+            "businessrule-71909773168029429916",
+            "businessrule-79960316131030112593",
+            "businessrule-81760746419124272603",
+            "businessrule-86313704517800761850",
+            "businessrule-89513911810275647919",
+            "businessrule-90470730563627765974",
+            "businessrule-92873738128602220135",
+            "businessrule-96701855986906093783",
+            "businessrule-97000243539037627331",
+            "businessrule-97862941341357225531",
+            "businessrule-99096323836097983665",
+            "businessrule-99139491988760691407"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "The rules of states and filters stay as they are.",
+            "keeps": [
+              "businessrule-07376289294643129633",
+              "businessrule-07554086131159240838",
+              "businessrule-09965726926686583005",
+              "businessrule-11674597249570802702",
+              "businessrule-12540995342195943001",
+              "businessrule-17641776170698884064",
+              "businessrule-18230757898637060853",
+              "businessrule-25766167090873157702",
+              "businessrule-28868424053274244047",
+              "businessrule-29495869201116213931",
+              "businessrule-29530054883116088403",
+              "businessrule-30168924374542565520",
+              "businessrule-33872241894384295212",
+              "businessrule-34301200927683901255",
+              "businessrule-35533060170265013329",
+              "businessrule-40601471490811436933",
+              "businessrule-46824143239519073718",
+              "businessrule-46971412075927401870",
+              "businessrule-52005709614722807804",
+              "businessrule-49748745950500666232",
+              "businessrule-56421390704826486738",
+              "businessrule-67323359061601595450",
+              "businessrule-67539343519248421601",
+              "businessrule-70331897906623822249",
+              "businessrule-70425663320377904356",
+              "businessrule-71909773168029429916",
+              "businessrule-79960316131030112593",
+              "businessrule-81760746419124272603",
+              "businessrule-86313704517800761850",
+              "businessrule-89513911810275647919",
+              "businessrule-90470730563627765974",
+              "businessrule-92873738128602220135",
+              "businessrule-96701855986906093783",
+              "businessrule-97000243539037627331",
+              "businessrule-97862941341357225531",
+              "businessrule-99096323836097983665",
+              "businessrule-99139491988760691407"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "task": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
+      "actor": "person",
+      "drops": [],
+      "name": "Preview and confirm",
+      "strategy": "guided",
+      "idea": "A single prompted path shows what the download holds and what would change, and the person confirms before the current definitions are replaced.",
+      "tradeoff": "Adds a confirming step for people who just want it done.",
+      "steps": [
+        {
+          "intent": "Point to the downloaded definitions.",
+          "system": "The system finds the template files in the downloaded folder.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-87686960346106148106",
+            "businessrule-94371671563498468562",
+            "businessrule-73782132825452925601",
+            "businessrule-92965345094444319678"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "The starting request is as simple as before.",
+            "keeps": [
+              "businessrule-87686960346106148106",
+              "businessrule-94371671563498468562",
+              "businessrule-73782132825452925601",
+              "businessrule-92965345094444319678"
+            ]
+          }
+        },
+        {
+          "intent": "See what the download holds.",
+          "system": "The system checks the templates and their language texts and tells how many categories, products and policies it holds and which templates it refuses and why.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-92573318973236627036",
+            "businessrule-69876963387177556361",
+            "businessrule-32910542149714942665",
+            "businessrule-09527630769674812053",
+            "businessrule-84649532972995606012",
+            "businessrule-93437714727587946479",
+            "businessrule-40646214351993665036",
+            "businessrule-98117161588141132501",
+            "businessrule-25371901799273876158",
+            "businessrule-80037556468037401208",
+            "businessrule-91228574547678345469",
+            "businessrule-83755288267226589422",
+            "businessrule-15417746115131960533",
+            "businessrule-41440459272484897081",
+            "businessrule-59268653642646332356",
+            "businessrule-26805667514169896082",
+            "businessrule-25143456587420753656",
+            "businessrule-89165707538784213793",
+            "businessrule-70397490486289456229",
+            "businessrule-05284912414586135547",
+            "businessrule-24413560949580370921",
+            "businessrule-24623125277050759553",
+            "businessrule-39179467487447053337",
+            "businessrule-11459402502484833685",
+            "businessrule-66701495026848575269",
+            "businessrule-97301799709818271508",
+            "businessrule-31892600882792899810",
+            "businessrule-43452052995976839356",
+            "businessrule-62728858792696794889",
+            "businessrule-25475639870526854331",
+            "businessrule-58670284456856579605",
+            "businessrule-68278299005201189825",
+            "businessrule-77397977946778263418",
+            "businessrule-93507723834804807958",
+            "businessrule-26710870928949391310",
+            "businessrule-48352716870696272616",
+            "businessrule-50061101372023867676",
+            "businessrule-60385862679195390671",
+            "businessrule-20341522967469767562",
+            "businessrule-23440834431907337703",
+            "businessrule-35659935925800526059",
+            "businessrule-27318854358145723180",
+            "businessrule-40992022396445585276",
+            "businessrule-46883945724661990816",
+            "businessrule-48999549165964538717",
+            "businessrule-35101409759930685557",
+            "businessrule-22959538508130326801",
+            "businessrule-24269573875592969564"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "split",
+            "reason": "Seeing the content and problems first lets a rarely-used person decide with knowledge.",
+            "keeps": [
+              "businessrule-92573318973236627036",
+              "businessrule-69876963387177556361",
+              "businessrule-32910542149714942665",
+              "businessrule-09527630769674812053",
+              "businessrule-84649532972995606012",
+              "businessrule-93437714727587946479",
+              "businessrule-40646214351993665036",
+              "businessrule-98117161588141132501",
+              "businessrule-25371901799273876158",
+              "businessrule-80037556468037401208",
+              "businessrule-91228574547678345469",
+              "businessrule-83755288267226589422",
+              "businessrule-15417746115131960533",
+              "businessrule-41440459272484897081",
+              "businessrule-59268653642646332356",
+              "businessrule-26805667514169896082",
+              "businessrule-25143456587420753656",
+              "businessrule-89165707538784213793",
+              "businessrule-70397490486289456229",
+              "businessrule-05284912414586135547",
+              "businessrule-24413560949580370921",
+              "businessrule-24623125277050759553",
+              "businessrule-39179467487447053337",
+              "businessrule-11459402502484833685",
+              "businessrule-66701495026848575269",
+              "businessrule-97301799709818271508",
+              "businessrule-31892600882792899810",
+              "businessrule-43452052995976839356",
+              "businessrule-62728858792696794889",
+              "businessrule-25475639870526854331",
+              "businessrule-58670284456856579605",
+              "businessrule-68278299005201189825",
+              "businessrule-77397977946778263418",
+              "businessrule-93507723834804807958",
+              "businessrule-26710870928949391310",
+              "businessrule-48352716870696272616",
+              "businessrule-50061101372023867676",
+              "businessrule-60385862679195390671",
+              "businessrule-20341522967469767562",
+              "businessrule-23440834431907337703",
+              "businessrule-35659935925800526059",
+              "businessrule-27318854358145723180",
+              "businessrule-40992022396445585276",
+              "businessrule-46883945724661990816",
+              "businessrule-48999549165964538717",
+              "businessrule-35101409759930685557",
+              "businessrule-22959538508130326801",
+              "businessrule-24269573875592969564"
+            ]
+          }
+        },
+        {
+          "intent": "Confirm replacing what I have.",
+          "system": "The system, on a yes, empties the workspace, adds the definitions, remembers the folder, and on a no changes nothing.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840",
+            "entity-40163170707735391190"
+          ],
+          "honours": [
+            "businessrule-90575686774382821065",
+            "businessrule-44253734408576510565"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "deferred",
+            "reason": "The replacement is asked at the point it is understood, not before.",
+            "keeps": [
+              "businessrule-90575686774382821065",
+              "businessrule-44253734408576510565"
+            ]
+          }
+        },
+        {
+          "intent": "Know what went wrong.",
+          "system": "The system lists the problems that remain and asks whether to continue only where a choice is wanted.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-34235271555130179948"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "Problems are still reported in full.",
+            "keeps": [
+              "businessrule-34235271555130179948"
+            ]
+          }
+        },
+        {
+          "intent": "Start working with the new definitions.",
+          "system": "The system shows the category tree with nothing selected and forgets earlier search results.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840"
+          ],
+          "honours": [
+            "businessrule-02094124658868396159",
+            "businessrule-09710935452747152124",
+            "businessrule-31928423765922463982",
+            "businessrule-77153890827857678995",
+            "businessrule-95679837516811308115",
+            "businessrule-16229847440499672368",
+            "businessrule-53806388515964147870",
+            "businessrule-54518846821349856909",
+            "businessrule-55193519950925403263",
+            "businessrule-75568512748421119593",
+            "businessrule-69364776950274199547",
+            "businessrule-97390301066419776959"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "The person begins from a clean view.",
+            "keeps": [
+              "businessrule-02094124658868396159",
+              "businessrule-09710935452747152124",
+              "businessrule-31928423765922463982",
+              "businessrule-77153890827857678995",
+              "businessrule-95679837516811308115",
+              "businessrule-16229847440499672368",
+              "businessrule-53806388515964147870",
+              "businessrule-54518846821349856909",
+              "businessrule-55193519950925403263",
+              "businessrule-75568512748421119593",
+              "businessrule-69364776950274199547",
+              "businessrule-97390301066419776959"
+            ]
+          }
+        },
+        {
+          "intent": "See each policy's setting and comment as before.",
+          "system": "The system works out each policy's state and comment and applies the filters.",
+          "confidence": "sure",
+          "touches": [
+            "entity-92808062881922645840",
+            "entity-99683518011128701149",
+            "entity-52418278656387992812"
+          ],
+          "honours": [
+            "businessrule-07376289294643129633",
+            "businessrule-07554086131159240838",
+            "businessrule-09965726926686583005",
+            "businessrule-11674597249570802702",
+            "businessrule-12540995342195943001",
+            "businessrule-17641776170698884064",
+            "businessrule-18230757898637060853",
+            "businessrule-25766167090873157702",
+            "businessrule-28868424053274244047",
+            "businessrule-29495869201116213931",
+            "businessrule-29530054883116088403",
+            "businessrule-30168924374542565520",
+            "businessrule-33872241894384295212",
+            "businessrule-34301200927683901255",
+            "businessrule-35533060170265013329",
+            "businessrule-40601471490811436933",
+            "businessrule-46824143239519073718",
+            "businessrule-46971412075927401870",
+            "businessrule-52005709614722807804",
+            "businessrule-49748745950500666232",
+            "businessrule-56421390704826486738",
+            "businessrule-67323359061601595450",
+            "businessrule-67539343519248421601",
+            "businessrule-70331897906623822249",
+            "businessrule-70425663320377904356",
+            "businessrule-71909773168029429916",
+            "businessrule-79960316131030112593",
+            "businessrule-81760746419124272603",
+            "businessrule-86313704517800761850",
+            "businessrule-89513911810275647919",
+            "businessrule-90470730563627765974",
+            "businessrule-92873738128602220135",
+            "businessrule-96701855986906093783",
+            "businessrule-97000243539037627331",
+            "businessrule-97862941341357225531",
+            "businessrule-99096323836097983665",
+            "businessrule-99139491988760691407"
+          ],
+          "link": {
+            "_tag": "legacy",
+            "from": [
+              "block-40092394967077955539"
+            ],
+            "change": "kept",
+            "reason": "The rules of states and filters stay as they are.",
+            "keeps": [
+              "businessrule-07376289294643129633",
+              "businessrule-07554086131159240838",
+              "businessrule-09965726926686583005",
+              "businessrule-11674597249570802702",
+              "businessrule-12540995342195943001",
+              "businessrule-17641776170698884064",
+              "businessrule-18230757898637060853",
+              "businessrule-25766167090873157702",
+              "businessrule-28868424053274244047",
+              "businessrule-29495869201116213931",
+              "businessrule-29530054883116088403",
+              "businessrule-30168924374542565520",
+              "businessrule-33872241894384295212",
+              "businessrule-34301200927683901255",
+              "businessrule-35533060170265013329",
+              "businessrule-40601471490811436933",
+              "businessrule-46824143239519073718",
+              "businessrule-46971412075927401870",
+              "businessrule-52005709614722807804",
+              "businessrule-49748745950500666232",
+              "businessrule-56421390704826486738",
+              "businessrule-67323359061601595450",
+              "businessrule-67539343519248421601",
+              "businessrule-70331897906623822249",
+              "businessrule-70425663320377904356",
+              "businessrule-71909773168029429916",
+              "businessrule-79960316131030112593",
+              "businessrule-81760746419124272603",
+              "businessrule-86313704517800761850",
+              "businessrule-89513911810275647919",
+              "businessrule-90470730563627765974",
+              "businessrule-92873738128602220135",
+              "businessrule-96701855986906093783",
+              "businessrule-97000243539037627331",
+              "businessrule-97862941341357225531",
+              "businessrule-99096323836097983665",
+              "businessrule-99139491988760691407"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{"read":6,"challenges":[
+{"record":1,"says":"It proposes a profile before the person selects one, yet claims to honour the rule that OK does nothing until a folder is selected; the recommendation's 'explicit-choice rule still enforced' is contradicted by a preselected default."},
+{"record":3,"says":"Apart from an added preview step, it replays today's order (comments, sources, effect, remember, report) in new words, so it is barely a variant of the legacy shape, and its claim that people cannot see where changes land today is not in the legacy sentences."},
+{"record":4,"says":"The step says the same rules apply for every source kind and file encoding, but the honoured rules differ by kind (REG files fail 'not implemented' when forgetting a value, branch limits only apply to REG, POL/registry/user hive/scratch report differently), so a REG failure and the per-kind outcomes are hidden behind the recommended wording."},
+{"record":5,"says":"A check-first stage cannot say per source how the change will take effect, because the edition-dependent diff is computed from the file as last on disk at the moment of saving, and it adds a check-then-write gap the legacy 'write only if fully writable, else report not writable' rule does not have."}
+]}

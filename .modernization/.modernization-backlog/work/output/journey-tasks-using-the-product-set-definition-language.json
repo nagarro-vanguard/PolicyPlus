@@ -1,0 +1,95 @@
+{
+ "stories": [
+  {
+   "title": "Set the language of the policy definition text",
+   "what": "A person names the language in which policy definition text is shown. The language is checked, remembered at once, and the person is offered a reload so it applies now.",
+   "why": "Administrators read policy names and explanations in their own language, and they choose when to pay the cost of reloading the workspace.",
+   "actions": [
+    "block-04864433854821115058",
+    "block-14667094343185527716"
+   ],
+   "terms": [
+    {
+     "name": "Definition language",
+     "means": "The language code, two parts around a hyphen such as en-US, that picks the folder the policy definition text is read from; it is not the language of the program's own screens."
+    }
+   ],
+   "journey": {
+    "name": "Name the language, then reload",
+    "steps": [
+     "Say which language the definition text should use",
+     "Have the language remembered and applied"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the language dialog is open, when the person confirms text that does not split into exactly two parts around a hyphen, such as \"en\" or \"en-US-x\", then they see \"Please enter a valid language code.\" and the dialog stays open.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-31456964891379452251"
+      }
+     ]
+    },
+    {
+     "says": "Given the language dialog is open, when the person confirms text with exactly one hyphen, such as \"en-\" or \"-\", then it is accepted without being checked as a real language code.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-31456964891379452251"
+      }
+     ]
+    },
+    {
+     "says": "Given a language is already stored, when the person enters a code that equals it after spaces are trimmed, with upper and lower case counting as different, then the dialog closes without change.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-93543924991745555552"
+      }
+     ]
+    },
+    {
+     "says": "Given the stored language is en-US, when the person enters en-us, then it counts as a different language and is accepted.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-93543924991745555552"
+      }
+     ]
+    },
+    {
+     "says": "Given the person enters a well formed code that differs from the stored one, when they confirm, then the new code is saved at once.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-80947080049413275464"
+      }
+     ]
+    },
+    {
+     "says": "Given the new language was saved, when the person is asked \"Language changes will take effect when ADML files are next loaded. Would you like to reload the workspace now?\" and answers yes, then the loaded definitions are emptied and the saved definitions folder is loaded again with the new language.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-80947080049413275464"
+      }
+     ]
+    }
+   ],
+   "steps": [
+    "tasks-using-the-product.set-definition-language:name-the-language-then-reload#1",
+    "tasks-using-the-product.set-definition-language:name-the-language-then-reload#2"
+   ],
+   "components": [
+    "Definition language setting",
+    "Language code checker",
+    "Language change applier"
+   ],
+   "open": [
+    "The language code is later used as a folder name, yet any text with one hyphen is accepted, including text with path characters; should the new product keep accepting it or refuse unsafe text?",
+    "When the person answers no to the reload question, the stories state no behaviour for the workspace or for when the language applies; should the workspace stay as it is and the language apply the next time definitions are loaded?"
+   ]
+  }
+ ]
+}

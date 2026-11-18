@@ -9,6 +9,7 @@ import { layerAgentsMd, rootAgentsMd } from "./agents-md";
 import { attachmentText, headerFor } from "./attachment";
 import { epicBody, storyBody } from "./bodies";
 import type { Facts } from "./facts";
+import type { Target } from "../read/target";
 import { createEpicPrompt, deliverPrompt, scaffoldPrompt, type Manifest } from "./prompts";
 
 export type ManifestItem = {
@@ -56,6 +57,7 @@ export const publishPlan = (
     request: ModernizationRequest,
     workTracking: string,
     skillRoot: string,
+    target?: Target,
 ) => {
     write(layout.plan, JSON.stringify(Schema.encodeSync(Plan)(plan), null, 2));
     const items: ManifestItem[] = [];
@@ -79,17 +81,24 @@ export const publishPlan = (
         write(join(layout.bodies, `${key}.md`), `# ${epic.title}\n\n${epicBody(epic, plan)}`);
     }
     for (const story of plan.stories) {
-        const bundleFile =
-            story.surface && story.capability
-                ? join(layout.analysisBundles, bundleName(story.surface, story.capability))
-                : undefined;
-        const bundle = bundleFile && existsSync(bundleFile) ? readFileSync(bundleFile, "utf8") : undefined;
+        // The bundle of every surface the story's entry points belong to, in the order they appear.
+        const surfaceOf = new Map(
+            facts.capabilities.flatMap((c) =>
+                c.surfaces.flatMap((s) => s.actions.map((a) => [a.id, bundleName(s.name, c.name)] as const)),
+            ),
+        );
+        const names = [...new Set(story.actions.flatMap((id) => surfaceOf.get(id as string) ?? []))];
+        const texts = names
+            .map((name) => join(layout.analysisBundles, name))
+            .filter((file) => existsSync(file))
+            .map((file) => readFileSync(file, "utf8"));
+        const bundle = texts.length === 0 ? undefined : texts.join("\n\n---\n\n");
         const attached = story.builds.length > 0;
         write(join(layout.bodies, `${story.key}.md`), `# ${story.title}\n\n${storyBody(story, plan, facts)}`);
         if (attached)
             write(
                 join(layout.attachments, `${story.key}.md`),
-                attachmentText(story.title, headerFor(story, plan, facts), bundle),
+                attachmentText(story.title, headerFor(story, plan, facts, target && { target, request }), bundle),
             );
         items.push({
             key: story.key,
