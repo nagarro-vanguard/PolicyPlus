@@ -1,0 +1,221 @@
+{
+  "purpose": "Policy Plus is a Windows desktop editor for Group Policy settings, used by administrators and power users. It reads Microsoft's policy definition files and edits policy files directly, so it works on any Windows edition, including Home, which lacks the built-in editor.",
+  "stack": [
+    "language and runtime: TypeScript on Bun, in a Turborepo workspace of packages and apps",
+    "screens: TanStack Start, server rendered, with React 19, TanStack Router, Query and Form, Tailwind 4, shadcn on Base UI with Storybook for the components, lucide icons, Paraglide for the messages",
+    "services: Effect 4 HttpApi with Effect Schema, with an OpenAPI document generated from the same contract, served on Bun",
+    "data: PostgreSQL through Drizzle on Effect SQL, with Drizzle Kit migrations",
+    "checks: Vitest for tests, Playwright with axe for black-box and accessibility tests, ESLint, Prettier, knip, markdownlint, commitlint with conventional commits, lefthook"
+  ],
+  "notes": [],
+  "documents": [],
+  "layers": [
+    {
+      "id": "layer-tooling",
+      "name": "Tooling",
+      "path": "packages/tooling",
+      "purpose": "the shared TypeScript, ESLint, Prettier, knip, markdownlint, commitlint and lefthook configuration every layer extends, on Bun and Turborepo",
+      "carries": [
+        1,
+        5
+      ]
+    },
+    {
+      "id": "layer-domain",
+      "name": "Domain",
+      "path": "packages/domain",
+      "purpose": "the pure policy rules: reading policy definitions, resolving and editing policy state, with no I/O framework",
+      "carries": [
+        1
+      ]
+    },
+    {
+      "id": "layer-contracts",
+      "name": "Contracts",
+      "path": "packages/contracts",
+      "purpose": "the Effect Schema types and HttpApi contract, and the OpenAPI document generated from it",
+      "carries": [
+        3
+      ]
+    },
+    {
+      "id": "layer-data",
+      "name": "Data",
+      "path": "packages/data",
+      "purpose": "the PostgreSQL schema, Drizzle on Effect SQL repositories and Drizzle Kit migrations",
+      "carries": [
+        4
+      ]
+    },
+    {
+      "id": "layer-api",
+      "name": "Services",
+      "path": "apps/api",
+      "purpose": "the Effect HttpApi service implementing the contract on Bun, and serving the OpenAPI document",
+      "carries": [
+        3
+      ]
+    },
+    {
+      "id": "layer-ui",
+      "name": "Components",
+      "path": "packages/ui",
+      "purpose": "the shadcn on Base UI components, Tailwind theme and lucide icons, documented in Storybook",
+      "carries": [
+        2
+      ]
+    },
+    {
+      "id": "layer-web",
+      "name": "Screens",
+      "path": "apps/web",
+      "purpose": "the server rendered TanStack Start screens, routes, queries, forms and Paraglide messages",
+      "carries": [
+        2
+      ]
+    },
+    {
+      "id": "layer-e2e",
+      "name": "Black-box tests",
+      "path": "apps/e2e",
+      "purpose": "the Playwright and axe tests that drive the running product through its screens and API",
+      "carries": [
+        5
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "integrations.decision-1",
+      "topic": {
+        "_tag": "integration",
+        "system": "Computer file system folders"
+      },
+      "layer": "layer-api",
+      "chose": "Replace direct folder access with browser upload and download through the API: the service accepts files (POL, ADMX, ADML, CMTX, REG, SPOL) as request bodies and returns saved files as downloads. The service reads no user folder; stored files live in the Data layer.",
+      "reason": "Chose upload and download through layer-api over server-side disk access because a server rendered web product cannot see the user's folders and server disk access would leak across users. Assumes users work from files on their own machine and accept a save-as-download step."
+    },
+    {
+      "id": "integrations.decision-2",
+      "topic": {
+        "_tag": "integration",
+        "system": "Windows registry policy keys and loaded user hives"
+      },
+      "layer": "layer-domain",
+      "chose": "Replace live registry reads and writes with a registry policy source modelled in the Domain layer and filled from imported REG files and POL files. Reading or writing the live machine registry and loaded hives is not carried; the sources that need it become import and export of files.",
+      "reason": "Chose file based import and export over a live registry bridge because an Effect service on Bun in a server cannot reach the end user's Windows registry, and a local agent would add a second product to ship and secure. Assumes the product owner accepts losing live system editing in favour of file round trips."
+    },
+    {
+      "id": "integrations.decision-3",
+      "topic": {
+        "_tag": "integration",
+        "system": "Administrative template files (ADMX and ADML)"
+      },
+      "layer": "layer-domain",
+      "chose": "Carry in layer-domain as pure parsers from file text to typed policy definitions, with the uploaded or downloaded template packages stored by layer-data as rows and loaded per language.",
+      "reason": "Chose pure parsing in Domain with storage in Data over parsing inside the API handlers because the rules stay testable without I/O and one parser serves upload and the Microsoft download. Assumes template packages are small enough to store as text in PostgreSQL."
+    },
+    {
+      "id": "integrations.decision-4",
+      "topic": {
+        "_tag": "integration",
+        "system": "Windows registry settings key of Policy Plus"
+      },
+      "layer": "layer-data",
+      "chose": "Replace the registry settings key with a settings table in PostgreSQL, read and written through a Data repository and exposed by the API.",
+      "reason": "Chose a database table over browser local storage or a settings file because the setting is then read and written through the same API and Data repository as other state, and is covered by migrations and tests. Assumes no sign-in exists in the inputs, so the settings are one shared row for all users; per-user settings, and settings that follow a user across devices, would need a later story that adds sign-in."
+    },
+    {
+      "id": "integrations.decision-5",
+      "topic": {
+        "_tag": "integration",
+        "system": "Generated version source file"
+      },
+      "layer": "layer-tooling",
+      "chose": "Replace the generated source file with a build step in layer-tooling that reads the Git version and passes it to the API and screens as a build-time environment value; no generated file is committed.",
+      "reason": "Chose an environment value injected at build over a generated, checked-in source file because it avoids stale or dirty files in the repository and works the same under Turborepo caching if the value is a declared input. Assumes builds run in a Git checkout or receive the version from CI."
+    },
+    {
+      "id": "integrations.decision-6",
+      "topic": {
+        "_tag": "integration",
+        "system": "Policy comment files (CMTX)"
+      },
+      "layer": "layer-domain",
+      "chose": "Carry in layer-domain as a pure parser and writer for CMTX text; comments are stored by layer-data next to the policy state they belong to and exported as CMTX files on download.",
+      "reason": "Chose storing comments as data with CMTX as an import and export format over keeping CMTX files as the system of record because comments then stay consistent with the policy state they belong to and are covered by migrations and tests. Assumes round-trip fidelity of the CMTX text is tested; no comment search is carried, since the analysis shows none."
+    },
+    {
+      "id": "integrations.decision-7",
+      "topic": {
+        "_tag": "integration",
+        "system": "Active Directory domain"
+      },
+      "layer": "layer-api",
+      "chose": "Replace the live Active Directory lookup of a user's Group Policy object with importing that object's POL file by upload; the service makes no directory connection.",
+      "reason": "Chose upload of the GPO's registry.pol over an LDAP or SMB connection from the server because a hosted service typically is not on the domain and holding domain credentials is a security cost out of proportion to this need. Assumes administrators can copy the file from SYSVOL; a directory connector can be a later story."
+    },
+    {
+      "id": "integrations.decision-8",
+      "topic": {
+        "_tag": "integration",
+        "system": "Microsoft download site"
+      },
+      "layer": "layer-api",
+      "chose": "Carry in layer-api: the service downloads Microsoft's policy template package with the Effect HttpClient from a configured URL, unpacks it in memory, hands the files to Domain for parsing and has Data store them.",
+      "reason": "Chose a server side download with a configurable URL over a client side download because the server can validate, unpack and cache the package once for all users. Assumes outbound HTTPS to Microsoft is allowed from the service and the package format stays an archive of ADMX and ADML files."
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "Building and versioning Policy Plus",
+      "purpose": "Stamp the program with its current Git version when it is built.",
+      "actions": 1
+    },
+    {
+      "name": "Getting Microsoft policy definitions",
+      "purpose": "Download Microsoft's current policy template package and unpack it into a folder the program can read.",
+      "actions": 6
+    },
+    {
+      "name": "Using the product",
+      "purpose": "Product's own settings, such as the language of the policy text.",
+      "actions": 6
+    },
+    {
+      "name": "Choosing and saving policy sources",
+      "purpose": "Pick where the user and computer policies are kept (POL file, registry, a user's registry hive, a user's Group Policy object, or the live system) and save changes back to them.",
+      "actions": 15
+    },
+    {
+      "name": "Changing policy settings",
+      "purpose": "Set a policy to Enabled, Disabled or Not configured with its options and comment, and move settings in or out as SPOL text.",
+      "actions": 24
+    },
+    {
+      "name": "Finding policies",
+      "purpose": "Narrow the policy list by filter and find policies by ID, text or registry key and value, then pick a result.",
+      "actions": 29
+    },
+    {
+      "name": "Editing policy files directly",
+      "purpose": "Change the raw keys and values of a policy file, and bring registry files in or out of it.",
+      "actions": 35
+    },
+    {
+      "name": "Browsing policy definitions",
+      "purpose": "Look through the loaded policy templates: categories, products, support rules, template files and policies, and open the details of each.",
+      "actions": 47
+    }
+  ],
+  "outsideSystems": [
+    "Computer file system folders",
+    "Windows registry policy keys and loaded user hives",
+    "Administrative template files (ADMX and ADML)",
+    "Windows registry settings key of Policy Plus",
+    "Generated version source file",
+    "Policy comment files (CMTX)",
+    "Active Directory domain",
+    "Microsoft download site"
+  ]
+}

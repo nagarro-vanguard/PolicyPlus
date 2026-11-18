@@ -1,0 +1,1077 @@
+{
+  "stories": [
+    {
+      "title": "Choose whether to work on user or computer policies",
+      "what": "A small choice window asks which area, User or Computer, the person wants to work on, and offers only the areas the task allows.",
+      "why": "Importing, exporting and raw editing all act on one area at a time, so the person must say which one before anything changes.",
+      "actions": [
+        "block-91792378122287310099",
+        "block-74715625061692366925"
+      ],
+      "terms": [
+        {
+          "name": "Area",
+          "means": "One of the two halves of policy settings, User policies or Computer policies; not a single policy and not a file."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given the choice window is open, when the person presses OK before choosing User or Computer, then nothing happens; once one is chosen, OK reports that area to the task that asked and closes the window as accepted.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-64564273672622472190"
+            }
+          ]
+        },
+        {
+          "says": "Given the choice window is open, when the person presses Escape, then the window closes as cancelled and no area is chosen.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-21403142511575039594"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "See and select the keys and values of a policy file",
+      "what": "The raw editor lists every key of the uploaded policy file with its sub-keys and values, shows special deletion entries as such, and offers only the buttons that fit what is selected.",
+      "why": "Administrators who edit a policy file directly need to see exactly what it holds and be stopped from actions that make no sense for the selected item.",
+      "actions": [
+        "block-82351254846133371644"
+      ],
+      "terms": [
+        {
+          "name": "Policy file",
+          "means": "The file of raw registry-style keys and values that holds policy settings for one area; not the policy definitions that describe them."
+        },
+        {
+          "name": "Deletion entry",
+          "means": "A special entry in a policy file that tells the machine to remove a value or all values when policies are applied; not an ordinary value."
+        }
+      ],
+      "journey": {
+        "name": "Review a policy file in the raw editor",
+        "steps": [
+          "The person opens the raw editor on an uploaded policy file.",
+          "They read the list of keys, sub-keys and values.",
+          "They select a key or a value and see which actions are available."
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given a policy file with several keys, when the editor opens, then keys are listed in alphabetical order ignoring case, each followed by its indented sub-keys and then its values in alphabetical order, and a value with an empty name (the marker that keeps an empty key) is not listed.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-81365817698028227620"
+            },
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        },
+        {
+          "says": "Given a key name appears more than once with different letter case, when sub-keys are listed, then it appears only once and the key being listed is never listed as its own sub-key.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-67529938588779257243"
+            }
+          ]
+        },
+        {
+          "says": "Given ordinary values of several kinds, when they are listed, then a list of text shows its items joined by spaces, text shows as it is, 32-bit and 64-bit numbers show in decimal, binary data shows as hexadecimal bytes separated by spaces, and other kinds show no content.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-44523725638753390545"
+            }
+          ]
+        },
+        {
+          "says": "Given special deletion entries, when they are listed, then the delete-values entry shows as \"Delete values\" with its data, an entry that deletes one value shows as \"Delete value\" with the name, and entries that clear everything show as \"Delete all values\"; none of them can be edited or deleted.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-43194539708053716006"
+            }
+          ]
+        },
+        {
+          "says": "Given nothing is selected in the list, when the person looks at the buttons, then only Add key and Export are available and Add value, Delete value, Edit and Forget are unavailable.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-13057335115870748705"
+            }
+          ]
+        },
+        {
+          "says": "Given a key is selected, when the person looks at the buttons, then Add key, Add value, Delete value, Forget and Export are available and Edit is unavailable.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-86296876237579429124"
+            }
+          ]
+        },
+        {
+          "says": "Given a value is selected, when the person looks at the buttons, then Forget is always available, Add key, Add value and Export are unavailable, and Edit and Delete value are available only when the value is not already a deletion entry.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-32089237714667793315"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Close the raw editor with Done or Escape",
+      "what": "Done and Escape both close the raw editor; Done closes it as accepted and Escape as cancelled, and there is no Cancel button.",
+      "why": "Every change is applied to the loaded policy file as it is made, so closing never undoes anything and the person must know that.",
+      "actions": [
+        "block-91089666300107221398",
+        "block-93573573421282575863"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the raw editor is open with changes already made, when the person presses Done or Enter the editor closes as accepted, and when they press Escape it closes as cancelled; either way every change stays applied to the loaded policy file, to be saved to the stored file only when policies are saved.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-18574755515767742264"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Add a key to a policy file",
+      "what": "The person types a new key name, and an empty key of that name is added under the selected key, or at the top level when nothing is selected.",
+      "why": "Administrators need to create keys that policy definitions will later fill.",
+      "actions": [
+        "block-54431974963440976475"
+      ],
+      "terms": [
+        {
+          "name": "Key",
+          "means": "A named folder in a policy file that holds values and sub-keys; not a value."
+        }
+      ],
+      "journey": {
+        "name": "Add a key",
+        "steps": [
+          "The person selects a parent key, or nothing for the top level.",
+          "They press Add key and type a name.",
+          "The new key appears in the list, selected."
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the key name window is confirmed, when the name was typed, then the typed name is handed over unchecked; when it is cancelled, an empty name is handed over, so cancelling and typing nothing look the same.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-21846002666758208174"
+            }
+          ]
+        },
+        {
+          "says": "Given the typed name contains a backslash, when the person confirms, then they are told \"The key name is not valid.\" and no key is added.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-65588006996628019814"
+            }
+          ]
+        },
+        {
+          "says": "Given a key of the same name, ignoring case, already exists under the same parent, when the person confirms, then they are told \"The key name is already taken.\" and no key is added.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-27239953863800337722"
+            }
+          ]
+        },
+        {
+          "says": "Given the name is empty or the window was cancelled, when the person adds a key, then nothing is added; otherwise, given a valid free name, an empty key of that name is created under the selected key, or at the top level when nothing is selected, and it is selected in the list.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-94140234913184124479"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Add a value to the selected key",
+      "what": "The person chooses a value name and one of five kinds, then enters its data, and the value is stored under the selected key.",
+      "why": "Administrators need to write a raw value that no policy definition covers.",
+      "actions": [
+        "block-73079666774281241997"
+      ],
+      "terms": [
+        {
+          "name": "Value",
+          "means": "A named piece of data of one kind stored under a key in a policy file; not a key and not a policy."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given the new value window opens, when the person looks at it, then String, Expandable string, List of strings, 32-bit DWord and 64-bit QWord are offered with String chosen; confirming hands over the typed name unchecked, possibly empty, with the chosen kind, and cancelling hands over neither.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88605435114040098546"
+            }
+          ]
+        },
+        {
+          "says": "Given a name and kind are chosen, when the data window opens, then its starting data is empty text, zero, or an empty list by kind; if the person then confirms the data, the value is stored under the selected key and replaces without warning any value of the same name there, and if they do not confirm, nothing is stored.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-64891270751019389302"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Edit the data of a value",
+      "what": "The person changes the data of the selected value in a text, number or list-of-text window that fits its kind.",
+      "why": "Administrators correct raw values without recreating them.",
+      "actions": [
+        "block-04045695864978247457"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given a value is selected, when the person edits it, then a plain or expandable text value opens a text box, a 32-bit or 64-bit number a number box and a list of text a multi-line box; any other kind, such as binary, is refused with \"This value kind is not supported.\" and nothing changes; cancelling leaves the value as it was.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-87150598845683946147"
+            }
+          ]
+        },
+        {
+          "says": "Given the number box is open, when the person types a number, then a 32-bit value accepts 0 to 4,294,967,295 and a 64-bit value accepts 0 to 18,446,744,073,709,551,615.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-13220028854331489804"
+            }
+          ]
+        },
+        {
+          "says": "Given the person confirms new data, when it is stored, then the value keeps its name and kind, its data is replaced and it stays selected.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-05846735750774889498"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Mark a value for deletion or clear a key",
+      "what": "From the selected item, the person marks a value for deletion, or clears a key either completely, keeping its direct values, or by deleting one named value.",
+      "why": "A policy file can tell a machine to remove settings when policies are applied, so administrators must be able to record that intent.",
+      "actions": [
+        "block-16970529596856009541"
+      ],
+      "terms": [
+        {
+          "name": "Cleared key",
+          "means": "A key marked so that applying policies removes the values the machine holds in it; not a key forgotten from the file."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given a value is selected and not already a deletion entry, when the person deletes it, then the value is not erased from the file but replaced by a deletion entry named after it, which removes the value on the machine when policies are applied.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-27194812132584860836"
+            }
+          ]
+        },
+        {
+          "says": "Given a key is selected, when the person deletes it, then three choices are offered and OK does nothing until one is chosen; cancelling or Escape changes nothing. Clear everything removes all values and marks the key cleared; Clear first marks it cleared and puts back only its existing direct values with ordinary content, losing deletion entries already in the key and not putting back values of sub-keys; Delete one value is refused with \"You must enter a value name.\" when the name is empty, and otherwise removes any value of that name, whether or not it exists, and replaces it with a deletion entry.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-63694206615951133419"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Choose how to delete a key in the delete window",
+      "what": "A window lets the person pick one of three ways to delete, and asks for a value name only when deleting one value.",
+      "why": "The choice must be clear before a key is changed, and a missing value name must be caught early.",
+      "actions": [
+        "block-53120693124506724348",
+        "block-52241240840751807884",
+        "block-96284792383932228976"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the delete window has just opened, when the person looks at it, then no option is chosen and pressing Delete with none chosen does nothing; choosing the option to clear the key or to delete all values under it and pressing Delete accepts the choice without further input.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-30359040357073744492"
+            }
+          ]
+        },
+        {
+          "says": "Given the option to delete one value is chosen, when the value name is empty and the person presses Delete, then they are told \"You must enter a value name.\" and the window stays open; with a name, the choice is accepted.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-84404651755849490179"
+            }
+          ]
+        },
+        {
+          "says": "Given the options are shown, when the option to delete one value is not chosen, then the value name box cannot be typed in; when it is chosen, it can.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-30251051045932916641"
+            }
+          ]
+        },
+        {
+          "says": "Given the delete window is open, when the person presses Escape, then it closes as cancelled and nothing changes.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Forget a key or a value without leaving a deletion mark",
+      "what": "The person removes a key with everything in it, or one value, from the policy file entirely, after confirming.",
+      "why": "Sometimes the file should say nothing at all about a setting, rather than tell the machine to delete it.",
+      "actions": [
+        "block-42642804897148691736"
+      ],
+      "terms": [
+        {
+          "name": "Forget",
+          "means": "To remove an entry from the policy file leaving no deletion mark; not the same as deleting, which leaves a mark."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given a key is selected, when the person chooses Forget, then they are asked \"Are you sure you want to remove this key and all its contents?\"; on Yes the key, all its sub-keys, every value and every clearing mark are removed with no deletion entry left, and No changes nothing; forgetting a selected value removes the value and its deletion entry the same way.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-04432638879352685329"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Start a registry file import from the raw editor",
+      "what": "The Import button in the raw editor opens the registry file import window and refreshes the list when values were imported.",
+      "why": "Administrators can bring registry export files into the policy file they are editing without leaving the editor.",
+      "actions": [
+        "block-42014485464934566054"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the raw editor is open, when the person presses Import, then the registry file import window opens.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        },
+        {
+          "says": "Given the import window reports that values were imported, when it closes, then the list of keys and values is rebuilt to show them; otherwise it is left as it was.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Start a registry file export of the selected key",
+      "what": "The Export button opens the registry file export window with the selected key as its starting branch and the right registry prefix.",
+      "why": "Administrators can take one branch, or the whole policy file, out as a registry file.",
+      "actions": [
+        "block-00156606002660817029"
+      ],
+      "terms": [
+        {
+          "name": "Registry prefix",
+          "means": "The text put in front of key names in a registry file, such as the current-user or local-machine prefix; not part of the key's name in the policy file."
+        },
+        {
+          "name": "Source branch",
+          "means": "The key whose contents are exported, with everything below it; empty means the whole policy file."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given a key is selected, when the export window opens, then the source branch starts as that key, or empty with nothing selected; the person can type over it, the export uses the text in the box at the time, and an empty box exports all of the policy file.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-60632388568264259103"
+            }
+          ]
+        },
+        {
+          "says": "Given the user policy file is being edited, when the export window opens, then the prefix box starts as the current-user prefix, and as the local-machine prefix for the computer policy file; it can be changed and the export uses the text in the box unchecked.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-04261341694819838767"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Name a new key in the key name window",
+      "what": "The key name window puts the cursor in the name box with its text selected, and Escape closes it as cancelled.",
+      "why": "The person can type a name straight away or back out without a mouse.",
+      "actions": [
+        "block-33339374210388875839",
+        "block-56011203566573573100"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the key name window appears, when it is shown, then the cursor is in the name box and any text in it is selected.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            },
+            {
+              "_tag": "layer",
+              "id": "layer-web"
+            }
+          ]
+        },
+        {
+          "says": "Given the key name window is open, when the person presses Escape, then it closes as cancelled and no key is added.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Cancel the list-of-text window with Escape",
+      "what": "Pressing Escape in the window that edits a list of text closes it as cancelled.",
+      "why": "A person can leave the edit without changing the value.",
+      "actions": [
+        "block-80078734348197600769"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the list-of-text window is open, when the person presses Escape, then it closes as cancelled and the value is unchanged.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Switch the number box between decimal and hexadecimal",
+      "what": "In the number window the person can show the number in decimal or hexadecimal, and Escape closes it as cancelled.",
+      "why": "Registry numbers are often written in hexadecimal, so the person can read and type in either form.",
+      "actions": [
+        "block-50446188615114520824",
+        "block-72694376270340482080"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the number window shows a number, when the person ticks or unticks Hexadecimal, then the same number is displayed in hexadecimal or decimal.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        },
+        {
+          "says": "Given the number window is open, when the person presses Escape, then it closes as cancelled and the value is unchanged.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Cancel the text window with Escape",
+      "what": "Pressing Escape in the window that edits text closes it as cancelled.",
+      "why": "A person can leave the edit without changing the value.",
+      "actions": [
+        "block-93495413918984610841"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the text window is open, when the person presses Escape, then it closes as cancelled and the value is unchanged.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Cancel the new value window with Escape",
+      "what": "Pressing Escape in the window that asks for a value name and kind closes it as cancelled.",
+      "why": "A person can leave without adding a value.",
+      "actions": [
+        "block-12381913549521886903"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the new value window is open, when the person presses Escape, then it closes as cancelled and no value is added.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Choose the file for a registry export",
+      "what": "In the export window the person picks the name of the registry file to write, or cancels with Escape.",
+      "why": "The person needs to say where the exported registry file goes, or leave without exporting.",
+      "actions": [
+        "block-60201373498704616545",
+        "block-25624747884727551547"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the export window is open, when the person chooses a file name, then it is shown in the file box; in the web product the file is delivered as a download rather than written to a folder.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            }
+          ]
+        },
+        {
+          "says": "Given the export window is open, when the person presses Escape, then it closes as cancelled and nothing is exported.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "Does the person still type a file name in the web product, or is the download named automatically?"
+      ]
+    },
+    {
+      "title": "Export a branch of a policy file as a registry file",
+      "what": "The person writes the chosen branch of the policy file out as a registry file.",
+      "why": "Registry files can be reviewed, shared, and imported on machines that use the built-in registry editor.",
+      "actions": [
+        "block-37048128904866618877"
+      ],
+      "terms": [
+        {
+          "name": "Registry file",
+          "means": "A text file of registry keys and values that Windows can import; not a policy file."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given no file name was given, when the person presses Export, then they are told \"Please specify a filename and path for the exported REG.\" and nothing is written.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-98458070891453225274"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            }
+          ]
+        },
+        {
+          "says": "Given the policy file is applied to the export, when the export is built, then the whole file is applied as the difference from an empty file, so nothing is forgotten.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-97686874157870392601"
+            }
+          ]
+        },
+        {
+          "says": "Given a source branch ends with a backslash, when the export is built, then the trailing backslash is removed before the branch is used.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-38615217867457911992"
+            }
+          ]
+        },
+        {
+          "says": "Given keys are marked for removal and values for deletion, when the registry file is written, then a removed key is written with a leading minus sign and a deleted value as a bare minus sign.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57163770116853325546"
+            }
+          ]
+        },
+        {
+          "says": "Given values of every kind, when the registry file is written, then a default value is shown as an at sign, quotes and backslashes in names and text are escaped, text is quoted, a 32-bit number is \"dword:\" with eight hexadecimal digits, and every other kind including 64-bit numbers, expandable text and multiple strings is written as hex bytes with its type number as hex(n), except plain binary which is hex; lines wrap before column 78 with a trailing backslash.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-78788630170323770129"
+            }
+          ]
+        },
+        {
+          "says": "Given the file is written, when the export succeeds, then the person is told \"REG exported successfully.\" and the window closes; on any failure they are told only \"Failed to export REG!\" and the window stays open.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-14603482078338141941"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Choose a registry file to import and guess its prefix",
+      "what": "The person picks a registry file, and the program guesses the key prefix from it and warns about default values.",
+      "why": "Registry files name keys in full, and the program must know how much of the name to strip to place them in a policy file.",
+      "actions": [
+        "block-89194191501498123777"
+      ],
+      "terms": [
+        {
+          "name": "Default value",
+          "means": "The value of a registry key that has no name, written as an at sign in a registry file; not a value called default."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given the person browses for a registry file, when the chooser opens, then only files of type *.reg are offered; in the web product the file is uploaded.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-00824990257185597112"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            }
+          ]
+        },
+        {
+          "says": "Given a file is chosen and the prefix is empty, when the file is read, then the prefix is guessed from it, and if the file holds default values the person is warned \"This REG file contains data for default values, which cannot be applied to all policy sources.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-89009644626675244455"
+            }
+          ]
+        },
+        {
+          "says": "Given the file's first key belongs to the users hive, when the prefix is guessed, then it is that hive plus the user identifier; for any other first key, including the current-user hive, it is the hive name alone; a first key with no further backslash gives an empty prefix; a file with no keys gets the local-machine prefix.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-75481654180830858390"
+            }
+          ]
+        },
+        {
+          "says": "Given any value in the file has an empty name, when the file is read, then it is reported as holding default values.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-18921117498420510792"
+            }
+          ]
+        },
+        {
+          "says": "Given the guess fails, when the file is read, then the person is only warned \"An error occurred while trying to guess the prefix.\" and the prefix stays empty.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-17451417049747776074"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Import a registry file into a policy file",
+      "what": "The person loads a registry file with its prefix and applies it to the policy file.",
+      "why": "Settings exported from another machine or tool can be brought into the policy file in one step.",
+      "actions": [
+        "block-13677197335497518185"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given no file is named, when the person presses Import, then they are told \"Please specify a REG file to import.\" and nothing is imported; with no prefix they are told \"Please specify the prefix used to fully qualify paths in the REG file.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-97032716123610483497"
+            }
+          ]
+        },
+        {
+          "says": "Given the first line is not \"Windows Registry Editor Version 5.00\", when the file is read, then it is refused with \"Incorrect REG signature\".",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-52142616153788952070"
+            }
+          ]
+        },
+        {
+          "says": "Given blank lines and lines starting with a semicolon, when the file is read, then they are ignored.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-55584576559812010511"
+            }
+          ]
+        },
+        {
+          "says": "Given a key header, when it starts with a minus sign, then the whole key is marked for removal; otherwise it opens a key whose values follow.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57877192145861745927"
+            }
+          ]
+        },
+        {
+          "says": "Given a value line starting with an at sign, when the file is read, then it is the key's default value with an empty name.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-23306400970907693227"
+            }
+          ]
+        },
+        {
+          "says": "Given value data, when it is read, then a bare minus sign is a value to delete, quoted data is text, \"dword:\" is a 32-bit number in hexadecimal, and \"hex\" is bytes typed by the number in brackets or binary if none; data in none of these forms is kept as a value with no data and no type, with no error.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-59618595788928559733"
+            }
+          ]
+        },
+        {
+          "says": "Given a key name, when it starts with the prefix regardless of case, then the prefix is removed; a key not starting with it keeps its full original name.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-18627979551357993299"
+            }
+          ]
+        },
+        {
+          "says": "Given the file is read, when it is applied, then a key marked for removal is cleared, a value marked for deletion is deleted, any other value is saved, and the source branch limit is not checked.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-45318436042524755037"
+            }
+          ]
+        },
+        {
+          "says": "Given the file is loaded and applied straight to the chosen policy file, when it succeeds, then the policy file holds the imported entries; on any failure the person is told only \"Failed to import the REG file.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-61966293182360194116"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-2"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "What should happen when a key does not start with the prefix: should the web product apply the full original name as the old program did, or refuse it?",
+        "What should the person see for data in an unrecognised form: an empty value written, or a refusal?"
+      ]
+    },
+    {
+      "title": "Cancel the registry import with Escape",
+      "what": "Pressing Escape in the registry import window closes it as cancelled.",
+      "why": "A person can leave without importing.",
+      "actions": [
+        "block-37220153383335897650"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the import window is open, when the person presses Escape, then it closes as cancelled and nothing is imported.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-59516130836014950967"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Import a POL file into the user or computer policies",
+      "what": "The person picks a POL file and an area, and the file's settings are applied to that area's policy file.",
+      "why": "Policy files made elsewhere, for example copied from a domain, can be brought into the product.",
+      "actions": [
+        "block-75389740485334604011"
+      ],
+      "terms": [
+        {
+          "name": "POL file",
+          "means": "A Windows policy file that stores raw registry-style policy settings for one area; not a registry export file."
+        }
+      ],
+      "journey": {
+        "name": "Import a POL file",
+        "steps": [
+          "The person chooses Import POL and picks a file to upload.",
+          "They choose User or Computer.",
+          "They see whether the import worked."
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the area choice is shown, when the person looks at it, then User and Computer are each usable only when the task allows that area.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-14969413888672404933"
+            }
+          ]
+        },
+        {
+          "says": "Given a POL file is chosen by upload and an area is chosen, when it can be read, then it is applied to that area and the person is told \"POL import successful.\" with nothing saved for good until the person saves; when it cannot be read they are told \"The POL file could not be loaded.\" and nothing changes.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-69354381130041181167"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            }
+          ]
+        }
+      ],
+      "open": []
+    },
+    {
+      "title": "Export a policy area as a POL file",
+      "what": "The person writes an area's policy settings out as a POL file download.",
+      "why": "A POL file can be copied to a machine or domain that applies it.",
+      "actions": [
+        "block-41514309757986060440"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given an area is chosen, when the person exports, then a policy file held by the product is used as is, and policy state that came from imported registry files is rebuilt as a new POL file from the three policy locations.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-62577216252619197563"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-2"
+            }
+          ]
+        },
+        {
+          "says": "Given a POL file is rebuilt from registry files, when it is built, then every value and every sub-key under each of the three policy locations is copied with its own data type and environment variables left unexpanded.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-50297867320833369013"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-2"
+            }
+          ]
+        },
+        {
+          "says": "Given the export is done, when it succeeds, then the person is told \"POL exported successfully.\"; if it cannot be saved, they are told \"The POL file could not be saved.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57982804566984189207"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "The old program stopped with an unhandled error when one of the three policy locations was missing; what should the person see instead?"
+      ]
+    },
+    {
+      "title": "Open the raw editor on a policy file after a warning",
+      "what": "From the main screen the person opens the raw editor on a policy file, after accepting a caution the first time.",
+      "why": "Raw editing can leave policies inconsistent, so the person must knowingly accept the risk, and only a policy file that can be edited directly is offered.",
+      "actions": [
+        "block-18043112458533276543"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given neither area is backed by an uploaded policy file, when the person chooses to edit the raw policy file, then they are told \"Neither loaded source is backed by a POL file.\"; the area they may choose is limited to areas backed by a policy file.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-40441510620479008895"
+            },
+            {
+              "_tag": "decision",
+              "id": "scope.decision-15"
+            }
+          ]
+        },
+        {
+          "says": "Given the person has never accepted the caution, when they open the raw editor, then they must accept \"Caution! This tool is for very advanced users. Improper modifications may result in inconsistencies in policies' states.\"; Yes continues and records the acceptance, and No cancels and asks again next time.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-98676109650316370626"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "Where is the acceptance of the caution remembered in the web product: per browser, or in the shared settings?"
+      ]
+    },
+    {
+      "title": "Export a policy area as a registry file from the main screen",
+      "what": "The person chooses an area and the registry file export window opens for that area's policy file.",
+      "why": "Settings can be handed to Windows' own registry import.",
+      "actions": [
+        "block-04644155608109103956"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the person chooses an area, when they export to a registry file, then the area's policy settings, as a POL, are handed to the export window; if they cannot be produced, the person is told what went wrong.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-25739450692106090110"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "The old program stopped with an unhandled error for an unsupported source, unlike Export POL, which told the person; should the web product tell the person here too?"
+      ]
+    },
+    {
+      "title": "Import a registry file from the main screen",
+      "what": "The person chooses an area and imports a registry file into its policy file, and the view refreshes.",
+      "why": "Settings from registry files show up as policy states without a separate step.",
+      "actions": [
+        "block-61484076288336240425"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the person chooses an area and imports a registry file, when the import succeeds, then the file is applied to that area's policy file and the view is refreshed to show the new policy states.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-60060400053285241820"
+            }
+          ]
+        }
+      ],
+      "open": []
+    }
+  ]
+}

@@ -1,0 +1,355 @@
+{
+ "stories": [
+  {
+   "title": "Check and accept a new language for policy text",
+   "what": "A person types the language code for policy text (such as en-US) and the product accepts it, refuses a code that is not in the form language-region, or does nothing when the code is unchanged.",
+   "why": "Administrators read policy names and descriptions in their own language, so the product must take a code it can later use to find the matching template text.",
+   "actions": [
+    "block-14667094343185527716"
+   ],
+   "terms": [
+    {
+     "name": "Policy text language",
+     "means": "The language code (for example en-US) that decides which language of template text is shown for policies; it is not the language of the product's own screens.",
+     "entity": "Program preference"
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given the language dialog is open, when the person confirms text that does not split into exactly two parts around one hyphen (for example \"en\" or \"en-US-x\"), then \"Please enter a valid language code.\" is shown and the dialog stays open; any text with exactly one hyphen, including \"-\", \"en-\" or text with path characters, is accepted because it is not checked as a real language code, and the accepted text is later used as the name of the folder in which the template language files are looked for, so characters that do not belong in a folder name are not stopped here.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-31456964891379452251"
+      },
+      {
+       "_tag": "decision",
+       "id": "scope.decision-11"
+      }
+     ]
+    },
+    {
+     "says": "Given the language dialog shows the stored code, when the person confirms a code that, after its spaces are trimmed, is exactly equal to the stored code, which is compared as stored without trimming (upper and lower case count as different, so en-us differs from en-US), then the dialog closes as cancelled and nothing changes; otherwise the entered code, with its spaces trimmed, is returned as accepted, and saving it is done by another story.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-93543924991745555552"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-4"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "The rule accepts any text with exactly one hyphen and the code becomes a folder name in the legacy product; should the new product keep accepting it, or refuse characters that do not belong in a language code?"
+   ]
+  },
+  {
+   "title": "Start Policy Plus with the last used definitions and sources",
+   "what": "When a person opens the product it restores the policy definitions and the user and computer policy sources used last time, recovers with clear messages when either cannot be used, and shows the category tree ready to browse.",
+   "why": "Administrators continue where they left off without choosing definitions and sources again, and are never left with a silent failure.",
+   "actions": [
+    "block-92411706700308938260"
+   ],
+   "terms": [
+    {
+     "name": "Workspace",
+     "means": "The loaded policy definitions together with the open policy sources the person is working on; it is not a saved policy file.",
+     "entity": "Administrative template"
+    },
+    {
+     "name": "Policy source",
+     "means": "A place where the user or the computer policies are kept and read from; it is not the definitions that describe the policies.",
+     "entity": "Policy setting"
+    },
+    {
+     "name": "Definitions package",
+     "means": "The set of policy template files (ADMX and ADML) the workspace is loaded from, stored by the product; it is not a policy source.",
+     "entity": "Administrative template"
+    },
+    {
+     "name": "Default definitions package",
+     "means": "The definitions package loaded when none was saved or the saved one fails; it is the replacement for the definitions folder that Windows provides in the legacy product, not the person's own package.",
+     "entity": "Administrative template"
+    },
+    {
+     "name": "Starting source",
+     "means": "The policy source both sides open as when nothing usable was saved; in the legacy product it is the local Group Policy files, which the new product does not read from the person's computer.",
+     "entity": "Policy setting"
+    }
+   ],
+   "journey": {
+    "name": "Open Policy Plus",
+    "steps": [
+     "The person opens the product.",
+     "The product restores the saved policy sources and the saved definitions package.",
+     "If something cannot be used, the product says so and offers the default.",
+     "The person sees the category tree with both user and computer policies."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the product's settings are kept as one shared stored row of settings instead of in the Windows registry, when the product starts, then the saved policy sources, definitions package and policy text language are read from that row.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-25353365313977612083"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-4"
+      }
+     ]
+    },
+    {
+     "says": "Given no policy sources were saved, when the product starts for the first time, then the user source and the computer source both open as the starting source with no extra location, because the service does not read the local Group Policy files of the person's computer.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-27578488339642782673"
+      },
+      {
+       "_tag": "decision",
+       "id": "scope.decision-12"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-2"
+      }
+     ]
+    },
+    {
+     "says": "Given a definitions package was saved last time, when the product starts, then that package is loaded from what the product stored; when none is saved, the default definitions package is loaded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-40551856488084894130"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-3"
+      }
+     ]
+    },
+    {
+     "says": "Given loading the saved definitions reports problems, when the person is asked whether to keep using the workspace, then Yes keeps the partly loaded workspace and No fails with \"You decided to not use the problematic ADMX bundle.\", which discards the workspace and is handled as a failed load: for a package that is not the default the person is asked to load the default, and for the default package the person is told the definitions could not be loaded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-41547680626150552574"
+      }
+     ]
+    },
+    {
+     "says": "Given the saved definitions package is not the default and fails to load, when the product starts, then the person is told that the definitions could not be loaded from the package, with the reason, and is asked \"Load from the default location?\"; Yes saves the default definitions package as the saved choice and No leaves the workspace empty with no further message.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-78253526822536661517"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given the person chose to load the default location, when loading starts, then the workspace is replaced by an empty one and the default definitions package is loaded into it.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-58877134447436981389"
+      }
+     ]
+    },
+    {
+     "says": "Given the default definitions package fails to load, or fails after the person chose Yes, when loading ends, then the person is told \"Policy definitions could not be loaded: <reason>\" and the workspace stays empty.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-72200124994498270380"
+      }
+     ]
+    },
+    {
+     "says": "Given the previously saved policy sources cannot be opened, when the product starts, then the person is told \"The previous policy sources are not accessible. The defaults will be loaded.\", both sources are saved as the starting source and opened quietly, and only the kind of source is reset: any saved location text stays unchanged.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-83248377690419919134"
+      }
+     ]
+    },
+    {
+     "says": "Given the policy sources dialog is opened with the last used sources, when it appears, then each side is set to the remembered kind (Local GPO, Registry, POL file, Scratch space, and for users also per-user GPO or user hive), and the registry path, file name, SID or hive path is filled in only for the kinds that carry one.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-72559528436656832979"
+      },
+      {
+       "_tag": "decision",
+       "id": "scope.decision-12"
+      }
+     ]
+    },
+    {
+     "says": "Given the service will later download Microsoft's policy definitions, when the product starts, then the secure connections it opens for that download allow only TLS 1.0, 1.1 and 1.2 and no other protocol.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-15364695696024462204"
+      },
+      {
+       "_tag": "decision",
+       "id": "scope.decision-10"
+      }
+     ]
+    },
+    {
+     "says": "Given the workspace has loaded, when the category tree is first shown, then the area list stands on \"User or Computer\", so both user and computer policies are shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-85204901615179220846"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "Which source replaces the local Group Policy files as the starting source on first start: an empty scratch space, or something the person uploads?",
+    "Which package is the default definitions package now that the definitions folder provided by Windows cannot be read: the package downloaded from Microsoft, or an uploaded one?",
+    "What does the person see when the stored settings cannot be read or written, given the legacy behaviour of silent defaults with nothing remembered no longer applies to the registry key?",
+    "The legacy product sets the allowed TLS versions when it starts, but the rule belongs to downloading Microsoft's definitions and no decision says whether TLS 1.0 and 1.1 are still allowed on the server; should it move to the story that downloads definitions, and which versions are wanted?",
+    "Which of the source kinds Local GPO, Registry, per-user GPO and user hive stay offered in the dialog, given that the live system sources are dropped and become imports, and what does their location text hold?"
+   ]
+  },
+  {
+   "title": "Show who made Policy Plus and which version this is",
+   "what": "A person opens the About box to see the author, the project web address and, when known, the version of the product.",
+   "why": "People can tell which build they are running and where to find the project.",
+   "actions": [
+    "block-07316532942246428672"
+   ],
+   "terms": [],
+   "journey": {
+    "name": "Check the version",
+    "steps": [
+     "The person opens the About box from the menu.",
+     "The person reads the author, the project web address and the version if shown."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given a person opens the About box, when it appears, then it names the author and the project web address, and adds the version only when a version was built into the product.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59853527376948406586"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-5"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Change the language of policy text and reload",
+   "what": "A person chooses the language of policy text, the product saves it at once and offers to reload the workspace so the new language applies.",
+   "why": "Administrators see policy names and descriptions in the language they work in, without restarting.",
+   "actions": [
+    "block-04864433854821115058"
+   ],
+   "terms": [],
+   "journey": {
+    "name": "Switch policy text language",
+    "steps": [
+     "The person opens the language choice from the menu.",
+     "The person enters a language code and confirms.",
+     "The product saves it and asks whether to reload the workspace.",
+     "The person chooses Yes and sees the policies in the new language."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the person confirmed a new language code, when it is accepted, then the code is saved at once in the shared stored settings and the person is asked \"Language changes will take effect when ADML files are next loaded. Would you like to reload the workspace now?\"; Yes empties the workspace and reloads the saved definitions package in that language.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-80947080049413275464"
+      },
+      {
+       "_tag": "decision",
+       "id": "scope.decision-11"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-4"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-3"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Leave Policy Plus",
+   "what": "A person chooses Exit and the product ends their use of it; the legacy product also cleaned up the open policy sources at that moment.",
+   "why": "A person can finish their work and know the product is closed.",
+   "actions": [
+    "block-64319035576012171282",
+    "block-07512317177811313080"
+   ],
+   "terms": [],
+   "journey": {
+    "name": "Leave Policy Plus",
+    "steps": [
+     "The person chooses Exit.",
+     "The product closes."
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the product is open, when the person chooses Exit, then the product's screens end the person's use of it.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      },
+      {
+       "_tag": "decision",
+       "id": "scope.decision-12"
+      }
+     ]
+    },
+    {
+     "says": "Given the service reads no folder, hive or Group Policy object of the person's computer, when the person leaves, then the service holds nothing open on their behalf and has no file to release.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-2"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "What does Exit do in a web product: close the browser tab, return to a start screen, or something else?",
+    "Unsaved changes to a POL-backed source were lost without warning on leaving in the legacy product; should leaving now warn about them or keep them stored?"
+   ]
+  }
+ ]
+}

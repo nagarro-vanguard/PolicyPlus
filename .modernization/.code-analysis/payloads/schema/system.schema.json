@@ -1,0 +1,770 @@
+{
+  "type": "object",
+  "properties": {
+    "purpose": {
+      "type": "string",
+      "description": "What the system is for and who uses it; empty when no fact states it."
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The capability's record id, which names its payload file."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The capability's name."
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the capability offers, in one or two sentences."
+          },
+          "screens": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many screens its entry points are grouped into."
+          },
+          "actions": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many entry points it has."
+          },
+          "rules": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many rules are decided in code it reaches."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "purpose",
+          "screens",
+          "actions",
+          "rules"
+        ],
+        "additionalProperties": true,
+        "description": "One capability and the file that holds its payload."
+      },
+      "description": "Every capability of the system, each with the record id that names its payload file."
+    },
+    "areas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The area's record id."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The area's name."
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What its capabilities do together."
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Its capabilities' record ids."
+          },
+          "context": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "minLength": 1,
+                "description": "What the place is, in one sentence: its kind, its name and what it is for."
+              },
+              "inside": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For a place that is a map (the system, an area, a capability, a screen): what lies inside it, one line each. Capped, with the count left out in `insideNotShown`; empty for a place with nothing inside it."
+              },
+              "insideNotShown": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many lines were left out of `inside`."
+              },
+              "insideLabel": {
+                "type": "string",
+                "description": "What `inside` lists, as a heading; empty when `inside` is empty."
+              },
+              "lookFirst": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Where to look first, as pointers and never a dump: the place the work starts as `file:line`, then the files the code is in with its own first and the shared ones after, the most widely shared first. Capped, with the count left out in `lookFirstNotShown`."
+              },
+              "lookFirstNotShown": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many pointers were left out of `lookFirst`."
+              },
+              "layers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For a screen: the layers it uses, one line each with what the layer does, `file:line` and how many of the screen's rules it decides, after where to look first; empty for any other place."
+              },
+              "saves": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The kinds of data the place's code saves, by name."
+              },
+              "reads": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The kinds of data the place's code reads, by name."
+              },
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The first rules decided there, each as its sentence with `file:line`; the rest are counted in `rulesNotShown`."
+              },
+              "rulesNotShown": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many rules were left out of `rules`."
+              },
+              "rulesTotal": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many rules are decided in the place's code, all told."
+              },
+              "unconfirmed": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "What the code does not settle, as the capability's open points: what is assumed, and what would change if it is wrong. Capped."
+              },
+              "notFollowed": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The links in the place's code that reach nothing the code shows, each with what the code does show of where it goes. Capped."
+              },
+              "commit": {
+                "type": "string",
+                "description": "The commit the analysis describes, or a statement that it was not recorded."
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The same context as plain text, compiled once by the analysis so every medium copies the same words. It has the lines in a fixed order, an `Ask:` line left for the reader to fill, and contains no record ids."
+              }
+            },
+            "required": [
+              "scope",
+              "inside",
+              "insideNotShown",
+              "insideLabel",
+              "lookFirst",
+              "lookFirstNotShown",
+              "layers",
+              "saves",
+              "reads",
+              "rules",
+              "rulesNotShown",
+              "rulesTotal",
+              "unconfirmed",
+              "notFollowed",
+              "commit",
+              "text"
+            ],
+            "additionalProperties": true,
+            "description": "What a tool that reads code needs to continue from one place and no other: a map with pointers, capped, with a count of what was left out, in a fixed order. Every place has one, from the whole system down to a single rule."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "purpose",
+          "capabilities",
+          "context"
+        ],
+        "additionalProperties": true,
+        "description": "One area, the group of capabilities a person names first."
+      },
+      "description": "The areas of the system; none when the briefing found none."
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The layer's record id."
+          },
+          "name": {
+            "type": "string",
+            "description": "The layer's name."
+          },
+          "role": {
+            "type": "string",
+            "description": "What the layer does at the system's boundary."
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the layer does for the system, as the layer record states it."
+          },
+          "group": {
+            "type": "string",
+            "description": "The group it is read under: ui, api, data, batch, mixed or logic."
+          },
+          "blocks": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many blocks it holds."
+          },
+          "product": {
+            "type": "boolean",
+            "description": "Whether the layer is the product: false when half or more of its blocks lie in tooling or tests parts, or when it is build or install scripts."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "role",
+          "purpose",
+          "group",
+          "blocks",
+          "product"
+        ],
+        "additionalProperties": true,
+        "description": "One layer of the system."
+      },
+      "description": "The layers of the system."
+    },
+    "screens": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The screen's address: the path of its page file without the extension, with the folders every page shares left off."
+          },
+          "name": {
+            "type": "string",
+            "description": "The screen's name as the people using it say it; its page file's name when no one named it."
+          },
+          "purpose": {
+            "type": "string",
+            "description": "What a person does there, in one sentence; empty when no one named it."
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The files its actions start in: its markup, its code-behind class and its browser scripts."
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The record ids of the capabilities that hold actions of this screen."
+          },
+          "actionIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The record ids of its actions, which a person starts, across capabilities."
+          },
+          "actions": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many actions the screen holds, across capabilities."
+          },
+          "rules": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many distinct rules its actions reach, across capabilities."
+          },
+          "layersTouched": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "layerId": {
+                  "type": "string",
+                  "description": "The layer's record id."
+                },
+                "actions": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "How many of the screen's actions pass through the layer, as their paths show."
+                },
+                "rules": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "How many of the screen's distinct rules are decided in the layer; a rule is counted once, under the one layer that decides it."
+                },
+                "sharedRules": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "How many of those rules are reached by more than one of the screen's actions."
+                }
+              },
+              "required": [
+                "layerId",
+                "actions",
+                "rules",
+                "sharedRules"
+              ],
+              "additionalProperties": true,
+              "description": "One layer a screen touches: the layers its actions pass through and the layers that decide the rules its actions reach, in flow order (person-facing first, store last)."
+            },
+            "description": "The layers the screen touches merged across its capabilities, each action and rule counted once."
+          },
+          "context": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "minLength": 1,
+                "description": "What the place is, in one sentence: its kind, its name and what it is for."
+              },
+              "inside": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For a place that is a map (the system, an area, a capability, a screen): what lies inside it, one line each. Capped, with the count left out in `insideNotShown`; empty for a place with nothing inside it."
+              },
+              "insideNotShown": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many lines were left out of `inside`."
+              },
+              "insideLabel": {
+                "type": "string",
+                "description": "What `inside` lists, as a heading; empty when `inside` is empty."
+              },
+              "lookFirst": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Where to look first, as pointers and never a dump: the place the work starts as `file:line`, then the files the code is in with its own first and the shared ones after, the most widely shared first. Capped, with the count left out in `lookFirstNotShown`."
+              },
+              "lookFirstNotShown": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many pointers were left out of `lookFirst`."
+              },
+              "layers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For a screen: the layers it uses, one line each with what the layer does, `file:line` and how many of the screen's rules it decides, after where to look first; empty for any other place."
+              },
+              "saves": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The kinds of data the place's code saves, by name."
+              },
+              "reads": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The kinds of data the place's code reads, by name."
+              },
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The first rules decided there, each as its sentence with `file:line`; the rest are counted in `rulesNotShown`."
+              },
+              "rulesNotShown": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many rules were left out of `rules`."
+              },
+              "rulesTotal": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many rules are decided in the place's code, all told."
+              },
+              "unconfirmed": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "What the code does not settle, as the capability's open points: what is assumed, and what would change if it is wrong. Capped."
+              },
+              "notFollowed": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The links in the place's code that reach nothing the code shows, each with what the code does show of where it goes. Capped."
+              },
+              "commit": {
+                "type": "string",
+                "description": "The commit the analysis describes, or a statement that it was not recorded."
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The same context as plain text, compiled once by the analysis so every medium copies the same words. It has the lines in a fixed order, an `Ask:` line left for the reader to fill, and contains no record ids."
+              }
+            },
+            "required": [
+              "scope",
+              "inside",
+              "insideNotShown",
+              "insideLabel",
+              "lookFirst",
+              "lookFirstNotShown",
+              "layers",
+              "saves",
+              "reads",
+              "rules",
+              "rulesNotShown",
+              "rulesTotal",
+              "unconfirmed",
+              "notFollowed",
+              "commit",
+              "text"
+            ],
+            "additionalProperties": true,
+            "description": "What a tool that reads code needs to continue from one place and no other: a map with pointers, capped, with a count of what was left out, in a fixed order. Every place has one, from the whole system down to a single rule."
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "purpose",
+          "files",
+          "capabilities",
+          "actionIds",
+          "actions",
+          "rules",
+          "layersTouched",
+          "context"
+        ],
+        "additionalProperties": true,
+        "description": "One screen a person uses, merged across the capabilities that hold its actions."
+      },
+      "description": "Every screen a person uses, merged by page across capabilities, so a page is one screen however many capabilities its actions serve. Actions that other systems or a schedule start belong to no screen."
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "The layer a link leaves, by record id."
+          },
+          "to": {
+            "type": "string",
+            "description": "The layer a link reaches, by record id."
+          },
+          "kind": {
+            "type": "string",
+            "description": "How the link reaches: call, renders, reads, saves, request or dispatches."
+          },
+          "links": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many links of that kind between the two layers."
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "kind",
+          "links"
+        ],
+        "additionalProperties": true,
+        "description": "The links of one kind from one layer to another."
+      },
+      "description": "The links between layers; links into shapes of data reach no block and are not counted."
+    },
+    "entries": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Entry points a person starts."
+        },
+        "otherSystem": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Entry points another system or the runtime starts."
+        },
+        "schedule": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Entry points a schedule starts."
+        }
+      },
+      "required": [
+        "person",
+        "otherSystem",
+        "schedule"
+      ],
+      "additionalProperties": true,
+      "description": "How many entry points each kind of starter has, across the system."
+    },
+    "externals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The external system's record id."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What it is, in plain words."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "dataStore",
+              "messaging",
+              "outsideService",
+              "library"
+            ],
+            "description": "What kind of thing outside the code it is; groups external systems on pages. A `library` is code with no source here: a call into it names the operation as its resource, never data, and the flow is not followed further (P12.3)."
+          },
+          "links": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many links of the product's code reach it."
+          },
+          "reach": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "layer": {
+                  "type": "string",
+                  "description": "The layer's record id; empty when no layer holds the block."
+                },
+                "access": {
+                  "type": "string",
+                  "description": "How the layer reaches it: call, reads, saves, renders or request."
+                },
+                "links": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "How many links of that kind."
+                }
+              },
+              "required": [
+                "layer",
+                "access",
+                "links"
+              ],
+              "additionalProperties": true
+            },
+            "description": "The layers that reach it, and how."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "links",
+          "reach"
+        ],
+        "additionalProperties": true
+      },
+      "description": "What the code reaches outside itself, most reached first; libraries are not listed."
+    },
+    "gaps": {
+      "type": "object",
+      "properties": {
+        "unresolvedLinks": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Links in the whole system that reach nothing the code shows."
+        },
+        "unattributedBlocks": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Blocks no entry point reaches, so no capability has them."
+        }
+      },
+      "required": [
+        "unresolvedLinks",
+        "unattributedBlocks"
+      ],
+      "additionalProperties": true,
+      "description": "What the analysis could not follow in the whole system."
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the place is, in one sentence: its kind, its name and what it is for."
+        },
+        "inside": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "For a place that is a map (the system, an area, a capability, a screen): what lies inside it, one line each. Capped, with the count left out in `insideNotShown`; empty for a place with nothing inside it."
+        },
+        "insideNotShown": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many lines were left out of `inside`."
+        },
+        "insideLabel": {
+          "type": "string",
+          "description": "What `inside` lists, as a heading; empty when `inside` is empty."
+        },
+        "lookFirst": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Where to look first, as pointers and never a dump: the place the work starts as `file:line`, then the files the code is in with its own first and the shared ones after, the most widely shared first. Capped, with the count left out in `lookFirstNotShown`."
+        },
+        "lookFirstNotShown": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many pointers were left out of `lookFirst`."
+        },
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "For a screen: the layers it uses, one line each with what the layer does, `file:line` and how many of the screen's rules it decides, after where to look first; empty for any other place."
+        },
+        "saves": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The kinds of data the place's code saves, by name."
+        },
+        "reads": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The kinds of data the place's code reads, by name."
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The first rules decided there, each as its sentence with `file:line`; the rest are counted in `rulesNotShown`."
+        },
+        "rulesNotShown": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many rules were left out of `rules`."
+        },
+        "rulesTotal": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many rules are decided in the place's code, all told."
+        },
+        "unconfirmed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What the code does not settle, as the capability's open points: what is assumed, and what would change if it is wrong. Capped."
+        },
+        "notFollowed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The links in the place's code that reach nothing the code shows, each with what the code does show of where it goes. Capped."
+        },
+        "commit": {
+          "type": "string",
+          "description": "The commit the analysis describes, or a statement that it was not recorded."
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The same context as plain text, compiled once by the analysis so every medium copies the same words. It has the lines in a fixed order, an `Ask:` line left for the reader to fill, and contains no record ids."
+        }
+      },
+      "required": [
+        "scope",
+        "inside",
+        "insideNotShown",
+        "insideLabel",
+        "lookFirst",
+        "lookFirstNotShown",
+        "layers",
+        "saves",
+        "reads",
+        "rules",
+        "rulesNotShown",
+        "rulesTotal",
+        "unconfirmed",
+        "notFollowed",
+        "commit",
+        "text"
+      ],
+      "additionalProperties": true,
+      "description": "What a tool that reads code needs to continue from one place and no other: a map with pointers, capped, with a count of what was left out, in a fixed order. Every place has one, from the whole system down to a single rule."
+    }
+  },
+  "required": [
+    "purpose",
+    "capabilities",
+    "areas",
+    "layers",
+    "screens",
+    "edges",
+    "entries",
+    "externals",
+    "gaps",
+    "context"
+  ],
+  "additionalProperties": true,
+  "description": "The system's areas, layers and the links between layers, with what could not be followed."
+}

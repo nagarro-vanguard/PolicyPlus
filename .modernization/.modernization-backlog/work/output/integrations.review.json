@@ -1,0 +1,13 @@
+{
+  "read": 8,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The reason rejects server disk access because it would leak across users, yet decision-4 assumes no sign-in so the uploaded files, templates and comments stored in Data are one shared pool for all users, which is the same leak; the decision must say whose files these are or state the shared-pool assumption."
+    },
+    {
+      "record": 5,
+      "says": "The reason states that the analysis shows no comment search, a fact that is not in the inputs given (context and job), so the choice rests on a claim the reviewer cannot trace to the analysis."
+    }
+  ]
+}

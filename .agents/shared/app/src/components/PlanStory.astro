@@ -1,0 +1,68 @@
+---
+import Page from "../layouts/Page.astro";
+import Rows from "./Rows.astro";
+import PlanPrompt from "./PlanPrompt.astro";
+import { copy } from "../lib/copy";
+import { blockersOf, epicPath, phaseOf, planHomePath, reliedOn, statusOf, storyPath } from "../lib/plan";
+import type { PlanData } from "../lib/plan-data";
+import PlanEdit from "./PlanEdit";
+import { isLocked, moveTargets, defaultEditUrl } from "../lib/plan-edit";
+import { analysisLinksOf } from "../lib/plan-links";
+import type { ActionLookup } from "../lib/plan-links";
+export interface Props { data: PlanData; storyKey: string; lookup: ActionLookup; }
+const { data, storyKey, lookup } = Astro.props;
+const { plan, prompts, ledger } = data;
+const story = plan.stories.find((each) => each.key === storyKey);
+if (story === undefined) throw new Error("no such story");
+const root = "../../";
+const epic = plan.epics.find((each) => each.key === story.epic);
+const phase = phaseOf(plan, story);
+const blockers = blockersOf(plan, story);
+const relied = reliedOn(plan, story);
+const links = analysisLinksOf(story.actions, lookup);
+const editUrl = process.env.PLAN_EDIT_URL || defaultEditUrl;
+const editTargets = story.kind === "functional" ? moveTargets(plan.stories, story).map((each) => ({ key: each.key, title: each.title })) : [];
+const editActions = story.kind === "functional" ? story.actions.map((id) => ({ id, purpose: lookup(id)?.purpose ?? copy.plan.coverageAction })) : [];
+const titles = Object.fromEntries(plan.stories.map((each) => [each.key, each.title]));
+const prompt = prompts.deliver[story.key] ?? "";
+const builder = copy.plan.builderWords[story.builder as keyof typeof copy.plan.builderWords] ?? story.builder;
+---
+<Page title={story.title} depth={2} trail={[{ text: copy.site.home, href: `${root}index.html` }, { text: copy.plan.title, href: `${root}${planHomePath}.html` }, ...(epic ? [{ text: epic.title, href: `${root}${epicPath(epic)}.html` }] : []), { text: story.title }]}>
+    <p class="sub">{copy.plan.storyOrder(story.sequence, plan.stories.length)} · {statusOf(ledger, story.key)}</p>
+    <dl class="facts">
+        <dt>{copy.plan.storyPhase}</dt><dd>{phase ? copy.plan.phaseName(phase.number, phase.name) : story.phase}</dd>
+        {epic && <><dt>{copy.plan.storyEpic}</dt><dd><a href={`${root}${epicPath(epic)}.html`}>{epic.title}</a></dd></>}
+        <dt>{copy.plan.storyKind}</dt><dd>{story.tags.map((tag) => <span class="chip">{tag}</span>)}</dd>
+        <dt>{copy.plan.storyBuilder}</dt><dd>{builder}</dd>
+    </dl>
+    <h2>{copy.plan.storyWhat}</h2>
+    <p>{story.what}</p>
+    <h2>{copy.plan.storyWhy}</h2>
+    <p>{story.why}</p>
+    <h2>{copy.plan.storyBlocked}</h2>
+    {blockers.length === 0 ? <p>{copy.plan.storyNoBlockers}</p> : <Rows rows={blockers.map((each) => ({ text: each.title, href: `${root}${storyPath(each)}.html`, meta: copy.plan.storyOrder(each.sequence, plan.stories.length) }))} />}
+    {relied.length > 0 && <Fragment>
+        <h2>{copy.plan.storyReliesOn}</h2>
+        <Rows rows={relied.map((each) => ({ text: each.story.title, href: `${root}${storyPath(each.story)}.html`, meta: copy.plan.storyReliesLine(each.rules) }))} />
+    </Fragment>}
+    {story.builds.length > 0 && <p class="note">{copy.plan.storyBuilds(story.builds.length)}</p>}
+    <h2>{copy.plan.storyCriteria} ({story.criteria.length})</h2>
+    <ol class="criteria">{story.criteria.map((criterion) => <li>{criterion.says}</li>)}</ol>
+    {story.terms.length > 0 && <Fragment>
+        <h2>{copy.plan.storyTerms}</h2>
+        {story.terms.map((term) => <div class="assume"><div><strong>{term.name}</strong></div><div class="sub">{term.means}</div></div>)}
+    </Fragment>}
+    {story.journey && <Fragment>
+        <h2>{copy.plan.storyJourney}: {story.journey.name}</h2>
+        <ol>{story.journey.steps.map((step) => <li>{step}</li>)}</ol>
+    </Fragment>}
+    <h2>{copy.plan.storyFrom}</h2>
+    {story.actions.length === 0 ? <p class="note">{copy.plan.storyFromNone}</p> : <Fragment>
+        {links.capabilities.length > 0 && <p><span class="note">{copy.plan.storyFromCapabilities}:</span> {links.capabilities.map((link) => <a class="chip" href={link.href}>{link.text}</a>)}</p>}
+        {links.screens.length > 0 && <p><span class="note">{copy.plan.storyFromScreens}:</span> {links.screens.map((link) => <a class="chip" href={link.href}>{link.text}</a>)}</p>}
+        {links.actions.length > 0 && <Fragment><h3>{copy.plan.storyFromActions} ({links.actions.length})</h3><Rows rows={links.actions.map((link) => ({ text: link.text, href: link.href }))} /></Fragment>}
+    </Fragment>}
+    <div data-edit-url={editUrl}><PlanEdit client:only="react" storyKey={story.key} title={story.title} what={story.what} why={story.why} criteria={story.criteria.map((c) => c.says)} actions={editActions} targets={editTargets} titles={titles} locked={isLocked(ledger, story.key)} editUrl={editUrl} /></div>
+    <h2>{copy.plan.storyPrompt}</h2>
+    <PlanPrompt title={story.title} text={prompt} lead={copy.plan.storyPromptLead} />
+</Page>

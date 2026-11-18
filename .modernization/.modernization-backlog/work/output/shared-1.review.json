@@ -1,0 +1,25 @@
+{
+  "read": 10,
+  "challenges": [
+    {
+      "record": 2,
+      "says": "The criterion for businessrule-25371901799273876158 drops the rule's condition that a start-up load also discards the workspace."
+    },
+    {
+      "record": 4,
+      "says": "The criterion that a policy option of an unknown kind is dropped without notice cites only the legacy rule, yet base.decision-16 says an unknown policy element is kept and reported, never silently dropped; the contradiction is neither resolved nor cited."
+    },
+    {
+      "record": 5,
+      "says": "The criterion that any other control is dropped without notice conflicts with base.decision-16 (unknown elements are kept and reported) and neither cites nor reconciles it."
+    },
+    {
+      "record": 8,
+      "says": "The criteria on an imported registry source restate rules that describe the live registry, but they do not cite integrations.decision-2 that turns the live registry into imported files, so the builder cannot see why the rule applies to imports."
+    },
+    {
+      "record": 9,
+      "says": "The story joins two unrelated rules, and its wording (an 'XML attribute' returning nothing, 'server rendered', 'decisions make the service...') is not something a product owner who never saw the code could follow."
+    }
+  ]
+}

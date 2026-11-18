@@ -1,0 +1,1584 @@
+{
+  "kind": "surfaces",
+  "actions": [
+    "block-55576298759886274598",
+    "block-26736796202907003543",
+    "block-03044886867739368079",
+    "block-27559849759497597302",
+    "block-88991021756869656536",
+    "block-75494449832197867529",
+    "block-44706239895339562170",
+    "block-61877977111665770759",
+    "block-00880488620958939962",
+    "block-08747539546616381995",
+    "block-32698633467304016976",
+    "block-36457006871614893425",
+    "block-71047013454784114585",
+    "block-80717492809988540545",
+    "block-47405947189671669922",
+    "block-30919896261988592289",
+    "block-64273399884973341208",
+    "block-36571577833746850164",
+    "block-05405434344126500839",
+    "block-57135383118787346557",
+    "block-25728253727728310343",
+    "block-37035950900396190507",
+    "block-16750935830546567218",
+    "block-14507530008177660767",
+    "block-49062346851945682165",
+    "block-27516887165549303737",
+    "block-83203327187612347635",
+    "block-69596352550727046885",
+    "block-40488572982447813355"
+  ],
+  "owned": [
+    "businessrule-58048189688698008638",
+    "businessrule-88807660791719489759",
+    "businessrule-57716378734614233724",
+    "businessrule-01575097247784730570",
+    "businessrule-26561900736287578271",
+    "businessrule-32591775124677875588",
+    "businessrule-59209755491778300947",
+    "businessrule-76306981111385169671",
+    "businessrule-81206266674090971597",
+    "businessrule-03237181236179074787",
+    "businessrule-70906412717211463954",
+    "businessrule-81055540068763556055",
+    "businessrule-90628240213834851721",
+    "businessrule-61457439461915744538",
+    "businessrule-49813083192336894297",
+    "businessrule-81666786810242280110",
+    "businessrule-93221850558792273709",
+    "businessrule-34818300362920325745",
+    "businessrule-56645748073860464161",
+    "businessrule-73680018829588409732",
+    "businessrule-59811769233751713079",
+    "businessrule-79420398091956863443",
+    "businessrule-27271850163543025066",
+    "businessrule-35545130062422334165",
+    "businessrule-54035538146675510973",
+    "businessrule-54588279423566663184",
+    "businessrule-71024372746156766440",
+    "businessrule-73898787083077319907",
+    "businessrule-95826639622119629666",
+    "businessrule-20714647401379544771",
+    "businessrule-21915530910585082056",
+    "businessrule-31790508764365764837",
+    "businessrule-51916167191556979448",
+    "businessrule-63262725504588029346",
+    "businessrule-73561308167207352856",
+    "businessrule-17385510066480798684",
+    "businessrule-57749472934040708163",
+    "businessrule-79288582532948770219",
+    "businessrule-94342659396000502591",
+    "businessrule-15877826642522947109",
+    "businessrule-48840711587592938759",
+    "businessrule-49582367227471127226",
+    "businessrule-62209428351075007862",
+    "businessrule-73292110340688125936",
+    "businessrule-35354684864210149934",
+    "businessrule-38090025507732480917",
+    "businessrule-80544887789558031281",
+    "businessrule-86305970842078630022",
+    "businessrule-78338951417255409296",
+    "businessrule-17430127230259081557",
+    "businessrule-53914450774482291886",
+    "businessrule-90661647574869686546",
+    "businessrule-85052319902195299547",
+    "businessrule-36944318108231327872"
+  ],
+  "transitions": [],
+  "surfaces": [
+    {
+      "key": "capability-85379136702335736376/DoubleClickIgnoringTreeView",
+      "name": "DoubleClickIgnoringTreeView",
+      "actions": [
+        "block-55576298759886274598"
+      ],
+      "owned": [
+        "businessrule-58048189688698008638"
+      ]
+    },
+    {
+      "key": "capability-85379136702335736376/FilterOptions",
+      "name": "FilterOptions",
+      "actions": [
+        "block-26736796202907003543",
+        "block-03044886867739368079",
+        "block-27559849759497597302",
+        "block-88991021756869656536",
+        "block-75494449832197867529",
+        "block-44706239895339562170"
+      ],
+      "owned": [
+        "businessrule-88807660791719489759",
+        "businessrule-57716378734614233724",
+        "businessrule-01575097247784730570",
+        "businessrule-26561900736287578271",
+        "businessrule-32591775124677875588",
+        "businessrule-59209755491778300947",
+        "businessrule-76306981111385169671",
+        "businessrule-81206266674090971597",
+        "businessrule-03237181236179074787",
+        "businessrule-70906412717211463954",
+        "businessrule-81055540068763556055",
+        "businessrule-90628240213834851721",
+        "businessrule-61457439461915744538"
+      ]
+    },
+    {
+      "key": "capability-85379136702335736376/FindById",
+      "name": "FindById",
+      "actions": [
+        "block-61877977111665770759",
+        "block-00880488620958939962",
+        "block-08747539546616381995",
+        "block-32698633467304016976",
+        "block-36457006871614893425"
+      ],
+      "owned": [
+        "businessrule-49813083192336894297",
+        "businessrule-81666786810242280110",
+        "businessrule-93221850558792273709",
+        "businessrule-34818300362920325745",
+        "businessrule-56645748073860464161",
+        "businessrule-73680018829588409732",
+        "businessrule-59811769233751713079",
+        "businessrule-79420398091956863443"
+      ]
+    },
+    {
+      "key": "capability-85379136702335736376/FindByRegistry",
+      "name": "FindByRegistry",
+      "actions": [
+        "block-71047013454784114585",
+        "block-80717492809988540545"
+      ],
+      "owned": [
+        "businessrule-27271850163543025066",
+        "businessrule-35545130062422334165",
+        "businessrule-54035538146675510973",
+        "businessrule-54588279423566663184",
+        "businessrule-71024372746156766440",
+        "businessrule-73898787083077319907",
+        "businessrule-95826639622119629666"
+      ]
+    },
+    {
+      "key": "capability-85379136702335736376/FindByText",
+      "name": "FindByText",
+      "actions": [
+        "block-47405947189671669922",
+        "block-30919896261988592289"
+      ],
+      "owned": [
+        "businessrule-20714647401379544771",
+        "businessrule-21915530910585082056",
+        "businessrule-31790508764365764837",
+        "businessrule-51916167191556979448",
+        "businessrule-63262725504588029346",
+        "businessrule-73561308167207352856"
+      ]
+    },
+    {
+      "key": "capability-85379136702335736376/FindResults",
+      "name": "FindResults",
+      "actions": [
+        "block-64273399884973341208",
+        "block-36571577833746850164",
+        "block-05405434344126500839",
+        "block-57135383118787346557",
+        "block-25728253727728310343",
+        "block-37035950900396190507"
+      ],
+      "owned": [
+        "businessrule-17385510066480798684",
+        "businessrule-57749472934040708163",
+        "businessrule-79288582532948770219",
+        "businessrule-94342659396000502591",
+        "businessrule-15877826642522947109",
+        "businessrule-48840711587592938759"
+      ]
+    },
+    {
+      "key": "capability-85379136702335736376/Main",
+      "name": "Main",
+      "actions": [
+        "block-16750935830546567218",
+        "block-14507530008177660767",
+        "block-49062346851945682165",
+        "block-27516887165549303737",
+        "block-83203327187612347635",
+        "block-69596352550727046885",
+        "block-40488572982447813355"
+      ],
+      "owned": [
+        "businessrule-49582367227471127226",
+        "businessrule-62209428351075007862",
+        "businessrule-73292110340688125936",
+        "businessrule-35354684864210149934",
+        "businessrule-38090025507732480917",
+        "businessrule-80544887789558031281",
+        "businessrule-86305970842078630022",
+        "businessrule-78338951417255409296",
+        "businessrule-17430127230259081557",
+        "businessrule-53914450774482291886",
+        "businessrule-90661647574869686546",
+        "businessrule-85052319902195299547",
+        "businessrule-36944318108231327872"
+      ]
+    }
+  ],
+  "allow": [
+    "PolicyPlusWeb"
+  ],
+  "layerIds": [
+    "layer-tooling",
+    "layer-domain",
+    "layer-contracts",
+    "layer-data",
+    "layer-api",
+    "layer-ui",
+    "layer-web",
+    "layer-e2e"
+  ],
+  "decisionIds": [
+    "integrations.decision-1",
+    "integrations.decision-2",
+    "integrations.decision-3",
+    "integrations.decision-4",
+    "integrations.decision-5",
+    "integrations.decision-6",
+    "integrations.decision-7",
+    "integrations.decision-8",
+    "scope.decision-9",
+    "scope.decision-10",
+    "scope.decision-11",
+    "scope.decision-12",
+    "scope.decision-13",
+    "scope.decision-14",
+    "scope.decision-15",
+    "scope.decision-16",
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12",
+    "base.decision-13",
+    "base.decision-14",
+    "base.decision-15",
+    "base.decision-16",
+    "base.decision-17",
+    "base.decision-18",
+    "base.decision-19",
+    "base.decision-20",
+    "base.decision-21",
+    "base.decision-22",
+    "base.decision-23",
+    "base.decision-24",
+    "base.decision-25",
+    "base.decision-26",
+    "base.decision-27",
+    "base.decision-28"
+  ],
+  "areaDecisionIds": [
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12"
+  ],
+  "capability": {
+    "name": "Finding policies",
+    "purpose": "Narrow the policy list by filter and find policies by ID, text or registry key and value, then pick a result.",
+    "dataKinds": [
+      {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting",
+        "access": "reads and saves"
+      }
+    ]
+  },
+  "surfaceDetails": [
+    {
+      "name": "DoubleClickIgnoringTreeView",
+      "actions": [
+        {
+          "id": "block-55576298759886274598",
+          "name": "WndProc",
+          "purpose": "Drops the double-click message so the tree check state stays in step",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 155,
+            "lastLine": 158
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-58048189688698008638",
+          "says": "Double-clicking a product checkbox does nothing, so a tick shown always agrees with the tick kept.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 155,
+            "lastLine": 158
+          }
+        }
+      ],
+      "reliesOn": []
+    },
+    {
+      "name": "FilterOptions",
+      "actions": [
+        {
+          "id": "block-26736796202907003543",
+          "name": "SupportedCheckbox_CheckedChanged",
+          "purpose": "Enables the product requirements box only while Supported on is ticked",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 76,
+            "lastLine": 78
+          }
+        },
+        {
+          "id": "block-03044886867739368079",
+          "name": "FilterOptions_KeyDown",
+          "purpose": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 79,
+            "lastLine": 81
+          }
+        },
+        {
+          "id": "block-27559849759497597302",
+          "name": "ResetButton_Click",
+          "purpose": "Sets the dialog back to a filter that matches everything",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 82,
+            "lastLine": 84
+          }
+        },
+        {
+          "id": "block-88991021756869656536",
+          "name": "OkButton_Click",
+          "purpose": "Builds the filter from the chosen options and closes the dialog accepted",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 85,
+            "lastLine": 120
+          }
+        },
+        {
+          "id": "block-75494449832197867529",
+          "name": "AllowedProductsTreeview_EnabledChanged",
+          "purpose": "Recolours the product tree so it looks right when disabled",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 121,
+            "lastLine": 124
+          }
+        },
+        {
+          "id": "block-44706239895339562170",
+          "name": "AllowedProductsTreeview_AfterCheck",
+          "purpose": "Applies the new tick to all child products",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 125,
+            "lastLine": 129
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-88807660791719489759",
+          "says": "The product requirement box (the product tree and the two matching options) can be used only while Supported on is ticked; it starts unusable.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 76,
+            "lastLine": 78
+          }
+        },
+        {
+          "id": "businessrule-57716378734614233724",
+          "says": "Pressing Escape closes the filter dialog as cancelled and the current filter is unchanged.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 79,
+            "lastLine": 81
+          }
+        },
+        {
+          "id": "businessrule-01575097247784730570",
+          "says": "When the current filter has a supported-on condition, the dialog opens with Supported on ticked, exactly the filter's products ticked and the two matching options set as the filter holds; product branches whose tick differs from their parent are opened.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 54,
+            "lastLine": 74
+          }
+        },
+        {
+          "id": "businessrule-26561900736287578271",
+          "says": "When the filter dialog opens, the Current state choice shows Any if the current filter has no state condition, otherwise Not Configured, Configured, Enabled or Disabled as the filter holds.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 28,
+            "lastLine": 41
+          }
+        },
+        {
+          "id": "businessrule-32591775124677875588",
+          "says": "When the filter dialog opens, the Policy type choice shows Any if the current filter has no policy-type condition, Policy if it keeps only managed policies, and Preference if it keeps only the others.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 23,
+            "lastLine": 27
+          }
+        },
+        {
+          "id": "businessrule-59209755491778300947",
+          "says": "When the filter dialog opens, the Commented choice shows Any if the current filter has no comment condition, Yes if it keeps only commented policies and No if it keeps only uncommented ones.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 42,
+            "lastLine": 46
+          }
+        },
+        {
+          "id": "businessrule-76306981111385169671",
+          "says": "When the current filter has no supported-on condition, the dialog opens with Supported on unticked, both \"Match a policy if at least one selected product is supported\" and \"Match policies with missing or blank support definitions\" ticked, and no product ticked.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 47,
+            "lastLine": 53
+          }
+        },
+        {
+          "id": "businessrule-81206266674090971597",
+          "says": "Reset returns every choice to its default: Any for type, state and comment, Supported on unticked, both matching options ticked and no product ticked.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 82,
+            "lastLine": 84
+          }
+        },
+        {
+          "id": "businessrule-03237181236179074787",
+          "says": "When OK is pressed, the new filter keeps only managed policies for Policy, only unmanaged ones for Preference, and no policy-type condition for Any.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 88,
+            "lastLine": 93
+          }
+        },
+        {
+          "id": "businessrule-70906412717211463954",
+          "says": "When OK is pressed, the new filter keeps only commented policies for Yes, only uncommented ones for No, and no comment condition for Any.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 104,
+            "lastLine": 109
+          }
+        },
+        {
+          "id": "businessrule-81055540068763556055",
+          "says": "When OK is pressed, the new filter requires the chosen state: Not Configured, Configured, Enabled or Disabled; Any sets no state condition.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 94,
+            "lastLine": 103
+          }
+        },
+        {
+          "id": "businessrule-90628240213834851721",
+          "says": "When OK is pressed with Supported on ticked, the filter records every ticked product and both matching options; with it unticked, any ticks and options are discarded and no support condition applies. A filter with Supported on ticked and no product ticked is accepted.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 110,
+            "lastLine": 119
+          }
+        },
+        {
+          "id": "businessrule-61457439461915744538",
+          "says": "Ticking or unticking a product by hand ticks or unticks every product beneath it to match; changes made by the dialog itself do not spread.",
+          "place": {
+            "file": "PolicyPlus/FilterOptions.vb",
+            "firstLine": 125,
+            "lastLine": 129
+          }
+        }
+      ],
+      "reliesOn": []
+    },
+    {
+      "name": "FindById",
+      "actions": [
+        {
+          "id": "block-61877977111665770759",
+          "name": "FindById_Load",
+          "purpose": "Takes the status icons from the main window's icon list",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 14,
+            "lastLine": 21
+          }
+        },
+        {
+          "id": "block-00880488620958939962",
+          "name": "IdTextbox_TextChanged",
+          "purpose": "Looks the typed ID up among categories, products, support definitions and policies and shows what it found",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 22,
+            "lastLine": 53
+          }
+        },
+        {
+          "id": "block-08747539546616381995",
+          "name": "FindById_Shown",
+          "purpose": "Clears the placeholder space and focuses the ID box",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 54,
+            "lastLine": 58
+          }
+        },
+        {
+          "id": "block-32698633467304016976",
+          "name": "GoButton_Click",
+          "purpose": "Closes the dialog with the typed ID accepted",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 59,
+            "lastLine": 61
+          }
+        },
+        {
+          "id": "block-36457006871614893425",
+          "name": "FindById_KeyUp",
+          "purpose": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 62,
+            "lastLine": 64
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-49813083192336894297",
+          "says": "The Deduplicate Policies menu entry is hidden, so the person cannot start it.",
+          "place": {
+            "file": "PolicyPlus/Main.Designer.vb",
+            "firstLine": 266,
+            "lastLine": 266
+          }
+        },
+        {
+          "id": "businessrule-81666786810242280110",
+          "says": "The area choice offers only \"User or Computer\", \"User\" and \"Computer\", with no free text.",
+          "place": {
+            "file": "PolicyPlus/Main.Designer.vb",
+            "firstLine": 409,
+            "lastLine": 410
+          }
+        },
+        {
+          "id": "businessrule-93221850558792273709",
+          "says": "Only one item in the policy list can be selected at a time.",
+          "place": {
+            "file": "PolicyPlus/Main.Designer.vb",
+            "firstLine": 534,
+            "lastLine": 534
+          }
+        },
+        {
+          "id": "businessrule-34818300362920325745",
+          "says": "Text typed in Find by ID is trimmed and looked up in this order: category, product, support definition, then policy. The first kind that matches is selected, with its own icon shown; a policy is looked up only when no other kind matches.",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 22,
+            "lastLine": 40
+          }
+        },
+        {
+          "id": "businessrule-56645748073860464161",
+          "says": "When the text matches nothing, nothing is selected and a \"not found\" icon is shown; when the text is empty a blank icon is shown instead. The section from an earlier match is not cleared when the text changes to a non-policy.",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 24,
+            "lastLine": 27
+          }
+        },
+        {
+          "id": "businessrule-73680018829588409732",
+          "says": "A policy ID may end with \"@U\" to mean the user section or \"@C\" to mean the computer section; without a suffix, or with any other suffix, the policy applies to both sections. The suffix is cut off before the policy lookup, so an unknown suffix still finds the policy.",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 39,
+            "lastLine": 48
+          }
+        },
+        {
+          "id": "businessrule-59811769233751713079",
+          "says": "Go closes Find by ID as accepted whether or not the text matched anything, so the caller may receive no selection.",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 59,
+            "lastLine": 61
+          }
+        },
+        {
+          "id": "businessrule-79420398091956863443",
+          "says": "Pressing Escape closes Find by ID as cancelled.",
+          "place": {
+            "file": "PolicyPlus/FindById.vb",
+            "firstLine": 62,
+            "lastLine": 64
+          }
+        }
+      ],
+      "reliesOn": []
+    },
+    {
+      "name": "FindByRegistry",
+      "actions": [
+        {
+          "id": "block-71047013454784114585",
+          "name": "FindByRegistry_KeyUp",
+          "purpose": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 3,
+            "lastLine": 5
+          }
+        },
+        {
+          "id": "block-80717492809988540545",
+          "name": "SearchButton_Click",
+          "purpose": "Checks the typed registry key and value terms and builds the policy search function",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 6,
+            "lastLine": 37
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-27271850163543025066",
+          "says": "A value-name term must match the whole value name; \"*\" and \"?\" act as wildcards, so without them the name must be equal.",
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 20,
+            "lastLine": 22
+          }
+        },
+        {
+          "id": "businessrule-35545130062422334165",
+          "says": "A key term containing a backslash but no wildcard matches policies whose key path starts with that text.",
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 26,
+            "lastLine": 27
+          }
+        },
+        {
+          "id": "businessrule-54035538146675510973",
+          "says": "A key term containing \"*\" or \"?\" must match the whole key path as a wildcard pattern.",
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 24,
+            "lastLine": 25
+          }
+        },
+        {
+          "id": "businessrule-54588279423566663184",
+          "says": "A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case.",
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 17,
+            "lastLine": 35
+          }
+        },
+        {
+          "id": "businessrule-71024372746156766440",
+          "says": "When the key text starts with HKLM\\, HKCU\\, HKEY_LOCAL_MACHINE\\ or HKEY_CURRENT_USER\\, the search is refused with \"Policies' root keys are determined only by their section. Remove the root key from the search terms and try again.\"",
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 13,
+            "lastLine": 16
+          }
+        },
+        {
+          "id": "businessrule-73898787083077319907",
+          "says": "When Search is pressed with both the key and the value empty, the search is refused and the person is told \"Please enter search terms.\"",
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 9,
+            "lastLine": 12
+          }
+        },
+        {
+          "id": "businessrule-95826639622119629666",
+          "says": "A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text.",
+          "place": {
+            "file": "PolicyPlus/FindByRegistry.vb",
+            "firstLine": 28,
+            "lastLine": 29
+          }
+        }
+      ],
+      "reliesOn": [
+        {
+          "says": "When a policy file is clearing a key, all values and markers under the key are dropped and a single clear-all marker is stored.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for forgetting a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a policy is forgotten, the whole key of each of its list elements is cleared and every registry value it touches is dropped from the source, so it reads as Not configured.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "In the live registry, 'forgetting' a value deletes it, because the registry cannot remember a pending deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a value is forgotten in a policy file, both the value and its deletion marker are removed, so the policy reverts to not saying anything about it.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Clearing a key in the live registry deletes every value in it but leaves the key and its subkeys. Forgetting a key's clearance does nothing.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a key's clearance is forgotten in a REG file, the key-removal entry is dropped if it exists. The request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The registry values a policy touches are its own value, those in its value lists, those of its elements (the whole key for list elements) and those of checkbox and choice sub-lists, each counted once.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a key's clearance is forgotten in a policy file, every clear-all marker for that key is removed.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a key is cleared in a REG file, the request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted. Otherwise the key's earlier entries are replaced by a key-removal entry.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Text stored in a policy file is written in two-byte characters followed by a closing empty character.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a value is deleted in the live registry and its key does not exist, nothing happens. A missing value is not an error.",
+          "builtBy": "a shared story"
+        }
+      ]
+    },
+    {
+      "name": "FindByText",
+      "actions": [
+        {
+          "id": "block-47405947189671669922",
+          "name": "FindByText_KeyUp",
+          "purpose": "Closes the dialog as cancelled when Escape is pressed",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 8,
+            "lastLine": 10
+          }
+        },
+        {
+          "id": "block-30919896261988592289",
+          "name": "SearchButton_Click",
+          "purpose": "Checks the typed search text and chosen attributes and builds the policy search function",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 11,
+            "lastLine": 73
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-20714647401379544771",
+          "says": "Search text is split at spaces into plain words, wildcard words (containing \"*\" or \"?\") and quoted phrases. Words are lowercased and trimmed and lose the characters . , ' \" ; / ! ( ) { } [ ].",
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 25,
+            "lastLine": 49
+          }
+        },
+        {
+          "id": "businessrule-21915530910585082056",
+          "says": "A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together.",
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 51,
+            "lastLine": 58
+          }
+        },
+        {
+          "id": "businessrule-31790508764365764837",
+          "says": "When none of In title, In description and In comment is ticked, the search is refused with \"At least one attribute must be searched. Check one of the boxes and try again.\"; all three start ticked.",
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 17,
+            "lastLine": 23
+          }
+        },
+        {
+          "id": "businessrule-51916167191556979448",
+          "says": "A policy matches when the ticked attributes hit: its title, its description, or a comment on it from any supplied comment source (user or computer). Any one hit is enough.",
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 59,
+            "lastLine": 70
+          }
+        },
+        {
+          "id": "businessrule-63262725504588029346",
+          "says": "A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as \"abc\" does not close itself, so it also absorbs the following words.",
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 36,
+            "lastLine": 45
+          }
+        },
+        {
+          "id": "businessrule-73561308167207352856",
+          "says": "When Search is pressed with the search text empty, the search is refused and the person is told \"Please enter search terms.\"",
+          "place": {
+            "file": "PolicyPlus/FindByText.vb",
+            "firstLine": 12,
+            "lastLine": 16
+          }
+        }
+      ],
+      "reliesOn": []
+    },
+    {
+      "name": "FindResults",
+      "actions": [
+        {
+          "id": "block-64273399884973341208",
+          "name": "FindResults_Shown",
+          "purpose": "Starts the background search when one is waiting, otherwise restores the last selected result.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 95,
+            "lastLine": 105
+          }
+        },
+        {
+          "id": "block-36571577833746850164",
+          "name": "StopButton_Click",
+          "purpose": "Asks the running search to stop.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 106,
+            "lastLine": 108
+          }
+        },
+        {
+          "id": "block-05405434344126500839",
+          "name": "ResultsListview_SizeChanged",
+          "purpose": "Keeps the title column filling the width of the results list.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 109,
+            "lastLine": 111
+          }
+        },
+        {
+          "id": "block-57135383118787346557",
+          "name": "FindResults_Closing",
+          "purpose": "Stops the search when the results window is closed and settles the progress display.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 112,
+            "lastLine": 119
+          }
+        },
+        {
+          "id": "block-25728253727728310343",
+          "name": "GoClicked",
+          "purpose": "Takes the selected search result as the chosen policy and closes the window with OK.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 120,
+            "lastLine": 125
+          }
+        },
+        {
+          "id": "block-37035950900396190507",
+          "name": "FindResults_Load",
+          "purpose": "Turns on double-buffered drawing for the results list.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 126,
+            "lastLine": 130
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-17385510066480798684",
+          "says": "When the results window is reopened, the previously selected result is selected again if it is still in the list.",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 95,
+            "lastLine": 105
+          }
+        },
+        {
+          "id": "businessrule-57749472934040708163",
+          "says": "When a search ends it reports \"Finished searching: checked N policies, found M hits\", or \"Search canceled: ...\" if stopped, and the Stop button is disabled.",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 82,
+            "lastLine": 89
+          }
+        },
+        {
+          "id": "businessrule-79288582532948770219",
+          "says": "The search tests every policy in turn, and adds every hit to the list with its category name, in the order policies are held.",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 63,
+            "lastLine": 73
+          }
+        },
+        {
+          "id": "businessrule-94342659396000502591",
+          "says": "The list and progress are refreshed after every 20 policies: \"Searching: checked N policies so far, found M hits\".",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 74,
+            "lastLine": 80
+          }
+        },
+        {
+          "id": "businessrule-15877826642522947109",
+          "says": "Stop, or closing the results window, cancels the search; closing also leaves the label at \"Search canceled\" with the bar full if the search had not finished.",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 91,
+            "lastLine": 94
+          }
+        },
+        {
+          "id": "businessrule-48840711587592938759",
+          "says": "Go, or a double-click on a result, accepts only when a result is selected; the selected policy is passed back and its position remembered.",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 120,
+            "lastLine": 125
+          }
+        }
+      ],
+      "reliesOn": [
+        {
+          "says": "When a policy file is clearing a key, all values and markers under the key are dropped and a single clear-all marker is stored.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for forgetting a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Search text is split at spaces into plain words, wildcard words (containing \"*\" or \"?\") and quoted phrases. Words are lowercased and trimmed and lose the characters . , ' \" ; / ! ( ) { } [ ].",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "A value-name term must match the whole value name; \"*\" and \"?\" act as wildcards, so without them the name must be equal.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "When a policy is forgotten, the whole key of each of its list elements is cleared and every registry value it touches is dropped from the source, so it reads as Not configured.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A key term containing a backslash but no wildcard matches policies whose key path starts with that text.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "In the live registry, 'forgetting' a value deletes it, because the registry cannot remember a pending deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a value is forgotten in a policy file, both the value and its deletion marker are removed, so the policy reverts to not saying anything about it.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Clearing a key in the live registry deletes every value in it but leaves the key and its subkeys. Forgetting a key's clearance does nothing.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a key's clearance is forgotten in a REG file, the key-removal entry is dropped if it exists. The request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy matches when the ticked attributes hit: its title, its description, or a comment on it from any supplied comment source (user or computer). Any one hit is enough.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "The registry values a policy touches are its own value, those in its value lists, those of its elements (the whole key for list elements) and those of checkbox and choice sub-lists, each counted once.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A key term containing \"*\" or \"?\" must match the whole key path as a wildcard pattern.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "When a key's clearance is forgotten in a policy file, every clear-all marker for that key is removed.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as \"abc\" does not close itself, so it also absorbs the following words.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "When a key is cleared in a REG file, the request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted. Otherwise the key's earlier entries are replaced by a key-removal entry.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Text stored in a policy file is written in two-byte characters followed by a closing empty character.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a value is deleted in the live registry and its key does not exist, nothing happens. A missing value is not an error.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text.",
+          "builtBy": "an earlier part of this capability"
+        }
+      ]
+    },
+    {
+      "name": "Main",
+      "actions": [
+        {
+          "id": "block-16750935830546567218",
+          "name": "FindByIDToolStripMenuItem_Click",
+          "purpose": "Asks for an identifier and moves to, or opens, the matching category, policy, product or support definition.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 580,
+            "lastLine": 606
+          }
+        },
+        {
+          "id": "block-14507530008177660767",
+          "name": "ByTextToolStripMenuItem_Click",
+          "purpose": "Asks for search text and runs the search.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 645,
+            "lastLine": 650
+          }
+        },
+        {
+          "id": "block-49062346851945682165",
+          "name": "SearchResultsToolStripMenuItem_Click",
+          "purpose": "Shows the search results window without starting a search.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 651,
+            "lastLine": 654
+          }
+        },
+        {
+          "id": "block-27516887165549303737",
+          "name": "FindNextToolStripMenuItem_Click",
+          "purpose": "Moves to the next visible policy in the search results.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 655,
+            "lastLine": 667
+          }
+        },
+        {
+          "id": "block-83203327187612347635",
+          "name": "ByRegistryToolStripMenuItem_Click",
+          "purpose": "Asks for registry details and runs the search.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 668,
+            "lastLine": 671
+          }
+        },
+        {
+          "id": "block-69596352550727046885",
+          "name": "FilterOptionsToolStripMenuItem_Click",
+          "purpose": "Asks for filter settings and turns the filtered view on.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 692,
+            "lastLine": 700
+          }
+        },
+        {
+          "id": "block-40488572982447813355",
+          "name": "OnlyFilteredObjectsToolStripMenuItem_Click",
+          "purpose": "Switches whether the filter is applied to the lists.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 701,
+            "lastLine": 706
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-49582367227471127226",
+          "says": "After finding by identifier, a category opens if it is visible, otherwise the person is told \"The category is not currently visible. Change the view settings and try again.\"; a policy opens in the editor and the list moves to it; a product or support definition opens its details; anything else gives \"That object could not be found.\".",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 584,
+            "lastLine": 604
+          }
+        },
+        {
+          "id": "businessrule-62209428351075007862",
+          "says": "Moving to a policy first shows its category, but only when that category is visible in the tree; otherwise nothing happens and the person is not told. The policy row is then selected only if the policy is listed there. A policy hidden by the area choice or the filter leaves the category shown with nothing selected and no message; find by text and by registry do not check this before opening the editor.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 396,
+            "lastLine": 407
+          }
+        },
+        {
+          "id": "businessrule-73292110340688125936",
+          "says": "A policy found by identifier opens in the lower-numbered of the area shown and the area found (computer is lower than user, user lower than both), so Computer wins over User.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 596,
+            "lastLine": 596
+          }
+        },
+        {
+          "id": "businessrule-35354684864210149934",
+          "says": "Starting a search clears earlier results, sets the progress range to the number of policies, and begins on \"Starting search\".",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 11,
+            "lastLine": 26
+          }
+        },
+        {
+          "id": "businessrule-38090025507732480917",
+          "says": "When search results are opened from the main window and no search has been run (or it was cleared), the person is told \"No search has been run yet, so there are no results to display.\" and nothing opens.",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 27,
+            "lastLine": 37
+          }
+        },
+        {
+          "id": "businessrule-80544887789558031281",
+          "says": "A search dialog opens either empty or running a new search. When the person picks a result, its editor opens in the current area and the list moves to that policy.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 378,
+            "lastLine": 387
+          }
+        },
+        {
+          "id": "businessrule-86305970842078630022",
+          "says": "Find by text starts a search with what the person entered, and can search both areas' comments.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 647,
+            "lastLine": 649
+          }
+        },
+        {
+          "id": "businessrule-78338951417255409296",
+          "says": "\"Search Results\" only reopens the last results and starts no new search.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 653,
+            "lastLine": 653
+          }
+        },
+        {
+          "id": "businessrule-17430127230259081557",
+          "says": "Find Next moves to the next result that is currently visible, skipping hidden ones, and tells the person \"There are no more results that match the filter.\" when none is left.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 657,
+            "lastLine": 666
+          }
+        },
+        {
+          "id": "businessrule-53914450774482291886",
+          "says": "Taking the next policy returns nothing when no search has run or when the last result has been passed; otherwise it returns the result after the last chosen one.",
+          "place": {
+            "file": "PolicyPlus/FindResults.vb",
+            "firstLine": 42,
+            "lastLine": 46
+          }
+        },
+        {
+          "id": "businessrule-90661647574869686546",
+          "says": "Find by registry starts a search with what the person entered.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 670,
+            "lastLine": 670
+          }
+        },
+        {
+          "id": "businessrule-85052319902195299547",
+          "says": "Changing the filter options turns on \"Only Filtered Policies\" and moves to the nearest visible category.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 695,
+            "lastLine": 698
+          }
+        },
+        {
+          "id": "businessrule-36944318108231327872",
+          "says": "The \"Only Filtered Policies\" menu switches the filter on or off and moves to the nearest visible category.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 703,
+            "lastLine": 705
+          }
+        }
+      ],
+      "reliesOn": [
+        {
+          "says": "A category is orphaned when it has no parent among the loaded definitions although its definition names one.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category's icon is chosen in this order: orphaned, then empty, then normal.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For a policy's list elements, a marked-for-deletion list counts as one deleted element, and a list that holds any values counts as a present element and cancels that deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy's lists of on-values and off-values count as enabled or disabled evidence for each value in them that is present, using the list's own key when it names one.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy is visible only if it applies to a chosen area (user, computer or both). With \"Only Filtered Policies\" on, it must also pass the filter for a chosen area it applies to; passing for either one is enough.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "With both areas shown, a policy that applies to both areas shows its common state followed by \"(2)\" when both match, the computer state followed by \"(C)\" when only the user is Not Configured, the user state followed by \"(U)\" when only the computer is Not Configured, and \"Mixed\" otherwise.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When nothing is selected, the title and support lines are hidden and the pane reads \"Select an item to see its description.\".",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A value in a policy file counts as marked for deletion when a deletion marker names it, when the key has a clear-all marker, or when a delete-values list for the key names it, regardless of case. Entries are examined in sorted order, and a value whose name sorts after the marker is stored as present and cancels the deletion, whenever it was written and whichever marker kind came before.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Each entry of a support definition is listed by the name of the nested support definition when it is one, otherwise by the name of the product, otherwise as \"<missing: \" followed by the product code the entry names. Minimum and maximum versions are listed only for product entries that name a version range; a missing bound is shown blank.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For any other element (number, text, choice, multi-line text), a value marked for deletion counts as a deleted element and a value that is present counts as a present element.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A registry key counts as a policy key when it is one of the three policy branches (software\\policies, software\\microsoft\\windows\\currentversion\\policies, system\\currentcontrolset\\policies) or lies below one, regardless of case.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The live registry never reports a value as marked for deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy with a registry value of its own counts as enabled evidence when that value holds its 'on' value, which is the number 1 when the template gives none, and as disabled evidence when it holds its 'off' value or is marked for deletion when the template gives none.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Reading a value from a policy file gives nothing when the value is absent or marked for deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A value in the live registry counts as present when its key exists and, unless the value name is empty, the key lists a value of that name, regardless of case. An empty name means the key itself.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "If any element is present, the elements add their count to the enabled evidence; only when none is present do deleted elements add to the disabled evidence.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A support definition met a second time anywhere in one evaluation counts as not met, because the list of definitions seen is never emptied. Two entries that point at the same definition, with no cycle, make the second one not met.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "With both areas shown, the comment column is empty when neither area has a comment, shows \"(multiple)\" when both have one, and otherwise shows the single comment.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy's comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A value in a policy file counts as present only if it is stored and not marked for deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy's state in one area reads \"Enabled\", \"Disabled\", \"Not Configured\" or \"Unknown\"; the computer source is read for the computer area and the user source for any other.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A support entry for a product that has versions beneath it, whether a version range or a plain entry for a parent product that is not itself chosen, counts as met when any version in its range, or a sub-product directly beneath one, is chosen. The range runs from the entry's minimum (0 if none) to its maximum (the highest version if none). A range entry never matches on its own product, and a product with no versions beneath it never matches this way.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When the caller asks for 'any' matching, a support definition whose logic is all-of needs every entry met, and any other definition needs one entry met. When the caller does not ask for 'any', every definition, all-of included, is met by one entry. A definition with no entries, or none met, is met only when all are required. Plain product entries are checked before nested definitions.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The category tree selection follows the category shown in the right pane.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The right pane lists the chosen category in this order: an \"Up: <parent name>\" row marked \"Parent\" when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For a selected or highlighted category the pane shows its title, \"This category contains N policies and M subcategories.\" (\"The selected category\" when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A value counts as present when: for a deletion marker, it is marked for deletion; for a number, it exists as a whole number and equals the expected number; for text, it exists as text and equals the expected text. A value of the wrong kind is not present.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for checking whether a value will be deleted: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy passes the filter only when it passes every active part of it.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For a checkbox element: a value marked for deletion counts as one deleted element. Otherwise, each present off value (or off-list value) counts a tenth of a deleted element, and each present on value (or on-list value) counts one present element. A checkbox whose template declares no on value or on list adds no present evidence, even if it holds 1.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "After the edit dialog is accepted, which changes the open policy source in memory only, the list is refreshed in place if the current category is still visible; otherwise the program moves up to the nearest visible category. Nothing is written to disk until Save Policies.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For a selected policy the information pane shows its title, \"(no requirements information)\" when it has no support rule or \"Requirements:\" plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy's icon is chosen in this order: preference, then plain when it has no configurable elements, then \"extra configuration\" when it has some.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy applies to an area when its definition declares that area; a policy declared for both applies to each.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a policy lists no supported-on information, it counts as supported only if the caller allows unlisted policies. The same applies to a support entry that names no known product.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a view setting changes, the program moves up to the nearest visible category, drops the selected policy if the move happened or the policy is now hidden, then rebuilds the tree and list. A policy kept after the move appears in the information pane only: rebuilding the list reselects the category in the tree, which clears the selection, so its row is not highlighted.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for reading a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category is empty when it holds no subcategories and no policies at all, counting hidden ones.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "With both areas shown, a policy that applies to one area shows that area's state followed by \"(C)\" for computer or \"(U)\" for user. With a single area shown, only that area's state is shown, without a suffix.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy is Enabled when enabled evidence exceeds disabled evidence, Disabled when disabled exceeds enabled, Not configured when there is no evidence either way, and Unclear when both are equal and above zero.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\\policies, software\\microsoft\\windows\\currentversion\\policies and system\\currentcontrolset\\policies.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The product details window labels a product \"Major revision\", \"Minor revision\" or \"Top-level product\" from its type.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for listing a key's values: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Reading a value from the live registry gives nothing when the key is missing. Signed numbers are returned as the unsigned numbers policies use, and environment variables in text are not expanded.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The support details window states how a support definition matches products: \"Match all the referenced products\", \"Match any of the referenced products\", or \"Do not match products\" when it has no matching logic.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for asking whether a value is present: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A support entry for a product counts as met in two cases. The entry is not a version range and that exact product is among the chosen products. Or the product has versions beneath it, and any of those versions or their sub-products is chosen, even when the product itself is not.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When the current filter has a supported-on condition, the dialog opens with Supported on ticked, exactly the filter's products ticked and the two matching options set as the filter holds; product branches whose tick differs from their parent are opened.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "When the filter dialog opens, the Current state choice shows Any if the current filter has no state condition, otherwise Not Configured, Configured, Enabled or Disabled as the filter holds.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "When the filter dialog opens, the Policy type choice shows Any if the current filter has no policy-type condition, Policy if it keeps only managed policies, and Preference if it keeps only the others.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "When the filter dialog opens, the Commented choice shows Any if the current filter has no comment condition, Yes if it keeps only commented policies and No if it keeps only uncommented ones.",
+          "builtBy": "an earlier part of this capability"
+        },
+        {
+          "says": "When the current filter has no supported-on condition, the dialog opens with Supported on unticked, both \"Match a policy if at least one selected product is supported\" and \"Match policies with missing or blank support definitions\" ticked, and no product ticked.",
+          "builtBy": "an earlier part of this capability"
+        }
+      ]
+    }
+  ],
+  "transitionDetails": [],
+  "bundles": [
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-doubleclickignoringtreeview--finding-policies.md",
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-filteroptions--finding-policies.md",
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-findbyid--finding-policies.md",
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-findbyregistry--finding-policies.md",
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-findbytext--finding-policies.md",
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-findresults--finding-policies.md",
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-main--finding-policies.md"
+  ]
+}

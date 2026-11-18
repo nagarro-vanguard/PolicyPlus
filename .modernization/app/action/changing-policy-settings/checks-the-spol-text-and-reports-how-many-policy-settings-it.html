@@ -1,0 +1,96 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Checks the SPOL text and reports how many policy settings it holds.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/changing-policy-settings.html">Changing policy settings</a> › <a href="../../screen/import-policy-settings-text.html">Import policy settings text</a></div><h1>Checks the SPOL text and reports how many policy settings it holds.</h1><p class="lead">Started by a person. In the code: PolicyPlus/ImportSpol.vb:11</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the ImportSpol screen of Changing policy settings: Checks the SPOL text and reports how many policy settings it holds.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:11
+- PolicyPlus/ImportSpol.vb (only this capability)
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 11
+- When a semantic policy script fails to load, the error gives the line it stopped at, in the form '(Error found on line N.)'. (PolicyPlus/SpolFile.vb:6)
+- Verify reads the SPOL text and reports &quot;Validation successful, N policy settings found.&quot; or &quot;SPOL validation failed: &quot; followed by the reason; nothing is applied. (PolicyPlus/ImportSpol.vb:11)
+- A semantic policy script is read in lines separated by carriage return and line feed. A script using line feeds alone is read as one line, so it is refused with the signature message. (PolicyPlus/SpolFile.vb:15)
+- A semantic policy script is refused unless its first line is 'Policy Plus Semantic Policy', with the message 'Incorrect signature.'. (PolicyPlus/SpolFile.vb:50)
+- A policy header line in a semantic policy script is a user policy only when its first word is exactly 'U'. Any other first word, including lowercase 'u' or 'User', is a machine policy. The rest of the line is the policy's identifier. A header with no space after the first word fails with a general index error, with the line number but no reason. (PolicyPlus/SpolFile.vb:53)
+- A comment line in a semantic policy script is recognised without regard to letter case. A backslash followed by another backslash is one backslash, and a backslash followed by 'n' is a line break. (PolicyPlus/SpolFile.vb:56)
+- A comment in a semantic policy script is refused when it ends with a lone backslash, with the message 'Escape sequence started at end of comment.'. A backslash followed by any other character is refused with 'Unknown comment escape sequence' naming it. (PolicyPlus/SpolFile.vb:62)
+- The state in a semantic policy script must be 'Not configured', 'Enabled' or 'Disabled', regardless of case. Anything else is refused with 'Unknown policy state.'. (PolicyPlus/SpolFile.vb:78)
+  ...and 3 more
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/changing-policy-settings/dialog-windows-and-their-reactions.html">Dialog windows and their reactions</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/changing-policy-settings/policy-definitions-and-files.html">Policy definitions and files</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (11)</h2><div class="group-name">Dialog windows and their reactions</div><div class="row"><div class="main"><span>Verify reads the SPOL text and reports &quot;Validation successful, N policy settings found.&quot; or &quot;SPOL validation failed: &quot; followed by the reason; nothing is applied.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: Verify reads the SPOL text and reports &quot;Validation successful, N policy settings found.&quot; or &quot;SPOL validation failed: &quot; followed by the reason; nothing is applied.
+Where to look first:
+- Starts at PolicyPlus/ImportSpol.vb:11
+- PolicyPlus/ImportSpol.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportSpol.vb:11  ·  Screens: ImportSpol</div></div></div><div class="group-name">Policy definitions and files</div><div class="row"><div class="main"><span>A comment line in a semantic policy script is recognised without regard to letter case. A backslash followed by another backslash is one backslash, and a backslash followed by &#39;n&#39; is a line break.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A comment line in a semantic policy script is recognised without regard to letter case. A backslash followed by another backslash is one backslash, and a backslash followed by 'n' is a line break.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:56
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:56  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A setting value in a semantic policy script is read in this order. Starting with # is a whole number, and a # value that is not a whole number fails with a conversion message. A plain non-negative number is an unsigned number. &#39;True&#39; or &#39;False&#39;, in any letter case, is a yes/no value. Text in single quotes is text, and text in double quotes is a list of text. &#39;None&#39; is an empty list. Anything else is refused with &#39;Unknown option data format.&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A setting value in a semantic policy script is read in this order. Starting with # is a whole number, and a # value that is not a whole number fails with a conversion message. A plain non-negative number is an unsigned number. 'True' or 'False', in any letter case, is a yes/no value. Text in single quotes is text, and text in double quotes is a list of text. 'None' is an empty list. Anything else is refused with 'Unknown option data format.'.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:93
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:93  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A semantic policy script is refused unless its first line is &#39;Policy Plus Semantic Policy&#39;, with the message &#39;Incorrect signature.&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A semantic policy script is refused unless its first line is 'Policy Plus Semantic Policy', with the message 'Incorrect signature.'.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:50
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:50  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>The state in a semantic policy script must be &#39;Not configured&#39;, &#39;Enabled&#39; or &#39;Disabled&#39;, regardless of case. Anything else is refused with &#39;Unknown policy state.&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: The state in a semantic policy script must be 'Not configured', 'Enabled' or 'Disabled', regardless of case. Anything else is refused with 'Unknown policy state.'.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:78
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:78  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>When a semantic policy script fails to load, the error gives the line it stopped at, in the form &#39;(Error found on line N.)&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: When a semantic policy script fails to load, the error gives the line it stopped at, in the form '(Error found on line N.)'.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:6
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:6  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A semantic policy script is read in lines separated by carriage return and line feed. A script using line feeds alone is read as one line, so it is refused with the signature message.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A semantic policy script is read in lines separated by carriage return and line feed. A script using line feeds alone is read as one line, so it is refused with the signature message.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:15
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:15  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A comment in a semantic policy script is refused when it ends with a lone backslash, with the message &#39;Escape sequence started at end of comment.&#39;. A backslash followed by any other character is refused with &#39;Unknown comment escape sequence&#39; naming it.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A comment in a semantic policy script is refused when it ends with a lone backslash, with the message 'Escape sequence started at end of comment.'. A backslash followed by any other character is refused with 'Unknown comment escape sequence' naming it.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:62
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:62  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>A policy header line in a semantic policy script is a user policy only when its first word is exactly &#39;U&#39;. Any other first word, including lowercase &#39;u&#39; or &#39;User&#39;, is a machine policy. The rest of the line is the policy&#39;s identifier. A header with no space after the first word fails with a general index error, with the line number but no reason.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A policy header line in a semantic policy script is a user policy only when its first word is exactly 'U'. Any other first word, including lowercase 'u' or 'User', is a machine policy. The rest of the line is the policy's identifier. A header with no space after the first word fails with a general index error, with the line number but no reason.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:53
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:53  ·  Screens: ImportSpol</div></div></div><details class="more"><summary>Showing 8 of 10 business rules. Show all 10</summary><div class="row"><div class="main"><span>A bracketed setting in a semantic policy script holds one line per entry. Entries with one text are a list, entries with two texts are a table of name and value. With no entries the setting is stored with no value. For a list setting, the existing entries are then removed unless the definition keeps other entries, and nothing is written. For any other kind of setting the empty value makes the write fail.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A bracketed setting in a semantic policy script holds one line per entry. Entries with one text are a list, entries with two texts are a table of name and value. With no entries the setting is stored with no value. For a list setting, the existing entries are then removed unless the definition keeps other entries, and nothing is written. For any other kind of setting the empty value makes the write fail.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:105
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:105  ·  Screens: ImportSpol</div></div></div><div class="row"><div class="main"><span>Settings are read only for a policy that is Enabled. Lines under Not configured or Disabled are not read as settings but as the next policy&#39;s header.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: Settings are read only for a policy that is Enabled. Lines under Not configured or Disabled are not read as settings but as the next policy's header.
+Where to look first:
+- Starts at PolicyPlus/SpolFile.vb:88
+- PolicyPlus/SpolFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SpolFile.vb:88  ·  Screens: ImportSpol</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

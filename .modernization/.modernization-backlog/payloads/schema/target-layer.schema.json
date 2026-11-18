@@ -1,0 +1,64 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The layer's name in plain words, unique in the plan."
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The layer's folder, relative to the target codebase's root."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "code",
+        "test"
+      ],
+      "description": "`test` for a layer whose tests drive the running product and are committed first; `code` otherwise."
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What the layer holds, in one clause."
+    },
+    "carries": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "description": "The numbers of the target stack lines this layer carries, from 1."
+    },
+    "check": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The command that verifies the layer, run from its folder."
+    },
+    "dependsOn": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The layers this one may reach."
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "path",
+    "kind",
+    "purpose",
+    "carries",
+    "check",
+    "dependsOn"
+  ],
+  "additionalProperties": true,
+  "description": "One layer of the target codebase, as its root AGENTS.md lists it."
+}

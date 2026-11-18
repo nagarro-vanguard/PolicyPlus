@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fills in the policy name, help and support text and prepares the options and current state</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/changing-policy-settings.html">Changing policy settings</a> › <a href="../../screen/change-a-policy-setting.html">Change a policy setting</a></div><h1>Fills in the policy name, help and support text and prepares the options and current state</h1><p class="lead">Started by a person. In the code: PolicyPlus/EditSetting.vb:18</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the EditSetting screen of Changing policy settings: Fills in the policy name, help and support text and prepares the options and current state
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:18
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+Data read: Policy setting
+Rules decided here: 42
+- A policy's lists of on-values and off-values count as enabled or disabled evidence for each value in them that is present, using the list's own key when it names one. (PolicyPlus/PolicyProcessing.vb:11)
+- The Supported on box shows the supported-on name of the policy and is empty when the policy names none. (PolicyPlus/EditSetting.vb:20)
+- A policy with a registry value of its own counts as enabled evidence when that value holds its 'on' value, which is the number 1 when the template gives none, and as disabled evidence when it holds its 'off' value or is marked for deletion when the template gives none. (PolicyPlus/PolicyProcessing.vb:20)
+- A policy that applies to both computer and user can be edited for either, starting on Computer when no section was given; a policy for one section is fixed to that section and the section choice is unavailable. (PolicyPlus/EditSetting.vb:22)
+- For a policy's list elements, a marked-for-deletion list counts as one deleted element, and a list that holds any values counts as a present element and cancels that deletion. (PolicyPlus/PolicyProcessing.vb:40)
+- For a checkbox element: a value marked for deletion counts as one deleted element. Otherwise, each present off value (or off-list value) counts a tenth of a deleted element, and each present on value (or on-list value) counts one present element. A checkbox whose template declares no on value or on list adds no present evidence, even if it holds 1. (PolicyPlus/PolicyProcessing.vb:50)
+- For any other element (number, text, choice, multi-line text), a value marked for deletion counts as a deleted element and a value that is present counts as a present element. (PolicyPlus/PolicyProcessing.vb:62)
+- If any element is present, the elements add their count to the enabled evidence; only when none is present do deleted elements add to the disabled evidence. (PolicyPlus/PolicyProcessing.vb:70)
+  ...and 34 more
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/changing-policy-settings/dialog-windows-and-their-reactions.html">Dialog windows and their reactions</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/changing-policy-settings/policy-definitions-and-files.html">Policy definitions and files</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (42)</h2><div class="group-name">Dialog windows and their reactions</div><div class="row"><div class="main"><span>The comment box is disabled and reads &quot;Comments unavailable for this policy source&quot; when the source has no comments; otherwise it shows the policy&#39;s stored comment, or is empty when there is none.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: The comment box is disabled and reads &quot;Comments unavailable for this policy source&quot; when the source has no comments; otherwise it shows the policy's stored comment, or is empty when there is none.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:229
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:229  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The Supported on box shows the supported-on name of the policy and is empty when the policy names none.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: The Supported on box shows the supported-on name of the policy and is empty when the policy names none.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:20
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:20  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A policy that applies to both computer and user can be edited for either, starting on Computer when no section was given; a policy for one section is fixed to that section and the section choice is unavailable.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: A policy that applies to both computer and user can be edited for either, starting on Computer when no section was given; a policy for one section is fixed to that section and the section choice is unavailable.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:22
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:22  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>OK and Apply are available only when the chosen policy source can be written to.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: OK and Apply are available only when the chosen policy source can be written to.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:226
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:226  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The state shown when the dialog opens follows the policy&#39;s present state in the source being edited: Enabled, Disabled, or Not Configured for anything else, including an unclear state.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: The state shown when the dialog opens follows the policy's present state in the source being edited: Enabled, Disabled, or Not Configured for anything else, including an unclear state.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:191
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:191  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A check box starts with the presentation&#39;s default state.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: A check box starts with the presentation's default state.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:128
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:128  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A plain text entry is limited to the maximum length the policy defines and starts with the presentation&#39;s default text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: A plain text entry is limited to the maximum length the policy defines and starts with the presentation's default text.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:112
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:112  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:863
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:863  ·  Screens: EditSetting, Main</div></div></div><details class="more"><summary>Showing 8 of 12 business rules. Show all 12</summary><div class="row"><div class="main"><span>A number entered with a spin box is limited to the minimum and maximum the policy defines, in steps the presentation sets, and starts at the presentation&#39;s default.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: A number entered with a spin box is limited to the minimum and maximum the policy defines, in steps the presentation sets, and starts at the presentation's default.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:86
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:86  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>When the policy is Enabled, each option control is set to the value found in the source: numbers into number boxes, text into text and combo boxes, the matching item in drop-downs, true or false into check boxes, lines into multi-line boxes and the stored list into the list editor.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: When the policy is Enabled, each option control is set to the value found in the source: numbers into number boxes, text into text and combo boxes, the matching item in drop-downs, true or false into check boxes, lines into multi-line boxes and the stored list into the list editor.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:196
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:196  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A drop-down list shows the policy&#39;s choices by their translated names, sorted unless the presentation turns sorting off, and preselects the default choice when the presentation names one; otherwise nothing is selected.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: A drop-down list shows the policy's choices by their translated names, sorted unless the presentation turns sorting off, and preselects the default choice when the presentation names one; otherwise nothing is selected.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:145
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:145  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A text entry with suggestions is limited to the maximum length the policy defines, starts with the presentation&#39;s default text, and lists the presentation&#39;s suggestions, sorted unless the presentation turns sorting off.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Changing policy settings: A text entry with suggestions is limited to the maximum length the policy defines, starts with the presentation's default text, and lists the presentation's suggestions, sorted unless the presentation turns sorting off.
+Where to look first:
+- Starts at PolicyPlus/EditSetting.vb:132
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/EditSetting.vb:132  ·  Screens: EditSetting</div></div></div></details><div class="group-name">Policy definitions and files</div><div class="row"><div class="main"><span>A name or description written as &quot;$(string.&lt;id&gt;)&quot; shows the language file&#39;s text for that id; an unknown id shows the code itself; any other text is shown as written; an empty value stays empty.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A name or description written as &quot;$(string.<id>)&quot; shows the language file's text for that id; an unknown id shows the code itself; any other text is shown as written; an empty value stays empty.
+Where to look first:
+- Starts at PolicyPlus/AdmxBundle.vb:195
+- PolicyPlus/AdmxBundle.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/AdmxBundle.vb:195  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>For a policy&#39;s list elements, a marked-for-deletion list counts as one deleted element, and a list that holds any values counts as a present element and cancels that deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: For a policy's list elements, a marked-for-deletion list counts as one deleted element, and a list that holds any values counts as a present element and cancels that deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:40
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:40  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s lists of on-values and off-values count as enabled or disabled evidence for each value in them that is present, using the list&#39;s own key when it names one.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A policy's lists of on-values and off-values count as enabled or disabled evidence for each value in them that is present, using the list's own key when it names one.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:11
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:11  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A value in a policy file counts as marked for deletion when a deletion marker names it, when the key has a clear-all marker, or when a delete-values list for the key names it, regardless of case. Entries are examined in sorted order, and a value whose name sorts after the marker is stored as present and cancels the deletion, whenever it was written and whichever marker kind came before.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A value in a policy file counts as marked for deletion when a deletion marker names it, when the key has a clear-all marker, or when a delete-values list for the key names it, regardless of case. Entries are examined in sorted order, and a value whose name sorts after the marker is stored as present and cancels the deletion, whenever it was written and whichever marker kind came before.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:118
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:118  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:139
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:139  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A choice element is read as the position of the first item whose own value is present and, when the item has a value list, whose list is wholly present; when no item matches, the position is -1.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A choice element is read as the position of the first item whose own value is present and, when the item has a value list, whose list is wholly present; when no item matches, the position is -1.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:170
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:170  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>For any other element (number, text, choice, multi-line text), a value marked for deletion counts as a deleted element and a value that is present counts as a present element.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: For any other element (number, text, choice, multi-line text), a value marked for deletion counts as a deleted element and a value that is present counts as a present element.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:62
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:62  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>The live registry never reports a value as marked for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: The live registry never reports a value as marked for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:409
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:409  ·  Screens: EditSetting, Main</div></div></div><details class="more"><summary>Showing 8 of 30 business rules. Show all 30</summary><div class="row"><div class="main"><span>A policy with a registry value of its own counts as enabled evidence when that value holds its &#39;on&#39; value, which is the number 1 when the template gives none, and as disabled evidence when it holds its &#39;off&#39; value or is marked for deletion when the template gives none.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A policy with a registry value of its own counts as enabled evidence when that value holds its 'on' value, which is the number 1 when the template gives none, and as disabled evidence when it holds its 'off' value or is marked for deletion when the template gives none.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:20
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:20  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>Reading a value from a policy file gives nothing when the value is absent or marked for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: Reading a value from a policy file gives nothing when the value is absent or marked for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:114
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:114  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A value in the live registry counts as present when its key exists and, unless the value name is empty, the key lists a value of that name, regardless of case. An empty name means the key itself.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A value in the live registry counts as present when its key exists and, unless the value name is empty, the key lists a value of that name, regardless of case. An empty name means the key itself.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:384
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:384  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>If any element is present, the elements add their count to the enabled evidence; only when none is present do deleted elements add to the disabled evidence.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: If any element is present, the elements add their count to the enabled evidence; only when none is present do deleted elements add to the disabled evidence.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:70
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:70  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A list element whose entries have names the person provides is read as every stored name with its value, under the element&#39;s key.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A list element whose entries have names the person provides is read as every stored name with its value, under the element's key.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:149
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:149  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A list of values counts as present only when every value in it is present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A list of values counts as present only when every value in it is present.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:106
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:106  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The saved value of a multi-line text element is read as stored, without first checking that it exists.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: The saved value of a multi-line text element is read as stored, without first checking that it exists.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:184
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:184  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A value in a policy file counts as present only if it is stored and not marked for deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A value in a policy file counts as present only if it is stored and not marked for deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:110
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:110  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A checkbox is on when its on value (or all values of its on list) is present, or, with neither defined, when its value is 1; it is off in every other case, including when its off value is present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A checkbox is on when its on value (or all values of its on list) is present, or, with neither defined, when its value is 1; it is off in every other case, including when its off value is present.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:190
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:190  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A value counts as present when: for a deletion marker, it is marked for deletion; for a number, it exists as a whole number and equals the expected number; for text, it exists as text and equals the expected text. A value of the wrong kind is not present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A value counts as present when: for a deletion marker, it is marked for deletion; for a number, it exists as a whole number and equals the expected number; for text, it exists as text and equals the expected text. A value of the wrong kind is not present.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:87
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:87  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A REG file cannot be used as a source for checking whether a value will be deleted: the request fails with &#39;not implemented&#39;. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A REG file cannot be used as a source for checking whether a value will be deleted: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:220
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:220  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:231
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:231  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>For a checkbox element: a value marked for deletion counts as one deleted element. Otherwise, each present off value (or off-list value) counts a tenth of a deleted element, and each present on value (or on-list value) counts one present element. A checkbox whose template declares no on value or on list adds no present evidence, even if it holds 1.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: For a checkbox element: a value marked for deletion counts as one deleted element. Otherwise, each present off value (or off-list value) counts a tenth of a deleted element, and each present on value (or on-list value) counts one present element. A checkbox whose template declares no on value or on list adds no present evidence, even if it holds 1.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:50
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:50  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A source is writable by default for Scratch space; for a registry source it is &#39;no writing&#39; when the write test failed; for others it is &#39;no commit&#39; when the file or hive could not be opened for writing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A source is writable by default for Scratch space; for a registry source it is 'no writing' when the write test failed; for others it is 'no commit' when the file or hive could not be opened for writing.
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:163
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:163  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A REG file cannot be used as a source for reading a value: the request fails with &#39;not implemented&#39;. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A REG file cannot be used as a source for reading a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:217
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:217  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:320
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:320  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A list element whose entry names do not matter is read as a list of values: when the list has a prefix, the stored values named prefix1, prefix2, and so on, in order, until the first number that is missing; otherwise every stored value name under the key.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A list element whose entry names do not matter is read as a list of values: when the list has a prefix, the stored values named prefix1, prefix2, and so on, in order, until the first number that is missing; otherwise every stored value name under the key.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:155
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:155  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>The saved value of a number or text element is read as stored; the reading assumes the value exists and is of the right kind, and is not checked first. A checkbox is read by its own rule.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: The saved value of a number or text element is read as stored; the reading assumes the value exists and is of the right kind, and is not checked first. A checkbox is read by its own rule.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:140
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:140  ·  Screens: EditSetting</div></div></div><div class="row"><div class="main"><span>A policy is Enabled when enabled evidence exceeds disabled evidence, Disabled when disabled exceeds enabled, Not configured when there is no evidence either way, and Unclear when both are equal and above zero.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A policy is Enabled when enabled evidence exceeds disabled evidence, Disabled when disabled exceeds enabled, Not configured when there is no evidence either way, and Unclear when both are equal and above zero.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:77
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:77  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A REG file cannot be used as a source for listing a key&#39;s values: the request fails with &#39;not implemented&#39;. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A REG file cannot be used as a source for listing a key's values: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:223
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:223  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>Reading a value from the live registry gives nothing when the key is missing. Signed numbers are returned as the unsigned numbers policies use, and environment variables in text are not expanded.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: Reading a value from the live registry gives nothing when the key is missing. Signed numbers are returned as the unsigned numbers policies use, and environment variables in text are not expanded.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:391
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:391  ·  Screens: EditSetting, Main</div></div></div><div class="row"><div class="main"><span>A REG file cannot be used as a source for asking whether a value is present: the request fails with &#39;not implemented&#39;. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Changing policy settings: A REG file cannot be used as a source for asking whether a value is present: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:214
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:214  ·  Screens: EditSetting, Main</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

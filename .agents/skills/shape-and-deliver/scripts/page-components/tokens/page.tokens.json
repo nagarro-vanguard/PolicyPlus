@@ -1,0 +1,215 @@
+{
+    "$description": "The tokens of every generated page: Finch 2.0 colours, page-only values derived from them, the type and spacing scales, and the roles each page uses in light and dark. Format: W3C Design Tokens.",
+    "finch": {
+        "$description": "Finch 2.0 primitives, from 'Finch 2.0 - Design System.fig' (curated spine generated 2026-09-17), only the steps the roles use.",
+        "$type": "color",
+        "black": { "base": { "$value": "#06041F" } },
+        "white": { "base": { "$value": "#FFFFFF" } },
+        "grey": {
+            "50": { "$value": "#F5F5F5" },
+            "100": { "$value": "#E7E7E7" },
+            "200": { "$value": "#D7D7D9" },
+            "300": { "$value": "#ABB1BA" },
+            "500": { "$value": "#808792" },
+            "700": { "$value": "#585F69" },
+            "800": { "$value": "#464C55" }
+        },
+        "brand": {
+            "50": { "$value": "#EBFAF6" },
+            "300": { "$value": "#85E2C6" },
+            "500": { "$value": "#5DD8B3" },
+            "900": { "$value": "#2D807B" },
+            "base": { "$value": "#205463" }
+        },
+        "green": {
+            "50": { "$value": "#E8F8E9" },
+            "100": { "$value": "#BAE8C0" },
+            "800": { "$value": "#005C0C" },
+            "base": { "$value": "#22C55E" }
+        },
+        "red": {
+            "50": { "$value": "#FFEFEE" },
+            "100": { "$value": "#FFD0CC" },
+            "500": { "$value": "#F87171" },
+            "base": { "$value": "#8C252C" }
+        },
+        "yellow": {
+            "50": { "$value": "#FBF3E0" },
+            "100": { "$value": "#F0DBA4" },
+            "800": { "$value": "#5D4A00" },
+            "main": { "$value": "#EAC608" }
+        },
+        "purple": {
+            "50": { "$value": "#FAF0FF" },
+            "100": { "$value": "#EFD1FF" },
+            "500": { "$value": "#A763F8" },
+            "800": { "$value": "#612DA5" }
+        },
+        "surface": { "dark": { "$value": "#1A1628" } }
+    },
+    "derived": {
+        "$description": "Page-only values Finch does not have, each derived from Finch's dark surface or a Finch status colour, for dark mode.",
+        "$type": "color",
+        "sheet": {
+            "$value": "#211D31",
+            "$description": "Finch's dark surface, lightened one step for the reading sheet."
+        },
+        "raised": { "$value": "#2A2639", "$description": "Finch's dark surface, lightened two steps for cards." },
+        "sunken": { "$value": "#13101F", "$description": "Finch's dark surface, darkened one step for code." },
+        "line": { "$value": "#3A3550", "$description": "Finch's dark surface, lightened for hairlines." },
+        "pass": { "$value": "#10301A", "$description": "Finch green, mixed into the dark surface." },
+        "fail": { "$value": "#3A1418", "$description": "Finch red, mixed into the dark surface." },
+        "warn": { "$value": "#33290A", "$description": "Finch yellow, mixed into the dark surface." },
+        "info": { "$value": "#2A1A40", "$description": "Finch purple, mixed into the dark surface." }
+    },
+    "font": {
+        "family": {
+            "$type": "fontFamily",
+            "text": {
+                "$value": ["Mulish", "system-ui", "sans-serif"],
+                "$description": "Mulish 5.3.0 from Fontsource, Latin subset, SIL Open Font License."
+            },
+            "code": {
+                "$value": ["JetBrains Mono", "ui-monospace", "monospace"],
+                "$description": "JetBrains Mono 5.3.0 from Fontsource, Latin subset, SIL Open Font License."
+            }
+        },
+        "weight": {
+            "$type": "fontWeight",
+            "regular": { "$value": 400 },
+            "semibold": { "$value": 600 },
+            "bold": { "$value": 750 }
+        },
+        "size": {
+            "$type": "dimension",
+            "xs": { "$value": { "value": 0.8125, "unit": "rem" } },
+            "sm": { "$value": { "value": 0.875, "unit": "rem" } },
+            "md": { "$value": { "value": 1, "unit": "rem" } },
+            "lg": { "$value": { "value": 1.125, "unit": "rem" } },
+            "xl": { "$value": { "value": 1.375, "unit": "rem" } },
+            "2xl": { "$value": { "value": 1.75, "unit": "rem" } },
+            "3xl": { "$value": { "value": 2.25, "unit": "rem" } }
+        },
+        "leading": {
+            "$type": "number",
+            "body": { "$value": 1.6 },
+            "heading": { "$value": 1.25 }
+        }
+    },
+    "space": {
+        "$type": "dimension",
+        "1": { "$value": { "value": 0.25, "unit": "rem" } },
+        "2": { "$value": { "value": 0.5, "unit": "rem" } },
+        "3": { "$value": { "value": 0.75, "unit": "rem" } },
+        "4": { "$value": { "value": 1, "unit": "rem" } },
+        "6": { "$value": { "value": 1.5, "unit": "rem" } },
+        "8": { "$value": { "value": 2, "unit": "rem" } },
+        "12": { "$value": { "value": 3, "unit": "rem" } }
+    },
+    "radius": {
+        "$type": "dimension",
+        "sm": { "$value": { "value": 4, "unit": "px" } },
+        "md": { "$value": { "value": 8, "unit": "px" } },
+        "lg": { "$value": { "value": 16, "unit": "px" } }
+    },
+    "role": {
+        "$description": "What each colour is for, in light and dark. Pages use only these, as CSS custom properties named by their path: role.light.text.primary is --text-primary.",
+        "$type": "color",
+        "light": {
+            "surface": {
+                "page": { "$value": "{finch.grey.50}" },
+                "sheet": { "$value": "{finch.white.base}" },
+                "raised": { "$value": "{finch.white.base}" },
+                "sunken": { "$value": "{finch.grey.50}" }
+            },
+            "text": {
+                "primary": { "$value": "{finch.black.base}" },
+                "secondary": { "$value": "{finch.grey.800}" },
+                "muted": { "$value": "{finch.grey.700}" }
+            },
+            "line": {
+                "subtle": { "$value": "{finch.grey.200}" },
+                "strong": { "$value": "{finch.grey.500}" }
+            },
+            "accent": {
+                "brand": { "$value": "{finch.brand.base}" },
+                "link": { "$value": "{finch.brand.base}" },
+                "focus": { "$value": "{finch.brand.900}" },
+                "tint": { "$value": "{finch.brand.50}" }
+            },
+            "pass": {
+                "text": { "$value": "{finch.green.800}" },
+                "surface": { "$value": "{finch.green.50}" },
+                "dot": { "$value": "{finch.green.base}" }
+            },
+            "fail": {
+                "text": { "$value": "{finch.red.base}" },
+                "surface": { "$value": "{finch.red.50}" },
+                "dot": { "$value": "{finch.red.500}" }
+            },
+            "warn": {
+                "text": { "$value": "{finch.yellow.800}" },
+                "surface": { "$value": "{finch.yellow.50}" },
+                "dot": { "$value": "{finch.yellow.main}" }
+            },
+            "info": {
+                "text": { "$value": "{finch.purple.800}" },
+                "surface": { "$value": "{finch.purple.50}" },
+                "dot": { "$value": "{finch.purple.500}" }
+            },
+            "neutral": {
+                "text": { "$value": "{finch.grey.800}" },
+                "surface": { "$value": "{finch.grey.50}" },
+                "dot": { "$value": "{finch.grey.500}" }
+            }
+        },
+        "dark": {
+            "surface": {
+                "page": { "$value": "{finch.surface.dark}" },
+                "sheet": { "$value": "{derived.sheet}" },
+                "raised": { "$value": "{derived.raised}" },
+                "sunken": { "$value": "{derived.sunken}" }
+            },
+            "text": {
+                "primary": { "$value": "{finch.grey.50}" },
+                "secondary": { "$value": "{finch.grey.100}" },
+                "muted": { "$value": "{finch.grey.300}" }
+            },
+            "line": {
+                "subtle": { "$value": "{derived.line}" },
+                "strong": { "$value": "{finch.grey.500}" }
+            },
+            "accent": {
+                "brand": { "$value": "{finch.brand.300}" },
+                "link": { "$value": "{finch.brand.300}" },
+                "focus": { "$value": "{finch.brand.500}" },
+                "tint": { "$value": "{derived.raised}" }
+            },
+            "pass": {
+                "text": { "$value": "{finch.green.100}" },
+                "surface": { "$value": "{derived.pass}" },
+                "dot": { "$value": "{finch.green.base}" }
+            },
+            "fail": {
+                "text": { "$value": "{finch.red.100}" },
+                "surface": { "$value": "{derived.fail}" },
+                "dot": { "$value": "{finch.red.500}" }
+            },
+            "warn": {
+                "text": { "$value": "{finch.yellow.100}" },
+                "surface": { "$value": "{derived.warn}" },
+                "dot": { "$value": "{finch.yellow.main}" }
+            },
+            "info": {
+                "text": { "$value": "{finch.purple.100}" },
+                "surface": { "$value": "{derived.info}" },
+                "dot": { "$value": "{finch.purple.500}" }
+            },
+            "neutral": {
+                "text": { "$value": "{finch.grey.100}" },
+                "surface": { "$value": "{derived.raised}" },
+                "dot": { "$value": "{finch.grey.500}" }
+            }
+        }
+    }
+}

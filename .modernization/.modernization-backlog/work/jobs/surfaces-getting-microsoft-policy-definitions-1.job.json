@@ -1,0 +1,989 @@
+{
+  "kind": "surfaces",
+  "actions": [
+    "block-03053454096779816382",
+    "block-71707654079332679729",
+    "block-60182551583579953457",
+    "block-36474692648442947336",
+    "block-31629065709184768465",
+    "block-40092394967077955539"
+  ],
+  "owned": [
+    "businessrule-78945520165872370051",
+    "businessrule-75570169794845906057",
+    "businessrule-19284863828429321329",
+    "businessrule-34650805596483639458",
+    "businessrule-16960626064100495277",
+    "businessrule-17840470067823720423",
+    "businessrule-24154317128059319852",
+    "businessrule-33969702428946021999",
+    "businessrule-53408776186716933732",
+    "businessrule-70392920399990339776",
+    "businessrule-84139143444339961851",
+    "businessrule-91358402464075338920",
+    "businessrule-23603907625209300500",
+    "businessrule-68766858893219046657",
+    "businessrule-94371671563498468562"
+  ],
+  "transitions": [
+    "transition-06661621563201601518",
+    "transition-75067382849384472391",
+    "transition-10612937846340406069",
+    "transition-51160080980241291404",
+    "transition-27747052198892493091",
+    "transition-22468192592027627314",
+    "transition-80887081654133372599",
+    "transition-86521319960986518382",
+    "transition-27594299302588587247",
+    "transition-98316046502831010563",
+    "transition-66518996145123621291",
+    "transition-79493377009865225985",
+    "transition-15941671345420340422",
+    "transition-46264696378359167574",
+    "transition-74501217398374508233",
+    "transition-20790162524221496222"
+  ],
+  "surfaces": [
+    {
+      "key": "capability-37285537501950413921/DownloadAdmx",
+      "name": "DownloadAdmx",
+      "actions": [
+        "block-03053454096779816382",
+        "block-71707654079332679729",
+        "block-60182551583579953457",
+        "block-36474692648442947336"
+      ],
+      "owned": [
+        "businessrule-78945520165872370051",
+        "businessrule-75570169794845906057",
+        "businessrule-19284863828429321329",
+        "businessrule-34650805596483639458",
+        "businessrule-16960626064100495277",
+        "businessrule-17840470067823720423",
+        "businessrule-24154317128059319852",
+        "businessrule-33969702428946021999",
+        "businessrule-53408776186716933732",
+        "businessrule-70392920399990339776",
+        "businessrule-84139143444339961851",
+        "businessrule-91358402464075338920"
+      ]
+    },
+    {
+      "key": "capability-37285537501950413921/Main",
+      "name": "Main",
+      "actions": [
+        "block-31629065709184768465",
+        "block-40092394967077955539"
+      ],
+      "owned": [
+        "businessrule-23603907625209300500",
+        "businessrule-68766858893219046657",
+        "businessrule-94371671563498468562"
+      ]
+    }
+  ],
+  "allow": [
+    "PolicyPlusWeb"
+  ],
+  "layerIds": [
+    "layer-tooling",
+    "layer-domain",
+    "layer-contracts",
+    "layer-data",
+    "layer-api",
+    "layer-ui",
+    "layer-web",
+    "layer-e2e"
+  ],
+  "decisionIds": [
+    "integrations.decision-1",
+    "integrations.decision-2",
+    "integrations.decision-3",
+    "integrations.decision-4",
+    "integrations.decision-5",
+    "integrations.decision-6",
+    "integrations.decision-7",
+    "integrations.decision-8",
+    "scope.decision-9",
+    "scope.decision-10",
+    "scope.decision-11",
+    "scope.decision-12",
+    "scope.decision-13",
+    "scope.decision-14",
+    "scope.decision-15",
+    "scope.decision-16",
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12",
+    "base.decision-13",
+    "base.decision-14",
+    "base.decision-15",
+    "base.decision-16",
+    "base.decision-17",
+    "base.decision-18",
+    "base.decision-19",
+    "base.decision-20",
+    "base.decision-21",
+    "base.decision-22",
+    "base.decision-23",
+    "base.decision-24",
+    "base.decision-25",
+    "base.decision-26",
+    "base.decision-27",
+    "base.decision-28"
+  ],
+  "areaDecisionIds": [
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12"
+  ],
+  "capability": {
+    "name": "Getting Microsoft policy definitions",
+    "purpose": "Download Microsoft's current policy template package and unpack it into a folder the program can read.",
+    "dataKinds": [
+      {
+        "id": "entity-40163170707735391190",
+        "name": "Program preference",
+        "access": "reads and saves"
+      },
+      {
+        "id": "entity-92808062881922645840",
+        "name": "Administrative template",
+        "access": "reads and saves"
+      },
+      {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting",
+        "access": "reads"
+      }
+    ]
+  },
+  "surfaceDetails": [
+    {
+      "name": "DownloadAdmx",
+      "actions": [
+        {
+          "id": "block-03053454096779816382",
+          "name": "ButtonBrowse_Click",
+          "purpose": "Lets the person pick the destination folder in a folder dialog.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 7,
+            "lastLine": 13
+          }
+        },
+        {
+          "id": "block-71707654079332679729",
+          "name": "DownloadAdmx_Closing",
+          "purpose": "Blocks closing the window while a download is running.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 14,
+            "lastLine": 16
+          }
+        },
+        {
+          "id": "block-60182551583579953457",
+          "name": "DownloadAdmx_Shown",
+          "purpose": "Fills the destination folder with the Windows policy definitions folder and clears the busy state.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 17,
+            "lastLine": 21
+          }
+        },
+        {
+          "id": "block-36474692648442947336",
+          "name": "ButtonStart_Click",
+          "purpose": "Downloads Microsoft's policy definitions package, unpacks it and moves the files into the chosen folder.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 33,
+            "lastLine": 130
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-78945520165872370051",
+          "says": "Choosing a folder in the browse dialog replaces the destination; cancelling the dialog leaves the destination unchanged.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 7,
+            "lastLine": 13
+          }
+        },
+        {
+          "id": "businessrule-75570169794845906057",
+          "says": "When the person closes the download window while a download is running, the close is refused; the window closes only when no download is running.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 14,
+            "lastLine": 16
+          }
+        },
+        {
+          "id": "businessrule-19284863828429321329",
+          "says": "While a download runs, the start button, close button, destination box and browse button are all disabled, so a second download cannot be started and the destination cannot change; they are enabled again when it ends.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 22,
+            "lastLine": 32
+          }
+        },
+        {
+          "id": "businessrule-34650805596483639458",
+          "says": "Each time the download window opens, the destination folder is set to the Windows policy definitions folder (the PolicyDefinitions folder under the Windows folder) and no new policy folder is reported to the caller.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 17,
+            "lastLine": 21
+          }
+        },
+        {
+          "id": "businessrule-16960626064100495277",
+          "says": "Before any file is moved, when the folder written in the destination box already exists and the person is an administrator, ownership of it is taken and Administrators are given full control. This applies to whatever folder text is in the box, not only the Windows folder; a standard user skips it. A failure ends the download with \"Failed to take control of the destination.\" and nothing is moved.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 94,
+            "lastLine": 100
+          }
+        },
+        {
+          "id": "businessrule-17840470067823720423",
+          "says": "When any step fails, the person is told \"Failed to \" followed by the step that failed (create a scratch space, download the package, extract the package, take control of the destination, move the ADMX files, remove temporary files); the window stays open, controls are re-enabled, and no policy folder is reported. If only the final cleanup of the scratch folder fails, all files are already installed yet the person is told \"Failed to remove temporary files.\" and no new policy folder is offered.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 125,
+            "lastLine": 127
+          }
+        },
+        {
+          "id": "businessrule-24154317128059319852",
+          "says": "The template files are moved into the destination, then the language files for the person's regional format language (the culture of the regional settings, which can differ from the display language) are moved into a folder of that name if the package holds one. Unless that language is en-US, the English files are also moved into an en-US folder as a fallback; if the package has no en-US folder, the download stops with \"Failed to move the ADMX files.\" after the destination files were already replaced.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 103,
+            "lastLine": 111
+          }
+        },
+        {
+          "id": "businessrule-33969702428946021999",
+          "says": "When files are moved into a folder, the folder is created if missing and every file already there with the same name is deleted first and then replaced by the new one, with no backup. Only files directly in the source folder are moved. A failure part-way leaves some files replaced and others not.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 52,
+            "lastLine": 75
+          }
+        },
+        {
+          "id": "businessrule-53408776186716933732",
+          "says": "Starting the download always fetches one fixed Microsoft package, the Windows 11 September 2026 Update (26H2) administrative templates, into a scratch folder under the person's local application data as \"W11Admx.msi\"; the person cannot choose another version.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 83,
+            "lastLine": 86
+          }
+        },
+        {
+          "id": "businessrule-70392920399990339776",
+          "says": "For an administrator, each folder handed to the file move that already exists, the destination itself and any existing language folder, has its ownership taken; a language folder created during the move instead inherits permissions from the folder above. Every moved file, including the template files in the destination, is reset to inherit permissions. A standard user changes no permissions. A failure here ends the download with \"Failed to move the ADMX files.\", not the take-control message.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 55,
+            "lastLine": 73
+          }
+        },
+        {
+          "id": "businessrule-84139143444339961851",
+          "says": "After a successful download the scratch folder is deleted, the person is asked \"ADMX files downloaded successfully. Open them now?\", and the destination is reported as the new policy folder only if they answer Yes; either answer closes the window as done.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 117,
+            "lastLine": 122
+          }
+        },
+        {
+          "id": "businessrule-91358402464075338920",
+          "says": "The downloaded package is unpacked with the Windows installer tool; if the tool ends with a non-zero code the download stops with \"Failed to extract the package.\" and the package is kept. When it succeeds, the downloaded package file is deleted.",
+          "place": {
+            "file": "PolicyPlus/DownloadAdmx.vb",
+            "firstLine": 89,
+            "lastLine": 93
+          }
+        }
+      ],
+      "reliesOn": []
+    },
+    {
+      "name": "Main",
+      "actions": [
+        {
+          "id": "block-31629065709184768465",
+          "name": "Main_Shown",
+          "purpose": "On first run without a full set of definitions, offers to download them.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 46,
+            "lastLine": 57
+          }
+        },
+        {
+          "id": "block-40092394967077955539",
+          "name": "AcquireADMXFilesToolStripMenuItem_Click",
+          "purpose": "Opens the download window and loads the downloaded definitions.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 756,
+            "lastLine": 766
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-23603907625209300500",
+          "says": "When the offer is considered, it is made only if this Windows edition has no Group Policy support and more than two non-empty categories name a parent that is not among the loaded definitions. The person sees \"Welcome to Policy Plus! Home editions do not come with the full set of policy definitions. Would you like to download them now? This can also be done later with Help | Acquire ADMX Files.\"; Yes starts the download dialog.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 50,
+            "lastLine": 55
+          }
+        },
+        {
+          "id": "businessrule-68766858893219046657",
+          "says": "The welcome offer to download policy definitions is considered only once: the first time the window is shown the program records that it has been considered, even when no offer is made, and never considers it again.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 48,
+            "lastLine": 49
+          }
+        },
+        {
+          "id": "businessrule-94371671563498468562",
+          "says": "After a successful download of definitions, the workspace is emptied, the downloaded folder loaded and saved as the definitions folder, and the view rebuilt; with no new folder nothing changes.",
+          "place": {
+            "file": "PolicyPlus/Main.vb",
+            "firstLine": 759,
+            "lastLine": 764
+          }
+        }
+      ],
+      "reliesOn": [
+        {
+          "says": "A category is orphaned when it has no parent among the loaded definitions although its definition names one.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The computer counts as having the Group Policy infrastructure only when the number Windows gives for its edition equals one of 59 fixed codes in a list. The edition is asked for as Windows version 6.0, and the result of the call is not checked. When the call fails the edition stays 0, which is not in the list, so the computer counts as having none.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category is empty when it holds no subcategories and no policies at all, counting hidden ones.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category's icon is chosen in this order: orphaned, then empty, then normal.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A name or description written as \"$(string.<id>)\" shows the language file's text for that id; an unknown id shows the code itself; any other text is shown as written; an empty value stays empty.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For a policy's list elements, a marked-for-deletion list counts as one deleted element, and a list that holds any values counts as a present element and cancels that deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy's lists of on-values and off-values count as enabled or disabled evidence for each value in them that is present, using the list's own key when it names one.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A language file's text table is read only from its first text table, and each text is kept under its id; when the same text id appears twice, the file is refused as invalid and its template file is not loaded.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy is visible only if it applies to a chosen area (user, computer or both). With \"Only Filtered Policies\" on, it must also pass the filter for a chosen area it applies to; passing for either one is enough.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy shows the 'supported on' rule its reference names, found in this load or earlier ones; when none is found it has none.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "With both areas shown, a policy that applies to both areas shows its common state followed by \"(2)\" when both match, the computer state followed by \"(C)\" when only the user is Not Configured, the user state followed by \"(U)\" when only the computer is Not Configured, and \"Mixed\" otherwise.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category's explanation is optional. A category with any content inside it (even a comment) must contain a parent entry with a reference; otherwise the template is refused as invalid.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When nothing is selected, the title and support lines are hidden and the pane reads \"Select an item to see its description.\".",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A value in a policy file counts as marked for deletion when a deletion marker names it, when the key has a clear-all marker, or when a delete-values list for the key names it, regardless of case. Entries are examined in sorted order, and a value whose name sorts after the marker is stored as present and cancels the deletion, whenever it was written and whichever marker kind came before.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A number box takes default value 1, shows its up-down spinner and steps by 1 unless the language file says otherwise; an unreadable attribute value falls back to the same defaults.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy's switched-on and switched-off effects are read from its enabled and disabled values and lists; a list entry names a value and optionally its own key, falling back to the list's default key.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A number option accepts 0 to 4,294,967,295 unless the template sets other limits, overwrites existing values unless marked soft, and is stored as a number unless marked as text; unreadable attribute values fall back to these defaults.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A support rule entry is linked to the product its reference names; when no such product exists it is linked to the support rule of that name; when neither exists it stays unlinked.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy takes its category and its 'supported on' rule from the references in its own content, and has options only when it contains an options section.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category whose parent is named is attached under that parent, found among items of this load or of files loaded earlier; when the parent is not found, the category has no parent but is still listed among the top-level categories.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "An XML attribute that is absent gives nothing.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a template declares no target namespace, loading the folder stops at once with an error: the files after it are not read, nothing is built, and the person sees the error text (a start-up load also discards the workspace).",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy gets a settings screen layout only when the template names one, the name is written as \"$(presentation.<id>)\", and the language file holds a layout with that id; in every other case the policy has none.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For any other element (number, text, choice, multi-line text), a value marked for deletion counts as a deleted element and a value that is present counts as a present element.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A registry key counts as a policy key when it is one of the three policy branches (software\\policies, software\\microsoft\\windows\\currentversion\\policies, system\\currentcontrolset\\policies) or lies below one, regardless of case.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A reference containing a colon uses the namespace the template declared for its prefix; with an unknown prefix it is taken as already complete; a reference without a colon belongs to the template's own namespace.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A check box starts unticked unless the language file marks it ticked.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The live registry never reports a value as marked for deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy with a registry value of its own counts as enabled evidence when that value holds its 'on' value, which is the number 1 when the template gives none, and as disabled evidence when it holds its 'off' value or is marked for deletion when the template gives none.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Reading a value from a policy file gives nothing when the value is absent or marked for deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A value in the live registry counts as present when its key exists and, unless the value name is empty, the key lists a value of that name, regardless of case. An empty name means the key itself.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy option of any kind other than number, yes/no, text, list, choice or multi-line text is dropped without notice.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When the chosen language file cannot be parsed as XML, the template is refused with \"The ADML XML couldn't be parsed: <detail>\"; any other read problem gives \"The ADML is invalid: <detail>\".",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "If any element is present, the elements add their count to the enabled evidence; only when none is present do deleted elements add to the disabled evidence.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When loading definitions reports no problems nothing is shown; otherwise the person sees \"Errors were encountered while adding administrative templates to the workspace.\" with each problem, and, only where a choice is wanted, is asked \"Continue trying to use this workspace?\".",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A support definition met a second time anywhere in one evaluation counts as not met, because the list of definitions seen is never emptied. Two entries that point at the same definition, with no cycle, make the second one not met.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A yes/no option takes its registry effect for true and false from true and false values and lists.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "With both areas shown, the comment column is empty when neither area has a comment, shows \"(multiple)\" when both have one, and otherwise shows the single comment.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A text option allows 255 characters, is optional, is stored as plain text and overwrites existing values unless the template says otherwise; unreadable attribute values fall back to these defaults.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy is listed under the category its reference names, found in this load or earlier ones; when that category is not found the policy is kept in the policy list but belongs to no category.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy's comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a template file cannot be parsed as XML, it is refused with the message \"Couldn't load <path>: The ADMX XML couldn't be parsed: <detail>.\"; any other read problem is refused with \"The ADMX is invalid: <detail>\".",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A drop-down list has a preselected item only when the language file names one; otherwise none is preselected.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Products form three levels: a product, its major versions and their minor versions; deeper levels are not read, and each version must carry a version index or the file is refused as invalid.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Only labels, number boxes, text boxes, check boxes, combo boxes, drop-down lists, list boxes and multi-line text boxes are kept in a screen layout; any other control in the language file is dropped without notice.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When the structures are built, all new categories, products, support rules and policies join the final lists and the staged items are cleared, so loading further files adds to what is already available.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A value in a policy file counts as present only if it is stored and not marked for deletion.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A choice option is optional unless marked required. Each choice keeps whichever of a single registry value and a list of values it contains, both when both are present; a choice with neither is accepted and changes nothing.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy's state in one area reads \"Enabled\", \"Disabled\", \"Not Configured\" or \"Unknown\"; the computer source is read for the computer area and the user source for any other.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A registry value in a template is a delete marker, a number or a text, decided by the first of those it contains; a value with none of them is treated as a delete marker.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Entries of a combo box or drop-down list are sorted unless the language file says not to sort them.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A support entry for a product that has versions beneath it, whether a version range or a plain entry for a parent product that is not itself chosen, counts as met when any version in its range, or a sub-product directly beneath one, is chosen. The range runs from the entry's minimum (0 if none) to its maximum (the highest version if none). A range entry never matches on its own product, and a product with no versions beneath it never matches this way.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "An option's registry value name is taken from its own value name, except for a list option that has a value prefix attribute: the prefix is used and the own value name only when that prefix is empty. A list option counts as prefixed whenever the attribute is present, even if empty.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When the caller asks for 'any' matching, a support definition whose logic is all-of needs every entry met, and any other definition needs one entry met. When the caller does not ask for 'any', every definition, all-of included, is met by one entry. A definition with no entries, or none met, is met only when all are required. Plain product entries are checked before nested definitions.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The category tree selection follows the category shown in the right pane.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The right pane lists the chosen category in this order: an \"Up: <parent name>\" row marked \"Parent\" when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For a selected or highlighted category the pane shows its title, \"This category contains N policies and M subcategories.\" (\"The selected category\" when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A value counts as present when: for a deletion marker, it is marked for deletion; for a number, it exists as a whole number and equals the expected number; for text, it exists as text and equals the expected text. A value of the wrong kind is not present.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "An item's unique name is its template's namespace, a colon and its own name, so equal names in different templates stay apart.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A list option replaces other entries of its key unless marked additive, stores plain text unless marked expandable, numbers entries automatically unless the template says the person names them, and counts as prefixed only when a value prefix is given.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A control keeps the reference id the language file gives it, which ties it to the matching setting option in the template file; a control without one has no id.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A child product (major or minor version) is attached under its parent product, which must be defined in the same template file; only products without a parent are listed as top-level products.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for checking whether a value will be deleted: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy applies to computers when its class is \"Machine\", to users when \"User\", and to both for any other class value.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When no language file is found in any of those places, the template file is refused with \"The corresponding ADML is missing\" and none of its content is loaded.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy passes the filter only when it passes every active part of it.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a template file is refused with a reported failure (unparsable, invalid, namespace already owned, or no usable language file), it is skipped and the failure is listed; the other files in the folder still load and the structures are built from those that loaded.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For a checkbox element: a value marked for deletion counts as one deleted element. Otherwise, each present off value (or off-list value) counts a tenth of a deleted element, and each present on value (or on-list value) counts one present element. A checkbox whose template declares no on value or on list adds no present evidence, even if it holds 1.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Closing the workspace or replacing it with a new one discards all loaded definitions and the previous search results.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "For a selected policy the information pane shows its title, \"(no requirements information)\" when it has no support rule or \"Requirements:\" plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy's icon is chosen in this order: preference, then plain when it has no configurable elements, then \"extra configuration\" when it has some.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy applies to an area when its definition declares that area; a policy declared for both applies to each.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a template file's namespace is already held by a template file loaded earlier, it is refused with \"The <namespace> namespace is already owned by a different ADMX file\", so the same file cannot be added twice.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a policy lists no supported-on information, it counts as supported only if the caller allows unlisted policies. The same applies to a support entry that names no known product.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A template's superseded-ADM file name and minimum language revision are read when present; a superseded entry without a file name, or a minimum revision that is missing or not a number, refuses the template as invalid.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A language file's screen layouts are read only from its first presentation table; when the same layout id appears twice, the file is refused as invalid and its template file is not loaded.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for reading a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Only files directly in the chosen folder whose names end in .admx (in any letter case) are loaded as templates; subfolders and other files are ignored.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "An XML attribute that is absent, or whose text is not valid for the type of the stated default, gives that default.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "With both areas shown, a policy that applies to one area shows that area's state followed by \"(C)\" for computer or \"(U)\" for user. With a single area shown, only that area's state is shown, without a suffix.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When both a template file and its language file load, the template's categories, products, support rules and policies are staged for the next build and the pair is recorded as loaded under the template's namespace.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The namespace of a template is the one listed as its target; each prefix a template declares must be unique, and a repeated prefix refuses the file as invalid.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The language file for a template is taken from the subfolder named exactly by the language code if it holds this template's file; else from the first subfolder whose name starts with the same language part (before the dash, compared with capital letters mattering) that holds this template's file; else from the en-US subfolder if it holds it. A folder lacking the file is skipped.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy is Enabled when enabled evidence exceeds disabled evidence, Disabled when disabled exceeds enabled, Not configured when there is no evidence either way, and Unclear when both are equal and above zero.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "The language for definition text is the saved language code, or the computer's own language when none is saved.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "When a language file has no policy resources section, or its revision is missing or not a number, the file is refused as invalid and its template file is not loaded.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\\policies, software\\microsoft\\windows\\currentversion\\policies and system\\currentcontrolset\\policies.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for listing a key's values: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Reading a value from the live registry gives nothing when the key is missing. Signed numbers are returned as the unsigned numbers policies use, and environment variables in text are not expanded.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A support rule is 'any of' when its first logic element is \"or\", 'all of' when it is \"and\", and blank otherwise; only that first logic element is read, each reference or range in it becomes an entry, and a range may carry a minimum and maximum version.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "Clearing the search forgets the results, so reopening them reports that no search has been run.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A template file is refused as invalid when any of these is missing or unreadable: the policy definitions section; a namespace entry's prefix or namespace; a superseded-ADM file name; a minimum revision (missing or not a number); a support rule's name or display name; a support reference or range without its reference, or a version bound that is not a whole number; a product's name, display name or version index; a category's name or display name; a category's parent entry or its reference when the category has content; a policy's name, display name, key or class; a policy's category or supported-on reference; a number value's value; a list item's value name; a choice item's display name; or an option's id.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A REG file cannot be used as a source for asking whether a value is present: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+          "builtBy": "a shared story"
+        },
+        {
+          "says": "A support entry for a product counts as met in two cases. The entry is not a version range and that exact product is among the chosen products. Or the product has versions beneath it, and any of those versions or their sub-products is chosen, even when the product itself is not.",
+          "builtBy": "a shared story"
+        }
+      ]
+    }
+  ],
+  "transitionDetails": [
+    {
+      "id": "transition-06661621563201601518",
+      "entity": "Administrative template",
+      "from": "Downloaded package",
+      "to": "Unpacked",
+      "place": {
+        "file": "PolicyPlus/DownloadAdmx.vb",
+        "firstLine": 89,
+        "lastLine": 93
+      }
+    },
+    {
+      "id": "transition-75067382849384472391",
+      "entity": "Administrative template",
+      "from": "Unpacked",
+      "to": "Installed in a template folder",
+      "place": {
+        "file": "PolicyPlus/DownloadAdmx.vb",
+        "firstLine": 103,
+        "lastLine": 111
+      }
+    },
+    {
+      "id": "transition-10612937846340406069",
+      "entity": "Administrative template",
+      "from": "Loaded into the workspace",
+      "to": "Available as policy definitions",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 163,
+        "lastLine": 181
+      }
+    },
+    {
+      "id": "transition-51160080980241291404",
+      "entity": "Administrative template",
+      "from": "Loaded into the workspace or Available as policy definitions",
+      "to": "Cleared from the workspace",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 391,
+        "lastLine": 391
+      }
+    },
+    {
+      "id": "transition-27747052198892493091",
+      "entity": "Administrative template",
+      "from": "Loaded into the workspace or Available as policy definitions",
+      "to": "Cleared from the workspace",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 65,
+        "lastLine": 65
+      }
+    },
+    {
+      "id": "transition-22468192592027627314",
+      "entity": "Administrative template",
+      "from": "Loaded into the workspace or Available as policy definitions",
+      "to": "Cleared from the workspace",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 72,
+        "lastLine": 72
+      }
+    },
+    {
+      "id": "transition-80887081654133372599",
+      "entity": "Administrative template",
+      "from": "created",
+      "to": "Downloaded package",
+      "place": {
+        "file": "PolicyPlus/DownloadAdmx.vb",
+        "firstLine": 83,
+        "lastLine": 86
+      }
+    },
+    {
+      "id": "transition-86521319960986518382",
+      "entity": "Administrative template",
+      "from": "Installed in a template folder or Available as policy definitions",
+      "to": "Loaded into the workspace",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 72,
+        "lastLine": 77
+      }
+    },
+    {
+      "id": "transition-27594299302588587247",
+      "entity": "Policy setting",
+      "from": "created",
+      "to": "Not configured",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 94,
+        "lastLine": 100
+      }
+    },
+    {
+      "id": "transition-98316046502831010563",
+      "entity": "Program preference",
+      "from": "Welcome download offer not yet considered",
+      "to": "Welcome download offer considered",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 49,
+        "lastLine": 49
+      }
+    },
+    {
+      "id": "transition-66518996145123621291",
+      "entity": "Program preference",
+      "from": "Raw POL editing warning not yet accepted",
+      "to": "Raw POL editing warning accepted",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 787,
+        "lastLine": 787
+      }
+    },
+    {
+      "id": "transition-79493377009865225985",
+      "entity": "Program preference",
+      "from": "Policy sources remembered",
+      "to": "Policy sources at default (Local GPO)",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 33,
+        "lastLine": 34
+      }
+    },
+    {
+      "id": "transition-15941671345420340422",
+      "entity": "Program preference",
+      "from": "Policy sources at default (Local GPO) or Policy sources remembered",
+      "to": "Policy sources remembered",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 630,
+        "lastLine": 633
+      }
+    },
+    {
+      "id": "transition-46264696378359167574",
+      "entity": "Program preference",
+      "from": "Templates folder chosen",
+      "to": "Templates folder at Windows default",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 71,
+        "lastLine": 71
+      }
+    },
+    {
+      "id": "transition-74501217398374508233",
+      "entity": "Program preference",
+      "from": "Templates folder at Windows default or Templates folder chosen",
+      "to": "Templates folder chosen",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 517,
+        "lastLine": 517
+      }
+    },
+    {
+      "id": "transition-20790162524221496222",
+      "entity": "Program preference",
+      "from": "Templates folder at Windows default or Templates folder chosen",
+      "to": "Templates folder chosen",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 762,
+        "lastLine": 762
+      }
+    }
+  ],
+  "bundles": [
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-downloadadmx--getting-microsoft-policy-definitions.md",
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-main--getting-microsoft-policy-definitions.md"
+  ]
+}

@@ -2,7 +2,7 @@ import { positionDiagram, systemDiagram } from "./bundle-diagrams";
 import { filesOf, type FileRow } from "./bundle-files";
 import { productLines } from "./bundle-lines";
 import { at, rangesText, type Place } from "./bundle-places";
-import { screenSlice } from "./bundle-screen-slice";
+import { noWindow, screenSlice, surfaceSlice } from "./bundle-screen-slice";
 import { boundaryLines, contractLines, dataLines, reliedLines } from "./bundle-sections";
 import { capabilitySlice, type Payloads, type Slice } from "./bundle-slice";
 import { trustLines } from "./bundle-trust";
@@ -129,12 +129,68 @@ const bundleOf = (payloads: Payloads, slice: Slice): Bundle => {
  * The bundle of one screen.
  * @param payloads everything the analysis wrote
  * @param key the screen's address
+ * @param capabilityId the record id of the capability to cut the screen to; the whole screen when omitted
  * @returns the bundle; undefined when no screen has that address
  */
-export const screenBundle = (payloads: Payloads, key: string): Bundle | undefined => {
-    const slice = screenSlice(payloads, key);
+export const screenBundle = (payloads: Payloads, key: string, capabilityId?: string): Bundle | undefined => {
+    const slice = screenSlice(payloads, key, capabilityId);
     return slice === undefined ? undefined : bundleOf(payloads, slice);
 };
+
+/**
+ * The bundle of one surface of one capability, which is the unit a modernisation story builds.
+ * @param payloads everything the analysis wrote
+ * @param surface the surface's name as the actions name their screen, or `Entry points without a window`
+ * @param capabilityId the capability's record id
+ * @returns the bundle; undefined when the capability holds no action there
+ */
+export const surfaceBundle = (payloads: Payloads, surface: string, capabilityId: string): Bundle | undefined => {
+    const slice = surfaceSlice(payloads, surface, capabilityId);
+    return slice === undefined ? undefined : bundleOf(payloads, slice);
+};
+
+/**
+ * The text of a name as a file name part: lowercase, each run of other characters one `-`, none at either end.
+ * @param text the name
+ * @returns the slug
+ */
+export const slug = (text: string) =>
+    text
+        .toLowerCase()
+        .split("")
+        .map((char) => ((char >= "a" && char <= "z") || (char >= "0" && char <= "9") ? char : " "))
+        .join("")
+        .split(" ")
+        .filter((part) => part !== "")
+        .join("-");
+
+/**
+ * The file name of the bundle of one surface of one capability.
+ * @param surface the surface's name
+ * @param capability the capability's name
+ * @returns the file name
+ */
+export const surfaceBundleName = (surface: string, capability: string) =>
+    `screen-${slug(surface)}--${slug(capability)}.md`;
+
+/**
+ * Every surface of every capability: the pairs a bundle is written for, in the capabilities' order.
+ * @param payloads everything the analysis wrote
+ * @returns the pairs, with the capability's record id and name
+ */
+export const surfacePairs = (payloads: Payloads) =>
+    payloads.capabilities.flatMap((each) => {
+        const surfaces = new Set(
+            each.layers.flatMap((layer) =>
+                layer.actions.map((action) => (action.screen === "" ? noWindow : action.screen)),
+            ),
+        );
+        return [...surfaces].map((surface) => ({
+            surface,
+            capabilityId: each.capability.id,
+            capability: each.capability.name,
+        }));
+    });
 
 /**
  * The bundle of one capability.

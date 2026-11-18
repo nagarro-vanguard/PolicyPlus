@@ -1,0 +1,826 @@
+{
+  "stories": [
+    {
+      "terms": [],
+      "open": [],
+      "title": "Ignore double-clicks on product ticks in the filter",
+      "what": "Double-clicking a product's checkbox in the filter's product list does nothing, so the tick a person sees is always the tick that is kept.",
+      "why": "Administrators build product filters quickly and must be able to trust what is ticked.",
+      "actions": [
+        "block-55576298759886274598"
+      ],
+      "criteria": [
+        {
+          "says": "Given the product list in the filter dialog, when a person double-clicks a product's checkbox, then nothing changes and the tick shown is the tick kept.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-58048189688698008638"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [
+        {
+          "name": "Supported on",
+          "means": "The filter condition that keeps policies supported by the chosen products; it is not the Policy type or Current state condition."
+        },
+        {
+          "name": "Product requirement box",
+          "means": "The part of the filter dialog holding the product list and the two matching options; it is not the whole dialog."
+        }
+      ],
+      "open": [],
+      "title": "Choose the products a filter requires",
+      "what": "In the filter dialog a person ticks Supported on to use the product requirement box, and ticks products, each tick spreading to the products beneath it.",
+      "why": "Administrators narrow the policy list to the policies that apply to the Windows versions and products they manage.",
+      "actions": [
+        "block-26736796202907003543",
+        "block-75494449832197867529",
+        "block-44706239895339562170"
+      ],
+      "criteria": [
+        {
+          "says": "Given the filter dialog has just opened, when Supported on is not ticked, then the product list and the two matching options cannot be used; when it is ticked they can be used.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88807660791719489759"
+            }
+          ]
+        },
+        {
+          "says": "Given Supported on is ticked, when a person ticks or unticks a product by hand, then every product beneath it is ticked or unticked to match, and changes the dialog makes itself do not spread.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-61457439461915744538"
+            }
+          ]
+        },
+        {
+          "says": "Given Supported on is not ticked, when the dialog shows the product list, then the list looks unusable and readable.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-14"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [
+        {
+          "name": "Filter",
+          "means": "The set of conditions on type, state, comment and supported products that a policy must meet to be listed; it is not a search."
+        }
+      ],
+      "open": [],
+      "title": "Apply the options chosen in the filter dialog",
+      "what": "Pressing OK in the filter dialog builds a filter from the chosen type, state, comment and supported-on options and closes the dialog accepted.",
+      "why": "Administrators see only the policies that meet their conditions.",
+      "actions": [
+        "block-88991021756869656536"
+      ],
+      "criteria": [
+        {
+          "says": "Given a Policy type is chosen, when OK is pressed, then the filter keeps only managed policies for Policy, only unmanaged ones for Preference, and has no policy-type condition for Any.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-03237181236179074787"
+            }
+          ]
+        },
+        {
+          "says": "Given a Current state is chosen, when OK is pressed, then the filter requires Not Configured, Configured, Enabled or Disabled as chosen, and Any sets no state condition.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-81055540068763556055"
+            }
+          ]
+        },
+        {
+          "says": "Given a Commented choice, when OK is pressed, then the filter keeps only commented policies for Yes, only uncommented ones for No, and has no comment condition for Any.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-70906412717211463954"
+            }
+          ]
+        },
+        {
+          "says": "Given Supported on is ticked, when OK is pressed, then the filter records every ticked product and both matching options, and is accepted even when no product is ticked; given it is unticked, any ticks and options are discarded and no support condition applies.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-90628240213834851721"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Open, reset or cancel the filter dialog",
+      "what": "The filter dialog opens showing the filter now in force; a person can reset every choice to its default, or press Escape to close it without changing the current filter.",
+      "why": "People can start over or back out without side effects.",
+      "actions": [
+        "block-27559849759497597302",
+        "block-03044886867739368079"
+      ],
+      "criteria": [
+        {
+          "says": "Given the current filter has no policy-type condition, or keeps only managed policies, or only the others, when the dialog opens, then Policy type shows Any, Policy or Preference respectively.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-32591775124677875588"
+            }
+          ]
+        },
+        {
+          "says": "Given the current filter has no state condition, or requires Not Configured, Configured, Enabled or Disabled, when the dialog opens, then Current state shows Any or that state.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-26561900736287578271"
+            }
+          ]
+        },
+        {
+          "says": "Given the current filter has no comment condition, or keeps only commented, or only uncommented policies, when the dialog opens, then Commented shows Any, Yes or No respectively.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-59209755491778300947"
+            }
+          ]
+        },
+        {
+          "says": "Given the current filter has a supported-on condition, when the dialog opens, then Supported on is ticked, exactly the filter's products are ticked, both matching options are set as the filter holds, and product branches whose tick differs from their parent are opened.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-01575097247784730570"
+            }
+          ]
+        },
+        {
+          "says": "Given the current filter has no supported-on condition, when the dialog opens, then Supported on is unticked, both \"Match a policy if at least one selected product is supported\" and \"Match policies with missing or blank support definitions\" are ticked, and no product is ticked.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-76306981111385169671"
+            }
+          ]
+        },
+        {
+          "says": "Given any choices in the filter dialog, when Reset is pressed, then Policy type, Current state and Commented return to Any, Supported on is unticked, both matching options are ticked and no product is ticked.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-81206266674090971597"
+            }
+          ]
+        },
+        {
+          "says": "Given the filter dialog is open, when Escape is pressed, then it closes as cancelled and the current filter is unchanged.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57716378734614233724"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Turn the filter on and change it from the main window",
+      "what": "From the main window a person opens the filter dialog, which turns \"Only Filtered Policies\" on when changed, and switches the filter on or off with that menu entry.",
+      "why": "Administrators can narrow the policy lists and widen them again at will.",
+      "actions": [
+        "block-69596352550727046885",
+        "block-40488572982447813355"
+      ],
+      "journey": {
+        "name": "Narrow the list with a filter",
+        "steps": [
+          "Open the filter options from the menu",
+          "Choose conditions and press OK",
+          "See only the filtered policies and the nearest visible category",
+          "Switch Only Filtered Policies off to see everything again"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the filter dialog is accepted, when the filter options change, then \"Only Filtered Policies\" turns on and the view moves to the nearest visible category.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-85052319902195299547"
+            }
+          ]
+        },
+        {
+          "says": "Given the main window, when a person chooses \"Only Filtered Policies\", then the filter switches on or off and the view moves to the nearest visible category.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-36944318108231327872"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [
+        {
+          "name": "Find by ID",
+          "means": "The lookup of one item by its identifier; it is not a text search."
+        }
+      ],
+      "open": [],
+      "title": "Look up an identifier as it is typed",
+      "what": "Typing an ID in Find by ID looks it up as a category, product, support definition or policy and shows what was found, with the section a policy ID names.",
+      "why": "Administrators who know an ID reach the exact item without browsing.",
+      "actions": [
+        "block-61877977111665770759",
+        "block-00880488620958939962",
+        "block-08747539546616381995"
+      ],
+      "criteria": [
+        {
+          "says": "Given text typed in Find by ID, when it is trimmed and looked up, then a category is tried first, then a product, then a support definition, then a policy; the first kind that matches is selected with its own icon, and a policy is looked up only when no other kind matches.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-34818300362920325745"
+            }
+          ]
+        },
+        {
+          "says": "Given the text matches nothing, when it is typed, then nothing is selected and a \"not found\" icon is shown; given the text is empty, a blank icon is shown; and a section from an earlier match is not cleared when the text changes to a non-policy.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-56645748073860464161"
+            }
+          ]
+        },
+        {
+          "says": "Given a policy ID, when it ends with \"@U\" or \"@C\", then it means the user or computer section; with no suffix or any other suffix it applies to both, and the suffix is cut off before the lookup.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-73680018829588409732"
+            }
+          ]
+        },
+        {
+          "says": "Given Find by ID opens, then the status icons come from the product's icon set and the ID box is focused and empty.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-14"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Confirm Find by ID and limit the area and selection choices",
+      "what": "Go accepts Find by ID with the typed ID whether or not it matched, Escape closes it as cancelled, and the area choice, policy selection and menu offer only supported options.",
+      "why": "People decide when to go to what they found, or give up.",
+      "actions": [
+        "block-32698633467304016976",
+        "block-36457006871614893425"
+      ],
+      "criteria": [
+        {
+          "says": "Given Find by ID is open, when Go is pressed, then it closes accepted with the typed text, even when nothing matched, so the caller may receive no selection.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-59811769233751713079"
+            }
+          ]
+        },
+        {
+          "says": "Given Find by ID is open, when Escape is pressed, then it closes as cancelled.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-79420398091956863443"
+            }
+          ]
+        },
+        {
+          "says": "Given the area choice, when a person opens it, then it offers only \"User or Computer\", \"User\" and \"Computer\" and accepts no typed text.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-81666786810242280110"
+            }
+          ]
+        },
+        {
+          "says": "Given the policy list, when a person selects a policy, then only that one is selected.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-93221850558792273709"
+            }
+          ]
+        },
+        {
+          "says": "Given the main menu, when a person looks for Deduplicate Policies, then it is not offered.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-49813083192336894297"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [
+        "Should a policy hidden by the area choice or the filter still leave the category shown with no message, or should the person be told why nothing is selected?"
+      ],
+      "title": "Go to a policy, category, product or support definition by ID",
+      "what": "From the main window a person enters an ID and the product moves to the matching category or policy, or opens the product or support details.",
+      "why": "Administrators jump straight to a known item.",
+      "actions": [
+        "block-16750935830546567218"
+      ],
+      "journey": {
+        "name": "Jump to an item by its ID",
+        "steps": [
+          "Choose Find by ID from the menu",
+          "Type the ID and press Go",
+          "Land on the category, policy editor or details of the item"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given an ID is accepted, when it names a visible category, a policy, a product, a support definition or nothing known, then the category opens, the policy opens in the editor with the list moved to it, the product or support details open, or \"That object could not be found.\" is shown; a hidden category shows \"The category is not currently visible. Change the view settings and try again.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-49582367227471127226"
+            }
+          ]
+        },
+        {
+          "says": "Given a policy is found, when the list moves to it, then its category is shown only when visible in the tree, the policy row is selected only if listed there, and a policy hidden by the area or the filter leaves the category shown with nothing selected and no message.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-62209428351075007862"
+            }
+          ]
+        },
+        {
+          "says": "Given a policy found by ID, when it opens, then the area is the lower-numbered of the area shown and the area found, so Computer wins over User.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-73292110340688125936"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Refuse unusable text searches and cancel with Escape",
+      "what": "Find by text refuses an empty search or one with no attribute ticked, and closes as cancelled on Escape.",
+      "why": "People get a clear reason instead of an empty result.",
+      "actions": [
+        "block-47405947189671669922"
+      ],
+      "criteria": [
+        {
+          "says": "Given Find by text is open with empty search text, when Search is pressed, then the search is refused with \"Please enter search terms.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-73561308167207352856"
+            }
+          ]
+        },
+        {
+          "says": "Given In title, In description and In comment all start ticked, when none is ticked and Search is pressed, then the search is refused with \"At least one attribute must be searched. Check one of the boxes and try again.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-31790508764365764837"
+            }
+          ]
+        },
+        {
+          "says": "Given Find by text is open, when Escape is pressed, then it closes as cancelled.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-14"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [
+        {
+          "name": "Wildcard word",
+          "means": "A search word containing * or ? that matches any run or any one character; it is not a plain word."
+        },
+        {
+          "name": "Hit",
+          "means": "A policy that meets the search; it is not a policy merely listed."
+        }
+      ],
+      "open": [
+        "Should an unclosed quote still be dropped silently, as today, or should the person be told?",
+        "Decision 6 says no comment search is carried, yet the rule matches comments from the user and computer sources; should In comment be searched or dropped?"
+      ],
+      "title": "Find policies by title, description or comment text",
+      "what": "Search text is split into words, wildcards and phrases, and matches policies whose title, description or comment hit every word, wildcard and phrase of the search text.",
+      "why": "Administrators locate policies by what they remember of their wording.",
+      "actions": [
+        "block-30919896261988592289"
+      ],
+      "criteria": [
+        {
+          "says": "Given search text, when it is split, then plain words, wildcard words (with \"*\" or \"?\") and quoted phrases are told apart, and words are lowercased, trimmed and lose the characters . , ' \" ; / ! ( ) { } [ ].",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-20714647401379544771"
+            }
+          ]
+        },
+        {
+          "says": "Given a phrase opened with a double quote, when a later word ends in a double quote, then the phrase runs between them; a phrase never closed is dropped without telling the person, widening the search, and a single quoted word such as \"abc\" does not close itself so it absorbs the following words.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-63262725504588029346"
+            }
+          ]
+        },
+        {
+          "says": "Given parsed search text, when a text is tested, then it is a hit only if it contains every plain word as a whole word, every wildcard matches some word, and every quoted phrase appears as whole words together.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-21915530910585082056"
+            }
+          ]
+        },
+        {
+          "says": "Given the ticked attributes, when a policy's title or description hits, then the policy matches; any one hit is enough.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-51916167191556979448"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Refuse unusable registry searches and cancel with Escape",
+      "what": "Find by registry refuses empty terms and terms that name a root key, and closes as cancelled on Escape.",
+      "why": "People are told how to fix their terms.",
+      "actions": [
+        "block-71047013454784114585"
+      ],
+      "criteria": [
+        {
+          "says": "Given both key and value are empty, when Search is pressed, then the search is refused with \"Please enter search terms.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-73898787083077319907"
+            }
+          ]
+        },
+        {
+          "says": "Given key text starts with a root key name for the local machine or the current user, short or full, followed by a backslash, when Search is pressed, then it is refused with \"Policies' root keys are determined only by their section. Remove the root key from the search terms and try again.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-71024372746156766440"
+            }
+          ]
+        },
+        {
+          "says": "Given Find by registry is open, when Escape is pressed, then it closes as cancelled.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-14"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Find policies by registry key and value",
+      "what": "Search matches policies that read or write a registry value meeting every key and value term entered.",
+      "why": "Administrators who know a registry location find the policy that controls it.",
+      "actions": [
+        "block-80717492809988540545"
+      ],
+      "criteria": [
+        {
+          "says": "Given terms entered, when a policy is tested, then it matches when at least one registry value it reads or writes meets every term, ignoring case.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-54588279423566663184"
+            }
+          ]
+        },
+        {
+          "says": "Given a value-name term, when it is matched, then the whole name must match, with \"*\" and \"?\" as wildcards, otherwise equal.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-27271850163543025066"
+            }
+          ]
+        },
+        {
+          "says": "Given a key term with no backslash and no wildcard, then it matches policies with a key path part equal to it.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-95826639622119629666"
+            }
+          ]
+        },
+        {
+          "says": "Given a key term with a backslash and no wildcard, then it matches policies whose key path starts with that text.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-35545130062422334165"
+            }
+          ]
+        },
+        {
+          "says": "Given a key term with \"*\" or \"?\", then it must match the whole key path as a wildcard pattern.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-54035538146675510973"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Search every policy and list the hits as they are found",
+      "what": "The results window tests every policy in turn, adds each hit with its category, and refreshes its list and progress as it goes.",
+      "why": "Administrators see results early on a long search.",
+      "actions": [
+        "block-64273399884973341208",
+        "block-05405434344126500839",
+        "block-37035950900396190507"
+      ],
+      "criteria": [
+        {
+          "says": "Given a search is waiting, when the results window is shown, then the search tests every policy in turn and adds each hit to the list with its category name, in the order policies are held.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-79288582532948770219"
+            }
+          ]
+        },
+        {
+          "says": "Given a running search, when 20 more policies are checked, then the list and progress refresh with \"Searching: checked N policies so far, found M hits\".",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-94342659396000502591"
+            }
+          ]
+        },
+        {
+          "says": "Given the results list, when the window is resized or shown, then the title column fills the list width and drawing is smooth.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "scope.decision-14"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Report how a search ended and let the person stop it",
+      "what": "Stop or closing the window cancels a search, and the window reports how the search ended.",
+      "why": "People can abandon a long search and know what was covered.",
+      "actions": [
+        "block-36571577833746850164",
+        "block-57135383118787346557"
+      ],
+      "criteria": [
+        {
+          "says": "Given a search ends, when it finishes or is stopped, then it reports \"Finished searching: checked N policies, found M hits\" or \"Search canceled: ...\" and Stop is disabled.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57749472934040708163"
+            }
+          ]
+        },
+        {
+          "says": "Given a running search, when Stop is pressed or the window is closed, then the search is cancelled; closing before it finishes leaves \"Search canceled\" with the bar full.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-15877826642522947109"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [
+        {
+          "name": "Search results",
+          "means": "The policies a search found, kept so the person can return to them; it is not the filter."
+        }
+      ],
+      "open": [],
+      "title": "Choose a search result and reopen the results",
+      "what": "Go or a double-click takes the selected result, and reopening the window selects the earlier result again.",
+      "why": "People continue from where they left off.",
+      "actions": [
+        "block-25728253727728310343"
+      ],
+      "criteria": [
+        {
+          "says": "Given a result is selected, when Go or a double-click is used, then the window accepts, passes the policy back and remembers its position; with none selected it does not accept.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-48840711587592938759"
+            }
+          ]
+        },
+        {
+          "says": "Given the window is reopened, when the earlier selected result is still listed, then it is selected again.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-17385510066480798684"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Start a text or registry search from the main window",
+      "what": "The main window starts a search from the text or registry dialog's terms, clears earlier results and opens the picked policy.",
+      "why": "Administrators move from a search to the policy in one flow.",
+      "actions": [
+        "block-14507530008177660767",
+        "block-83203327187612347635"
+      ],
+      "journey": {
+        "name": "Search for a policy",
+        "steps": [
+          "Choose Find by text or by registry",
+          "Enter terms and press Search",
+          "Watch results appear",
+          "Pick a result and edit the policy"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given Find by text, when terms are entered, then a search starts with them and can search both areas' comments.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-86305970842078630022"
+            }
+          ]
+        },
+        {
+          "says": "Given Find by registry, when terms are entered, then a search starts with them.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-90661647574869686546"
+            }
+          ]
+        },
+        {
+          "says": "Given a search starts, then earlier results are cleared, the progress range is the number of policies and it begins on \"Starting search\".",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-35354684864210149934"
+            }
+          ]
+        },
+        {
+          "says": "Given a search dialog opens empty or runs a new search, when a result is picked, then its editor opens in the current area and the list moves to that policy.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-80544887789558031281"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Reopen the last search results",
+      "what": "\"Search Results\" shows the last results again without a new search.",
+      "why": "People revisit results after editing a policy.",
+      "actions": [
+        "block-49062346851945682165"
+      ],
+      "criteria": [
+        {
+          "says": "Given a search was run, when \"Search Results\" is chosen, then the last results reopen and no new search starts.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-78338951417255409296"
+            }
+          ]
+        },
+        {
+          "says": "Given no search has been run or it was cleared, when it is chosen, then \"No search has been run yet, so there are no results to display.\" is shown and nothing opens.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-38090025507732480917"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "terms": [],
+      "open": [],
+      "title": "Step to the next search result",
+      "what": "Find Next moves to the next visible policy in the results.",
+      "why": "Administrators work through hits one by one.",
+      "actions": [
+        "block-27516887165549303737"
+      ],
+      "criteria": [
+        {
+          "says": "Given results, when Find Next is chosen, then it moves to the next currently visible result, skipping hidden ones, and shows \"There are no more results that match the filter.\" when none is left.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-17430127230259081557"
+            }
+          ]
+        },
+        {
+          "says": "Given no search has run or the last result has been passed, when the next policy is taken, then nothing is returned; otherwise it is the result after the last chosen one.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-53914450774482291886"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

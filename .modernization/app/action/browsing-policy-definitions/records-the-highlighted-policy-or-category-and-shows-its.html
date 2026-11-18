@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Records the highlighted policy or category and shows its description.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/browsing-policy-definitions.html">Browsing policy definitions</a> › <a href="../../screen/policy-plus-main-window.html">Policy Plus main window</a></div><h1>Records the highlighted policy or category and shows its description.</h1><p class="lead">Started by a person. In the code: PolicyPlus/Main.vb:491</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the Main screen of Browsing policy definitions: Records the highlighted policy or category and shows its description.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:491
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 7
+- When nothing is selected, the title and support lines are hidden and the pane reads &quot;Select an item to see its description.&quot;. (PolicyPlus/Main.vb:146)
+- For a selected policy the information pane shows its title, &quot;(no requirements information)&quot; when it has no support rule or &quot;Requirements:&quot; plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences. (PolicyPlus/Main.vb:149)
+- For a selected or highlighted category the pane shows its title, &quot;This category contains N policies and M subcategories.&quot; (&quot;The selected category&quot; when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not. (PolicyPlus/Main.vb:158)
+- A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies. (PolicyPlus/Main.vb:296)
+- A registry key counts as a policy key when it is one of the three policy branches (software\policies, software\microsoft\windows\currentversion\policies, system\currentcontrolset\policies) or lies below one, regardless of case. (PolicyPlus/PolicySource.vb:412)
+- Highlighting a policy makes it the selected policy and clears any highlighted category; highlighting a category does the reverse; highlighting nothing clears both. (PolicyPlus/Main.vb:493)
+- The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped. (PolicyPlus/Main.vb:863)
+Unconfirmed:
+- For the capability: When the person's language has no exact language folder, the folder picked among those of the same primary language is the first one the operating system lists; which that is, is not stated in code. If wrong: A person could see a different regional variant of the policy text than expected when several variants are installed.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/browsing-policy-definitions/dialog-windows-and-their-reactions.html">Dialog windows and their reactions</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/browsing-policy-definitions/policy-definitions-and-files.html">Policy definitions and files</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (7)</h2><div class="group-name">Dialog windows and their reactions</div><div class="row"><div class="main"><span>When nothing is selected, the title and support lines are hidden and the pane reads &quot;Select an item to see its description.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When nothing is selected, the title and support lines are hidden and the pane reads &quot;Select an item to see its description.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:146
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:146  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Highlighting a policy makes it the selected policy and clears any highlighted category; highlighting a category does the reverse; highlighting nothing clears both.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Highlighting a policy makes it the selected policy and clears any highlighted category; highlighting a category does the reverse; highlighting nothing clears both.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:493
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:493  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For a selected or highlighted category the pane shows its title, &quot;This category contains N policies and M subcategories.&quot; (&quot;The selected category&quot; when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: For a selected or highlighted category the pane shows its title, &quot;This category contains N policies and M subcategories.&quot; (&quot;The selected category&quot; when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:158
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:158  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:863
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:863  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For a selected policy the information pane shows its title, &quot;(no requirements information)&quot; when it has no support rule or &quot;Requirements:&quot; plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: For a selected policy the information pane shows its title, &quot;(no requirements information)&quot; when it has no support rule or &quot;Requirements:&quot; plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:149
+- PolicyPlus/Main.Designer.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:149  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:296
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:296  ·  Screens: Main</div></div></div><div class="group-name">Policy definitions and files</div><div class="row"><div class="main"><span>A registry key counts as a policy key when it is one of the three policy branches (software\policies, software\microsoft\windows\currentversion\policies, system\currentcontrolset\policies) or lies below one, regardless of case.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Browsing policy definitions: A registry key counts as a policy key when it is one of the three policy branches (software\policies, software\microsoft\windows\currentversion\policies, system\currentcontrolset\policies) or lies below one, regardless of case.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:412
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:412  ·  Screens: Main</div></div></div></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

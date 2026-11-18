@@ -174,7 +174,7 @@ const noFallbacks = [
 ];
 
 export default tseslint.config(
-    { ignores: ["node_modules/**", "tests/**", "stages/publish/ux-visuals/**"] },
+    { ignores: ["node_modules/**", "tests/**"] },
     js.configs.recommended,
     ...tseslint.configs.recommendedTypeChecked,
     {

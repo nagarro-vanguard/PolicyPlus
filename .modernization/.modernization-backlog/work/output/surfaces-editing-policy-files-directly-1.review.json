@@ -1,0 +1,17 @@
+{
+  "read": 26,
+  "challenges": [
+    {"record": 6, "says": "The Clear everything and Clear first criterion repeats the disputed wording of the rule (all values removed, deletion entries lost, sub-key values not put back), which the analysis review found misleading: clearing affects only the key's own direct values and markers, and sub-keys keep their values untouched."},
+    {"record": 6, "says": "The 'what' sentence is not followable by a product owner: 'clears a key either completely, keeping its direct values' contradicts itself, and 'Clear first' versus 'Clear everything' is never explained in plain words."},
+    {"record": 24, "says": "The criterion says the person is told what went wrong when the export cannot be produced, but rule 06090110 says the old program raised an unhandled error here; the told-the-person behaviour is a new decision that belongs only in the open question, not stated as a criterion."},
+    {"record": 9, "says": "Both criteria cite only scope.decision-15, a carry decision that says nothing about opening the import window or rebuilding the list on success; the behaviour comes from the action's purpose, not from any cited rule or decision."},
+    {"record": 11, "says": "The cursor-in-name-box and Escape criteria cite scope.decision-15 (and layer-web), which cannot carry them; they rest only on the actions' purposes."},
+    {"record": 12, "says": "The Escape criterion cites scope.decision-15, which says nothing about Escape or leaving the value unchanged."},
+    {"record": 13, "says": "The hexadecimal toggle and Escape criteria cite scope.decision-15, which cannot carry either behaviour; they rest only on the actions' purposes."},
+    {"record": 14, "says": "The Escape criterion cites scope.decision-15, which says nothing about Escape or leaving the value unchanged."},
+    {"record": 15, "says": "The Escape criterion cites scope.decision-15, which says nothing about Escape or adding no value."},
+    {"record": 16, "says": "The 'chooses a file name, shown in the file box' and Escape criteria cite only integrations.decision-1 and scope.decision-15, neither of which states a file box or Escape behaviour; the 'download rather than written to a folder' claim also sits uneasily with a person still choosing a name, which the open question admits is unsettled."},
+    {"record": 18, "says": "The criterion on data in an unrecognised form (rule 59618595) omits the rule's statement that applying it writes an empty value or fails, and rule 18627979's fact that a prefix always ends in a backslash is dropped, so the open question on unrecognised data is left under-informed."},
+    {"record": 7, "says": "The fourth criterion (Escape closes the delete window as cancelled) cites only scope.decision-15, which cannot carry it; it rests on the action's purpose alone."}
+  ]
+}

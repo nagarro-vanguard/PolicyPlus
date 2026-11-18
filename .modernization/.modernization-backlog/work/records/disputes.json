@@ -1,0 +1,362 @@
+[
+  {
+    "job": "integrations",
+    "says": "Record 0: The reason rejects server disk access because it would leak across users, yet decision-4 assumes no sign-in so the uploaded files, templates and comments stored in Data are one shared pool for all users, which is the same leak; the decision must say whose files these are or state the shared-pool assumption."
+  },
+  {
+    "job": "integrations",
+    "says": "Record 5: The reason states that the analysis shows no comment search, a fact that is not in the inputs given (context and job), so the choice rests on a claim the reviewer cannot trace to the analysis."
+  },
+  {
+    "job": "scope",
+    "says": "Record 5: The reason states that administrators locate policies mainly by search, a fact that appears nowhere in the analysis or the decisions, so it cannot carry the choice to carry the capability."
+  },
+  {
+    "job": "scope",
+    "says": "Record 7: The reason claims every other capability selects policies from these views, which the inputs do not show (building, getting Microsoft definitions, settings and raw file editing are not described as starting from these views), so it cannot carry the choice."
+  },
+  {
+    "job": "base",
+    "says": "Record 0: It states that no library outside the stack is added, yet it adds fast-xml-parser and fflate, which the stack in the context does not list, so the decision contradicts itself."
+  },
+  {
+    "job": "base",
+    "says": "Record 2: Its reason leans on decision-9 allowing no library outside the stack, but decision-9 itself adds two such libraries, so the grounds for excluding Testing Library and property testing do not hold as written."
+  },
+  {
+    "job": "foundation-stories",
+    "says": "Record 3: The Services criterion adds 'without starting a network server', which base.decision-11 does not say; it only names the HttpApi test client."
+  },
+  {
+    "job": "foundation-stories",
+    "says": "Record 3: The Storybook criterion says a component without a story is 'reported', but base.decision-24 only says each component has a story and names no check that reports a missing one."
+  },
+  {
+    "job": "foundation-stories",
+    "says": "Record 3: The CI criterion turns an assumption of base.decision-11 ('CI can run Docker and Playwright browsers') into a requirement, and no criterion carries the rule that a story is done only when its layer checks and its black-box test pass."
+  },
+  {
+    "job": "foundation-stories",
+    "says": "Record 1: The knip criterion repeats the one in the first story (both cite base.decision-14), so the same rule is covered twice rather than once."
+  },
+  {
+    "job": "foundation-stories",
+    "says": "Record 4: No story carries the layer conventions base.decision-19 to 23, 25 and 26 (file size limits in the contract, forward-only migrations, repositories returning Domain types, thin handlers, upload validation, Paraglide messages, generated client only), so a stated decision reaches no builder; the criterion on AGENTS.md says only that conventions are written, not which."
+  },
+  {
+    "job": "shared-1",
+    "says": "Record 2: The criterion for businessrule-25371901799273876158 drops the rule's condition that a start-up load also discards the workspace."
+  },
+  {
+    "job": "shared-1",
+    "says": "Record 4: The criterion that a policy option of an unknown kind is dropped without notice cites only the legacy rule, yet base.decision-16 says an unknown policy element is kept and reported, never silently dropped; the contradiction is neither resolved nor cited."
+  },
+  {
+    "job": "shared-1",
+    "says": "Record 5: The criterion that any other control is dropped without notice conflicts with base.decision-16 (unknown elements are kept and reported) and neither cites nor reconciles it."
+  },
+  {
+    "job": "shared-1",
+    "says": "Record 8: The criteria on an imported registry source restate rules that describe the live registry, but they do not cite integrations.decision-2 that turns the live registry into imported files, so the builder cannot see why the rule applies to imports."
+  },
+  {
+    "job": "shared-1",
+    "says": "Record 9: The story joins two unrelated rules, and its wording (an 'XML attribute' returning nothing, 'server rendered', 'decisions make the service...') is not something a product owner who never saw the code could follow."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 0: The criterion on the language falls back to \"the computer's own language\", which in a server-rendered product is the server's or is undefined; it cites no decision (integrations.decision-4 and base.decision-22 store the language in a settings row) and does not say whose language is used when none is saved."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 0: \"Namespace\" is used in the criteria (owned namespace, recorded under the template's namespace) but is not defined in the terms, so a product owner who never saw the code cannot follow it."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 4: The last criterion promises identical bytes on write-back, but the cited rule 70425663320377904356 truncates text at its first empty character and a multiple-string value at its first empty string on read, so bytes after the truncation cannot be written back; the criterion contradicts the rule it sits beside without saying which wins."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 4: base.decision-16 is about unknown policy elements in definitions, yet it is applied to a POL file as 'an unknown element is kept and reported'; the claim 'a value is written as the type it was read as' comes from no cited rule or decision."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 5: The 'Policy source' and 'SID' terms say a User hive source may show the SID in brackets, but the name criterion says the brackets hold the imported file name in place of a path or SID; the term and the criterion contradict."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 5: The criterion on sources that could not release their resources (rule 59631775004799082543) is kept as written, but with no hive mounted and no file held open (the story's own criteria say so) no source can fail to release, so the criterion can never be met or tested."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 5: The writability criterion says a registry source is always changeable, dropping the rule's read-only outcome, and the close criterion says closing a user hive always succeeds, dropping the rule's reported failure; these are changes in behaviour with no condition kept to say when they would differ."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 5: The criteria that read values from a registry source filled by an imported REG file contradict the next story, which says a REG file source fails every read with 'not implemented'; the two stories do not say how a REG import is held so that reading works here and fails there."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 6: Its rules describe a live REG file source that cannot be read, but integrations.decision-2 and scope.decision-15 turn REG into an import and export format whose content is read into stored sources, so it is unclear when this failure can still occur; the criterion cites no decision and does not say what carries the rule."
+  },
+  {
+    "job": "shared-2",
+    "says": "Record 5: Wording a product owner cannot follow: 'Registry.pol file', 'GPO', 'signed number with the same bits' and 'unsigned 32-bit or 64-bit number' are used in criteria without being explained in plain terms."
+  },
+  {
+    "job": "shared-3",
+    "says": "Record 0: The writability criterion ('no writing' when the write test failed, 'no commit' when the file could not be opened for writing) keeps legacy live-registry and disk-open conditions that integrations.decision-1 and decision-2 remove, cites no decision, and does not say what fails for an uploaded or stored source."
+  },
+  {
+    "job": "shared-3",
+    "says": "Record 1: The criterion that registry-style sources 'lose nothing' flattens the rule (a registry source applies changes at once, a user hive file when it is closed) and cites no decision although decision-2 drops the live registry, so what is lost for an imported registry or hive source is unstated."
+  },
+  {
+    "job": "shared-3",
+    "says": "Record 3: Criteria say 'when it is stored' for marking, forgetting and clearing, wording a product owner cannot follow; the rule describes the change made to the policy file's entries."
+  },
+  {
+    "job": "shared-3",
+    "says": "Record 4: The '**delvals' criterion drops the rule's sentence that clearing a live registry key removes only that key's own values."
+  },
+  {
+    "job": "shared-3",
+    "says": "Record 5: The forget and clear criteria describe the live registry's behaviour but do not cite integrations.decision-2 or say they apply to the imported registry source model the story is about."
+  },
+  {
+    "job": "shared-3",
+    "says": "Record 9: The edit-accepted criterion says 'nothing is written to disk until Save', which contradicts decision-1 (the service reads and writes no folder) and does not say what Save stores or downloads."
+  },
+  {
+    "job": "surfaces-building-and-versioning-policy-plus-1",
+    "says": "Record 0: The second criterion adds a condition the cited rule does not state (\"when the commit is not itself tagged\") and uses the term \"describe command\", which a product owner who never saw the code cannot follow; the rule says only a tag, commit count and short commit name when tags exist, and a short commit name otherwise."
+  },
+  {
+    "job": "surfaces-building-and-versioning-policy-plus-1",
+    "says": "Record 0: The what and the term \"Build version\" say the version is shown or reported by the screens and the service, but the cited rule only stamps the version into a file and no reviewed input shows it displayed anywhere."
+  },
+  {
+    "job": "surfaces-getting-microsoft-policy-definitions-1",
+    "says": "Record 0: The first criterion says more than businessrule-34650805596483639458, which only sets the destination to the Windows policy definitions folder and reports no new folder to the caller; it invents 'shows that Microsoft's package will be kept as the program's definitions' and an agreement step, and the story's 'names where the definitions go' contradicts its second criterion, where there is no folder to choose."
+  },
+  {
+    "job": "surfaces-getting-microsoft-policy-definitions-1",
+    "says": "Record 2: The third criterion drops from businessrule-24154317128059319852 that the missing English folder stops the download only after the destination files were already replaced, and the second criterion says 'nothing is stored' on extraction failure while omitting that the package file is kept and, on success, deleted (businessrule-91358402464075338920)."
+  },
+  {
+    "job": "surfaces-getting-microsoft-policy-definitions-1",
+    "says": "Record 2: The second criterion promises that unpacking makes the files ready to store, citing no decision, although integrations.decision-8 and base.decision-9 assume an in-memory archive and the story's own open question admits the Windows installer package cannot be opened that way; the fact cannot carry the claim, and the criteria use 'service' wording a product owner has no use for."
+  },
+  {
+    "job": "surfaces-getting-microsoft-policy-definitions-1",
+    "says": "Record 4: The criteria on remembering a policy-source choice, falling back from an unusable policy-source place, the raw POL editing warning and creating a missing policy file cite transitions that this story's action (the Acquire ADMX Files menu item) never performs, so they say things unrelated to the story's what and why and bury unrelated behaviour in it."
+  },
+  {
+    "job": "surfaces-getting-microsoft-policy-definitions-1",
+    "says": "Record 4: The fallback criterion merges four transitions from different places (startup clearing, default templates folder, and chosen folder at Main.vb 517 which is not part of this action) into one 'cannot be loaded, uses default definitions' statement that none of the cited transitions alone says."
+  },
+  {
+    "job": "surfaces-using-the-product-1",
+    "says": "Record 1: The first criterion cites the rule that settings which cannot be opened or created read as defaults silently and are not remembered, yet says only that settings are read from the shared row, so that rule's condition and outcome are neither carried nor stated as dropped, and the matching open question is not tied to it."
+  },
+  {
+    "job": "surfaces-using-the-product-1",
+    "says": "Record 1: The TLS criterion has no testable condition (\"the service will later download\") and cites scope.decision-10, which only carries the Microsoft download and says nothing about allowed protocol versions or about doing it at start, so the decision cannot carry a fixed TLS 1.0/1.1/1.2 allow-list on the server."
+  },
+  {
+    "job": "surfaces-using-the-product-1",
+    "says": "Record 1: The policy sources dialog criterion lists the kinds Local GPO, Registry, per-user GPO and user hive as remembered and shown, but scope.decision-12 drops the live system sources and the same story says the service reads no local Group Policy, so the criterion contradicts the decisions it cites and the story's own first-start criterion."
+  },
+  {
+    "job": "surfaces-using-the-product-1",
+    "says": "Record 4: The first criterion cites no rule, only layer-web, and says Exit makes the screens end the person's use, which no rule or decision defines in a web product (its own open question admits this), so a developer cannot build or test it."
+  },
+  {
+    "job": "surfaces-choosing-and-saving-policy-sources-1",
+    "says": "Record 0: Criteria 1 and 2 promise that Search turns a typed account name into a SID, but decision 7 removes the directory connection and nothing in the inputs can carry that translation, so these criteria assert behaviour no decision supports (the open question admits it, the criteria still state it as fact)."
+  },
+  {
+    "job": "surfaces-choosing-and-saving-policy-sources-1",
+    "says": "Record 3: The user POL file Browse criterion drops the conditions of businessrule-60819102502476341284 (only '.pol' files, a file that does not exist yet may be named, no question before an existing file), which the computer-side story applies but this story never states for the user side."
+  },
+  {
+    "job": "surfaces-choosing-and-saving-policy-sources-1",
+    "says": "Record 3: The words per-user GPO, user hive and Scratch space are used without a term in this story (terms is empty), so a product owner reading it alone cannot follow them."
+  },
+  {
+    "job": "surfaces-choosing-and-saving-policy-sources-1",
+    "says": "Record 4: The criteria offer Local GPO as a choice for both sides, while the 'Open the chosen policy sources' story says the live system source is not offered and decisions 1, 2 and 12 give Local GPO no file-based replacement, so the stories contradict each other."
+  },
+  {
+    "job": "surfaces-choosing-and-saving-policy-sources-1",
+    "says": "Record 5: The criterion says the live system source is not offered, contradicting stories 2 to 4 which still list Local GPO as a choice, and it cites decision 12 for a statement that decision only supports for the sources it names."
+  },
+  {
+    "job": "surfaces-choosing-and-saving-policy-sources-1",
+    "says": "Record 6: businessrule-13724150063390760319 also says saving remembers the chosen source types and locations for the next start, but no criterion carries that condition; it is left only as an open question, and decision 4 gives no basis for what is remembered."
+  },
+  {
+    "job": "surfaces-choosing-and-saving-policy-sources-1",
+    "says": "Record 6: Wording a product owner cannot follow: Registry.pol, CMTX and 'running number' are used without a term, and the story mixes file names of the legacy system into the outcomes."
+  },
+  {
+    "job": "surfaces-changing-policy-settings-1",
+    "says": "Record 4: The Disabled criterion for businessrule-56832565542674334637 drops its conditions: a list loses all values under its key even when the definition says to keep other entries, and the values left in place are those of a chosen item, a checkbox's on list and the policy's own on list, not only 'extra on values'."
+  },
+  {
+    "job": "surfaces-changing-policy-settings-1",
+    "says": "Record 3: The criteria use words a product owner who never saw the code cannot follow: 'presentation's default', 'spin box', 'expandable string', 'multiple-string value', '32-bit number', 'registry value' and 'extra values'."
+  },
+  {
+    "job": "surfaces-changing-policy-settings-1",
+    "says": "Record 4: The criteria for 'Unknown' state and 'registry value' (and the policy's 'on value', 'off value') are unexplained jargon, and 'only supplied settings are written' sits beside 'every option is written whatever its value' with nothing saying when each applies, so the two read as contradictory."
+  },
+  {
+    "job": "surfaces-changing-policy-settings-1",
+    "says": "Record 4: The last criterion cites decision-2 and scope.decision-13 for 'the write goes to the stored policy settings for the section', but decision-2 only says the registry source is modelled in Domain and filled from imported files, so neither decision carries that statement."
+  },
+  {
+    "job": "surfaces-changing-policy-settings-1",
+    "says": "Record 0: The criterion that state and comment 'come from the stored settings, not from the registry' cites decisions that do not say where a section's state is read from, so the fact is not carried by what it cites."
+  },
+  {
+    "job": "surfaces-changing-policy-settings-1",
+    "says": "Record 6: The Reset criterion cites layer-web although businessrule-27078270365699057081 owns the Reset behaviour (confirmation text and the restored header with blank lines), and the rule is cited only for Open File."
+  },
+  {
+    "job": "surfaces-changing-policy-settings-1",
+    "says": "Record 8: The 'Include SPOL header' criterion cites scope.decision-13, which only says SPOL text in and out is carried; the heading-and-blank-line fact comes from the shared-story rule the surface relies on, which a decision cannot carry."
+  },
+  {
+    "job": "surfaces-changing-policy-settings-1",
+    "says": "Record 3: The Apply story holds the option-saving rules while the state-writing rules (forget first, Enabled, Disabled) sit in the OK story, though both buttons run the same save; the split leaves Apply's own story depending on an unstated later story."
+  },
+  {
+    "job": "surfaces-changing-policy-settings-1",
+    "says": "Record 9: The criterion for businessrule-70167687024707690035 says 'the view refreshes either way' and gives both messages, but the rule's 'all policies to both sources and comments' and the failure-count wording 'N out of M' do not state when the first message shows versus the second, leaving the success condition ambiguous."
+  },
+  {
+    "job": "surfaces-finding-policies-1",
+    "says": "Record 1: The third criterion cites scope.decision-14, which only says filters and search are carried in full; it cannot carry that the disabled product list 'looks unusable and readable' (and the wording is unclear to a product owner)."
+  },
+  {
+    "job": "surfaces-finding-policies-1",
+    "says": "Record 5: The fourth criterion cites scope.decision-14 for status icons from the icon set and a focused, empty ID box; that decision says nothing of icons or focus, so the criterion has no support."
+  },
+  {
+    "job": "surfaces-finding-policies-1",
+    "says": "Record 8: The Escape criterion cites scope.decision-14, which cannot carry closing as cancelled; no rule is cited for it either."
+  },
+  {
+    "job": "surfaces-finding-policies-1",
+    "says": "Record 9: The fourth criterion cites only title or description and drops the comment condition of businessrule-51916167191556979448 (user or computer comment), and the open question points to a 'Decision 6' that is not named and, as integrations.decision-6, covers storing comments, not a ban on comment search."
+  },
+  {
+    "job": "surfaces-finding-policies-1",
+    "says": "Record 10: The Escape criterion cites scope.decision-14, which cannot carry closing as cancelled."
+  },
+  {
+    "job": "surfaces-finding-policies-1",
+    "says": "Record 12: The third criterion cites scope.decision-14 for a title column filling the list width and smooth drawing; that decision says nothing about either."
+  },
+  {
+    "job": "surfaces-finding-policies-1",
+    "says": "Record 7: The third criterion says 'lower-numbered' area, a code detail a product owner cannot follow; it should say Computer beats User, and both beats neither, in plain words."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 6: The Clear everything and Clear first criterion repeats the disputed wording of the rule (all values removed, deletion entries lost, sub-key values not put back), which the analysis review found misleading: clearing affects only the key's own direct values and markers, and sub-keys keep their values untouched."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 6: The 'what' sentence is not followable by a product owner: 'clears a key either completely, keeping its direct values' contradicts itself, and 'Clear first' versus 'Clear everything' is never explained in plain words."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 24: The criterion says the person is told what went wrong when the export cannot be produced, but rule 06090110 says the old program raised an unhandled error here; the told-the-person behaviour is a new decision that belongs only in the open question, not stated as a criterion."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 9: Both criteria cite only scope.decision-15, a carry decision that says nothing about opening the import window or rebuilding the list on success; the behaviour comes from the action's purpose, not from any cited rule or decision."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 11: The cursor-in-name-box and Escape criteria cite scope.decision-15 (and layer-web), which cannot carry them; they rest only on the actions' purposes."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 12: The Escape criterion cites scope.decision-15, which says nothing about Escape or leaving the value unchanged."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 13: The hexadecimal toggle and Escape criteria cite scope.decision-15, which cannot carry either behaviour; they rest only on the actions' purposes."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 14: The Escape criterion cites scope.decision-15, which says nothing about Escape or leaving the value unchanged."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 15: The Escape criterion cites scope.decision-15, which says nothing about Escape or adding no value."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 16: The 'chooses a file name, shown in the file box' and Escape criteria cite only integrations.decision-1 and scope.decision-15, neither of which states a file box or Escape behaviour; the 'download rather than written to a folder' claim also sits uneasily with a person still choosing a name, which the open question admits is unsettled."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 18: The criterion on data in an unrecognised form (rule 59618595) omits the rule's statement that applying it writes an empty value or fails, and rule 18627979's fact that a prefix always ends in a backslash is dropped, so the open question on unrecognised data is left under-informed."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-1",
+    "says": "Record 7: The fourth criterion (Escape closes the delete window as cancelled) cites only scope.decision-15, which cannot carry it; it rests on the action's purpose alone."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-2",
+    "says": "Record 0: The second open question treats a typed minus sign as possibly setting the smallest value, but hexadecimal parsing rejects a sign with a format error that is silently ignored, so the value stays unchanged; the Minimum branch (EditPolNumericData.vb:47-48) is only reached on overflow, which a leading minus cannot cause, so the question misstates the current behaviour."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-2",
+    "says": "Record 0: The first open question asks about capitals and no prefix, but the code fixes this (String.Format \"{0:X}\", line 26) as a fact, not an open point, and criterion 1 does not state it; either state it in the criterion or drop the question."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-2",
+    "says": "Record 0: The second criterion (ordinary behaviour when hexadecimal mode is off) cites layer-web and base.decision-25 (messages, forms and queries), which say nothing about the field falling back to the standard control; the citation does not support the criterion."
+  },
+  {
+    "job": "surfaces-editing-policy-files-directly-2",
+    "says": "Record 0: Criterion 4 and the rule leave out that empty text leaves the value unchanged and that text too large for the 32-bit field in a 32-bit value is clamped to that smaller maximum; the story only hints at this in the term, so the 32-bit versus 64-bit clamp is not testable from the criteria."
+  },
+  {
+    "job": "surfaces-browsing-policy-definitions-1",
+    "says": "Record 0: The criterion \"added to the policies already loaded and the structures are built\" uses builder wording a product owner cannot follow, and it overlaps the single ADMX file criterion without saying how a template file differs from an ADMX file."
+  },
+  {
+    "job": "surfaces-browsing-policy-definitions-1",
+    "says": "Record 1: The resize criterion cites only layer-web and a scope decision, not a rule, so it states fit-to-pane behaviour (no horizontal scroll bar, labels fitting) that no cited sentence carries."
+  },
+  {
+    "job": "surfaces-browsing-policy-definitions-1",
+    "says": "Record 14: The value-writing criterion drops parts of the cited rule: text lists have items double-quoted with quotes doubled, tables have double-quoted name: value lines, and text is single-quoted with no escaping, which is why quotes or line breaks cannot be read back."
+  },
+  {
+    "job": "surfaces-browsing-policy-definitions-2",
+    "says": "Record 0: Criterion 2 presumes 'another source choice is shown' and can be switched away from file picking, but criterion 3 says no folder or domain choice is offered at all, so the two contradict and the rule it cites (folder box enabled only with 'This folder') has no behaviour left to carry."
+  },
+  {
+    "job": "surfaces-browsing-policy-definitions-2",
+    "says": "Record 0: Criterion 3 states as fact that no Windows-folder choice is offered, while the first open question asks whether to offer the Windows policy definitions folder or the stored package; the criterion settles what the story says is undecided."
+  },
+  {
+    "job": "surfaces-browsing-policy-definitions-2",
+    "says": "Record 0: Criterion 6 cites base.decision-23, which only says uploads are checked for size and type before parsing; it cannot carry 'told what is missing' or the window staying open, which come from the dropped refusal part of the OK rule (businessrule-53176229115945924012), and the refusal text is left to an open question."
+  },
+  {
+    "job": "surfaces-browsing-policy-definitions-2",
+    "says": "Record 0: Criterion 4 (names appear in a list, list unchanged when the dialog is closed without picking) rests on no cited rule or decision; decision-1 says nothing of a file list, so the behaviour is invented, and the Browse action's own reading of the rule is not cited."
+  },
+  {
+    "job": "surfaces-browsing-policy-definitions-2",
+    "says": "Record 0: Criterion 1 cites businessrule-76226373219464614800 only for 'first choice selected' and drops its stated condition that the SYSVOL choice exists only when the computer is on a domain and the folder is found; that condition is not covered by any criterion (decision-7 is cited only for the Active Directory lookup of a GPO's POL file, not for definitions folders)."
+  }
+]

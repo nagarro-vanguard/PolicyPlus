@@ -1,0 +1,45 @@
+---
+import Page from "../layouts/Page.astro";
+import PlanPrompt from "./PlanPrompt.astro";
+import { copy } from "../lib/copy";
+import { decisionsByTopic, layerName, planHomePath, previewFolder, subjectOf } from "../lib/plan";
+import type { PlanData } from "../lib/plan-data";
+export interface Props { data: PlanData; }
+const { data } = Astro.props;
+const { plan, prompts, previews } = data;
+const root = "../";
+const names = new Map(plan.layers.map((layer) => [layer.id, layer.name] as const));
+const rootPreview = previews.get("");
+const layerKind = (kind: string) => copy.plan.layerKinds[kind as keyof typeof copy.plan.layerKinds] ?? kind;
+---
+<Page title={copy.plan.foundationTitle} lead={copy.plan.foundationLead} depth={1} trail={[{ text: copy.site.home, href: `${root}index.html` }, { text: copy.plan.title, href: `${root}${planHomePath}.html` }, { text: copy.plan.foundationTitle }]}>
+    <h2>{copy.plan.layers} ({plan.layers.length})</h2>
+    <div class="table-wrap"><table class="data">
+        <thead><tr><th>{copy.plan.layerColumns.layer}</th><th>{copy.plan.layerColumns.folder}</th><th>{copy.plan.layerColumns.kind}</th><th>{copy.plan.layerColumns.purpose}</th><th>{copy.plan.layerColumns.dependsOn}</th></tr></thead>
+        <tbody>{plan.layers.map((layer) => <tr>
+            <td>{layer.name}</td>
+            <td><code>{layer.path}</code></td>
+            <td>{layerKind(layer.kind)}</td>
+            <td>{layer.purpose}<div class="sub">{copy.plan.layerColumns.check}: <code>{layer.check}</code></div></td>
+            <td>{layer.dependsOn.length === 0 ? copy.plan.layerNone : layer.dependsOn.map((id) => names.get(id) ?? id).join(", ")}</td>
+        </tr>)}</tbody>
+    </table></div>
+    <h2>{copy.plan.decisions} ({plan.decisions.length})</h2>
+    {decisionsByTopic(plan.decisions).map((group) => <section>
+        <h3>{copy.plan.decisionTopics[group.topic]} ({group.decisions.length})</h3>
+        {group.decisions.map((decision) => <div class="assume">
+            <div><strong>{subjectOf(decision, layerName(plan, decision.layer))}</strong> · {copy.plan.decisionChose}: {decision.chose}</div>
+            <div class="sub">{copy.plan.decisionWhy}: {decision.reason}</div>
+            {group.topic !== "convention" && <div class="sub">{copy.plan.decisionGoverns(layerName(plan, decision.layer))}</div>}
+        </div>)}
+    </section>)}
+    <h2>{copy.plan.rulesFiles}</h2>
+    <p class="note">{copy.plan.rulesFilesLead}</p>
+    {rootPreview !== undefined && <details open><summary>{copy.plan.rulesRoot}</summary><pre class="prompt">{rootPreview}</pre></details>}
+    {plan.layers.map((layer) => {
+        const text = previews.get(previewFolder(layer));
+        return text === undefined ? null : <details><summary>{layer.name}</summary><pre class="prompt">{text}</pre></details>;
+    })}
+    <h2 id="scaffold">{copy.plan.scaffoldHeading}</h2>
+    <PlanPrompt title={copy.plan.foundationTitle} text={prompts.scaffold} lead={copy.plan.scaffoldLead} />
+</Page>

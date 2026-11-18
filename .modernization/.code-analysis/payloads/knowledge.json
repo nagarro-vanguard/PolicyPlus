@@ -1,0 +1,5517 @@
+{
+  "parts": [
+    {
+      "id": "part-84884120082996248766",
+      "name": "Policy Plus desktop editor",
+      "kind": "program",
+      "purpose": "A Windows desktop program that edits Group Policy settings for all Windows editions, used by administrators and power users.",
+      "folders": [
+        "PolicyPlus"
+      ],
+      "technologies": [
+        ".NET Framework",
+        "Microsoft Windows",
+        "System.DirectoryServices",
+        "System.Xml",
+        "Visual Basic .NET",
+        "Windows Forms"
+      ],
+      "files": 92
+    }
+  ],
+  "technologies": [
+    {
+      "id": "technology-35569778825867670313",
+      "name": ".NET Framework",
+      "kind": "framework",
+      "versions": [
+        {
+          "label": "v4.5.2",
+          "parts": [
+            "part-84884120082996248766"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technology-21672362062668746986",
+      "name": "Git ignore rules",
+      "kind": "notCode",
+      "versions": [
+        {
+          "label": "",
+          "parts": []
+        }
+      ]
+    },
+    {
+      "id": "technology-37376411076882179403",
+      "name": "Markdown documents",
+      "kind": "notCode",
+      "versions": [
+        {
+          "label": "",
+          "parts": []
+        }
+      ]
+    },
+    {
+      "id": "technology-82419739670951366154",
+      "name": "Microsoft Windows",
+      "kind": "platform",
+      "versions": [
+        {
+          "label": "",
+          "parts": [
+            "part-84884120082996248766"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technology-80468534907831364037",
+      "name": "MSBuild and Visual Studio project files",
+      "kind": "notCode",
+      "versions": [
+        {
+          "label": "",
+          "parts": []
+        }
+      ]
+    },
+    {
+      "id": "technology-12028088391452822950",
+      "name": "System.DirectoryServices",
+      "kind": "library",
+      "versions": [
+        {
+          "label": "",
+          "parts": [
+            "part-84884120082996248766"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technology-24515639277863321320",
+      "name": "System.Xml",
+      "kind": "library",
+      "versions": [
+        {
+          "label": "",
+          "parts": [
+            "part-84884120082996248766"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technology-32094534928982550668",
+      "name": "Visual Basic .NET",
+      "kind": "language",
+      "versions": [
+        {
+          "label": "",
+          "parts": [
+            "part-84884120082996248766"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technology-74929009651457653740",
+      "name": "Windows batch script",
+      "kind": "notCode",
+      "versions": [
+        {
+          "label": "",
+          "parts": []
+        }
+      ]
+    },
+    {
+      "id": "technology-15458745836330537789",
+      "name": "Windows Forms",
+      "kind": "framework",
+      "versions": [
+        {
+          "label": "",
+          "parts": [
+            "part-84884120082996248766"
+          ]
+        }
+      ]
+    }
+  ],
+  "answers": [
+    {
+      "id": "fact-02393723106748175487",
+      "aspect": "build-release",
+      "question": "How is it built, packaged and released, and in which environments?",
+      "group": "How each part is built and released",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "A script stamps the current source revision into a generated version file before each build; the file is kept out of version control, so a build without that step has no revision.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": ".gitignore",
+          "firstLine": 1,
+          "lastLine": 2
+        },
+        {
+          "file": "version.bat",
+          "firstLine": 1,
+          "lastLine": 8
+        }
+      ]
+    },
+    {
+      "id": "fact-03893549041694512543",
+      "aspect": "purpose",
+      "question": "What is it for, and who uses it?",
+      "group": "What it is",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "Policy Plus is a Windows desktop editor for Group Policy settings. It reads Microsoft's administrative templates and edits policy files directly, so it works on Windows editions without the built-in editor.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "README.md",
+          "firstLine": 1,
+          "lastLine": 10
+        }
+      ]
+    },
+    {
+      "id": "fact-08040114224504549032",
+      "aspect": "scheduled-work",
+      "question": "What work runs on a schedule or in batches, and what starts it?",
+      "group": "How work enters, and how it is handled",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "Nothing runs on a schedule or in batches. The one automatic action is a one-time offer at first launch to download definition files on computers without Group Policy.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 46,
+          "lastLine": 57
+        }
+      ]
+    },
+    {
+      "id": "fact-10103642107898702938",
+      "aspect": "runs-where",
+      "question": "Where does it run?",
+      "group": "Where it runs, and how each part starts and stops",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "The program needs elevated Windows rights for its main work: it enables process privileges, loads and unloads registry hives, refreshes policy, and edits Group Policy files under the Windows system folder.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/PInvoke.vb",
+          "firstLine": 4,
+          "lastLine": 10
+        },
+        {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 18,
+          "lastLine": 19
+        }
+      ]
+    },
+    {
+      "id": "fact-15255740489277757978",
+      "aspect": "customers-apart",
+      "question": "How are customers or organisations kept apart?",
+      "group": "Who can do what, settings, and when things fail",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "It serves one person on one computer, so there are no customers or organisations to keep apart. Different user profiles and the machine are separate policy stores that the person picks, and Windows file and registry rights apply.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 22,
+          "lastLine": 27
+        },
+        {
+          "file": "PolicyPlus/OpenUserRegistry.vb",
+          "firstLine": 9,
+          "lastLine": 12
+        }
+      ]
+    },
+    {
+      "id": "fact-15892720570951117851",
+      "aspect": "runs-where",
+      "question": "Where does it run?",
+      "group": "Where it runs, and how each part starts and stops",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "It runs on the user's own Windows computer as one desktop program on .NET Framework 4.5.2. It asks for elevated rights when available but starts without them; loading registry hives, refreshing policy and editing local Group Policy files need them. It can also reach the domain's shared policy folder.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-16067230107243765163",
+      "aspect": "settings",
+      "question": "Where do settings and secrets come from, and which live outside the code?",
+      "group": "Who can do what, settings, and when things fail",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "The program's own few settings, such as the last definitions folder, last policy sources, language and first-run flag, are kept in the current user's registry; nothing is read from files. It holds no secrets.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/ConfigurationStorage.vb",
+          "firstLine": 1,
+          "lastLine": 8
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 20,
+          "lastLine": 22
+        }
+      ]
+    },
+    {
+      "id": "fact-28317381620440484920",
+      "aspect": "failures",
+      "question": "How are failures logged, retried and reported?",
+      "group": "Who can do what, settings, and when things fail",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "Failures are shown to the person in message boxes and never logged or retried. Many are swallowed silently, including failing to save settings or comments. The download tells only which step failed, not why, and a failed download leaves its scratch folder behind.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/ConfigurationStorage.vb",
+          "firstLine": 5,
+          "lastLine": 9
+        },
+        {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 123,
+          "lastLine": 126
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 614,
+          "lastLine": 638
+        }
+      ]
+    },
+    {
+      "id": "fact-37633336540025671609",
+      "aspect": "around-work",
+      "question": "What runs around all incoming work, such as checks every request passes?",
+      "group": "How work enters, and how it is handled",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "Nothing runs around all work: there are no shared checks, filters or logging layers. Each dialog checks its own inputs, or not. The open-folder dialog confirms the folder exists, but the download dialog accepts any typed folder without checking it. Whether a policy store is writable is tested when it is opened.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 37,
+          "lastLine": 40
+        },
+        {
+          "file": "PolicyPlus/OpenAdmxFolder.vb",
+          "firstLine": 36,
+          "lastLine": 43
+        },
+        {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 52,
+          "lastLine": 60
+        }
+      ]
+    },
+    {
+      "id": "fact-41071046553783511208",
+      "aspect": "work-enters",
+      "question": "How does work enter it, and who or what starts that work?",
+      "group": "How work enters, and how it is handled",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "A person starts all work in the windows through menu items, buttons and double-clicks. Files the person opens also bring in input: registry, policy and semantic policy files, and user profile files under the Users folder. We found no command-line, network, service or other-program entry in the program's own files; startup is a plain Windows Forms main window.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-41705061505392187132",
+      "aspect": "scheduled-work",
+      "question": "What work runs on a schedule or in batches, and what starts it?",
+      "group": "How work enters, and how it is handled",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "Nothing runs on a schedule or in batches. The one automatic action is a one-time offer at first launch to download definition files on computers without Group Policy.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-46174673436839477548",
+      "aspect": "starts-stops",
+      "question": "How does it start and stop?",
+      "group": "Where it runs, and how each part starts and stops",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "A person starts the program, which opens the main window and loads the last-used definitions folder and policy sources saved in the user's registry. It stops when the main window closes.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-52543639111844492727",
+      "aspect": "build-release",
+      "question": "How is it built, packaged and released, and in which environments?",
+      "group": "How each part is built and released",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "It is built in Visual Studio or by a GitHub workflow into one executable run directly, with no installer. A script stamps the source revision in. We presume the workflow uploads the latest build to cloud storage; stages beyond that are unconfirmed.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-58054726142862143266",
+      "aspect": "unit-of-work",
+      "question": "How is one piece of work carried out, from arrival to response?",
+      "group": "How work enters, and how it is handled",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "The person picks a setting and a dialog edits it in memory. With the live local registry as source, each change is written at once and Save reports it as already applied. File and per-user profile sources wait for Save or for the source to close. Save is a sequence: comments, then both stores, then remembered sources, so a failure partway leaves earlier writes done. Language and definitions folder save when chosen. Download and Find run in background tasks.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-62649004367082617327",
+      "aspect": "around-work",
+      "question": "What runs around all incoming work, such as checks every request passes?",
+      "group": "How work enters, and how it is handled",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "Nothing runs around all work: there are no shared checks, filters or logging layers. Each dialog checks its own inputs, or not. The open-folder dialog confirms the folder exists, but the download dialog accepts any typed folder. Whether a policy store is writable is tested when it is opened.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-63676518668804053498",
+      "aspect": "customers-apart",
+      "question": "How are customers or organisations kept apart?",
+      "group": "Who can do what, settings, and when things fail",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "It serves one person on one computer, so there are no customers or organisations to keep apart. User profiles and the machine are separate policy stores that the person picks, and Windows file and registry rights apply.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-64173072684328940435",
+      "aspect": "who-can-do-what",
+      "question": "Who can do what, and where is that decided?",
+      "group": "Who can do what, settings, and when things fail",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "The program has no users or roles of its own; what a person can change is set by Windows. Administrators can edit machine policies and other users' profiles, others only what Windows lets them write. The program tests writability and administrator status and enables extra system privileges when available.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-64659708696583092631",
+      "aspect": "runs-where",
+      "question": "Where does it run?",
+      "group": "Where it runs, and how each part starts and stops",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "It runs on the user's own Windows computer as one desktop program on .NET Framework 4.5.2. It requests elevated rights when available but starts without them; loading registry hives, refreshing policy and editing local Group Policy files need them. It can also reach the domain's shared policy folder.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-65852010671836147791",
+      "aspect": "purpose",
+      "question": "What is it for, and who uses it?",
+      "group": "What it is",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "A Windows desktop program that lets administrators and power users edit Group Policy settings on any Windows edition, including Home editions that lack the built-in editor, by reading policy definition files and writing the chosen settings.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 46,
+          "lastLine": 57
+        },
+        {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 8,
+          "lastLine": 14
+        }
+      ]
+    },
+    {
+      "id": "fact-65987955098148491419",
+      "aspect": "build-release",
+      "question": "How is it built, packaged and released, and in which environments?",
+      "group": "How each part is built and released",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "It is built in Visual Studio or by a GitHub workflow into one executable run directly, with no installer. A script stamps the source revision in. We presume the workflow uploads the latest build to cloud storage; its file was not read, so staging stages are unconfirmed.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-68736636935527482468",
+      "aspect": "settings",
+      "question": "Where do settings and secrets come from, and which live outside the code?",
+      "group": "Who can do what, settings, and when things fail",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "The program's own few settings, such as the last definitions folder, last policy sources, language and first-run flag, are kept in the current user's registry; nothing is read from files. It holds no secrets.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-70040487864324357715",
+      "aspect": "rules-it-applies",
+      "question": "Which rules does it apply?",
+      "group": "What it offers",
+      "subject": {
+        "kind": "capability",
+        "id": "capability-12186108826760133070",
+        "name": "Browsing policy definitions"
+      },
+      "statement": "A template names the lowest language-file revision it needs, but the code never compares it with the language file found, so an outdated language file is used without warning.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/AdmlFile.vb",
+          "firstLine": 19,
+          "lastLine": 19
+        },
+        {
+          "file": "PolicyPlus/AdmxBundle.vb",
+          "firstLine": 64,
+          "lastLine": 77
+        },
+        {
+          "file": "PolicyPlus/AdmxFile.vb",
+          "firstLine": 32,
+          "lastLine": 33
+        }
+      ]
+    },
+    {
+      "id": "fact-71018195397220859627",
+      "aspect": "life-of-states",
+      "question": "Which states does it go through, and what moves it on?",
+      "group": "What it keeps",
+      "subject": {
+        "kind": "entity",
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting"
+      },
+      "statement": "A policy state is only an edit in memory until the source is saved or closed. Saving a local policy writes the policy file and version, then refreshes Group Policy or copies the changes into the live registry. A user hive applies on unload, registry sources at once, and the empty source discards.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 625,
+          "lastLine": 630
+        },
+        {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 93,
+          "lastLine": 150
+        },
+        {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 109,
+          "lastLine": 116
+        },
+        {
+          "file": "PolicyPlus/PolicySource.vb",
+          "firstLine": 150,
+          "lastLine": 178
+        }
+      ]
+    },
+    {
+      "id": "fact-75990589032226140452",
+      "aspect": "purpose",
+      "question": "What is it for, and who uses it?",
+      "group": "What it is",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "Policy Plus is a Windows desktop editor for Group Policy settings, used by administrators and power users. It reads Microsoft's policy definition files and edits policy files directly, so it works on any Windows edition, including Home, which lacks the built-in editor.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-76124608197084184403",
+      "aspect": "starts-stops",
+      "question": "How does it start and stop?",
+      "group": "Where it runs, and how each part starts and stops",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "A person starts the program, which opens the main window and loads the last-used definitions folder and policy sources saved in the user's registry. It stops when the main window closes.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 18,
+          "lastLine": 45
+        },
+        {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 8,
+          "lastLine": 10
+        }
+      ]
+    },
+    {
+      "id": "fact-77855055239248189870",
+      "aspect": "work-enters",
+      "question": "How does work enter it, and who or what starts that work?",
+      "group": "How work enters, and how it is handled",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "A person starts all work in the windows: menu items, buttons and double-clicks. Files the person opens also bring in input: registry, policy and semantic policy files, and user profile files found under the Users folder. We found no code in the program's own files for command-line arguments, network listening, services or calls from other programs; startup is a plain Windows Forms main window.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/ImportReg.vb",
+          "firstLine": 10,
+          "lastLine": 10
+        },
+        {
+          "file": "PolicyPlus/ImportSpol.vb",
+          "firstLine": 4,
+          "lastLine": 4
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 18,
+          "lastLine": 45
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 526,
+          "lastLine": 529
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 722,
+          "lastLine": 724
+        },
+        {
+          "file": "PolicyPlus/OpenUserRegistry.vb",
+          "firstLine": 8,
+          "lastLine": 12
+        }
+      ]
+    },
+    {
+      "id": "fact-77857990153423021328",
+      "aspect": "purpose",
+      "question": "What is it for, and who uses it?",
+      "group": "What it is",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "Policy Plus is a Windows desktop editor for Group Policy settings, used by administrators and power users. It reads Microsoft's policy definition files and edits policy files directly, so it works on any Windows edition, including Home, which lacks the built-in editor.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-78807551590576524220",
+      "aspect": "runs-where",
+      "question": "Where does it run?",
+      "group": "Where it runs, and how each part starts and stops",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "It runs on the user's own Windows computer as a desktop program, using the Windows registry and the local Group Policy files.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 18,
+          "lastLine": 18
+        },
+        {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 8,
+          "lastLine": 9
+        }
+      ]
+    },
+    {
+      "id": "fact-79571243521410730248",
+      "aspect": "rules-it-applies",
+      "question": "Which rules does it apply?",
+      "group": "What it offers",
+      "subject": {
+        "kind": "capability",
+        "id": "capability-12186108826760133070",
+        "name": "Browsing policy definitions"
+      },
+      "statement": "Loading policy templates applies two loose rules. It uses the exact language folder, else the first folder of the same primary language that holds the language file, else en-US; with none, the file is refused. It never checks the language file against the template's minimum revision, so an outdated file loads silently.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-80838911939195751294",
+      "aspect": "unit-of-work",
+      "question": "How is one piece of work carried out, from arrival to response?",
+      "group": "How work enters, and how it is handled",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "The person picks a setting and a dialog edits it in memory. When the source is the live local registry, each change is written to the registry at once, and Save reports it as already applied. File and per-user profile sources wait for Save, or for the source to close. Save writes comments, then both stores, then remembered sources. Language and definitions folder are saved when chosen. The definition download and the Find results search run in background tasks.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 76,
+          "lastLine": 121
+        },
+        {
+          "file": "PolicyPlus/FindResults.vb",
+          "firstLine": 97,
+          "lastLine": 97
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 517,
+          "lastLine": 517
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 614,
+          "lastLine": 638
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 806,
+          "lastLine": 809
+        },
+        {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 52,
+          "lastLine": 60
+        },
+        {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 135,
+          "lastLine": 138
+        },
+        {
+          "file": "PolicyPlus/PolicySource.vb",
+          "firstLine": 374,
+          "lastLine": 382
+        }
+      ]
+    },
+    {
+      "id": "fact-82076822120996281238",
+      "aspect": "failures",
+      "question": "How are failures logged, retried and reported?",
+      "group": "Who can do what, settings, and when things fail",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "statement": "Failures are shown to the person in message boxes and never logged or retried. Many are swallowed silently, including failing to save settings or comments. The download tells only which step failed, not why, and a failed download leaves its scratch folder behind.",
+      "basis": "concluded",
+      "evidence": []
+    },
+    {
+      "id": "fact-91868679194863187891",
+      "aspect": "runs-where",
+      "question": "Where does it run?",
+      "group": "Where it runs, and how each part starts and stops",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "It runs on the user's own Windows computer as a single desktop program that needs the .NET Framework 4.5.2 installed. It reads and writes the computer's registry and policy files and can reach the domain's shared policy folder.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/App.config",
+          "firstLine": 2,
+          "lastLine": 4
+        },
+        {
+          "file": "PolicyPlus/OpenAdmxFolder.vb",
+          "firstLine": 9,
+          "lastLine": 22
+        },
+        {
+          "file": "PolicyPlus/PolicyPlus.vbproj",
+          "firstLine": 14,
+          "lastLine": 14
+        }
+      ]
+    },
+    {
+      "id": "fact-95717209305223405070",
+      "aspect": "who-can-do-what",
+      "question": "Who can do what, and where is that decided?",
+      "group": "Who can do what, settings, and when things fail",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "The program has no users or roles of its own; what a person can change is set by Windows. Administrators can edit machine policies and other users' profiles, others only what Windows lets them write. The program tests writability and administrator status and enables extra system privileges when available.",
+      "basis": "observed",
+      "evidence": [
+        {
+          "file": "PolicyPlus/OpenUserRegistry.vb",
+          "firstLine": 8,
+          "lastLine": 8
+        },
+        {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 52,
+          "lastLine": 60
+        },
+        {
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "firstLine": 63,
+          "lastLine": 65
+        }
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "fact-20387745968289728476",
+      "aspect": "rules-it-applies",
+      "question": "Which rules does it apply?",
+      "subject": {
+        "kind": "capability",
+        "id": "capability-12186108826760133070",
+        "name": "Browsing policy definitions"
+      },
+      "statement": "When the person's language has no exact language folder, the folder picked among those of the same primary language is the first one the operating system lists; which that is, is not stated in code.",
+      "why": "The folder listing order is left to the file system, and the template folders present are out of scope.",
+      "confirmWith": "the running system",
+      "ifWrong": "A person could see a different regional variant of the policy text than expected when several variants are installed.",
+      "evidence": [
+        {
+          "file": "PolicyPlus/AdmxBundle.vb",
+          "firstLine": 49,
+          "lastLine": 59
+        }
+      ]
+    },
+    {
+      "id": "fact-51155211321112647924",
+      "aspect": "rules-it-applies",
+      "question": "Which rules does it apply?",
+      "subject": {
+        "kind": "capability",
+        "id": "capability-17758885276262804412",
+        "name": "Building and versioning Policy Plus"
+      },
+      "statement": "The build script puts git's text between two quote marks on separate lines of the generated file. We assume the file is still valid code and the version string works.",
+      "why": "Lines 5 to 7 write the git text on its own line, so whether the result compiles is not settled by these lines. The committed generated file holds an empty version, so the result of a run is not shown in the code.",
+      "confirmWith": "the running system",
+      "ifWrong": "The build would fail or embed a wrong version after the script runs.",
+      "evidence": [
+        {
+          "file": "version.bat",
+          "firstLine": 5,
+          "lastLine": 7
+        }
+      ]
+    },
+    {
+      "id": "fact-64648038267474436688",
+      "aspect": "build-release",
+      "question": "How is it built, packaged and released, and in which environments?",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "An automated build on GitHub compiles the program on each change to the main branch. We assume it also publishes the result as the latest download; the build definition itself was not read.",
+      "why": "The build definition file lies outside the files read; only its status badge and the hand-build guide are visible.",
+      "confirmWith": "a document",
+      "ifWrong": "What the pipeline publishes, and where, would differ from what we describe.",
+      "evidence": [
+        {
+          "file": "COMPILE.md",
+          "firstLine": 10,
+          "lastLine": 14
+        },
+        {
+          "file": "README.md",
+          "firstLine": 3,
+          "lastLine": 3
+        }
+      ]
+    },
+    {
+      "id": "fact-64694143404189506601",
+      "aspect": "rules-it-applies",
+      "question": "Which rules does it apply?",
+      "subject": {
+        "kind": "capability",
+        "id": "capability-74192280505907161455",
+        "name": "Choosing and saving policy sources"
+      },
+      "statement": "The Group Policy check relies on a fixed list of edition codes. We assume those codes are the professional, enterprise, education and server editions, and that Home editions are absent. The code names no editions.",
+      "why": "The list holds numbers only; their meaning as editions comes from outside knowledge.",
+      "confirmWith": "a document",
+      "ifWrong": "The program would hide or show its warning about missing Group Policy on the wrong computers.",
+      "evidence": [
+        {
+          "file": "PolicyPlus/SystemInfo.vb",
+          "firstLine": 3,
+          "lastLine": 11
+        }
+      ]
+    },
+    {
+      "id": "fact-66090717571428373796",
+      "aspect": "build-release",
+      "question": "How is it built, packaged and released, and in which environments?",
+      "subject": {
+        "kind": "part",
+        "id": "part-84884120082996248766",
+        "name": "Policy Plus desktop editor"
+      },
+      "statement": "It is compiled with Visual Studio into one executable that is run directly with no installer. A build workflow appears to compile each push to the main branch and publish the file to cloud storage as the latest build; there are no separate environments.",
+      "why": "The build workflow file is outside the files we read, so its steps are known only from the repository listing.",
+      "confirmWith": "a decision",
+      "ifWrong": "The release route, and where users get the program, would differ.",
+      "evidence": [
+        {
+          "file": "COMPILE.md",
+          "firstLine": 8,
+          "lastLine": 13
+        },
+        {
+          "file": "INSTALL.md",
+          "firstLine": 1,
+          "lastLine": 4
+        }
+      ]
+    },
+    {
+      "id": "fact-66380449200035407276",
+      "aspect": "what-it-holds",
+      "question": "What does it hold?",
+      "subject": {
+        "kind": "entity",
+        "id": "entity-92808062881922645840",
+        "name": "Administrative template"
+      },
+      "statement": "The main window is a hub: it shows the policy template tree, but also the computer and user policy sources, the policy state filter, comments and saved preferences. We tie it to the template only because the tree is its main content.",
+      "why": "The window holds several kinds of data at once, so no single kind of data fits it and no file says which one it is for.",
+      "confirmWith": "a decision",
+      "ifWrong": "If the window belongs with policy settings instead, the template page loses one screen and the policy setting page gains it.",
+      "evidence": [
+        {
+          "file": "PolicyPlus/Main.Designer.vb",
+          "firstLine": 706,
+          "lastLine": 762
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 25,
+          "lastLine": 35
+        },
+        {
+          "file": "PolicyPlus/Main.vb",
+          "firstLine": 405,
+          "lastLine": 430
+        }
+      ]
+    },
+    {
+      "id": "fact-96177046561151439379",
+      "aspect": "rules-it-applies",
+      "question": "Which rules does it apply?",
+      "subject": {
+        "kind": "capability",
+        "id": "capability-37285537501950413921",
+        "name": "Getting Microsoft policy definitions"
+      },
+      "statement": "The package at the fixed Microsoft address is assumed to still hold the template folder at the expected path and an en-US language folder, and to unpack with a zero exit code. A different layout makes every download fail at the unpack or move step.",
+      "why": "The package is hosted by Microsoft and its contents are not in the code.",
+      "confirmWith": "the running system",
+      "ifWrong": "Downloads fail with a step message, and the fixed path and link must be changed in a rebuild.",
+      "evidence": [
+        {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 3,
+          "lastLine": 4
+        },
+        {
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "firstLine": 103,
+          "lastLine": 111
+        }
+      ]
+    }
+  ],
+  "lifecycles": [
+    {
+      "id": "lifecycle-09812424885852427906",
+      "entity": {
+        "id": "entity-92808062881922645840",
+        "name": "Administrative template"
+      },
+      "states": [
+        "Downloaded package",
+        "Unpacked",
+        "Installed in a template folder",
+        "Loaded into the workspace",
+        "Available as policy definitions",
+        "Cleared from the workspace"
+      ],
+      "transitions": [
+        {
+          "from": [
+            1
+          ],
+          "to": 2,
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "line": 89
+        },
+        {
+          "from": [
+            2
+          ],
+          "to": 3,
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "line": 103
+        },
+        {
+          "from": [
+            4
+          ],
+          "to": 5,
+          "file": "PolicyPlus/AdmxBundle.vb",
+          "line": 163
+        },
+        {
+          "from": [
+            4,
+            5
+          ],
+          "to": 6,
+          "file": "PolicyPlus/Main.vb",
+          "line": 391
+        },
+        {
+          "from": [
+            4,
+            5
+          ],
+          "to": 6,
+          "file": "PolicyPlus/Main.vb",
+          "line": 65
+        },
+        {
+          "from": [
+            4,
+            5
+          ],
+          "to": 6,
+          "file": "PolicyPlus/Main.vb",
+          "line": 72
+        },
+        {
+          "from": [],
+          "to": 1,
+          "file": "PolicyPlus/DownloadAdmx.vb",
+          "line": 83
+        },
+        {
+          "from": [
+            3,
+            5
+          ],
+          "to": 4,
+          "file": "PolicyPlus/AdmxBundle.vb",
+          "line": 72
+        }
+      ]
+    },
+    {
+      "id": "lifecycle-59796801155011807356",
+      "entity": {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting"
+      },
+      "states": [
+        "Not configured",
+        "Enabled",
+        "Disabled",
+        "Unclear"
+      ],
+      "transitions": [
+        {
+          "from": [],
+          "to": 1,
+          "file": "PolicyPlus/PolicyLoader.vb",
+          "line": 94
+        }
+      ]
+    },
+    {
+      "id": "lifecycle-46311695710332376050",
+      "entity": {
+        "id": "entity-40163170707735391190",
+        "name": "Program preference"
+      },
+      "states": [
+        "Welcome download offer not yet considered",
+        "Welcome download offer considered",
+        "Raw POL editing warning not yet accepted",
+        "Raw POL editing warning accepted",
+        "Policy sources at default (Local GPO)",
+        "Policy sources remembered",
+        "Templates folder at Windows default",
+        "Templates folder chosen",
+        "Language follows the system",
+        "Language chosen"
+      ],
+      "transitions": [
+        {
+          "from": [
+            1
+          ],
+          "to": 2,
+          "file": "PolicyPlus/Main.vb",
+          "line": 49
+        },
+        {
+          "from": [
+            3
+          ],
+          "to": 4,
+          "file": "PolicyPlus/Main.vb",
+          "line": 787
+        },
+        {
+          "from": [
+            6
+          ],
+          "to": 5,
+          "file": "PolicyPlus/Main.vb",
+          "line": 33
+        },
+        {
+          "from": [
+            5,
+            6
+          ],
+          "to": 6,
+          "file": "PolicyPlus/Main.vb",
+          "line": 630
+        },
+        {
+          "from": [
+            8
+          ],
+          "to": 7,
+          "file": "PolicyPlus/Main.vb",
+          "line": 71
+        },
+        {
+          "from": [
+            7,
+            8
+          ],
+          "to": 8,
+          "file": "PolicyPlus/Main.vb",
+          "line": 517
+        },
+        {
+          "from": [
+            7,
+            8
+          ],
+          "to": 8,
+          "file": "PolicyPlus/Main.vb",
+          "line": 762
+        }
+      ]
+    }
+  ],
+  "partLinks": [
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-08492831744411585027",
+      "kind": "reads",
+      "links": 1
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-08492831744411585027",
+      "kind": "saves",
+      "links": 1
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-25314431250146805945",
+      "kind": "reads",
+      "links": 8
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-45436197603688581519",
+      "kind": "reads",
+      "links": 2
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-45436197603688581519",
+      "kind": "saves",
+      "links": 2
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-47673734579321187695",
+      "kind": "request",
+      "links": 1
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-84087908423930356962",
+      "kind": "reads",
+      "links": 1
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-90077838450756006603",
+      "kind": "reads",
+      "links": 19
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-90077838450756006603",
+      "kind": "saves",
+      "links": 17
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-90078096462363044953",
+      "kind": "call",
+      "links": 1
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-97068941883605652538",
+      "kind": "reads",
+      "links": 12
+    },
+    {
+      "from": "part-84884120082996248766",
+      "to": "external-97068941883605652538",
+      "kind": "saves",
+      "links": 3
+    }
+  ],
+  "dataUse": [
+    {
+      "capability": {
+        "id": "capability-12186108826760133070",
+        "name": "Browsing policy definitions"
+      },
+      "entity": {
+        "id": "entity-92808062881922645840",
+        "name": "Administrative template"
+      },
+      "saves": false,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-37285537501950413921",
+        "name": "Getting Microsoft policy definitions"
+      },
+      "entity": {
+        "id": "entity-92808062881922645840",
+        "name": "Administrative template"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-56009572261677044081",
+        "name": "Using the product"
+      },
+      "entity": {
+        "id": "entity-92808062881922645840",
+        "name": "Administrative template"
+      },
+      "saves": false,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-74192280505907161455",
+        "name": "Choosing and saving policy sources"
+      },
+      "entity": {
+        "id": "entity-52418278656387992812",
+        "name": "Policy comment"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-56009572261677044081",
+        "name": "Using the product"
+      },
+      "entity": {
+        "id": "entity-52418278656387992812",
+        "name": "Policy comment"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-12186108826760133070",
+        "name": "Browsing policy definitions"
+      },
+      "entity": {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting"
+      },
+      "saves": false,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-64744418053658352712",
+        "name": "Changing policy settings"
+      },
+      "entity": {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-74192280505907161455",
+        "name": "Choosing and saving policy sources"
+      },
+      "entity": {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-38063153752557655155",
+        "name": "Editing policy files directly"
+      },
+      "entity": {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-85379136702335736376",
+        "name": "Finding policies"
+      },
+      "entity": {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-37285537501950413921",
+        "name": "Getting Microsoft policy definitions"
+      },
+      "entity": {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting"
+      },
+      "saves": false,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-56009572261677044081",
+        "name": "Using the product"
+      },
+      "entity": {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-12186108826760133070",
+        "name": "Browsing policy definitions"
+      },
+      "entity": {
+        "id": "entity-40163170707735391190",
+        "name": "Program preference"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-74192280505907161455",
+        "name": "Choosing and saving policy sources"
+      },
+      "entity": {
+        "id": "entity-40163170707735391190",
+        "name": "Program preference"
+      },
+      "saves": true,
+      "reads": false
+    },
+    {
+      "capability": {
+        "id": "capability-38063153752557655155",
+        "name": "Editing policy files directly"
+      },
+      "entity": {
+        "id": "entity-40163170707735391190",
+        "name": "Program preference"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-37285537501950413921",
+        "name": "Getting Microsoft policy definitions"
+      },
+      "entity": {
+        "id": "entity-40163170707735391190",
+        "name": "Program preference"
+      },
+      "saves": true,
+      "reads": true
+    },
+    {
+      "capability": {
+        "id": "capability-56009572261677044081",
+        "name": "Using the product"
+      },
+      "entity": {
+        "id": "entity-40163170707735391190",
+        "name": "Program preference"
+      },
+      "saves": true,
+      "reads": true
+    }
+  ],
+  "figures": [
+    {
+      "id": "figure-24626580169983514120",
+      "kind": "integration",
+      "question": "What does it reach outside itself?",
+      "caption": "It works with template files, policy files, the Windows registry and Microsoft's download site, plus the domain for user lookups.",
+      "wanted": "",
+      "records": []
+    },
+    {
+      "id": "figure-42710430659681530857",
+      "kind": "states",
+      "question": "How does the data change over time?",
+      "caption": "Policy settings move between Not configured, Enabled and Disabled; templates and preferences have their own short lives.",
+      "wanted": "",
+      "records": []
+    },
+    {
+      "id": "figure-42261206513859757562",
+      "kind": "layers",
+      "question": "How is the code layered?",
+      "caption": "Dialog windows sit on top of the policy definition and file code, which sits on program set-up; build tooling stands apart.",
+      "wanted": "",
+      "records": []
+    },
+    {
+      "id": "figure-10741327947799901951",
+      "kind": "data",
+      "question": "Which capabilities keep which data?",
+      "caption": "Policy settings are kept by most capabilities, program preferences by about half, templates by a few, and policy comments by only two.",
+      "wanted": "",
+      "records": []
+    }
+  ],
+  "risks": [
+    {
+      "id": "fact-50435550495374899486",
+      "statement": "A failed load of policy templates leaves the workspace inconsistent. Staged items survive and make later loads fail, partly filled lists make retries fail on duplicate names, and a download reloads after clearing the workspace, so a failure leaves it empty. Several actions reset it; others do not.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-16346136343428412072",
+          "statement": "A failed build of the policy lists leaves the workspace inconsistent. Staged items survive and are reprocessed on the next load, and a build that fails partway through the final lists leaves some filled, so a retry fails on duplicate names. Close workspace, Acquire, Open folder with clearing, and language reload reset it; failed Open folder and Open file do not, and only start-up resets automatically.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/AdmxBundle.vb",
+              "firstLine": 44,
+              "lastLine": 44
+            },
+            {
+              "file": "PolicyPlus/AdmxBundle.vb",
+              "firstLine": 72,
+              "lastLine": 77
+            },
+            {
+              "file": "PolicyPlus/AdmxBundle.vb",
+              "firstLine": 163,
+              "lastLine": 181
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 62,
+              "lastLine": 66
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 389,
+              "lastLine": 393
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 512,
+              "lastLine": 519
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 808,
+              "lastLine": 813
+            }
+          ]
+        },
+        {
+          "id": "fact-15246147133158610990",
+          "statement": "A template with a repeated item name, or a policy lacking a category or supported-on reference, stops the build with an error that the person sees. The staged items are never cleared, so every later load of any file fails the same way until the workspace is cleared; a start-up load discards the workspace.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/AdmxBundle.vb",
+              "firstLine": 89,
+              "lastLine": 126
+            },
+            {
+              "file": "PolicyPlus/AdmxBundle.vb",
+              "firstLine": 153,
+              "lastLine": 160
+            },
+            {
+              "file": "PolicyPlus/AdmxBundle.vb",
+              "firstLine": 177,
+              "lastLine": 181
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 60,
+              "lastLine": 82
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 515,
+              "lastLine": 520
+            }
+          ]
+        },
+        {
+          "id": "fact-50484811353064212382",
+          "statement": "After a download, loading the new folder has no error handling and happens after the workspace was cleared. An unexpected failure escapes the button handler, leaving an empty or half-built workspace with the source setting unsaved. The source is saved whatever load problems were reported.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/AdmxBundle.vb",
+              "firstLine": 18,
+              "lastLine": 28
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 512,
+              "lastLine": 519
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 755,
+              "lastLine": 763
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/AdmxBundle.vb",
+          "PolicyPlus/Main.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-75702489101755763020",
+      "statement": "Applying a policy file's held changes to the live registry writes, deletes or clears whatever keys the file names. Only forgetting old values is limited to policy branches, so a crafted policy file, a different route from a REG import, can change other registry keys.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-12884417411408741318",
+          "statement": "Changes held in a policy file are applied to the live registry by writing, deleting or clearing whatever keys the file names. Only forgetting old values is limited to the policy branches, so a crafted policy file can touch other registry keys.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicySource.vb",
+              "firstLine": 150,
+              "lastLine": 172
+            },
+            {
+              "file": "PolicyPlus/PolicySource.vb",
+              "firstLine": 174,
+              "lastLine": 177
+            },
+            {
+              "file": "PolicyPlus/PolicySource.vb",
+              "firstLine": 374,
+              "lastLine": 383
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/PolicySource.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-86576523782126063412",
+      "statement": "Applying a policy, from the settings window or a script, clears its stored values or comment before the new ones are read or written. A failure, such as a drop-down with no choice, leaves the policy empty or half set and reports little.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-21033848734857416942",
+          "statement": "Applying a policy with OK or Apply clears its stored values before reading the new ones. If reading fails, for example a drop-down with no choice made, the policy is left with no values and OK does not close.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/EditSetting.vb",
+              "firstLine": 242,
+              "lastLine": 242
+            },
+            {
+              "file": "PolicyPlus/EditSetting.vb",
+              "firstLine": 264,
+              "lastLine": 264
+            },
+            {
+              "file": "PolicyPlus/EditSetting.vb",
+              "firstLine": 312,
+              "lastLine": 319
+            }
+          ]
+        },
+        {
+          "id": "fact-62172537879554925038",
+          "statement": "When a semantic policy script is applied, the policy's old settings are wiped before the new ones are written. If the write fails midway, for example on an unknown choice item, the policy is left half set and the person only sees a failure count.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicyProcessing.vb",
+              "firstLine": 347,
+              "lastLine": 351
+            },
+            {
+              "file": "PolicyPlus/SpolFile.vb",
+              "firstLine": 186,
+              "lastLine": 201
+            },
+            {
+              "file": "PolicyPlus/SpolFile.vb",
+              "firstLine": 209,
+              "lastLine": 214
+            }
+          ]
+        },
+        {
+          "id": "fact-76184019834073395161",
+          "statement": "A semantic policy script stores the person's comment before wiping and writing the policy's settings. If the write fails, the new comment stays against a half-written policy and the failure is only counted.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/SpolFile.vb",
+              "firstLine": 186,
+              "lastLine": 201
+            },
+            {
+              "file": "PolicyPlus/SpolFile.vb",
+              "firstLine": 209,
+              "lastLine": 214
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/EditSetting.vb",
+          "PolicyPlus/PolicyProcessing.vb",
+          "PolicyPlus/SpolFile.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-22000279955646585729",
+      "statement": "Comment loading and saving failures are hidden. An unreadable comment file silently disables comments for that source, a failed save is dropped so typed comments are lost, and turning on the comment filter then fails with an unhandled error.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-27105429884607042812",
+          "statement": "Policy comments are loaded and saved without telling the person when it fails. A comment file that cannot be read silently disables comments for that source. A failed comment save is ignored, though policies are saved after it, so policies can be stored while comment edits are lost.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/CmtxFile.vb",
+              "firstLine": 66,
+              "lastLine": 77
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 328,
+              "lastLine": 343
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 608,
+              "lastLine": 624
+            }
+          ]
+        },
+        {
+          "id": "fact-59518445505341714352",
+          "statement": "A comment file that cannot be read leaves the comments of that source unavailable, not empty, and filtering the policy list by commented policies then raises an error. The unreadable file is not overwritten when saving.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/CmtxFile.vb",
+              "firstLine": 12,
+              "lastLine": 44
+            },
+            {
+              "file": "PolicyPlus/CmtxFile.vb",
+              "firstLine": 69,
+              "lastLine": 76
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 337,
+              "lastLine": 343
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 426,
+              "lastLine": 430
+            }
+          ]
+        },
+        {
+          "id": "fact-76141315107187519127",
+          "statement": "When saving the comments fails, the failure is dropped with no message, so comments the person typed are lost without notice.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/CmtxFile.vb",
+              "firstLine": 53,
+              "lastLine": 61
+            },
+            {
+              "file": "PolicyPlus/CmtxFile.vb",
+              "firstLine": 122,
+              "lastLine": 122
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 616,
+              "lastLine": 620
+            }
+          ]
+        },
+        {
+          "id": "fact-64802352726843821853",
+          "statement": "Turning on the comment filter fails with an unhandled error when a policy source has no comment file or its comment file could not be loaded, because the missing comment list is read as if it existed.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 329,
+              "lastLine": 344
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 427,
+              "lastLine": 430
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          {
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          {
+            "id": "capability-85379136702335736376",
+            "name": "Finding policies"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/CmtxFile.vb",
+          "PolicyPlus/Main.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-42277425467355902150",
+      "statement": "Enabling a policy with a list option the person never opened writes that option with no list. The list stays empty until the list editor is used or the source holds one, and nothing checks it.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-56821189303055742863",
+          "statement": "Enabling a policy with a list option the person never opened writes that option with no list. The list is held in the button's stored data, empty until the list editor is used or the source already holds one, and nothing checks it.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/EditSetting.vb",
+              "firstLine": 168,
+              "lastLine": 170
+            },
+            {
+              "file": "PolicyPlus/EditSetting.vb",
+              "firstLine": 219,
+              "lastLine": 221
+            },
+            {
+              "file": "PolicyPlus/EditSetting.vb",
+              "firstLine": 265,
+              "lastLine": 266
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/EditSetting.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-20412314359783302224",
+      "statement": "For an administrator, the program unpacks a package it never verified and then makes Administrators owner of the typed destination with full control, so a compromised source would be trusted with that folder.",
+      "category": "release-and-operations",
+      "categoryWords": "Releasing or running the system depends on manual or missing steps",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-75040748900887579878",
+          "statement": "The definition package is downloaded from a Microsoft address, unpacked and its files moved into the chosen folder with no signature or checksum check, so a compromised source would be trusted. When run as administrator, the program then enables ownership and restore privileges, makes Administrators owner of the destination, and grants full control. The destination is whatever is typed.",
+          "subject": {
+            "kind": "part",
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 18,
+              "lastLine": 18
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 42,
+              "lastLine": 51
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 85,
+              "lastLine": 92
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-81545588812996299336",
+      "statement": "Importing a REG file applies it key by key to the live policy source with no rollback, and a REG source cannot read or forget values. A failure leaves earlier changes in place and the person sees only a general failure message.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-77839004385920196769",
+          "statement": "Importing a REG file applies it key by key straight to the live policy source with no rollback. If one step fails, earlier changes stay while the person sees only \"Failed to import the REG file.\"",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/ImportReg.vb",
+              "firstLine": 37,
+              "lastLine": 43
+            },
+            {
+              "file": "PolicyPlus/RegFile.vb",
+              "firstLine": 260,
+              "lastLine": 275
+            }
+          ]
+        },
+        {
+          "id": "fact-83742149859898467611",
+          "statement": "A REG file source cannot read, check or forget values, so applying a newer policy file over an older one fails partway for any dropped value under a policy branch, leaving the file partly changed.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicySource.vb",
+              "firstLine": 174,
+              "lastLine": 177
+            },
+            {
+              "file": "PolicyPlus/RegFile.vb",
+              "firstLine": 214,
+              "lastLine": 239
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          {
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          {
+            "id": "capability-85379136702335736376",
+            "name": "Finding policies"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/ImportReg.vb",
+          "PolicyPlus/PolicySource.vb",
+          "PolicyPlus/RegFile.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-96449602844378450586",
+      "statement": "Importing a REG file applies it to whichever source is open, live registry or policy file, with no check of the keys it names. The branch limit exists only when a REG file is the target, so an import can write, delete or clear keys outside the policy branches.",
+      "category": "access-control",
+      "categoryWords": "Someone can read or change what they should not",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-08674747828778206890",
+          "statement": "Imported REG files are applied without the source-branch limit that the same class enforces when saving, so a REG file can write, delete or clear keys anywhere under its prefix.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/RegFile.vb",
+              "firstLine": 210,
+              "lastLine": 213
+            },
+            {
+              "file": "PolicyPlus/RegFile.vb",
+              "firstLine": 260,
+              "lastLine": 275
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          {
+            "id": "capability-85379136702335736376",
+            "name": "Finding policies"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/RegFile.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-91144266139190398632",
+      "statement": "Policy files and REG files are saved by overwriting in place. A failure partway leaves a truncated or damaged file, with no copy of the old one.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-17270251476784721453",
+          "statement": "Policy files and REG files are saved by overwriting the file in place, so a failure partway leaves a truncated or damaged file with no copy of the old one.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicySource.vb",
+              "firstLine": 63,
+              "lastLine": 67
+            },
+            {
+              "file": "PolicyPlus/RegFile.vb",
+              "firstLine": 182,
+              "lastLine": 186
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/PolicySource.vb",
+          "PolicyPlus/RegFile.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-47674373057909803396",
+      "statement": "Policy template and comment XML files are read with default settings and no stated limit on external references. The folders or domain share they come from may be writable by others, and whether external entities resolve depends on the framework default.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-04739652896842125463",
+          "statement": "Policy template and comment XML files are read with default settings and no stated limit on external references. Files come from a chosen folder or the domain share, which another party may be able to write. Whether external entities resolve depends on the framework default.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/AdmlFile.vb",
+              "firstLine": 15,
+              "lastLine": 16
+            },
+            {
+              "file": "PolicyPlus/AdmxFile.vb",
+              "firstLine": 18,
+              "lastLine": 19
+            },
+            {
+              "file": "PolicyPlus/CmtxFile.vb",
+              "firstLine": 11,
+              "lastLine": 12
+            },
+            {
+              "file": "PolicyPlus/OpenAdmxFolder.vb",
+              "firstLine": 22,
+              "lastLine": 33
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/AdmlFile.vb",
+          "PolicyPlus/AdmxFile.vb",
+          "PolicyPlus/CmtxFile.vb",
+          "PolicyPlus/OpenAdmxFolder.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-52640844386200344106",
+      "statement": "Results of requesting Windows privileges and loading a user registry file are discarded. The person learns a source cannot be saved, or silently gets an empty read-only source, never why. A refused privilege passes silently and fails later with an unrelated error.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-15573853964759523820",
+          "statement": "When rights or a registry hive cannot be obtained, the results of the privilege calls, the hive load and the settings key opening are discarded. The person is told a source cannot be modified or saved, but never why. The download path likewise ignores the privilege result.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-35569778825867670313",
+            "name": ".NET Framework"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/ConfigurationStorage.vb",
+              "firstLine": 5,
+              "lastLine": 9
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 97,
+              "lastLine": 98
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 314,
+              "lastLine": 327
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 63,
+              "lastLine": 77
+            },
+            {
+              "file": "PolicyPlus/Privilege.vb",
+              "firstLine": 6,
+              "lastLine": 13
+            }
+          ]
+        },
+        {
+          "id": "fact-76255531494446254803",
+          "statement": "Mounting a per-user registry file ignores the Windows result, and enabling the needed privileges ignores theirs. If the mount fails, the person is told the source cannot be saved, but not why. They can still edit an empty in-memory source, which is never written.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 316,
+              "lastLine": 328
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 628,
+              "lastLine": 629
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 64,
+              "lastLine": 78
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 163,
+              "lastLine": 172
+            },
+            {
+              "file": "PolicyPlus/Privilege.vb",
+              "firstLine": 8,
+              "lastLine": 13
+            }
+          ]
+        },
+        {
+          "id": "fact-74749544175369547848",
+          "statement": "A user hive that cannot be loaded raises no error: the result of the load is ignored and the program silently swaps in an empty read-only source, so a person can believe the hive holds no policies.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 69,
+              "lastLine": 74
+            }
+          ]
+        },
+        {
+          "id": "fact-33444233724991800294",
+          "statement": "Enabling a Windows privilege never checks the results of opening the process token, looking up the privilege or adjusting the token. A refused privilege passes silently and the caller carries on, to fail later at the registry or file with an unrelated error.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Privilege.vb",
+              "firstLine": 8,
+              "lastLine": 13
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/ConfigurationStorage.vb",
+          "PolicyPlus/DownloadAdmx.vb",
+          "PolicyPlus/Main.vb",
+          "PolicyPlus/PolicyLoader.vb",
+          "PolicyPlus/Privilege.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-27837766012127440237",
+      "statement": "Saving a local or per-user policy writes the policy file first and the version file second. A failure on the second step, or a malformed version line that truncates the version file, leaves new settings with an old or damaged version, which Group Policy clients use to detect change.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-55158706975826119693",
+          "statement": "Updating the version file truncates it before reading each version line. A malformed version line stops the save midway and leaves a damaged file, so Group Policy clients may miss the change.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 173,
+              "lastLine": 207
+            }
+          ]
+        },
+        {
+          "id": "fact-07645171374015833281",
+          "statement": "Saving a local or per-user policy writes the policy file first and the version file second. If the second step fails, new settings carry an old version number that clients use to detect change.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 119,
+              "lastLine": 147
+            },
+            {
+              "file": "PolicyPlus/PolicySource.vb",
+              "firstLine": 63,
+              "lastLine": 67
+            }
+          ]
+        },
+        {
+          "id": "fact-98539196066386810723",
+          "statement": "Saving a local or per-user Group Policy writes the policy file first and the version file second. If the version file holds a non-numeric version, it is emptied first and left with only the lines before the Version line, losing the version and any later lines, and the two files fall out of step.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 123,
+              "lastLine": 124
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 144,
+              "lastLine": 145
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 179,
+              "lastLine": 197
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/PolicyLoader.vb",
+          "PolicyPlus/PolicySource.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-18542404210494634528",
+      "statement": "Saving reports its result poorly. One handler covers both sources without saying which failed, success is shown even when nothing was writable, and the result of the Group Policy refresh request is ignored, so a person may be told a policy applied when it did not.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-43378992220589393472",
+          "statement": "Saving writes the computer source then the user source inside one error handler. A computer failure skips the user save, yet the message reports a failure without saying which source was saved.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 625,
+              "lastLine": 636
+            }
+          ]
+        },
+        {
+          "id": "fact-93510318952967184501",
+          "statement": "Saving hides two failures: comment-saving errors are swallowed silently, and \"Success.\" is shown even when neither source was writable and nothing was written to disk.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 616,
+              "lastLine": 622
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 626,
+              "lastLine": 634
+            }
+          ]
+        },
+        {
+          "id": "fact-97490448387942657472",
+          "statement": "After saving to a Group Policy, the result of the Windows policy refresh request is ignored and success is reported, so a person is told the policy was applied even if the refresh failed.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 127,
+              "lastLine": 128
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 146,
+              "lastLine": 147
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/Main.vb",
+          "PolicyPlus/PolicyLoader.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-89931935320572975196",
+      "statement": "Saving writes the computer source first and the user source second, with no rollback. If the user save fails, the computer policies are already on disk, yet the person sees only a failure and the chosen sources are not remembered.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-64153448904802977779",
+          "statement": "Saving writes the computer source first and the user source second with no rollback. If the user save fails, the computer policies are already on disk, yet the person is told only \"Saving failed!\" and the chosen sources are not remembered.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 625,
+              "lastLine": 637
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/Main.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-91061469838719692911",
+      "statement": "Template and comment XML files, read from a chosen folder or the domain share, are loaded with default settings and no stated limit on external references. Whether those resolve rests on the framework default, which the code does not settle. If they do, a crafted file on a writable share could read local files.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-04739652896842125463",
+          "statement": "Policy template and comment XML files are read with default settings and no stated limit on external references. Files come from a chosen folder or the domain share, which another party may be able to write. Whether external entities resolve depends on the framework default.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/AdmlFile.vb",
+              "firstLine": 15,
+              "lastLine": 16
+            },
+            {
+              "file": "PolicyPlus/AdmxFile.vb",
+              "firstLine": 18,
+              "lastLine": 19
+            },
+            {
+              "file": "PolicyPlus/CmtxFile.vb",
+              "firstLine": 11,
+              "lastLine": 12
+            },
+            {
+              "file": "PolicyPlus/OpenAdmxFolder.vb",
+              "firstLine": 22,
+              "lastLine": 33
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/AdmlFile.vb",
+          "PolicyPlus/AdmxFile.vb",
+          "PolicyPlus/CmtxFile.vb",
+          "PolicyPlus/OpenAdmxFolder.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-93514878933817348566",
+      "statement": "Text typed by the person, a user identifier or a language code, is used unchecked as part of a folder path. Path characters redirect where policy and version files are created or which folder is searched for definition text, using the person's own rights.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-11312565131731000574",
+          "statement": "A typed user identifier is joined into the path of the per-user policy folder with no check. Path separators or dots are not rejected, so a crafted value can point the written policy and version files at another folder, using the person's own rights.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/OpenPol.vb",
+              "firstLine": 98,
+              "lastLine": 100
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 40,
+              "lastLine": 42
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 143,
+              "lastLine": 147
+            }
+          ]
+        },
+        {
+          "id": "fact-38996276001591019302",
+          "statement": "A SID typed straight into the policy sources dialog is never checked. It is turned into a file path, and a missing file is created with its folder, so a value with parent-folder segments makes the program create and later write a policy file and version file outside the per-user policy folder.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/OpenPol.vb",
+              "firstLine": 99,
+              "lastLine": 100
+            },
+            {
+              "file": "PolicyPlus/OpenUserGpo.vb",
+              "firstLine": 20,
+              "lastLine": 26
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 41,
+              "lastLine": 42
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 93,
+              "lastLine": 98
+            }
+          ]
+        },
+        {
+          "id": "fact-70525185379630927527",
+          "statement": "The preferred language code typed by the person is used unchecked as a folder name when looking for ADML files, so text with path characters changes which folder is searched for definition text.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/AdmxBundle.vb",
+              "firstLine": 46,
+              "lastLine": 47
+            },
+            {
+              "file": "PolicyPlus/LanguageOptions.vb",
+              "firstLine": 10,
+              "lastLine": 14
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/AdmxBundle.vb",
+          "PolicyPlus/LanguageOptions.vb",
+          "PolicyPlus/OpenPol.vb",
+          "PolicyPlus/OpenUserGpo.vb",
+          "PolicyPlus/PolicyLoader.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-56994763377319349632",
+      "statement": "The download accepts what it is given without checks: the package is unpacked with no signature or hash check, and the destination is any folder typed. For an administrator the files written also get their access rules reset. The package address is fixed HTTPS, so the package gap matters only if that channel is compromised.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-52494602648967862527",
+          "statement": "A downloaded Microsoft installer package is unpacked with the Windows installer tool and its files are written into the destination folder, with no check of signature or hash. When run as administrator, the files are written with ownership and access rules reset. The package arrives over HTTPS from a fixed Microsoft address, so the gap matters if that channel or address is compromised.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-15458745836330537789",
+            "name": "Windows Forms"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 64,
+              "lastLine": 73
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 85
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 90,
+              "lastLine": 92
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 105,
+              "lastLine": 110
+            }
+          ]
+        },
+        {
+          "id": "fact-94304744188346731866",
+          "statement": "The download dialog accepts any folder the person types or browses to, without checking it. When run as administrator it takes ownership of an existing folder, grants Administrators full control, and deletes and replaces same-named files. Pointed at the wrong folder, it changes ownership and permissions there.",
+          "subject": {
+            "kind": "part",
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 37,
+              "lastLine": 62
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 64,
+              "lastLine": 68
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-88055566546560071059",
+      "statement": "The download destination is free text and never checked as a policy definitions folder. A wrong existing folder typed or browsed to, which needs an administrator to change the default, has its ownership taken and its same-named files deleted and replaced. A folder that does not exist is simply created.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-94304744188346731866",
+          "statement": "The download dialog accepts any folder the person types or browses to, without checking it. When run as administrator it takes ownership of an existing folder, grants Administrators full control, and deletes and replaces same-named files. Pointed at the wrong folder, it changes ownership and permissions there.",
+          "subject": {
+            "kind": "part",
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 37,
+              "lastLine": 62
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 64,
+              "lastLine": 68
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        },
+        {
+          "id": "fact-16267032577290833393",
+          "statement": "The destination folder is free text and used unchecked: nothing confirms it is a policy definitions folder. Run as an administrator, any existing folder typed there has its ownership taken, Administrators given full control, and its same-named files deleted and replaced.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 37,
+              "lastLine": 37
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 42,
+              "lastLine": 51
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 52,
+              "lastLine": 75
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-02652737250649713241",
+      "statement": "The downloaded Microsoft template package is run through the Windows installer tool with no signature, publisher or hash check, only a secure address. The tool processes the package before anything is verified, so a compromised channel or address delivers altered files for the template folder.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-52494602648967862527",
+          "statement": "A downloaded Microsoft installer package is unpacked with the Windows installer tool and its files are written into the destination folder, with no check of signature or hash. When run as administrator, the files are written with ownership and access rules reset. The package arrives over HTTPS from a fixed Microsoft address, so the gap matters if that channel or address is compromised.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-15458745836330537789",
+            "name": "Windows Forms"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 64,
+              "lastLine": 73
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 85
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 90,
+              "lastLine": 92
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 105,
+              "lastLine": 110
+            }
+          ]
+        },
+        {
+          "id": "fact-01795043297445562312",
+          "statement": "The downloaded package is installed into the template folder, taking ownership of it when run as administrator, with no check of the package beyond the secure web address and the unpack tool's exit code.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 92
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        },
+        {
+          "id": "fact-14176262314397507436",
+          "statement": "The downloaded package is trusted on download alone. It is run through the Windows installer tool and its templates replace files in the policy folder, possibly as administrator, with no check of signature, publisher or hash.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 83,
+              "lastLine": 86
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 89,
+              "lastLine": 93
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 103,
+              "lastLine": 111
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-36575264496926649308",
+      "statement": "The Microsoft template package is unpacked with no hash or signature check, so a tampered or substituted package would have its files moved into the policy template folder. The address is a fixed Microsoft link, which limits exposure to a compromised source or channel.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-76916394421056916225",
+          "statement": "The Microsoft template package is downloaded and unpacked with the Windows installer with no hash or signature check. A tampered or substituted package would be unpacked and its files moved into the policy template folder.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 91
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-80103629781801359083",
+      "statement": "The name of a value added in the raw policy editor is not checked. An empty name hides the key's marker, and names that begin with deletion prefixes or equal the delete-values name are read back as deletion or clearing instructions.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-00983495136312009183",
+          "statement": "The name of a value added in the raw policy editor is not checked. It can be empty, which overwrites the key's empty-key marker and hides it from the list, or begin with the deletion prefixes or equal the delete-values name, so an ordinary value is stored that is read back as a deletion or clearing instruction.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/EditPol.vb",
+              "firstLine": 26,
+              "lastLine": 26
+            },
+            {
+              "file": "PolicyPlus/EditPol.vb",
+              "firstLine": 42,
+              "lastLine": 47
+            },
+            {
+              "file": "PolicyPlus/EditPol.vb",
+              "firstLine": 154,
+              "lastLine": 173
+            },
+            {
+              "file": "PolicyPlus/EditPolValue.vb",
+              "firstLine": 8,
+              "lastLine": 28
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/EditPol.vb",
+          "PolicyPlus/EditPolValue.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-66216857720858667149",
+      "statement": "The program allows TLS 1.0 and 1.1 as well as 1.2 for every web request, which is only the template download, to keep Vista working. A server or on-path party forcing an old protocol would be accepted. The download address is fixed HTTPS.",
+      "category": "cryptography",
+      "categoryWords": "Data is protected by weak or fixed encryption",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-86655857190607115081",
+          "statement": "The program sets TLS 1.0, 1.1 and 1.2 for the whole process; a code comment gives Vista compatibility as the reason. The framework target is 4.5.2, where TLS 1.2 is not the default and must be set explicitly. The only request seen is the download from a fixed HTTPS address; a downgrade needs the server or an on-path party to offer the old protocol.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-15458745836330537789",
+            "name": "Windows Forms"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/App.config",
+              "firstLine": 4,
+              "lastLine": 4
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 86
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 19,
+              "lastLine": 20
+            },
+            {
+              "file": "PolicyPlus/PolicyPlus.vbproj",
+              "firstLine": 14,
+              "lastLine": 14
+            }
+          ]
+        },
+        {
+          "id": "fact-90934044383930674993",
+          "statement": "The program allows TLS 1.0, 1.1 and 1.2 together for every web request the process makes, so a download uses the newest version both sides support. Older versions stay permitted. A code comment says this keeps Vista working.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 19,
+              "lastLine": 20
+            }
+          ]
+        },
+        {
+          "id": "fact-40193764427477821170",
+          "statement": "The program sets older TLS versions 1.0 and 1.1 alongside 1.2 for every web request it makes, which is the single definition download. The connection normally uses the best version both ends support, but a server or middlebox forcing an older version would be accepted. A comment ties it to Vista.",
+          "subject": {
+            "kind": "part",
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 86
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 19,
+              "lastLine": 20
+            }
+          ]
+        },
+        {
+          "id": "fact-77386097511990604677",
+          "statement": "The program allows TLS 1.0 and 1.1 as well as 1.2 for every web request, kept for Vista compatibility, so the definition files can be downloaded over protocols known to be weak.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 19,
+              "lastLine": 20
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/App.config",
+          "PolicyPlus/DownloadAdmx.vb",
+          "PolicyPlus/Main.vb",
+          "PolicyPlus/PolicyPlus.vbproj"
+        ]
+      }
+    },
+    {
+      "id": "fact-98960508124088180695",
+      "statement": "The template download deletes each existing file before moving the new one in. A failure midway leaves the destination partly replaced, and the scratch folder with the downloaded package stays in the person's local data. Only the failed step is reported.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-83488988106069862750",
+          "statement": "The download replaces template files one by one, deleting each existing file before moving the new one in. If a step fails midway, the destination is left half updated and the scratch folder stays behind. The user is told only which phase failed.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 64,
+              "lastLine": 74
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 105,
+              "lastLine": 114
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 123,
+              "lastLine": 128
+            }
+          ]
+        },
+        {
+          "id": "fact-74784351723264976546",
+          "statement": "A failed download leaves data inconsistent. A failure while moving leaves the destination part replaced, as old files are deleted before new ones arrive. The scratch folder is removed only on success, so downloaded or unpacked files stay in the person's local application data. A failed cleanup after a full install is reported as failure.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 67,
+              "lastLine": 68
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 101,
+              "lastLine": 111
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 112,
+              "lastLine": 114
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 123,
+              "lastLine": 127
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-22216410232757189725",
+      "statement": "The template download, run as administrator, takes ownership of the destination folder and its existing language subfolders, grants Administrators full control and replaces same-named files; a missing folder is created. This happens to the system definitions folder even on the default path, not only when another folder is typed.",
+      "category": "access-control",
+      "categoryWords": "Someone can read or change what they should not",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-40965423471104978310",
+          "statement": "When run as an administrator, the download takes ownership of the chosen destination folder, grants Administrators full control, and replaces any same-named files with resetting of their permissions. The folder is chosen or typed by the person and is not limited to the policy definitions folder, so another folder can be altered.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-35569778825867670313",
+            "name": ".NET Framework"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 7,
+              "lastLine": 13
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 18,
+              "lastLine": 18
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 42,
+              "lastLine": 51
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 52,
+              "lastLine": 75
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        },
+        {
+          "id": "fact-54288861537598541797",
+          "statement": "For an administrator, the download takes ownership of the folder typed or browsed to in the destination box, grants full control, and deletes same-named files there. The folder is not restricted to the standard definitions folder, so a wrong or unusual existing folder is altered. Reach is limited to an administrator who changes the default.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-15458745836330537789",
+            "name": "Windows Forms"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.Designer.vb",
+              "firstLine": 55,
+              "lastLine": 60
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 18,
+              "lastLine": 18
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 37,
+              "lastLine": 41
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 52,
+              "lastLine": 73
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        },
+        {
+          "id": "fact-97179458552628827424",
+          "statement": "When run as administrator, the template download takes ownership of the folder the person typed, grants Administrators full control, deletes same-named files and resets file permissions. A wrong folder choice, such as a system folder, has its permissions rewritten. The default is the Windows template folder.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 10,
+              "lastLine": 10
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 42,
+              "lastLine": 50
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 67,
+              "lastLine": 72
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.Designer.vb",
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-76860215324608408052",
+      "statement": "The template download, when run as administrator, takes ownership of whatever folder is typed or browsed to, grants Administrators full control, and deletes and replaces same-named files there. The folder defaults to the standard template folder but is not checked, so a wrong existing folder has its ownership and permissions changed.",
+      "category": "access-control",
+      "categoryWords": "Someone can read or change what they should not",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-40965423471104978310",
+          "statement": "When run as an administrator, the download takes ownership of the chosen destination folder, grants Administrators full control, and replaces any same-named files with resetting of their permissions. The folder is chosen or typed by the person and is not limited to the policy definitions folder, so another folder can be altered.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-35569778825867670313",
+            "name": ".NET Framework"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 7,
+              "lastLine": 13
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 18,
+              "lastLine": 18
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 42,
+              "lastLine": 51
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 52,
+              "lastLine": 75
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        },
+        {
+          "id": "fact-54288861537598541797",
+          "statement": "For an administrator, the download takes ownership of the folder typed or browsed to in the destination box, grants full control, and deletes same-named files there. The folder is not restricted to the standard definitions folder, so a wrong or unusual existing folder is altered. Reach is limited to an administrator who changes the default.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-15458745836330537789",
+            "name": "Windows Forms"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.Designer.vb",
+              "firstLine": 55,
+              "lastLine": 60
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 18,
+              "lastLine": 18
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 37,
+              "lastLine": 41
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 52,
+              "lastLine": 73
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        },
+        {
+          "id": "fact-97179458552628827424",
+          "statement": "When run as administrator, the template download takes ownership of the folder the person typed, grants Administrators full control, deletes same-named files and resets file permissions. A wrong folder choice, such as a system folder, has its permissions rewritten. The default is the Windows template folder.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 10,
+              "lastLine": 10
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 42,
+              "lastLine": 50
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 67,
+              "lastLine": 72
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 94,
+              "lastLine": 100
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.Designer.vb",
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-70139127149017712152",
+      "statement": "Unsaved policy changes are lost without warning for sources backed by a policy file. Opening other sources or exiting closes them with no prompt. Registry sources apply at once, so lose nothing.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-01636780499361602632",
+          "statement": "Unsaved policy changes are lost without warning for sources backed by a POL file (local Group Policy files, a chosen POL file, a per-user Group Policy object). Opening other sources or exiting closes them with no prompt. Registry sources apply at once, so they lose nothing.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 311,
+              "lastLine": 315
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 685,
+              "lastLine": 687
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/Main.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-52593358741058521893",
+      "statement": "Values supplied for a policy's settings, by a person or a script, are written without checks. Numbers are forced to unsigned 32-bit and text is stored as given, ignoring any minimum, maximum or length in the definition. A failure leaves earlier settings written, with no undo.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-67344956526911959547",
+          "statement": "The values a person or script supplies for a policy's settings are written without checks. Numbers are forced to unsigned 32-bit, so negatives or non-numbers fail. Text is written as given, and no minimum, maximum or length from the definition applies. A failure at any setting leaves earlier settings written, with no undo.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/EditSetting.vb",
+              "firstLine": 242,
+              "lastLine": 274
+            },
+            {
+              "file": "PolicyPlus/PolicyProcessing.vb",
+              "firstLine": 301,
+              "lastLine": 356
+            },
+            {
+              "file": "PolicyPlus/PolicyProcessing.vb",
+              "firstLine": 304,
+              "lastLine": 353
+            },
+            {
+              "file": "PolicyPlus/SpolFile.vb",
+              "firstLine": 209,
+              "lastLine": 214
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/EditSetting.vb",
+          "PolicyPlus/PolicyProcessing.vb",
+          "PolicyPlus/SpolFile.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-91387162490596109265",
+      "statement": "What the template download moves into the policy template folder is whatever the unpacked package holds. With no check of the package, a tampered or substituted one replaces the installed templates, which the program then loads as trusted definitions.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-76916394421056916225",
+          "statement": "The Microsoft template package is downloaded and unpacked with the Windows installer with no hash or signature check. A tampered or substituted package would be unpacked and its files moved into the policy template folder.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 91
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-34228979440916667737",
+      "statement": "When a download, install or export fails, the person sees only the step that failed, not the cause, with no retry. A finished install can be reported as a failure when cleanup fails, leaving the new folder unloaded and unpacked files behind.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-76711632053172933863",
+          "statement": "When a download, unpack or move fails, the person sees only the step that failed, not the cause. The scratch folder holding the downloaded package and partly unpacked files is removed only on success, and files already moved into the destination are not rolled back.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-35569778825867670313",
+            "name": ".NET Framework"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 76,
+              "lastLine": 92
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 114,
+              "lastLine": 114
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 123,
+              "lastLine": 128
+            }
+          ]
+        },
+        {
+          "id": "fact-02991397301408275911",
+          "statement": "A finished install can be reported as a failure. Once the files are in the destination, a failure deleting the scratch folder shows a failure message, the window does not close as done, and the new folder is neither loaded nor saved as the source, though installed. The unpacked files stay behind.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 101,
+              "lastLine": 111
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 112,
+              "lastLine": 115
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 116,
+              "lastLine": 127
+            }
+          ]
+        },
+        {
+          "id": "fact-41205464185439348614",
+          "statement": "When a download step fails, the reason is discarded and the person sees only the name of the step that failed, with no retry. A failure from the network, disk space, permissions or the installer tool cannot be told apart.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 92,
+              "lastLine": 92
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 123,
+              "lastLine": 128
+            }
+          ]
+        },
+        {
+          "id": "fact-97770259352604637119",
+          "statement": "A failed registry script export tells the person only that it failed, never why. Every error is caught and its cause is dropped, so a bad path and a locked file look the same.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/ExportReg.vb",
+              "firstLine": 32,
+              "lastLine": 34
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb",
+          "PolicyPlus/ExportReg.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-56687914628409735596",
+      "statement": "When rights or a per-user registry file cannot be obtained, the results are discarded. The person is told a source cannot be modified or saved, never why, and can keep editing an empty in-memory source that is never written.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "medium",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-15573853964759523820",
+          "statement": "When rights or a registry hive cannot be obtained, the results of the privilege calls, the hive load and the settings key opening are discarded. The person is told a source cannot be modified or saved, but never why. The download path likewise ignores the privilege result.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-35569778825867670313",
+            "name": ".NET Framework"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/ConfigurationStorage.vb",
+              "firstLine": 5,
+              "lastLine": 9
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 97,
+              "lastLine": 98
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 314,
+              "lastLine": 327
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 63,
+              "lastLine": 77
+            },
+            {
+              "file": "PolicyPlus/Privilege.vb",
+              "firstLine": 6,
+              "lastLine": 13
+            }
+          ]
+        },
+        {
+          "id": "fact-76255531494446254803",
+          "statement": "Mounting a per-user registry file ignores the Windows result, and enabling the needed privileges ignores theirs. If the mount fails, the person is told the source cannot be saved, but not why. They can still edit an empty in-memory source, which is never written.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 316,
+              "lastLine": 328
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 628,
+              "lastLine": 629
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 64,
+              "lastLine": 78
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 163,
+              "lastLine": 172
+            },
+            {
+              "file": "PolicyPlus/Privilege.vb",
+              "firstLine": 8,
+              "lastLine": 13
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/ConfigurationStorage.vb",
+          "PolicyPlus/DownloadAdmx.vb",
+          "PolicyPlus/Main.vb",
+          "PolicyPlus/PolicyLoader.vb",
+          "PolicyPlus/Privilege.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-77812823097705716765",
+      "statement": "A failure to open or create the saved-settings registry area is silently swallowed. The program then runs without remembering anything and the person is never told.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-51261738138430698933",
+          "statement": "Failure to create the saved-settings registry area is silently ignored. The program then runs without remembering anything, and the person is never told.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/ConfigurationStorage.vb",
+              "firstLine": 5,
+              "lastLine": 9
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/ConfigurationStorage.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-65240253473013838622",
+      "statement": "A typed user identifier is joined into the per-user policy folder path with no check, so a crafted value can point the written policy and version files at another folder. It acts only with the person's own rights.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-11312565131731000574",
+          "statement": "A typed user identifier is joined into the path of the per-user policy folder with no check. Path separators or dots are not rejected, so a crafted value can point the written policy and version files at another folder, using the person's own rights.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/OpenPol.vb",
+              "firstLine": 98,
+              "lastLine": 100
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 40,
+              "lastLine": 42
+            },
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 143,
+              "lastLine": 147
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/OpenPol.vb",
+          "PolicyPlus/PolicyLoader.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-47660326513046703143",
+      "statement": "Changing or loading policy sources has no error handling. Sources are replaced one by one, so a failure leaves a mix or an empty workspace with an unhandled error. A start-up fallback still presets the failed sources, and a missing registry location stops a POL export.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-94996134427621657741",
+          "statement": "Choosing new policy sources from the menu has no error handling: sources are closed and replaced one by one, so a failure opening the second leaves the window with a mix of old and new sources and an unhandled error.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 29,
+              "lastLine": 36
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 311,
+              "lastLine": 315
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 607,
+              "lastLine": 613
+            }
+          ]
+        },
+        {
+          "id": "fact-16274013496689260759",
+          "statement": "Acquiring definitions empties the workspace before loading the downloaded folder, with no error handling. A failed load raises an unhandled error, leaves the workspace empty and the remembered folder unchanged, and the tree is not rebuilt, so the window keeps showing the old categories.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 760,
+              "lastLine": 763
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 763,
+              "lastLine": 763
+            }
+          ]
+        },
+        {
+          "id": "fact-04855578496716449522",
+          "statement": "After start-up falls back to the default sources, the Open Policy Resources dialog is still preset with the sources that failed, because it is given the saved type and location read before the fallback. Accepting it retries the broken sources.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 25,
+              "lastLine": 28
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 33,
+              "lastLine": 37
+            }
+          ]
+        },
+        {
+          "id": "fact-46009965396240790363",
+          "statement": "A policy location missing from the registry gives no key to open, so building a POL from a registry source stops with an unhandled error and the export fails without a clear message.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 460,
+              "lastLine": 464
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/Main.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-18463018743718338823",
+      "statement": "Each template states the minimum text-file revision it needs and each text file states its own, but nothing compares them. A template can be paired with text too old for it.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-16778468043530360515",
+          "statement": "Each template file states the minimum text-file revision it needs and each text file states its own revision, but nothing compares them. A template can become available paired with text too old for it.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/AdmlFile.vb",
+              "firstLine": 19,
+              "lastLine": 19
+            },
+            {
+              "file": "PolicyPlus/AdmxBundle.vb",
+              "firstLine": 64,
+              "lastLine": 77
+            },
+            {
+              "file": "PolicyPlus/AdmxFile.vb",
+              "firstLine": 32,
+              "lastLine": 33
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/AdmlFile.vb",
+          "PolicyPlus/AdmxBundle.vb",
+          "PolicyPlus/AdmxFile.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-04202805004341787445",
+      "statement": "Escape in the raw policy editor looks like a cancel, but every edit has already changed the loaded policy source and the caller ignores the answer. Changes cannot be discarded except by not saving afterwards.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-51657694839411948760",
+          "statement": "Escape in the raw policy editor looks like a cancel, but every add, edit, delete and forget has already changed the loaded policy source, and the caller ignores the answer. Changes cannot be discarded except by not saving policies afterwards.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/EditPol.vb",
+              "firstLine": 84,
+              "lastLine": 89
+            },
+            {
+              "file": "PolicyPlus/EditPol.vb",
+              "firstLine": 169,
+              "lastLine": 169
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 789,
+              "lastLine": 793
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/EditPol.vb",
+          "PolicyPlus/Main.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-59652162321844305136",
+      "statement": "If the program cannot create its settings key it carries on silently, so sources, folder, language and prompts revert each run. Remembered-source values are also written one by one, so a failure can leave a mismatched pair.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-51261738138430698933",
+          "statement": "Failure to create the saved-settings registry area is silently ignored. The program then runs without remembering anything, and the person is never told.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/ConfigurationStorage.vb",
+              "firstLine": 5,
+              "lastLine": 9
+            }
+          ]
+        },
+        {
+          "id": "fact-80229301991530813416",
+          "statement": "If the program cannot create its settings key in the registry, it carries on without telling anyone. Nothing is then remembered: sources, folder, language and one-time prompts all revert each run, and the prompts reappear.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/ConfigurationStorage.vb",
+              "firstLine": 5,
+              "lastLine": 9
+            },
+            {
+              "file": "PolicyPlus/ConfigurationStorage.vb",
+              "firstLine": 14,
+              "lastLine": 16
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 48,
+              "lastLine": 49
+            }
+          ]
+        },
+        {
+          "id": "fact-35277840847155725223",
+          "statement": "After a successful save, the four remembered-source values are written one after another inside one guarded step. If one write fails, some values are updated and others keep old content, so the next start may restore a mismatched pair.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 630,
+              "lastLine": 633
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 635,
+              "lastLine": 636
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/ConfigurationStorage.vb",
+          "PolicyPlus/Main.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-55975875671114502038",
+      "statement": "Opening a live registry source tests writing by creating then deleting a probe value. A failure in between leaves the probe value behind, and the failure is swallowed.",
+      "category": "data-integrity",
+      "categoryWords": "Data can end up wrong, lost or inconsistent",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-77497315367093606519",
+          "statement": "Opening a live registry source tests writing by creating then deleting a probe value under the policies key. A failure in between leaves the probe value behind, but the failure is swallowed.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicyLoader.vb",
+              "firstLine": 52,
+              "lastLine": 61
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/PolicyLoader.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-83507954894332327045",
+      "statement": "Reading a policy file trusts the length stored in each entry and the shape of the data. A damaged or hostile file can demand huge memory or fail unexplained, and REG files report no line number on error.",
+      "category": "input-handling",
+      "categoryWords": "Input from outside is used without checks, so it can change what the code does",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-10783310118545980054",
+          "statement": "Reading a policy file trusts the length stored in each entry and the shape of the data. A damaged or hostile file can demand huge memory or fail with an unexplained error, and REG files give no line number on error.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicySource.vb",
+              "firstLine": 53,
+              "lastLine": 57
+            },
+            {
+              "file": "PolicyPlus/RegFile.vb",
+              "firstLine": 53,
+              "lastLine": 53
+            },
+            {
+              "file": "PolicyPlus/RegFile.vb",
+              "firstLine": 80,
+              "lastLine": 95
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-38063153752557655155",
+            "name": "Editing policy files directly"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/PolicySource.vb",
+          "PolicyPlus/RegFile.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-39926917425155878738",
+      "statement": "Several windows raise an unhandled error on ordinary input: double-clicking with no row selected, right-clicking with no category, an unnamed list entry, an unreadable import file, a malformed search wildcard, a removed product in a filter, or an inspector item with no match. No program-wide handler is set, so the framework's default error dialog appears.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-59282169406904274164",
+          "statement": "Double-clicking in any of the four lists of the template details window, with no row selected, raises an error in the person's window, because the first selected row is read without checking.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DetailAdmx.vb",
+              "firstLine": 21,
+              "lastLine": 32
+            }
+          ]
+        },
+        {
+          "id": "fact-01440247535185187496",
+          "statement": "Opening the policy inspector for a policy whose presentation lists an item ID that no policy element has stops the inspector with an unhandled error instead of showing what it can.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/InspectPolicyElements.vb",
+              "firstLine": 117,
+              "lastLine": 118
+            }
+          ]
+        },
+        {
+          "id": "fact-96071026279319116821",
+          "statement": "Double-clicking empty space in the loaded ADMX files list, or in the support definitions list after a filter leaves no rows, stops the window with an unhandled error. The products window guards the same action.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/LoadedAdmx.vb",
+              "firstLine": 16,
+              "lastLine": 18
+            },
+            {
+              "file": "PolicyPlus/LoadedSupportDefinitions.vb",
+              "firstLine": 20,
+              "lastLine": 22
+            }
+          ]
+        },
+        {
+          "id": "fact-92129006865446746389",
+          "statement": "Confirming the list editor with a named-entry row whose name cell was never filled in stops the dialog with an unhandled error. A never-filled value cell is also returned as an empty entry, as part of the same missing check.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/ListEditor.vb",
+              "firstLine": 31,
+              "lastLine": 32
+            },
+            {
+              "file": "PolicyPlus/ListEditor.vb",
+              "firstLine": 36,
+              "lastLine": 36
+            },
+            {
+              "file": "PolicyPlus/ListEditor.vb",
+              "firstLine": 43,
+              "lastLine": 43
+            }
+          ]
+        },
+        {
+          "id": "fact-80328512283248817899",
+          "statement": "Right-clicking the category tree when no category is selected raises an unhandled error: the program neither opens nor cancels the menu, because the selected node is read without checking it exists.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-74192280505907161455",
+            "name": "Choosing and saving policy sources"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 820,
+              "lastLine": 822
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 823,
+              "lastLine": 823
+            }
+          ]
+        },
+        {
+          "id": "fact-44356108302568422603",
+          "statement": "Opening a file in the semantic policy import window reads it whole with no error handling. An unreadable or very large file raises an unhandled error and replaces whatever the person typed.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/ImportSpol.vb",
+              "firstLine": 3,
+              "lastLine": 10
+            }
+          ]
+        },
+        {
+          "id": "fact-07735331011516017636",
+          "statement": "A registry search with a malformed wildcard (such as an unclosed bracket in the key or value) breaks the search. The background task fails uncaught, so the results window stays on \"Starting search\" with Stop enabled and no reason is shown.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-85379136702335736376",
+            "name": "Finding policies"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/FindByRegistry.vb",
+              "firstLine": 20,
+              "lastLine": 25
+            },
+            {
+              "file": "PolicyPlus/FindResults.vb",
+              "firstLine": 63,
+              "lastLine": 73
+            },
+            {
+              "file": "PolicyPlus/FindResults.vb",
+              "firstLine": 97,
+              "lastLine": 97
+            }
+          ]
+        },
+        {
+          "id": "fact-39890830671862398214",
+          "statement": "Opening the filter dialog fails when the current filter holds a product no longer in the loaded policy definitions, because each product is looked up directly. The person cannot open or reset the filter.",
+          "subject": {
+            "kind": "capability",
+            "id": "capability-85379136702335736376",
+            "name": "Finding policies"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/FilterOptions.vb",
+              "firstLine": 56,
+              "lastLine": 58
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-12186108826760133070",
+            "name": "Browsing policy definitions"
+          },
+          {
+            "id": "capability-85379136702335736376",
+            "name": "Finding policies"
+          },
+          {
+            "id": "capability-64744418053658352712",
+            "name": "Changing policy settings"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DetailAdmx.vb",
+          "PolicyPlus/FilterOptions.vb",
+          "PolicyPlus/FindByRegistry.vb",
+          "PolicyPlus/FindResults.vb",
+          "PolicyPlus/ImportSpol.vb",
+          "PolicyPlus/InspectPolicyElements.vb",
+          "PolicyPlus/ListEditor.vb",
+          "PolicyPlus/LoadedAdmx.vb",
+          "PolicyPlus/LoadedSupportDefinitions.vb",
+          "PolicyPlus/Main.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-47748155744817612522",
+      "statement": "The program permits TLS 1.0 and 1.1 alongside 1.2 for every web request it makes, which is only the template download; a comment gives Vista compatibility as the reason. A connection uses the best version both ends offer, but a server or on-path party forcing an old version would be accepted.",
+      "category": "cryptography",
+      "categoryWords": "Data is protected by weak or fixed encryption",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-86655857190607115081",
+          "statement": "The program sets TLS 1.0, 1.1 and 1.2 for the whole process; a code comment gives Vista compatibility as the reason. The framework target is 4.5.2, where TLS 1.2 is not the default and must be set explicitly. The only request seen is the download from a fixed HTTPS address; a downgrade needs the server or an on-path party to offer the old protocol.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-15458745836330537789",
+            "name": "Windows Forms"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/App.config",
+              "firstLine": 4,
+              "lastLine": 4
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 86
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 19,
+              "lastLine": 20
+            },
+            {
+              "file": "PolicyPlus/PolicyPlus.vbproj",
+              "firstLine": 14,
+              "lastLine": 14
+            }
+          ]
+        },
+        {
+          "id": "fact-90934044383930674993",
+          "statement": "The program allows TLS 1.0, 1.1 and 1.2 together for every web request the process makes, so a download uses the newest version both sides support. Older versions stay permitted. A code comment says this keeps Vista working.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 19,
+              "lastLine": 20
+            }
+          ]
+        },
+        {
+          "id": "fact-40193764427477821170",
+          "statement": "The program sets older TLS versions 1.0 and 1.1 alongside 1.2 for every web request it makes, which is the single definition download. The connection normally uses the best version both ends support, but a server or middlebox forcing an older version would be accepted. A comment ties it to Vista.",
+          "subject": {
+            "kind": "part",
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 86
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 19,
+              "lastLine": 20
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          },
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/App.config",
+          "PolicyPlus/DownloadAdmx.vb",
+          "PolicyPlus/Main.vb",
+          "PolicyPlus/PolicyPlus.vbproj"
+        ]
+      }
+    },
+    {
+      "id": "fact-39060116312418615302",
+      "statement": "The program targets .NET Framework 4.5.2, which Microsoft stopped supporting in April 2022, so it gets no security fixes. The readme says newer versions also work and ship with Windows 10 or later, which limits the reach to the declared minimum.",
+      "category": "unsupported-technology",
+      "categoryWords": "A technology is out of support or no longer receives fixes",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-19510029468004741670",
+          "statement": "The program targets .NET Framework 4.5.2, which Microsoft no longer supports, so it receives no security fixes.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-35569778825867670313",
+            "name": ".NET Framework"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/PolicyPlus.vbproj",
+              "firstLine": 14,
+              "lastLine": 14
+            }
+          ]
+        },
+        {
+          "id": "fact-31024608165237448739",
+          "statement": "The declared minimum framework is version 4.5.2, a version Microsoft ended support for in April 2022, so it no longer receives security fixes. The README says newer versions also work and come preinstalled on Windows 10 or newer; the shown reach is the declared minimum.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-35569778825867670313",
+            "name": ".NET Framework"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/App.config",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/PolicyPlus.vbproj",
+              "firstLine": 14,
+              "lastLine": 14
+            },
+            {
+              "file": "README.md",
+              "firstLine": 34,
+              "lastLine": 36
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/App.config",
+          "PolicyPlus/PolicyPlus.vbproj",
+          "README.md"
+        ]
+      }
+    },
+    {
+      "id": "fact-47177372044392566454",
+      "statement": "The template download uses one fixed address naming a single dated Windows 11 package (26H2) and its folder layout, with no fallback. When Microsoft retires it, or a newer release appears, the feature fails until the program is rebuilt.",
+      "category": "release-and-operations",
+      "categoryWords": "Releasing or running the system depends on manual or missing steps",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-75662203638625383135",
+          "statement": "The program downloads Microsoft's administrative templates package from one fixed web address naming a single Windows 11 update, then unpacks it with the Windows installer. When Microsoft retires that address, the download feature breaks until the code is changed.",
+          "subject": {
+            "kind": "part",
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 92
+            }
+          ]
+        },
+        {
+          "id": "fact-60390713589835980398",
+          "statement": "The template download is a fixed address in code, protected only by the secure connection, which the program sets to allow Tls, Tls 1.1 and Tls 1.2, keeping older versions on purpose. No size, hash or signature check precedes unpacking. A new Windows release needs a new program release.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-35569778825867670313",
+            "name": ".NET Framework"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 92
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 96,
+              "lastLine": 114
+            },
+            {
+              "file": "PolicyPlus/Main.vb",
+              "firstLine": 19,
+              "lastLine": 20
+            }
+          ]
+        },
+        {
+          "id": "fact-11162233511739790592",
+          "statement": "The template download address names one dated Microsoft update package. When Microsoft retires or replaces it, the download feature fails until the program is rebuilt with a new address.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-82419739670951366154",
+            "name": "Microsoft Windows"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 3
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 84,
+              "lastLine": 85
+            }
+          ]
+        },
+        {
+          "id": "fact-23580349590936340154",
+          "statement": "The download link is fixed to one Windows 11 release (26H2) and its folder layout, so it will stop matching newer packages and need a code change to move.",
+          "subject": {
+            "kind": "part",
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 3,
+              "lastLine": 4
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          },
+          {
+            "id": "capability-56009572261677044081",
+            "name": "Using the product"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb",
+          "PolicyPlus/Main.vb"
+        ]
+      }
+    },
+    {
+      "id": "fact-52624008757453504996",
+      "statement": "When a download, unpack or move fails, the person sees only which step failed, not the cause. The scratch folder is removed only on success, and files already moved into the destination are not rolled back.",
+      "category": "failure-handling",
+      "categoryWords": "Failures are hidden, lost or not retried",
+      "severity": "low",
+      "subject": {
+        "kind": "system",
+        "id": "",
+        "name": "The whole system"
+      },
+      "findings": [
+        {
+          "id": "fact-76711632053172933863",
+          "statement": "When a download, unpack or move fails, the person sees only the step that failed, not the cause. The scratch folder holding the downloaded package and partly unpacked files is removed only on success, and files already moved into the destination are not rolled back.",
+          "subject": {
+            "kind": "technology",
+            "id": "technology-35569778825867670313",
+            "name": ".NET Framework"
+          },
+          "evidence": [
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 76,
+              "lastLine": 92
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 114,
+              "lastLine": 114
+            },
+            {
+              "file": "PolicyPlus/DownloadAdmx.vb",
+              "firstLine": 123,
+              "lastLine": 128
+            }
+          ]
+        }
+      ],
+      "places": {
+        "capabilities": [
+          {
+            "id": "capability-37285537501950413921",
+            "name": "Getting Microsoft policy definitions"
+          }
+        ],
+        "parts": [
+          {
+            "id": "part-84884120082996248766",
+            "name": "Policy Plus desktop editor"
+          }
+        ],
+        "files": [
+          "PolicyPlus/DownloadAdmx.vb"
+        ]
+      }
+    }
+  ]
+}

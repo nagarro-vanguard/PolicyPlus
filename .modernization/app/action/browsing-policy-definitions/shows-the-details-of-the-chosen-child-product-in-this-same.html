@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Shows the details of the chosen child product in this same window.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/browsing-policy-definitions.html">Browsing policy definitions</a> › <a href="../../screen/product-details.html">Product details</a></div><h1>Shows the details of the chosen child product in this same window.</h1><p class="lead">Started by a person. In the code: PolicyPlus/DetailProduct.vb:41</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the DetailProduct screen of Browsing policy definitions: Shows the details of the chosen child product in this same window.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:41
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 5
+- The product details window labels a product &quot;Major revision&quot;, &quot;Minor revision&quot; or &quot;Top-level product&quot; from its type. (PolicyPlus/DetailProduct.vb:13)
+- The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank. (PolicyPlus/DetailProduct.vb:21)
+- A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled. (PolicyPlus/DetailProduct.vb:22)
+- The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list. (PolicyPlus/DetailProduct.vb:29)
+- Double-clicking a child revision in the product details window shows that child in the same window; with nothing selected, nothing happens. (PolicyPlus/DetailProduct.vb:41)
+Unconfirmed:
+- For the capability: When the person's language has no exact language folder, the folder picked among those of the same primary language is the first one the operating system lists; which that is, is not stated in code. If wrong: A person could see a different regional variant of the policy text than expected when several variants are installed.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/browsing-policy-definitions/dialog-windows-and-their-reactions.html">Dialog windows and their reactions</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (5)</h2><div class="group-name">Dialog windows and their reactions</div><div class="row"><div class="main"><span>The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:29
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:29  ·  Screens: DetailAdmx, DetailProduct, DetailSupport, LoadedProducts</div></div></div><div class="row"><div class="main"><span>A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:22
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:22  ·  Screens: DetailAdmx, DetailProduct, DetailSupport, LoadedProducts</div></div></div><div class="row"><div class="main"><span>Double-clicking a child revision in the product details window shows that child in the same window; with nothing selected, nothing happens.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Double-clicking a child revision in the product details window shows that child in the same window; with nothing selected, nothing happens.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:41
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:41  ·  Screens: DetailProduct</div></div></div><div class="row"><div class="main"><span>The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:21
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:21  ·  Screens: DetailAdmx, DetailProduct, DetailSupport, LoadedProducts</div></div></div><div class="row"><div class="main"><span>The product details window labels a product &quot;Major revision&quot;, &quot;Minor revision&quot; or &quot;Top-level product&quot; from its type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The product details window labels a product &quot;Major revision&quot;, &quot;Minor revision&quot; or &quot;Top-level product&quot; from its type.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:13
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:13  ·  Screens: DetailAdmx, DetailProduct, DetailSupport, LoadedProducts</div></div></div></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

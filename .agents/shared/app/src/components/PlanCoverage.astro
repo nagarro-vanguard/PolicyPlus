@@ -1,0 +1,53 @@
+---
+import Page from "../layouts/Page.astro";
+import { copy } from "../lib/copy";
+import { coverageTree, planHomePath, progressOf, storyPath } from "../lib/plan";
+import type { PlanData } from "../lib/plan-data";
+import type { ActionLookup } from "../lib/plan-links";
+import { plural } from "../lib/text";
+export interface Props { data: PlanData; lookup: ActionLookup; }
+const { data, lookup } = Astro.props;
+const { plan, ledger } = data;
+const root = "../";
+const tree = coverageTree(plan);
+const progress = progressOf(plan, ledger);
+const unplanned = plan.coverage.unplanned.toSorted((one, other) => one.file.localeCompare(other.file) || one.firstLine - other.firstLine);
+const noWindow = "Entry points without a window";
+// A surface is named in the plan as the code names its window; the analysis knows the screen by a plain name.
+const surfaceName = (surface: { name: string; ids: readonly string[] }) =>
+    surface.name === noWindow
+        ? copy.plan.coverageNoWindow
+        : (surface.ids.map((id) => lookup(id)?.screen?.text).find((text) => text !== undefined) ?? surface.name);
+---
+<Page title={copy.plan.coverageTitle} lead={copy.plan.coverageLead} depth={1} trail={[{ text: copy.site.home, href: `${root}index.html` }, { text: copy.plan.title, href: `${root}${planHomePath}.html` }, { text: copy.plan.coverageTitle }]}>
+    <div class="glance">
+        <div>{plural(tree.length, "capability", "capabilities")}</div>
+        <div>{plural(tree.reduce((sum, each) => sum + each.actions, 0), "action")}</div>
+        <div>{plural(plan.stories.length, "story", "stories")}</div>
+        <div>{copy.plan.coverageRules(plan.coverage.rulesBuilt, plan.coverage.rulesTotal)}</div>
+        <div>{copy.plan.coverageRulesMerged(progress.rulesBuilt, progress.rulesTotal)}</div>
+    </div>
+    <h2>{copy.plan.coverageTree}</h2>
+    {tree.map((capability) => <section class="coverage-capability">
+        <h3>{capability.name}</h3>
+        <p class="sub">{copy.plan.coverageCapability(copy.plan.scopeWords[capability.scope as keyof typeof copy.plan.scopeWords] ?? capability.scope, capability.surfaces.length, capability.actions, capability.stories)}</p>
+        {capability.surfaces.map((surface) => <details>
+            <summary>{surfaceName(surface)} · {copy.plan.coverageSurface(surface.actions)}</summary>
+            {surface.stories.map((entry) => <div class="row"><div class="main">
+                <a href={`${root}${storyPath(entry.story)}.html`}>{entry.story.title}</a>
+                <ul class="coverage-actions">{entry.actions.map((action) => <li>{lookup(action.id)?.purpose ?? copy.plan.coverageAction}</li>)}</ul>
+            </div><div class="meta">{plural(entry.actions.length, "action")}</div></div>)}
+            {surface.without.length > 0 && <div class="row"><div class="main"><strong>{copy.plan.coverageNoStory}</strong>
+                <ul class="coverage-actions">{surface.without.map((action) => <li>{lookup(action.id)?.purpose ?? copy.plan.coverageAction}</li>)}</ul>
+            </div></div>}
+        </details>)}
+    </section>)}
+    <h2>{copy.plan.unplanned} ({unplanned.length})</h2>
+    <p class="note">{copy.plan.unplannedLead(unplanned.length)}</p>
+    <details><summary>{copy.plan.unplanned} ({unplanned.length})</summary>
+        <div class="table-wrap"><table class="data">
+            <thead><tr><th>{copy.plan.unplannedColumns.what}</th><th>{copy.plan.unplannedColumns.file}</th><th>{copy.plan.unplannedColumns.lines}</th></tr></thead>
+            <tbody>{unplanned.map((item) => <tr><td><code>{item.what}</code></td><td><code>{item.file}</code></td><td>{item.firstLine}–{item.lastLine}</td></tr>)}</tbody>
+        </table></div>
+    </details>
+</Page>

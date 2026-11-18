@@ -1,0 +1,352 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Saves comments and policy settings to their sources and remembers the chosen sources.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/choosing-and-saving-policy-sources.html">Choosing and saving policy sources</a> › <a href="../../screen/policy-plus-main-window.html">Policy Plus main window</a></div><h1>Saves comments and policy settings to their sources and remembers the chosen sources.</h1><p class="lead">Started by a person. In the code: PolicyPlus/Main.vb:614</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the Main screen of Choosing and saving policy sources: Saves comments and policy settings to their sources and remembers the chosen sources.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:614
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+- PolicyPlus/ConfigurationStorage.vb (shared with 4 other capabilities)
+- PolicyPlus/PInvoke.vb (shared with 3 other capabilities)
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+- PolicyPlus/CmtxFile.vb (shared with 1 other capability)
+- PolicyPlus/SystemInfo.vb (shared with 1 other capability)
+Data saved: Policy comment, Policy setting, Program preference
+Data read: Policy setting
+Rules decided here: 46
+- Saving writes each source's comments first, then writes a source only if it is fully writable (otherwise reported as &quot;not writable&quot;), then remembers the chosen source types and locations for the next start. The person sees &quot;Success.&quot; with the user and computer outcomes, or &quot;Saving failed!&quot; with the reason. (PolicyPlus/Main.vb:625)
+- The computer counts as having the Group Policy infrastructure only when the number Windows gives for its edition equals one of 59 fixed codes in a list. The edition is asked for as Windows version 6.0, and the result of the call is not checked. When the call fails the edition stays 0, which is not in the list, so the computer counts as having none. (PolicyPlus/SystemInfo.vb:3)
+- A policy file is refused when it does not start with the 'PReg' signature, with the message 'Missing PReg signature'. (PolicyPlus/PolicySource.vb:33)
+- A policy file is refused when its format version is not 1, with the message 'Unknown (newer) version of POL format'. (PolicyPlus/PolicySource.vb:34)
+- When comments are saved, each comment gets its own text id built from the policy's namespace, policy name and a running number, and each distinct namespace gets a prefix made from its name (dots turned into underscores) and the running number. (PolicyPlus/CmtxFile.vb:50)
+- When a policy file is read, an extra empty character after the value name, as Microsoft's documentation allows, is skipped. (PolicyPlus/PolicySource.vb:50)
+- When a policy file is read and the same key and value name occur twice, the later entry wins. Key and value names are matched without regard to letter case, and the first spelling seen is kept for saving. (PolicyPlus/PolicySource.vb:59)
+- When a policy file is saved, entries are written in alphabetical order, so a key-clearing marker is always written before the values it clears. (PolicyPlus/PolicySource.vb:77)
+  ...and 38 more
+Unconfirmed:
+- For the capability: The Group Policy check relies on a fixed list of edition codes. We assume those codes are the professional, enterprise, education and server editions, and that Home editions are absent. The code names no editions. If wrong: The program would hide or show its warning about missing Group Policy on the wrong computers.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/choosing-and-saving-policy-sources/dialog-windows-and-their-reactions.html">Dialog windows and their reactions</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/choosing-and-saving-policy-sources/policy-definitions-and-files.html">Policy definitions and files</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/choosing-and-saving-policy-sources/program-setup-and-settings.html">Program setup and settings</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (46)</h2><div class="group-name">Dialog windows and their reactions</div><div class="row"><div class="main"><span>Saving writes each source&#39;s comments first, then writes a source only if it is fully writable (otherwise reported as &quot;not writable&quot;), then remembers the chosen source types and locations for the next start. The person sees &quot;Success.&quot; with the user and computer outcomes, or &quot;Saving failed!&quot; with the reason.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Choosing and saving policy sources: Saving writes each source's comments first, then writes a source only if it is fully writable (otherwise reported as &quot;not writable&quot;), then remembers the chosen source types and locations for the next start. The person sees &quot;Success.&quot; with the user and computer outcomes, or &quot;Saving failed!&quot; with the reason.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:625
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:625  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>A source&#39;s comment list is saved to its comment file location whenever the list exists, even when empty; a source without comment support has no list and is skipped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Choosing and saving policy sources: A source's comment list is saved to its comment file location whenever the list exists, even when empty; a source without comment support has no list and is skipped.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:618
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:618  ·  Screens: Main</div></div></div><div class="group-name">Policy definitions and files</div><div class="row"><div class="main"><span>When gpt.ini does not exist, a new one is written with the General section, both extension-name lines and Version 65537.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When gpt.ini does not exist, a new one is written with the General section, both extension-name lines and Version 65537.
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:198
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:198  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy file&#39;s changes are applied to another source, an entry is saved only if it has a non-empty value name that does not start with &#39;**&#39;. Other marker-style entries and entries with an empty value name are skipped without notice. A saved value keeps its original letter case and type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a policy file's changes are applied to another source, an entry is saved only if it has a non-empty value name that does not start with '**'. Other marker-style entries and entries with an empty value name are skipped without notice. A saved value keeps its original letter case and type.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:169
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:169  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When gpt.ini is updated and already exists, its Version number is raised by 1 for a machine source and by 65536 for a user source; if no Version line exists, it is set to 65537 (both parts at 1).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When gpt.ini is updated and already exists, its Version number is raised by 1 for a machine source and by 65536 for a user source; if no Version line exists, it is set to 65537 (both parts at 1).
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:177
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:177  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy file is clearing a key, all values and markers under the key are dropped and a single clear-all marker is stored.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a policy file is clearing a key, all values and markers under the key are dropped and a single clear-all marker is stored.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:183
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:183  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A REG file cannot be used as a source for forgetting a value: the request fails with &#39;not implemented&#39;. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A REG file cannot be used as a source for forgetting a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:237
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:237  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A value in a policy file counts as marked for deletion when a deletion marker names it, when the key has a clear-all marker, or when a delete-values list for the key names it, regardless of case. Entries are examined in sorted order, and a value whose name sorts after the marker is stored as present and cancels the deletion, whenever it was written and whichever marker kind came before.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A value in a policy file counts as marked for deletion when a deletion marker names it, when the key has a clear-all marker, or when a delete-values list for the key names it, regardless of case. Entries are examined in sorted order, and a value whose name sorts after the marker is stored as present and cancels the deletion, whenever it was written and whichever marker kind came before.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:118
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:118  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:139
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:139  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Saving a local Group Policy source writes the Registry.pol file, raises the gpt.ini version, and then, on Windows editions that list as having Group Policy (decided by a fixed list of product edition codes), asks Windows to refresh policy (&quot;saved to disk and invoked policy refresh&quot;). On other editions, the difference between the file as last on disk (read at the moment of saving) and the new content is applied to the running account&#39;s own registry (the current user&#39;s for a user source, the machine&#39;s for a machine source) and all windows are notified (&quot;saved to disk and applied diff to Registry&quot;).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: Saving a local Group Policy source writes the Registry.pol file, raises the gpt.ini version, and then, on Windows editions that list as having Group Policy (decided by a fixed list of product edition codes), asks Windows to refresh policy (&quot;saved to disk and invoked policy refresh&quot;). On other editions, the difference between the file as last on disk (read at the moment of saving) and the new content is applied to the running account's own registry (the current user's for a user source, the machine's for a machine source) and all windows are notified (&quot;saved to disk and applied diff to Registry&quot;).
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:119
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+- PolicyPlus/SystemInfo.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:119  ·  Screens: Main</div></div></div><details class="more"><summary>Showing 8 of 44 business rules. Show all 44</summary><div class="row"><div class="main"><span>Saving a per-user GPO writes its Registry.pol file, raises its gpt.ini version and asks Windows to refresh user policy (&quot;saved to disk and invoked policy refresh&quot;).</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: Saving a per-user GPO writes its Registry.pol file, raises its gpt.ini version and asks Windows to refresh user policy (&quot;saved to disk and invoked policy refresh&quot;).
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:143
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:143  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a value is saved into a REG file, it is ignored if a source branch is set and its key lies outside that branch. When no branch is set, every key is accepted. Any value already stored under that name is replaced.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a value is saved into a REG file, it is ignored if a source branch is set and its key lies outside that branch. When no branch is set, every key is accepted. Any value already stored under that name is replaced.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:226
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:226  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Saving a POL file source writes the file only (&quot;saved to disk&quot;); a registry source reports &quot;already applied&quot; because it was changed live; a user hive reports &quot;will apply when policy source is closed&quot;; Scratch space reports &quot;discarded&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: Saving a POL file source writes the file only (&quot;saved to disk&quot;); a registry source reports &quot;already applied&quot; because it was changed live; a user hive reports &quot;will apply when policy source is closed&quot;; Scratch space reports &quot;discarded&quot;.
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:134
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:134  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a value is deleted in a REG file, the request is ignored if a source branch is set and the key lies outside it, or if the key is already marked for removal. When no branch is set, every key is accepted. Otherwise the value is recorded as deleted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a value is deleted in a REG file, the request is ignored if a source branch is set and the key lies outside it, or if the key is already marked for removal. When no branch is set, every key is accepted. Otherwise the value is recorded as deleted.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:240
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:240  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When gpt.ini is updated, the Machine and User extension-name lines for the registry policy are added if missing and left untouched if present.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When gpt.ini is updated, the Machine and User extension-name lines for the registry policy are added if missing and left untouched if present.
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:190
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:190  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A registry key counts as a policy key when it is one of the three policy branches (software\policies, software\microsoft\windows\currentversion\policies, system\currentcontrolset\policies) or lies below one, regardless of case.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A registry key counts as a policy key when it is one of the three policy branches (software\policies, software\microsoft\windows\currentversion\policies, system\currentcontrolset\policies) or lies below one, regardless of case.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:412
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:412  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy file&#39;s changes are applied to another source, an entry starting &#39;**deletekeys&#39; clears each key named in its semicolon-separated list under the entry&#39;s key, using lower-case names. Clearing removes only that key&#39;s own values, not its subkeys.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a policy file's changes are applied to another source, an entry starting '**deletekeys' clears each key named in its semicolon-separated list under the entry's key, using lower-case names. Clearing removes only that key's own values, not its subkeys.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:165
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:165  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a number is saved to the live registry, an unsigned 32-bit or 64-bit number is converted to the signed number the registry stores with the same bits, and the key is created if missing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a number is saved to the live registry, an unsigned 32-bit or 64-bit number is converted to the signed number the registry stores with the same bits, and the key is created if missing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:374
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:374  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy file is refused when its format version is not 1, with the message &#39;Unknown (newer) version of POL format&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A policy file is refused when its format version is not 1, with the message 'Unknown (newer) version of POL format'.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:34
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:34  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When comments are saved, each comment gets its own text id built from the policy&#39;s namespace, policy name and a running number, and each distinct namespace gets a prefix made from its name (dots turned into underscores) and the running number.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When comments are saved, each comment gets its own text id built from the policy's namespace, policy name and a running number, and each distinct namespace gets a prefix made from its name (dots turned into underscores) and the running number.
+Where to look first:
+- Starts at PolicyPlus/CmtxFile.vb:50
+- PolicyPlus/CmtxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/CmtxFile.vb:50  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a newer policy file is applied over an older one, values the old file held and the new one dropped are forgotten in the target, but only if they sit under the three policy branches of the registry.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a newer policy file is applied over an older one, values the old file held and the new one dropped are forgotten in the target, but only if they sit under the three policy branches of the registry.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:174
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:174  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>In the live registry, &#39;forgetting&#39; a value deletes it, because the registry cannot remember a pending deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: In the live registry, 'forgetting' a value deletes it, because the registry cannot remember a pending deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:371
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:371  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a value is forgotten in a policy file, both the value and its deletion marker are removed, so the policy reverts to not saying anything about it.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a value is forgotten in a policy file, both the value and its deletion marker are removed, so the policy reverts to not saying anything about it.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:99
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:99  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The computer counts as having the Group Policy infrastructure only when the number Windows gives for its edition equals one of 59 fixed codes in a list. The edition is asked for as Windows version 6.0, and the result of the call is not checked. When the call fails the edition stays 0, which is not in the list, so the computer counts as having none.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: The computer counts as having the Group Policy infrastructure only when the number Windows gives for its edition equals one of 59 fixed codes in a list. The edition is asked for as Windows version 6.0, and the result of the call is not checked. When the call fails the edition stays 0, which is not in the list, so the computer counts as having none.
+Where to look first:
+- Starts at PolicyPlus/SystemInfo.vb:3
+- PolicyPlus/SystemInfo.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/SystemInfo.vb:3  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Clearing a key in the live registry deletes every value in it but leaves the key and its subkeys. Forgetting a key&#39;s clearance does nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: Clearing a key in the live registry deletes every value in it but leaves the key and its subkeys. Forgetting a key's clearance does nothing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:416
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:416  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A multiple-string value is stored as its strings each followed by an empty character, with one more empty character closing the list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A multiple-string value is stored as its strings each followed by an empty character, with one more empty character closing the list.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:296
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:296  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A 64-bit number is stored in a policy file as 8 bytes, lowest byte first.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A 64-bit number is stored in a policy file as 8 bytes, lowest byte first.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:272
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:272  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy file is read and the same key and value name occur twice, the later entry wins. Key and value names are matched without regard to letter case, and the first spelling seen is kept for saving.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a policy file is read and the same key and value name occur twice, the later entry wins. Key and value names are matched without regard to letter case, and the first spelling seen is kept for saving.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:59
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:59  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Saving comments writes every comment and text held in memory into the target file, in schema version 1.0, replacing what the file held before.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: Saving comments writes every comment and text held in memory into the target file, in schema version 1.0, replacing what the file held before.
+Where to look first:
+- Starts at PolicyPlus/CmtxFile.vb:83
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+- PolicyPlus/CmtxFile.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/CmtxFile.vb:83  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The comment file for a source sits beside its file: the POL file or hive path with the extension changed to .cmtx; for Local GPO or per-user GPO a file named comment.cmtx in the same folder; for the registry a file under the person&#39;s local application data folder (one for user, one for machine); Scratch space has none, so comments are unavailable.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: The comment file for a source sits beside its file: the POL file or hive path with the extension changed to .cmtx; for Local GPO or per-user GPO a file named comment.cmtx in the same folder; for the registry a file under the person's local application data folder (one for user, one for machine); Scratch space has none, so comments are unavailable.
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:151
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:151  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a key is cleared in a REG file, the request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted. Otherwise the key&#39;s earlier entries are replaced by a key-removal entry.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a key is cleared in a REG file, the request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted. Otherwise the key's earlier entries are replaced by a key-removal entry.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:248
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:248  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy file is refused when it does not start with the &#39;PReg&#39; signature, with the message &#39;Missing PReg signature&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A policy file is refused when it does not start with the 'PReg' signature, with the message 'Missing PReg signature'.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:33
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:33  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy file&#39;s changes are applied to another source, an entry named &#39;**deletevalues&#39; deletes each value in its semicolon-separated list, using lower-case names.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a policy file's changes are applied to another source, an entry named '**deletevalues' deletes each value in its semicolon-separated list, using lower-case names.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:161
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:161  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:231
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:231  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A 32-bit number is stored in a policy file as 4 bytes, lowest byte first.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A 32-bit number is stored in a policy file as 4 bytes, lowest byte first.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:255
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:255  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a value is marked for deletion in a policy file, any value or marker already held under that name is dropped first. A deletion marker holding the number 32, as Microsoft does, is added unless the value is already marked or its key is cleared.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a value is marked for deletion in a policy file, any value or marker already held under that name is dropped first. A deletion marker holding the number 32, as Microsoft does, is added unless the value is already marked or its key is cleared.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:92
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:92  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy file is read, an extra empty character after the value name, as Microsoft&#39;s documentation allows, is skipped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a policy file is read, an extra empty character after the value name, as Microsoft's documentation allows, is skipped.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:50
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:50  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy file is saved, entries are written in alphabetical order, so a key-clearing marker is always written before the values it clears.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a policy file is saved, entries are written in alphabetical order, so a key-clearing marker is always written before the values it clears.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:77
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:77  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A source is writable by default for Scratch space; for a registry source it is &#39;no writing&#39; when the write test failed; for others it is &#39;no commit&#39; when the file or hive could not be opened for writing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A source is writable by default for Scratch space; for a registry source it is 'no writing' when the write test failed; for others it is 'no commit' when the file or hive could not be opened for writing.
+Where to look first:
+- Starts at PolicyPlus/PolicyLoader.vb:163
+- PolicyPlus/PolicyLoader.vb (shared with 2 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyLoader.vb:163  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy file&#39;s changes are applied to another source, an entry named &#39;**del.&#39; plus a value name deletes that value, using the lower-case key and value names.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a policy file's changes are applied to another source, an entry named '**del.' plus a value name deletes that value, using the lower-case key and value names.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:157
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:157  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a value is set in a policy file, it replaces any value already held under that name. A deletion marker for the name is not removed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a value is set in a policy file, it replaces any value already held under that name. A deletion marker for the name is not removed.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:105
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:105  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:320
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:320  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Text stored in a policy file is written in two-byte characters followed by a closing empty character.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: Text stored in a policy file is written in two-byte characters followed by a closing empty character.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:240
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:240  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a policy file&#39;s changes are applied to another source, an entry starting &#39;**delvals&#39; clears the whole key, using the lower-case key name. Entries are applied in sorted order, so clear-all entries come before values. Clearing a live registry key removes only that key&#39;s own values.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a policy file's changes are applied to another source, an entry starting '**delvals' clears the whole key, using the lower-case key name. Entries are applied in sorted order, so clear-all entries come before values. Clearing a live registry key removes only that key's own values.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:159
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:159  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a value is deleted in the live registry and its key does not exist, nothing happens. A missing value is not an error.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: When a value is deleted in the live registry and its key does not exist, nothing happens. A missing value is not an error.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:365
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:365  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A value written to a policy file is stored as text, expandable text, a 32-bit or 64-bit number or a multiple string by its stated type. Every other type is stored as raw bytes with that type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Choosing and saving policy sources: A value written to a policy file is stored as text, expandable text, a 32-bit or 64-bit number or a multiple string by its stated type. Every other type is stored as raw bytes with that type.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:337
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:337  ·  Screens: Main</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

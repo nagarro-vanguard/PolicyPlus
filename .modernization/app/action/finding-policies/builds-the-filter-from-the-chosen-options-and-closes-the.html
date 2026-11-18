@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Builds the filter from the chosen options and closes the dialog accepted</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/finding-policies.html">Finding policies</a> › <a href="../../screen/filter-the-policy-list.html">Filter the policy list</a></div><h1>Builds the filter from the chosen options and closes the dialog accepted</h1><p class="lead">Started by a person. In the code: PolicyPlus/FilterOptions.vb:85</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the FilterOptions screen of Finding policies: Builds the filter from the chosen options and closes the dialog accepted
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:85
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 4
+- When OK is pressed, the new filter keeps only managed policies for Policy, only unmanaged ones for Preference, and no policy-type condition for Any. (PolicyPlus/FilterOptions.vb:88)
+- When OK is pressed, the new filter requires the chosen state: Not Configured, Configured, Enabled or Disabled; Any sets no state condition. (PolicyPlus/FilterOptions.vb:94)
+- When OK is pressed, the new filter keeps only commented policies for Yes, only uncommented ones for No, and no comment condition for Any. (PolicyPlus/FilterOptions.vb:104)
+- When OK is pressed with Supported on ticked, the filter records every ticked product and both matching options; with it unticked, any ticks and options are discarded and no support condition applies. A filter with Supported on ticked and no product ticked is accepted. (PolicyPlus/FilterOptions.vb:110)
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/finding-policies/dialog-windows-and-their-reactions.html">Dialog windows and their reactions</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (4)</h2><div class="group-name">Dialog windows and their reactions</div><div class="row"><div class="main"><span>When OK is pressed, the new filter keeps only managed policies for Policy, only unmanaged ones for Preference, and no policy-type condition for Any.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When OK is pressed, the new filter keeps only managed policies for Policy, only unmanaged ones for Preference, and no policy-type condition for Any.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:88
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:88  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>When OK is pressed, the new filter keeps only commented policies for Yes, only uncommented ones for No, and no comment condition for Any.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When OK is pressed, the new filter keeps only commented policies for Yes, only uncommented ones for No, and no comment condition for Any.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:104
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:104  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>When OK is pressed, the new filter requires the chosen state: Not Configured, Configured, Enabled or Disabled; Any sets no state condition.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When OK is pressed, the new filter requires the chosen state: Not Configured, Configured, Enabled or Disabled; Any sets no state condition.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:94
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:94  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>When OK is pressed with Supported on ticked, the filter records every ticked product and both matching options; with it unticked, any ticks and options are discarded and no support condition applies. A filter with Supported on ticked and no product ticked is accepted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When OK is pressed with Supported on ticked, the filter records every ticked product and both matching options; with it unticked, any ticks and options are discarded and no support condition applies. A filter with Supported on ticked and no product ticked is accepted.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:110
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:110  ·  Screens: FilterOptions</div></div></div></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dialog windows and their reactions</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/getting-microsoft-policy-definitions.html">Getting Microsoft policy definitions</a> › Dialog windows and their reactions</div><h1>Dialog windows and their reactions</h1><p class="lead">What a person sees and enters in the program&#39;s windows, and the routines that answer each click, selection and window event before handing the choices to the policy code. In Getting Microsoft policy definitions: 6 actions and 46 business rules. Part of its code is also used by other capabilities.</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: The Dialog windows and their reactions layer of Getting Microsoft policy definitions: 6 actions and 46 rules; part of its code is also used by other capabilities.
+Where to look first:
+- PolicyPlus/DownloadAdmx.Designer.vb (only this capability)
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Data saved: Administrative template
+Data read: Administrative template
+Rules decided here: 46
+- Choosing a folder in the browse dialog replaces the destination; cancelling the dialog leaves the destination unchanged. (PolicyPlus/DownloadAdmx.vb:7)
+- When the person closes the download window while a download is running, the close is refused; the window closes only when no download is running. (PolicyPlus/DownloadAdmx.vb:14)
+- Each time the download window opens, the destination folder is set to the Windows policy definitions folder (the PolicyDefinitions folder under the Windows folder) and no new policy folder is reported to the caller. (PolicyPlus/DownloadAdmx.vb:17)
+- While a download runs, the start button, close button, destination box and browse button are all disabled, so a second download cannot be started and the destination cannot change; they are enabled again when it ends. (PolicyPlus/DownloadAdmx.vb:22)
+- Clearing the search forgets the results, so reopening them reports that no search has been run. (PolicyPlus/FindResults.vb:38)
+- The welcome offer to download policy definitions is considered only once: the first time the window is shown the program records that it has been considered, even when no offer is made, and never considers it again. (PolicyPlus/Main.vb:48)
+- When the offer is considered, it is made only if this Windows edition has no Group Policy support and more than two non-empty categories name a parent that is not among the loaded definitions. The person sees &quot;Welcome to Policy Plus! Home editions do not come with the full set of policy definitions. Would you like to download them now? This can also be done later with Help | Acquire ADMX Files.&quot;; Yes starts the download dialog. (PolicyPlus/Main.vb:50)
+- When files are moved into a folder, the folder is created if missing and every file already there with the same name is deleted first and then replaced by the new one, with no backup. Only files directly in the source folder are moved. A failure part-way leaves some files replaced and others not. (PolicyPlus/DownloadAdmx.vb:52)
+  ...and 38 more
+Unconfirmed:
+- For the capability: The package at the fixed Microsoft address is assumed to still hold the template folder at the expected path and an en-US language folder, and to unpack with a zero exit code. A different layout makes every download fail at the unpack or move step. If wrong: Downloads fail with a step message, and the fixed path and link must be changed in a rebuild.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What can be started here (6)</h2><div class="row"><div class="main"><a href="../../action/getting-microsoft-policy-definitions/lets-the-person-pick-the-destination-folder-in-a-folder.html">Lets the person pick the destination folder in a folder dialog.</a><div class="sub">PolicyPlus/DownloadAdmx.vb:7</div></div><div class="meta">DownloadAdmx</div></div><div class="row"><div class="main"><a href="../../action/getting-microsoft-policy-definitions/blocks-closing-the-window-while-a-download-is-running.html">Blocks closing the window while a download is running.</a><div class="sub">PolicyPlus/DownloadAdmx.vb:14</div></div><div class="meta">DownloadAdmx</div></div><div class="row"><div class="main"><a href="../../action/getting-microsoft-policy-definitions/fills-the-destination-folder-with-the-windows-policy.html">Fills the destination folder with the Windows policy definitions folder and clears the busy state.</a><div class="sub">PolicyPlus/DownloadAdmx.vb:17</div></div><div class="meta">DownloadAdmx</div></div><div class="row"><div class="main"><a href="../../action/getting-microsoft-policy-definitions/downloads-microsoft-s-policy-definitions-package-unpacks-it.html">Downloads Microsoft&#39;s policy definitions package, unpacks it and moves the files into the chosen folder.</a><div class="sub">PolicyPlus/DownloadAdmx.vb:33</div></div><div class="meta">DownloadAdmx</div></div><div class="row"><div class="main"><a href="../../action/getting-microsoft-policy-definitions/on-first-run-without-a-full-set-of-definitions-offers-to.html">On first run without a full set of definitions, offers to download them.</a><div class="sub">PolicyPlus/Main.vb:46</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/getting-microsoft-policy-definitions/opens-the-download-window-and-loads-the-downloaded.html">Opens the download window and loads the downloaded definitions.</a><div class="sub">PolicyPlus/Main.vb:756</div></div><div class="meta">Main</div></div><h2>Business rules in this layer (46)</h2><div class="row"><div class="main"><span>Choosing a folder in the browse dialog replaces the destination; cancelling the dialog leaves the destination unchanged.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: Choosing a folder in the browse dialog replaces the destination; cancelling the dialog leaves the destination unchanged.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:7
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:7  ·  Screens: DownloadAdmx</div></div></div><div class="row"><div class="main"><span>When the person closes the download window while a download is running, the close is refused; the window closes only when no download is running.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: When the person closes the download window while a download is running, the close is refused; the window closes only when no download is running.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:14
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:14  ·  Screens: DownloadAdmx</div></div></div><div class="row"><div class="main"><span>Each time the download window opens, the destination folder is set to the Windows policy definitions folder (the PolicyDefinitions folder under the Windows folder) and no new policy folder is reported to the caller.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: Each time the download window opens, the destination folder is set to the Windows policy definitions folder (the PolicyDefinitions folder under the Windows folder) and no new policy folder is reported to the caller.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:17
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:17  ·  Screens: DownloadAdmx</div></div></div><div class="row"><div class="main"><span>While a download runs, the start button, close button, destination box and browse button are all disabled, so a second download cannot be started and the destination cannot change; they are enabled again when it ends.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: While a download runs, the start button, close button, destination box and browse button are all disabled, so a second download cannot be started and the destination cannot change; they are enabled again when it ends.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:22
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:22  ·  Screens: DownloadAdmx</div></div></div><div class="row"><div class="main"><span>Clearing the search forgets the results, so reopening them reports that no search has been run.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: Clearing the search forgets the results, so reopening them reports that no search has been run.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:38
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:38  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The welcome offer to download policy definitions is considered only once: the first time the window is shown the program records that it has been considered, even when no offer is made, and never considers it again.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: The welcome offer to download policy definitions is considered only once: the first time the window is shown the program records that it has been considered, even when no offer is made, and never considers it again.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:48
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:48  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>When the offer is considered, it is made only if this Windows edition has no Group Policy support and more than two non-empty categories name a parent that is not among the loaded definitions. The person sees &quot;Welcome to Policy Plus! Home editions do not come with the full set of policy definitions. Would you like to download them now? This can also be done later with Help | Acquire ADMX Files.&quot;; Yes starts the download dialog.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: When the offer is considered, it is made only if this Windows edition has no Group Policy support and more than two non-empty categories name a parent that is not among the loaded definitions. The person sees &quot;Welcome to Policy Plus! Home editions do not come with the full set of policy definitions. Would you like to download them now? This can also be done later with Help | Acquire ADMX Files.&quot;; Yes starts the download dialog.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:50
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:50  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When files are moved into a folder, the folder is created if missing and every file already there with the same name is deleted first and then replaced by the new one, with no backup. Only files directly in the source folder are moved. A failure part-way leaves some files replaced and others not.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: When files are moved into a folder, the folder is created if missing and every file already there with the same name is deleted first and then replaced by the new one, with no backup. Only files directly in the source folder are moved. A failure part-way leaves some files replaced and others not.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:52
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:52  ·  Screens: DownloadAdmx</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>For an administrator, each folder handed to the file move that already exists, the destination itself and any existing language folder, has its ownership taken; a language folder created during the move instead inherits permissions from the folder above. Every moved file, including the template files in the destination, is reset to inherit permissions. A standard user changes no permissions. A failure here ends the download with &quot;Failed to move the ADMX files.&quot;, not the take-control message.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: For an administrator, each folder handed to the file move that already exists, the destination itself and any existing language folder, has its ownership taken; a language folder created during the move instead inherits permissions from the folder above. Every moved file, including the template files in the destination, is reset to inherit permissions. A standard user changes no permissions. A failure here ends the download with &quot;Failed to move the ADMX files.&quot;, not the take-control message.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:55
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:55  ·  Screens: DownloadAdmx</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>Starting the download always fetches one fixed Microsoft package, the Windows 11 September 2026 Update (26H2) administrative templates, into a scratch folder under the person&#39;s local application data as &quot;W11Admx.msi&quot;; the person cannot choose another version.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: Starting the download always fetches one fixed Microsoft package, the Windows 11 September 2026 Update (26H2) administrative templates, into a scratch folder under the person's local application data as &quot;W11Admx.msi&quot;; the person cannot choose another version.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:83
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:83  ·  Screens: DownloadAdmx</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>The downloaded package is unpacked with the Windows installer tool; if the tool ends with a non-zero code the download stops with &quot;Failed to extract the package.&quot; and the package is kept. When it succeeds, the downloaded package file is deleted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: The downloaded package is unpacked with the Windows installer tool; if the tool ends with a non-zero code the download stops with &quot;Failed to extract the package.&quot; and the package is kept. When it succeeds, the downloaded package file is deleted.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:89
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:89  ·  Screens: DownloadAdmx</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:90
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:90  ·  Screens: Main</div></div></div><details class="more"><summary>Showing 12 of 46 business rules. Show all 46</summary><div class="row"><div class="main"><span>Before any file is moved, when the folder written in the destination box already exists and the person is an administrator, ownership of it is taken and Administrators are given full control. This applies to whatever folder text is in the box, not only the Windows folder; a standard user skips it. A failure ends the download with &quot;Failed to take control of the destination.&quot; and nothing is moved.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: Before any file is moved, when the folder written in the destination box already exists and the person is an administrator, ownership of it is taken and Administrators are given full control. This applies to whatever folder text is in the box, not only the Windows folder; a standard user skips it. A failure ends the download with &quot;Failed to take control of the destination.&quot; and nothing is moved.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:94
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:94  ·  Screens: DownloadAdmx</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:100
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:100  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The template files are moved into the destination, then the language files for the person&#39;s regional format language (the culture of the regional settings, which can differ from the display language) are moved into a folder of that name if the package holds one. Unless that language is en-US, the English files are also moved into an en-US folder as a fallback; if the package has no en-US folder, the download stops with &quot;Failed to move the ADMX files.&quot; after the destination files were already replaced.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: The template files are moved into the destination, then the language files for the person's regional format language (the culture of the regional settings, which can differ from the display language) are moved into a folder of that name if the package holds one. Unless that language is en-US, the English files are also moved into an en-US folder as a fallback; if the package has no en-US folder, the download stops with &quot;Failed to move the ADMX files.&quot; after the destination files were already replaced.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:103
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:103  ·  Screens: DownloadAdmx</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:109
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:109  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The right pane lists the chosen category in this order: an &quot;Up: &lt;parent name&gt;&quot; row marked &quot;Parent&quot; when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: The right pane lists the chosen category in this order: an &quot;Up: <parent name>&quot; row marked &quot;Parent&quot; when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:113
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:113  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>After a successful download the scratch folder is deleted, the person is asked &quot;ADMX files downloaded successfully. Open them now?&quot;, and the destination is reported as the new policy folder only if they answer Yes; either answer closes the window as done.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: After a successful download the scratch folder is deleted, the person is asked &quot;ADMX files downloaded successfully. Open them now?&quot;, and the destination is reported as the new policy folder only if they answer Yes; either answer closes the window as done.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:117
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:117  ·  Screens: DownloadAdmx</div></div></div><div class="row"><div class="main"><span>When any step fails, the person is told &quot;Failed to &quot; followed by the step that failed (create a scratch space, download the package, extract the package, take control of the destination, move the ADMX files, remove temporary files); the window stays open, controls are re-enabled, and no policy folder is reported. If only the final cleanup of the scratch folder fails, all files are already installed yet the person is told &quot;Failed to remove temporary files.&quot; and no new policy folder is offered.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: When any step fails, the person is told &quot;Failed to &quot; followed by the step that failed (create a scratch space, download the package, extract the package, take control of the destination, move the ADMX files, remove temporary files); the window stays open, controls are re-enabled, and no policy folder is reported. If only the final cleanup of the scratch folder fails, all files are already installed yet the person is told &quot;Failed to remove temporary files.&quot; and no new policy folder is offered.
+Where to look first:
+- Starts at PolicyPlus/DownloadAdmx.vb:125
+- PolicyPlus/DownloadAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DownloadAdmx.vb:125  ·  Screens: DownloadAdmx</div></div></div><div class="row"><div class="main"><span>The category tree selection follows the category shown in the right pane.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: The category tree selection follows the category shown in the right pane.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:139
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:139  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When nothing is selected, the title and support lines are hidden and the pane reads &quot;Select an item to see its description.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: When nothing is selected, the title and support lines are hidden and the pane reads &quot;Select an item to see its description.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:146
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:146  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For a selected policy the information pane shows its title, &quot;(no requirements information)&quot; when it has no support rule or &quot;Requirements:&quot; plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: For a selected policy the information pane shows its title, &quot;(no requirements information)&quot; when it has no support rule or &quot;Requirements:&quot; plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:149
+- PolicyPlus/Main.Designer.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:149  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For a selected or highlighted category the pane shows its title, &quot;This category contains N policies and M subcategories.&quot; (&quot;The selected category&quot; when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: For a selected or highlighted category the pane shows its title, &quot;This category contains N policies and M subcategories.&quot; (&quot;The selected category&quot; when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:158
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:158  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is orphaned when it has no parent among the loaded definitions although its definition names one.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A category is orphaned when it has no parent among the loaded definitions although its definition names one.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:171
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:171  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is empty when it holds no subcategories and no policies at all, counting hidden ones.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A category is empty when it holds no subcategories and no policies at all, counting hidden ones.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:174
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:174  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category&#39;s icon is chosen in this order: orphaned, then empty, then normal.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A category's icon is chosen in this order: orphaned, then empty, then normal.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:177
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:177  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s icon is chosen in this order: preference, then plain when it has no configurable elements, then &quot;extra configuration&quot; when it has some.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A policy's icon is chosen in this order: preference, then plain when it has no configurable elements, then &quot;extra configuration&quot; when it has some.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:186
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:186  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:196
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:196  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is visible only if it applies to a chosen area (user, computer or both). With &quot;Only Filtered Policies&quot; on, it must also pass the filter for a chosen area it applies to; passing for either one is enough.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A policy is visible only if it applies to a chosen area (user, computer or both). With &quot;Only Filtered Policies&quot; on, it must also pass the filter for a chosen area it applies to; passing for either one is enough.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:204
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:204  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>With both areas shown, a policy that applies to both areas shows its common state followed by &quot;(2)&quot; when both match, the computer state followed by &quot;(C)&quot; when only the user is Not Configured, the user state followed by &quot;(U)&quot; when only the computer is Not Configured, and &quot;Mixed&quot; otherwise.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: With both areas shown, a policy that applies to both areas shows its common state followed by &quot;(2)&quot; when both match, the computer state followed by &quot;(C)&quot; when only the user is Not Configured, the user state followed by &quot;(U)&quot; when only the computer is Not Configured, and &quot;Mixed&quot; otherwise.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:234
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:234  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>With both areas shown, a policy that applies to one area shows that area&#39;s state followed by &quot;(C)&quot; for computer or &quot;(U)&quot; for user. With a single area shown, only that area&#39;s state is shown, without a suffix.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: With both areas shown, a policy that applies to one area shows that area's state followed by &quot;(C)&quot; for computer or &quot;(U)&quot; for user. With a single area shown, only that area's state is shown, without a suffix.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:248
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:248  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s state in one area reads &quot;Enabled&quot;, &quot;Disabled&quot;, &quot;Not Configured&quot; or &quot;Unknown&quot;; the computer source is read for the computer area and the user source for any other.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A policy's state in one area reads &quot;Enabled&quot;, &quot;Disabled&quot;, &quot;Not Configured&quot; or &quot;Unknown&quot;; the computer source is read for the computer area and the user source for any other.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:257
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:257  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>With both areas shown, the comment column is empty when neither area has a comment, shows &quot;(multiple)&quot; when both have one, and otherwise shows the single comment.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: With both areas shown, the comment column is empty when neither area has a comment, shows &quot;(multiple)&quot; when both have one, and otherwise shows the single comment.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:270
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:270  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A policy's comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:288
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:288  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:296
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:296  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Closing the workspace or replacing it with a new one discards all loaded definitions and the previous search results.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: Closing the workspace or replacing it with a new one discards all loaded definitions and the previous search results.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:391
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:391  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:411
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:411  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy passes the filter only when it passes every active part of it.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A policy passes the filter only when it passes every active part of it.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:411
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:411  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:414
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:414  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:427
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:427  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:431
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:431  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy applies to an area when its definition declares that area; a policy declared for both applies to each.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: A policy applies to an area when its definition declares that area; a policy declared for both applies to each.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:438
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:438  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When loading definitions reports no problems nothing is shown; otherwise the person sees &quot;Errors were encountered while adding administrative templates to the workspace.&quot; with each problem, and, only where a choice is wanted, is asked &quot;Continue trying to use this workspace?&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: When loading definitions reports no problems nothing is shown; otherwise the person sees &quot;Errors were encountered while adding administrative templates to the workspace.&quot; with each problem, and, only where a choice is wanted, is asked &quot;Continue trying to use this workspace?&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:471
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:471  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The language for definition text is the saved language code, or the computer&#39;s own language when none is saved.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: The language for definition text is the saved language code, or the computer's own language when none is saved.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:478
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:478  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>After a successful download of definitions, the workspace is emptied, the downloaded folder loaded and saved as the definitions folder, and the view rebuilt; with no new folder nothing changes.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: After a successful download of definitions, the workspace is emptied, the downloaded folder loaded and saved as the definitions folder, and the view rebuilt; with no new folder nothing changes.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:759
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:759  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Getting Microsoft policy definitions: The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:863
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:863  ·  Screens: Main</div></div></div></details><h2>Data structures defined here (29)</h2><div class="row"><div class="main"><span>DetailAdmx</span><div class="sub">DetailAdmx, Label1, Label2, Label3, Label4, Label5, Label6, Label7, TextPath, TextNamespace, TextSupersededAdm, LsvPolicies, ChPolicyId, ChName, LsvCategories, ChCategoryId, ChCategoryName, LsvProducts, ChProductId, ChProductName, LsvSupportDefinitions, ChSupportId, ChSupportName, ButtonClose</div></div><div class="meta">24 fields</div></div><div class="row"><div class="main"><span>DetailCategory</span><div class="sub">DetailCategory, NameLabel, IdLabel, DefinedLabel, DisplayCode, InfoCodeLabel, ParentLabel, NameTextbox, IdTextbox, DefinedTextbox, DisplayCodeTextbox, InfoCodeTextbox, ParentTextbox, ParentButton, CloseButton</div></div><div class="meta">15 fields</div></div><div class="row"><div class="main"><span>DetailPolicy</span><div class="sub">Me, NameLabel, IdLabel, DefinedLabel, DisplayLabel, InfoLabel, PresentLabel, SectionLabel, SupportLabel, CategoryLabel, NameTextbox, IdTextbox, DefinedTextbox, DisplayCodeTextbox, InfoCodeTextbox, PresentCodeTextbox, SectionTextbox, SupportTextbox, CategoryTextbox, CategoryButton, SupportButton, CloseButton</div></div><div class="meta">22 fields</div></div><div class="row"><div class="main"><span>DetailProduct</span><div class="sub">Me, NameLabel, IdLabel, DefinedLabel, KindLabel, VersionLabel, ParentLabel, ChildrenLabel, DisplayCodeLabel, NameTextbox, IdTextbox, DefinedTextbox, DisplayCodeTextbox, KindTextbox, ParentButton, ParentTextbox, ChildrenListview, ChVersion, ChName, CloseButton, VersionTextbox</div></div><div class="meta">21 fields</div></div><div class="row"><div class="main"><span>DetailSupport</span><div class="sub">Me, NameLabel, IdLabel, DefinedLabel, DisplayCodeLabel, LogicLabel, ProductsLabel, NameTextbox, IdTextbox, DefinedTextbox, DisplayCodeTextbox, LogicTextbox, EntriesListview, ChName, ChMinVer, ChMaxVer, CloseButton</div></div><div class="meta">17 fields</div></div><div class="row"><div class="main"><span>DownloadAdmx</span><div class="sub">Me, LabelWhatsThis, LabelDestFolder, TextDestFolder, ButtonBrowse, ProgressSpinner, LabelProgress, ButtonStart, ButtonClose</div></div><div class="meta">9 fields</div></div><div class="row"><div class="main"><span>EditPol</span><div class="sub">Me, LsvPol, ButtonSave, ChItem, ChValue, ButtonAddKey, ButtonAddValue, ButtonDeleteValue, ButtonForget, ButtonEdit, ButtonImport, ButtonExport</div></div><div class="meta">12 fields</div></div><div class="row"><div class="main"><span>PolValueInfo</span><div class="sub">Key, Name, Kind, Data, IsDeleter</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>EditPolDelete</span><div class="sub">Me, TextKey, OptPurge, OptClearFirst, OptDeleteOne, TextValueName, ButtonOK, Label1</div></div><div class="meta">8 fields</div></div><div class="row"><div class="main"><span>EditPolKey</span><div class="sub">Me, TextName, ButtonOK, Label1</div></div><div class="meta">4 fields</div></div><div class="row"><div class="main"><span>EditPolMultiStringData</span><div class="sub">Me, TextName, TextData, ButtonOK, Label1, Label2</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditPolNumericData</span><div class="sub">Me, TextName, CheckHexadecimal, NumData, ButtonOK, Label1, Label2</div></div><div class="meta">7 fields</div></div><details class="more"><summary>Showing 12 of 29 data structures. Show all 29</summary><div class="row"><div class="main"><span>EditPolStringData</span><div class="sub">Me, TextName, TextData, ButtonOK, Label1, Label2</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditPolValue</span><div class="sub">Me, ComboKind, ButtonOK, TextName, Label1, Label2</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditSetting</span><div class="sub">Me, CommentLabel, SupportedLabel, SettingNameLabel, CommentTextbox, SupportedTextbox, NotConfiguredOption, EnabledOption, DisabledOption, ExtraOptionsPanel, ExtraOptionsTable, CloseButton, OkButton, HelpTextbox, SectionDropdown, ApplyButton, SectionLabel</div></div><div class="meta">17 fields</div></div><div class="row"><div class="main"><span>DropdownPresentationMap</span><div class="sub">ID, DisplayName</div></div><div class="meta">2 fields</div></div><div class="row"><div class="main"><span>ExportReg</span><div class="sub">Label1, Label2, Label3, Label4, TextReg, TextBranch, TextRoot, ButtonBrowse, ButtonExport</div></div><div class="meta">9 fields</div></div><div class="row"><div class="main"><span>ImportReg</span><div class="sub">Label1, Label2, TextReg, TextRoot, ButtonBrowse, ButtonImport</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>ImportSpol</span><div class="sub">ButtonOpenFile, Label1, ButtonApply, TextSpol, ButtonVerify, ButtonReset</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>InspectPolicyElements</span><div class="sub">PolicyNameTextbox, PolicyNameLabel, PolicyDetailsButton, InfoTreeview, CloseButton</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>InspectSpolFragment</span><div class="sub">TextPolicyName, LabelPolicy, TextSpol, ButtonClose, ButtonCopy, CheckHeader</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>LanguageOptions</span><div class="sub">Label1, Label2, ButtonOK, TextAdmlLanguage</div></div><div class="meta">4 fields</div></div><div class="row"><div class="main"><span>ListEditor</span><div class="sub">EntriesDatagrid, NameColumn, ValueColumn, ElementNameLabel, CloseButton, OkButton</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>LoadedAdmx</span><div class="sub">LsvAdmx, ChFileTitle, ChFolder, ChNamespace, ButtonClose</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>LoadedProducts</span><div class="sub">LsvTopLevelProducts, LabelMajorVersion, LsvMajorVersions, LabelMinorVersion, LsvMinorVersions, ButtonClose</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>LoadedSupportDefinitions</span><div class="sub">LsvSupport, ChName, ChDefinedIn, ButtonClose, TextFilter</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>Main</span><div class="sub">MainMenu, FileToolStripMenuItem, OpenADMXFolderToolStripMenuItem, OpenADMXFileToolStripMenuItem, SetADMLLanguageToolStripMenuItem, CloseADMXWorkspaceToolStripMenuItem, OpenPolicyResourcesToolStripMenuItem, SavePoliciesToolStripMenuItem, EditRawPOLToolStripMenuItem, ExitToolStripMenuItem, ViewToolStripMenuItem, EmptyCategoriesToolStripMenuItem, OnlyFilteredObjectsToolStripMenuItem, FilterOptionsToolStripMenuItem, DeduplicatePoliciesToolStripMenuItem, LoadedADMXFilesToolStripMenuItem, AllProductsToolStripMenuItem, AllSupportDefinitionsToolStripMenuItem, FindToolStripMenuItem, ByIDToolStripMenuItem, ByTextToolStripMenuItem, ByRegistryToolStripMenuItem, SearchResultsToolStripMenuItem, FindNextToolStripMenuItem, ShareToolStripMenuItem, ImportSemanticPolicyToolStripMenuItem, ImportPOLToolStripMenuItem, ImportREGToolStripMenuItem, ExportPOLToolStripMenuItem, ExportREGToolStripMenuItem, HelpToolStripMenuItem, AboutToolStripMenuItem, AcquireADMXFilesToolStripMenuItem, SplitContainer, ComboAppliesTo, CategoriesTree, PolicyObjectContext, CmeCatOpen, CmePolEdit, CmeAllDetails, CmePolInspectElements, CmePolSpolFragment, PolicyIcons, PoliciesList, ChSettingName, SettingInfoPanel, PolicyInfoTable, PolicyTitleLabel, PolicySupportedLabel, PolicyDescLabel, InfoStrip, ComputerSourceLabel, UserSourceLabel, PolicyIsPrefTable, PictureBox1, PolicyIsPrefLabel</div></div><div class="meta">56 fields</div></div><div class="row"><div class="main"><span>OpenAdmxFolder</span><div class="sub">Me, LabelFromWhere, OptLocalFolder, OptSysvol, OptCustomFolder, TextFolder, ButtonOK, ButtonBrowse, ClearWorkspaceCheckbox</div></div><div class="meta">9 fields</div></div><div class="row"><div class="main"><span>OpenPol</span><div class="sub">Me, ComputerGroup, CompNullOption, CompFileBrowseButton, CompPolFilenameTextbox, CompFileOption, CompRegistryOption, CompLocalOption, UserGroup, UserPerUserRegOption, UserPerUserGpoOption, UserBrowseHiveButton, UserNullOption, UserBrowseGpoButton, UserHivePathTextbox, UserFileBrowseButton, UserGpoSidTextbox, UserPolFilenameTextbox, UserFileOption, UserRegistryOption, UserLocalOption, OkButton, CompRegTextbox, UserRegTextbox</div></div><div class="meta">24 fields</div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

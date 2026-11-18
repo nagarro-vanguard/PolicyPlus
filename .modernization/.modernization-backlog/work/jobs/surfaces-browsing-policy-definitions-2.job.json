@@ -1,0 +1,230 @@
+{
+  "kind": "surfaces",
+  "actions": [
+    "block-13117547435582731450",
+    "block-59255999245406242607",
+    "block-30537692166592904451",
+    "block-20168653063977540452",
+    "block-73356074458344317029"
+  ],
+  "owned": [
+    "businessrule-88154451768954453608",
+    "businessrule-76226373219464614800",
+    "businessrule-43765682097437166867",
+    "businessrule-53176229115945924012",
+    "businessrule-98012095360980700253"
+  ],
+  "transitions": [],
+  "surfaces": [
+    {
+      "key": "capability-12186108826760133070/OpenAdmxFolder",
+      "name": "OpenAdmxFolder",
+      "actions": [
+        "block-13117547435582731450",
+        "block-59255999245406242607",
+        "block-30537692166592904451",
+        "block-20168653063977540452",
+        "block-73356074458344317029"
+      ],
+      "owned": [
+        "businessrule-88154451768954453608",
+        "businessrule-76226373219464614800",
+        "businessrule-43765682097437166867",
+        "businessrule-53176229115945924012",
+        "businessrule-98012095360980700253"
+      ]
+    }
+  ],
+  "allow": [
+    "PolicyPlusWeb"
+  ],
+  "layerIds": [
+    "layer-tooling",
+    "layer-domain",
+    "layer-contracts",
+    "layer-data",
+    "layer-api",
+    "layer-ui",
+    "layer-web",
+    "layer-e2e"
+  ],
+  "decisionIds": [
+    "integrations.decision-1",
+    "integrations.decision-2",
+    "integrations.decision-3",
+    "integrations.decision-4",
+    "integrations.decision-5",
+    "integrations.decision-6",
+    "integrations.decision-7",
+    "integrations.decision-8",
+    "scope.decision-9",
+    "scope.decision-10",
+    "scope.decision-11",
+    "scope.decision-12",
+    "scope.decision-13",
+    "scope.decision-14",
+    "scope.decision-15",
+    "scope.decision-16",
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12",
+    "base.decision-13",
+    "base.decision-14",
+    "base.decision-15",
+    "base.decision-16",
+    "base.decision-17",
+    "base.decision-18",
+    "base.decision-19",
+    "base.decision-20",
+    "base.decision-21",
+    "base.decision-22",
+    "base.decision-23",
+    "base.decision-24",
+    "base.decision-25",
+    "base.decision-26",
+    "base.decision-27",
+    "base.decision-28"
+  ],
+  "areaDecisionIds": [
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12"
+  ],
+  "capability": {
+    "name": "Browsing policy definitions",
+    "purpose": "Look through the loaded policy templates: categories, products, support rules, template files and policies, and open the details of each.",
+    "dataKinds": [
+      {
+        "id": "entity-40163170707735391190",
+        "name": "Program preference",
+        "access": "reads and saves"
+      },
+      {
+        "id": "entity-92808062881922645840",
+        "name": "Administrative template",
+        "access": "reads"
+      },
+      {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting",
+        "access": "reads"
+      }
+    ]
+  },
+  "surfaceDetails": [
+    {
+      "name": "OpenAdmxFolder",
+      "actions": [
+        {
+          "id": "block-13117547435582731450",
+          "name": "Options_CheckedChanged",
+          "purpose": "Enables the folder box and Browse button only when the custom folder choice is selected.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 6,
+            "lastLine": 10
+          }
+        },
+        {
+          "id": "block-59255999245406242607",
+          "name": "OpenAdmxFolder_Shown",
+          "purpose": "Looks for the domain's SYSVOL policy definitions folder and enables that choice only if it exists.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 11,
+            "lastLine": 26
+          }
+        },
+        {
+          "id": "block-30537692166592904451",
+          "name": "ButtonOK_Click",
+          "purpose": "Takes the chosen folder, checks it exists and closes the window with OK.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 27,
+            "lastLine": 41
+          }
+        },
+        {
+          "id": "block-20168653063977540452",
+          "name": "ButtonBrowse_Click",
+          "purpose": "Lets the person pick a folder in a folder dialog and puts it in the folder box.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 42,
+            "lastLine": 47
+          }
+        },
+        {
+          "id": "block-73356074458344317029",
+          "name": "OpenAdmxFolder_KeyUp",
+          "purpose": "Closes the window as cancelled when Escape is pressed.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 48,
+            "lastLine": 50
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-88154451768954453608",
+          "says": "The folder box and its Browse button are usable only when the 'This folder' choice is selected.",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 6,
+            "lastLine": 10
+          }
+        },
+        {
+          "id": "businessrule-76226373219464614800",
+          "says": "When the ADMX folder dialog opens, 'This folder' is chosen first, and the 'The domain's SYSVOL' choice is available only if the computer is joined to a domain and the folder \\\\domain\\SYSVOL\\domain\\Policies\\PolicyDefinitions exists.",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 11,
+            "lastLine": 26
+          }
+        },
+        {
+          "id": "businessrule-43765682097437166867",
+          "says": "The option to clear the workspace before adding the folder is ticked by default, and its choice is passed on only when a folder that exists was accepted.",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 36,
+            "lastLine": 36
+          }
+        },
+        {
+          "id": "businessrule-53176229115945924012",
+          "says": "When OK is pressed in the ADMX folder dialog, the folder is the system's Windows PolicyDefinitions folder, the domain SYSVOL folder, or the typed folder, as chosen. A folder that does not exist is refused with \"The folder you specified does not exist.\" and the dialog stays open.",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 27,
+            "lastLine": 41
+          }
+        },
+        {
+          "id": "businessrule-98012095360980700253",
+          "says": "Pressing Escape closes the ADMX folder dialog as cancelled, with no folder chosen.",
+          "place": {
+            "file": "PolicyPlus/OpenAdmxFolder.vb",
+            "firstLine": 48,
+            "lastLine": 50
+          }
+        }
+      ],
+      "reliesOn": []
+    }
+  ],
+  "transitionDetails": [],
+  "bundles": [
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-openadmxfolder--browsing-policy-definitions.md"
+  ]
+}

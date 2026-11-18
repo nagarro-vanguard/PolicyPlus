@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Writes a policy source out as a POL file.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/editing-policy-files-directly.html">Editing policy files directly</a> › <a href="../../screen/policy-plus-main-window.html">Policy Plus main window</a></div><h1>Writes a policy source out as a POL file.</h1><p class="lead">Started by a person. In the code: PolicyPlus/Main.vb:741</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the Main screen of Editing policy files directly: Writes a policy source out as a POL file.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:741
+- PolicyPlus/OpenSection.Designer.vb (only this capability)
+- PolicyPlus/OpenSection.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Data saved: Policy setting
+Data read: Policy setting
+Rules decided here: 11
+- The section dialog lets a person choose only the sections the caller allows: User and Computer are each usable only when enabled by the caller. (PolicyPlus/OpenSection.vb:17)
+- When a policy file is saved, entries are written in alphabetical order, so a key-clearing marker is always written before the values it clears. (PolicyPlus/PolicySource.vb:77)
+- When a value is set in a policy file, it replaces any value already held under that name. A deletion marker for the name is not removed. (PolicyPlus/PolicySource.vb:105)
+- Text stored in a policy file is written in two-byte characters followed by a closing empty character. (PolicyPlus/PolicySource.vb:240)
+- A 32-bit number is stored in a policy file as 4 bytes, lowest byte first. (PolicyPlus/PolicySource.vb:255)
+- A 64-bit number is stored in a policy file as 8 bytes, lowest byte first. (PolicyPlus/PolicySource.vb:272)
+- A multiple-string value is stored as its strings each followed by an empty character, with one more empty character closing the list. (PolicyPlus/PolicySource.vb:296)
+- A value written to a policy file is stored as text, expandable text, a 32-bit or 64-bit number or a multiple string by its stated type. Every other type is stored as raw bytes with that type. (PolicyPlus/PolicySource.vb:337)
+  ...and 3 more
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/editing-policy-files-directly/dialog-windows-and-their-reactions.html">Dialog windows and their reactions</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/editing-policy-files-directly/policy-definitions-and-files.html">Policy definitions and files</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (11)</h2><div class="group-name">Dialog windows and their reactions</div><div class="row"><div class="main"><span>The section dialog lets a person choose only the sections the caller allows: User and Computer are each usable only when enabled by the caller.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Editing policy files directly: The section dialog lets a person choose only the sections the caller allows: User and Computer are each usable only when enabled by the caller.
+Where to look first:
+- Starts at PolicyPlus/OpenSection.vb:17
+- PolicyPlus/OpenSection.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenSection.vb:17  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a POL is built from a registry-backed source, every value and every sub-key under each of the three policy locations is copied with its own data type, with environment variables left unexpanded. A location missing from the registry stops the copy with an unhandled error.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Editing policy files directly: When a POL is built from a registry-backed source, every value and every sub-key under each of the three policy locations is copied with its own data type, with environment variables left unexpanded. A location missing from the registry stops the copy with an unhandled error.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:450
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:450  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Exporting a POL file writes the chosen area&#39;s policy source as a POL file; the person sees &quot;POL exported successfully.&quot; or &quot;The POL file could not be saved.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Editing policy files directly: Exporting a POL file writes the chosen area's policy source as a POL file; the person sees &quot;POL exported successfully.&quot; or &quot;The POL file could not be saved.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:745
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:745  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Exporting uses a source backed by a POL file as is. A registry-backed source (a chosen registry key or a loaded user hive file) is rebuilt as a new POL from the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies. Any other source type is rejected, which no known source type reaches.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Editing policy files directly: Exporting uses a source backed by a POL file as is. A registry-backed source (a chosen registry key or a loaded user hive file) is rebuilt as a new POL from the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies. Any other source type is rejected, which no known source type reaches.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:441
+- PolicyPlus/PolicyLoader.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:441  ·  Screens: Main</div></div></div><div class="group-name">Policy definitions and files</div><div class="row"><div class="main"><span>A multiple-string value is stored as its strings each followed by an empty character, with one more empty character closing the list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: A multiple-string value is stored as its strings each followed by an empty character, with one more empty character closing the list.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:296
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:296  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>A 64-bit number is stored in a policy file as 8 bytes, lowest byte first.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: A 64-bit number is stored in a policy file as 8 bytes, lowest byte first.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:272
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:272  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>A 32-bit number is stored in a policy file as 4 bytes, lowest byte first.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: A 32-bit number is stored in a policy file as 4 bytes, lowest byte first.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:255
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:255  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>When a policy file is saved, entries are written in alphabetical order, so a key-clearing marker is always written before the values it clears.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: When a policy file is saved, entries are written in alphabetical order, so a key-clearing marker is always written before the values it clears.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:77
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:77  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a value is set in a policy file, it replaces any value already held under that name. A deletion marker for the name is not removed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: When a value is set in a policy file, it replaces any value already held under that name. A deletion marker for the name is not removed.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:105
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:105  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>Text stored in a policy file is written in two-byte characters followed by a closing empty character.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: Text stored in a policy file is written in two-byte characters followed by a closing empty character.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:240
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:240  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>A value written to a policy file is stored as text, expandable text, a 32-bit or 64-bit number or a multiple string by its stated type. Every other type is stored as raw bytes with that type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: A value written to a policy file is stored as text, expandable text, a 32-bit or 64-bit number or a multiple string by its stated type. Every other type is stored as raw bytes with that type.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:337
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:337  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

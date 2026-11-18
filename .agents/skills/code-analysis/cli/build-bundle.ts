@@ -1,17 +1,28 @@
-import { Console, Effect } from "effect";
+import { Console, Effect, Layer, Option } from "effect";
 import { Argument, Command, Flag } from "effect/cli";
 import { join } from "node:path";
 import { BundlePayload } from "../shared/model/schemas/bundle-payload";
 import { CapabilityPayload } from "../shared/model/schemas/payloads";
 import { KnowledgePayload } from "../shared/model/schemas/knowledge-payload";
 import { SystemPayload } from "../shared/model/schemas/system-payload";
-import { bundleGaps, bundleText, capabilityBundle, screenBundle, type Payloads } from "../shared/read/bundle";
+import {
+    bundleGaps,
+    bundleText,
+    capabilityBundle,
+    screenBundle,
+    slug as slugOf,
+    surfaceBundle,
+    surfaceBundleName,
+    surfacePairs,
+    type Bundle,
+    type Payloads,
+} from "../shared/read/bundle";
 import { AnalysisRoot } from "../shared/run/analysis-root";
 import { analysisPaths, sourceBase } from "../shared/run/analysis-layout";
 import { AnalysisRequest } from "../shared/run/analysis-request";
 import { readDocumentStrictly } from "../shared/run/json-files";
 import { UsageInvalid } from "../shared/run/script-errors";
-import { needsAction, rootServices, runScript } from "../shared/run/run-script";
+import { needsAction, runScript, scriptServices } from "../shared/run/run-script";
 import { FileAccess } from "../shared/source/file-access";
 
 /**
@@ -65,50 +76,111 @@ const sourcesOf = Effect.fnUntraced(function* (folder: string, paths: readonly s
 });
 
 /**
- * Build the bundle of a screen or a capability: its context and, unless told not to, the source of every file it names,
- * as one text to paste into a tool that will modernise it, and written beside the payloads.
- * @param kind `screen` or `capability`
- * @param name a screen's address, or a capability's name or record id
- * @param withSource whether to embed the files' source
- * @returns the effect that writes `<analysis root>/bundles/<kind>-<name>.md` and says where
+ * Write one bundle: its text, with the source of its files when asked, and a line saying where and how big; and say what
+ * does not add up in it.
+ * @param input the bundle, the file to write it to and where the source is read from
+ * @param input.bundle the bundle
+ * @param input.path the file to write
+ * @param input.sourceFolder the folder the source is read from; undefined when it is not to be embedded
+ * @returns the size of the written text in lines, the files named and embedded, and whether it adds up
  */
-const buildBundle = Effect.fn("buildBundle")(function* (kind: string, name: string, withSource: boolean) {
-    const { root } = yield* AnalysisRoot;
-    const payloads = yield* readPayloads(`${root}/payloads`);
-    const bundle =
-        kind === "screen"
-            ? screenBundle(payloads, name)
-            : kind === "capability"
-              ? capabilityBundle(payloads, capabilityIdOf(payloads, name))
-              : undefined;
-    if (bundle === undefined) {
-        return yield* new UsageInvalid({
-            issue: `${kind} "${name}" is no screen address or capability of this analysis: give \`screen\` and an address as the site shows it, or \`capability\` and its name`,
-        });
-    }
-    const request = yield* readDocumentStrictly(analysisPaths(root).analysisRequest, AnalysisRequest);
-    const sources = withSource
-        ? yield* sourcesOf(
-              sourceBase(request.sourceRoots),
-              bundle.files.map((file) => file.path),
-          )
-        : new Map<string, string>();
-    const slug = name
-        .toLowerCase()
-        .split("")
-        .map((char) => ((char >= "a" && char <= "z") || (char >= "0" && char <= "9") ? char : "-"))
-        .join("");
-    const path = `${root}/bundles/${kind}-${slug}.md`;
-    yield* (yield* FileAccess).writeText(
-        path,
-        bundleText(bundle, (file) => sources.get(file)),
-    );
+const writeBundle = Effect.fnUntraced(function* (input: {
+    readonly bundle: Bundle;
+    readonly path: string;
+    readonly sourceFolder: string | undefined;
+}) {
+    const { bundle, path, sourceFolder } = input;
+    const sources =
+        sourceFolder === undefined
+            ? new Map<string, string>()
+            : yield* sourcesOf(
+                  sourceFolder,
+                  bundle.files.map((file) => file.path),
+              );
+    const text = bundleText(bundle, (file) => sources.get(file));
+    yield* (yield* FileAccess).writeText(path, text);
     yield* Console.log(`${path}: ${bundle.files.length} files named, ${sources.size} embedded`);
     const gaps = bundleGaps(bundle);
     for (const gap of gaps) {
         yield* Console.log(`the bundle does not add up: ${gap}`);
     }
-    if (gaps.length > 0) {
+    return { lines: text.split("\n").length - 1, gaps: gaps.length };
+});
+
+/**
+ * Write the bundle of every surface of every capability, and sum up.
+ * @param root the analysis root
+ * @param payloads everything the analysis wrote
+ * @param sourceFolder the folder the source is read from; undefined when it is not to be embedded
+ * @returns the effect that writes the files and prints one line each and a summary
+ */
+const buildAll = Effect.fnUntraced(function* (root: string, payloads: Payloads, sourceFolder: string | undefined) {
+    let failing = 0;
+    let largest = { path: "", lines: 0 };
+    const pairs = surfacePairs(payloads);
+    for (const pair of pairs) {
+        const bundle = surfaceBundle(payloads, pair.surface, pair.capabilityId);
+        if (bundle === undefined) {
+            continue;
+        }
+        const path = `${root}/bundles/${surfaceBundleName(pair.surface, pair.capability)}`;
+        const done = yield* writeBundle({ bundle, path, sourceFolder });
+        failing += done.gaps;
+        largest = done.lines > largest.lines ? { path, lines: done.lines } : largest;
+    }
+    yield* Console.log(
+        `${pairs.length} bundles written to ${root}/bundles, ${failing} things that do not add up; the largest is ${largest.path} with ${largest.lines} lines`,
+    );
+    if (failing > 0) {
+        yield* needsAction;
+    }
+});
+
+/**
+ * Build the bundles asked for: the bundle of a screen (all of it, or the part one capability holds), of a capability, or
+ * of every surface of every capability. Each holds its context and, when told to, the source of every file it names, as
+ * one text to paste into a tool that will modernise it, written beside the payloads.
+ * @param kind `screen`, `capability` or `all`
+ * @param name a screen's address, or a capability's name or record id; none for `all`
+ * @param options what to restrict to and embed
+ * @param options.capability a capability's name or record id to restrict a screen to
+ * @param options.withSource whether to embed the files' source
+ * @returns the effect that writes the files under `<analysis root>/bundles/` and says where
+ */
+const buildBundle = Effect.fn("buildBundle")(function* (
+    kind: string,
+    name: string | undefined,
+    options: { readonly capability: string | undefined; readonly withSource: boolean },
+) {
+    const { root } = yield* AnalysisRoot;
+    const payloads = yield* readPayloads(`${root}/payloads`);
+    const request = yield* readDocumentStrictly(analysisPaths(root).analysisRequest, AnalysisRequest);
+    const sourceFolder = options.withSource ? sourceBase(request.sourceRoots) : undefined;
+    if (kind === "all") {
+        return yield* buildAll(root, payloads, sourceFolder);
+    }
+    const capabilityId = options.capability === undefined ? undefined : capabilityIdOf(payloads, options.capability);
+    const bundle =
+        name === undefined
+            ? undefined
+            : kind === "screen"
+              ? screenBundle(payloads, name, capabilityId)
+              : kind === "capability"
+                ? capabilityBundle(payloads, capabilityIdOf(payloads, name))
+                : undefined;
+    if (bundle === undefined || name === undefined) {
+        return yield* new UsageInvalid({
+            issue: `${kind} "${name === undefined ? "" : name}" is no screen address (with that capability) or capability of this analysis: give \`screen\` and an address as the site shows it, \`capability\` and its name, or \`all\``,
+        });
+    }
+    const slug = name
+        .toLowerCase()
+        .split("")
+        .map((char) => ((char >= "a" && char <= "z") || (char >= "0" && char <= "9") ? char : "-"))
+        .join("");
+    const suffix = kind === "screen" && options.capability !== undefined ? `--${slugOf(options.capability)}` : "";
+    const done = yield* writeBundle({ bundle, path: `${root}/bundles/${kind}-${slug}${suffix}.md`, sourceFolder });
+    if (done.gaps > 0) {
         yield* needsAction;
     }
 });
@@ -117,14 +189,16 @@ const command = Command.make(
     "build-bundle",
     {
         kind: Argument.String("kind"),
-        name: Argument.String("name"),
+        name: Argument.String("name").pipe(Argument.optional),
+        capability: Flag.String("capability").pipe(Flag.optional),
         withSource: Flag.Boolean("with-source").pipe(Flag.withDefault(false)),
     },
-    ({ kind, name, withSource }) => buildBundle(kind, name, withSource),
+    ({ kind, name, capability, withSource }) =>
+        buildBundle(kind, Option.getOrUndefined(name), { capability: Option.getOrUndefined(capability), withSource }),
 ).pipe(
     Command.withDescription(
-        "Builds the bundle of one screen or one capability of a finished analysis, to modernise it to another stack, as one markdown text written to <analysis root>/bundles/<kind>-<name>.md. It holds the product context with the system diagram, where the slice sits (diagram), the screens it opens and is opened by, what it must do (controls, actions and the rules it owns), the rules it relies on that other code decides, the data it touches with the life of each kind and its changes of state, what to doubt (records challenged in review, risks once each, assumptions, code nothing reaches) and the files to read in order, each with the lines to read. The source is referenced, not embedded; --with-source embeds the lines the file list names. Checks that each rule is listed once, every cited place is covered by the file list and no boilerplate is left; the run needs action when not. Run write-payloads first. Nothing is redacted: a secret in the code is in the bundle when the source is embedded. Arguments: `screen` with the screen's address as its page shows it, or `capability` with its name.",
+        "Builds the bundle of one screen, one screen as one capability holds it, one capability, or every surface of every capability of a finished analysis, to modernise it to another stack, as one markdown text each, written to <analysis root>/bundles/. It reads only payloads/, work/analysis-request.json and the source, not the record store. It holds the product context with the system diagram, where the slice sits (diagram), the screens it opens and is opened by, what it must do (controls, actions and the rules it owns), the rules it relies on that other code decides, the data it touches with the life of each kind and its changes of state, what to doubt (records challenged in review, risks once each, assumptions, code nothing reaches) and the files to read in order, each with the lines to read. The source is referenced, not embedded; --with-source embeds the lines the file list names. Checks that each rule is listed once, every cited place is covered by the file list and no boilerplate is left; the run needs action when not. Run write-payloads first. Nothing is redacted: a secret in the code is in the bundle when the source is embedded. Arguments: `screen <address>` (file <kind>-<address>.md; the screen's address as its page shows it) with `--capability <name>` to cut it to the actions, rules and neighbours of that capability (file screen-<address>--<capability>.md); `capability <name>`; or `all`, which writes screen-<slug(surface)>--<slug(capability)>.md for every (surface, capability) pair, a surface being the screen an action names or `Entry points without a window`, prints one line per bundle and a summary with the largest.",
     ),
 );
 
-runScript(command, rootServices);
+runScript(command, Layer.mergeAll(scriptServices, AnalysisRoot.layer));

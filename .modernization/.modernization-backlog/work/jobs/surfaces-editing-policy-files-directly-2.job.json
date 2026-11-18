@@ -1,0 +1,142 @@
+{
+  "kind": "surfaces",
+  "actions": [
+    "block-89740736795318812041",
+    "block-20624708115873028291"
+  ],
+  "owned": [
+    "businessrule-85571919984782494727"
+  ],
+  "transitions": [],
+  "surfaces": [
+    {
+      "key": "capability-38063153752557655155/WideRangeNumericUpDown",
+      "name": "WideRangeNumericUpDown",
+      "actions": [
+        "block-89740736795318812041",
+        "block-20624708115873028291"
+      ],
+      "owned": [
+        "businessrule-85571919984782494727"
+      ]
+    }
+  ],
+  "allow": [
+    "PolicyPlusWeb"
+  ],
+  "layerIds": [
+    "layer-tooling",
+    "layer-domain",
+    "layer-contracts",
+    "layer-data",
+    "layer-api",
+    "layer-ui",
+    "layer-web",
+    "layer-e2e"
+  ],
+  "decisionIds": [
+    "integrations.decision-1",
+    "integrations.decision-2",
+    "integrations.decision-3",
+    "integrations.decision-4",
+    "integrations.decision-5",
+    "integrations.decision-6",
+    "integrations.decision-7",
+    "integrations.decision-8",
+    "scope.decision-9",
+    "scope.decision-10",
+    "scope.decision-11",
+    "scope.decision-12",
+    "scope.decision-13",
+    "scope.decision-14",
+    "scope.decision-15",
+    "scope.decision-16",
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12",
+    "base.decision-13",
+    "base.decision-14",
+    "base.decision-15",
+    "base.decision-16",
+    "base.decision-17",
+    "base.decision-18",
+    "base.decision-19",
+    "base.decision-20",
+    "base.decision-21",
+    "base.decision-22",
+    "base.decision-23",
+    "base.decision-24",
+    "base.decision-25",
+    "base.decision-26",
+    "base.decision-27",
+    "base.decision-28"
+  ],
+  "areaDecisionIds": [
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12"
+  ],
+  "capability": {
+    "name": "Editing policy files directly",
+    "purpose": "Change the raw keys and values of a policy file, and bring registry files in or out of it.",
+    "dataKinds": [
+      {
+        "id": "entity-40163170707735391190",
+        "name": "Program preference",
+        "access": "reads and saves"
+      },
+      {
+        "id": "entity-99683518011128701149",
+        "name": "Policy setting",
+        "access": "reads and saves"
+      }
+    ]
+  },
+  "surfaceDetails": [
+    {
+      "name": "WideRangeNumericUpDown",
+      "actions": [
+        {
+          "id": "block-89740736795318812041",
+          "name": "UpdateEditText",
+          "purpose": "Shows the value as hexadecimal text when hexadecimal mode is on, otherwise leaves display to the standard control.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/EditPolNumericData.vb",
+            "firstLine": 21,
+            "lastLine": 31
+          }
+        },
+        {
+          "id": "block-20624708115873028291",
+          "name": "ValidateEditText",
+          "purpose": "Reads typed hexadecimal text into the value in hexadecimal mode, otherwise leaves it to the standard control.",
+          "startedBy": "person",
+          "place": {
+            "file": "PolicyPlus/EditPolNumericData.vb",
+            "firstLine": 32,
+            "lastLine": 39
+          }
+        }
+      ],
+      "owned": [
+        {
+          "id": "businessrule-85571919984782494727",
+          "says": "When a typed hexadecimal number is too large to fit, the value is set to the largest allowed value; text that is not a hexadecimal number leaves the value unchanged.",
+          "place": {
+            "file": "PolicyPlus/EditPolNumericData.vb",
+            "firstLine": 40,
+            "lastLine": 58
+          }
+        }
+      ],
+      "reliesOn": []
+    }
+  ],
+  "transitionDetails": [],
+  "bundles": [
+    "/Users/anupvasudeva/me/projects/PolicyPlus/.modernization/.code-analysis/bundles/screen-widerangenumericupdown--editing-policy-files-directly.md"
+  ]
+}

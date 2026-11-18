@@ -1,0 +1,13 @@
+{
+  "read": 1,
+  "challenges": [
+    {
+      "record": 0,
+      "says": "The second criterion adds a condition the cited rule does not state (\"when the commit is not itself tagged\") and uses the term \"describe command\", which a product owner who never saw the code cannot follow; the rule says only a tag, commit count and short commit name when tags exist, and a short commit name otherwise."
+    },
+    {
+      "record": 0,
+      "says": "The what and the term \"Build version\" say the version is shown or reported by the screens and the service, but the cited rule only stamps the version into a file and no reviewed input shows it displayed anywhere."
+    }
+  ]
+}

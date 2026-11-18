@@ -1,0 +1,656 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dialog windows and their reactions</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/finding-policies.html">Finding policies</a> › Dialog windows and their reactions</div><h1>Dialog windows and their reactions</h1><p class="lead">What a person sees and enters in the program&#39;s windows, and the routines that answer each click, selection and window event before handing the choices to the policy code. In Finding policies: 29 actions and 89 business rules. Part of its code is also used by other capabilities.</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: The Dialog windows and their reactions layer of Finding policies: 29 actions and 89 rules; part of its code is also used by other capabilities.
+Where to look first:
+- PolicyPlus/FilterOptions.Designer.vb (only this capability)
+- PolicyPlus/FilterOptions.vb (only this capability)
+- PolicyPlus/FindById.Designer.vb (only this capability)
+- PolicyPlus/FindById.vb (only this capability)
+- PolicyPlus/FindByRegistry.Designer.vb (only this capability)
+- PolicyPlus/FindByRegistry.vb (only this capability)
+- PolicyPlus/FindByText.Designer.vb (only this capability)
+- PolicyPlus/FindByText.vb (only this capability)
+- PolicyPlus/Main.Designer.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+- PolicyPlus/EditSetting.vb (shared with 2 other capabilities)
+  ...and 3 more
+Rules decided here: 89
+- When Search is pressed with both the key and the value empty, the search is refused and the person is told &quot;Please enter search terms.&quot; (PolicyPlus/FindByRegistry.vb:9)
+- The support details window states how a support definition matches products: &quot;Match all the referenced products&quot;, &quot;Match any of the referenced products&quot;, or &quot;Do not match products&quot; when it has no matching logic. (PolicyPlus/DetailSupport.vb:11)
+- Starting a search clears earlier results, sets the progress range to the number of policies, and begins on &quot;Starting search&quot;. (PolicyPlus/FindResults.vb:11)
+- When Search is pressed with the search text empty, the search is refused and the person is told &quot;Please enter search terms.&quot; (PolicyPlus/FindByText.vb:12)
+- The product details window labels a product &quot;Major revision&quot;, &quot;Minor revision&quot; or &quot;Top-level product&quot; from its type. (PolicyPlus/DetailProduct.vb:13)
+- When the key text starts with HKLM\, HKCU\, HKEY_LOCAL_MACHINE\ or HKEY_CURRENT_USER\, the search is refused with &quot;Policies' root keys are determined only by their section. Remove the root key from the search terms and try again.&quot; (PolicyPlus/FindByRegistry.vb:13)
+- When none of In title, In description and In comment is ticked, the search is refused with &quot;At least one attribute must be searched. Check one of the boxes and try again.&quot;; all three start ticked. (PolicyPlus/FindByText.vb:17)
+- A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case. (PolicyPlus/FindByRegistry.vb:17)
+  ...and 81 more
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What can be started here (29)</h2><div class="row"><div class="main"><a href="../../action/finding-policies/closes-the-dialog-as-cancelled-when-escape-is-pressed-4.html">Closes the dialog as cancelled when Escape is pressed</a><div class="sub">PolicyPlus/FindByRegistry.vb:3</div></div><div class="meta">FindByRegistry</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/checks-the-typed-registry-key-and-value-terms-and-builds-the.html">Checks the typed registry key and value terms and builds the policy search function</a><div class="sub">PolicyPlus/FindByRegistry.vb:6</div></div><div class="meta">FindByRegistry</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/closes-the-dialog-as-cancelled-when-escape-is-pressed-3.html">Closes the dialog as cancelled when Escape is pressed</a><div class="sub">PolicyPlus/FindByText.vb:8</div></div><div class="meta">FindByText</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/checks-the-typed-search-text-and-chosen-attributes-and.html">Checks the typed search text and chosen attributes and builds the policy search function</a><div class="sub">PolicyPlus/FindByText.vb:11</div></div><div class="meta">FindByText</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/takes-the-status-icons-from-the-main-window-s-icon-list.html">Takes the status icons from the main window&#39;s icon list</a><div class="sub">PolicyPlus/FindById.vb:14</div></div><div class="meta">FindById</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/looks-the-typed-id-up-among-categories-products-support.html">Looks the typed ID up among categories, products, support definitions and policies and shows what it found</a><div class="sub">PolicyPlus/FindById.vb:22</div></div><div class="meta">FindById</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/clears-the-placeholder-space-and-focuses-the-id-box.html">Clears the placeholder space and focuses the ID box</a><div class="sub">PolicyPlus/FindById.vb:54</div></div><div class="meta">FindById</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/closes-the-dialog-with-the-typed-id-accepted.html">Closes the dialog with the typed ID accepted</a><div class="sub">PolicyPlus/FindById.vb:59</div></div><div class="meta">FindById</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/closes-the-dialog-as-cancelled-when-escape-is-pressed-2.html">Closes the dialog as cancelled when Escape is pressed</a><div class="sub">PolicyPlus/FindById.vb:62</div></div><div class="meta">FindById</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/enables-the-product-requirements-box-only-while-supported-on.html">Enables the product requirements box only while Supported on is ticked</a><div class="sub">PolicyPlus/FilterOptions.vb:76</div></div><div class="meta">FilterOptions</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/closes-the-dialog-as-cancelled-when-escape-is-pressed.html">Closes the dialog as cancelled when Escape is pressed</a><div class="sub">PolicyPlus/FilterOptions.vb:79</div></div><div class="meta">FilterOptions</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/sets-the-dialog-back-to-a-filter-that-matches-everything.html">Sets the dialog back to a filter that matches everything</a><div class="sub">PolicyPlus/FilterOptions.vb:82</div></div><div class="meta">FilterOptions</div></div><details class="more"><summary>Showing 12 of 29 actions. Show all 29</summary><div class="row"><div class="main"><a href="../../action/finding-policies/builds-the-filter-from-the-chosen-options-and-closes-the.html">Builds the filter from the chosen options and closes the dialog accepted</a><div class="sub">PolicyPlus/FilterOptions.vb:85</div></div><div class="meta">FilterOptions</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/starts-the-background-search-when-one-is-waiting-otherwise.html">Starts the background search when one is waiting, otherwise restores the last selected result.</a><div class="sub">PolicyPlus/FindResults.vb:95</div></div><div class="meta">FindResults</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/asks-the-running-search-to-stop.html">Asks the running search to stop.</a><div class="sub">PolicyPlus/FindResults.vb:106</div></div><div class="meta">FindResults</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/keeps-the-title-column-filling-the-width-of-the-results-list.html">Keeps the title column filling the width of the results list.</a><div class="sub">PolicyPlus/FindResults.vb:109</div></div><div class="meta">FindResults</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/stops-the-search-when-the-results-window-is-closed-and.html">Stops the search when the results window is closed and settles the progress display.</a><div class="sub">PolicyPlus/FindResults.vb:112</div></div><div class="meta">FindResults</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/takes-the-selected-search-result-as-the-chosen-policy-and.html">Takes the selected search result as the chosen policy and closes the window with OK.</a><div class="sub">PolicyPlus/FindResults.vb:120</div></div><div class="meta">FindResults</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/recolours-the-product-tree-so-it-looks-right-when-disabled.html">Recolours the product tree so it looks right when disabled</a><div class="sub">PolicyPlus/FilterOptions.vb:121</div></div><div class="meta">FilterOptions</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/applies-the-new-tick-to-all-child-products.html">Applies the new tick to all child products</a><div class="sub">PolicyPlus/FilterOptions.vb:125</div></div><div class="meta">FilterOptions</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/turns-on-double-buffered-drawing-for-the-results-list.html">Turns on double-buffered drawing for the results list.</a><div class="sub">PolicyPlus/FindResults.vb:126</div></div><div class="meta">FindResults</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/drops-the-double-click-message-so-the-tree-check-state-stays.html">Drops the double-click message so the tree check state stays in step</a><div class="sub">PolicyPlus/FilterOptions.vb:155</div></div><div class="meta">DoubleClickIgnoringTreeView</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/asks-for-an-identifier-and-moves-to-or-opens-the-matching.html">Asks for an identifier and moves to, or opens, the matching category, policy, product or support definition.</a><div class="sub">PolicyPlus/Main.vb:580</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/asks-for-search-text-and-runs-the-search.html">Asks for search text and runs the search.</a><div class="sub">PolicyPlus/Main.vb:645</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/shows-the-search-results-window-without-starting-a-search.html">Shows the search results window without starting a search.</a><div class="sub">PolicyPlus/Main.vb:651</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/moves-to-the-next-visible-policy-in-the-search-results.html">Moves to the next visible policy in the search results.</a><div class="sub">PolicyPlus/Main.vb:655</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/asks-for-registry-details-and-runs-the-search.html">Asks for registry details and runs the search.</a><div class="sub">PolicyPlus/Main.vb:668</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/asks-for-filter-settings-and-turns-the-filtered-view-on.html">Asks for filter settings and turns the filtered view on.</a><div class="sub">PolicyPlus/Main.vb:692</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/finding-policies/switches-whether-the-filter-is-applied-to-the-lists.html">Switches whether the filter is applied to the lists.</a><div class="sub">PolicyPlus/Main.vb:701</div></div><div class="meta">Main</div></div></details><h2>Business rules in this layer (89)</h2><div class="row"><div class="main"><span>When Search is pressed with both the key and the value empty, the search is refused and the person is told &quot;Please enter search terms.&quot;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When Search is pressed with both the key and the value empty, the search is refused and the person is told &quot;Please enter search terms.&quot;
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:9
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:9  ·  Screens: FindByRegistry</div></div></div><div class="row"><div class="main"><span>The support details window states how a support definition matches products: &quot;Match all the referenced products&quot;, &quot;Match any of the referenced products&quot;, or &quot;Do not match products&quot; when it has no matching logic.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The support details window states how a support definition matches products: &quot;Match all the referenced products&quot;, &quot;Match any of the referenced products&quot;, or &quot;Do not match products&quot; when it has no matching logic.
+Where to look first:
+- Starts at PolicyPlus/DetailSupport.vb:11
+- PolicyPlus/DetailSupport.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailSupport.vb:11  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Starting a search clears earlier results, sets the progress range to the number of policies, and begins on &quot;Starting search&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Starting a search clears earlier results, sets the progress range to the number of policies, and begins on &quot;Starting search&quot;.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:11
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:11  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When Search is pressed with the search text empty, the search is refused and the person is told &quot;Please enter search terms.&quot;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When Search is pressed with the search text empty, the search is refused and the person is told &quot;Please enter search terms.&quot;
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:12
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:12  ·  Screens: FindByText</div></div></div><div class="row"><div class="main"><span>The product details window labels a product &quot;Major revision&quot;, &quot;Minor revision&quot; or &quot;Top-level product&quot; from its type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The product details window labels a product &quot;Major revision&quot;, &quot;Minor revision&quot; or &quot;Top-level product&quot; from its type.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:13
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:13  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When the key text starts with HKLM\, HKCU\, HKEY_LOCAL_MACHINE\ or HKEY_CURRENT_USER\, the search is refused with &quot;Policies&#39; root keys are determined only by their section. Remove the root key from the search terms and try again.&quot;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the key text starts with HKLM\, HKCU\, HKEY_LOCAL_MACHINE\ or HKEY_CURRENT_USER\, the search is refused with &quot;Policies' root keys are determined only by their section. Remove the root key from the search terms and try again.&quot;
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:13
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:13  ·  Screens: FindByRegistry</div></div></div><div class="row"><div class="main"><span>When none of In title, In description and In comment is ticked, the search is refused with &quot;At least one attribute must be searched. Check one of the boxes and try again.&quot;; all three start ticked.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When none of In title, In description and In comment is ticked, the search is refused with &quot;At least one attribute must be searched. Check one of the boxes and try again.&quot;; all three start ticked.
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:17
+- PolicyPlus/FindByText.Designer.vb (only this capability)
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:17  ·  Screens: FindByText</div></div></div><div class="row"><div class="main"><span>A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:17
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:17  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>Each entry of a support definition is listed by the name of the nested support definition when it is one, otherwise by the name of the product, otherwise as &quot;&lt;missing: &quot; followed by the product code the entry names. Minimum and maximum versions are listed only for product entries that name a version range; a missing bound is shown blank.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Each entry of a support definition is listed by the name of the nested support definition when it is one, otherwise by the name of the product, otherwise as &quot;<missing: &quot; followed by the product code the entry names. Minimum and maximum versions are listed only for product entries that name a version range; a missing bound is shown blank.
+Where to look first:
+- Starts at PolicyPlus/DetailSupport.vb:20
+- PolicyPlus/DetailSupport.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailSupport.vb:20  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A value-name term must match the whole value name; &quot;*&quot; and &quot;?&quot; act as wildcards, so without them the name must be equal.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A value-name term must match the whole value name; &quot;*&quot; and &quot;?&quot; act as wildcards, so without them the name must be equal.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:20
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:20  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:21
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:21  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:22
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:22  ·  Screens: Main</div></div></div><details class="more"><summary>Showing 12 of 89 business rules. Show all 89</summary><div class="row"><div class="main"><span>Text typed in Find by ID is trimmed and looked up in this order: category, product, support definition, then policy. The first kind that matches is selected, with its own icon shown; a policy is looked up only when no other kind matches.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Text typed in Find by ID is trimmed and looked up in this order: category, product, support definition, then policy. The first kind that matches is selected, with its own icon shown; a policy is looked up only when no other kind matches.
+Where to look first:
+- Starts at PolicyPlus/FindById.vb:22
+- PolicyPlus/FindById.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindById.vb:22  ·  Screens: FindById</div></div></div><div class="row"><div class="main"><span>When the filter dialog opens, the Policy type choice shows Any if the current filter has no policy-type condition, Policy if it keeps only managed policies, and Preference if it keeps only the others.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the filter dialog opens, the Policy type choice shows Any if the current filter has no policy-type condition, Policy if it keeps only managed policies, and Preference if it keeps only the others.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:23
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:23  ·  Screens: FilterOptions, Main</div></div></div><div class="row"><div class="main"><span>When the text matches nothing, nothing is selected and a &quot;not found&quot; icon is shown; when the text is empty a blank icon is shown instead. The section from an earlier match is not cleared when the text changes to a non-policy.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the text matches nothing, nothing is selected and a &quot;not found&quot; icon is shown; when the text is empty a blank icon is shown instead. The section from an earlier match is not cleared when the text changes to a non-policy.
+Where to look first:
+- Starts at PolicyPlus/FindById.vb:24
+- PolicyPlus/FindById.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindById.vb:24  ·  Screens: FindById</div></div></div><div class="row"><div class="main"><span>A key term containing &quot;*&quot; or &quot;?&quot; must match the whole key path as a wildcard pattern.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A key term containing &quot;*&quot; or &quot;?&quot; must match the whole key path as a wildcard pattern.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:24
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:24  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>Search text is split at spaces into plain words, wildcard words (containing &quot;*&quot; or &quot;?&quot;) and quoted phrases. Words are lowercased and trimmed and lose the characters . , &#39; &quot; ; / ! ( ) { } [ ].</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Search text is split at spaces into plain words, wildcard words (containing &quot;*&quot; or &quot;?&quot;) and quoted phrases. Words are lowercased and trimmed and lose the characters . , ' &quot; ; / ! ( ) { } [ ].
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:25
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:25  ·  Screens: FindByText, FindResults</div></div></div><div class="row"><div class="main"><span>A key term containing a backslash but no wildcard matches policies whose key path starts with that text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A key term containing a backslash but no wildcard matches policies whose key path starts with that text.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:26
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:26  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>When search results are opened from the main window and no search has been run (or it was cleared), the person is told &quot;No search has been run yet, so there are no results to display.&quot; and nothing opens.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When search results are opened from the main window and no search has been run (or it was cleared), the person is told &quot;No search has been run yet, so there are no results to display.&quot; and nothing opens.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:27
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:27  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When the filter dialog opens, the Current state choice shows Any if the current filter has no state condition, otherwise Not Configured, Configured, Enabled or Disabled as the filter holds.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the filter dialog opens, the Current state choice shows Any if the current filter has no state condition, otherwise Not Configured, Configured, Enabled or Disabled as the filter holds.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:28
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:28  ·  Screens: FilterOptions, Main</div></div></div><div class="row"><div class="main"><span>A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:28
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:28  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:29
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:29  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as &quot;abc&quot; does not close itself, so it also absorbs the following words.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as &quot;abc&quot; does not close itself, so it also absorbs the following words.
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:36
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:36  ·  Screens: FindByText, FindResults</div></div></div><div class="row"><div class="main"><span>A policy ID may end with &quot;@U&quot; to mean the user section or &quot;@C&quot; to mean the computer section; without a suffix, or with any other suffix, the policy applies to both sections. The suffix is cut off before the policy lookup, so an unknown suffix still finds the policy.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy ID may end with &quot;@U&quot; to mean the user section or &quot;@C&quot; to mean the computer section; without a suffix, or with any other suffix, the policy applies to both sections. The suffix is cut off before the policy lookup, so an unknown suffix still finds the policy.
+Where to look first:
+- Starts at PolicyPlus/FindById.vb:39
+- PolicyPlus/FindById.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindById.vb:39  ·  Screens: FindById</div></div></div><div class="row"><div class="main"><span>When the filter dialog opens, the Commented choice shows Any if the current filter has no comment condition, Yes if it keeps only commented policies and No if it keeps only uncommented ones.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the filter dialog opens, the Commented choice shows Any if the current filter has no comment condition, Yes if it keeps only commented policies and No if it keeps only uncommented ones.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:42
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:42  ·  Screens: FilterOptions, Main</div></div></div><div class="row"><div class="main"><span>Taking the next policy returns nothing when no search has run or when the last result has been passed; otherwise it returns the result after the last chosen one.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Taking the next policy returns nothing when no search has run or when the last result has been passed; otherwise it returns the result after the last chosen one.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:42
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:42  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When the current filter has no supported-on condition, the dialog opens with Supported on unticked, both &quot;Match a policy if at least one selected product is supported&quot; and &quot;Match policies with missing or blank support definitions&quot; ticked, and no product ticked.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the current filter has no supported-on condition, the dialog opens with Supported on unticked, both &quot;Match a policy if at least one selected product is supported&quot; and &quot;Match policies with missing or blank support definitions&quot; ticked, and no product ticked.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:47
+- PolicyPlus/FilterOptions.Designer.vb (only this capability)
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:47  ·  Screens: FilterOptions, Main</div></div></div><div class="row"><div class="main"><span>A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together.
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:51
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:51  ·  Screens: FindByText, FindResults</div></div></div><div class="row"><div class="main"><span>When the current filter has a supported-on condition, the dialog opens with Supported on ticked, exactly the filter&#39;s products ticked and the two matching options set as the filter holds; product branches whose tick differs from their parent are opened.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the current filter has a supported-on condition, the dialog opens with Supported on ticked, exactly the filter's products ticked and the two matching options set as the filter holds; product branches whose tick differs from their parent are opened.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:54
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:54  ·  Screens: FilterOptions, Main</div></div></div><div class="row"><div class="main"><span>Go closes Find by ID as accepted whether or not the text matched anything, so the caller may receive no selection.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Go closes Find by ID as accepted whether or not the text matched anything, so the caller may receive no selection.
+Where to look first:
+- Starts at PolicyPlus/FindById.vb:59
+- PolicyPlus/FindById.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindById.vb:59  ·  Screens: FindById</div></div></div><div class="row"><div class="main"><span>A policy matches when the ticked attributes hit: its title, its description, or a comment on it from any supplied comment source (user or computer). Any one hit is enough.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy matches when the ticked attributes hit: its title, its description, or a comment on it from any supplied comment source (user or computer). Any one hit is enough.
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:59
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:59  ·  Screens: FindByText, FindResults</div></div></div><div class="row"><div class="main"><span>Pressing Escape closes Find by ID as cancelled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Pressing Escape closes Find by ID as cancelled.
+Where to look first:
+- Starts at PolicyPlus/FindById.vb:62
+- PolicyPlus/FindById.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindById.vb:62  ·  Screens: FindById</div></div></div><div class="row"><div class="main"><span>The search tests every policy in turn, and adds every hit to the list with its category name, in the order policies are held.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The search tests every policy in turn, and adds every hit to the list with its category name, in the order policies are held.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:63
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:63  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>The list and progress are refreshed after every 20 policies: &quot;Searching: checked N policies so far, found M hits&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The list and progress are refreshed after every 20 policies: &quot;Searching: checked N policies so far, found M hits&quot;.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:74
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:74  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>The product requirement box (the product tree and the two matching options) can be used only while Supported on is ticked; it starts unusable.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The product requirement box (the product tree and the two matching options) can be used only while Supported on is ticked; it starts unusable.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:76
+- PolicyPlus/FilterOptions.Designer.vb (only this capability)
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:76  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>Pressing Escape closes the filter dialog as cancelled and the current filter is unchanged.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Pressing Escape closes the filter dialog as cancelled and the current filter is unchanged.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:79
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:79  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>Reset returns every choice to its default: Any for type, state and comment, Supported on unticked, both matching options ticked and no product ticked.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Reset returns every choice to its default: Any for type, state and comment, Supported on unticked, both matching options ticked and no product ticked.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:82
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:82  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>When a search ends it reports &quot;Finished searching: checked N policies, found M hits&quot;, or &quot;Search canceled: ...&quot; if stopped, and the Stop button is disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When a search ends it reports &quot;Finished searching: checked N policies, found M hits&quot;, or &quot;Search canceled: ...&quot; if stopped, and the Stop button is disabled.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:82
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:82  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>When OK is pressed, the new filter keeps only managed policies for Policy, only unmanaged ones for Preference, and no policy-type condition for Any.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When OK is pressed, the new filter keeps only managed policies for Policy, only unmanaged ones for Preference, and no policy-type condition for Any.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:88
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:88  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:90
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:90  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Stop, or closing the results window, cancels the search; closing also leaves the label at &quot;Search canceled&quot; with the bar full if the search had not finished.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Stop, or closing the results window, cancels the search; closing also leaves the label at &quot;Search canceled&quot; with the bar full if the search had not finished.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:91
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:91  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>When OK is pressed, the new filter requires the chosen state: Not Configured, Configured, Enabled or Disabled; Any sets no state condition.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When OK is pressed, the new filter requires the chosen state: Not Configured, Configured, Enabled or Disabled; Any sets no state condition.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:94
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:94  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>When the results window is reopened, the previously selected result is selected again if it is still in the list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the results window is reopened, the previously selected result is selected again if it is still in the list.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:95
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:95  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:100
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:100  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When OK is pressed, the new filter keeps only commented policies for Yes, only uncommented ones for No, and no comment condition for Any.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When OK is pressed, the new filter keeps only commented policies for Yes, only uncommented ones for No, and no comment condition for Any.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:104
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:104  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:109
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:109  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When OK is pressed with Supported on ticked, the filter records every ticked product and both matching options; with it unticked, any ticks and options are discarded and no support condition applies. A filter with Supported on ticked and no product ticked is accepted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When OK is pressed with Supported on ticked, the filter records every ticked product and both matching options; with it unticked, any ticks and options are discarded and no support condition applies. A filter with Supported on ticked and no product ticked is accepted.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:110
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:110  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>The right pane lists the chosen category in this order: an &quot;Up: &lt;parent name&gt;&quot; row marked &quot;Parent&quot; when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The right pane lists the chosen category in this order: an &quot;Up: <parent name>&quot; row marked &quot;Parent&quot; when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:113
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:113  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Go, or a double-click on a result, accepts only when a result is selected; the selected policy is passed back and its position remembered.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Go, or a double-click on a result, accepts only when a result is selected; the selected policy is passed back and its position remembered.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:120
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:120  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>Ticking or unticking a product by hand ticks or unticks every product beneath it to match; changes made by the dialog itself do not spread.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Ticking or unticking a product by hand ticks or unticks every product beneath it to match; changes made by the dialog itself do not spread.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:125
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:125  ·  Screens: FilterOptions</div></div></div><div class="row"><div class="main"><span>The category tree selection follows the category shown in the right pane.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The category tree selection follows the category shown in the right pane.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:139
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:139  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When nothing is selected, the title and support lines are hidden and the pane reads &quot;Select an item to see its description.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When nothing is selected, the title and support lines are hidden and the pane reads &quot;Select an item to see its description.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:146
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:146  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For a selected policy the information pane shows its title, &quot;(no requirements information)&quot; when it has no support rule or &quot;Requirements:&quot; plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: For a selected policy the information pane shows its title, &quot;(no requirements information)&quot; when it has no support rule or &quot;Requirements:&quot; plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:149
+- PolicyPlus/Main.Designer.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:149  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Double-clicking a product checkbox does nothing, so a tick shown always agrees with the tick kept.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Double-clicking a product checkbox does nothing, so a tick shown always agrees with the tick kept.
+Where to look first:
+- Starts at PolicyPlus/FilterOptions.vb:155
+- PolicyPlus/FilterOptions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FilterOptions.vb:155  ·  Screens: DoubleClickIgnoringTreeView</div></div></div><div class="row"><div class="main"><span>For a selected or highlighted category the pane shows its title, &quot;This category contains N policies and M subcategories.&quot; (&quot;The selected category&quot; when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: For a selected or highlighted category the pane shows its title, &quot;This category contains N policies and M subcategories.&quot; (&quot;The selected category&quot; when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:158
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:158  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is orphaned when it has no parent among the loaded definitions although its definition names one.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A category is orphaned when it has no parent among the loaded definitions although its definition names one.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:171
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:171  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is empty when it holds no subcategories and no policies at all, counting hidden ones.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A category is empty when it holds no subcategories and no policies at all, counting hidden ones.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:174
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:174  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category&#39;s icon is chosen in this order: orphaned, then empty, then normal.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A category's icon is chosen in this order: orphaned, then empty, then normal.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:177
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:177  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s icon is chosen in this order: preference, then plain when it has no configurable elements, then &quot;extra configuration&quot; when it has some.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy's icon is chosen in this order: preference, then plain when it has no configurable elements, then &quot;extra configuration&quot; when it has some.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:186
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:186  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:196
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:196  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is visible only if it applies to a chosen area (user, computer or both). With &quot;Only Filtered Policies&quot; on, it must also pass the filter for a chosen area it applies to; passing for either one is enough.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy is visible only if it applies to a chosen area (user, computer or both). With &quot;Only Filtered Policies&quot; on, it must also pass the filter for a chosen area it applies to; passing for either one is enough.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:204
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:204  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a view setting changes, the program moves up to the nearest visible category, drops the selected policy if the move happened or the policy is now hidden, then rebuilds the tree and list. A policy kept after the move appears in the information pane only: rebuilding the list reselects the category in the tree, which clears the selection, so its row is not highlighted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When a view setting changes, the program moves up to the nearest visible category, drops the selected policy if the move happened or the policy is now hidden, then rebuilds the tree and list. A policy kept after the move appears in the information pane only: rebuilding the list reselects the category in the tree, which clears the selection, so its row is not highlighted.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:221
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:221  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>With both areas shown, a policy that applies to both areas shows its common state followed by &quot;(2)&quot; when both match, the computer state followed by &quot;(C)&quot; when only the user is Not Configured, the user state followed by &quot;(U)&quot; when only the computer is Not Configured, and &quot;Mixed&quot; otherwise.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: With both areas shown, a policy that applies to both areas shows its common state followed by &quot;(2)&quot; when both match, the computer state followed by &quot;(C)&quot; when only the user is Not Configured, the user state followed by &quot;(U)&quot; when only the computer is Not Configured, and &quot;Mixed&quot; otherwise.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:234
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:234  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>With both areas shown, a policy that applies to one area shows that area&#39;s state followed by &quot;(C)&quot; for computer or &quot;(U)&quot; for user. With a single area shown, only that area&#39;s state is shown, without a suffix.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: With both areas shown, a policy that applies to one area shows that area's state followed by &quot;(C)&quot; for computer or &quot;(U)&quot; for user. With a single area shown, only that area's state is shown, without a suffix.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:248
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:248  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s state in one area reads &quot;Enabled&quot;, &quot;Disabled&quot;, &quot;Not Configured&quot; or &quot;Unknown&quot;; the computer source is read for the computer area and the user source for any other.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy's state in one area reads &quot;Enabled&quot;, &quot;Disabled&quot;, &quot;Not Configured&quot; or &quot;Unknown&quot;; the computer source is read for the computer area and the user source for any other.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:257
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:257  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The Deduplicate Policies menu entry is hidden, so the person cannot start it.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The Deduplicate Policies menu entry is hidden, so the person cannot start it.
+Where to look first:
+- Starts at PolicyPlus/Main.Designer.vb:266
+- PolicyPlus/Main.Designer.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.Designer.vb:266  ·  Screens: FindById</div></div></div><div class="row"><div class="main"><span>With both areas shown, the comment column is empty when neither area has a comment, shows &quot;(multiple)&quot; when both have one, and otherwise shows the single comment.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: With both areas shown, the comment column is empty when neither area has a comment, shows &quot;(multiple)&quot; when both have one, and otherwise shows the single comment.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:270
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:270  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy's comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:288
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:288  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:296
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:296  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>After the edit dialog is accepted, which changes the open policy source in memory only, the list is refreshed in place if the current category is still visible; otherwise the program moves up to the nearest visible category. Nothing is written to disk until Save Policies.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: After the edit dialog is accepted, which changes the open policy source in memory only, the list is refreshed in place if the current category is still visible; otherwise the program moves up to the nearest visible category. Nothing is written to disk until Save Policies.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:300
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:300  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A search dialog opens either empty or running a new search. When the person picks a result, its editor opens in the current area and the list moves to that policy.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A search dialog opens either empty or running a new search. When the person picks a result, its editor opens in the current area and the list moves to that policy.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:378
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:378  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Moving to a policy first shows its category, but only when that category is visible in the tree; otherwise nothing happens and the person is not told. The policy row is then selected only if the policy is listed there. A policy hidden by the area choice or the filter leaves the category shown with nothing selected and no message; find by text and by registry do not check this before opening the editor.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Moving to a policy first shows its category, but only when that category is visible in the tree; otherwise nothing happens and the person is not told. The policy row is then selected only if the policy is listed there. A policy hidden by the area choice or the filter leaves the category shown with nothing selected and no message; find by text and by registry do not check this before opening the editor.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:396
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:396  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The area choice offers only &quot;User or Computer&quot;, &quot;User&quot; and &quot;Computer&quot;, with no free text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The area choice offers only &quot;User or Computer&quot;, &quot;User&quot; and &quot;Computer&quot;, with no free text.
+Where to look first:
+- Starts at PolicyPlus/Main.Designer.vb:409
+- PolicyPlus/Main.Designer.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.Designer.vb:409  ·  Screens: FindById</div></div></div><div class="row"><div class="main"><span>A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:411
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:411  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy passes the filter only when it passes every active part of it.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy passes the filter only when it passes every active part of it.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:411
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:411  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:414
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:414  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:427
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:427  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:431
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:431  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy applies to an area when its definition declares that area; a policy declared for both applies to each.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy applies to an area when its definition declares that area; a policy declared for both applies to each.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:438
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:438  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Only one item in the policy list can be selected at a time.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Only one item in the policy list can be selected at a time.
+Where to look first:
+- Starts at PolicyPlus/Main.Designer.vb:534
+- PolicyPlus/Main.Designer.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.Designer.vb:534  ·  Screens: FindById</div></div></div><div class="row"><div class="main"><span>After finding by identifier, a category opens if it is visible, otherwise the person is told &quot;The category is not currently visible. Change the view settings and try again.&quot;; a policy opens in the editor and the list moves to it; a product or support definition opens its details; anything else gives &quot;That object could not be found.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: After finding by identifier, a category opens if it is visible, otherwise the person is told &quot;The category is not currently visible. Change the view settings and try again.&quot;; a policy opens in the editor and the list moves to it; a product or support definition opens its details; anything else gives &quot;That object could not be found.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:584
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:584  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy found by identifier opens in the lower-numbered of the area shown and the area found (computer is lower than user, user lower than both), so Computer wins over User.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy found by identifier opens in the lower-numbered of the area shown and the area found (computer is lower than user, user lower than both), so Computer wins over User.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:596
+- PolicyPlus/AdmxStructures.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:596  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Find by text starts a search with what the person entered, and can search both areas&#39; comments.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Find by text starts a search with what the person entered, and can search both areas' comments.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:647
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:647  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>&quot;Search Results&quot; only reopens the last results and starts no new search.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: &quot;Search Results&quot; only reopens the last results and starts no new search.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:653
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:653  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Find Next moves to the next result that is currently visible, skipping hidden ones, and tells the person &quot;There are no more results that match the filter.&quot; when none is left.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Find Next moves to the next result that is currently visible, skipping hidden ones, and tells the person &quot;There are no more results that match the filter.&quot; when none is left.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:657
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:657  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Find by registry starts a search with what the person entered.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Find by registry starts a search with what the person entered.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:670
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:670  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Changing the filter options turns on &quot;Only Filtered Policies&quot; and moves to the nearest visible category.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Changing the filter options turns on &quot;Only Filtered Policies&quot; and moves to the nearest visible category.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:695
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:695  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The &quot;Only Filtered Policies&quot; menu switches the filter on or off and moves to the nearest visible category.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The &quot;Only Filtered Policies&quot; menu switches the filter on or off and moves to the nearest visible category.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:703
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:703  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:863
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:863  ·  Screens: Main</div></div></div></details><h2>Data structures defined here (14)</h2><div class="row"><div class="main"><span>EditPol</span><div class="sub">Me, LsvPol, ButtonSave, ChItem, ChValue, ButtonAddKey, ButtonAddValue, ButtonDeleteValue, ButtonForget, ButtonEdit, ButtonImport, ButtonExport</div></div><div class="meta">12 fields</div></div><div class="row"><div class="main"><span>PolValueInfo</span><div class="sub">Key, Name, Kind, Data, IsDeleter</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>EditPolDelete</span><div class="sub">Me, TextKey, OptPurge, OptClearFirst, OptDeleteOne, TextValueName, ButtonOK, Label1</div></div><div class="meta">8 fields</div></div><div class="row"><div class="main"><span>EditPolKey</span><div class="sub">Me, TextName, ButtonOK, Label1</div></div><div class="meta">4 fields</div></div><div class="row"><div class="main"><span>EditPolMultiStringData</span><div class="sub">Me, TextName, TextData, ButtonOK, Label1, Label2</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditPolNumericData</span><div class="sub">Me, TextName, CheckHexadecimal, NumData, ButtonOK, Label1, Label2</div></div><div class="meta">7 fields</div></div><div class="row"><div class="main"><span>EditPolStringData</span><div class="sub">Me, TextName, TextData, ButtonOK, Label1, Label2</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditPolValue</span><div class="sub">Me, ComboKind, ButtonOK, TextName, Label1, Label2</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditSetting</span><div class="sub">Me, CommentLabel, SupportedLabel, SettingNameLabel, CommentTextbox, SupportedTextbox, NotConfiguredOption, EnabledOption, DisabledOption, ExtraOptionsPanel, ExtraOptionsTable, CloseButton, OkButton, HelpTextbox, SectionDropdown, ApplyButton, SectionLabel</div></div><div class="meta">17 fields</div></div><div class="row"><div class="main"><span>ExportReg</span><div class="sub">Label1, Label2, Label3, Label4, TextReg, TextBranch, TextRoot, ButtonBrowse, ButtonExport</div></div><div class="meta">9 fields</div></div><div class="row"><div class="main"><span>ImportReg</span><div class="sub">Label1, Label2, TextReg, TextRoot, ButtonBrowse, ButtonImport</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>ImportSpol</span><div class="sub">ButtonOpenFile, Label1, ButtonApply, TextSpol, ButtonVerify, ButtonReset</div></div><div class="meta">6 fields</div></div><details class="more"><summary>Showing 12 of 14 data structures. Show all 14</summary><div class="row"><div class="main"><span>InspectSpolFragment</span><div class="sub">TextPolicyName, LabelPolicy, TextSpol, ButtonClose, ButtonCopy, CheckHeader</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>ListEditor</span><div class="sub">EntriesDatagrid, NameColumn, ValueColumn, ElementNameLabel, CloseButton, OkButton</div></div><div class="meta">6 fields</div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

@@ -1,0 +1,98 @@
+---
+import Page from "../../layouts/Page.astro";
+import Figure from "../../components/Figure.astro";
+import Rows from "../../components/Rows.astro";
+import Bundle from "../../components/Bundle.astro";
+import RiskMarker from "../../components/RiskMarker.astro";
+import { bundleIndex, capabilities, knowledge, pathOf, productLayers, slugs, system } from "../../lib/payloads";
+import { bundleOfScreen } from "../../lib/bundle";
+import { risksInFiles } from "../../lib/risks";
+import { screenModel } from "../../lib/model";
+import { knownIds } from "../../lib/check";
+import { copy } from "../../lib/copy";
+import { firstSentence, plural, where } from "../../lib/text";
+import { readableControl } from "../../lib/controls";
+import type { Action, Layer } from "../../lib/types";
+
+export async function getStaticPaths() {
+    const sys = await system();
+    return sys.screens.map((screen) => ({ params: { key: screen.key } }));
+}
+const { key } = Astro.params;
+const sys = await system();
+const all = await capabilities();
+const know = await knowledge();
+const addresses = await slugs();
+const screen = sys.screens.find((each) => each.key === key);
+if (screen === undefined) throw new Error("no such screen");
+const depth = screen.key.split("/").length;
+const root = "../".repeat(depth);
+const caps = all.filter((each) => screen.capabilities.includes(each.capability.id));
+const wanted = new Set(screen.actionIds);
+const known = knownIds(sys, all, know);
+const product = productLayers(sys);
+const figure = screenModel(screen, caps, undefined, product);
+const mine: { action: Action; cid: string; layer: Layer }[] = caps.flatMap((cap) => cap.layers.flatMap((layer) => layer.actions.filter((action) => wanted.has(action.id)).map((action) => ({ action, cid: cap.capability.id, layer }))));
+const layerOf = new Map(caps.flatMap((cap) => cap.layers.map((layer) => [layer.id, { layer, cid: cap.capability.id }] as const)));
+const ruleOf = new Map(caps.flatMap((cap) => cap.layers.flatMap((layer) => layer.rules.map((rule) => [rule.id, { rule, layer, cid: cap.capability.id }] as const))));
+const reached = new Set(mine.flatMap(({ action }) => action.rules));
+const layerHref = (cid: string, lid: string) => `${root}layer/${addresses.capability(cid)}/${addresses.layer(cid, lid)}.html`;
+const touchedLayers = screen.layersTouched.filter((touched) => product.has(touched.layerId) || !screen.layersTouched.some((each) => product.has(each.layerId)));
+const leftOut = screen.layersTouched.filter((touched) => !touchedLayers.includes(touched)).map((touched) => layerOf.get(touched.layerId)?.layer.name ?? "");
+const strip = touchedLayers.flatMap((touched) => {
+    const info = layerOf.get(touched.layerId);
+    if (info === undefined) return [];
+    const byCapability: Record<string, [number, number]> = {};
+    for (const cap of caps) {
+        const actions = mine.filter((entry) => entry.cid === cap.capability.id && entry.action.path.some((step) => step.layer === touched.layerId)).length;
+        const rules = new Set(mine.filter((entry) => entry.cid === cap.capability.id).flatMap((entry) => entry.action.rules).filter((rule) => ruleOf.get(rule)?.layer.id === touched.layerId)).size;
+        byCapability[cap.capability.id] = [actions, rules];
+    }
+    const places = [...new Map([
+        ...[...reached].flatMap((rule) => { const found = ruleOf.get(rule); return found && found.layer.id === touched.layerId ? [found.rule.place] : []; }),
+        ...mine.filter((entry) => entry.layer.id === touched.layerId).map((entry) => entry.action.place),
+        ...info.layer.evidence,
+    ].map((place) => [where(place), place] as const)).values()];
+    const data = [...info.layer.context.saves.map((name) => `saves ${name}`), ...info.layer.context.reads.map((name) => `reads ${name}`)];
+    return [{ touched, info, byCapability, places, data }];
+});
+const classes = new Set(mine.map((entry) => entry.action.screen).filter((name) => name !== ""));
+const controls = caps.flatMap((cap) => cap.screens.filter((each) => classes.has(each.name)).flatMap((each) => each.controls.map((control) => ({ ...control, capability: cap.capability.id }))));
+const seen = new Set<string>();
+const uniqueControls = controls.filter((control) => { if (seen.has(control.name)) return false; seen.add(control.name); return true; });
+const ruleLayers = touchedLayers.flatMap((touched) => { const rules = [...reached].flatMap((rule) => { const found = ruleOf.get(rule); return found && found.layer.id === touched.layerId ? [found] : []; }); return rules.length > 0 ? [{ touched, name: layerOf.get(touched.layerId)?.layer.name ?? touched.layerId, rules }] : []; });
+const lead = `${screen.purpose === "" ? "" : `${screen.purpose} `}${copy.screen.figureFiles(screen.files)}`;
+const risks = risksInFiles(know, screen.files);
+const held = bundleOfScreen(sys, all, know, await bundleIndex(), screen.key);
+---
+<Page title={screen.name} lead={lead} depth={depth} brief={screen.context.text} trail={[{ text: copy.site.home, href: `${root}index.html` }, { text: screen.name }]}>
+    <RiskMarker risks={risks} root={root} slug={addresses.risk} />
+    <Figure id="screen-trace" facts={figure.facts} build={(limit) => screenModel(screen, caps, limit, product).model} known={known} />
+    {caps.length > 1 && <div class="filter" role="group" aria-label={copy.screen.filter}><span class="note">{copy.screen.filter}:</span> {caps.map((cap) => <button class="chip toggle on" aria-pressed="true" data-capability-chip={cap.capability.id}>{cap.capability.name}</button>)}</div>}
+    <h2>{copy.screen.layers(strip.length)}</h2>
+    <div class="strip-row strip-head"><div>{copy.screen.columns.layer}</div><div>{copy.screen.columns.does}</div><div>{copy.screen.columns.actions}</div><div>{copy.screen.columns.rules}</div><div>{copy.screen.columns.code}</div><div>{copy.screen.columns.data}</div></div>
+    {strip.map(({ touched, info, byCapability, places, data }) => <div class={`strip-row${touched.rules === 0 ? " dim" : ""}`} data-by-capability={JSON.stringify(byCapability)}>
+        <div><a href={layerHref(info.cid, info.layer.id)}>{info.layer.name}</a></div>
+        <div title={info.layer.purpose}>{firstSentence(info.layer.purpose)}</div>
+        <div data-actions>{touched.actions}</div>
+        <div data-rules data-passes={copy.screen.passesThrough}>{touched.rules === 0 ? copy.screen.passesThrough : `${touched.rules}${touched.sharedRules > 0 ? ` (${copy.screen.shared(touched.sharedRules)})` : ""}`}</div>
+        <div><details><summary>{copy.screen.codeCount(places.length)}</summary>{places.map((place) => <div class="where">{where(place)}</div>)}</details></div>
+        <div>{data.length === 0 ? <span class="empty">{copy.screen.noData}</span> : <details><summary>{copy.screen.dataCount(data.length)}</summary>{data.map((chip) => <span class="chip">{chip}</span>)}</details>}</div>
+    </div>)}
+    {leftOut.length > 0 && <p class="note">{copy.leftOut(leftOut)}</p>}
+    <h2>{copy.screen.controls(uniqueControls.length)}</h2>
+    {uniqueControls.length === 0 ? <p class="empty">{copy.screen.noControls}</p> : <p class="note">{copy.screen.controlsNote}</p>}
+    <Rows rows={uniqueControls.map((control) => { const readable = readableControl(control.name, control.declaredAs); return { text: readable.text, meta: readable.kind, sub: readable.text === readable.name ? undefined : copy.screen.controlName(readable.name), capability: control.capability }; })} cap={12} noun="controls" />
+    <h2>{copy.screen.actions(mine.length)}</h2>
+    <Rows rows={mine.map(({ action, cid }) => {
+        const cap = caps.find((each) => each.capability.id === cid);
+        const sharedRules = [...new Set(action.rules)].filter((rule) => mine.filter((entry) => entry.action.rules.includes(rule)).length > 1).length;
+        return { text: action.purpose, href: `${root}action/${addresses.capability(cid)}/${addresses.action(cid, action.id)}.html`, meta: `${plural(new Set(action.rules).size, "rule")}${sharedRules > 0 ? copy.screen.sharedWithOthers(sharedRules) : ""}`, path: cap ? pathOf(cap, action).map((step) => ({ name: step.name })) : [], capability: cid };
+    })} cap={12} noun="actions" />
+    <h2>{copy.screen.rules(reached.size)}</h2>
+    {reached.size === 0 && <p class="empty">{copy.screen.noRules}</p>}
+    {ruleLayers.map(({ touched, name, rules }) => <details class="group" id={`group-${touched.layerId}`}><summary>{name} ({rules.length})</summary>
+        <Rows rows={rules.map(({ rule, cid }) => ({ text: rule.says, copy: rule.context.text, meta: rule.gates ? copy.words.changesState : undefined, sub: where(rule.place), capability: cid }))} cap={8} noun="business rules" />
+    </details>)}
+    <Bundle files={held === undefined ? [] : held.files} command={`cd .agents/skills/code-analysis && CODE_ANALYSIS_ROOT=${copy.bundle.place} bun cli/build-bundle.ts screen ${screen.key}`} />
+</Page>

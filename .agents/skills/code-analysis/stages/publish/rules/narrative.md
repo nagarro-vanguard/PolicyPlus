@@ -1,6 +1,6 @@
 # Narrative: rules
 
-How ux-visuals talks about the system. It is read by business analysts, product owners, architects and the people who decide with them, and parts of it will be lifted into a proposal. Every page, figure and sentence the build writes itself follows these rules, for any stack and any medium.
+How the app talks about the system. It is read by business analysts, product owners, architects and the people who decide with them, and parts of it will be lifted into a proposal. Every page, figure and sentence the build writes itself follows these rules, for any stack and any medium.
 
 ## Voice
 

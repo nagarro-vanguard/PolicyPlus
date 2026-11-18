@@ -1,0 +1,661 @@
+{
+  "kind": "shared",
+  "shared": [
+    "businessrule-02030966310880796596",
+    "businessrule-44390406872239414183",
+    "businessrule-87097618083601098949",
+    "businessrule-02094124658868396159",
+    "businessrule-05284912414586135547",
+    "businessrule-07376289294643129633",
+    "businessrule-07554086131159240838",
+    "businessrule-09527630769674812053",
+    "businessrule-09710935452747152124",
+    "businessrule-09965726926686583005",
+    "businessrule-11459402502484833685",
+    "businessrule-11674597249570802702",
+    "businessrule-12540995342195943001",
+    "businessrule-15417746115131960533",
+    "businessrule-16229847440499672368",
+    "businessrule-17641776170698884064",
+    "businessrule-18230757898637060853",
+    "businessrule-20341522967469767562",
+    "businessrule-22959538508130326801",
+    "businessrule-23440834431907337703",
+    "businessrule-24269573875592969564",
+    "businessrule-24413560949580370921",
+    "businessrule-24623125277050759553",
+    "businessrule-25143456587420753656",
+    "businessrule-25371901799273876158",
+    "businessrule-25475639870526854331",
+    "businessrule-25766167090873157702",
+    "businessrule-26710870928949391310",
+    "businessrule-26805667514169896082",
+    "businessrule-27318854358145723180",
+    "businessrule-28868424053274244047",
+    "businessrule-29495869201116213931",
+    "businessrule-29530054883116088403",
+    "businessrule-30168924374542565520",
+    "businessrule-31892600882792899810",
+    "businessrule-31928423765922463982",
+    "businessrule-32910542149714942665",
+    "businessrule-33872241894384295212",
+    "businessrule-34235271555130179948",
+    "businessrule-34301200927683901255",
+    "businessrule-35101409759930685557",
+    "businessrule-35533060170265013329",
+    "businessrule-35659935925800526059",
+    "businessrule-39179467487447053337",
+    "businessrule-40601471490811436933",
+    "businessrule-40646214351993665036",
+    "businessrule-40992022396445585276",
+    "businessrule-41440459272484897081",
+    "businessrule-43452052995976839356",
+    "businessrule-44253734408576510565",
+    "businessrule-46824143239519073718",
+    "businessrule-46883945724661990816",
+    "businessrule-46971412075927401870",
+    "businessrule-48352716870696272616",
+    "businessrule-48999549165964538717",
+    "businessrule-49748745950500666232",
+    "businessrule-50061101372023867676",
+    "businessrule-52005709614722807804",
+    "businessrule-53806388515964147870",
+    "businessrule-54518846821349856909"
+  ],
+  "layerIds": [
+    "layer-tooling",
+    "layer-domain",
+    "layer-contracts",
+    "layer-data",
+    "layer-api",
+    "layer-ui",
+    "layer-web",
+    "layer-e2e"
+  ],
+  "decisionIds": [
+    "integrations.decision-1",
+    "integrations.decision-2",
+    "integrations.decision-3",
+    "integrations.decision-4",
+    "integrations.decision-5",
+    "integrations.decision-6",
+    "integrations.decision-7",
+    "integrations.decision-8",
+    "scope.decision-9",
+    "scope.decision-10",
+    "scope.decision-11",
+    "scope.decision-12",
+    "scope.decision-13",
+    "scope.decision-14",
+    "scope.decision-15",
+    "scope.decision-16",
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12",
+    "base.decision-13",
+    "base.decision-14",
+    "base.decision-15",
+    "base.decision-16",
+    "base.decision-17",
+    "base.decision-18",
+    "base.decision-19",
+    "base.decision-20",
+    "base.decision-21",
+    "base.decision-22",
+    "base.decision-23",
+    "base.decision-24",
+    "base.decision-25",
+    "base.decision-26",
+    "base.decision-27",
+    "base.decision-28"
+  ],
+  "areaDecisionIds": [
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12"
+  ],
+  "rules": [
+    {
+      "id": "businessrule-02030966310880796596",
+      "says": "A category is orphaned when it has no parent among the loaded definitions although its definition names one.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 171,
+        "lastLine": 171
+      }
+    },
+    {
+      "id": "businessrule-44390406872239414183",
+      "says": "The computer counts as having the Group Policy infrastructure only when the number Windows gives for its edition equals one of 59 fixed codes in a list. The edition is asked for as Windows version 6.0, and the result of the call is not checked. When the call fails the edition stays 0, which is not in the list, so the computer counts as having none.",
+      "place": {
+        "file": "PolicyPlus/SystemInfo.vb",
+        "firstLine": 3,
+        "lastLine": 11
+      }
+    },
+    {
+      "id": "businessrule-87097618083601098949",
+      "says": "A category is empty when it holds no subcategories and no policies at all, counting hidden ones.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 174,
+        "lastLine": 174
+      }
+    },
+    {
+      "id": "businessrule-02094124658868396159",
+      "says": "A category's icon is chosen in this order: orphaned, then empty, then normal.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 177,
+        "lastLine": 183
+      }
+    },
+    {
+      "id": "businessrule-05284912414586135547",
+      "says": "A name or description written as \"$(string.<id>)\" shows the language file's text for that id; an unknown id shows the code itself; any other text is shown as written; an empty value stays empty.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 195,
+        "lastLine": 199
+      }
+    },
+    {
+      "id": "businessrule-07376289294643129633",
+      "says": "For a policy's list elements, a marked-for-deletion list counts as one deleted element, and a list that holds any values counts as a present element and cancels that deletion.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 40,
+        "lastLine": 49
+      }
+    },
+    {
+      "id": "businessrule-07554086131159240838",
+      "says": "A policy's lists of on-values and off-values count as enabled or disabled evidence for each value in them that is present, using the list's own key when it names one.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 11,
+        "lastLine": 18
+      }
+    },
+    {
+      "id": "businessrule-09527630769674812053",
+      "says": "A language file's text table is read only from its first text table, and each text is kept under its id; when the same text id appears twice, the file is refused as invalid and its template file is not loaded.",
+      "place": {
+        "file": "PolicyPlus/AdmlFile.vb",
+        "firstLine": 29,
+        "lastLine": 37
+      }
+    },
+    {
+      "id": "businessrule-09710935452747152124",
+      "says": "A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 196,
+        "lastLine": 200
+      }
+    },
+    {
+      "id": "businessrule-09965726926686583005",
+      "says": "A policy is visible only if it applies to a chosen area (user, computer or both). With \"Only Filtered Policies\" on, it must also pass the filter for a chosen area it applies to; passing for either one is enough.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 204,
+        "lastLine": 215
+      }
+    },
+    {
+      "id": "businessrule-11459402502484833685",
+      "says": "A policy shows the 'supported on' rule its reference names, found in this load or earlier ones; when none is found it has none.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 159,
+        "lastLine": 160
+      }
+    },
+    {
+      "id": "businessrule-11674597249570802702",
+      "says": "With both areas shown, a policy that applies to both areas shows its common state followed by \"(2)\" when both match, the computer state followed by \"(C)\" when only the user is Not Configured, the user state followed by \"(U)\" when only the computer is Not Configured, and \"Mixed\" otherwise.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 234,
+        "lastLine": 247
+      }
+    },
+    {
+      "id": "businessrule-12540995342195943001",
+      "says": "A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 414,
+        "lastLine": 426
+      }
+    },
+    {
+      "id": "businessrule-15417746115131960533",
+      "says": "A category's explanation is optional. A category with any content inside it (even a comment) must contain a parent entry with a reference; otherwise the template is refused as invalid.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 105,
+        "lastLine": 110
+      }
+    },
+    {
+      "id": "businessrule-16229847440499672368",
+      "says": "When nothing is selected, the title and support lines are hidden and the pane reads \"Select an item to see its description.\".",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 146,
+        "lastLine": 148
+      }
+    },
+    {
+      "id": "businessrule-17641776170698884064",
+      "says": "A value in a policy file counts as marked for deletion when a deletion marker names it, when the key has a clear-all marker, or when a delete-values list for the key names it, regardless of case. Entries are examined in sorted order, and a value whose name sorts after the marker is stored as present and cancels the deletion, whenever it was written and whichever marker kind came before.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 118,
+        "lastLine": 135
+      }
+    },
+    {
+      "id": "businessrule-18230757898637060853",
+      "says": "Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 139,
+        "lastLine": 149
+      }
+    },
+    {
+      "id": "businessrule-20341522967469767562",
+      "says": "A number box takes default value 1, shows its up-down spinner and steps by 1 unless the language file says otherwise; an unreadable attribute value falls back to the same defaults.",
+      "place": {
+        "file": "PolicyPlus/AdmlFile.vb",
+        "firstLine": 54,
+        "lastLine": 58
+      }
+    },
+    {
+      "id": "businessrule-22959538508130326801",
+      "says": "A policy's switched-on and switched-off effects are read from its enabled and disabled values and lists; a list entry names a value and optionally its own key, falling back to the list's default key.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 133,
+        "lastLine": 166
+      }
+    },
+    {
+      "id": "businessrule-23440834431907337703",
+      "says": "A number option accepts 0 to 4,294,967,295 unless the template sets other limits, overwrites existing values unless marked soft, and is stored as a number unless marked as text; unreadable attribute values fall back to these defaults.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 199,
+        "lastLine": 205
+      }
+    },
+    {
+      "id": "businessrule-24269573875592969564",
+      "says": "A support rule entry is linked to the product its reference names; when no such product exists it is linked to the support rule of that name; when neither exists it stays unlinked.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 145,
+        "lastLine": 151
+      }
+    },
+    {
+      "id": "businessrule-24413560949580370921",
+      "says": "A policy takes its category and its 'supported on' rule from the references in its own content, and has options only when it contains an options section.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 188,
+        "lastLine": 195
+      }
+    },
+    {
+      "id": "businessrule-24623125277050759553",
+      "says": "A category whose parent is named is attached under that parent, found among items of this load or of files loaded earlier; when the parent is not found, the category has no parent but is still listed among the top-level categories.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 128,
+        "lastLine": 136
+      }
+    },
+    {
+      "id": "businessrule-25143456587420753656",
+      "says": "An XML attribute that is absent gives nothing.",
+      "place": {
+        "file": "PolicyPlus/XmlExtensions.vb",
+        "firstLine": 6,
+        "lastLine": 8
+      }
+    },
+    {
+      "id": "businessrule-25371901799273876158",
+      "says": "When a template declares no target namespace, loading the folder stops at once with an error: the files after it are not read, nothing is built, and the person sees the error text (a start-up load also discards the workspace).",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 44,
+        "lastLine": 44
+      }
+    },
+    {
+      "id": "businessrule-25475639870526854331",
+      "says": "A policy gets a settings screen layout only when the template names one, the name is written as \"$(presentation.<id>)\", and the language file holds a layout with that id; in every other case the policy has none.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 122,
+        "lastLine": 122
+      }
+    },
+    {
+      "id": "businessrule-25766167090873157702",
+      "says": "For any other element (number, text, choice, multi-line text), a value marked for deletion counts as a deleted element and a value that is present counts as a present element.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 62,
+        "lastLine": 68
+      }
+    },
+    {
+      "id": "businessrule-26710870928949391310",
+      "says": "A registry key counts as a policy key when it is one of the three policy branches (software\\policies, software\\microsoft\\windows\\currentversion\\policies, system\\currentcontrolset\\policies) or lies below one, regardless of case.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 412,
+        "lastLine": 415
+      }
+    },
+    {
+      "id": "businessrule-26805667514169896082",
+      "says": "A reference containing a colon uses the namespace the template declared for its prefix; with an unknown prefix it is taken as already complete; a reference without a colon belongs to the template's own namespace.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 213,
+        "lastLine": 223
+      }
+    },
+    {
+      "id": "businessrule-27318854358145723180",
+      "says": "A check box starts unticked unless the language file marks it ticked.",
+      "place": {
+        "file": "PolicyPlus/AdmlFile.vb",
+        "firstLine": 74,
+        "lastLine": 74
+      }
+    },
+    {
+      "id": "businessrule-28868424053274244047",
+      "says": "The live registry never reports a value as marked for deletion.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 409,
+        "lastLine": 411
+      }
+    },
+    {
+      "id": "businessrule-29495869201116213931",
+      "says": "A policy with a registry value of its own counts as enabled evidence when that value holds its 'on' value, which is the number 1 when the template gives none, and as disabled evidence when it holds its 'off' value or is marked for deletion when the template gives none.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 20,
+        "lastLine": 31
+      }
+    },
+    {
+      "id": "businessrule-29530054883116088403",
+      "says": "Reading a value from a policy file gives nothing when the value is absent or marked for deletion.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 114,
+        "lastLine": 117
+      }
+    },
+    {
+      "id": "businessrule-30168924374542565520",
+      "says": "A value in the live registry counts as present when its key exists and, unless the value name is empty, the key lists a value of that name, regardless of case. An empty name means the key itself.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 384,
+        "lastLine": 390
+      }
+    },
+    {
+      "id": "businessrule-31892600882792899810",
+      "says": "A policy option of any kind other than number, yes/no, text, list, choice or multi-line text is dropped without notice.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 244,
+        "lastLine": 254
+      }
+    },
+    {
+      "id": "businessrule-31928423765922463982",
+      "says": "A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 90,
+        "lastLine": 95
+      }
+    },
+    {
+      "id": "businessrule-32910542149714942665",
+      "says": "When the chosen language file cannot be parsed as XML, the template is refused with \"The ADML XML couldn't be parsed: <detail>\"; any other read problem gives \"The ADML is invalid: <detail>\".",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 64,
+        "lastLine": 70
+      }
+    },
+    {
+      "id": "businessrule-33872241894384295212",
+      "says": "If any element is present, the elements add their count to the enabled evidence; only when none is present do deleted elements add to the disabled evidence.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 70,
+        "lastLine": 74
+      }
+    },
+    {
+      "id": "businessrule-34235271555130179948",
+      "says": "When loading definitions reports no problems nothing is shown; otherwise the person sees \"Errors were encountered while adding administrative templates to the workspace.\" with each problem, and, only where a choice is wanted, is asked \"Continue trying to use this workspace?\".",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 471,
+        "lastLine": 475
+      }
+    },
+    {
+      "id": "businessrule-34301200927683901255",
+      "says": "A support definition met a second time anywhere in one evaluation counts as not met, because the list of definitions seen is never emptied. Two entries that point at the same definition, with no cycle, make the second one not met.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 401,
+        "lastLine": 402
+      }
+    },
+    {
+      "id": "businessrule-35101409759930685557",
+      "says": "A yes/no option takes its registry effect for true and false from true and false values and lists.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 206,
+        "lastLine": 209
+      }
+    },
+    {
+      "id": "businessrule-35533060170265013329",
+      "says": "With both areas shown, the comment column is empty when neither area has a comment, shows \"(multiple)\" when both have one, and otherwise shows the single comment.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 270,
+        "lastLine": 281
+      }
+    },
+    {
+      "id": "businessrule-35659935925800526059",
+      "says": "A text option allows 255 characters, is optional, is stored as plain text and overwrites existing values unless the template says otherwise; unreadable attribute values fall back to these defaults.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 210,
+        "lastLine": 216
+      }
+    },
+    {
+      "id": "businessrule-39179467487447053337",
+      "says": "A policy is listed under the category its reference names, found in this load or earlier ones; when that category is not found the policy is kept in the policy list but belongs to no category.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 152,
+        "lastLine": 158
+      }
+    },
+    {
+      "id": "businessrule-40601471490811436933",
+      "says": "A policy's comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 288,
+        "lastLine": 293
+      }
+    },
+    {
+      "id": "businessrule-40646214351993665036",
+      "says": "When a template file cannot be parsed as XML, it is refused with the message \"Couldn't load <path>: The ADMX XML couldn't be parsed: <detail>.\"; any other read problem is refused with \"The ADMX is invalid: <detail>\".",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 37,
+        "lastLine": 43
+      }
+    },
+    {
+      "id": "businessrule-40992022396445585276",
+      "says": "A drop-down list has a preselected item only when the language file names one; otherwise none is preselected.",
+      "place": {
+        "file": "PolicyPlus/AdmlFile.vb",
+        "firstLine": 94,
+        "lastLine": 94
+      }
+    },
+    {
+      "id": "businessrule-41440459272484897081",
+      "says": "Products form three levels: a product, its major versions and their minor versions; deeper levels are not read, and each version must carry a version index or the file is refused as invalid.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 74,
+        "lastLine": 98
+      }
+    },
+    {
+      "id": "businessrule-43452052995976839356",
+      "says": "Only labels, number boxes, text boxes, check boxes, combo boxes, drop-down lists, list boxes and multi-line text boxes are kept in a screen layout; any other control in the language file is dropped without notice.",
+      "place": {
+        "file": "PolicyPlus/AdmlFile.vb",
+        "firstLine": 106,
+        "lastLine": 110
+      }
+    },
+    {
+      "id": "businessrule-44253734408576510565",
+      "says": "When the structures are built, all new categories, products, support rules and policies join the final lists and the staged items are cleared, so loading further files adds to what is already available.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 163,
+        "lastLine": 181
+      }
+    },
+    {
+      "id": "businessrule-46824143239519073718",
+      "says": "A value in a policy file counts as present only if it is stored and not marked for deletion.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 110,
+        "lastLine": 113
+      }
+    },
+    {
+      "id": "businessrule-46883945724661990816",
+      "says": "A choice option is optional unless marked required. Each choice keeps whichever of a single registry value and a list of values it contains, both when both are present; a choice with neither is accepted and changes nothing.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 225,
+        "lastLine": 243
+      }
+    },
+    {
+      "id": "businessrule-46971412075927401870",
+      "says": "A policy's state in one area reads \"Enabled\", \"Disabled\", \"Not Configured\" or \"Unknown\"; the computer source is read for the computer area and the user source for any other.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 257,
+        "lastLine": 266
+      }
+    },
+    {
+      "id": "businessrule-48352716870696272616",
+      "says": "A registry value in a template is a delete marker, a number or a text, decided by the first of those it contains; a value with none of them is treated as a delete marker.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 115,
+        "lastLine": 132
+      }
+    },
+    {
+      "id": "businessrule-48999549165964538717",
+      "says": "Entries of a combo box or drop-down list are sorted unless the language file says not to sort them.",
+      "place": {
+        "file": "PolicyPlus/AdmlFile.vb",
+        "firstLine": 79,
+        "lastLine": 79
+      }
+    },
+    {
+      "id": "businessrule-49748745950500666232",
+      "says": "A support entry for a product that has versions beneath it, whether a version range or a plain entry for a parent product that is not itself chosen, counts as met when any version in its range, or a sub-product directly beneath one, is chosen. The range runs from the entry's minimum (0 if none) to its maximum (the highest version if none). A range entry never matches on its own product, and a product with no versions beneath it never matches this way.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 386,
+        "lastLine": 396
+      }
+    },
+    {
+      "id": "businessrule-50061101372023867676",
+      "says": "An option's registry value name is taken from its own value name, except for a list option that has a value prefix attribute: the prefix is used and the own value name only when that prefix is empty. A list option counts as prefixed whenever the attribute is present, even if empty.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 248,
+        "lastLine": 250
+      }
+    },
+    {
+      "id": "businessrule-52005709614722807804",
+      "says": "When the caller asks for 'any' matching, a support definition whose logic is all-of needs every entry met, and any other definition needs one entry met. When the caller does not ask for 'any', every definition, all-of included, is met by one entry. A definition with no entries, or none met, is met only when all are required. Plain product entries are checked before nested definitions.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 403,
+        "lastLine": 421
+      }
+    },
+    {
+      "id": "businessrule-53806388515964147870",
+      "says": "The category tree selection follows the category shown in the right pane.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 139,
+        "lastLine": 141
+      }
+    },
+    {
+      "id": "businessrule-54518846821349856909",
+      "says": "The right pane lists the chosen category in this order: an \"Up: <parent name>\" row marked \"Parent\" when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 113,
+        "lastLine": 129
+      }
+    }
+  ]
+}

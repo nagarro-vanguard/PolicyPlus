@@ -168,25 +168,28 @@ const rulesOf = (
 };
 
 /**
- * The slice of a screen: what its actions run, followed through calls into shared code but not into other screens,
- * which are named as the screens it opens; and the screens that open it.
- * @param payloads everything the analysis wrote
- * @param key the screen's address
- * @returns the slice; undefined when no screen has that address
+ * The text a surface with no window is called in a bundle and in its file name.
  */
-export const screenSlice = (payloads: Payloads, key: string): Slice | undefined => {
-    const screen = payloads.system.screens.find((each) => each.key === key);
-    if (screen === undefined) {
-        return undefined;
-    }
+export const noWindow = "Entry points without a window";
+
+/**
+ * The slice of a screen, from the screen as it is restricted to what the slice covers.
+ * @param payloads everything the analysis wrote
+ * @param screen the screen, with its actions and capabilities already restricted
+ * @param title the slice's title
+ * @param restricted whether the screen is cut to one capability, so that neighbours are cut with it
+ * @returns the slice
+ */
+const sliceOfScreen = (payloads: Payloads, screen: Screen, title: string, restricted: boolean): Slice => {
     const byFile = screensByFile(payloads);
     const { reached, opens, blocks, presenters } = closureOf(payloads, screen, byFile);
     const ownFiles = new Set(screen.files.flatMap((file) => [file, designerOf(file)]));
     const capabilities = payloads.capabilities.filter((each) => screen.capabilities.includes(each.capability.id));
     const wanted = new Set(screen.actionIds);
+    const openedBy = openedByOf(payloads, screen, { byFile, blocks, presenters, ownFiles });
     return {
         kind: "screen",
-        title: screen.name,
+        title,
         capabilities,
         screens: [screen],
         blocks: reached,
@@ -199,7 +202,104 @@ export const screenSlice = (payloads: Payloads, key: string): Slice | undefined 
         ),
         rules: rulesOf(payloads, screen, reached, ownFiles),
         opens,
-        openedBy: openedByOf(payloads, screen, { byFile, blocks, presenters, ownFiles }),
+        openedBy: restricted
+            ? openedBy.filter((each) => each.via.capabilities.some((id) => screen.capabilities.includes(id)))
+            : openedBy,
         dedicated: (file) => ownFiles.has(file),
     };
+};
+
+/**
+ * The slice of a screen: what its actions run, followed through calls into shared code but not into other screens,
+ * which are named as the screens it opens; and the screens that open it. With a capability, only the actions that
+ * capability holds on the screen, and the rules and neighbours those reach.
+ * @param payloads everything the analysis wrote
+ * @param key the screen's address
+ * @param capabilityId the record id of the capability to restrict the screen to; all its capabilities when omitted
+ * @returns the slice; undefined when no screen has that address, or the capability holds no action of it
+ */
+export const screenSlice = (payloads: Payloads, key: string, capabilityId?: string): Slice | undefined => {
+    const screen = payloads.system.screens.find((each) => each.key === key);
+    if (screen === undefined) {
+        return undefined;
+    }
+    if (capabilityId === undefined) {
+        return sliceOfScreen(payloads, screen, screen.name, false);
+    }
+    const capability = payloads.capabilities.find((each) => each.capability.id === capabilityId);
+    const mine = new Set(
+        capability === undefined ? [] : capability.layers.flatMap((layer) => layer.actions.map((action) => action.id)),
+    );
+    const actionIds = screen.actionIds.filter((id) => mine.has(id));
+    return capability === undefined || actionIds.length === 0
+        ? undefined
+        : sliceOfScreen(
+              payloads,
+              { ...screen, capabilities: [capabilityId], actionIds },
+              `${screen.name}, as ${capability.capability.name}`,
+              true,
+          );
+};
+
+/**
+ * The slice of one surface of one capability: the actions the capability holds in the container named as the surface
+ * (the code's own name for the window), or those no container holds for `Entry points without a window`.
+ * @param payloads everything the analysis wrote
+ * @param surface the surface's name, as the actions name their screen, or `Entry points without a window`
+ * @param capabilityId the capability's record id
+ * @returns the slice; undefined when the capability holds no action there
+ */
+export const surfaceSlice = (payloads: Payloads, surface: string, capabilityId: string): Slice | undefined => {
+    const capability = payloads.capabilities.find((each) => each.capability.id === capabilityId);
+    const container = surface === noWindow ? "" : surface;
+    const actions =
+        capability === undefined
+            ? []
+            : capability.layers.flatMap((layer) => layer.actions.filter((action) => action.screen === container));
+    if (capability === undefined || actions.length === 0) {
+        return undefined;
+    }
+    const ids = new Set(actions.map((action) => action.id));
+    const matching = payloads.system.screens.filter((each) => each.actionIds.some((id) => ids.has(id)));
+    const [first] = matching;
+    const files = [...new Set(matching.flatMap((each) => each.files))];
+    const screen: Screen = {
+        ...(first === undefined ? emptyScreen : first),
+        key: first === undefined ? "" : first.key,
+        name: first === undefined ? surface : first.name,
+        files: first === undefined ? [...new Set(actions.map((action) => action.place.file))] : files,
+        capabilities: [capabilityId],
+        actionIds: [...ids],
+    };
+    return sliceOfScreen(payloads, screen, `${screen.name}, as ${capability.capability.name}`, true);
+};
+
+const emptyScreen: Screen = {
+    key: "",
+    name: noWindow,
+    purpose: "",
+    files: [],
+    capabilities: [],
+    actionIds: [],
+    actions: 0,
+    rules: 0,
+    layersTouched: [],
+    context: {
+        scope: "",
+        inside: [],
+        insideNotShown: 0,
+        insideLabel: "",
+        lookFirst: [],
+        lookFirstNotShown: 0,
+        layers: [],
+        saves: [],
+        reads: [],
+        rules: [],
+        rulesNotShown: 0,
+        rulesTotal: 0,
+        unconfirmed: [],
+        notFollowed: [],
+        commit: "",
+        text: "",
+    },
 };

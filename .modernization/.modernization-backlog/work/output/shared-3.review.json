@@ -1,0 +1,8 @@
+{"read":12,"challenges":[
+{"record":0,"says":"The writability criterion ('no writing' when the write test failed, 'no commit' when the file could not be opened for writing) keeps legacy live-registry and disk-open conditions that integrations.decision-1 and decision-2 remove, cites no decision, and does not say what fails for an uploaded or stored source."},
+{"record":1,"says":"The criterion that registry-style sources 'lose nothing' flattens the rule (a registry source applies changes at once, a user hive file when it is closed) and cites no decision although decision-2 drops the live registry, so what is lost for an imported registry or hive source is unstated."},
+{"record":3,"says":"Criteria say 'when it is stored' for marking, forgetting and clearing, wording a product owner cannot follow; the rule describes the change made to the policy file's entries."},
+{"record":4,"says":"The '**delvals' criterion drops the rule's sentence that clearing a live registry key removes only that key's own values."},
+{"record":5,"says":"The forget and clear criteria describe the live registry's behaviour but do not cite integrations.decision-2 or say they apply to the imported registry source model the story is about."},
+{"record":9,"says":"The edit-accepted criterion says 'nothing is written to disk until Save', which contradicts decision-1 (the service reads and writes no folder) and does not say what Save stores or downloads."}
+]}

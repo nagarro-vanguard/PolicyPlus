@@ -1,0 +1,661 @@
+{
+  "kind": "shared",
+  "shared": [
+    "businessrule-55193519950925403263",
+    "businessrule-56421390704826486738",
+    "businessrule-58670284456856579605",
+    "businessrule-59268653642646332356",
+    "businessrule-60385862679195390671",
+    "businessrule-62728858792696794889",
+    "businessrule-66701495026848575269",
+    "businessrule-67323359061601595450",
+    "businessrule-67539343519248421601",
+    "businessrule-68278299005201189825",
+    "businessrule-69364776950274199547",
+    "businessrule-69876963387177556361",
+    "businessrule-70331897906623822249",
+    "businessrule-70397490486289456229",
+    "businessrule-70425663320377904356",
+    "businessrule-71909773168029429916",
+    "businessrule-73782132825452925601",
+    "businessrule-75568512748421119593",
+    "businessrule-77153890827857678995",
+    "businessrule-77397977946778263418",
+    "businessrule-79960316131030112593",
+    "businessrule-80037556468037401208",
+    "businessrule-81760746419124272603",
+    "businessrule-83755288267226589422",
+    "businessrule-84649532972995606012",
+    "businessrule-86313704517800761850",
+    "businessrule-87686960346106148106",
+    "businessrule-89165707538784213793",
+    "businessrule-89513911810275647919",
+    "businessrule-90470730563627765974",
+    "businessrule-90575686774382821065",
+    "businessrule-91228574547678345469",
+    "businessrule-92573318973236627036",
+    "businessrule-92873738128602220135",
+    "businessrule-92965345094444319678",
+    "businessrule-93437714727587946479",
+    "businessrule-93507723834804807958",
+    "businessrule-95679837516811308115",
+    "businessrule-96701855986906093783",
+    "businessrule-97000243539037627331",
+    "businessrule-97301799709818271508",
+    "businessrule-97390301066419776959",
+    "businessrule-97862941341357225531",
+    "businessrule-98117161588141132501",
+    "businessrule-99096323836097983665",
+    "businessrule-99139491988760691407",
+    "businessrule-06218920206107794280",
+    "businessrule-29585332630928853779",
+    "businessrule-31889487085995982343",
+    "businessrule-34447675520768722859",
+    "businessrule-35899140497190862562",
+    "businessrule-39262656033285451423",
+    "businessrule-46972642019161394212",
+    "businessrule-49395771262191850050",
+    "businessrule-50808386816006011599",
+    "businessrule-51029550915449645879",
+    "businessrule-51554818045857630746",
+    "businessrule-59631775004799082543",
+    "businessrule-62563112935081932578",
+    "businessrule-67456626752221980743"
+  ],
+  "layerIds": [
+    "layer-tooling",
+    "layer-domain",
+    "layer-contracts",
+    "layer-data",
+    "layer-api",
+    "layer-ui",
+    "layer-web",
+    "layer-e2e"
+  ],
+  "decisionIds": [
+    "integrations.decision-1",
+    "integrations.decision-2",
+    "integrations.decision-3",
+    "integrations.decision-4",
+    "integrations.decision-5",
+    "integrations.decision-6",
+    "integrations.decision-7",
+    "integrations.decision-8",
+    "scope.decision-9",
+    "scope.decision-10",
+    "scope.decision-11",
+    "scope.decision-12",
+    "scope.decision-13",
+    "scope.decision-14",
+    "scope.decision-15",
+    "scope.decision-16",
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12",
+    "base.decision-13",
+    "base.decision-14",
+    "base.decision-15",
+    "base.decision-16",
+    "base.decision-17",
+    "base.decision-18",
+    "base.decision-19",
+    "base.decision-20",
+    "base.decision-21",
+    "base.decision-22",
+    "base.decision-23",
+    "base.decision-24",
+    "base.decision-25",
+    "base.decision-26",
+    "base.decision-27",
+    "base.decision-28"
+  ],
+  "areaDecisionIds": [
+    "base.decision-9",
+    "base.decision-10",
+    "base.decision-11",
+    "base.decision-12"
+  ],
+  "rules": [
+    {
+      "id": "businessrule-55193519950925403263",
+      "says": "For a selected or highlighted category the pane shows its title, \"This category contains N policies and M subcategories.\" (\"The selected category\" when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 158,
+        "lastLine": 163
+      }
+    },
+    {
+      "id": "businessrule-56421390704826486738",
+      "says": "A value counts as present when: for a deletion marker, it is marked for deletion; for a number, it exists as a whole number and equals the expected number; for text, it exists as text and equals the expected text. A value of the wrong kind is not present.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 87,
+        "lastLine": 105
+      }
+    },
+    {
+      "id": "businessrule-58670284456856579605",
+      "says": "The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 863,
+        "lastLine": 870
+      }
+    },
+    {
+      "id": "businessrule-59268653642646332356",
+      "says": "An item's unique name is its template's namespace, a colon and its own name, so equal names in different templates stay apart.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 209,
+        "lastLine": 209
+      }
+    },
+    {
+      "id": "businessrule-60385862679195390671",
+      "says": "A list option replaces other entries of its key unless marked additive, stores plain text unless marked expandable, numbers entries automatically unless the template says the person names them, and counts as prefixed only when a value prefix is given.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 217,
+        "lastLine": 224
+      }
+    },
+    {
+      "id": "businessrule-62728858792696794889",
+      "says": "A control keeps the reference id the language file gives it, which ties it to the matching setting option in the template file; a control without one has no id.",
+      "place": {
+        "file": "PolicyPlus/AdmlFile.vb",
+        "firstLine": 107,
+        "lastLine": 107
+      }
+    },
+    {
+      "id": "businessrule-66701495026848575269",
+      "says": "A child product (major or minor version) is attached under its parent product, which must be defined in the same template file; only products without a parent are listed as top-level products.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 137,
+        "lastLine": 143
+      }
+    },
+    {
+      "id": "businessrule-67323359061601595450",
+      "says": "A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 411,
+        "lastLine": 413
+      }
+    },
+    {
+      "id": "businessrule-67539343519248421601",
+      "says": "A REG file cannot be used as a source for checking whether a value will be deleted: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 220,
+        "lastLine": 222
+      }
+    },
+    {
+      "id": "businessrule-68278299005201189825",
+      "says": "A policy applies to computers when its class is \"Machine\", to users when \"User\", and to both for any other class value.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 174,
+        "lastLine": 182
+      }
+    },
+    {
+      "id": "businessrule-69364776950274199547",
+      "says": "When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 109,
+        "lastLine": 112
+      }
+    },
+    {
+      "id": "businessrule-69876963387177556361",
+      "says": "When no language file is found in any of those places, the template file is refused with \"The corresponding ADML is missing\" and none of its content is loaded.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 62,
+        "lastLine": 62
+      }
+    },
+    {
+      "id": "businessrule-70331897906623822249",
+      "says": "A policy passes the filter only when it passes every active part of it.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 411,
+        "lastLine": 434
+      }
+    },
+    {
+      "id": "businessrule-70397490486289456229",
+      "says": "When a template file is refused with a reported failure (unparsable, invalid, namespace already owned, or no usable language file), it is skipped and the failure is listed; the other files in the folder still load and the structures are built from those that loaded.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 22,
+        "lastLine": 26
+      }
+    },
+    {
+      "id": "businessrule-70425663320377904356",
+      "says": "Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 231,
+        "lastLine": 239
+      }
+    },
+    {
+      "id": "businessrule-71909773168029429916",
+      "says": "For a checkbox element: a value marked for deletion counts as one deleted element. Otherwise, each present off value (or off-list value) counts a tenth of a deleted element, and each present on value (or on-list value) counts one present element. A checkbox whose template declares no on value or on list adds no present evidence, even if it holds 1.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 50,
+        "lastLine": 61
+      }
+    },
+    {
+      "id": "businessrule-73782132825452925601",
+      "says": "Closing the workspace or replacing it with a new one discards all loaded definitions and the previous search results.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 391,
+        "lastLine": 392
+      }
+    },
+    {
+      "id": "businessrule-75568512748421119593",
+      "says": "For a selected policy the information pane shows its title, \"(no requirements information)\" when it has no support rule or \"Requirements:\" plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 149,
+        "lastLine": 157
+      }
+    },
+    {
+      "id": "businessrule-77153890827857678995",
+      "says": "A policy's icon is chosen in this order: preference, then plain when it has no configurable elements, then \"extra configuration\" when it has some.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 186,
+        "lastLine": 192
+      }
+    },
+    {
+      "id": "businessrule-77397977946778263418",
+      "says": "A policy applies to an area when its definition declares that area; a policy declared for both applies to each.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 438,
+        "lastLine": 438
+      }
+    },
+    {
+      "id": "businessrule-79960316131030112593",
+      "says": "A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 427,
+        "lastLine": 430
+      }
+    },
+    {
+      "id": "businessrule-80037556468037401208",
+      "says": "When a template file's namespace is already held by a template file loaded earlier, it is refused with \"The <namespace> namespace is already owned by a different ADMX file\", so the same file cannot be added twice.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 44,
+        "lastLine": 44
+      }
+    },
+    {
+      "id": "businessrule-81760746419124272603",
+      "says": "When a policy lists no supported-on information, it counts as supported only if the caller allows unlisted policies. The same applies to a support entry that names no known product.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 382,
+        "lastLine": 384
+      }
+    },
+    {
+      "id": "businessrule-83755288267226589422",
+      "says": "A template's superseded-ADM file name and minimum language revision are read when present; a superseded entry without a file name, or a minimum revision that is missing or not a number, refuses the template as invalid.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 30,
+        "lastLine": 33
+      }
+    },
+    {
+      "id": "businessrule-84649532972995606012",
+      "says": "A language file's screen layouts are read only from its first presentation table; when the same layout id appears twice, the file is refused as invalid and its template file is not loaded.",
+      "place": {
+        "file": "PolicyPlus/AdmlFile.vb",
+        "firstLine": 40,
+        "lastLine": 46
+      }
+    },
+    {
+      "id": "businessrule-86313704517800761850",
+      "says": "A REG file cannot be used as a source for reading a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 217,
+        "lastLine": 219
+      }
+    },
+    {
+      "id": "businessrule-87686960346106148106",
+      "says": "Only files directly in the chosen folder whose names end in .admx (in any letter case) are loaded as templates; subfolders and other files are ignored.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 20,
+        "lastLine": 21
+      }
+    },
+    {
+      "id": "businessrule-89165707538784213793",
+      "says": "An XML attribute that is absent, or whose text is not valid for the type of the stated default, gives that default.",
+      "place": {
+        "file": "PolicyPlus/XmlExtensions.vb",
+        "firstLine": 9,
+        "lastLine": 16
+      }
+    },
+    {
+      "id": "businessrule-89513911810275647919",
+      "says": "With both areas shown, a policy that applies to one area shows that area's state followed by \"(C)\" for computer or \"(U)\" for user. With a single area shown, only that area's state is shown, without a suffix.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 248,
+        "lastLine": 252
+      }
+    },
+    {
+      "id": "businessrule-90470730563627765974",
+      "says": "A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 320,
+        "lastLine": 336
+      }
+    },
+    {
+      "id": "businessrule-90575686774382821065",
+      "says": "When both a template file and its language file load, the template's categories, products, support rules and policies are staged for the next build and the pair is recorded as loaded under the template's namespace.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 72,
+        "lastLine": 77
+      }
+    },
+    {
+      "id": "businessrule-91228574547678345469",
+      "says": "The namespace of a template is the one listed as its target; each prefix a template declares must be unique, and a repeated prefix refuses the file as invalid.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 24,
+        "lastLine": 29
+      }
+    },
+    {
+      "id": "businessrule-92573318973236627036",
+      "says": "The language file for a template is taken from the subfolder named exactly by the language code if it holds this template's file; else from the first subfolder whose name starts with the same language part (before the dash, compared with capital letters mattering) that holds this template's file; else from the en-US subfolder if it holds it. A folder lacking the file is skipped.",
+      "place": {
+        "file": "PolicyPlus/AdmxBundle.vb",
+        "firstLine": 46,
+        "lastLine": 61
+      }
+    },
+    {
+      "id": "businessrule-92873738128602220135",
+      "says": "A policy is Enabled when enabled evidence exceeds disabled evidence, Disabled when disabled exceeds enabled, Not configured when there is no evidence either way, and Unclear when both are equal and above zero.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 77,
+        "lastLine": 85
+      }
+    },
+    {
+      "id": "businessrule-92965345094444319678",
+      "says": "The language for definition text is the saved language code, or the computer's own language when none is saved.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 478,
+        "lastLine": 478
+      }
+    },
+    {
+      "id": "businessrule-93437714727587946479",
+      "says": "When a language file has no policy resources section, or its revision is missing or not a number, the file is refused as invalid and its template file is not loaded.",
+      "place": {
+        "file": "PolicyPlus/AdmlFile.vb",
+        "firstLine": 18,
+        "lastLine": 19
+      }
+    },
+    {
+      "id": "businessrule-93507723834804807958",
+      "says": "A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\\policies, software\\microsoft\\windows\\currentversion\\policies and system\\currentcontrolset\\policies.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 296,
+        "lastLine": 296
+      }
+    },
+    {
+      "id": "businessrule-95679837516811308115",
+      "says": "After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 100,
+        "lastLine": 103
+      }
+    },
+    {
+      "id": "businessrule-96701855986906093783",
+      "says": "A REG file cannot be used as a source for listing a key's values: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 223,
+        "lastLine": 225
+      }
+    },
+    {
+      "id": "businessrule-97000243539037627331",
+      "says": "Reading a value from the live registry gives nothing when the key is missing. Signed numbers are returned as the unsigned numbers policies use, and environment variables in text are not expanded.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 391,
+        "lastLine": 403
+      }
+    },
+    {
+      "id": "businessrule-97301799709818271508",
+      "says": "A support rule is 'any of' when its first logic element is \"or\", 'all of' when it is \"and\", and blank otherwise; only that first logic element is read, each reference or range in it becomes an entry, and a range may carry a minimum and maximum version.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 42,
+        "lastLine": 69
+      }
+    },
+    {
+      "id": "businessrule-97390301066419776959",
+      "says": "Clearing the search forgets the results, so reopening them reports that no search has been run.",
+      "place": {
+        "file": "PolicyPlus/FindResults.vb",
+        "firstLine": 38,
+        "lastLine": 41
+      }
+    },
+    {
+      "id": "businessrule-97862941341357225531",
+      "says": "A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 431,
+        "lastLine": 433
+      }
+    },
+    {
+      "id": "businessrule-98117161588141132501",
+      "says": "A template file is refused as invalid when any of these is missing or unreadable: the policy definitions section; a namespace entry's prefix or namespace; a superseded-ADM file name; a minimum revision (missing or not a number); a support rule's name or display name; a support reference or range without its reference, or a version bound that is not a whole number; a product's name, display name or version index; a category's name or display name; a category's parent entry or its reference when the category has content; a policy's name, display name, key or class; a policy's category or supported-on reference; a number value's value; a list item's value name; a choice item's display name; or an option's id.",
+      "place": {
+        "file": "PolicyPlus/AdmxFile.vb",
+        "firstLine": 20,
+        "lastLine": 33
+      }
+    },
+    {
+      "id": "businessrule-99096323836097983665",
+      "says": "A REG file cannot be used as a source for asking whether a value is present: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.",
+      "place": {
+        "file": "PolicyPlus/RegFile.vb",
+        "firstLine": 214,
+        "lastLine": 216
+      }
+    },
+    {
+      "id": "businessrule-99139491988760691407",
+      "says": "A support entry for a product counts as met in two cases. The entry is not a version range and that exact product is among the chosen products. Or the product has versions beneath it, and any of those versions or their sub-products is chosen, even when the product itself is not.",
+      "place": {
+        "file": "PolicyPlus/PolicyProcessing.vb",
+        "firstLine": 385,
+        "lastLine": 385
+      }
+    },
+    {
+      "id": "businessrule-06218920206107794280",
+      "says": "A Scratch space source is an empty policy store that can be changed but is never saved anywhere.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 80,
+        "lastLine": 81
+      }
+    },
+    {
+      "id": "businessrule-29585332630928853779",
+      "says": "The source name shown in the status bar is Local GPO, Registry, File, User GPO, User hive or Scratch space, followed by the path or SID in brackets when there is one.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 218,
+        "lastLine": 236
+      }
+    },
+    {
+      "id": "businessrule-31889487085995982343",
+      "says": "No comment of a comment file can be read when any comment's policy reference has no colon or a prefix that is not declared, its text is not written as \"$(resource.<id>)\", its text id is missing, or two comments resolve to the same policy.",
+      "place": {
+        "file": "PolicyPlus/CmtxFile.vb",
+        "firstLine": 69,
+        "lastLine": 76
+      }
+    },
+    {
+      "id": "businessrule-34447675520768722859",
+      "says": "When a number is saved to the live registry, an unsigned 32-bit or 64-bit number is converted to the signed number the registry stores with the same bits, and the key is created if missing.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 374,
+        "lastLine": 383
+      }
+    },
+    {
+      "id": "businessrule-35899140497190862562",
+      "says": "A registry source counts as writable only when a test value can be written under Software\\Policies and removed again; otherwise it is read-only.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 52,
+        "lastLine": 61
+      }
+    },
+    {
+      "id": "businessrule-39262656033285451423",
+      "says": "A policy file is refused when its format version is not 1, with the message 'Unknown (newer) version of POL format'.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 34,
+        "lastLine": 34
+      }
+    },
+    {
+      "id": "businessrule-46972642019161394212",
+      "says": "When a source is closed, a mounted user hive is unloaded and the result tells whether unloading succeeded; every other kind of source closes successfully.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 109,
+        "lastLine": 116
+      }
+    },
+    {
+      "id": "businessrule-49395771262191850050",
+      "says": "A source read through the file branch covers a POL file, the local Group Policy and a per-user Group Policy, each with a Registry.pol path. An existing file is loaded; it is writable only when it can be opened for reading and writing, otherwise it can be viewed but not committed.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 83,
+        "lastLine": 92
+      }
+    },
+    {
+      "id": "businessrule-50808386816006011599",
+      "says": "A user hive source is mounted by loading the hive file under a fresh temporary name in the machine registry, after the backup and restore privileges are switched on. If the hive cannot be opened afterwards, the source becomes an empty, read-only scratch source instead, without telling the person.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 62,
+        "lastLine": 79
+      }
+    },
+    {
+      "id": "businessrule-51029550915449645879",
+      "says": "A registry source must start with HKCU, HKEY_CURRENT_USER, HKU, HKEY_USERS, HKLM or HKEY_LOCAL_MACHINE (any case); otherwise it is refused with \"The root key is not valid.\" A path after the root is opened, and created if missing.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 20,
+        "lastLine": 37
+      }
+    },
+    {
+      "id": "businessrule-51554818045857630746",
+      "says": "When a policy file is read and the same key and value name occur twice, the later entry wins. Key and value names are matched without regard to letter case, and the first spelling seen is kept for saving.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 59,
+        "lastLine": 59
+      }
+    },
+    {
+      "id": "businessrule-59631775004799082543",
+      "says": "Closing the policy sources tells the person \"Cleanup did not complete fully because the loaded resources are open in other programs.\" when any source could not release its resources.",
+      "place": {
+        "file": "PolicyPlus/Main.vb",
+        "firstLine": 364,
+        "lastLine": 373
+      }
+    },
+    {
+      "id": "businessrule-62563112935081932578",
+      "says": "The comment file for a source sits beside its file: the POL file or hive path with the extension changed to .cmtx; for Local GPO or per-user GPO a file named comment.cmtx in the same folder; for the registry a file under the person's local application data folder (one for user, one for machine); Scratch space has none, so comments are unavailable.",
+      "place": {
+        "file": "PolicyPlus/PolicyLoader.vb",
+        "firstLine": 151,
+        "lastLine": 162
+      }
+    },
+    {
+      "id": "businessrule-67456626752221980743",
+      "says": "A policy file is refused when it does not start with the 'PReg' signature, with the message 'Missing PReg signature'.",
+      "place": {
+        "file": "PolicyPlus/PolicySource.vb",
+        "firstLine": 33,
+        "lastLine": 33
+      }
+    }
+  ]
+}

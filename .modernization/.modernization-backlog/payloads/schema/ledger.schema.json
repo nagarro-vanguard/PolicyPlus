@@ -1,0 +1,65 @@
+{
+  "type": "object",
+  "properties": {
+    "reviewed": {
+      "type": "string",
+      "minLength": 1,
+      "description": "When the person acknowledged the plan, as an ISO date and time."
+    },
+    "items": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The work item's address in the tracker."
+          },
+          "branch": {
+            "type": "string",
+            "minLength": 1
+          },
+          "worktree": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "planned",
+              "created",
+              "branched",
+              "approved",
+              "built",
+              "merged",
+              "blocked",
+              "failed"
+            ],
+            "description": "Where the work item stands in delivery."
+          },
+          "pr": {
+            "type": "string",
+            "minLength": 1
+          },
+          "result": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The folder holding the delivery's evidence and result."
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": true,
+        "description": "One work item's progress."
+      },
+      "description": "By work item key: an epic's key or a story's key."
+    }
+  },
+  "required": [
+    "items"
+  ],
+  "additionalProperties": true,
+  "description": "What has been done with the plan's work items; written during delivery, never by an agent."
+}

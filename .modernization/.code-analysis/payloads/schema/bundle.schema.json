@@ -1,0 +1,379 @@
+{
+  "type": "object",
+  "properties": {
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The block's record id."
+          },
+          "name": {
+            "type": "string",
+            "description": "The routine's name as the code writes it."
+          },
+          "container": {
+            "type": "string",
+            "description": "The class or module that holds it, as the code writes it."
+          },
+          "layer": {
+            "type": "string",
+            "description": "The record id of the layer it belongs to."
+          },
+          "file": {
+            "type": "string",
+            "description": "The file, relative to the source folder."
+          },
+          "firstLine": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The first line of the block."
+          },
+          "lastLine": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The last line of the block."
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The record ids of the capabilities whose entry points reach it; empty when none does."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "container",
+          "layer",
+          "file",
+          "firstLine",
+          "lastLine",
+          "capabilities"
+        ],
+        "additionalProperties": true,
+        "description": "One routine of the code, with where it is and who reaches it."
+      },
+      "description": "Every block the map found."
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "The record id of the block the link leaves."
+          },
+          "to": {
+            "type": "string",
+            "description": "The record id of the block the link reaches."
+          },
+          "kind": {
+            "type": "string",
+            "description": "How it reaches: call, renders, dispatches or request."
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "kind"
+        ],
+        "additionalProperties": true,
+        "description": "One link from one block to another block."
+      },
+      "description": "Every link between two blocks, with the links to outside systems left out."
+    },
+    "access": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "block": {
+            "type": "string",
+            "description": "The record id of the block that reads or saves."
+          },
+          "entity": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The record id."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name."
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "additionalProperties": true,
+            "description": "The kind of data it touches."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "reads",
+              "saves"
+            ],
+            "description": "Whether the block reads or saves it."
+          }
+        },
+        "required": [
+          "block",
+          "entity",
+          "kind"
+        ],
+        "additionalProperties": true,
+        "description": "One block that reads or saves one kind of data."
+      },
+      "description": "Which blocks read or save which kinds of data."
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The rule's record id."
+          },
+          "block": {
+            "type": "string",
+            "description": "The record id of the block that decides it; empty when none is known."
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The record ids of the capabilities that reach the block deciding it."
+          },
+          "reading": {
+            "type": "string",
+            "enum": [
+              "reviewed",
+              "corrected",
+              "disputed",
+              "unread"
+            ],
+            "description": "Where a second reading left the record: reviewed (read and not challenged), corrected (changed after the review), disputed (challenged and unchanged since) or unread."
+          },
+          "why": {
+            "type": "string",
+            "description": "The reviewer's words when the rule is disputed; empty otherwise."
+          },
+          "gates": {
+            "type": "string",
+            "description": "The record id of the change of state it allows or refuses; empty when none."
+          }
+        },
+        "required": [
+          "id",
+          "block",
+          "capabilities",
+          "reading",
+          "why",
+          "gates"
+        ],
+        "additionalProperties": true,
+        "description": "What the bundles need to know of one business rule beyond its payload entry."
+      },
+      "description": "Every business rule, with who reaches it and where a second reading left it."
+    },
+    "lifecycles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The life's record id."
+          },
+          "entity": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The record id."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name."
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "additionalProperties": true,
+            "description": "The kind of data whose life it is."
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "description": "A non-empty piece of text."
+            },
+            "description": "Its states, in order; a transition names one by its number, from 1."
+          },
+          "transitions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The change of state's record id."
+                },
+                "from": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "description": "The numbers of the states it leaves; empty when the code creates the record in `to`."
+                },
+                "to": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "The number of the state it reaches."
+                },
+                "file": {
+                  "type": "string",
+                  "description": "The file that writes the new state."
+                },
+                "firstLine": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "The first line that writes it."
+                },
+                "lastLine": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "The last line that writes it."
+                },
+                "reading": {
+                  "type": "string",
+                  "enum": [
+                    "reviewed",
+                    "corrected",
+                    "disputed",
+                    "unread"
+                  ],
+                  "description": "Where a second reading left the record: reviewed (read and not challenged), corrected (changed after the review), disputed (challenged and unchanged since) or unread."
+                },
+                "why": {
+                  "type": "string",
+                  "description": "The reviewer's words when the change is disputed; empty otherwise."
+                }
+              },
+              "required": [
+                "id",
+                "from",
+                "to",
+                "file",
+                "firstLine",
+                "lastLine",
+                "reading",
+                "why"
+              ],
+              "additionalProperties": true,
+              "description": "One place where the code moves a record from one state to another."
+            },
+            "description": "Every change of state of the life."
+          }
+        },
+        "required": [
+          "id",
+          "entity",
+          "states",
+          "transitions"
+        ],
+        "additionalProperties": true,
+        "description": "The life of one kind of data that has states."
+      },
+      "description": "The lives of the kinds of data that have states."
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "The window's class, as the code writes it."
+          },
+          "name": {
+            "type": "string",
+            "description": "The control's name as the code writes it."
+          },
+          "declaredAs": {
+            "type": "string",
+            "description": "The control's declaration, which gives its kind."
+          }
+        },
+        "required": [
+          "container",
+          "name",
+          "declaredAs"
+        ],
+        "additionalProperties": true,
+        "description": "One control a window declares."
+      },
+      "description": "The controls each window declares."
+    },
+    "unreached": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "what": {
+            "type": "string",
+            "description": "The routine, as its class and name."
+          },
+          "file": {
+            "type": "string",
+            "description": "The file, relative to the source folder."
+          },
+          "firstLine": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The first line of the routine."
+          },
+          "lastLine": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The last line of the routine."
+          }
+        },
+        "required": [
+          "what",
+          "file",
+          "firstLine",
+          "lastLine"
+        ],
+        "additionalProperties": true,
+        "description": "One routine no call the analysis could follow reaches."
+      },
+      "description": "The routines nothing the analysis could follow reaches."
+    }
+  },
+  "required": [
+    "blocks",
+    "links",
+    "access",
+    "rules",
+    "lifecycles",
+    "controls",
+    "unreached"
+  ],
+  "additionalProperties": true,
+  "description": "What a bundle needs beyond the capability and system payloads: the blocks and the links between them, which blocks read or save which data, who reaches each rule and where a second reading left it, the lives of the data, each window's controls and the code nothing reaches."
+}

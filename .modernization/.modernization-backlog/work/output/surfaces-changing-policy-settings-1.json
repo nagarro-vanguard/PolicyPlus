@@ -1,0 +1,816 @@
+{
+ "stories": [
+  {
+   "title": "Open a policy setting and see its current state",
+   "what": "A person opens a policy and sees its name, help, support text, current state (Enabled, Disabled or Not configured), its comment and the section it applies to, and can switch between Enabled, Disabled, Not configured and between Computer and User.",
+   "why": "Administrators need to see what a policy is set to, and for which section, before they change it.",
+   "actions": [
+    "block-49789533336413980059",
+    "block-57992755110790680579",
+    "block-51334849021361427410",
+    "block-77916892868646047596"
+   ],
+   "terms": [
+    {
+     "name": "Policy setting",
+     "means": "The state of one policy (Enabled, Disabled or Not configured) with its option values and comment; not the policy's definition.",
+     "entity": "Policy setting"
+    },
+    {
+     "name": "Section",
+     "means": "Whether a policy setting is for the Computer or for the User; not a category of policies."
+    }
+   ],
+   "journey": {
+    "name": "Change a policy's setting",
+    "steps": [
+     "Open a policy from the list",
+     "Read its current state, options and comment",
+     "Pick Enabled, Disabled or Not configured",
+     "Fill in the options",
+     "Press OK or Apply"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given a policy that names a supported-on text, when its dialog opens, then the Supported on box shows it, and the box is empty when the policy names none.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-20408685392954236399"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy for both Computer and User, when it opens without a section chosen, then it starts on Computer and the person can edit it for either; given a policy for one section, then the section is fixed and the choice is unavailable.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-22919299514571743135"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy whose stored state in the section is Enabled or Disabled, when the dialog opens, then that state is shown; for Not configured or an unclear state, Not Configured is shown.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-33075335985104561108"
+      }
+     ]
+    },
+    {
+     "says": "Given the section being edited, when the dialog opens, then OK and Apply are available only when that section can be written to.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-23336067846798029987"
+      }
+     ]
+    },
+    {
+     "says": "Given a section with no comments, when the dialog opens, then the comment box is disabled and reads \"Comments unavailable for this policy source\"; otherwise it shows the stored comment or is empty.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-01560321201783674273"
+      }
+     ]
+    },
+    {
+     "says": "Given the dialog is open, when Enabled is picked, then the option controls can be edited; when Disabled or Not Configured is picked, they are greyed out.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-59619098183313284576"
+      }
+     ]
+    },
+    {
+     "says": "Given the person picks Computer or User, when the choice changes, then the writability, comments and chosen state reload from that section; option values are replaced only for options that section stores when Enabled, and other typed values stay.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-47264131679601828501"
+      }
+     ]
+    },
+    {
+     "says": "Given extra width, when the dialog is resized, then the width is shared between the options panel and the help and comment boxes.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given policy settings are stored by the service, when a section is chosen, then its state and comment come from the stored settings, not from the registry.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "scope.decision-13"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-2"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Enter list entries for a policy option",
+   "what": "A person edits a list option in a grid and confirms it; entries are returned in order, and named lists refuse duplicate names.",
+   "why": "List options such as allowed programs need entries the person can add, rename and check.",
+   "actions": [
+    "block-48615537389470790613"
+   ],
+   "terms": [
+    {
+     "name": "List editor",
+     "means": "The grid in which a list option's entries are typed; not the policy dialog itself."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a list where the person names each entry, when two entries have exactly the same name and OK is pressed, then it is refused with \"Multiple entries are named \"<name>\"! Remove or rename all but one.\" and nothing is returned; Run and run count as two entries.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-36860850025836880139"
+      }
+     ]
+    },
+    {
+     "says": "Given a list without names, when OK is pressed, then every row except the empty new row at the bottom is returned in the order shown, even a row with an empty value; for named lists the new row is ignored.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-67944280997214552078"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "What should happen when a name cell of a named list was never filled in? The old program stopped with an unhandled error."
+   ]
+  },
+  {
+   "title": "Fill in a policy's option values",
+   "what": "A person fills in a policy's options (numbers, text, choices, check boxes, lists), with each control starting from its default and limited by what the policy allows.",
+   "why": "Every Enabled policy is only as useful as the option values the person can set correctly.",
+   "actions": [
+    "block-18703182669260421228",
+    "block-75724566670057728491",
+    "block-89806020979547308639"
+   ],
+   "terms": [
+    {
+     "name": "Option",
+     "means": "One configurable value of a policy such as a number, text or choice; not the policy's state."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given a check box option, when the dialog opens, then it starts with the presentation's default state.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-47134496169701496073"
+      }
+     ]
+    },
+    {
+     "says": "Given a plain text option, when it is shown, then it is limited to the policy's maximum length and starts with the default text.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-47891883049575092611"
+      }
+     ]
+    },
+    {
+     "says": "Given a number spin box, when it is shown, then it is limited to the policy's minimum and maximum, moves in the presentation's steps and starts at the default.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76476292137970655950"
+      }
+     ]
+    },
+    {
+     "says": "Given a drop-down, when it is shown, then the choices appear by translated name, sorted unless sorting is off, with the default preselected when one is named, otherwise nothing selected.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-95995013385384587600"
+      }
+     ]
+    },
+    {
+     "says": "Given a text option with suggestions, when it is shown, then it is limited to the maximum length, starts with the default text and lists the suggestions, sorted unless sorting is off.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-98958969318255528192"
+      }
+     ]
+    },
+    {
+     "says": "Given a plain number box, when text is entered, then text a whole-number reading accepts is kept (including sign or spaces), other text becomes the default, a number beyond the maximum or minimum becomes that limit, a number above 2,147,483,647 becomes the default, and a kept negative is converted to unsigned when applied; pasted text is not restricted.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-76178080166619590309"
+      }
+     ]
+    },
+    {
+     "says": "Given a number box, when a key other than a digit or control key is typed, then it is ignored.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-11779280825123119273"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy that is Enabled in the section, when the dialog opens, then each option shows the stored value: numbers, text, the matching drop-down item, check box state, multi-line lines and the stored list.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-90485587050957154914"
+      }
+     ]
+    },
+    {
+     "says": "Given a list option, when the person opens the list editor and confirms, then what it returns is kept as the option's value.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Apply option values to a policy and keep the dialog open",
+   "what": "A person presses Apply to save the policy and its option values, each written in the form its definition asks for, while the dialog stays open.",
+   "why": "Windows reads these stored values, so the form and the key must match the definition exactly.",
+   "actions": [
+    "block-38804446611751385293"
+   ],
+   "terms": [
+    {
+     "name": "Apply",
+     "means": "Saving the policy and staying in the dialog; not closing it."
+    }
+   ],
+   "criteria": [
+    {
+     "says": "Given Apply, when pressed, then the policy is written, the dialog stays open and a change is recorded.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-53979609002646144363"
+      }
+     ]
+    },
+    {
+     "says": "Given a setting that names its own key, when it is saved, then it goes under that key; otherwise under the policy's key.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-53178349170981485484"
+      }
+     ]
+    },
+    {
+     "says": "Given a number option, when saved, then it is written as text if the definition says so, otherwise as a 32-bit number.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-19622432139142313215"
+      }
+     ]
+    },
+    {
+     "says": "Given a text option, when saved, then it is an expandable string if the definition says so, otherwise a plain string.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-64524120751868809207"
+      }
+     ]
+    },
+    {
+     "says": "Given a multi-line text option, when saved, then it is written as a multiple-string value.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-55949208713495428877"
+      }
+     ]
+    },
+    {
+     "says": "Given a check box option, when saved, then a ticked box with no on value first saves 1 and an unticked box with no off value first removes the value, and the defined on or off value with its extra values then overwrites that.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-67842190900074642321"
+      }
+     ]
+    },
+    {
+     "says": "Given a list option that does not keep other entries, when saved, then every existing value under its key is removed first and a list with no entries stays empty.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-75244076300039577548"
+      }
+     ]
+    },
+    {
+     "says": "Given list entries, when saved, then entries carrying names use them; otherwise each is numbered from 1 and named with the definition's prefix plus the number, or by its own text when there is no prefix.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-46516041958192928718"
+      }
+     ]
+    },
+    {
+     "says": "Given a choice option, when saved, then the chosen item's value and its extra values are written.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-92009750053258186072"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "When the chosen choice position does not exist, the old program left the policy half set with no undo. Should the new product reject the save and write nothing instead?"
+   ]
+  },
+  {
+   "title": "Save a policy's state with OK",
+   "what": "A person saves Enabled, Disabled or Not configured with options and comment by pressing OK, which closes the dialog.",
+   "why": "This is the product's purpose: changing what a policy is set to.",
+   "actions": [
+    "block-96135191155885644109"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a policy being saved, when OK or Apply is pressed, then everything the source holds for that policy is forgotten first, then the chosen state is written.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-84933301477035282498"
+      }
+     ]
+    },
+    {
+     "says": "Given Not configured or Unknown, when saved, then nothing is written or removed beyond the forgetting, so the policy ends with no values.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-90058940824311429227"
+      }
+     ]
+    },
+    {
+     "says": "Given Enabled is chosen, when applied, then every option is written whatever its value, including options never filled in.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-60774486401252037450"
+      }
+     ]
+    },
+    {
+     "says": "Given Enabled and settings the person supplied, when written, then only supplied settings are written and unsupplied ones are left as they were.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-97175686457081101132"
+      }
+     ]
+    },
+    {
+     "says": "Given Enabled, when saved, then the policy's own on value and its extra on values are saved, a blank list key falling back to the policy's key, and the number 1 when the policy has a value name but no on value.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-66734059366331213205"
+      },
+      {
+       "_tag": "rule",
+       "id": "businessrule-14958427259964761169"
+      }
+     ]
+    },
+    {
+     "says": "Given a registry value to write for a policy, then a value defined as delete is removed, a number is saved as 32-bit, text as text, and a policy with no value writes nothing.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-80911529766189561154"
+      }
+     ]
+    },
+    {
+     "says": "Given Disabled, when saved, then with no off value the registry value is removed, otherwise the off value and its extra off values are saved.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-04152128046162000583"
+      }
+     ]
+    },
+    {
+     "says": "Given Disabled, when saved, then each setting gets only its own removal: lists lose all values under their key, check boxes with an off value or list get it saved, others lose their single value, and extra on values are left in place.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-56832565542674334637"
+      }
+     ]
+    },
+    {
+     "says": "Given a source that supports comments, when applied, then an empty comment removes the stored comment and any text replaces or adds it.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-33456476599558212379"
+      }
+     ]
+    },
+    {
+     "says": "Given OK, when pressed, then the policy is written and the dialog closes as a change.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-37207468109369530089"
+      }
+     ]
+    },
+    {
+     "says": "Given the legacy registry and Group Policy sources, when saving, then the write goes to the stored policy settings for the section.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-2"
+      },
+      {
+       "_tag": "decision",
+       "id": "scope.decision-13"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Close the policy setting dialog and report changes",
+   "what": "Cancel and other ways of closing the dialog report whether a change was made.",
+   "why": "The list behind the dialog refreshes only when a change was made, even if the person then cancels.",
+   "actions": [
+    "block-29401732049948573203",
+    "block-06231454516231170585"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given Apply was used earlier in the session, when Cancel is pressed, then the dialog closes reported as a change; otherwise as a cancel.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-65724709448091621197"
+      }
+     ]
+    },
+    {
+     "says": "Given Apply was used earlier, when the dialog is closed by any other means, then it is still reported as a change.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-07359577675270518038"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Load a SPOL script into the import window",
+   "what": "A person opens a SPOL file, edits its text, resets it, and leaves the window with Escape.",
+   "why": "SPOL text is how settings move between machines; the person needs to prepare it before applying.",
+   "actions": [
+    "block-27933278213709856376",
+    "block-20479299247601531941",
+    "block-92467440283303600855",
+    "block-02431696381301467584",
+    "block-98990608667721641067"
+   ],
+   "terms": [
+    {
+     "name": "SPOL",
+     "means": "Semantic policy text that lists policies with their state and options; not a registry file."
+    }
+   ],
+   "journey": {
+    "name": "Import settings from SPOL",
+    "steps": [
+     "Open the import window",
+     "Open a SPOL file or type text",
+     "Verify it",
+     "Apply it",
+     "Read the result message"
+    ]
+   },
+   "criteria": [
+    {
+     "says": "Given the person picks a SPOL file, when it is opened, then the whole file replaces the typed text without asking or checking; the file arrives by upload.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-27078270365699057081"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-1"
+      }
+     ]
+    },
+    {
+     "says": "Given the import window opens, when it is shown, then any earlier parsed result is discarded so a cancelled session passes nothing back.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-53070511165338807522"
+      }
+     ]
+    },
+    {
+     "says": "Given no text is selected, when Escape is pressed, then the window closes as cancelled; when text is selected, Escape closes nothing.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-00415446495174126677"
+      }
+     ]
+    },
+    {
+     "says": "Given the text box, when Ctrl+A is pressed, then all text is selected.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given the person confirms with Yes to \"Are you sure you want to reset the text box?\", when Reset is chosen, then the text becomes the header and blank lines.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Read, verify and apply SPOL text in the import window",
+   "what": "A person verifies SPOL text to see how many settings it holds, or applies it, handing the parsed script back or being told it is invalid; the text is read line by line into policy states and settings.",
+   "why": "People should see mistakes before anything changes.",
+   "actions": [
+    "block-70742542454119360952",
+    "block-34107094698830091312"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given SPOL text, when read, then it must begin with the signature line \"Policy Plus Semantic Policy\" or is refused with \"Incorrect signature.\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-37953448968627114950"
+      }
+     ]
+    },
+    {
+     "says": "Given SPOL text, when read, then lines are split at carriage return and line feed, so line-feed-only text is read as one line and refused with the signature message.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-64894609785645160893"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy header, when read, then it is a user policy only when its first word is exactly U, otherwise machine; the rest is the identifier; a header without a space fails with the line number and no reason.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-85959955505766938318"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy state, when read, then it must be Not configured, Enabled or Disabled in any letter case, otherwise refused with \"Unknown policy state.\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-38078267378406118840"
+      }
+     ]
+    },
+    {
+     "says": "Given an Enabled policy, when read, then its settings are read; lines under Not configured or Disabled are read as the next header.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-97058087218177971913"
+      }
+     ]
+    },
+    {
+     "says": "Given a setting value, when read, then # starts a whole number (failing with a conversion message), a plain non-negative number is unsigned, True or False in any case is yes/no, single quotes are text, double quotes a list, None an empty list, anything else \"Unknown option data format.\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-21688833916465491468"
+      }
+     ]
+    },
+    {
+     "says": "Given a bracketed setting, when read, then one-text lines make a list and two-text lines a name and value table; with no entries a list setting loses its existing entries unless the definition keeps them, and any other kind fails to write.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-91520515189249767580"
+      }
+     ]
+    },
+    {
+     "says": "Given comment lines, when read, then they are recognised in any letter case, with a double backslash read as one backslash and backslash n as a line break.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-17846007911557610465"
+      }
+     ]
+    },
+    {
+     "says": "Given a comment ending in a lone backslash or with an unknown escape, when read, then it is refused with \"Escape sequence started at end of comment.\" or \"Unknown comment escape sequence\" naming it.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-82283321913472173436"
+      }
+     ]
+    },
+    {
+     "says": "Given a failure while reading, then the message ends with \"(Error found on line N.)\".",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-49239739229069713399"
+      }
+     ]
+    },
+    {
+     "says": "Given SPOL text, when Verify is pressed, then it reports \"Validation successful, N policy settings found.\" or \"SPOL validation failed: \" and the reason, and nothing is applied.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-14257585336729172869"
+      }
+     ]
+    },
+    {
+     "says": "Given SPOL text, when Apply is pressed, then valid text is passed back to the main window; invalid text is refused with \"The SPOL text is invalid: \" and the reason.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-30078789996227150580"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Inspect and copy a SPOL fragment",
+   "what": "A person sees the SPOL text of a fragment, can show or hide the header line, select all and copy it.",
+   "why": "Administrators move single settings between machines by copying their SPOL text.",
+   "actions": [
+    "block-18241451168755948032",
+    "block-93851338452706207861",
+    "block-74794780607473579452",
+    "block-56021383816140036498"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given the fragment window opens, when it is shown, then the text is focused and fully selected.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given Include SPOL header, when ticked, then the text starts with the heading and a blank line; otherwise only the fragment shows.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "scope.decision-13"
+      }
+     ]
+    },
+    {
+     "says": "Given the text box, when Ctrl+A is pressed, then all text is selected.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given the text, when Copy is pressed, then the whole text is selected and copied to the clipboard.",
+     "from": [
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Import a semantic policy into the stored settings",
+   "what": "A person imports SPOL text and its policies are applied to the computer and user settings and their comments, with a result message.",
+   "why": "One import sets many policies at once.",
+   "actions": [
+    "block-91334952261881723533"
+   ],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given parsed SPOL, when applied, then each policy goes to the machine or user source by its section.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-47001836867625969953"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy with a comment and a comment store, when applied, then the comment is stored first; an empty comment leaves any existing one alone.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-78566706966921753288"
+      }
+     ]
+    },
+    {
+     "says": "Given a policy, when applied, then its earlier settings are wiped and then the stated state and settings are written.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-12966156302506777327"
+      }
+     ]
+    },
+    {
+     "says": "Given many policies, when one fails, then it is skipped and counted and the rest are applied; only the failure count is reported.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-45692609540846356884"
+      }
+     ]
+    },
+    {
+     "says": "Given the import finishes, then the person sees \"Semantic Policy successfully applied.\" or \"N out of M could not be applied.\" and the view refreshes either way.",
+     "from": [
+      {
+       "_tag": "rule",
+       "id": "businessrule-70167687024707690035"
+      }
+     ]
+    }
+   ],
+   "open": [
+    "If writing a policy fails, the old program kept the new comment against a half-written policy. Should the new product keep the comment or undo it?",
+    "Should the failure message say which policies failed and why? The old one gave only a count."
+   ]
+  }
+ ]
+}

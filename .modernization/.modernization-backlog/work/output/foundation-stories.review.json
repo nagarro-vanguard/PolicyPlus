@@ -1,0 +1,25 @@
+{
+  "read": 5,
+  "challenges": [
+    {
+      "record": 3,
+      "says": "The Services criterion adds 'without starting a network server', which base.decision-11 does not say; it only names the HttpApi test client."
+    },
+    {
+      "record": 3,
+      "says": "The Storybook criterion says a component without a story is 'reported', but base.decision-24 only says each component has a story and names no check that reports a missing one."
+    },
+    {
+      "record": 3,
+      "says": "The CI criterion turns an assumption of base.decision-11 ('CI can run Docker and Playwright browsers') into a requirement, and no criterion carries the rule that a story is done only when its layer checks and its black-box test pass."
+    },
+    {
+      "record": 1,
+      "says": "The knip criterion repeats the one in the first story (both cite base.decision-14), so the same rule is covered twice rather than once."
+    },
+    {
+      "record": 4,
+      "says": "No story carries the layer conventions base.decision-19 to 23, 25 and 26 (file size limits in the contract, forward-only migrations, repositories returning Domain types, thin handlers, upload validation, Paraglide messages, generated client only), so a stated decision reaches no builder; the criterion on AGENTS.md says only that conventions are written, not which."
+    }
+  ]
+}

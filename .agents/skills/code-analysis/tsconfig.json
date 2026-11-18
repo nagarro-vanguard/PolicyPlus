@@ -19,5 +19,5 @@
         "jsxFragmentFactory": "Fragment"
     },
     "include": ["."],
-    "exclude": ["node_modules", "stages/publish/ux-visuals"]
+    "exclude": ["node_modules"]
 }

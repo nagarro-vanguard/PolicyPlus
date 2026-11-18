@@ -1,0 +1,606 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dialog windows and their reactions</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/browsing-policy-definitions.html">Browsing policy definitions</a> › Dialog windows and their reactions</div><h1>Dialog windows and their reactions</h1><p class="lead">What a person sees and enters in the program&#39;s windows, and the routines that answer each click, selection and window event before handing the choices to the policy code. In Browsing policy definitions: 47 actions and 82 business rules. Part of its code is also used by other capabilities.</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: The Dialog windows and their reactions layer of Browsing policy definitions: 47 actions and 82 rules; part of its code is also used by other capabilities.
+Where to look first:
+- PolicyPlus/DetailAdmx.Designer.vb (only this capability)
+- PolicyPlus/DetailAdmx.vb (only this capability)
+- PolicyPlus/DetailCategory.Designer.vb (only this capability)
+- PolicyPlus/DetailCategory.vb (only this capability)
+- PolicyPlus/DetailPolicy.vb (only this capability)
+- PolicyPlus/InspectPolicyElements.vb (only this capability)
+- PolicyPlus/LoadedAdmx.Designer.vb (only this capability)
+- PolicyPlus/LoadedAdmx.vb (only this capability)
+- PolicyPlus/LoadedProducts.Designer.vb (only this capability)
+- PolicyPlus/LoadedProducts.vb (only this capability)
+- PolicyPlus/LoadedSupportDefinitions.Designer.vb (only this capability)
+- PolicyPlus/LoadedSupportDefinitions.vb (only this capability)
+  ...and 9 more
+Data read: Administrative template
+Rules decided here: 82
+- The top-level products list shows every loaded product ordered by name, each with its number of children. (PolicyPlus/LoadedProducts.vb:6)
+- The folder box and its Browse button are usable only when the 'This folder' choice is selected. (PolicyPlus/OpenAdmxFolder.vb:6)
+- The Semantic Policy fragment shows one section per area the policy applies to: the machine section reads the computer source and its comments, the user section reads the user source and its comments; an area the policy does not cover is left out. (PolicyPlus/InspectSpolFragment.vb:7)
+- The policy inspector shows a &quot;Registry value&quot; line for the policy only when the policy names a registry value. (PolicyPlus/InspectPolicyElements.vb:9)
+- The policy inspector shows a &quot;Client extension&quot; line for the policy only when the policy names a client extension. (PolicyPlus/InspectPolicyElements.vb:10)
+- The support definitions list shows only definitions whose name contains the typed filter text, ignoring upper or lower case; an empty filter shows all. Entries are ordered by name with leading spaces ignored and shown without them. (PolicyPlus/LoadedSupportDefinitions.vb:10)
+- The policy details window names the section a policy applies to: &quot;User or computer&quot; when it applies to both, &quot;Computer&quot; when machine-only, &quot;User&quot; when user-only. (PolicyPlus/DetailPolicy.vb:11)
+- The support details window states how a support definition matches products: &quot;Match all the referenced products&quot;, &quot;Match any of the referenced products&quot;, or &quot;Do not match products&quot; when it has no matching logic. (PolicyPlus/DetailSupport.vb:11)
+  ...and 74 more
+Unconfirmed:
+- For the capability: When the person's language has no exact language folder, the folder picked among those of the same primary language is the first one the operating system lists; which that is, is not stated in code. If wrong: A person could see a different regional variant of the policy text than expected when several variants are installed.
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What can be started here (47)</h2><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/enables-the-folder-box-and-browse-button-only-when-the.html">Enables the folder box and Browse button only when the custom folder choice is selected.</a><div class="sub">PolicyPlus/OpenAdmxFolder.vb:6</div></div><div class="meta">OpenAdmxFolder</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/looks-for-the-domain-s-sysvol-policy-definitions-folder-and.html">Looks for the domain&#39;s SYSVOL policy definitions folder and enables that choice only if it exists.</a><div class="sub">PolicyPlus/OpenAdmxFolder.vb:11</div></div><div class="meta">OpenAdmxFolder</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-details-window-of-the-admx-file-double-clicked-in.html">Opens the details window of the ADMX file double-clicked in the list.</a><div class="sub">PolicyPlus/LoadedAdmx.vb:16</div></div><div class="meta">LoadedAdmx</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/keeps-the-namespace-column-filling-the-width-left-over-when.html">Keeps the namespace column filling the width left over when the window changes size.</a><div class="sub">PolicyPlus/LoadedAdmx.vb:19</div></div><div class="meta">LoadedAdmx</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-details-window-of-the-support-definition-double.html">Opens the details window of the support definition double-clicked.</a><div class="sub">PolicyPlus/LoadedSupportDefinitions.vb:20</div></div><div class="meta">LoadedSupportDefinitions</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-detail-window-of-the-policy-double-clicked-in-the.html">Opens the detail window of the policy double-clicked in the policy list.</a><div class="sub">PolicyPlus/DetailAdmx.vb:21</div></div><div class="meta">DetailAdmx</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-selected-admx-file-s-details-when-enter-is-pressed.html">Opens the selected ADMX file&#39;s details when Enter is pressed.</a><div class="sub">PolicyPlus/LoadedAdmx.vb:22</div></div><div class="meta">LoadedAdmx</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/shows-the-details-of-the-parent-category-in-the-same-window.html">Shows the details of the parent category in the same window.</a><div class="sub">PolicyPlus/DetailCategory.vb:23</div></div><div class="meta">DetailCategory</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/lists-the-major-versions-of-the-selected-top-level-product.html">Lists the major versions of the selected top-level product.</a><div class="sub">PolicyPlus/LoadedProducts.vb:23</div></div><div class="meta">LoadedProducts</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/narrows-the-support-definition-list-to-names-containing-the.html">Narrows the support definition list to names containing the typed text.</a><div class="sub">PolicyPlus/LoadedSupportDefinitions.vb:23</div></div><div class="meta">LoadedSupportDefinitions</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-detail-window-of-the-category-double-clicked-in.html">Opens the detail window of the category double-clicked in the category list.</a><div class="sub">PolicyPlus/DetailAdmx.vb:24</div></div><div class="meta">DetailAdmx</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-detail-window-of-the-product-double-clicked-in-the.html">Opens the detail window of the product double-clicked in the product list.</a><div class="sub">PolicyPlus/DetailAdmx.vb:27</div></div><div class="meta">DetailAdmx</div></div><details class="more"><summary>Showing 12 of 47 actions. Show all 47</summary><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-selected-support-definition-s-details-when-enter.html">Opens the selected support definition&#39;s details when Enter is pressed.</a><div class="sub">PolicyPlus/LoadedSupportDefinitions.vb:27</div></div><div class="meta">LoadedSupportDefinitions</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/takes-the-chosen-folder-checks-it-exists-and-closes-the.html">Takes the chosen folder, checks it exists and closes the window with OK.</a><div class="sub">PolicyPlus/OpenAdmxFolder.vb:27</div></div><div class="meta">OpenAdmxFolder</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-detail-window-of-the-support-rule-double-clicked.html">Opens the detail window of the support rule double-clicked in the support-rule list.</a><div class="sub">PolicyPlus/DetailAdmx.vb:30</div></div><div class="meta">DetailAdmx</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-details-window-for-the-support-definition-the.html">Opens the details window for the support definition the policy is supported on.</a><div class="sub">PolicyPlus/DetailPolicy.vb:37</div></div><div class="meta">DetailPolicy</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/resizes-the-name-column-so-it-fills-the-list-beside-the.html">Resizes the Name column so it fills the list beside the Version column.</a><div class="sub">PolicyPlus/DetailProduct.vb:38</div></div><div class="meta">DetailProduct</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/resizes-the-name-column-so-it-fills-the-list-beside-the-2.html">Resizes the Name column so it fills the list beside the version columns.</a><div class="sub">PolicyPlus/DetailSupport.vb:38</div></div><div class="meta">DetailSupport</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-details-window-for-the-category-the-policy-sits-in.html">Opens the details window for the category the policy sits in.</a><div class="sub">PolicyPlus/DetailPolicy.vb:40</div></div><div class="meta">DetailPolicy</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/shows-the-details-of-the-chosen-child-product-in-this-same.html">Shows the details of the chosen child product in this same window.</a><div class="sub">PolicyPlus/DetailProduct.vb:41</div></div><div class="meta">DetailProduct</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-product-details-or-shows-the-referenced-support.html">Opens the product details, or shows the referenced support definition in this window.</a><div class="sub">PolicyPlus/DetailSupport.vb:41</div></div><div class="meta">DetailSupport</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/lists-the-minor-versions-of-the-selected-major-version.html">Lists the minor versions of the selected major version.</a><div class="sub">PolicyPlus/LoadedProducts.vb:41</div></div><div class="meta">LoadedProducts</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/lets-the-person-pick-a-folder-in-a-folder-dialog-and-puts-it.html">Lets the person pick a folder in a folder dialog and puts it in the folder box.</a><div class="sub">PolicyPlus/OpenAdmxFolder.vb:42</div></div><div class="meta">OpenAdmxFolder</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/shows-the-details-of-the-product-s-parent-product-in-this.html">Shows the details of the product&#39;s parent product in this same window.</a><div class="sub">PolicyPlus/DetailProduct.vb:45</div></div><div class="meta">DetailProduct</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/closes-the-window-as-cancelled-when-escape-is-pressed.html">Closes the window as cancelled when Escape is pressed.</a><div class="sub">PolicyPlus/OpenAdmxFolder.vb:48</div></div><div class="meta">OpenAdmxFolder</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-details-window-of-the-product-double-clicked.html">Opens the details window of the product double-clicked.</a><div class="sub">PolicyPlus/LoadedProducts.vb:57</div></div><div class="meta">LoadedProducts</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-selected-product-s-details-when-enter-is-pressed.html">Opens the selected product&#39;s details when Enter is pressed.</a><div class="sub">PolicyPlus/LoadedProducts.vb:63</div></div><div class="meta">LoadedProducts</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/copies-the-selected-node-text-to-the-clipboard-on-ctrl-c.html">Copies the selected node text to the clipboard on Ctrl+C.</a><div class="sub">PolicyPlus/InspectPolicyElements.vb:187</div></div><div class="meta">InspectPolicyElements</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-policy-details-window-for-the-inspected-policy.html">Opens the policy details window for the inspected policy.</a><div class="sub">PolicyPlus/InspectPolicyElements.vb:192</div></div><div class="meta">InspectPolicyElements</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/lists-the-chosen-category-s-subcategories-and-policies-and.html">Lists the chosen category&#39;s subcategories and policies and shows its description.</a><div class="sub">PolicyPlus/Main.vb:480</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/resizes-the-policy-name-column-to-fill-the-list.html">Resizes the policy name column to fill the list.</a><div class="sub">PolicyPlus/Main.vb:487</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/records-the-highlighted-policy-or-category-and-shows-its.html">Records the highlighted policy or category and shows its description.</a><div class="sub">PolicyPlus/Main.vb:491</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/asks-for-a-folder-of-policy-definitions-and-loads-it-into.html">Asks for a folder of policy definitions and loads it into the workspace.</a><div class="sub">PolicyPlus/Main.vb:510</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/asks-for-one-admx-file-and-adds-it-to-the-workspace.html">Asks for one ADMX file and adds it to the workspace.</a><div class="sub">PolicyPlus/Main.vb:524</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/clears-all-loaded-policy-definitions.html">Clears all loaded policy definitions.</a><div class="sub">PolicyPlus/Main.vb:538</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/switches-whether-categories-with-no-visible-policies-are.html">Switches whether categories with no visible policies are shown.</a><div class="sub">PolicyPlus/Main.vb:543</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/switches-the-view-between-user-computer-and-both-policy.html">Switches the view between user, computer and both policy sections.</a><div class="sub">PolicyPlus/Main.vb:549</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-chosen-category-or-the-edit-window-of-the-chosen.html">Opens the chosen category, or the edit window of the chosen policy.</a><div class="sub">PolicyPlus/Main.vb:561</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/merges-identical-user-and-computer-policy-pairs-into-single.html">Merges identical user and computer policy pairs into single dual-section policies.</a><div class="sub">PolicyPlus/Main.vb:572</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/fits-the-description-pane-s-labels-to-its-width-and-hides.html">Fits the description pane&#39;s labels to its width and hides its horizontal scroll bar.</a><div class="sub">PolicyPlus/Main.vb:672</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-highlighted-item-when-enter-is-pressed.html">Opens the highlighted item when Enter is pressed.</a><div class="sub">PolicyPlus/Main.vb:688</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/lists-the-admx-files-loaded-in-the-workspace.html">Lists the ADMX files loaded in the workspace.</a><div class="sub">PolicyPlus/Main.vb:767</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/lists-every-support-definition-in-the-workspace.html">Lists every support definition in the workspace.</a><div class="sub">PolicyPlus/Main.vb:770</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/lists-every-product-in-the-workspace.html">Lists every product in the workspace.</a><div class="sub">PolicyPlus/Main.vb:773</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/shows-only-the-menu-items-that-apply-to-a-category-or-a.html">Shows only the menu items that apply to a category or a policy.</a><div class="sub">PolicyPlus/Main.vb:817</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/opens-the-category-edit-window-details-or-inspection-window.html">Opens the category, edit window, details or inspection window for the chosen object.</a><div class="sub">PolicyPlus/Main.vb:839</div></div><div class="meta">Main</div></div><div class="row"><div class="main"><a href="../../action/browsing-policy-definitions/selects-the-node-under-a-right-click.html">Selects the node under a right click.</a><div class="sub">PolicyPlus/Main.vb:859</div></div><div class="meta">Main</div></div></details><h2>Business rules in this layer (82)</h2><div class="row"><div class="main"><span>The top-level products list shows every loaded product ordered by name, each with its number of children.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The top-level products list shows every loaded product ordered by name, each with its number of children.
+Where to look first:
+- Starts at PolicyPlus/LoadedProducts.vb:6
+- PolicyPlus/LoadedProducts.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/LoadedProducts.vb:6  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The folder box and its Browse button are usable only when the &#39;This folder&#39; choice is selected.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The folder box and its Browse button are usable only when the 'This folder' choice is selected.
+Where to look first:
+- Starts at PolicyPlus/OpenAdmxFolder.vb:6
+- PolicyPlus/OpenAdmxFolder.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenAdmxFolder.vb:6  ·  Screens: OpenAdmxFolder</div></div></div><div class="row"><div class="main"><span>The Semantic Policy fragment shows one section per area the policy applies to: the machine section reads the computer source and its comments, the user section reads the user source and its comments; an area the policy does not cover is left out.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The Semantic Policy fragment shows one section per area the policy applies to: the machine section reads the computer source and its comments, the user section reads the user source and its comments; an area the policy does not cover is left out.
+Where to look first:
+- Starts at PolicyPlus/InspectSpolFragment.vb:7
+- PolicyPlus/InspectSpolFragment.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectSpolFragment.vb:7  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The policy inspector shows a &quot;Registry value&quot; line for the policy only when the policy names a registry value.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The policy inspector shows a &quot;Registry value&quot; line for the policy only when the policy names a registry value.
+Where to look first:
+- Starts at PolicyPlus/InspectPolicyElements.vb:9
+- PolicyPlus/InspectPolicyElements.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectPolicyElements.vb:9  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The policy inspector shows a &quot;Client extension&quot; line for the policy only when the policy names a client extension.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The policy inspector shows a &quot;Client extension&quot; line for the policy only when the policy names a client extension.
+Where to look first:
+- Starts at PolicyPlus/InspectPolicyElements.vb:10
+- PolicyPlus/InspectPolicyElements.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectPolicyElements.vb:10  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The support definitions list shows only definitions whose name contains the typed filter text, ignoring upper or lower case; an empty filter shows all. Entries are ordered by name with leading spaces ignored and shown without them.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The support definitions list shows only definitions whose name contains the typed filter text, ignoring upper or lower case; an empty filter shows all. Entries are ordered by name with leading spaces ignored and shown without them.
+Where to look first:
+- Starts at PolicyPlus/LoadedSupportDefinitions.vb:10
+- PolicyPlus/LoadedSupportDefinitions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/LoadedSupportDefinitions.vb:10  ·  Screens: LoadedSupportDefinitions, Main</div></div></div><div class="row"><div class="main"><span>The policy details window names the section a policy applies to: &quot;User or computer&quot; when it applies to both, &quot;Computer&quot; when machine-only, &quot;User&quot; when user-only.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The policy details window names the section a policy applies to: &quot;User or computer&quot; when it applies to both, &quot;Computer&quot; when machine-only, &quot;User&quot; when user-only.
+Where to look first:
+- Starts at PolicyPlus/DetailPolicy.vb:11
+- PolicyPlus/DetailPolicy.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailPolicy.vb:11  ·  Screens: DetailAdmx, InspectPolicyElements, Main</div></div></div><div class="row"><div class="main"><span>The support details window states how a support definition matches products: &quot;Match all the referenced products&quot;, &quot;Match any of the referenced products&quot;, or &quot;Do not match products&quot; when it has no matching logic.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The support details window states how a support definition matches products: &quot;Match all the referenced products&quot;, &quot;Match any of the referenced products&quot;, or &quot;Do not match products&quot; when it has no matching logic.
+Where to look first:
+- Starts at PolicyPlus/DetailSupport.vb:11
+- PolicyPlus/DetailSupport.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailSupport.vb:11  ·  Screens: DetailAdmx, DetailPolicy, DetailSupport, LoadedSupportDefinitions</div></div></div><div class="row"><div class="main"><span>When the ADMX folder dialog opens, &#39;This folder&#39; is chosen first, and the &#39;The domain&#39;s SYSVOL&#39; choice is available only if the computer is joined to a domain and the folder \\domain\SYSVOL\domain\Policies\PolicyDefinitions exists.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When the ADMX folder dialog opens, 'This folder' is chosen first, and the 'The domain's SYSVOL' choice is available only if the computer is joined to a domain and the folder \\domain\SYSVOL\domain\Policies\PolicyDefinitions exists.
+Where to look first:
+- Starts at PolicyPlus/OpenAdmxFolder.vb:11
+- PolicyPlus/OpenAdmxFolder.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenAdmxFolder.vb:11  ·  Screens: OpenAdmxFolder</div></div></div><div class="row"><div class="main"><span>The product details window labels a product &quot;Major revision&quot;, &quot;Minor revision&quot; or &quot;Top-level product&quot; from its type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The product details window labels a product &quot;Major revision&quot;, &quot;Minor revision&quot; or &quot;Top-level product&quot; from its type.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:13
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:13  ·  Screens: DetailAdmx, DetailProduct, DetailSupport, LoadedProducts</div></div></div><div class="row"><div class="main"><span>The detail window of a category shows its parent&#39;s name and enables the parent button when the parent exists; when the parent is named but missing it shows &quot;&lt;orphaned from &lt;parent&gt;&gt;&quot; and the button is disabled; a top-level category shows nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The detail window of a category shows its parent's name and enables the parent button when the parent exists; when the parent is named but missing it shows &quot;<orphaned from <parent>>&quot; and the button is disabled; a top-level category shows nothing.
+Where to look first:
+- Starts at PolicyPlus/DetailCategory.vb:14
+- PolicyPlus/DetailCategory.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailCategory.vb:14  ·  Screens: DetailAdmx, DetailCategory, DetailPolicy, Main</div></div></div><div class="row"><div class="main"><span>Within each section of the fragment, the policy comment is included only when one is stored for that policy, and the option values are included only when the policy is Enabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Within each section of the fragment, the policy comment is included only when one is stored for that policy, and the option values are included only when the policy is Enabled.
+Where to look first:
+- Starts at PolicyPlus/InspectSpolFragment.vb:14
+- PolicyPlus/InspectSpolFragment.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectSpolFragment.vb:14  ·  Screens: Main</div></div></div><details class="more"><summary>Showing 12 of 82 business rules. Show all 82</summary><div class="row"><div class="main"><span>The detail window of a template file lists only the policies, categories (including sub-categories), products (including versions) and support rules that were defined in that file.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The detail window of a template file lists only the policies, categories (including sub-categories), products (including versions) and support rules that were defined in that file.
+Where to look first:
+- Starts at PolicyPlus/DetailAdmx.vb:15
+- PolicyPlus/DetailAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailAdmx.vb:15  ·  Screens: LoadedAdmx</div></div></div><div class="row"><div class="main"><span>Double-clicking the loaded ADMX files list opens the file details for the selected row without checking that a row is selected; pressing Enter does check.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Double-clicking the loaded ADMX files list opens the file details for the selected row without checking that a row is selected; pressing Enter does check.
+Where to look first:
+- Starts at PolicyPlus/LoadedAdmx.vb:16
+- PolicyPlus/LoadedAdmx.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/LoadedAdmx.vb:16  ·  Screens: LoadedAdmx</div></div></div><div class="row"><div class="main"><span>When a policy names a support definition that exists, its name is shown and the support-details button is enabled. When it does not exist, the button is disabled and the text reads &quot;&lt;missing: &quot; followed by the code the policy names; with no code the text is blank.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When a policy names a support definition that exists, its name is shown and the support-details button is enabled. When it does not exist, the button is disabled and the text reads &quot;<missing: &quot; followed by the code the policy names; with no code the text is blank.
+Where to look first:
+- Starts at PolicyPlus/DetailPolicy.vb:19
+- PolicyPlus/DetailPolicy.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailPolicy.vb:19  ·  Screens: DetailAdmx, InspectPolicyElements, Main</div></div></div><div class="row"><div class="main"><span>Each entry of a support definition is listed by the name of the nested support definition when it is one, otherwise by the name of the product, otherwise as &quot;&lt;missing: &quot; followed by the product code the entry names. Minimum and maximum versions are listed only for product entries that name a version range; a missing bound is shown blank.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Each entry of a support definition is listed by the name of the nested support definition when it is one, otherwise by the name of the product, otherwise as &quot;<missing: &quot; followed by the product code the entry names. Minimum and maximum versions are listed only for product entries that name a version range; a missing bound is shown blank.
+Where to look first:
+- Starts at PolicyPlus/DetailSupport.vb:20
+- PolicyPlus/DetailSupport.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailSupport.vb:20  ·  Screens: DetailAdmx, DetailPolicy, DetailSupport, LoadedSupportDefinitions</div></div></div><div class="row"><div class="main"><span>Double-clicking the support definitions list opens the definition details for the selected row without checking that a row is selected; pressing Enter does check.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Double-clicking the support definitions list opens the definition details for the selected row without checking that a row is selected; pressing Enter does check.
+Where to look first:
+- Starts at PolicyPlus/LoadedSupportDefinitions.vb:20
+- PolicyPlus/LoadedSupportDefinitions.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/LoadedSupportDefinitions.vb:20  ·  Screens: LoadedSupportDefinitions</div></div></div><div class="row"><div class="main"><span>The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The product details window shows a version number for major and minor revisions only; for a top-level product the version is blank.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:21
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:21  ·  Screens: DetailAdmx, DetailProduct, DetailSupport, LoadedProducts</div></div></div><div class="row"><div class="main"><span>A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A product with a parent shows the parent name and enables the parent button; a product with no parent shows a blank parent and the button is disabled.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:22
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:22  ·  Screens: DetailAdmx, DetailProduct, DetailSupport, LoadedProducts</div></div></div><div class="row"><div class="main"><span>The major versions list shows the children of the selected top-level product ordered by version, with the heading naming that product; with no product selected it is empty and prompts the person to select one.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The major versions list shows the children of the selected top-level product ordered by version, with the heading naming that product; with no product selected it is empty and prompts the person to select one.
+Where to look first:
+- Starts at PolicyPlus/LoadedProducts.vb:23
+- PolicyPlus/LoadedProducts.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/LoadedProducts.vb:23  ·  Screens: LoadedProducts</div></div></div><div class="row"><div class="main"><span>When a policy sits in a category that exists, the category name is shown and the category-details button is enabled. A policy whose named category is unknown shows &quot;&lt;orphaned from &quot; followed by that category code, and one with no category code shows &quot;&lt;uncategorized&gt;&quot;; the button is then disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When a policy sits in a category that exists, the category name is shown and the category-details button is enabled. A policy whose named category is unknown shows &quot;<orphaned from &quot; followed by that category code, and one with no category code shows &quot;<uncategorized>&quot;; the button is then disabled.
+Where to look first:
+- Starts at PolicyPlus/DetailPolicy.vb:27
+- PolicyPlus/DetailPolicy.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailPolicy.vb:27  ·  Screens: DetailAdmx, InspectPolicyElements, Main</div></div></div><div class="row"><div class="main"><span>When OK is pressed in the ADMX folder dialog, the folder is the system&#39;s Windows PolicyDefinitions folder, the domain SYSVOL folder, or the typed folder, as chosen. A folder that does not exist is refused with &quot;The folder you specified does not exist.&quot; and the dialog stays open.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When OK is pressed in the ADMX folder dialog, the folder is the system's Windows PolicyDefinitions folder, the domain SYSVOL folder, or the typed folder, as chosen. A folder that does not exist is refused with &quot;The folder you specified does not exist.&quot; and the dialog stays open.
+Where to look first:
+- Starts at PolicyPlus/OpenAdmxFolder.vb:27
+- PolicyPlus/OpenAdmxFolder.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenAdmxFolder.vb:27  ·  Screens: OpenAdmxFolder</div></div></div><div class="row"><div class="main"><span>The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The product details window lists every child revision of a product with its version and name; a product with no children shows an empty list.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:29
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:29  ·  Screens: DetailAdmx, DetailProduct, DetailSupport, LoadedProducts</div></div></div><div class="row"><div class="main"><span>The option to clear the workspace before adding the folder is ticked by default, and its choice is passed on only when a folder that exists was accepted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The option to clear the workspace before adding the folder is ticked by default, and its choice is passed on only when a folder that exists was accepted.
+Where to look first:
+- Starts at PolicyPlus/OpenAdmxFolder.vb:36
+- PolicyPlus/OpenAdmxFolder.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenAdmxFolder.vb:36  ·  Screens: OpenAdmxFolder</div></div></div><div class="row"><div class="main"><span>The fragment text starts with the heading &quot;Policy Plus Semantic Policy&quot; and a blank line only when &quot;Include SPOL header&quot; is ticked; otherwise only the fragment is shown.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The fragment text starts with the heading &quot;Policy Plus Semantic Policy&quot; and a blank line only when &quot;Include SPOL header&quot; is ticked; otherwise only the fragment is shown.
+Where to look first:
+- Starts at PolicyPlus/InspectSpolFragment.vb:37
+- PolicyPlus/InspectSpolFragment.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectSpolFragment.vb:37  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Clearing the search forgets the results, so reopening them reports that no search has been run.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Clearing the search forgets the results, so reopening them reports that no search has been run.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:38
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:38  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Double-clicking a child revision in the product details window shows that child in the same window; with nothing selected, nothing happens.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Double-clicking a child revision in the product details window shows that child in the same window; with nothing selected, nothing happens.
+Where to look first:
+- Starts at PolicyPlus/DetailProduct.vb:41
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailProduct.vb:41  ·  Screens: DetailProduct</div></div></div><div class="row"><div class="main"><span>The minor versions list shows the children of the selected major version ordered by version, with the heading naming it; with no major version selected it is empty and prompts the person to select one.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The minor versions list shows the children of the selected major version ordered by version, with the heading naming it; with no major version selected it is empty and prompts the person to select one.
+Where to look first:
+- Starts at PolicyPlus/LoadedProducts.vb:41
+- PolicyPlus/LoadedProducts.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/LoadedProducts.vb:41  ·  Screens: LoadedProducts</div></div></div><div class="row"><div class="main"><span>Double-clicking an entry in the support details window opens the product details window for a product entry, and shows a nested support definition in the same window. An entry whose product is missing, or with nothing selected, does nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Double-clicking an entry in the support details window opens the product details window for a product entry, and shows a nested support definition in the same window. An entry whose product is missing, or with nothing selected, does nothing.
+Where to look first:
+- Starts at PolicyPlus/DetailSupport.vb:42
+- PolicyPlus/DetailProduct.vb (shared with 1 other capability)
+- PolicyPlus/DetailSupport.vb (shared with 1 other capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/DetailSupport.vb:42  ·  Screens: DetailSupport</div></div></div><div class="row"><div class="main"><span>Pressing Escape closes the ADMX folder dialog as cancelled, with no folder chosen.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Pressing Escape closes the ADMX folder dialog as cancelled, with no folder chosen.
+Where to look first:
+- Starts at PolicyPlus/OpenAdmxFolder.vb:48
+- PolicyPlus/OpenAdmxFolder.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/OpenAdmxFolder.vb:48  ·  Screens: OpenAdmxFolder</div></div></div><div class="row"><div class="main"><span>Opening product details by double-click or Enter does nothing when no product is selected in that list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Opening product details by double-click or Enter does nothing when no product is selected in that list.
+Where to look first:
+- Starts at PolicyPlus/LoadedProducts.vb:57
+- PolicyPlus/LoadedProducts.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/LoadedProducts.vb:57  ·  Screens: LoadedProducts</div></div></div><div class="row"><div class="main"><span>In the inspector, a group of affected registry settings with no on or off setting reads &quot;Left implicit&quot; when the policy names a registry value, and &quot;Left to elements&quot; when it names none. Inside a Yes/No element it always reads &quot;Left implicit&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: In the inspector, a group of affected registry settings with no on or off setting reads &quot;Left implicit&quot; when the policy names a registry value, and &quot;Left to elements&quot; when it names none. Inside a Yes/No element it always reads &quot;Left implicit&quot;.
+Where to look first:
+- Starts at PolicyPlus/InspectPolicyElements.vb:58
+- PolicyPlus/InspectPolicyElements.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectPolicyElements.vb:58  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The policy inspector lists presentation details for the policy whenever it has both a presentation and elements, whatever the elements hold. Each presentation item with an ID is matched to the policy element with the same ID; items without an ID show no element details. When no element has that ID, the inspector stops with an unhandled error.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The policy inspector lists presentation details for the policy whenever it has both a presentation and elements, whatever the elements hold. Each presentation item with an ID is matched to the policy element with the same ID; items without an ID show no element details. When no element has that ID, the inspector stops with an unhandled error.
+Where to look first:
+- Starts at PolicyPlus/InspectPolicyElements.vb:63
+- PolicyPlus/InspectPolicyElements.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectPolicyElements.vb:63  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A category appears in the tree only when it passes the visibility rule; each shown category gets an icon by its kind and carries its visible subcategories below it, and the tree is sorted.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:90
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:90  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: After the category tree is rebuilt from the loaded definitions, no category, policy or highlighted item is selected and the information pane shows the empty state.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:100
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:100  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When the list is rebuilt, the policy already selected is selected again and revealed only if it is still listed, that is, it sits in the category shown and passes the visibility rule; otherwise nothing is selected. Then, if the policy is in the same category and the list still has that many rows, the earlier top row is put back, so the policy is not guaranteed to stay in view.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:109
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:109  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The right pane lists the chosen category in this order: an &quot;Up: &lt;parent name&gt;&quot; row marked &quot;Parent&quot; when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The right pane lists the chosen category in this order: an &quot;Up: <parent name>&quot; row marked &quot;Parent&quot; when the category has a parent, then visible subcategories by name, then visible policies by name. Each policy row shows its state and its comment text.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:113
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:113  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The category tree selection follows the category shown in the right pane.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The category tree selection follows the category shown in the right pane.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:139
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:139  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For a list element the inspector states how value names are formed: &quot;User provides value names&quot; when the person names them, a prefix when the element has one, otherwise &quot;No prefix (values named for their data)&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: For a list element the inspector states how value names are formed: &quot;User provides value names&quot; when the person names them, a prefix when the element has one, otherwise &quot;No prefix (values named for their data)&quot;.
+Where to look first:
+- Starts at PolicyPlus/InspectPolicyElements.vb:143
+- PolicyPlus/InspectPolicyElements.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectPolicyElements.vb:143  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When nothing is selected, the title and support lines are hidden and the pane reads &quot;Select an item to see its description.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When nothing is selected, the title and support lines are hidden and the pane reads &quot;Select an item to see its description.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:146
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:146  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For a selected policy the information pane shows its title, &quot;(no requirements information)&quot; when it has no support rule or &quot;Requirements:&quot; plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: For a selected policy the information pane shows its title, &quot;(no requirements information)&quot; when it has no support rule or &quot;Requirements:&quot; plus the support name, and its explanation. A notice that the policy is a preference appears only for preferences.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:149
+- PolicyPlus/Main.Designer.vb (only this capability)
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:149  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Choice display names in the inspector are resolved through the definitions file that defines the policy, and choices are numbered from zero in file order.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Choice display names in the inspector are resolved through the definitions file that defines the policy, and choices are numbered from zero in file order.
+Where to look first:
+- Starts at PolicyPlus/InspectPolicyElements.vb:157
+- PolicyPlus/InspectPolicyElements.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectPolicyElements.vb:157  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>For a selected or highlighted category the pane shows its title, &quot;This category contains N policies and M subcategories.&quot; (&quot;The selected category&quot; when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: For a selected or highlighted category the pane shows its title, &quot;This category contains N policies and M subcategories.&quot; (&quot;The selected category&quot; when highlighted but not opened) and its explanation. The counts include every policy and subcategory, hidden or not.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:158
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:158  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is orphaned when it has no parent among the loaded definitions although its definition names one.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A category is orphaned when it has no parent among the loaded definitions although its definition names one.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:171
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:171  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category is empty when it holds no subcategories and no policies at all, counting hidden ones.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A category is empty when it holds no subcategories and no policies at all, counting hidden ones.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:174
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:174  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A category&#39;s icon is chosen in this order: orphaned, then empty, then normal.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A category's icon is chosen in this order: orphaned, then empty, then normal.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:177
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:177  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s icon is chosen in this order: preference, then plain when it has no configurable elements, then &quot;extra configuration&quot; when it has some.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A policy's icon is chosen in this order: preference, then plain when it has no configurable elements, then &quot;extra configuration&quot; when it has some.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:186
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:186  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The inspector copies the selected line to the clipboard only on Ctrl+C with a line selected.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The inspector copies the selected line to the clipboard only on Ctrl+C with a line selected.
+Where to look first:
+- Starts at PolicyPlus/InspectPolicyElements.vb:188
+- PolicyPlus/InspectPolicyElements.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/InspectPolicyElements.vb:188  ·  Screens: InspectPolicyElements</div></div></div><div class="row"><div class="main"><span>A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A category is visible when empty categories are switched on. Otherwise it is visible only if it has at least one visible policy or one visible subcategory.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:196
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:196  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is visible only if it applies to a chosen area (user, computer or both). With &quot;Only Filtered Policies&quot; on, it must also pass the filter for a chosen area it applies to; passing for either one is enough.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A policy is visible only if it applies to a chosen area (user, computer or both). With &quot;Only Filtered Policies&quot; on, it must also pass the filter for a chosen area it applies to; passing for either one is enough.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:204
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:204  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a view setting changes, the program moves up to the nearest visible category, drops the selected policy if the move happened or the policy is now hidden, then rebuilds the tree and list. A policy kept after the move appears in the information pane only: rebuilding the list reselects the category in the tree, which clears the selection, so its row is not highlighted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When a view setting changes, the program moves up to the nearest visible category, drops the selected policy if the move happened or the policy is now hidden, then rebuilds the tree and list. A policy kept after the move appears in the information pane only: rebuilding the list reselects the category in the tree, which clears the selection, so its row is not highlighted.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:221
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:221  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>With both areas shown, a policy that applies to both areas shows its common state followed by &quot;(2)&quot; when both match, the computer state followed by &quot;(C)&quot; when only the user is Not Configured, the user state followed by &quot;(U)&quot; when only the computer is Not Configured, and &quot;Mixed&quot; otherwise.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: With both areas shown, a policy that applies to both areas shows its common state followed by &quot;(2)&quot; when both match, the computer state followed by &quot;(C)&quot; when only the user is Not Configured, the user state followed by &quot;(U)&quot; when only the computer is Not Configured, and &quot;Mixed&quot; otherwise.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:234
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:234  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>With both areas shown, a policy that applies to one area shows that area&#39;s state followed by &quot;(C)&quot; for computer or &quot;(U)&quot; for user. With a single area shown, only that area&#39;s state is shown, without a suffix.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: With both areas shown, a policy that applies to one area shows that area's state followed by &quot;(C)&quot; for computer or &quot;(U)&quot; for user. With a single area shown, only that area's state is shown, without a suffix.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:248
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:248  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s state in one area reads &quot;Enabled&quot;, &quot;Disabled&quot;, &quot;Not Configured&quot; or &quot;Unknown&quot;; the computer source is read for the computer area and the user source for any other.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A policy's state in one area reads &quot;Enabled&quot;, &quot;Disabled&quot;, &quot;Not Configured&quot; or &quot;Unknown&quot;; the computer source is read for the computer area and the user source for any other.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:257
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:257  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>With both areas shown, the comment column is empty when neither area has a comment, shows &quot;(multiple)&quot; when both have one, and otherwise shows the single comment.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: With both areas shown, the comment column is empty when neither area has a comment, shows &quot;(multiple)&quot; when both have one, and otherwise shows the single comment.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:270
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:270  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy&#39;s comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A policy's comment in one area is empty when that source has no comment file or holds no comment for the policy, and otherwise the saved text.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:288
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:288  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A policy is a preference, not a managed policy, when it names a registry key outside the three policy locations: software\policies, software\microsoft\windows\currentversion\policies and system\currentcontrolset\policies.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:296
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:296  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>After the edit dialog is accepted, which changes the open policy source in memory only, the list is refreshed in place if the current category is still visible; otherwise the program moves up to the nearest visible category. Nothing is written to disk until Save Policies.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: After the edit dialog is accepted, which changes the open policy source in memory only, the list is refreshed in place if the current category is still visible; otherwise the program moves up to the nearest visible category. Nothing is written to disk until Save Policies.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:300
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:300  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Closing the workspace or replacing it with a new one discards all loaded definitions and the previous search results.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Closing the workspace or replacing it with a new one discards all loaded definitions and the previous search results.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:391
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:391  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A filter on managed policies hides preferences when managed policies are wanted, and hides managed policies when preferences are wanted.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:411
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:411  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy passes the filter only when it passes every active part of it.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A policy passes the filter only when it passes every active part of it.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:411
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:411  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A filter on state keeps only policies whose state in the checked area is Configured (Enabled or Disabled), Not Configured, Disabled or Enabled, as chosen.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:414
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:414  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A filter on comments keeps only policies that have a non-empty comment in the checked area, or only those that have none, as chosen.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:427
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:427  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A filter on products keeps only policies supported by the chosen products, honouring the options to match any product and to include policies with blank support.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:431
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:431  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A policy applies to an area when its definition declares that area; a policy declared for both applies to each.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A policy applies to an area when its definition declares that area; a policy declared for both applies to each.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:438
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:438  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When loading definitions reports no problems nothing is shown; otherwise the person sees &quot;Errors were encountered while adding administrative templates to the workspace.&quot; with each problem, and, only where a choice is wanted, is asked &quot;Continue trying to use this workspace?&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When loading definitions reports no problems nothing is shown; otherwise the person sees &quot;Errors were encountered while adding administrative templates to the workspace.&quot; with each problem, and, only where a choice is wanted, is asked &quot;Continue trying to use this workspace?&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:471
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:471  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The language for definition text is the saved language code, or the computer&#39;s own language when none is saved.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The language for definition text is the saved language code, or the computer's own language when none is saved.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:478
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:478  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Selecting a category in the tree makes it the current category and clears any selected policy.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Selecting a category in the tree makes it the current category and clears any selected policy.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:482
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:482  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Highlighting a policy makes it the selected policy and clears any highlighted category; highlighting a category does the reverse; highlighting nothing clears both.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Highlighting a policy makes it the selected policy and clears any highlighted category; highlighting a category does the reverse; highlighting nothing clears both.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:493
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:493  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a definitions folder is opened, the workspace is emptied first only if &quot;clear workspace&quot; is chosen. Otherwise the folder&#39;s definitions are added to the current workspace. Problems found are reported but do not stop the load.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When a definitions folder is opened, the workspace is emptied first only if &quot;clear workspace&quot; is chosen. Otherwise the folder's definitions are added to the current workspace. Problems found are reported but do not stop the load.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:512
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:512  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A definitions folder is remembered as the definitions folder for the next start only when &quot;clear workspace&quot; was chosen and the load did not fail; when the workspace is added to, the remembered folder is unchanged.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A definitions folder is remembered as the definitions folder for the next start only when &quot;clear workspace&quot; was chosen and the load did not fail; when the workspace is added to, the remembered folder is unchanged.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:517
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:517  ·  Screens: Main</div></div><div class="meta">Changes a state</div></div><div class="row"><div class="main"><span>When opening a definitions folder fails, the person is told &quot;The folder could not be fully added to the workspace.&quot; with the reason. The workspace may already be emptied or partly filled, the remembered folder is unchanged, and the view is rebuilt anyway.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When opening a definitions folder fails, the person is told &quot;The folder could not be fully added to the workspace.&quot; with the reason. The workspace may already be emptied or partly filled, the remembered folder is unchanged, and the view is rebuilt anyway.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:518
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:518  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>A single ADMX file picked from the file dialog (ADMX files only) is added to the current workspace without emptying it and is not remembered as the definitions folder; a failure shows &quot;The ADMX file could not be added to the workspace.&quot; with the reason.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: A single ADMX file picked from the file dialog (ADMX files only) is added to the current workspace without emptying it and is not remembered as the definitions folder; a failure shows &quot;The ADMX file could not be added to the workspace.&quot; with the reason.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:526
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:526  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Closing the workspace from the menu empties it at once with no confirmation and rebuilds the view.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Closing the workspace from the menu empties it at once with no confirmation and rebuilds the view.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:540
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:540  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The &quot;Empty Categories&quot; menu switches empty categories on or off and the view moves to the nearest visible category.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The &quot;Empty Categories&quot; menu switches empty categories on or off and the view moves to the nearest visible category.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:545
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:545  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The area choice &quot;User&quot; shows user policies, &quot;Computer&quot; shows computer policies and any other choice shows both.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The area choice &quot;User&quot; shows user policies, &quot;Computer&quot; shows computer policies and any other choice shows both.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:551
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:551  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Opening an item in the policy list does nothing with no selection, opens a category as the current one, or opens a policy&#39;s editor for the area currently shown; Enter does the same.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Opening an item in the policy list does nothing with no selection, opens a category as the current one, or opens a policy's editor for the area currently shown; Enter does the same.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:563
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:563  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>Policy deduplication merges otherwise identical user and computer policy pairs into single policies that apply to both and tells the person &quot;Deduplicated N policies.&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: Policy deduplication merges otherwise identical user and computer policy pairs into single policies that apply to both and tells the person &quot;Deduplicated N policies.&quot;.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:574
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:574  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When the right-click menu is opened from the category tree, it is shown for the selected category, and a tree with no selected category is not handled (the program fails with an error). When opened from anywhere else with a row selected in the policy list, it is shown for that row. When opened from anywhere else with no row selected, it is not shown.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When the right-click menu is opened from the category tree, it is shown for the selected category, and a tree with no selected category is not handled (the program fails with an error). When opened from anywhere else with a row selected in the policy list, it is shown for that row. When opened from anywhere else with no row selected, it is not shown.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:820
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:820  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The right-click menu shows only the actions that fit what was clicked: policy-only actions are hidden for a category, and category-only actions are hidden for a policy.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The right-click menu shows only the actions that fit what was clicked: policy-only actions are hidden for a category, and category-only actions are hidden for a policy.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:831
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:831  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>When a category in the tree is right-clicked, it becomes the selected category, because a right-click alone does not select it; a left-click is left as is.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: When a category in the tree is right-clicked, it becomes the selected category, because a right-click alone does not select it; a left-click is left as is.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:861
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:861  ·  Screens: Main</div></div></div><div class="row"><div class="main"><span>The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Browsing policy definitions: The text of a policy description is tidied for display: leading and trailing spaces are removed from every line and blank space at the end of the text is dropped.
+Where to look first:
+- Starts at PolicyPlus/Main.vb:863
+- PolicyPlus/Main.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/Main.vb:863  ·  Screens: Main</div></div></div></details><h2>Data structures defined here (29)</h2><div class="row"><div class="main"><span>DetailAdmx</span><div class="sub">DetailAdmx, Label1, Label2, Label3, Label4, Label5, Label6, Label7, TextPath, TextNamespace, TextSupersededAdm, LsvPolicies, ChPolicyId, ChName, LsvCategories, ChCategoryId, ChCategoryName, LsvProducts, ChProductId, ChProductName, LsvSupportDefinitions, ChSupportId, ChSupportName, ButtonClose</div></div><div class="meta">24 fields</div></div><div class="row"><div class="main"><span>DetailCategory</span><div class="sub">DetailCategory, NameLabel, IdLabel, DefinedLabel, DisplayCode, InfoCodeLabel, ParentLabel, NameTextbox, IdTextbox, DefinedTextbox, DisplayCodeTextbox, InfoCodeTextbox, ParentTextbox, ParentButton, CloseButton</div></div><div class="meta">15 fields</div></div><div class="row"><div class="main"><span>DetailPolicy</span><div class="sub">Me, NameLabel, IdLabel, DefinedLabel, DisplayLabel, InfoLabel, PresentLabel, SectionLabel, SupportLabel, CategoryLabel, NameTextbox, IdTextbox, DefinedTextbox, DisplayCodeTextbox, InfoCodeTextbox, PresentCodeTextbox, SectionTextbox, SupportTextbox, CategoryTextbox, CategoryButton, SupportButton, CloseButton</div></div><div class="meta">22 fields</div></div><div class="row"><div class="main"><span>DetailProduct</span><div class="sub">Me, NameLabel, IdLabel, DefinedLabel, KindLabel, VersionLabel, ParentLabel, ChildrenLabel, DisplayCodeLabel, NameTextbox, IdTextbox, DefinedTextbox, DisplayCodeTextbox, KindTextbox, ParentButton, ParentTextbox, ChildrenListview, ChVersion, ChName, CloseButton, VersionTextbox</div></div><div class="meta">21 fields</div></div><div class="row"><div class="main"><span>DetailSupport</span><div class="sub">Me, NameLabel, IdLabel, DefinedLabel, DisplayCodeLabel, LogicLabel, ProductsLabel, NameTextbox, IdTextbox, DefinedTextbox, DisplayCodeTextbox, LogicTextbox, EntriesListview, ChName, ChMinVer, ChMaxVer, CloseButton</div></div><div class="meta">17 fields</div></div><div class="row"><div class="main"><span>DownloadAdmx</span><div class="sub">Me, LabelWhatsThis, LabelDestFolder, TextDestFolder, ButtonBrowse, ProgressSpinner, LabelProgress, ButtonStart, ButtonClose</div></div><div class="meta">9 fields</div></div><div class="row"><div class="main"><span>EditPol</span><div class="sub">Me, LsvPol, ButtonSave, ChItem, ChValue, ButtonAddKey, ButtonAddValue, ButtonDeleteValue, ButtonForget, ButtonEdit, ButtonImport, ButtonExport</div></div><div class="meta">12 fields</div></div><div class="row"><div class="main"><span>PolValueInfo</span><div class="sub">Key, Name, Kind, Data, IsDeleter</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>EditPolDelete</span><div class="sub">Me, TextKey, OptPurge, OptClearFirst, OptDeleteOne, TextValueName, ButtonOK, Label1</div></div><div class="meta">8 fields</div></div><div class="row"><div class="main"><span>EditPolKey</span><div class="sub">Me, TextName, ButtonOK, Label1</div></div><div class="meta">4 fields</div></div><div class="row"><div class="main"><span>EditPolMultiStringData</span><div class="sub">Me, TextName, TextData, ButtonOK, Label1, Label2</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditPolNumericData</span><div class="sub">Me, TextName, CheckHexadecimal, NumData, ButtonOK, Label1, Label2</div></div><div class="meta">7 fields</div></div><details class="more"><summary>Showing 12 of 29 data structures. Show all 29</summary><div class="row"><div class="main"><span>EditPolStringData</span><div class="sub">Me, TextName, TextData, ButtonOK, Label1, Label2</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditPolValue</span><div class="sub">Me, ComboKind, ButtonOK, TextName, Label1, Label2</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>EditSetting</span><div class="sub">Me, CommentLabel, SupportedLabel, SettingNameLabel, CommentTextbox, SupportedTextbox, NotConfiguredOption, EnabledOption, DisabledOption, ExtraOptionsPanel, ExtraOptionsTable, CloseButton, OkButton, HelpTextbox, SectionDropdown, ApplyButton, SectionLabel</div></div><div class="meta">17 fields</div></div><div class="row"><div class="main"><span>DropdownPresentationMap</span><div class="sub">ID, DisplayName</div></div><div class="meta">2 fields</div></div><div class="row"><div class="main"><span>ExportReg</span><div class="sub">Label1, Label2, Label3, Label4, TextReg, TextBranch, TextRoot, ButtonBrowse, ButtonExport</div></div><div class="meta">9 fields</div></div><div class="row"><div class="main"><span>ImportReg</span><div class="sub">Label1, Label2, TextReg, TextRoot, ButtonBrowse, ButtonImport</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>ImportSpol</span><div class="sub">ButtonOpenFile, Label1, ButtonApply, TextSpol, ButtonVerify, ButtonReset</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>InspectPolicyElements</span><div class="sub">PolicyNameTextbox, PolicyNameLabel, PolicyDetailsButton, InfoTreeview, CloseButton</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>InspectSpolFragment</span><div class="sub">TextPolicyName, LabelPolicy, TextSpol, ButtonClose, ButtonCopy, CheckHeader</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>LanguageOptions</span><div class="sub">Label1, Label2, ButtonOK, TextAdmlLanguage</div></div><div class="meta">4 fields</div></div><div class="row"><div class="main"><span>ListEditor</span><div class="sub">EntriesDatagrid, NameColumn, ValueColumn, ElementNameLabel, CloseButton, OkButton</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>LoadedAdmx</span><div class="sub">LsvAdmx, ChFileTitle, ChFolder, ChNamespace, ButtonClose</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>LoadedProducts</span><div class="sub">LsvTopLevelProducts, LabelMajorVersion, LsvMajorVersions, LabelMinorVersion, LsvMinorVersions, ButtonClose</div></div><div class="meta">6 fields</div></div><div class="row"><div class="main"><span>LoadedSupportDefinitions</span><div class="sub">LsvSupport, ChName, ChDefinedIn, ButtonClose, TextFilter</div></div><div class="meta">5 fields</div></div><div class="row"><div class="main"><span>Main</span><div class="sub">MainMenu, FileToolStripMenuItem, OpenADMXFolderToolStripMenuItem, OpenADMXFileToolStripMenuItem, SetADMLLanguageToolStripMenuItem, CloseADMXWorkspaceToolStripMenuItem, OpenPolicyResourcesToolStripMenuItem, SavePoliciesToolStripMenuItem, EditRawPOLToolStripMenuItem, ExitToolStripMenuItem, ViewToolStripMenuItem, EmptyCategoriesToolStripMenuItem, OnlyFilteredObjectsToolStripMenuItem, FilterOptionsToolStripMenuItem, DeduplicatePoliciesToolStripMenuItem, LoadedADMXFilesToolStripMenuItem, AllProductsToolStripMenuItem, AllSupportDefinitionsToolStripMenuItem, FindToolStripMenuItem, ByIDToolStripMenuItem, ByTextToolStripMenuItem, ByRegistryToolStripMenuItem, SearchResultsToolStripMenuItem, FindNextToolStripMenuItem, ShareToolStripMenuItem, ImportSemanticPolicyToolStripMenuItem, ImportPOLToolStripMenuItem, ImportREGToolStripMenuItem, ExportPOLToolStripMenuItem, ExportREGToolStripMenuItem, HelpToolStripMenuItem, AboutToolStripMenuItem, AcquireADMXFilesToolStripMenuItem, SplitContainer, ComboAppliesTo, CategoriesTree, PolicyObjectContext, CmeCatOpen, CmePolEdit, CmeAllDetails, CmePolInspectElements, CmePolSpolFragment, PolicyIcons, PoliciesList, ChSettingName, SettingInfoPanel, PolicyInfoTable, PolicyTitleLabel, PolicySupportedLabel, PolicyDescLabel, InfoStrip, ComputerSourceLabel, UserSourceLabel, PolicyIsPrefTable, PictureBox1, PolicyIsPrefLabel</div></div><div class="meta">56 fields</div></div><div class="row"><div class="main"><span>OpenAdmxFolder</span><div class="sub">Me, LabelFromWhere, OptLocalFolder, OptSysvol, OptCustomFolder, TextFolder, ButtonOK, ButtonBrowse, ClearWorkspaceCheckbox</div></div><div class="meta">9 fields</div></div><div class="row"><div class="main"><span>OpenPol</span><div class="sub">Me, ComputerGroup, CompNullOption, CompFileBrowseButton, CompPolFilenameTextbox, CompFileOption, CompRegistryOption, CompLocalOption, UserGroup, UserPerUserRegOption, UserPerUserGpoOption, UserBrowseHiveButton, UserNullOption, UserBrowseGpoButton, UserHivePathTextbox, UserFileBrowseButton, UserGpoSidTextbox, UserPolFilenameTextbox, UserFileOption, UserRegistryOption, UserLocalOption, OkButton, CompRegTextbox, UserRegTextbox</div></div><div class="meta">24 fields</div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

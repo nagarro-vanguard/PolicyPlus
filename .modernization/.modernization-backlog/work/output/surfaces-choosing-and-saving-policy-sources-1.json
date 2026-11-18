@@ -1,0 +1,459 @@
+{
+  "stories": [
+    {
+      "title": "Look up a user's Group Policy object by account name",
+      "what": "In the dialog for a user's Group Policy object, the person types an account name and presses Search to see its security identifier (SID), or types the SID directly, then confirms or cancels. The chosen SID names the object whose policy file is then imported by upload.",
+      "why": "Administrators can point the user side of Policy Plus at one person's Group Policy object without knowing the SID by heart, and cannot go on with a SID that is not valid.",
+      "actions": [
+        "block-94740465332149589219",
+        "block-85480965507959714722",
+        "block-75399435004242266349"
+      ],
+      "terms": [
+        {
+          "name": "Security identifier (SID)",
+          "means": "The identifier that names one account and its Group Policy object, such as S-1-5-21-...; it is not the account's display name."
+        },
+        {
+          "name": "Per-user Group Policy object",
+          "means": "The policy kept for one named user account, used as the user policy source; it is not the local Group Policy that applies to everyone on the computer."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given an account name is typed, when the person presses Search, then the account's SID appears in the SID box; and when the name cannot be translated, then the person is told \"The name could not be translated to a SID.\"",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-91379498462935455610"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-7"
+            }
+          ]
+        },
+        {
+          "says": "Given a name is typed and the SID box is empty, when the person presses OK, then the name is looked up first, and the dialog stays open if no SID results.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88238619586671903040"
+            }
+          ]
+        },
+        {
+          "says": "Given the SID box holds text that is not a valid SID, when the person presses OK, then they are told \"The SID is not valid. Enter a SID in the lower box, or enter a username in the top box and press Search to translate.\" and the dialog stays open; given a valid SID, then it is returned, the dialog closes as accepted and the person is asked to upload that object's policy file.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-77474018484672211108"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-7"
+            }
+          ]
+        },
+        {
+          "says": "Given the dialog is open, when the person presses Escape, then it closes as cancelled and nothing is chosen.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-26724904229141688759"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "Which account names can Search translate to a SID now that no directory connection exists (decision 7 only replaces the lookup by a policy file upload), for example a fixed list, names in an uploaded file, or none so the SID is always typed?"
+      ]
+    },
+    {
+      "title": "Pick a user profile as the user policy source",
+      "what": "In the user profile dialog, the person selects a profile folder and presses OK to use that profile's registry hive file (ntuser.dat) as the user policy source, or cancels with Escape. The hive's policies are brought in as an imported REG or POL file.",
+      "why": "Administrators can edit the policies of a specific person's profile without being signed in as that person.",
+      "actions": [
+        "block-81482853098029816247",
+        "block-77449854280048805872"
+      ],
+      "terms": [
+        {
+          "name": "User hive",
+          "means": "The file ntuser.dat in a profile folder, holding that person's registry settings; it is not the live registry of the signed-in person."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given no profile is selected, when the person presses OK, then nothing happens; given a profile is selected, then that profile's hive is returned as the chosen user source, the dialog closes as accepted and the person is asked to import that hive's policies as a REG or POL file, since the live hive is not read.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-02848405191150173128"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-2"
+            },
+            {
+              "_tag": "decision",
+              "id": "scope.decision-12"
+            }
+          ]
+        },
+        {
+          "says": "Given the dialog is open, when the person presses Escape, then it closes as cancelled and nothing is chosen.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-37850254215893887157"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "Where does the list of profile folders the person selects from come from, since the service reads no user folder (decision 1), and what stands in for the path C:\\Users\\<folder>\\ntuser.dat that the legacy dialog returns?"
+      ]
+    },
+    {
+      "title": "Choose the computer policy source",
+      "what": "In the policy sources dialog, the person chooses where the computer policies come from: the local Group Policy, a registry path, a POL file, or Scratch space. Each choice enables only its own box and Browse button, and the POL file is picked from the person's own machine.",
+      "why": "The person can see which computer source is active and cannot type into one that is not chosen.",
+      "actions": [
+        "block-43495097990247728689",
+        "block-07841055713983147509"
+      ],
+      "terms": [
+        {
+          "name": "Policy source",
+          "means": "The place where one side's policies are kept and saved back to: Local GPO, Registry, POL file, per-user GPO, user hive or Scratch space; it is not the template files that describe the policies."
+        },
+        {
+          "name": "Scratch space",
+          "means": "An empty source that can be changed but is never saved anywhere; it is not a file the person can download."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given the person selects a computer choice, when the dialog updates, then the registry path box is usable only with the Registry choice, and the POL file name box and its Browse button only with the POL file choice.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-58680491450946971024"
+            },
+            {
+              "_tag": "decision",
+              "id": "scope.decision-12"
+            }
+          ]
+        },
+        {
+          "says": "Given the person presses Browse for the computer POL file, when the file picker opens, then it accepts only '.pol' files, allows naming a file that does not exist yet, and does not ask before an existing file is chosen; the file comes from upload from the person's machine.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-60819102502476341284"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "What is the content of the Local GPO choice, since decisions 1, 2 and 12 give no file-based replacement for the system's own policy folder: an uploaded Registry.pol, a stored copy, or is the choice not offered?"
+      ]
+    },
+    {
+      "title": "Choose the user policy source",
+      "what": "In the policy sources dialog, the person chooses where the user policies come from: the local Group Policy, a registry path, a POL file, a per-user Group Policy object, a user hive, or Scratch space. Each choice enables only its own boxes and Browse buttons, which lead to the file picker and the two dialogs for a user's object or profile.",
+      "why": "The person can set the user side separately from the computer side and cannot type into a box that does not belong to the chosen source.",
+      "actions": [
+        "block-16593836685470314086",
+        "block-18882497527396093425",
+        "block-22676943268795169202",
+        "block-07013931817450395539"
+      ],
+      "terms": [],
+      "criteria": [
+        {
+          "says": "Given the person selects a user choice, when the dialog updates, then the registry path box is usable only with Registry, the POL file box and Browse only with POL file, the SID box and Browse only with per-user GPO, and the hive path box and Browse only with user hive.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-34260437212150300999"
+            },
+            {
+              "_tag": "decision",
+              "id": "scope.decision-12"
+            }
+          ]
+        },
+        {
+          "says": "Given the person presses a Browse button for the user POL file, the user's Group Policy object or the user's profile, when the matching picker or dialog opens, then its result fills the box that belongs to that choice.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-7"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-2"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "What is the content of the Local GPO choice on the user side, since decisions 1, 2 and 12 give no file-based replacement for the system's own policy folder?"
+      ]
+    },
+    {
+      "title": "Confirm or cancel the chosen policy sources",
+      "what": "Pressing OK in the policy sources dialog creates the computer and user sources from the choices made, and keeps the dialog open with the reason when one cannot be created. Pressing Escape cancels.",
+      "why": "The person only moves on with two working sources, and can back out without changing anything.",
+      "actions": [
+        "block-53684119065030568086",
+        "block-39062072014858771500"
+      ],
+      "terms": [],
+      "journey": {
+        "name": "Choose where policies are kept",
+        "steps": [
+          "Open the policy sources dialog",
+          "Choose the computer source",
+          "Choose the user source",
+          "Press OK, or Escape to cancel"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given a computer choice, when the person presses OK, then the source is created from the choice (Local GPO, Registry with the typed path, POL file with the typed name, or Scratch space when none is chosen); if it cannot be created, then they are told \"The computer policy loader could not be created.\" followed by the reason and the dialog stays open.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-75533700456390778594"
+            },
+            {
+              "_tag": "decision",
+              "id": "scope.decision-12"
+            }
+          ]
+        },
+        {
+          "says": "Given a user choice, when the person presses OK, then the source is created from the choice (Local GPO, Registry, POL file, per-user GPO with the typed SID, user hive with the typed file path, or Scratch space otherwise); if it cannot be created, then they are told \"The user policy loader could not be created.\" followed by the reason and the dialog stays open; the dialog closes as accepted only when both sources were created.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-36363277387876573326"
+            },
+            {
+              "_tag": "decision",
+              "id": "scope.decision-12"
+            }
+          ]
+        },
+        {
+          "says": "Given the dialog is open, when the person presses Escape, then it closes as cancelled.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-66851330016699676430"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "What does creating a Local GPO source from the choice mean in the target product, since no source of its content is stated?"
+      ]
+    },
+    {
+      "title": "Open the chosen policy sources",
+      "what": "From the main screen, the person opens the policy sources dialog and, once accepted, the program opens the chosen user and computer sources and shows the result.",
+      "why": "The person works on the policies of the source they chose, and sees at once whether it can be changed.",
+      "actions": [
+        "block-52519148395305522333"
+      ],
+      "terms": [],
+      "journey": {
+        "name": "Open policy sources",
+        "steps": [
+          "Choose the open policy resources command",
+          "Choose the sources in the dialog",
+          "See the result of opening",
+          "Continue in the nearest visible category"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the person accepted the policy sources dialog, when the sources are opened, then the opening result is shown and the view moves to the nearest visible category. Sources come from uploaded files and imports; the live system source is not offered.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-10464012301936997836"
+            },
+            {
+              "_tag": "decision",
+              "id": "scope.decision-12"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Save policy changes to their sources",
+      "what": "From the main screen, the person saves comments and policy settings back to the user and computer sources. Saved files are returned as downloads, including the policy file and gpt.ini of a Group Policy source. Nothing is written to a disk of the server's host, refreshed or applied live.",
+      "why": "The person's work is kept in the file of the source it came from, with a clear outcome per side.",
+      "actions": [
+        "block-66465089975119483214"
+      ],
+      "terms": [
+        {
+          "name": "gpt.ini",
+          "means": "The small file next to a Group Policy source's policy file that holds its version number and extension lines; it is not the policy file itself."
+        }
+      ],
+      "journey": {
+        "name": "Save policies",
+        "steps": [
+          "Choose the save command",
+          "Comments are written for each source",
+          "Each writable source is saved",
+          "See the outcome for the user and computer sides"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given sources are open, when the person saves, then each source's comments are written first, then a source is written only if fully writable (otherwise reported \"not writable\"); the person sees \"Success.\" with the user and computer outcomes, or \"Saving failed!\" with the reason.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-13724150063390760319"
+            }
+          ]
+        },
+        {
+          "says": "Given a source has a comment list, when saving, then it is saved to its comment file location even when empty; a source without comment support has no list and is skipped.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-87767421628061265824"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-6"
+            }
+          ]
+        },
+        {
+          "says": "Given comments are saved, when the file is written, then each comment gets its own text id built from the policy's namespace, policy name and a running number, and each distinct namespace gets a prefix made from its name (dots turned into underscores) and the running number.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-39804924157705575084"
+            }
+          ]
+        },
+        {
+          "says": "Given comments are saved, when the file is written, then every comment and text held is written to the target file in schema version 1.0, replacing what the file held, and the file is offered as a CMTX download.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-57614366266507799597"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-6"
+            }
+          ]
+        },
+        {
+          "says": "Given a local Group Policy source, when saved, then the Registry.pol and gpt.ini are produced with the version raised and offered as downloads, and the outcome tells that the files were produced for download; no policy refresh, Windows edition check or live registry difference is applied.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-19841193988434357732"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-2"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            }
+          ]
+        },
+        {
+          "says": "Given a per-user GPO source, when saved, then its Registry.pol is produced, its gpt.ini version is raised, both are offered as downloads, and the outcome tells that the files were produced for download; no policy refresh is invoked.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-20632548312339129786"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-7"
+            }
+          ]
+        },
+        {
+          "says": "Given a POL file, registry, user hive or Scratch space source, when saved, then the outcome tells that the file was produced for download (POL file, registry and user hive sources, which are REG or POL files) or \"discarded\" (Scratch space); nothing is applied live and no change waits for a source to close.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-24339552780845919468"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-2"
+            }
+          ]
+        },
+        {
+          "says": "Given a Group Policy source whose gpt.ini does not exist, when saved, then a new gpt.ini is written with the General section, both extension-name lines and Version 65537.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-00851565168679896073"
+            }
+          ]
+        },
+        {
+          "says": "Given a gpt.ini exists, when updated, then its Version is raised by 1 for a machine source and by 65536 for a user source, and set to 65537 when no Version line exists.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-09176393040056781958"
+            }
+          ]
+        },
+        {
+          "says": "Given a gpt.ini is updated, when the Machine and User extension-name lines for the registry policy are missing, then they are added; when present, they are left untouched.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-26056926835272364672"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "What outcome wording replaces \"saved to disk and invoked policy refresh\", \"saved to disk and applied diff to Registry\", \"already applied\" and \"will apply when policy source is closed\", which describe disk writes, refreshes and live changes that decisions 1, 2 and 7 do not carry?",
+        "What is remembered for the next start (the legacy program keeps the chosen source types and locations), and for whom, since uploaded sources have no location on the server and decision 4 stores one shared settings row for all users?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "stories": [
+    {
+      "title": "Choose where to add policy definitions from",
+      "what": "A person opens the 'add policy definitions' window, chooses where the templates come from, decides whether to clear the loaded definitions first, and then confirms or cancels. Because the product runs in a browser and cannot see the person's folders, the folder choices are replaced by choosing template files (ADMX and ADML) from their own computer.",
+      "why": "Administrators need to load the right set of policy templates before they can browse or edit any policy, and need a clear refusal when nothing usable was chosen.",
+      "actions": [
+        "block-13117547435582731450",
+        "block-59255999245406242607",
+        "block-30537692166592904451",
+        "block-20168653063977540452",
+        "block-73356074458344317029"
+      ],
+      "terms": [
+        {
+          "name": "Policy definitions",
+          "means": "The administrative template files (ADMX and ADML) that describe the available policies; they are not the policy settings a person has chosen.",
+          "entity": "entity-92808062881922645840"
+        },
+        {
+          "name": "Clear before adding",
+          "means": "The option to remove the definitions already loaded before the new ones are added; it is not a deletion of any policy setting."
+        }
+      ],
+      "journey": {
+        "name": "Add policy definitions",
+        "steps": [
+          "Open the window to add policy definitions",
+          "Choose where the definitions come from",
+          "Pick the template files to add",
+          "Decide whether to clear the loaded definitions first",
+          "Confirm to add them, or cancel"
+        ]
+      },
+      "criteria": [
+        {
+          "says": "Given the window has just opened, when the person looks at it, then the choice to pick files from their own computer is already selected, and the file picker and file list are usable.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-76226373219464614800"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            },
+            {
+              "_tag": "layer",
+              "id": "layer-web"
+            }
+          ]
+        },
+        {
+          "says": "Given the window is open and another source choice is shown, when the person selects a choice other than picking files from their own computer, then the file picker and file list are not usable, and when they select picking files again, then both become usable.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-88154451768954453608"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            }
+          ]
+        },
+        {
+          "says": "Given the product cannot reach the person's folders, the Windows folder or a domain's shared policy folder, when the window opens, then no folder or domain choice is offered, and the person can load a domain's definitions only by picking the files they copied from it.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-7"
+            },
+            {
+              "_tag": "decision",
+              "id": "scope.decision-16"
+            }
+          ]
+        },
+        {
+          "says": "Given the person presses the browse button, when they pick files in their computer's file dialog, then the picked file names appear in the list; and when they close that dialog without picking, then the list is unchanged.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-1"
+            },
+            {
+              "_tag": "layer",
+              "id": "layer-web"
+            }
+          ]
+        },
+        {
+          "says": "Given the person has picked template files, when they press OK, then the window closes as accepted and those files are the ones added to the loaded definitions.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-53176229115945924012"
+            },
+            {
+              "_tag": "decision",
+              "id": "integrations.decision-3"
+            }
+          ]
+        },
+        {
+          "says": "Given nothing usable has been chosen, when the person presses OK, then they are told what is missing and the window stays open.",
+          "from": [
+            {
+              "_tag": "decision",
+              "id": "base.decision-23"
+            }
+          ]
+        },
+        {
+          "says": "Given the window opens, when the person looks at the option to clear the loaded definitions before adding, then it is ticked; and given they press OK with usable files, then their tick or untick is passed on, while given the window was cancelled or refused, then no choice is passed on.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-43765682097437166867"
+            }
+          ]
+        },
+        {
+          "says": "Given the window is open, when the person presses Escape, then the window closes as cancelled and nothing is chosen or added.",
+          "from": [
+            {
+              "_tag": "rule",
+              "id": "businessrule-98012095360980700253"
+            }
+          ]
+        }
+      ],
+      "open": [
+        "The old window offered 'the Windows policy definitions folder'; should the new one offer the stored Microsoft package or the installed definitions in its place, or drop that choice?",
+        "What exact wording should the refusal show when no files, or no readable template files, were chosen (the old text spoke of a folder that does not exist)?"
+      ]
+    }
+  ]
+}

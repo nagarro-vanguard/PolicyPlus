@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Lets the person pick a REG file and guesses the key prefix from it.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/editing-policy-files-directly.html">Editing policy files directly</a> › <a href="../../screen/import-a-registry-file.html">Import a registry file</a></div><h1>Lets the person pick a REG file and guesses the key prefix from it.</h1><p class="lead">Started by a person. In the code: PolicyPlus/ImportReg.vb:9</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the ImportReg screen of Editing policy files directly: Lets the person pick a REG file and guesses the key prefix from it.
+Where to look first:
+- Starts at PolicyPlus/ImportReg.vb:9
+- PolicyPlus/ImportReg.vb (only this capability)
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Data read: Policy setting
+Rules decided here: 12
+- When a REG file is chosen and the prefix is empty, the prefix is guessed from the file; if the file holds default values, the person is warned &quot;This REG file contains data for default values, which cannot be applied to all policy sources.&quot; (PolicyPlus/ImportReg.vb:9)
+- Only files of type *.reg are offered by the file chooser when browsing for the REG file. (PolicyPlus/ImportReg.vb:10)
+- When the guess fails, the person is only warned &quot;An error occurred while trying to guess the prefix.&quot; and the prefix stays empty. (PolicyPlus/ImportReg.vb:19)
+- Blank lines and lines starting with a semicolon in a REG file are ignored. (PolicyPlus/RegFile.vb:42)
+- A REG file is refused when its first line is not 'Windows Registry Editor Version 5.00', with the message 'Incorrect REG signature'. (PolicyPlus/RegFile.vb:47)
+- A REG key header starting with a minus sign marks the whole key for removal. Otherwise it opens a key whose values follow. (PolicyPlus/RegFile.vb:54)
+- A REG file value line starting with an at sign is the key's default value, with an empty name. (PolicyPlus/RegFile.vb:65)
+- In a REG file, a value written as a bare minus sign is a value to delete. A quoted value is text, 'dword:' is a 32-bit number in hexadecimal, and 'hex' is bytes, typed by the number in brackets or binary if none. Data in none of these forms is kept as a value with no data and no type, with no error, and applying it writes an empty value or fails. (PolicyPlus/RegFile.vb:65)
+  ...and 4 more
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/editing-policy-files-directly/dialog-windows-and-their-reactions.html">Dialog windows and their reactions</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/editing-policy-files-directly/policy-definitions-and-files.html">Policy definitions and files</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (12)</h2><div class="group-name">Dialog windows and their reactions</div><div class="row"><div class="main"><span>Only files of type *.reg are offered by the file chooser when browsing for the REG file.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Editing policy files directly: Only files of type *.reg are offered by the file chooser when browsing for the REG file.
+Where to look first:
+- Starts at PolicyPlus/ImportReg.vb:10
+- PolicyPlus/ImportReg.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportReg.vb:10  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>When the guess fails, the person is only warned &quot;An error occurred while trying to guess the prefix.&quot; and the prefix stays empty.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Editing policy files directly: When the guess fails, the person is only warned &quot;An error occurred while trying to guess the prefix.&quot; and the prefix stays empty.
+Where to look first:
+- Starts at PolicyPlus/ImportReg.vb:19
+- PolicyPlus/ImportReg.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportReg.vb:19  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>When a REG file is chosen and the prefix is empty, the prefix is guessed from the file; if the file holds default values, the person is warned &quot;This REG file contains data for default values, which cannot be applied to all policy sources.&quot;</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Editing policy files directly: When a REG file is chosen and the prefix is empty, the prefix is guessed from the file; if the file holds default values, the person is warned &quot;This REG file contains data for default values, which cannot be applied to all policy sources.&quot;
+Where to look first:
+- Starts at PolicyPlus/ImportReg.vb:9
+- PolicyPlus/ImportReg.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/ImportReg.vb:9  ·  Screens: ImportReg</div></div></div><div class="group-name">Policy definitions and files</div><div class="row"><div class="main"><span>A REG file is reported as holding default values when any value has an empty name.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: A REG file is reported as holding default values when any value has an empty name.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:298
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:298  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>A REG file value line starting with an at sign is the key&#39;s default value, with an empty name.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: A REG file value line starting with an at sign is the key's default value, with an empty name.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:65
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:65  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>A REG file is refused when its first line is not &#39;Windows Registry Editor Version 5.00&#39;, with the message &#39;Incorrect REG signature&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: A REG file is refused when its first line is not 'Windows Registry Editor Version 5.00', with the message 'Incorrect REG signature'.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:47
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:47  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>Blank lines and lines starting with a semicolon in a REG file are ignored.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: Blank lines and lines starting with a semicolon in a REG file are ignored.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:42
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:42  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>A REG key header starting with a minus sign marks the whole key for removal. Otherwise it opens a key whose values follow.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: A REG key header starting with a minus sign marks the whole key for removal. Otherwise it opens a key whose values follow.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:54
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:54  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>In a REG file, a value written as a bare minus sign is a value to delete. A quoted value is text, &#39;dword:&#39; is a 32-bit number in hexadecimal, and &#39;hex&#39; is bytes, typed by the number in brackets or binary if none. Data in none of these forms is kept as a value with no data and no type, with no error, and applying it writes an empty value or fails.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: In a REG file, a value written as a bare minus sign is a value to delete. A quoted value is text, 'dword:' is a 32-bit number in hexadecimal, and 'hex' is bytes, typed by the number in brackets or binary if none. Data in none of these forms is kept as a value with no data and no type, with no error, and applying it writes an empty value or fails.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:65
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:65  ·  Screens: ImportReg</div></div></div><div class="row"><div class="main"><span>Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: Text read from a policy file stops at its first empty character, and a multiple-string value ends at its first empty string.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:231
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:231  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div><div class="row"><div class="main"><span>The prefix of a REG file is guessed from its first key only. For a key starting with &#39;HKEY_USERS\&#39; it is that hive plus the user identifier. For any other key, including HKEY_CURRENT_USER, it is the hive name alone. A first key with no further backslash gives an empty prefix. A file with no keys gets &#39;HKEY_LOCAL_MACHINE\&#39;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: The prefix of a REG file is guessed from its first key only. For a key starting with 'HKEY_USERS\' it is that hive plus the user identifier. For any other key, including HKEY_CURRENT_USER, it is the hive name alone. A first key with no further backslash gives an empty prefix. A file with no keys gets 'HKEY_LOCAL_MACHINE\'.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:284
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:284  ·  Screens: ImportReg</div></div></div><details class="more"><summary>Showing 8 of 9 business rules. Show all 9</summary><div class="row"><div class="main"><span>A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Editing policy files directly: A stored policy file value is read back as text for text and expandable text, a 32-bit or 64-bit number for numbers, a list of strings for multiple strings, and raw bytes for every other type.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:320
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:320  ·  Screens: EditPol, ExportReg, ImportReg, Main</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

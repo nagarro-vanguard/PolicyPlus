@@ -275,6 +275,8 @@ export function analysisPaths(root: string) {
         conclusions: conclusionsPaths(stageWork),
         stageAudit: stageAuditPaths(stageWork),
         pages: join(root, subjectFolder),
+        /** Where the app, the pages a person reads the analysis through, is built by default. */
+        app: join(root, "app"),
         ...inventoryPaths(stageWork),
         howItRunsJobs: stageWork("how-it-runs", "jobs.json"),
         /** One How it runs job's folder, named by its job id; the job's stack name is in the job list, never in a path. */

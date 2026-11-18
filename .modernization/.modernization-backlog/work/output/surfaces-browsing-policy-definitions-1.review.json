@@ -1,0 +1,5 @@
+{"read":15,"challenges":[
+{"record":0,"says":"The criterion \"added to the policies already loaded and the structures are built\" uses builder wording a product owner cannot follow, and it overlaps the single ADMX file criterion without saying how a template file differs from an ADMX file."},
+{"record":1,"says":"The resize criterion cites only layer-web and a scope decision, not a rule, so it states fit-to-pane behaviour (no horizontal scroll bar, labels fitting) that no cited sentence carries."},
+{"record":14,"says":"The value-writing criterion drops parts of the cited rule: text lists have items double-quoted with quotes doubled, tables have double-quoted name: value lines, and text is single-quoted with no escaping, which is why quotes or line breaks cannot be read back."}
+]}

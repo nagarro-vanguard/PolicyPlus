@@ -1,0 +1,386 @@
+{
+ "stories": [
+  {
+   "title": "Set up the workspace, runtime and shared tooling",
+   "what": "A Bun and Turborepo workspace with one package or app per layer, a pinned Bun version, shared TypeScript, ESLint, Prettier, knip, markdownlint, commitlint and lefthook configuration that each layer extends, and a root check command.",
+   "why": "Every later story starts from the same checked, repeatable workspace, so a rule change happens in one place and developers get the same results locally and in CI.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a fresh checkout, when a developer runs `bun install` and `bun run check` at the root, then Turborepo runs lint, typecheck, test and build for every layer and exits with code 0.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-10"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-tooling"
+      }
+     ]
+    },
+    {
+     "says": "Given the repository, when a developer lists the workspace, then the layers tooling, domain, contracts, data, api, ui, web and e2e each exist at their planned path and each extends the shared configuration without copying it.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-28"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-tooling"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-domain"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-contracts"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-data"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-api"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-ui"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-e2e"
+      }
+     ]
+    },
+    {
+     "says": "Given a layer that imports a layer above it or leaves an export unused, when `bun run check` runs, then the check fails and names the import or export.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-14"
+      }
+     ]
+    },
+    {
+     "says": "Given a commit with staged files that fail lint, format or typecheck, or a message that is not a conventional commit, when the developer commits, then lefthook rejects the commit and shows the failing check.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-13"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Fix the libraries every layer may use",
+   "what": "The agreed libraries installed: Effect 4 with Schema, HttpApi, HttpClient and SQL; Drizzle ORM and Kit; fast-xml-parser; fflate; TanStack Query and Form; and the rule, written in AGENTS.md, that no library outside this stack is added without a story that needs it.",
+   "why": "One schema language and a small, I/O-free parser set keep the Domain testable and avoid duplicate types, and nothing enters without a story that needs it.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given the workspace after `bun install`, when a developer lists the installed dependencies, then Effect 4, Drizzle ORM, Drizzle Kit, fast-xml-parser, fflate, TanStack Query and TanStack Form are present and Zod is absent.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-9"
+      }
+     ]
+    },
+    {
+     "says": "Given a dependency that is listed in a layer but never imported, or an export that nothing uses, when `bun run check` runs, then knip fails and names it.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-14"
+      }
+     ]
+    },
+    {
+     "says": "Given the root AGENTS.md, when a developer reads it, then it states that no library outside the agreed stack is added without a story that needs it.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-9"
+      },
+      {
+       "_tag": "decision",
+       "id": "base.decision-12"
+      }
+     ]
+    },
+    {
+     "says": "Given a small sample ADMX file and a small zip archive, when a Domain test parses the first with fast-xml-parser and unpacks the second with fflate in memory under Bun, then both succeed with no file, network or database access.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-9"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-domain"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Configure environments, local database and the build version",
+   "what": "Validated environment configuration with an .env.example, a Docker Compose file for local PostgreSQL, and a build step that reads the Git version and passes it to the services and screens as a declared Turborepo input.",
+   "why": "Developers and the black-box tests run against the same database version, a missing setting stops the product at start-up, and the displayed version is never a stale committed file.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given Docker is available, when a developer runs the documented compose command, then a PostgreSQL database starts and accepts a connection with the address given in .env.example.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-10"
+      }
+     ]
+    },
+    {
+     "says": "Given an environment variable listed in .env.example is missing or invalid, when the service or the screens start, then they stop at start-up with a message naming the variable.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-10"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-tooling"
+      }
+     ]
+    },
+    {
+     "says": "Given a Git checkout, when the product is built, then the Git version is available to the services and screens as a build-time value and no generated version file is added to the repository.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-5"
+      },
+      {
+       "_tag": "decision",
+       "id": "scope.decision-9"
+      }
+     ]
+    },
+    {
+     "says": "Given the Git version changes, when Turborepo builds again, then the affected tasks rerun instead of reusing a cached result.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-10"
+      },
+      {
+       "_tag": "decision",
+       "id": "integrations.decision-5"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Set up the test tooling for every layer",
+   "what": "Vitest in each code layer, a real PostgreSQL test database for the Data layer, the HttpApi test client for the Services layer, Storybook stories for the components, Vitest tests of pure logic in the Screens layer, and Playwright with axe in the black-box layer.",
+   "why": "A story can be called done only when its layer checks and its black-box test pass, and the tests catch what can really break: migrations, SQL behaviour and what a user sees.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given a layer with a Vitest test, when `bun run test` runs, then Turborepo runs that layer's tests and reports a failing test as a failed task.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-11"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-tooling"
+      }
+     ]
+    },
+    {
+     "says": "Given a table of sample ADMX, ADML, POL, REG, CMTX and SPOL files and a round-trip test for a parser and its writer, when the Domain tests run, then each sample is checked by an example-based test and the round-trip test passes.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-11"
+      },
+      {
+       "_tag": "decision",
+       "id": "base.decision-17"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-domain"
+      }
+     ]
+    },
+    {
+     "says": "Given the local database is running, when the Data tests run, then they connect to a real PostgreSQL test database, apply the migrations and use no in-memory fake.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-11"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-data"
+      }
+     ]
+    },
+    {
+     "says": "Given a handler of the contract, when a Services test calls it through the HttpApi test client, then the test receives the handler's response without starting a network server.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-11"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-api"
+      }
+     ]
+    },
+    {
+     "says": "Given a component, when Storybook is built, then the component's story renders and a component without a story is reported.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-11"
+      },
+      {
+       "_tag": "decision",
+       "id": "base.decision-24"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-ui"
+      }
+     ]
+    },
+    {
+     "says": "Given a pure function in the Screens layer, when the Screens tests run, then a Vitest test of that function runs and passes.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-11"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-web"
+      }
+     ]
+    },
+    {
+     "says": "Given the running product and a seeded database, when Playwright runs a screen test, then axe checks that screen and any violation fails the test.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-11"
+      },
+      {
+       "_tag": "decision",
+       "id": "base.decision-27"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-e2e"
+      }
+     ]
+    },
+    {
+     "says": "Given the project's CI, when it runs the Data tests and one Playwright test, then PostgreSQL starts under Docker and the Playwright browsers are available, and both tests run.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-11"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Set the pattern for rules written as tested code",
+   "what": "One worked example in the Domain layer: a named, pure rule function with a test named after the rule, domain terms taken from the analysis wording, typed errors, and a round-trip test, plus the AGENTS.md lines that record the pattern; and the OpenAPI document and client generated from hand-written Contracts.",
+   "why": "The legacy rules live as code and tests that cannot go stale silently, so every later story copies one proven pattern instead of inventing its own.",
+   "actions": [],
+   "terms": [],
+   "criteria": [
+    {
+     "says": "Given the example rule, when a developer reads the Domain layer, then the rule is one named pure function and its test carries the rule's name.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-12"
+      },
+      {
+       "_tag": "decision",
+       "id": "base.decision-15"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-domain"
+      }
+     ]
+    },
+    {
+     "says": "Given malformed input to the example parser, when it runs, then it returns a typed Effect error and an unknown element is kept and reported, not dropped.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-16"
+      }
+     ]
+    },
+    {
+     "says": "Given text the example writer produced from the example parser's result, when it is compared with the original text, then the two match byte for byte where the format allows.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-17"
+      }
+     ]
+    },
+    {
+     "says": "Given a hand-written schema and HttpApi group in Contracts, when the generate script runs, then the OpenAPI document and the client are written from them, and CI fails if the committed OpenAPI document differs from the generated one.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-12"
+      },
+      {
+       "_tag": "decision",
+       "id": "base.decision-18"
+      },
+      {
+       "_tag": "layer",
+       "id": "layer-contracts"
+      }
+     ]
+    },
+    {
+     "says": "Given the AGENTS.md of each layer, when a developer reads it, then it states the layer's conventions and the reasons of the decisions that apply, and no separate wiki is needed.",
+     "from": [
+      {
+       "_tag": "decision",
+       "id": "base.decision-12"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,51 @@
+---
+import { copy } from "../lib/copy";
+import { rootOf } from "../lib/payloads";
+import { hasPlan } from "../lib/plan-data";
+export interface Props {
+    title: string;
+    lead?: string;
+    trail?: { text: string; href?: string }[];
+    depth?: number;
+    brief?: string;
+}
+const { title, lead = "", trail = [], depth = 0, brief = "" } = Astro.props;
+const root = rootOf(depth);
+const plan = hasPlan();
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="stylesheet" href={`${root}page.css`} />
+    <link rel="stylesheet" href={`${root}ux.css`} />
+</head>
+<body data-root={root}>
+    <header class="top">
+        <a class="home" href={`${root}index.html`}>{copy.site.home}</a>
+        <nav class="sections" aria-label={copy.nav.label}>
+            <a href={`${root}index.html#does`}>{copy.nav.does}</a>
+            <a href={`${root}made-of.html`}>{copy.nav.madeOf}</a>
+            <a href={`${root}how-it-runs.html`}>{copy.nav.runs}</a>
+            <a href={`${root}connections.html`}>{copy.nav.connections}</a>
+            <a href={`${root}data.html`}>{copy.nav.data}</a>
+            <a href={`${root}risks.html`}>{copy.nav.risks}</a>
+            {plan && <a href={`${root}plan.html`}>{copy.nav.plan}</a>}
+        </nav>
+        <input id="search" type="search" placeholder={copy.site.search} aria-label={copy.site.search} />
+    </header>
+    <div id="results" hidden></div>
+    <main id="main">
+        {trail.length > 0 && <div class="trail">{trail.map((step, i) => <>{i > 0 && " › "}{step.href ? <a href={step.href}>{step.text}</a> : step.text}</>)}</div>}
+        <h1>{title}</h1>
+        {lead !== "" && <p class="lead">{lead}</p>}
+        {brief !== "" && <button class="copy" data-copy-text={brief} data-copied={copy.site.copied}><span data-label>{copy.site.copyBrief}</span></button>}
+        <slot />
+    </main>
+    <script type="application/json" id="copy-strings" set:html={JSON.stringify({ copied: copy.site.copiedAnnounce, noMatch: copy.site.noMatch })}></script>
+    <div id="announce" class="visually-hidden" aria-live="polite"></div>
+    <script is:inline src={`${root}site.js`}></script>
+</body>
+</html>

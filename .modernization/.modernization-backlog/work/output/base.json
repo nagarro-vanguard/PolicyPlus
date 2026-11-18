@@ -1,0 +1,188 @@
+{
+  "decisions": [
+    {
+      "id": "decision-9",
+      "topic": {
+        "_tag": "area",
+        "name": "libraries"
+      },
+      "layer": "workspace",
+      "chose": "Effect 4 with Effect Schema, HttpApi, HttpClient and Effect SQL for contracts, API, data and the Microsoft download; Drizzle ORM and Drizzle Kit for the schema and migrations; fast-xml-parser for ADMX, ADML and CMTX text; fflate for unpacking the Microsoft archive in memory; TanStack Query and Form in Screens; Zod is not used. No library outside the stack is added without a story that needs it.",
+      "reason": "Chose one schema library (Effect Schema) for contract, validation and OpenAPI over adding Zod because a second schema language would duplicate every type. Chose fast-xml-parser and fflate (small, pure JS, run on Bun) over Node-only native modules because Domain must stay free of I/O. Assumes the template archive format stays zip-compatible and files are small."
+    },
+    {
+      "id": "decision-10",
+      "topic": {
+        "_tag": "area",
+        "name": "tooling and environment"
+      },
+      "layer": "layer-tooling",
+      "chose": "Bun is the package manager and runtime, pinned by a version file; Turborepo runs one task per layer (lint, typecheck, test, build) with declared inputs; local PostgreSQL runs from a Docker Compose file at the root; configuration is read from environment variables validated by Effect Schema at start-up, with an .env.example listing each; the Git version is a declared Turborepo input.",
+      "reason": "Chose Docker Compose for the local database over requiring a locally installed PostgreSQL because every developer and the black-box tests get the same version. Chose validated environment variables over config files because the service and screens share one place that fails fast. Assumes Docker is available to developers and CI."
+    },
+    {
+      "id": "decision-11",
+      "topic": {
+        "_tag": "area",
+        "name": "testing"
+      },
+      "layer": "workspace",
+      "chose": "Vitest per layer: Domain with example-based unit tests, table-driven over sample ADMX, ADML, POL, REG, CMTX and SPOL files, plus a round-trip test per parser and writer; Data against a real PostgreSQL test database, no mocks; API through the HttpApi test client; Components with Storybook stories and Screens with Vitest tests of their pure logic. Playwright with axe in layer-e2e drives the running product, one accessibility check per screen. A story is done when its layer checks and its black-box test pass.",
+      "reason": "Chose a real PostgreSQL in Data tests over in-memory fakes because migrations and SQL behaviour are what can break. Chose black-box Playwright for end-to-end rules over component-only tests because the legacy behaviour is user-visible, and chose table-driven Vitest tests over adding Testing Library or a property-testing library because neither is in the stack and decision-9 allows no library outside it without a story. Assumes CI can run Docker and Playwright browsers; no coverage threshold is set because the inputs give none."
+    },
+    {
+      "id": "decision-12",
+      "topic": {
+        "_tag": "area",
+        "name": "knowledge in code"
+      },
+      "layer": "workspace",
+      "chose": "The legacy rules live as code and tests, not documents: each rule is a named, pure Domain function with a test named after the rule, a short comment naming the legacy source only where the reason is not evident, and domain terms in code match the analysis wording. The Effect Schema types and HttpApi groups are written by hand in Contracts; only the OpenAPI document and the client are generated from them, never hand-written. Decision reasons live in AGENTS.md lines and the story, not in a separate wiki.",
+      "reason": "Chose rules as tested pure functions with intention-revealing names over a prose rules document because tests cannot go stale silently. Chose comments only for non-obvious legacy quirks over commenting everything to avoid noise. Assumes the analysis vocabulary is stable enough to name code after."
+    },
+    {
+      "id": "decision-13",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "workspace",
+      "chose": "Commit with conventional commits; lefthook runs lint, format and typecheck on staged files before commit, and commitlint on the message.",
+      "reason": "Chose hooks over CI-only enforcement because feedback arrives before review; CI repeats the same checks so hooks can be skipped without harm."
+    },
+    {
+      "id": "decision-14",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "workspace",
+      "chose": "Run work through Turborepo (bun run check at the root); a layer imports only layers beneath it, and knip fails on unused exports or dependencies.",
+      "reason": "Chose enforced dependency direction over convention alone because layers stay replaceable; assumes knip config lists the entry points of each layer."
+    },
+    {
+      "id": "decision-15",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-domain",
+      "chose": "Pure code only: no file, network, database or clock access; take inputs as arguments and return typed results or Effect errors.",
+      "reason": "Chose purity over convenient I/O inside rules because it keeps rules testable without setup."
+    },
+    {
+      "id": "decision-16",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-domain",
+      "chose": "Model failure as typed Effect errors (for example malformed ADMX), never thrown exceptions or null; an unknown policy element is kept and reported, not silently dropped.",
+      "reason": "Chose typed errors over exceptions so callers must handle each case; keeping unknowns preserves round-trip fidelity of policy files."
+    },
+    {
+      "id": "decision-17",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-domain",
+      "chose": "Policy values and POL, REG and CMTX text round-trip byte-faithfully where the legacy format allows; a round-trip test accompanies every parser and writer.",
+      "reason": "Chose round-trip tests over spot checks because users overwrite real policy files with the output."
+    },
+    {
+      "id": "decision-18",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-contracts",
+      "chose": "Every request and response is an Effect Schema; the HttpApi group per capability is the only source of the OpenAPI document, regenerated by a script and checked for drift in CI.",
+      "reason": "Chose generation over hand editing so Screens and API cannot disagree."
+    },
+    {
+      "id": "decision-19",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-contracts",
+      "chose": "File content crosses the API as upload bodies and downloads with an explicit media type and size limit; the contract names the limit.",
+      "reason": "Chose explicit limits over defaults because policy files are untrusted input."
+    },
+    {
+      "id": "decision-20",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-data",
+      "chose": "Schema changes only through Drizzle Kit migrations committed with the change; a migration is never edited after it merges.",
+      "reason": "Chose forward-only migrations over editing history so every environment reaches the same schema."
+    },
+    {
+      "id": "decision-21",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-data",
+      "chose": "Repositories return Domain types, not Drizzle rows, and run inside Effect SQL transactions when more than one table changes.",
+      "reason": "Chose mapping at the boundary over leaking rows so the schema can change without touching Domain."
+    },
+    {
+      "id": "decision-22",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-api",
+      "chose": "Handlers only decode, call Domain and Data, and encode; no policy rule lives in a handler. Operational configuration (download URL, size limits, database address) comes from validated environment configuration; the product's own settings, such as the policy text language, are read through the Data repository (decision-4), not from configuration.",
+      "reason": "Chose thin handlers over logic in handlers because rules stay testable in Domain. Chose to keep operator-set configuration apart from user settings because decision-4 stores the product's settings in a database table, so only deployment values belong in environment variables."
+    },
+    {
+      "id": "decision-23",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-api",
+      "chose": "Uploaded files are validated for size and type before parsing, and the Microsoft download accepts only the configured HTTPS host.",
+      "reason": "Chose allow-listing over open fetching to limit server-side request risk; assumes the URL is operator-set."
+    },
+    {
+      "id": "decision-24",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-ui",
+      "chose": "Components are presentational, styled with Tailwind tokens, built on Base UI for behaviour and accessibility, each with a Storybook story; no data fetching or routing.",
+      "reason": "Chose Base UI primitives over custom widgets so keyboard and screen reader behaviour comes for free."
+    },
+    {
+      "id": "decision-25",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-web",
+      "chose": "Server data goes through TanStack Query and route loaders; forms use TanStack Form with Effect Schema validation; every visible string is a Paraglide message.",
+      "reason": "Chose messages from the start over retrofitting because every visible string would otherwise have to be found and replaced later; this is independent of the policy text language, which only chooses the template language loaded (decision-3), not the language of the screens' own text."
+    },
+    {
+      "id": "decision-26",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-web",
+      "chose": "Screens call the API through a client generated from the contract and never import Data or Domain parsers.",
+      "reason": "Chose the generated client over direct imports to keep the layer boundary and the contract authoritative."
+    },
+    {
+      "id": "decision-27",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-e2e",
+      "chose": "Tests drive only screens and the public API against a seeded database, assert accessibility with axe on each screen, and never reach into code of other layers.",
+      "reason": "Chose black-box isolation over shortcuts so tests prove what a user would see."
+    },
+    {
+      "id": "decision-28",
+      "topic": {
+        "_tag": "convention"
+      },
+      "layer": "layer-tooling",
+      "chose": "Shared configuration is extended by each layer and not copied; changing a rule happens here only.",
+      "reason": "Chose one source of lint and format rules over per-layer copies to prevent drift."
+    }
+  ]
+}

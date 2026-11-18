@@ -1,0 +1,30 @@
+{
+  "kind": "base",
+  "areas": [
+    "libraries",
+    "tooling and environment",
+    "testing",
+    "knowledge in code"
+  ],
+  "layerIds": [
+    "layer-tooling",
+    "layer-domain",
+    "layer-contracts",
+    "layer-data",
+    "layer-api",
+    "layer-ui",
+    "layer-web",
+    "layer-e2e"
+  ],
+  "decisionIds": [
+    "integrations.decision-1",
+    "integrations.decision-2",
+    "integrations.decision-3",
+    "integrations.decision-4",
+    "integrations.decision-5",
+    "integrations.decision-6",
+    "integrations.decision-7",
+    "integrations.decision-8"
+  ],
+  "areaDecisionIds": []
+}

@@ -107,7 +107,7 @@ export class SiteBuildFailed extends Schema.TaggedError<SiteBuildFailed>()("Site
     cause,
 }) {
     override get message() {
-        return `ux-visuals could not be built (${this.step}): ${String(this.cause)}`;
+        return `the app could not be built (${this.step}): ${String(this.cause)}`;
     }
 }
 

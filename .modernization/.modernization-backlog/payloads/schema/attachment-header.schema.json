@@ -1,0 +1,222 @@
+{
+  "type": "object",
+  "properties": {
+    "story": {
+      "type": "string"
+    },
+    "fingerprint": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The fingerprint of the analysis the header was made from."
+    },
+    "criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ac": {
+            "type": "string",
+            "minLength": 1,
+            "description": "AC-1, AC-2 and so on, numbered in the order the work item body lists the criteria."
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "says": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "where": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "firstLine": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "lastLine": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "firstLine",
+                    "lastLine"
+                  ],
+                  "additionalProperties": true
+                },
+                "doubt": {
+                  "type": "string",
+                  "description": "The reviewer's words when the rule was disputed; empty otherwise."
+                }
+              },
+              "required": [
+                "says",
+                "where",
+                "doubt"
+              ],
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "ac",
+          "rules"
+        ],
+        "additionalProperties": true
+      },
+      "description": "Each criterion with the legacy rules it backs."
+    },
+    "reliesOn": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "says": {
+            "type": "string",
+            "minLength": 1
+          },
+          "builtBy": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "says",
+          "builtBy"
+        ],
+        "additionalProperties": true
+      },
+      "description": "Rules another story builds, with that story's title."
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "access": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "kind",
+          "access"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity": {
+            "type": "string",
+            "minLength": 1
+          },
+          "from": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to": {
+            "type": "string",
+            "minLength": 1
+          },
+          "where": {
+            "type": "object",
+            "properties": {
+              "file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "firstLine": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "lastLine": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "file",
+              "firstLine",
+              "lastLine"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "entity",
+          "from",
+          "to",
+          "where"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "outsideSystems": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "cited": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "firstLine": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "lastLine": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "file",
+          "firstLine",
+          "lastLine"
+        ],
+        "additionalProperties": true
+      },
+      "description": "Every place the header names; each must lie in the attached bundle's read order."
+    }
+  },
+  "required": [
+    "story",
+    "fingerprint",
+    "criteria",
+    "reliesOn",
+    "data",
+    "transitions",
+    "outsideSystems",
+    "cited"
+  ],
+  "additionalProperties": true,
+  "description": "The typed front of a story's attachment, written from the analysis payloads."
+}

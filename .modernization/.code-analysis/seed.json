@@ -1,0 +1,19 @@
+{
+  "what": "Frozen copy of PolicyPlus's code-analysis output, the seed input for building and testing the modernization skills",
+  "copiedFrom": ".code-analysis",
+  "copiedAt": "2026-11-18T17:39:02",
+  "analysisCommit": "not recorded by the analysis (the folder was not a git repository then)",
+  "workspaceHead": "8d7c059b8812fc4b8d14cb1e02e071c30a0a8605",
+  "payloadFiles": 15,
+  "fingerprint": "a1383465f00c95338259e65715c3c7f016bd5e3dcb6372e2f969d0b5acdda584",
+  "contains": [
+    "payloads/",
+    "bundles/ (3 bundles; the batch of all screens comes in Phase 3)",
+    "work/analysis-request.json"
+  ],
+  "leftOut": [
+    "analysis.sqlite",
+    "ux-visuals/ (the app rebuilds it)",
+    "work/ stage folders"
+  ]
+}

@@ -1,0 +1,6 @@
+{"read":5,"challenges":[
+{"record":1,"says":"The first criterion cites the rule that settings which cannot be opened or created read as defaults silently and are not remembered, yet says only that settings are read from the shared row, so that rule's condition and outcome are neither carried nor stated as dropped, and the matching open question is not tied to it."},
+{"record":1,"says":"The TLS criterion has no testable condition (\"the service will later download\") and cites scope.decision-10, which only carries the Microsoft download and says nothing about allowed protocol versions or about doing it at start, so the decision cannot carry a fixed TLS 1.0/1.1/1.2 allow-list on the server."},
+{"record":1,"says":"The policy sources dialog criterion lists the kinds Local GPO, Registry, per-user GPO and user hive as remembered and shown, but scope.decision-12 drops the live system sources and the same story says the service reads no local Group Policy, so the criterion contradicts the decisions it cites and the story's own first-start criterion."},
+{"record":4,"says":"The first criterion cites no rule, only layer-web, and says Exit makes the screens end the person's use, which no rule or decision defines in a web product (its own open question admits this), so a developer cannot build or test it."}
+]}

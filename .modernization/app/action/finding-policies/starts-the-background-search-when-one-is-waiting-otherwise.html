@@ -1,0 +1,207 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Starts the background search when one is waiting, otherwise restores the last selected result.</title><link rel="stylesheet" href="../../page.css"><link rel="stylesheet" href="../../ux.css"></head><body data-root="../../"><header class="top"><a class="home" href="../../index.html">Overview</a><nav class="sections" aria-label="Sections"><a href="../../index.html#does">What it does</a><a href="../../made-of.html">What it is made of</a><a href="../../how-it-runs.html">How it runs</a><a href="../../connections.html">What it connects to</a><a href="../../data.html">Data and how it changes</a><a href="../../risks.html">What can go wrong</a><a href="../../plan.html">Modernization plan</a></nav><input id="search" type="search" placeholder="Search screens, actions and business rules" aria-label="Search screens, actions and business rules"></header><div id="results" hidden></div><main id="main"><div class="trail"><a href="../../index.html">Overview</a> › <a href="../../capability/finding-policies.html">Finding policies</a> › <a href="../../screen/search-results.html">Search results</a></div><h1>Starts the background search when one is waiting, otherwise restores the last selected result.</h1><p class="lead">Started by a person. In the code: PolicyPlus/FindResults.vb:95</p><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Action started by a person in the FindResults screen of Finding policies: Starts the background search when one is waiting, otherwise restores the last selected result.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:95
+- PolicyPlus/FindByRegistry.vb (only this capability)
+- PolicyPlus/FindByText.vb (only this capability)
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Data saved: Policy setting
+Data read: Policy setting
+Rules decided here: 26
+- A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case. (PolicyPlus/FindByRegistry.vb:17)
+- A value-name term must match the whole value name; &quot;*&quot; and &quot;?&quot; act as wildcards, so without them the name must be equal. (PolicyPlus/FindByRegistry.vb:20)
+- A key term containing &quot;*&quot; or &quot;?&quot; must match the whole key path as a wildcard pattern. (PolicyPlus/FindByRegistry.vb:24)
+- Search text is split at spaces into plain words, wildcard words (containing &quot;*&quot; or &quot;?&quot;) and quoted phrases. Words are lowercased and trimmed and lose the characters . , ' &quot; ; / ! ( ) { } [ ]. (PolicyPlus/FindByText.vb:25)
+- A key term containing a backslash but no wildcard matches policies whose key path starts with that text. (PolicyPlus/FindByRegistry.vb:26)
+- A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text. (PolicyPlus/FindByRegistry.vb:28)
+- A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as &quot;abc&quot; does not close itself, so it also absorbs the following words. (PolicyPlus/FindByText.vb:36)
+- A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together. (PolicyPlus/FindByText.vb:51)
+  ...and 18 more
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository" data-copied="Copied"><span data-label>Copy a brief</span></button><h2>What it passes through</h2><div class="path"><a href="../../layer/finding-policies/dialog-windows-and-their-reactions.html">Dialog windows and their reactions</a><span class="arrow" aria-hidden="true">→</span><a href="../../layer/finding-policies/policy-definitions-and-files.html">Policy definitions and files</a></div><p class="note">Layers are listed in the order this action first reaches them. Where the code picks an implementation while running, the path shown is likely rather than certain.</p><h2>Business rules along the way (26)</h2><div class="group-name">Dialog windows and their reactions</div><div class="row"><div class="main"><span>When the results window is reopened, the previously selected result is selected again if it is still in the list.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When the results window is reopened, the previously selected result is selected again if it is still in the list.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:95
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:95  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>Search text is split at spaces into plain words, wildcard words (containing &quot;*&quot; or &quot;?&quot;) and quoted phrases. Words are lowercased and trimmed and lose the characters . , &#39; &quot; ; / ! ( ) { } [ ].</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: Search text is split at spaces into plain words, wildcard words (containing &quot;*&quot; or &quot;?&quot;) and quoted phrases. Words are lowercased and trimmed and lose the characters . , ' &quot; ; / ! ( ) { } [ ].
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:25
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:25  ·  Screens: FindByText, FindResults</div></div></div><div class="row"><div class="main"><span>A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together.
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:51
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:51  ·  Screens: FindByText, FindResults</div></div></div><div class="row"><div class="main"><span>A value-name term must match the whole value name; &quot;*&quot; and &quot;?&quot; act as wildcards, so without them the name must be equal.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A value-name term must match the whole value name; &quot;*&quot; and &quot;?&quot; act as wildcards, so without them the name must be equal.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:20
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:20  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>A key term containing a backslash but no wildcard matches policies whose key path starts with that text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A key term containing a backslash but no wildcard matches policies whose key path starts with that text.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:26
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:26  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>A policy matches when the ticked attributes hit: its title, its description, or a comment on it from any supplied comment source (user or computer). Any one hit is enough.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy matches when the ticked attributes hit: its title, its description, or a comment on it from any supplied comment source (user or computer). Any one hit is enough.
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:59
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:59  ·  Screens: FindByText, FindResults</div></div></div><div class="row"><div class="main"><span>A key term containing &quot;*&quot; or &quot;?&quot; must match the whole key path as a wildcard pattern.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A key term containing &quot;*&quot; or &quot;?&quot; must match the whole key path as a wildcard pattern.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:24
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:24  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A policy matches a registry search when at least one registry value it reads or writes meets every term entered; matching ignores case.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:17
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:17  ·  Screens: FindByRegistry, FindResults</div></div></div><details class="more"><summary>Showing 8 of 13 business rules. Show all 13</summary><div class="row"><div class="main"><span>When a search ends it reports &quot;Finished searching: checked N policies, found M hits&quot;, or &quot;Search canceled: ...&quot; if stopped, and the Stop button is disabled.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: When a search ends it reports &quot;Finished searching: checked N policies, found M hits&quot;, or &quot;Search canceled: ...&quot; if stopped, and the Stop button is disabled.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:82
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:82  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as &quot;abc&quot; does not close itself, so it also absorbs the following words.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A phrase opened with a double quote runs until a later word ending in a double quote; a phrase never closed is dropped without telling the person, which widens the search. A single quoted word such as &quot;abc&quot; does not close itself, so it also absorbs the following words.
+Where to look first:
+- Starts at PolicyPlus/FindByText.vb:36
+- PolicyPlus/FindByText.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByText.vb:36  ·  Screens: FindByText, FindResults</div></div></div><div class="row"><div class="main"><span>The search tests every policy in turn, and adds every hit to the list with its category name, in the order policies are held.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The search tests every policy in turn, and adds every hit to the list with its category name, in the order policies are held.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:63
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:63  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>The list and progress are refreshed after every 20 policies: &quot;Searching: checked N policies so far, found M hits&quot;.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: The list and progress are refreshed after every 20 policies: &quot;Searching: checked N policies so far, found M hits&quot;.
+Where to look first:
+- Starts at PolicyPlus/FindResults.vb:74
+- PolicyPlus/FindResults.vb (shared with 3 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindResults.vb:74  ·  Screens: FindResults</div></div></div><div class="row"><div class="main"><span>A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Dialog windows and their reactions layer of Finding policies: A key term with no backslash and no wildcard matches policies having a key path with a part equal to that text.
+Where to look first:
+- Starts at PolicyPlus/FindByRegistry.vb:28
+- PolicyPlus/FindByRegistry.vb (only this capability)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/FindByRegistry.vb:28  ·  Screens: FindByRegistry, FindResults</div></div></div></details><div class="group-name">Policy definitions and files</div><div class="row"><div class="main"><span>When a policy file is clearing a key, all values and markers under the key are dropped and a single clear-all marker is stored.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: When a policy file is clearing a key, all values and markers under the key are dropped and a single clear-all marker is stored.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:183
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:183  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>A REG file cannot be used as a source for forgetting a value: the request fails with &#39;not implemented&#39;. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: A REG file cannot be used as a source for forgetting a value: the request fails with 'not implemented'. Applying a newer policy file over an older one to a REG file fails this way for any dropped value under a policy branch.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:237
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:237  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: Listing the values of a key in a policy file leaves out the marker entries unless the caller asks for them.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:139
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:139  ·  Screens: FindByRegistry, FindResults, Main</div></div></div><div class="row"><div class="main"><span>When a policy is forgotten, the whole key of each of its list elements is cleared and every registry value it touches is dropped from the source, so it reads as Not configured.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: When a policy is forgotten, the whole key of each of its list elements is cleared and every registry value it touches is dropped from the source, so it reads as Not configured.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:249
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:249  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>In the live registry, &#39;forgetting&#39; a value deletes it, because the registry cannot remember a pending deletion.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: In the live registry, 'forgetting' a value deletes it, because the registry cannot remember a pending deletion.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:371
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:371  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>When a value is forgotten in a policy file, both the value and its deletion marker are removed, so the policy reverts to not saying anything about it.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: When a value is forgotten in a policy file, both the value and its deletion marker are removed, so the policy reverts to not saying anything about it.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:99
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:99  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>Clearing a key in the live registry deletes every value in it but leaves the key and its subkeys. Forgetting a key&#39;s clearance does nothing.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: Clearing a key in the live registry deletes every value in it but leaves the key and its subkeys. Forgetting a key's clearance does nothing.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:416
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:416  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>When a key&#39;s clearance is forgotten in a REG file, the key-removal entry is dropped if it exists. The request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: When a key's clearance is forgotten in a REG file, the key-removal entry is dropped if it exists. The request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:254
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:254  ·  Screens: FindByRegistry, FindResults</div></div></div><details class="more"><summary>Showing 8 of 13 business rules. Show all 13</summary><div class="row"><div class="main"><span>The registry values a policy touches are its own value, those in its value lists, those of its elements (the whole key for list elements) and those of checkbox and choice sub-lists, each counted once.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: The registry values a policy touches are its own value, those in its value lists, those of its elements (the whole key for list elements) and those of checkbox and choice sub-lists, each counted once.
+Where to look first:
+- Starts at PolicyPlus/PolicyProcessing.vb:213
+- PolicyPlus/PolicyProcessing.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicyProcessing.vb:213  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>When a key&#39;s clearance is forgotten in a policy file, every clear-all marker for that key is removed.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: When a key's clearance is forgotten in a policy file, every clear-all marker for that key is removed.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:190
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:190  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>When a key is cleared in a REG file, the request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted. Otherwise the key&#39;s earlier entries are replaced by a key-removal entry.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: When a key is cleared in a REG file, the request is ignored if a source branch is set and the key lies outside it. When no branch is set, every key is accepted. Otherwise the key's earlier entries are replaced by a key-removal entry.
+Where to look first:
+- Starts at PolicyPlus/RegFile.vb:248
+- PolicyPlus/RegFile.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/RegFile.vb:248  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>Text stored in a policy file is written in two-byte characters followed by a closing empty character.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: Text stored in a policy file is written in two-byte characters followed by a closing empty character.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:240
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:240  ·  Screens: FindByRegistry, FindResults</div></div></div><div class="row"><div class="main"><span>When a value is deleted in the live registry and its key does not exist, nothing happens. A missing value is not an error.</span><button class="copy" data-copy-text="Ask: (say what you want done here: verify, test, rewrite or explain)
+Scope: Business rule decided in the Policy definitions and files layer of Finding policies: When a value is deleted in the live registry and its key does not exist, nothing happens. A missing value is not an error.
+Where to look first:
+- Starts at PolicyPlus/PolicySource.vb:365
+- PolicyPlus/PolicySource.vb (shared with 6 other capabilities)
+Rules decided here: 0
+Unconfirmed: nothing the analysis could not settle here
+Commit: not recorded: the folder was not a git repository"><span data-label>Copy</span></button><div class="sub">PolicyPlus/PolicySource.vb:365  ·  Screens: FindByRegistry, FindResults</div></div></div></details></main><script type="application/json" id="copy-strings">{"copied":"Copied to the clipboard","noMatch":"Nothing matches. The search looks in capability names and purposes, screens, what each action does and business rules."}</script><div id="announce" class="visually-hidden" aria-live="polite"></div><script src="../../site.js"></script></body></html>

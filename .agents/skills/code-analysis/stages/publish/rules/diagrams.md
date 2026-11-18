@@ -1,13 +1,13 @@
 # Diagrams: rules
 
-What a diagram of the system may show, when one is worth drawing, and how it is drawn. A figure that shows what the records do not hold, or hides what they do, misleads the person reading it. The build of ux-visuals and its reviewer apply these rules, for any stack and any medium.
+What a diagram of the system may show, when one is worth drawing, and how it is drawn. A figure that shows what the records do not hold, or hides what they do, misleads the person reading it. The build of the app and its reviewer apply these rules, for any stack and any medium.
 
 ## Records and commands
 
 - A diagram reads the payloads (`payloads/system.json`, `payloads/knowledge.json` and one file per capability); it never reads the store.
 - Which pictures a system needs is the briefing's judgement: it picks from a menu of what the records can draw (parts, integration, states, data, layers) and writes the question and a caption without counts, as `Figure` records. The build draws what was chosen from the records it names, never anything else; a page the briefing chose no picture for gets each shape its records support, and a picture asked for that the menu lacks is listed as wanted, not drawn.
-- `diagrams.config.ts`, in `stages/publish/ux-visuals/src/lib`, is the one place that says which diagram goes where, what a place must hold for it to be drawn, how it is laid out and drawn (HTML, SVG, or a node-and-edge library where a person pans and drills) and how many boxes it may hold. Changing any of that is an edit there, never in a page.
-- `cli/build-ux-visuals.ts` writes `ux-visuals/` after `write-payloads`; a figure that does not hold fails the build.
+- `diagrams.config.ts`, in `.agents/shared/app/src/lib`, is the one place that says which diagram goes where, what a place must hold for it to be drawn, how it is laid out and drawn (HTML, SVG, or a node-and-edge library where a person pans and drills) and how many boxes it may hold. Changing any of that is an edit there, never in a page.
+- `cli/build-app.ts` writes `app/` after `write-payloads`; a figure that does not hold fails the build.
 
 ## A diagram
 

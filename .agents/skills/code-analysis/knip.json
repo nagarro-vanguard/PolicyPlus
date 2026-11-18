@@ -9,8 +9,5 @@
         "shared/**/*.{ts,tsx}!",
         "stages/**/*.{ts,tsx}!"
     ],
-    "ignoreExportsUsedInFile": false,
-    "ignore": [
-        "stages/publish/ux-visuals/**"
-    ]
+    "ignoreExportsUsedInFile": false
 }

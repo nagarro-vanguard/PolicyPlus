@@ -1,0 +1,70 @@
+{
+  "stories": [
+    {
+      "title": "Enter whole numbers in hexadecimal when editing a number value",
+      "what": "When someone edits a number value in a policy file, they can switch the number field to hexadecimal, see the value as hexadecimal text, and type a hexadecimal number to set it.",
+      "why": "Administrators often know registry numbers in hexadecimal and the values can be larger than the ordinary number field can handle; typing them as they know them avoids conversion mistakes.",
+      "actions": [
+        "block-89740736795318812041",
+        "block-20624708115873028291"
+      ],
+      "terms": [
+        {
+          "name": "Hexadecimal mode",
+          "means": "The setting of the number field that shows and reads the value as base-16 text; it is not a different value, only a different way of writing the same number."
+        },
+        {
+          "name": "Largest allowed value",
+          "means": "The biggest number the edited value can hold, which depends on whether the value is a 32-bit or a 64-bit number; it is not a limit on how many digits can be typed."
+        }
+      ],
+      "criteria": [
+        {
+          "says": "Given the number field is showing a value and hexadecimal mode is on, when the value is shown, then it appears as hexadecimal text, including values above 7FFFFFFF.",
+          "from": [
+            { "_tag": "layer", "id": "layer-ui" },
+            { "_tag": "decision", "id": "base.decision-24" }
+          ]
+        },
+        {
+          "says": "Given hexadecimal mode is off, when the value is shown or a number is typed, then the field behaves like an ordinary number field.",
+          "from": [
+            { "_tag": "layer", "id": "layer-web" },
+            { "_tag": "decision", "id": "base.decision-25" }
+          ]
+        },
+        {
+          "says": "Given hexadecimal mode is on, when someone types a valid hexadecimal number and leaves the field, then the value becomes that number and the field shows it again as hexadecimal text.",
+          "from": [
+            { "_tag": "layer", "id": "layer-ui" }
+          ]
+        },
+        {
+          "says": "Given hexadecimal mode is on, when someone types a hexadecimal number too large to fit, then the value is set to the largest allowed value; and when the text is not a hexadecimal number, then the value stays unchanged.",
+          "from": [
+            { "_tag": "rule", "id": "businessrule-85571919984782494727" },
+            { "_tag": "decision", "id": "base.decision-12" }
+          ]
+        },
+        {
+          "says": "Given the rule for oversized and non-hexadecimal text, when the tests run, then a test named after the rule passes for too-large text, non-hexadecimal text and a valid number.",
+          "from": [
+            { "_tag": "decision", "id": "base.decision-11" },
+            { "_tag": "layer", "id": "layer-domain" }
+          ]
+        },
+        {
+          "says": "Given the screen that edits a number value is open, when someone switches hexadecimal mode on, then the screen offers the hexadecimal field and passes an accessibility check.",
+          "from": [
+            { "_tag": "decision", "id": "scope.decision-15" },
+            { "_tag": "decision", "id": "base.decision-27" }
+          ]
+        }
+      ],
+      "open": [
+        "Should hexadecimal text be shown in capital letters without a prefix, as the current program does?",
+        "What should happen when someone types a minus sign in hexadecimal mode: leave the value unchanged, or set the smallest value?"
+      ]
+    }
+  ]
+}
