@@ -202,7 +202,12 @@ describe("plan views", () => {
     test("each story says what its tags run and which layers it is built in", () => {
         const { built } = full();
         const story = built.input.views?.stories.find((each) => each.key === "story-2");
-        expect(story?.work).toEqual({ profile: "build", reference: true });
+        expect(story?.work).toEqual({
+            profile: "build",
+            reference: true,
+            label: "rebuilt",
+            words: "Rebuilt from today's behaviour",
+        });
         expect(built.input.views?.phases.find((phase) => phase.number === 3)?.builtIn).toEqual(["Application"]);
         expect(built.input.views?.layers.find((layer) => layer.id === "layer-store")?.stack).toEqual(["data: two"]);
     });

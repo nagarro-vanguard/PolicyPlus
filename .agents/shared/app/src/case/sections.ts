@@ -12,17 +12,18 @@ import { pageOf } from "./routes";
 export const sectionIds = ["overview", "reference", "journeys", "architecture", "choices", "plan", "risks"] as const;
 export type SectionId = (typeof sectionIds)[number];
 
-type Spec = { id: SectionId; needs: readonly string[]; href: string; built: boolean };
+/** `folder`: the folder that holds the section's other pages (`journey/` for one page per journey), when it has one. */
+type Spec = { id: SectionId; needs: readonly string[]; href: string; built: boolean; folder?: string };
 
 /** What each section needs from the case, and where its page is. */
 const specs: readonly Spec[] = [
     { id: "overview", needs: ["facts/system.json", "nodes/overview.json"], href: "index.html", built: true },
     { id: "reference", needs: ["nodes/overview.json"], href: pageOf("overview"), built: true },
-    { id: "journeys", needs: ["journeys/today.json"], href: "journeys.html", built: false },
-    { id: "architecture", needs: ["architecture.json"], href: "architecture.html", built: false },
-    { id: "choices", needs: ["journeys/changed.json"], href: "choices.html", built: false },
-    { id: "plan", needs: ["plan/stories.json"], href: "plan.html", built: false },
-    { id: "risks", needs: ["facts/risks.json"], href: "risks.html", built: false },
+    { id: "journeys", needs: ["journeys/today.json"], href: "journeys.html", built: true, folder: "journey/" },
+    { id: "architecture", needs: ["facts/layers.json"], href: "architecture.html", built: true },
+    { id: "choices", needs: ["journeys/changed.json"], href: "choices.html", built: true },
+    { id: "plan", needs: ["plan/stories.json"], href: "plan.html", built: true },
+    { id: "risks", needs: ["facts/risks.json"], href: "risks.html", built: true },
 ];
 
 export type Section = { id: SectionId; label: string; question: string; href: string; built: boolean };
@@ -56,6 +57,8 @@ export const navOf = (sections: readonly Section[]) => sections.filter((section)
 export const sectionOfPage = (page: string, sections: readonly Section[]): SectionId | undefined => {
     const own = sections.find((section) => section.href === page);
     if (own !== undefined) return own.id;
+    const inFolder = specs.find((spec) => spec.folder !== undefined && page.startsWith(spec.folder));
+    if (inFolder !== undefined && sections.some((section) => section.id === inFolder.id)) return inFolder.id;
     if (page === "unplaced.html" || /^[a-z]+\//.test(page)) return "reference";
     return undefined;
 };

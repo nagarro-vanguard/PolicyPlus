@@ -1,0 +1,18 @@
+---
+import Page from "../layouts/Page.astro";
+import { Risks } from "../components/risks/Risks";
+import { caseData } from "../case/data";
+import { theCase } from "../case/loader";
+import { risksViewOf } from "../case/risks-view";
+import { siteOf } from "../case/site";
+import { copy } from "../lib/copy";
+// Every risk of the system, ranked by the case's rule, with a filter by severity and by capability. The page exists only
+// when the Risks section does (the section registry, src/case/sections.ts), as a dynamic route with no path otherwise.
+export const getStaticPaths = async () =>
+    (await siteOf()).nav.some((section) => section.id === "risks") ? [{ params: { risks: "risks" } }] : [];
+const view = risksViewOf(theCase(), await caseData());
+---
+<Page title={copy.risks.title} lead={copy.risks.lead} page="risks.html">
+    <Risks view={view} root="./" />
+    <script>import "../scripts/risks.ts";</script>
+</Page>

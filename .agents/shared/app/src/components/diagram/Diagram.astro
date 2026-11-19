@@ -1,0 +1,59 @@
+---
+import type { DiagramView } from "../../case/diagram-view";
+import { copy } from "../../lib/copy";
+import { DiagramCanvas, dashes } from "./DiagramCanvas";
+import { DiagramMatrix } from "./DiagramMatrix";
+import { Fold } from "../Fold";
+// One diagram, the same anatomy for every kind: its title, the case's caption and question, the drawing in a frame of
+// its own that scrolls when the drawing is larger (never scaled down), a block saying how to read it (each kind of line
+// with its style and its words, the frames, the numbers), and the case's text version, always on the page beside it.
+// The drawing is the app's one diagram island (`client:visible`): the page ships no script for it until it is in view,
+// and the text version is there with no script at all. A diagram whose lines outnumber twice its boxes would draw as a
+// tangle, so it is a table of who reaches whom instead, rendered at build time with no script.
+export interface Props {
+    diagram: DiagramView;
+    /** The heading level of the title, below the section that holds it. */
+    level?: "h3" | "h4";
+}
+const { diagram, level = "h3" } = Astro.props;
+const Heading = level;
+---
+<figure class="flex min-w-0 flex-col gap-spacing-md" data-diagram={diagram.key}>
+    <div class="flex flex-col gap-spacing-2xs">
+        <Heading class="text-sm font-medium" data-written-by="app">{diagram.title}</Heading>
+        {diagram.caption === null ? null : <p class="text-muted-foreground" data-written-by="agent">{diagram.caption}</p>}
+        {diagram.question === null ? null : <p class="text-sm text-muted-foreground" data-written-by="agent">{diagram.question}</p>}
+    </div>
+    {diagram.matrix === null ? (
+        <div class="max-h-[75svh] overflow-auto rounded-surface border border-border bg-background" role="region" aria-label={diagram.graph.words.drawing} tabindex="0" data-diagram-region>
+            <DiagramCanvas client:visible {...diagram.graph} />
+        </div>
+    ) : (
+        <div class="max-h-[75svh] overflow-auto rounded-surface border border-border" role="region" aria-label={diagram.graph.words.drawing} tabindex="0">
+            <DiagramMatrix matrix={diagram.matrix} corner={copy.diagram.matrixCorner} />
+        </div>
+    )}
+    <figcaption class="flex flex-col gap-spacing-xs text-sm">
+        <span class="font-medium" data-written-by="app">{copy.diagram.legend}</span>
+        {diagram.matrix !== null ? null : (
+            <ul class="flex flex-wrap gap-x-spacing-xl gap-y-spacing-2xs">
+                {diagram.legend.map((each) => (
+                    <li class="flex items-center gap-spacing-xs">
+                        <svg width="32" height="10" aria-hidden="true" class="shrink-0">
+                            <line x1="1" y1="5" x2="31" y2="5" class="stroke-(--diagram-edge)" stroke-width="1.5" stroke-dasharray={each.style === null ? "" : (dashes[each.style] ?? "")} />
+                        </svg>
+                        <span data-written-by="agent">{each.words}</span>
+                    </li>
+                ))}
+            </ul>
+        )}
+        <ul class="flex flex-col gap-spacing-2xs text-muted-foreground">
+            {diagram.notes.map((note) => <li data-written-by="app">{note}</li>)}
+        </ul>
+    </figcaption>
+    <Fold summary={copy.diagram.textVersion}>
+        <ul class="flex list-disc flex-col gap-spacing-2xs ps-spacing-4xl">
+            {diagram.text.map((line) => <li data-written-by="agent">{line}</li>)}
+        </ul>
+    </Fold>
+</figure>

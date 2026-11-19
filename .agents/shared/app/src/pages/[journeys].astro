@@ -1,0 +1,17 @@
+---
+import Page from "../layouts/Page.astro";
+import { JourneyList } from "../components/journeys/JourneyList";
+import { journeysView } from "../case/journeys";
+import { copy } from "../lib/copy";
+import { siteOf } from "../case/site";
+// The list of journeys: grouped by the hierarchy's own areas and capabilities, with a plain filter and what the new
+// ways drop on purpose. The page exists only when the Journeys section does (the section registry, src/case/sections.ts):
+// a system with no journeys has no `journeys.html`, as a dynamic route with no path.
+export const getStaticPaths = async () =>
+    (await siteOf()).nav.some((section) => section.id === "journeys") ? [{ params: { journeys: "journeys" } }] : [];
+const view = await journeysView();
+---
+<Page title={copy.journeys.title} lead={view.hasWays ? copy.journeys.lead : copy.journeys.leadToday} page="journeys.html">
+    <JourneyList view={view} root="./" />
+    <script>import "../scripts/journeys.ts";</script>
+</Page>

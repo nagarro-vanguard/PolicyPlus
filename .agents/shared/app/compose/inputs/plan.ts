@@ -1,6 +1,8 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
+import { changedSinceBuilt } from "../../../../skills/plan-modernization-backlog/shared/derive/built-from";
+import { layoutOf } from "../../../../skills/plan-modernization-backlog/shared/model/layout";
 import { ComposeError } from "../errors";
 import { namesIn, readJson, readText, sha256 } from "../io";
 
@@ -29,7 +31,10 @@ const Story = z.looseObject({
     builds: Ids,
     reliesOn: z.array(z.looseObject({ rule: Text, builtBy: Text })),
     actions: Ids,
-    criteria: z.array(z.looseObject({ says: Text })),
+    criteria: z.array(
+        z.looseObject({ says: Text, from: z.array(z.looseObject({ _tag: Text, id: Text })).optional() }),
+    ),
+    open: Ids.optional(),
     steps: Ids.optional(),
     components: Ids.optional(),
     layers: Ids.optional(),
@@ -69,7 +74,14 @@ const Plan = z.looseObject({
     ),
     phases: z.array(z.looseObject({ number: z.number(), name: Text, why: Text, stories: Ids })),
     stories: z.array(Story),
-    coverage: z.looseObject({ rulesBuilt: z.number(), rulesTotal: z.number() }),
+    coverage: z.looseObject({
+        rulesBuilt: z.number(),
+        rulesTotal: z.number(),
+        unplanned: z
+            .array(z.looseObject({ what: Text, file: Text, firstLine: z.number(), lastLine: z.number() }))
+            .optional(),
+    }),
+    builtFrom: z.looseObject({ analysis: Text }).optional(),
     conflicts: z
         .array(z.looseObject({ stage: Text, variant: z.string(), says: Text, resolved: z.boolean() }))
         .optional(),
@@ -90,6 +102,11 @@ export type PlanStory = PlanFile["stories"][number];
 
 export type PlanInput = {
     readonly root: string;
+    /**
+     * Whether the decisions or the analysis changed since the plan was built, by the plan skill's own
+     * `changedSinceBuilt`; null when the plan keeps no record of what it was built from, or it cannot be compared.
+     */
+    readonly stale: boolean | null;
     readonly fingerprint: string;
     readonly plan: PlanFile;
     readonly prompts: z.output<typeof Prompts>;
@@ -132,8 +149,16 @@ export const readPlan = (root: string): PlanInput => {
             .filter((name) => name.endsWith(".md"))
             .map((name) => [name.slice(0, -3), readText(join(folder, name))] as const),
     );
+    let stale: boolean | null = null;
+    try {
+        const changed = changedSinceBuilt(layoutOf(root), plan as Parameters<typeof changedSinceBuilt>[1]);
+        stale = changed === undefined ? null : changed.length > 0;
+    } catch {
+        stale = null;
+    }
     return {
         root,
+        stale,
         fingerprint: sha256(`${sha256(planText)}\n${sha256(promptsText)}`),
         plan,
         prompts: readJson(promptsPath, Prompts, promptsText),

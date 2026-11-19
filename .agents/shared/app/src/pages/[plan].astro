@@ -1,0 +1,20 @@
+---
+import Page from "../layouts/Page.astro";
+import { Plan } from "../components/plan/Plan";
+import { caseData } from "../case/data";
+import { theCase } from "../case/loader";
+import { planViewOf } from "../case/plan-view";
+import { siteOf } from "../case/site";
+import { copy } from "../lib/copy";
+// The plan: how it is built up, its phases in build order, what builds what, every story with its filters and the
+// sheet a story opens in, and what the plan leaves out. The page exists only when the Plan section does (the section
+// registry, src/case/sections.ts): a case with no plan has no `plan.html`, as a dynamic route with no path.
+export const getStaticPaths = async () =>
+    (await siteOf()).nav.some((section) => section.id === "plan") ? [{ params: { plan: "plan" } }] : [];
+const site = await siteOf();
+const view = planViewOf(theCase(), await caseData(), site.sections);
+---
+<Page title={copy.plan.title} lead={copy.plan.lead} page="plan.html" wide>
+    {view === null ? null : <Plan view={view} root="./" />}
+    <script>import "../scripts/plan.ts";</script>
+</Page>

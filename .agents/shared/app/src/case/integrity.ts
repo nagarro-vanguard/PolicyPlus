@@ -103,6 +103,8 @@ export const caseProblems = (kase: Case): string[] => {
         for (const key of brief.numbers) number("the Brief", key);
         if (brief.plan !== null) for (const field of ["phases", "epics", "stories", "readyFirst"]) number("the Brief's plan", brief.plan[field] as string);
     }
-    if (kase.has("search.json")) for (const record of kase.json("search.json") as { node: string }[]) node("search", record.node);
+    // A search record of a section's own page (a journey, a story, a risk, a domain) names its section, not a node.
+    if (kase.has("search.json"))
+        for (const record of kase.json("search.json") as { node: string; section?: string }[]) if (record.section === undefined) node("search", record.node);
     return problems;
 };

@@ -2,9 +2,9 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
 import { loadDisputes } from "../../../../skills/shape-target/shared/disputes";
-import { gates, subjectOf, type Gate } from "../../../../skills/shape-target/shared/gates";
+import { gates, proposalOf, snapshotOf, subjectOf, type Gate } from "../../../../skills/shape-target/shared/gates";
 import { layoutOf } from "../../../../skills/shape-target/shared/model/layout";
-import { changedSince, type Since } from "../../../../skills/shape-target/shared/since";
+import { changedSince, itemsOf, type Since } from "../../../../skills/shape-target/shared/since";
 import { ComposeError } from "../errors";
 import { readJson, readText, sha256 } from "../io";
 
@@ -126,6 +126,11 @@ const ArchitectureVariants = z.array(
         score: z
             .looseObject({ steps: z.number(), stepsServed: z.number(), rules: z.number(), rulesAssigned: z.number() })
             .optional(),
+        domains: z.array(z.looseObject({ name: Text, concept: Text.optional() })).optional(),
+        containers: z
+            .array(z.looseObject({ name: Text, kind: Text, tech: Text.optional(), holds: Ids.optional() }))
+            .optional(),
+        integrations: z.array(z.looseObject({ need: Text, domain: Text, how: Text })).optional(),
     }),
 );
 const TargetManifest = z.looseObject({ contractVersion: z.number(), files: z.record(Text, Text) });
@@ -138,6 +143,8 @@ export type TargetTask = z.output<typeof Tasks>["tasks"][number];
 
 export type GateRecord = {
     readonly gate: Gate;
+    /** The name of each item the decision is about, now and as confirmed, by its key; for what changed since. */
+    readonly names?: ReadonlyMap<string, string>;
     /** confirmed: a decision is recorded; changed: the file it was made about differs from the hash it kept. */
     readonly state: "not made" | "confirmed" | "changed" | "confirmed, no hash kept";
     readonly since: Since | undefined;
@@ -156,6 +163,26 @@ export type Target = {
     readonly gates: readonly GateRecord[];
     readonly disputes: readonly { stage: string; variant: string; says: string }[];
     readonly runsOn: ReadonlyMap<string, string>;
+};
+
+/** The name of each item of a decision, from the confirmed copy first and the file now after it. */
+const namesOf = (layout: ReturnType<typeof layoutOf>, gate: Gate): Map<string, string> => {
+    const names = new Map<string, string>();
+    for (const path of [snapshotOf(layout, gate), proposalOf(layout, gate)]) {
+        if (!existsSync(path)) continue;
+        let value: unknown;
+        try {
+            value = JSON.parse(readText(path)) as unknown;
+        } catch {
+            continue;
+        }
+        for (const item of itemsOf(gate, value)) {
+            const record = item.value as Record<string, unknown> | null;
+            const name = record?.title ?? record?.name;
+            if (typeof name === "string" && name.trim() !== "") names.set(item.key, name);
+        }
+    }
+    return names;
 };
 
 const runsOnCatalogue = join(
@@ -225,7 +252,7 @@ export const readTarget = (root: string): Target => {
                 : existsSync(about) && subjectOf(about) === record.subject
                   ? "confirmed"
                   : "changed";
-        return { gate, state, since: changedSince(layout, gate) };
+        return { gate, state, since: changedSince(layout, gate), names: namesOf(layout, gate) };
     });
     // Every decision's stage keeps its surviving challenges in `disputes-<stage>.json`; the as-is decision's file is
     // read by the same reader although shape-target's stage type does not name it.

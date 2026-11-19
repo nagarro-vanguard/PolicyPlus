@@ -1,7 +1,7 @@
 import { ComposeError } from "../errors";
 import { compareText, distinct } from "../io";
 import type { Payloads } from "../inputs/payloads";
-import type { Target, TargetJourney } from "../inputs/target";
+import type { Target, TargetArchitecture, TargetJourney } from "../inputs/target";
 import type { Facts } from "./facts";
 import { firstSentence, Slugs, sortByText } from "./text";
 
@@ -53,6 +53,8 @@ export type ProposedJourney = {
     steps: ProposedStep[];
     drops: { actions: string[]; rules: string[]; reason: string }[];
     dropped: string[];
+    /** True when a step is anything but kept as it is today, or the journey leaves something out. */
+    hasChanges: boolean;
     alternatives: { name: string; strategy: string; idea: string; tradeoff: string }[];
 };
 
@@ -155,6 +157,9 @@ export const proposedOf = (target: Target, today: readonly TodayJourney[]): Prop
                     reason: drop.reason,
                 })),
                 dropped,
+                hasChanges:
+                    journey.drops.length > 0 ||
+                    journey.steps.some((step) => step.link._tag !== "legacy" || step.link.change !== "kept"),
                 alternatives: sortByText(
                     target.variants.filter((variant) => variant.task === journey.task && variant.name !== journey.name),
                     (variant) => variant.name,
@@ -216,9 +221,55 @@ export type ArchitectureView = {
         name: string;
         idea: string;
         tradeoff: string;
-        score: { steps: number; stepsServed: number; rules: number; rulesAssigned: number } | null;
+        score: Score | null;
+        /** The option's own parts that run, domains and outside systems, when its record keeps them. */
+        containers: { name: string; kind: string; tech: string | null; holds: string[] }[];
+        domains: { name: string; concept: string | null }[];
+        integrations: { outside: string; name: string; domain: string; how: string }[];
     }[];
+    /** The chosen option's score, when its record keeps one. */
+    score: Score | null;
+    /**
+     * Where today's rules land: one row per layer of today (and one for rules in no layer, `layer` null, when there
+     * are any), one cell per domain the row's rules go to, and the column `""` for rules placed in no domain.
+     */
+    landing: {
+        layers: { layer: string | null; name: string; rules: number; number: string }[];
+        domains: string[];
+        cells: { layer: string | null; domain: string; rules: string[]; number: string }[];
+    };
+    /** Rules of today placed in no domain, each with the reason a chosen journey gives for leaving it out, or null. */
+    unplaced: { rule: string; reason: string | null }[];
 };
+
+type Score = { steps: number; stepsServed: number; rules: number; rulesAssigned: number };
+
+const scoreOf = (score: Score | undefined): Score | null =>
+    score === undefined
+        ? null
+        : {
+              steps: score.steps,
+              stepsServed: score.stepsServed,
+              rules: score.rules,
+              rulesAssigned: score.rulesAssigned,
+          };
+
+/**
+ * The names a plain risk text says, exactly as written: the domains, the parts that run and the components it names.
+ * @param text the risk's words
+ * @param names every name of the architecture
+ * @returns the names it says, in the architecture's order
+ */
+const namedIn = (text: string, names: readonly string[]) =>
+    distinct(
+        names.filter((name) => {
+            const at = text.indexOf(name);
+            if (at < 0) return false;
+            const before = text[at - 1] ?? " ";
+            const after = text[at + name.length] ?? " ";
+            return !/[\p{L}\p{N}]/u.test(before) && !/[\p{L}\p{N}]/u.test(after);
+        }),
+    );
 
 /**
  * The chosen architecture with its joins: distinct components per domain, how the containers talk and the uses that
@@ -228,7 +279,12 @@ export type ArchitectureView = {
  * @param slugs the address parts
  * @returns the architecture
  */
-export const architectureOf = (target: Target, facts: Facts, slugs: Slugs): ArchitectureView => {
+export const architectureOf = (
+    target: Target,
+    facts: Facts,
+    slugs: Slugs,
+    journeys: readonly ProposedJourney[] = [],
+): ArchitectureView => {
     const architecture = target.architecture;
     const components: Component[] = sortByText(architecture.components ?? [], (each) => each.name).map((each) => ({
         name: each.name,
@@ -316,7 +372,17 @@ export const architectureOf = (target: Target, facts: Facts, slugs: Slugs): Arch
         })),
         risks: architecture.risks.map((risk) =>
             typeof risk === "string"
-                ? { statement: risk, summary: firstSentence(risk), kind: null, cites: [], containedBy: null }
+                ? {
+                      statement: risk,
+                      summary: firstSentence(risk),
+                      kind: null,
+                      cites: namedIn(risk, [
+                          ...architecture.domains.map((each) => each.name),
+                          ...architecture.containers.map((each) => each.name),
+                          ...components.map((each) => each.name),
+                      ]),
+                      containedBy: null,
+                  }
                 : {
                       statement: risk.statement,
                       summary: firstSentence(risk.statement),
@@ -334,16 +400,88 @@ export const architectureOf = (target: Target, facts: Facts, slugs: Slugs): Arch
             name: each.name,
             idea: each.idea,
             tradeoff: each.tradeoff,
-            score:
-                each.score === undefined
-                    ? null
-                    : {
-                          steps: each.score.steps,
-                          stepsServed: each.score.stepsServed,
-                          rules: each.score.rules,
-                          rulesAssigned: each.score.rulesAssigned,
-                      },
+            score: scoreOf(each.score),
+            containers: (each.containers ?? []).map((container) => ({
+                name: container.name,
+                kind: container.kind,
+                tech: container.tech ?? null,
+                holds: [...(container.holds ?? [])],
+            })),
+            domains: (each.domains ?? []).map((domain) => ({ name: domain.name, concept: domain.concept ?? null })),
+            integrations: (each.integrations ?? []).map((integration) => ({
+                outside: integration.need,
+                name: outsideName.get(integration.need) ?? "",
+                domain: integration.domain,
+                how: integration.how,
+            })),
         })),
+        score: scoreOf(target.alternatives.find((each) => each.name === architecture.name)?.score),
+        ...landingOf(facts, architecture.domains, journeys, slugs),
+    };
+};
+
+/**
+ * Where today's rules land in the chosen domains, by today's layer, and the rules no domain holds with the reason a
+ * chosen journey gives for leaving each out.
+ * @param facts the facts
+ * @param domains the chosen domains
+ * @param journeys the chosen journeys, for their drops
+ * @param slugs the address parts, for the number keys
+ * @returns the table and the rules placed nowhere
+ */
+const landingOf = (
+    facts: Facts,
+    domains: TargetArchitecture["domains"],
+    journeys: readonly ProposedJourney[],
+    slugs: Slugs,
+): Pick<ArchitectureView, "landing" | "unplaced"> => {
+    const domainOf = new Map<string, string>();
+    for (const domain of domains) for (const rule of domain.rules) if (!domainOf.has(rule)) domainOf.set(rule, domain.name);
+    const layerName = new Map(facts.layers.map((layer) => [layer.id, layer.name]));
+    const rows = [
+        ...facts.layers.map((layer) => layer.id as string | null),
+        ...(facts.rules.some((rule) => rule.layer === null || !layerName.has(rule.layer)) ? [null] : []),
+    ];
+    const layerKey = (layer: string | null) =>
+        layer === null ? "none" : slugs.of("landing-layer", layer, layerName.get(layer) ?? layer);
+    const columnKey = (domain: string) =>
+        domain === "" ? "none" : slugs.of("domain", domain, domain);
+    const rowOf = (layer: string | null) => (layer !== null && layerName.has(layer) ? layer : null);
+    const cells: ArchitectureView["landing"]["cells"] = [];
+    const columns = [...domains.map((domain) => domain.name), ""];
+    for (const layer of rows) {
+        for (const domain of columns) {
+            const rules = facts.rules
+                .filter((rule) => rowOf(rule.layer) === layer && (domainOf.get(rule.id) ?? "") === domain)
+                .map((rule) => rule.id);
+            if (rules.length === 0) continue;
+            cells.push({
+                layer,
+                domain,
+                rules,
+                number: `architecture/landing/${layerKey(layer)}/${columnKey(domain)}`,
+            });
+        }
+    }
+    const reasonOf = new Map<string, string>();
+    for (const journey of journeys)
+        for (const drop of journey.drops) for (const rule of drop.rules) if (!reasonOf.has(rule)) reasonOf.set(rule, drop.reason);
+    return {
+        landing: {
+            layers: rows
+                .map((layer) => ({
+                    layer,
+                    name: layer === null ? "" : (layerName.get(layer) ?? ""),
+                    rules: facts.rules.filter((rule) => rowOf(rule.layer) === layer).length,
+                    number: `architecture/landing/${layerKey(layer)}`,
+                }))
+                .filter((row) => row.rules > 0),
+            domains: columns,
+            cells,
+        },
+        unplaced: facts.rules
+            .filter((rule) => !domainOf.has(rule.id))
+            .map((rule) => ({ rule: rule.id, reason: reasonOf.get(rule.id) ?? null })),
     };
 };
 

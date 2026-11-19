@@ -1,0 +1,19 @@
+---
+import Page from "../../layouts/Page.astro";
+import { JourneyPage } from "../../components/journeys/JourneyPage";
+import { Crumbs } from "../../components/shell/Crumbs";
+import { journeysPage, journeysView } from "../../case/journeys";
+import { rootOf } from "../../case/routes";
+import { copy } from "../../lib/copy";
+// One page per journey of today, at `journey/<slug>.html`: today beside the new way, step by step. An address with no
+// journey falls to the 404 page like any other.
+export const getStaticPaths = async () => (await journeysView()).journeys.map((journey) => ({ params: { slug: journey.slug } }));
+const slug = (Astro.params as { slug: string }).slug;
+const view = (await journeysView()).journeys.find((journey) => journey.slug === slug);
+if (view === undefined) throw new Error(`the case holds no journey ${slug}`);
+const root = rootOf(view.page);
+---
+<Page title={view.title} lead={view.outcome} page={view.page} writtenBy="agent" wide>
+    <Crumbs slot="trail" crumbs={[{ href: journeysPage, name: copy.journeys.title }]} current={view.title} root={root} />
+    <JourneyPage view={view} root={root} />
+</Page>

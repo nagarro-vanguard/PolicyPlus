@@ -1,0 +1,105 @@
+---
+import Page from "../layouts/Page.astro";
+import Diagram from "../components/diagram/Diagram.astro";
+import { Section } from "../components/Explorer";
+import { Challenges, Components, Containers, Domains, Landing, Options, OutsideTable, ProposedHead, Risks, SinceFold, Stack, Sub, TodayData, Unplaced } from "../components/Architecture";
+import { proposedView, todayView } from "../case/architecture-view";
+import { siteOf } from "../case/site";
+import { copy } from "../lib/copy";
+// The Architecture page: today (how the code is organised, what it connects to, where its data lives) and, when the
+// case holds a target, the proposal (the parts that run, the domains and what they use, what it is built with, the
+// outside systems, the risks it accepts and its open questions), the options considered side by side, the challenges
+// still open and what changed since the person confirmed. A system with no target shows today only. The page exists
+// only when the Architecture section does (src/case/sections.ts), as a dynamic route with no path otherwise.
+export const getStaticPaths = async () =>
+    (await siteOf()).nav.some((section) => section.id === "architecture") ? [{ params: { architecture: "architecture" } }] : [];
+const words = copy.architecture;
+const today = todayView();
+const proposed = await proposedView();
+const hasToday = today.organisation !== null || today.context !== null || today.data !== null || today.entities.length > 0 || today.stores.length > 0;
+---
+<Page wide title={words.title} lead={proposed === null ? words.leadToday : words.lead} page="architecture.html">
+    <div class="flex flex-col gap-spacing-5xl">
+        {hasToday ? (
+            <div id="today">
+                <Section title={words.today} writtenBy="app">
+                    <p class="text-muted-foreground" data-written-by="app">{words.todayLead}</p>
+                    <div class="flex flex-col gap-spacing-4xl">
+                        {today.organisation === null ? null : <Diagram diagram={today.organisation} />}
+                        {today.context === null ? null : <Diagram diagram={today.context} />}
+                        {today.data === null ? null : <Diagram diagram={today.data} />}
+                        <TodayData today={today} />
+                    </div>
+                </Section>
+            </div>
+        ) : null}
+        {proposed === null ? null : (
+            <div id="proposed">
+                <Section title={words.proposed} writtenBy="app">
+                    <div class="flex flex-col gap-spacing-4xl">
+                        <ProposedHead view={proposed} />
+                        <SinceFold since={proposed.since} />
+                        {proposed.containers.length === 0 ? null : (
+                            <Sub title={words.parts} lead={words.partsLead}>
+                                <Containers view={proposed} />
+                            </Sub>
+                        )}
+                        {proposed.talksDiagram === null ? null : <Diagram diagram={proposed.talksDiagram} />}
+                        {proposed.domainsDiagram === null ? null : <Diagram diagram={proposed.domainsDiagram} />}
+                        {proposed.domains.length === 0 ? null : (
+                            <div class="flex flex-col gap-spacing-md">
+                                {proposed.domainsDiagram === null ? <Sub title={words.domains} lead={words.domainsLead}><Domains view={proposed} /></Sub> : <><p class="text-muted-foreground" data-written-by="app">{words.domainsLead}</p><Domains view={proposed} /></>}
+                                <Components view={proposed} />
+                            </div>
+                        )}
+                        {proposed.landing === null ? null : (
+                            <Sub title={words.landing} lead={words.landingLead}>
+                                <Landing view={proposed.landing} />
+                                {proposed.unplaced === null ? null : <Unplaced view={proposed.unplaced} />}
+                            </Sub>
+                        )}
+                        {proposed.stack.length === 0 ? null : (
+                            <Sub title={words.stack} lead={words.stackLead}>
+                                <Stack view={proposed} />
+                            </Sub>
+                        )}
+                        {proposed.outside.length === 0 ? null : (
+                            <Sub title={words.outside} lead={words.outsideLead}>
+                                <OutsideTable view={proposed} />
+                            </Sub>
+                        )}
+                        {proposed.risks.length === 0 ? null : (
+                            <Sub title={words.risks} lead={words.risksLead}>
+                                <Risks items={proposed.risks} />
+                            </Sub>
+                        )}
+                        {proposed.questions.length === 0 ? null : (
+                            <Sub title={words.questions} lead={words.questionsLead}>
+                                <Risks items={proposed.questions} />
+                            </Sub>
+                        )}
+                    </div>
+                </Section>
+            </div>
+        )}
+        {proposed === null || proposed.options.length < 2 ? null : (
+            <div id="options">
+                <Section title={words.options} writtenBy="app">
+                    <p class="text-muted-foreground" data-written-by="app">{words.optionsLead}</p>
+                    <Options options={proposed.options} />
+                </Section>
+            </div>
+        )}
+        {proposed === null || proposed.challenges.length === 0 ? null : (
+            <div id="challenges">
+                <Section title={words.challenges} writtenBy="app">
+                    <p class="text-muted-foreground" data-written-by="app">{words.challengesLead}</p>
+                    <Challenges items={proposed.challenges} />
+                </Section>
+            </div>
+        )}
+    </div>
+</Page>
+<script>
+    import "../scripts/filter.ts";
+</script>

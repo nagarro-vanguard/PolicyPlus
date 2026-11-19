@@ -94,6 +94,8 @@ export type Risk = {
     capabilities: string[];
     parts: string[];
     files: string[];
+    /** The product places whose files hold a file the risk's findings lie in; empty when none does. */
+    surfaces: string[];
     breadth: number;
     rank: number;
 };
@@ -487,6 +489,14 @@ export const factsOf = (payloads: Payloads): Facts => {
                 capabilities: capabilitiesOf,
                 parts: partsOf,
                 files: distinct(risk.places?.files ?? []),
+                surfaces: surfaces
+                    .filter(
+                        (surface) =>
+                            surface.product &&
+                            !surface.test &&
+                            surface.files.some((file) => (risk.places?.files ?? []).includes(file)),
+                    )
+                    .map((surface) => surface.key),
                 breadth: capabilitiesOf.length + partsOf.length,
                 rank: 0,
             };

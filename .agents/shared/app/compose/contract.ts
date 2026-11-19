@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { diagramKinds } from "./build/diagrams";
 import { foldKinds, levels } from "./build/hierarchy";
+import { workLabels, type WorkLabel } from "./build/work";
 
 /*
  * The contract of `case/`: one schema per file. `compose` checks every file against its schema before writing it, and
@@ -149,6 +150,7 @@ const facts = {
             capabilities: Ids,
             parts: Ids,
             files: Ids,
+            surfaces: Ids,
             breadth: N,
             rank: N,
         }),
@@ -236,10 +238,12 @@ const ProposedJourney = z.strictObject({
     ),
     drops: z.array(z.strictObject({ actions: Ids, rules: Ids, reason: S })),
     dropped: Ids,
+    hasChanges: z.boolean(),
     alternatives: z.array(z.strictObject({ name: S, strategy: S, idea: S, tradeoff: S })),
 });
 
-const Since = z.strictObject({ added: Ids, removed: Ids, changed: Ids });
+const Since = z.strictObject({ added: Ids, removed: Ids, changed: Ids, names: z.record(S, S) });
+const Score = z.strictObject({ steps: N, stepsServed: N, rules: N, rulesAssigned: N });
 const Pair = z.strictObject({ from: S, to: S, uses: N });
 
 const Architecture = z.strictObject({
@@ -285,9 +289,19 @@ const Architecture = z.strictObject({
             name: S,
             idea: S,
             tradeoff: S,
-            score: z.strictObject({ steps: N, stepsServed: N, rules: N, rulesAssigned: N }).nullable(),
+            score: Score.nullable(),
+            containers: z.array(z.strictObject({ name: S, kind: S, tech: S.nullable(), holds: Ids })),
+            domains: z.array(z.strictObject({ name: S, concept: S.nullable() })),
+            integrations: z.array(z.strictObject({ outside: S, name: S, domain: S, how: S })),
         }),
     ),
+    score: Score.nullable(),
+    landing: z.strictObject({
+        layers: z.array(z.strictObject({ layer: S.nullable(), name: S, rules: N, number: S })),
+        domains: Ids,
+        cells: z.array(z.strictObject({ layer: S.nullable(), domain: S, rules: Ids, number: S })),
+    }),
+    unplaced: z.array(z.strictObject({ rule: S, reason: S.nullable() })),
 });
 
 const Story = z.strictObject({
@@ -297,7 +311,9 @@ const Story = z.strictObject({
     why: S,
     kind: S,
     tags: Ids,
-    work: z.strictObject({ profile: S, reference: z.boolean() }).nullable(),
+    work: z
+        .strictObject({ profile: S, reference: z.boolean(), label: z.enum(Object.keys(workLabels) as [WorkLabel]), words: S })
+        .nullable(),
     phase: N,
     epic: S,
     sequence: N,
@@ -312,7 +328,17 @@ const Story = z.strictObject({
     layers: Ids,
     capability: S.nullable(),
     surface: S.nullable(),
-    criteria: N,
+    criteria: z.array(
+        z.strictObject({
+            says: S,
+            given: S.nullable(),
+            when: S.nullable(),
+            then: S.nullable(),
+            from: z.array(z.strictObject({ kind: S, id: S })),
+        }),
+    ),
+    open: Ids,
+    challenges: Ids,
     status: S,
     split: z.strictObject({ part: S, from: S }).nullable(),
 });
@@ -376,7 +402,16 @@ export const caseFiles = {
     "numbers.json": z.array(NumberEntry),
     "diagrams.json": z.array(Diagram),
     "evidence.json": z.record(S, Excerpt),
-    "search.json": z.array(z.strictObject({ node: S, name: S, level: S, parent: S, text: S })),
+    "search.json": z.array(
+        z.strictObject({
+            node: S,
+            name: S,
+            level: S,
+            parent: S,
+            text: S,
+            section: z.enum(["journeys", "plan", "risks", "architecture"]).optional(),
+        }),
+    ),
     "brief.json": Brief,
     "journeys/today.json": z.array(TodayJourney),
     "journeys/proposed.json": z.array(ProposedJourney),
@@ -411,7 +446,9 @@ export const caseFiles = {
             sequence: N,
         }),
     ),
-    "plan/phases.json": z.array(z.strictObject({ number: N, name: S, why: S, stories: Ids, builtIn: Ids })),
+    "plan/phases.json": z.array(
+        z.strictObject({ number: N, name: S, why: S, stories: Ids, epics: Ids, builtIn: Ids }),
+    ),
     "plan/layers.json": z.array(
         z.strictObject({
             id: S,
@@ -438,6 +475,8 @@ export const caseFiles = {
             total: N,
         })
         .nullable(),
+    "plan/unplanned.json": z.array(z.strictObject({ name: S, file: S, firstLine: N, lastLine: N })),
+    "plan/stale.json": z.boolean().nullable(),
     "plan/conflicts.json": z.array(z.strictObject({ stage: S, variant: S, says: S, resolved: z.boolean().nullable() })),
     "assistant/index.json": z.record(S, z.record(S, N)),
     ...Object.fromEntries(

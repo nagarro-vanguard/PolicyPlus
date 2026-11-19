@@ -4,6 +4,9 @@ import type { PlanInput } from "../inputs/plan";
 import type { RequestInput } from "../inputs/plan";
 import type { ArchitectureView, ProposedJourney, StepTrace } from "./journeys";
 import { sortByText } from "./text";
+import { workLabels, type WorkLabel } from "./work";
+
+export { workLabels, type WorkLabel } from "./work";
 
 /*
  * The plan's views, every join made here: who each story unblocks, which stories are ready to start under the
@@ -18,8 +21,11 @@ export type StoryView = {
     why: string;
     kind: string;
     tags: string[];
-    /** What the tags run: the workflow's profile, or null when the tag set names no workflow. */
-    work: { profile: string; reference: boolean } | null;
+    /**
+     * What the tags run: the workflow's profile, and the kind of work in plain words from compose's closed catalogue
+     * (`workLabels`); null when the tag set names no workflow.
+     */
+    work: { profile: string; reference: boolean; label: WorkLabel; words: string } | null;
     phase: number;
     epic: string;
     sequence: number;
@@ -34,7 +40,12 @@ export type StoryView = {
     layers: string[];
     capability: string | null;
     surface: string | null;
-    criteria: number;
+    /** The acceptance criteria: Given, When and Then when the sentence follows that pattern, else the sentence alone. */
+    criteria: Criterion[];
+    /** What the plan leaves unsettled for this story, one question each, as the plan wrote them. */
+    open: string[];
+    /** The reviewers' challenges about this story that are not settled. */
+    challenges: string[];
     status: string;
     split: { part: string; from: string } | null;
 };
@@ -52,7 +63,7 @@ export type PlanViews = {
         stories: string[];
         sequence: number;
     }[];
-    phases: { number: number; name: string; why: string; stories: string[]; builtIn: string[] }[];
+    phases: { number: number; name: string; why: string; stories: string[]; epics: string[]; builtIn: string[] }[];
     layers: {
         id: string;
         name: string;
@@ -77,6 +88,47 @@ export type PlanViews = {
     } | null;
     conflicts: { stage: string; variant: string; says: string; resolved: boolean | null }[];
     coverage: { rulesBuilt: number; rulesTotal: number };
+    /** The code the plan lists as reached by nothing it could follow, so no story builds it. */
+    unplanned: { name: string; file: string; firstLine: number; lastLine: number }[];
+    /** True when what the plan was built from changed since; null when the plan cannot say. */
+    stale: boolean | null;
+};
+
+export type Criterion = {
+    says: string;
+    given: string | null;
+    when: string | null;
+    then: string | null;
+    /** What it rests on: a legacy rule, a state change, a decision, a layer or a journey step, by kind and key. */
+    from: { kind: string; id: string }[];
+};
+
+
+const workLabelOf = (kind: string, reference: boolean): WorkLabel =>
+    kind === "design" || kind === "wait"
+        ? "designed"
+        : kind === "bug"
+          ? "fix"
+          : kind === "technical"
+            ? reference
+                ? "technical-rebuilt"
+                : "technical"
+            : reference
+              ? "rebuilt"
+              : "feature";
+
+const givenWhenThen = /^\s*given\s+([\s\S]+?),\s+when\s+([\s\S]+?),\s+then\s+([\s\S]+?)\s*$/iu;
+
+const criterionOf = (says: string, from: readonly { _tag: string; id: string }[]): Criterion => {
+    const match = givenWhenThen.exec(says);
+    const part = (text: string | undefined) => (text === undefined ? null : text.replace(/\.$/u, "").trim());
+    return {
+        says,
+        given: part(match?.[1]),
+        when: part(match?.[2]),
+        then: part(match?.[3]),
+        from: from.map((each) => ({ kind: each._tag, id: each.id })),
+    };
 };
 
 /** The matrix column of steps no component serves. */
@@ -99,8 +151,14 @@ export const planViewsOf = (
     architecture: ArchitectureView | undefined,
     trace: readonly StepTrace[],
     disputes: readonly { stage: string; variant: string; says: string }[],
+    plain: (text: string) => string = (text) => text,
 ): PlanViews => {
     const { plan } = input;
+    const storyKeys = new Set(plan.stories.map((story) => story.key));
+    const challengesOf = new Map<string, string[]>();
+    for (const each of plan.conflicts ?? [])
+        if (!each.resolved && storyKeys.has(each.variant))
+            challengesOf.set(each.variant, [...(challengesOf.get(each.variant) ?? []), plain(each.says)]);
     const status = (key: string) => input.status.get(key) ?? "planned";
     const domainOf = new Map((architecture?.components ?? []).map((component) => [component.name, component.domain]));
     const domainOfRule = new Map(
@@ -126,10 +184,11 @@ export const planViewsOf = (
                 work:
                     workflow === undefined
                         ? null
-                        : {
-                              profile: workflow.profile,
-                              reference: "reference" in workflow && workflow.reference === true,
-                          },
+                        : (() => {
+                              const reference = "reference" in workflow && workflow.reference === true;
+                              const label = workLabelOf(workflow.kind, reference);
+                              return { profile: workflow.profile, reference, label, words: workLabels[label] };
+                          })(),
                 phase: story.phase,
                 epic: story.epic,
                 sequence: story.sequence,
@@ -149,7 +208,9 @@ export const planViewsOf = (
                 layers: distinct(story.layers ?? []),
                 capability: story.capability ?? null,
                 surface: story.surface ?? null,
-                criteria: story.criteria.length,
+                criteria: story.criteria.map((each) => criterionOf(plain(each.says), each.from ?? [])),
+                open: (story.open ?? []).map(plain),
+                challenges: distinct(challengesOf.get(story.key) ?? []),
                 status: status(story.key),
                 split:
                     story.part === undefined || story.splitFrom === undefined
@@ -226,6 +287,7 @@ export const planViewsOf = (
             name: phase.name,
             why: phase.why,
             stories: [...phase.stories],
+            epics: distinct(phase.stories.map((key) => storyOf.get(key)?.epic ?? "").filter((key) => key !== "")),
             builtIn: distinct(
                 phase.stories.flatMap((key) => storyOf.get(key)?.layers ?? []).map((id) => layerName.get(id) ?? id),
             ),
@@ -254,10 +316,12 @@ export const planViewsOf = (
             ...(plan.conflicts ?? []).map((each) => ({
                 stage: each.stage,
                 variant: each.variant,
-                says: each.says,
+                says: plain(each.says),
                 resolved: each.resolved,
             })),
-            ...(plan.conflicts === undefined ? disputes.map((each) => ({ ...each, resolved: null })) : []),
+            ...(plan.conflicts === undefined
+                ? disputes.map((each) => ({ ...each, says: plain(each.says), resolved: null }))
+                : []),
         ].sort(
             (one, other) =>
                 compareText(one.stage, other.stage) ||
@@ -265,5 +329,12 @@ export const planViewsOf = (
                 compareText(one.says, other.says),
         ),
         coverage: { rulesBuilt: plan.coverage.rulesBuilt, rulesTotal: plan.coverage.rulesTotal },
+        unplanned: (plan.coverage.unplanned ?? []).map((each) => ({
+            name: each.what,
+            file: each.file,
+            firstLine: each.firstLine,
+            lastLine: each.lastLine,
+        })),
+        stale: input.stale,
     };
 };

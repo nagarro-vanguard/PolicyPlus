@@ -99,5 +99,9 @@ export const assistantTexts = (kase: Case): Map<string, string> => {
         if (!kase.has(path)) continue;
         for (const [key, text] of Object.entries(kase.json(path) as Record<string, string>)) files.set(assistantFileOf(key), text);
     }
+    // A journey's text, by its slug, in a folder of its own so a slug can never take a node's file.
+    if (kase.has("assistant/journey.json"))
+        for (const [slug, text] of Object.entries(kase.json("assistant/journey.json") as Record<string, string>))
+            files.set(`assistant/journey/${slug}.txt`, text);
     return files;
 };

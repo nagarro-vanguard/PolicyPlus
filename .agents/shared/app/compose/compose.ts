@@ -9,9 +9,10 @@ import { factsOf, type Facts } from "./build/facts";
 import { hierarchyOf, levels } from "./build/hierarchy";
 import { architectureOf, proposedOf, todayOf, traceOf } from "./build/journeys";
 import { Numbers } from "./build/numbers";
-import { planViewsOf } from "./build/plan-views";
+import { planViewsOf, workLabels, type PlanViews } from "./build/plan-views";
+import { plainTextOf } from "./build/plain";
 import { searchOf } from "./build/search";
-import { Slugs } from "./build/text";
+import { slugify, Slugs } from "./build/text";
 import { caseContractVersion, caseFiles, Manifest, schemaPathOf } from "./contract";
 import { ComposeError } from "./errors";
 import { compareText, distinct, sha256, stableJson } from "./io";
@@ -59,13 +60,27 @@ export const buildCase = (options: ComposeOptions) => {
         throw new ComposeError("missing", "missing fact: the plan was made from a target, and no --target was given");
     }
 
-    const facts = factsOf(payloads);
+    const raw = factsOf(payloads);
+    const plain = plainTextOf(raw);
+    // A rule's review reading may cite other records by id; the reader meets their words.
+    const facts: Facts = { ...raw, rules: raw.rules.map((rule) => ({ ...rule, why: plain(rule.why) })) };
     const numbers = new Numbers();
     const hierarchy = hierarchyOf(facts, numbers);
     const slugs = new Slugs();
     const today = todayOf(payloads, target, facts, slugs);
     const proposed = target === undefined ? [] : proposedOf(target, today);
-    const architecture = target === undefined ? undefined : architectureOf(target, facts, slugs);
+    const built = target === undefined ? undefined : architectureOf(target, facts, slugs, proposed);
+    const architecture =
+        built === undefined
+            ? undefined
+            : {
+                  ...built,
+                  risks: built.risks.map((risk) => ({
+                      ...risk,
+                      statement: plain(risk.statement),
+                      summary: plain(risk.summary),
+                  })),
+              };
     const storiesOfStep = new Map<string, string[]>();
     for (const story of plan?.plan.stories ?? [])
         for (const step of story.steps ?? []) storiesOfStep.set(step, [...(storiesOfStep.get(step) ?? []), story.key]);
@@ -73,9 +88,10 @@ export const buildCase = (options: ComposeOptions) => {
     const views =
         plan === undefined
             ? undefined
-            : planViewsOf(plan, request, proposed, architecture, trace, target?.disputes ?? []);
+            : planViewsOf(plan, request, proposed, architecture, trace, target?.disputes ?? [], plain);
     const brief = briefOf(facts, request, architecture, views, numbers);
     journeyNumbers(numbers, today, proposed, architecture);
+    if (views !== undefined) planNumbers(numbers, views);
     const diagrams = diagramsOf(facts, payloads, hierarchy.nodeOf, today, proposed, architecture);
     const sourceRoot = options.source ?? payloads.sourceRoot;
     const evidence = evidenceOf(facts, sourceRoot);
@@ -131,7 +147,22 @@ export const compose = (options: ComposeOptions): Composed => {
         "numbers.json": numbers.all(),
         "diagrams.json": diagrams,
         "evidence.json": evidence,
-        "search.json": searchOf(hierarchy.nodes),
+        "search.json": searchOf(hierarchy.nodes, {
+            journeys: today.map((journey) => ({
+                slug: journey.slug,
+                title: journey.title,
+                outcome: journey.outcome,
+                capability: facts.capabilities.find((each) => each.id === journey.capability)?.name ?? "",
+            })),
+            stories: (views?.stories ?? []).map((story) => ({
+                sequence: story.sequence,
+                title: story.title,
+                what: story.what,
+                epic: views?.epics.find((epic) => epic.key === story.epic)?.label ?? "",
+            })),
+            risks: facts.risks,
+            domains: architecture?.domains ?? [],
+        }),
         "brief.json": brief,
         "journeys/today.json": today,
         "assistant/index.json": assistant.sizes,
@@ -149,7 +180,20 @@ export const compose = (options: ComposeOptions): Composed => {
             "journeys/changed.json": target.gates.map((gate) => ({
                 gate: gate.gate,
                 state: gate.state,
-                since: gate.since ?? null,
+                since:
+                    gate.since === undefined
+                        ? null
+                        : {
+                              ...gate.since,
+                              names: Object.fromEntries(
+                                  [...gate.since.added, ...gate.since.removed, ...gate.since.changed]
+                                      .sort(compareText)
+                                      .flatMap((key) => {
+                                          const name = gate.names?.get(key);
+                                          return name === undefined ? [] : [[key, name] as const];
+                                      }),
+                              ),
+                          },
             })),
             "architecture.json": architecture,
         });
@@ -164,6 +208,8 @@ export const compose = (options: ComposeOptions): Composed => {
             "plan/ready.json": views.ready,
             "plan/matrix.json": views.matrix,
             "plan/conflicts.json": views.conflicts,
+            "plan/unplanned.json": views.unplanned,
+            "plan/stale.json": views.stale,
         });
     }
 
@@ -274,7 +320,160 @@ const journeyNumbers = (
         scope: "steps of today's journeys",
         source: "the analysis's journeys",
     });
+    const rule = { one: "business rule", many: "business rules" };
+    for (const each of today) {
+        numbers.add({
+            key: `journey/${each.slug}/steps/today`,
+            value: each.steps.length,
+            noun: { one: "step today", many: "steps today" },
+            scope: "steps of this journey as it runs today",
+            source: "the analysis's journeys",
+        });
+    }
     if (architecture === undefined) return;
+    for (const way of proposed) {
+        const changed = distinct(way.steps.flatMap((step) => step.changes.map((change) => change.rule)));
+        const kept = distinct(way.steps.flatMap((step) => step.kept)).filter((id) => !changed.includes(id));
+        const base = `journey/${way.slug}`;
+        numbers.add({
+            key: `${base}/steps/proposed`,
+            value: way.steps.length,
+            noun: { one: "step in the new way", many: "steps in the new way" },
+            scope: "steps of the chosen new way of this journey",
+            source: "the chosen journeys",
+        });
+        const ruleNumbers = (key: string, steps: string, values: { kept: number; changed: number; dropped: number }) => {
+            numbers.add({
+                key: `${key}/rules/kept`,
+                value: values.kept,
+                noun: { one: "business rule kept", many: "business rules kept" },
+                scope: `business rules ${steps} applies as today, each counted once`,
+                source: "the chosen journeys' steps",
+            });
+            numbers.add({
+                key: `${key}/rules/changed`,
+                value: values.changed,
+                noun: { one: "business rule changed", many: "business rules changed" },
+                scope: `business rules ${steps} applies differently from today, each counted once`,
+                source: "the chosen journeys' changes",
+            });
+            numbers.add({
+                key: `${key}/rules/dropped`,
+                value: values.dropped,
+                noun: { one: "business rule left out", many: "business rules left out" },
+                scope: `business rules ${steps} leaves out on purpose, each counted once`,
+                source: "the chosen journeys' drops",
+            });
+        };
+        ruleNumbers(base, "the new way of this journey", {
+            kept: kept.length,
+            changed: changed.length,
+            dropped: way.dropped.length,
+        });
+        for (const step of way.steps) {
+            ruleNumbers(`${base}/step/${step.number}`, "this step", {
+                kept: step.kept.length,
+                changed: distinct(step.changes.map((change) => change.rule)).length,
+                dropped: way.dropped.filter((id) => step.honours.includes(id)).length,
+            });
+        }
+    }
+    numbers.add({
+        key: "journeys/dropped/actions",
+        value: distinct(proposed.flatMap((each) => each.drops.flatMap((drop) => drop.actions))).length,
+        noun: { one: "action", many: "actions" },
+        scope: "actions of today the chosen journeys leave out on purpose, each counted once",
+        source: "the chosen journeys' drops",
+    });
+    numbers.combined(
+        "journeys/strategies",
+        journey,
+        distinct(proposed.map((each) => each.strategy)).map((strategy) => ({
+            kind: slugify(strategy),
+            value: proposed.filter((each) => each.strategy === strategy).length,
+            noun: { one: `${strategy} journey`, many: `${strategy} journeys` },
+        })),
+        "chosen journeys, by the kind of new way chosen",
+        "the chosen journeys",
+    );
+    if (architecture.score !== null) {
+        const score = architecture.score;
+        numbers.add({
+            key: "architecture/score/steps",
+            value: score.steps,
+            noun: step,
+            scope: "steps of the chosen journeys the chosen architecture was scored on",
+            source: "the chosen architecture's score",
+        });
+        numbers.add({
+            key: "architecture/score/steps-served",
+            value: score.stepsServed,
+            noun: step,
+            scope: "steps of the chosen journeys a component of the chosen architecture serves",
+            source: "the chosen architecture's score",
+        });
+        numbers.add({
+            key: "architecture/score/rules",
+            value: score.rules,
+            noun: rule,
+            scope: "business rules the chosen architecture was scored on",
+            source: "the chosen architecture's score",
+        });
+        numbers.add({
+            key: "architecture/score/rules-assigned",
+            value: score.rulesAssigned,
+            noun: rule,
+            scope: "business rules the chosen architecture gives a domain",
+            source: "the chosen architecture's score",
+        });
+    }
+    for (const domain of architecture.domains) {
+        numbers.add({
+            key: `architecture/domain/${domain.slug}/components`,
+            value: domain.components,
+            noun: { one: "component", many: "components" },
+            scope: "components of this domain, each counted once",
+            source: "the chosen architecture",
+        });
+        numbers.add({
+            key: `architecture/domain/${domain.slug}/rules`,
+            value: domain.rules.length,
+            noun: { one: "business rule placed here", many: "business rules placed here" },
+            scope: "business rules of today this domain holds, each counted once",
+            source: "the chosen architecture",
+        });
+    }
+    for (const row of architecture.landing.layers) {
+        numbers.add({
+            key: row.number,
+            value: row.rules,
+            noun: rule,
+            scope:
+                row.layer === null
+                    ? "business rules of today in no layer"
+                    : "business rules of today decided in this layer",
+            source: "the analysis's rules",
+        });
+    }
+    for (const cell of architecture.landing.cells) {
+        numbers.add({
+            key: cell.number,
+            value: cell.rules.length,
+            noun: rule,
+            scope:
+                cell.domain === ""
+                    ? "business rules of today in this layer that no domain holds"
+                    : "business rules of today in this layer that this domain holds",
+            source: "the analysis's rules and the chosen architecture",
+        });
+    }
+    numbers.add({
+        key: "architecture/unplaced",
+        value: architecture.unplaced.length,
+        noun: rule,
+        scope: "business rules of today that no domain of the chosen architecture holds",
+        source: "the analysis's rules and the chosen architecture",
+    });
     numbers.add({
         key: "journeys/proposed/steps",
         value: proposed.reduce((sum, each) => sum + each.steps.length, 0),
@@ -317,4 +516,25 @@ const journeyNumbers = (
         scope: "parts of the chosen architecture built and run as one",
         source: "the chosen architecture",
     });
+};
+
+const planNumbers = (numbers: Numbers, views: PlanViews) => {
+    numbers.add({
+        key: "plan/unplanned",
+        value: views.unplanned.length,
+        noun: { one: "place in the code", many: "places in the code" },
+        scope: "places in the code nothing the analysis followed reaches, so no story builds them",
+        source: "the plan's coverage",
+    });
+    numbers.combined(
+        "plan/stories/work",
+        { one: "story", many: "stories" },
+        (Object.keys(workLabels) as (keyof typeof workLabels)[]).map((label) => ({
+            kind: label,
+            value: views.stories.filter((story) => story.work?.label === label).length,
+            noun: { one: workLabels[label], many: workLabels[label] },
+        })),
+        "stories of the plan, by the kind of work",
+        "the plan's tags",
+    );
 };
