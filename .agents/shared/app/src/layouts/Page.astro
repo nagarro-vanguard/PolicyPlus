@@ -10,11 +10,14 @@ import { SideNav } from "../components/shell/SideNav";
 import { MobileNav } from "../components/shell/MobileNav";
 import { SearchButton, ThemeControl } from "../components/shell/TopBar";
 import { Palette } from "../components/shell/Palette";
+import { ErrorState } from "@continuum/ui/components/error-state";
 // The frame of every page, built from the design system's components (vendor/ui) and rendered to HTML at build time.
 // The islands, the only components that ship a script, are listed here and nowhere else:
 //   MobileNav, `client:media` below Finch's `md`: the sheet that holds the menu on a narrow screen.
 // Everything else that moves (search, copy for an assistant, the detail at `#<key>`, the theme) is the page's own small
-// script, src/scripts/shell.ts and public/site.js, with no framework.
+// script, src/scripts/shell.ts and public/site.js, with no framework. After the build the offline packager
+// (scripts/package/) turns every script into a classic one, adds the page's Content-Security-Policy and moves repeated
+// class lists into one shared stylesheet, so the folder works from `file://` and from any subfolder of a site.
 export interface Props {
     title: string;
     lead?: string;
@@ -48,9 +51,12 @@ const nav = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
+    <link rel="icon" href="data:," />
     <ClientRouter fallback="swap" />
     <script is:inline>
         try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+        // Opened from a file, the router cannot read the next page: links load pages the plain way.
+        if (location.protocol === "file:") { var vt = document.querySelector('meta[name="astro-view-transitions-enabled"]'); if (vt) vt.remove(); }
     </script>
 </head>
 <body data-root={root} data-page={page}>
@@ -64,6 +70,9 @@ const nav = {
                 <div class="ms-auto shrink-0"><ThemeControl /></div>
             </header>
             <main id="main" tabindex="-1" class:list={["mx-auto flex w-full flex-col gap-spacing-4xl px-spacing-xxl pt-spacing-4xl pb-spacing-5xl md:px-spacing-5xl", wide ? "max-w-wide" : "max-w-column"]} data-wide={wide ? "true" : undefined}>
+                <div id="page-error" hidden data-written-by="app">
+                    <ErrorState compact title={copy.site.pageErrorTitle} message={copy.site.pageError} />
+                </div>
                 <slot name="trail" />
                 <div data-written-by={writtenBy}>
                     <PageOpening title={title} summary={lead === "" ? undefined : lead} />

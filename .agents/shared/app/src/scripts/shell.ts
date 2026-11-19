@@ -1,10 +1,13 @@
 // The shell of every page: the shortcut hint, the search, the copy for a reader's assistant and the detail of an action
 // or a rule, opened on the page that holds it at `#<key>`. The search reads `data/search.json`, the detail
-// `data/node/<key>.json`, the assistant's text `assistant/<key>.txt`; all are written at build time, so the shell never
-// grows with the system shown. No framework: the detail is drawn from the pieces the server rendered into `#parts` with
-// the design system's components, and the menu on a narrow screen is the MobileNav island.
+// `data/node/<key>.json` and the pieces it is drawn from `data/parts.html`, the assistant's text `assistant/<key>.txt`;
+// all are written at build time and read as classic scripts (load.ts), so they work from `file://` too, and the shell
+// never grows with the system shown. An error in a page's script shows a plain message at the top of the page instead
+// of failing in silence. No framework: the detail is drawn from the pieces rendered with the design system's
+// components, and the menu on a narrow screen is the MobileNav island.
 import { navigate } from "astro:transitions/client";
 import { detailOf } from "../case/routes";
+import { loadFile } from "./load";
 import type { NodeView, RowView } from "../case/view";
 
 let root = document.body.dataset.root ?? "./";
@@ -35,7 +38,10 @@ let list: HTMLElement | null = null;
 let rows: Hit[] = [];
 let active = 0;
 const searchable = () => {
-    records ??= fetch(`${root}data/search.json`).then((response) => response.json() as Promise<Hit[]>);
+    records ??= loadFile<Hit[]>(`${root}data/search.json`).catch((error: unknown) => {
+        records = undefined;
+        throw error;
+    });
     return records;
 };
 /** Every word typed must start a word of the name, the parent or the text; the name's matches come first. */
@@ -88,7 +94,14 @@ let sequence = 0;
 const update = async () => {
     if (input === null) return;
     const mine = ++sequence;
-    const all = await searchable();
+    let all: Hit[];
+    try {
+        all = await searchable();
+    } catch {
+        if (mine !== sequence || list === null) return;
+        list.replaceChildren(el("li", "px-spacing-md py-spacing-lg text-sm text-muted-foreground", strings().failed ?? "", "app"));
+        return;
+    }
     if (mine !== sequence) return;
     rows = matches(all, input.value);
     active = 0;
@@ -122,31 +135,60 @@ document.addEventListener("click", (event) => {
     const label = button.querySelector("[data-label]");
     const fallback = button.parentElement?.querySelector<HTMLTextAreaElement>("[data-assistant-fallback]") ?? null;
     void (async () => {
-        const text = await fetch(button.dataset.assistantFile ?? "").then((response) => (response.ok ? response.text() : Promise.reject(new Error(String(response.status)))));
-        try {
-            if (navigator.clipboard === undefined) throw new Error("no clipboard");
-            await navigator.clipboard.writeText(text);
+        const text = await loadFile<string>(button.dataset.assistantFile ?? "", false);
+        const done = () => {
             const was = label?.textContent ?? "";
             if (label !== null) label.textContent = button.dataset.copied ?? "";
             say(strings().copied ?? "");
             setTimeout(() => {
                 if (label !== null) label.textContent = was;
             }, 1800);
+        };
+        try {
+            if (navigator.clipboard === undefined) throw new Error("no clipboard");
+            await navigator.clipboard.writeText(text);
+            done();
         } catch {
-            if (fallback !== null) {
-                fallback.value = text;
-                fallback.hidden = false;
-                fallback.select();
+            // The browser refused the clipboard (no permission, or an address it does not trust): the text is shown,
+            // selected, and copied the older way; if that is refused too, the reader copies it by hand.
+            if (fallback === null) {
+                say(strings().copyFailed ?? "");
+                return;
             }
-            say(strings().copyFailed ?? "");
+            fallback.value = text;
+            fallback.hidden = false;
+            fallback.select();
+            let copied = false;
+            try {
+                copied = document.execCommand("copy");
+            } catch {
+                copied = false;
+            }
+            if (copied) {
+                fallback.hidden = true;
+                done();
+            } else say(strings().copyFailed ?? "");
         }
     })().catch(() => say(strings().failed ?? ""));
 });
 
 /* ---------- the detail of an action or a rule ---------- */
-/** A copy of one of the pieces the server rendered into `#parts`, with the design system's classes. */
+/** The pieces the server rendered once for the site (`data/parts.html`), read the first time a detail opens. */
+let pieces: Promise<HTMLTemplateElement> | undefined;
+let template: HTMLTemplateElement | null = null;
+const loadPieces = () => {
+    pieces ??= loadFile<string>(`${root}data/parts.html`).then((html) => {
+        const box = document.createElement("template");
+        box.innerHTML = html;
+        return box;
+    });
+    pieces.catch(() => {
+        pieces = undefined;
+    });
+    return pieces;
+};
+/** A copy of one of the pieces, with the design system's classes. */
 const part = (name: string): HTMLElement => {
-    const template = document.getElementById("parts") as HTMLTemplateElement | null;
     const found = template?.content.querySelector<HTMLElement>(`[data-part="${name}"]`);
     if (found === null || found === undefined) throw new Error(`the page has no piece ${name}`);
     const copy = found.cloneNode(true) as HTMLElement;
@@ -276,9 +318,8 @@ const showDetail = async () => {
     panel.hidden = false;
     panel.replaceChildren(el("p", "text-muted-foreground", said.loading ?? "", "app"));
     try {
-        const response = await fetch(`${root}${detailOf(key)}`);
-        if (!response.ok) throw new Error(String(response.status));
-        const view = (await response.json()) as NodeView;
+        const [view, box] = await Promise.all([loadFile<NodeView>(`${root}${detailOf(key)}`), loadPieces()]);
+        template = box;
         panel.replaceChildren(draw(view, said));
         panel.scrollIntoView({ block: "start" });
     } catch {
@@ -298,9 +339,23 @@ const recover = async () => {
     if (hit !== undefined) location.replace(`${root}${hit.href}`);
 };
 
+/* ---------- an error in a page's script: a plain message at the top of the page, never silence ---------- */
+const showError = () => {
+    const box = document.getElementById("page-error");
+    if (box !== null) box.hidden = false;
+};
+addEventListener("error", (event: ErrorEvent) => {
+    // A browser notice with no error behind it (a resize observer that took two frames) breaks nothing.
+    if (event.error === undefined || event.error === null) return;
+    showError();
+});
+addEventListener("unhandledrejection", showError);
+
 /* ---------- each page ---------- */
 const start = () => {
     root = document.body.dataset.root ?? "./";
+    // Opened from a file, a page cannot be read ahead of the click: the links are not prefetched.
+    if (location.protocol === "file:") for (const link of document.querySelectorAll("[data-astro-prefetch]")) link.removeAttribute("data-astro-prefetch");
     palette = document.querySelector<HTMLDialogElement>("[data-palette]");
     input = document.getElementById("palette-input") as HTMLInputElement | null;
     list = document.getElementById("palette-list");

@@ -1,5 +1,5 @@
-import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, sep } from "node:path";
+import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
@@ -8,41 +8,13 @@ import { addressesIn, isPlanPage, languageFindings, pathNamesRecordId, planFindi
 import { buildConfig } from "./src/case/build-config.ts";
 import { openCase } from "./src/case/read.ts";
 import { assistantTexts } from "./src/case/raw-data.ts";
-
-/**
- * After the build, every `/_astro/` address in a page becomes a path relative to the page, and every one in a stylesheet
- * (the theme's fonts) a path relative to the stylesheet, so the output folder opens from any address, a subfolder of a
- * site included.
- * @returns the integration
- */
-const relativeAssets = () => ({
-    name: "relative-assets",
-    hooks: {
-        "astro:build:done": ({ dir }) => {
-            const out = fileURLToPath(dir);
-            const walk = (folder) =>
-                readdirSync(folder).flatMap((name) => {
-                    const path = join(folder, name);
-                    return statSync(path).isDirectory() ? walk(path) : [path];
-                });
-            for (const file of walk(out).filter((each) => each.endsWith(".html"))) {
-                const depth = relative(out, file).split(sep).length - 1;
-                const prefix = depth === 0 ? "./" : "../".repeat(depth);
-                const html = readFileSync(file, "utf8");
-                writeFileSync(
-                    file,
-                    html.replaceAll('"/_astro/', `"${prefix}_astro/`).replaceAll("'/_astro/", `'${prefix}_astro/`),
-                );
-            }
-            for (const file of walk(join(out, "_astro")).filter((each) => each.endsWith(".css")))
-                writeFileSync(file, readFileSync(file, "utf8").replaceAll(/url\((["']?)\/_astro\//g, "url($1./"));
-        },
-    },
-});
+import { offlinePackage } from "./scripts/package/index.ts";
+import { writeDataFile } from "./scripts/package/data.ts";
 
 /**
  * After the build, the texts a reader copies for an assistant are written beside the pages, one file per node, read from
- * the case on demand by the copy button: a large system holds tens of megabytes of them, so no page carries them.
+ * the case on demand by the copy button: a large system holds tens of megabytes of them, so no page carries them. Each is a
+ * classic script (scripts/package/data.ts), so a page opened from `file://` can read it.
  * @returns the integration
  */
 const assistantFiles = () => ({
@@ -50,10 +22,7 @@ const assistantFiles = () => ({
     hooks: {
         "astro:build:done": ({ dir }) => {
             const out = fileURLToPath(dir);
-            for (const [path, text] of assistantTexts(openCase(buildConfig().caseDir))) {
-                mkdirSync(dirname(join(out, path)), { recursive: true });
-                writeFileSync(join(out, path), text);
-            }
+            for (const [path, text] of assistantTexts(openCase(buildConfig().caseDir))) writeDataFile(out, path, text);
         },
     },
 });
@@ -116,13 +85,15 @@ const readerCheck = () => ({
 });
 
 // The stylesheet is never inlined: its font addresses are relative to it, so it must stay one file in _astro/.
+// The offline packager (scripts/package/) runs last, after the reader check has read the pages as Astro wrote them: it
+// makes every address relative, every script classic, every data file a script, and adds the Content-Security-Policy.
 // The design system's components (vendor/ui, synced from Continuum UI, imported as `@continuum/ui/*`) are React, rendered
 // to HTML at build time; only the islands listed in src/layouts/Page.astro ship a script.
 // Static pages, one file per node of a page level (`capability/<slug>.html`). The app's only input is the case folder
 // compose wrote, named by src/case/build-config.ts (checked once; the build fails without it).
 buildConfig();
 export default defineConfig({
-    integrations: [react(), relativeAssets(), assistantFiles(), readerCheck()],
+    integrations: [react(), assistantFiles(), readerCheck(), offlinePackage(fileURLToPath(new URL("./src/styles/app.css", import.meta.url)))],
     vite: {
         plugins: [tailwindcss()],
         resolve: { alias: [{ find: /^@continuum\/ui\//, replacement: `${fileURLToPath(new URL("./vendor/ui/", import.meta.url))}` }] },

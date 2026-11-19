@@ -1,14 +1,13 @@
 ---
 import Page from "../layouts/Page.astro";
 import { Explorer } from "../components/Explorer";
-import { Parts } from "../components/Parts";
 import { Crumbs } from "../components/shell/Crumbs";
 import { caseData, caseNodes } from "../case/data";
 import { hasPage, keyOfPath, pageOf, pathOf, rootOf } from "../case/routes";
 import { viewOf } from "../case/view";
 // One page per node of a page level, at the address its key makes (`capability/keeping-records.html`). Actions and
 // rules open on these pages, at `#<key>`, in the detail below the Explorer, which the page's script draws from the
-// pieces in `#parts`.
+// pieces in `data/parts.html`, read the first time a detail opens.
 export const getStaticPaths = async () =>
     (await caseNodes()).filter((node) => hasPage(node.level)).map((node) => ({ params: { key: pathOf(node.key) } }));
 const key = keyOfPath((Astro.params as { key: string }).key);
@@ -20,5 +19,4 @@ const view = viewOf(key, await caseData());
     <Crumbs slot="trail" crumbs={view.crumbs} current={view.name} root={root} />
     <Explorer view={view} root={root} />
     <section id="detail" class="flex flex-col gap-spacing-xl rounded-surface border border-border bg-card p-spacing-4xl text-card-foreground shadow-(--shadow-elevation-1)" hidden aria-live="polite"></section>
-    <template id="parts"><Parts /></template>
 </Page>

@@ -1,16 +1,15 @@
-import Elk from "elkjs/lib/elk.bundled.js";
+import ElkApi from "elkjs/lib/elk-api.js";
 import { type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from "react";
+import { loadScript } from "../../scripts/load";
 
-// The drawing of one diagram, the app's one diagram island (`client:visible`): its script, with the layout engine (ELK,
-// about 1.5 MB) in it, is fetched only when a diagram comes into view, so a page with no diagram, or one never scrolled
-// to, loads none of it. ELK is imported statically on purpose: a dynamic import makes the bundler preload its chunk from
-// the site's root (`/_astro/`), which fails when the site is opened from a subfolder. One grammar for every kind: boxes with their full names (wrapped, never cut), lines
+// The drawing of one diagram, the app's one diagram island (`client:visible`): its script is loaded only when a diagram
+// comes into view. The layout engine (ELK, about 1.5 MB) runs in a worker made from a `blob:` address, off the page's
+// thread; its source is the classic script `_astro/elk-layout.js` the offline packager writes (scripts/package/), read
+// once per page, so it works from `file://` too. One grammar for every kind: boxes with their full names (wrapped, never cut), lines
 // with arrowheads from one box to another, a line's style for its kind, groups drawn as labelled boundaries, a number on
 // a line when it stands for more than one link. Text keeps the diagram tokens' size; a drawing larger than its frame
 // scrolls inside it and is never scaled down. Selecting a box (click, Enter or Space) brightens what it reaches and what
 // reaches it, and says so in words below the drawing. Escape clears the selection.
-// Offline packaging (Phase 5): an island is a module script, which a page opened from `file://` cannot load; the
-// packager runs ELK in a `blob:` worker instead.
 
 export type GraphNode = { id: string; label: string; group: string | null; tone: "box" | "store" | "outside" | "system" };
 export type GraphEdge = { from: string; to: string; style: number; count: number };
@@ -53,6 +52,22 @@ type ElkNode = {
 };
 
 const maxText = 208;
+
+type Layouter = { layout: (graph: unknown) => Promise<unknown> };
+let engine: Promise<Layouter> | undefined;
+/** The layout engine in its worker, started once per page and shared by its diagrams. */
+const layouter = (): Promise<Layouter> => {
+    engine ??= loadScript(`${document.body.dataset.root ?? "./"}_astro/elk-layout.js`).then(() => {
+        const source = (self as unknown as { __elkWorker?: string }).__elkWorker;
+        if (source === undefined) throw new Error("the layout engine did not load");
+        const address = URL.createObjectURL(new Blob([source], { type: "text/javascript" }));
+        return new ElkApi({ workerFactory: () => new Worker(address) }) as unknown as Layouter;
+    });
+    engine.catch(() => {
+        engine = undefined;
+    });
+    return engine;
+};
 
 /** The pixel size of a length token at the page's root, such as `0.8125rem`. */
 const pixels = (value: string) => {
@@ -143,7 +158,7 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
         children,
         edges,
     };
-    const done = (await new Elk().layout(graph as never)) as unknown as ElkNode;
+    const done = (await (await layouter()).layout(graph)) as ElkNode;
     const boxes: Box[] = [];
     const frames: Frame[] = [];
     const words = new Map(props.groups.map((group) => [`group:${group.id}`, group.words]));

@@ -3,7 +3,9 @@
 // at `#story=<n>`, so a link opens it and closing it takes the story out of the address. A link in the page (a phase's "List its stories",
 // a matrix cell or column) sets a filter through the hash (`#phase=3`, `#cell=2.4`, `#domain=1`), which this script
 // moves into the query. No framework: the sheet is a native modal dialog, and each story's body is read when it is
-// opened from `plan/story/<n>.html`, written at build time.
+// opened from `plan/story/<n>.html`, written at build time and read as a classic script (load.ts).
+
+import { loadFile } from "./load";
 
 const filters = ["q", "phase", "epic", "domain", "kind"] as const;
 let cell = "";
@@ -99,9 +101,7 @@ const openStory = async (n: string) => {
     dialog.querySelector<HTMLElement>("[data-story-close]")?.focus();
     const mine = ++reading;
     try {
-        const response = await fetch(`${document.body.dataset.root ?? "./"}plan/story/${n}.html`);
-        if (!response.ok) throw new Error(String(response.status));
-        const html = await response.text();
+        const html = await loadFile<string>(`${document.body.dataset.root ?? "./"}plan/story/${n}.html`);
         if (mine !== reading || body === null) return;
         body.innerHTML = html;
         body.scrollTop = 0;
@@ -191,5 +191,3 @@ addEventListener(
 addEventListener("hashchange", onHash);
 addEventListener("popstate", onHash);
 document.addEventListener("astro:page-load", start);
-
-export {};

@@ -42,3 +42,120 @@
         @apply font-mono;
     }
 }
+
+/*
+ * Motion, on the theme's motion tokens. A fold opens and closes its body (`::details-content` with `interpolate-size`;
+ * a browser without them snaps open, which is fine), the story sheet slides in from its edge, and a page swapped by the
+ * view transition router cross-fades.
+ */
+@layer components {
+    :root {
+        interpolate-size: allow-keywords;
+    }
+
+    details::details-content {
+        block-size: 0;
+        overflow-y: clip;
+        overflow-clip-margin: 0.25rem;
+        transition:
+            block-size var(--motion-duration-slow) var(--motion-ease-in-out),
+            content-visibility var(--motion-duration-slow) allow-discrete;
+    }
+
+    details[open]::details-content {
+        block-size: auto;
+    }
+
+    dialog[data-story-sheet] {
+        transition:
+            translate var(--motion-duration-slow) var(--motion-ease-out),
+            opacity var(--motion-duration-slow) var(--motion-ease-out),
+            overlay var(--motion-duration-slow) allow-discrete,
+            display var(--motion-duration-slow) allow-discrete;
+    }
+
+    dialog[data-story-sheet]:not([open]) {
+        translate: 2.5rem 0;
+        opacity: 0;
+    }
+
+    @starting-style {
+        dialog[data-story-sheet][open] {
+            translate: 2.5rem 0;
+            opacity: 0;
+        }
+    }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: var(--motion-duration-slow);
+    animation-timing-function: var(--motion-ease-in-out);
+}
+
+/*
+ * Reduced motion wins everywhere. The theme's own rule sets short durations without `!important`, so a component's
+ * `!important` utility or a style a script sets would still move: here the motion tokens are zero, every duration is
+ * forced short, folds and the sheet snap, and the view transition router swaps pages with no animation.
+ */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --motion-duration-quick: 0ms;
+        --motion-duration-standard: 0ms;
+        --motion-duration-slow: 0ms;
+    }
+
+    *,
+    ::before,
+    ::after,
+    ::details-content,
+    ::backdrop {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}
+
+/*
+ * Print: the page's content only, every fold open, links to other sites with their address. The menu, the top bar, the
+ * search, the copy controls and the sheets are left out.
+ */
+@media print {
+    details::details-content {
+        content-visibility: visible;
+        block-size: auto;
+    }
+
+    [data-slot="sidebar"],
+    [data-slot="sidebar-wrapper"] > [data-slot="sidebar-gap"],
+    header,
+    dialog,
+    [data-palette],
+    [data-for-assistant],
+    [data-copy-text],
+    [data-needs-js],
+    #page-error,
+    a[href="#main"] {
+        display: none !important;
+    }
+
+    main {
+        max-width: none !important;
+        padding: 0 !important;
+    }
+
+    a[href^="http"]::after {
+        content: " (" attr(href) ")";
+    }
+
+    * {
+        print-color-adjust: exact;
+    }
+}

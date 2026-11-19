@@ -106,6 +106,8 @@ export const copy = {
         trail: "Trail",
         sections: "Site",
         sectionsTitle: "Sections",
+        pageErrorTitle: "Something on this page did not work",
+        pageError: "Open the page again, or go on from the menu.",
     },
     reference: {
         /** The Reference section's label: the capability noun and the places noun the case gives. */
