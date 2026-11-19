@@ -6,14 +6,16 @@ export const groupWords: Record<string, string> = {
     mixed: "Mixed entry",
     logic: "Business logic",
     data: "Data and storage",
+    checks: "Tests that check the rest",
 };
-export const groupOrder = ["ui", "api", "batch", "mixed", "logic", "data"];
+export const groupOrder = ["ui", "api", "batch", "mixed", "logic", "data", "checks"];
 
 export const roleWords: Record<string, string> = {
     facesPerson: "A person starts work here",
     facesOtherSystems: "Other systems start work here",
     runsOnSchedule: "Starts on a schedule",
     runsAsTooling: "Build or install scripts start work here",
+    checksCode: "Tests that check the rest of the code",
     mixedEntry: "Work starts here in several ways",
     reachesStore: "Reads and saves stored data",
     decides: "Decides and calls: starts nothing itself",

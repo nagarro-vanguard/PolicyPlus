@@ -3,7 +3,7 @@ import type { CapabilityPayload } from "../model/schemas/payloads";
 
 export type Group = CapabilityPayload["layers"][number]["group"];
 
-const groupOrder: readonly Group[] = ["ui", "api", "batch", "mixed", "logic", "data"];
+const groupOrder: readonly Group[] = ["ui", "api", "batch", "mixed", "logic", "data", "checks"];
 
 /**
  * The group a modernization reads a layer under, from the role derived from the code.
@@ -21,6 +21,8 @@ export const groupOf = (role: string): Group => {
         case "runsOnSchedule":
         case "runsAsTooling":
             return "batch";
+        case "checksCode":
+            return "checks";
         case "mixedEntry":
             return "mixed";
         default:

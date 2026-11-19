@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { derive, makeRoot, rowsOf, type Spec } from "./fixture";
 import { recordShapes } from "../shared/model/record-shapes";
+import { appEnvironment } from "../shared/source/site-builder";
 
 /**
  * The payloads as a contract: written whole by an analysis of any age (blocks the map left without a name, a store
@@ -347,4 +348,16 @@ describe("the record-shape fingerprint", () => {
             expect(json(join(root, "payloads", "manifest.json")).contractVersion).toBe(1);
         },
     );
+});
+
+describe("what the app build is given", () => {
+    test("the bundle command the caller names reaches the app as BUILD_BUNDLE, and nothing when it names none", () => {
+        const given = { analysis: "/a/payloads", out: "/a/app" };
+        expect(appEnvironment({ ...given, bundleCommand: "CODE_ANALYSIS_ROOT=/a bun /s/build-bundle.ts" })).toEqual({
+            ANALYSIS_PAYLOADS_DIR: "/a/payloads",
+            APP_OUT: "/a/app",
+            BUILD_BUNDLE: "CODE_ANALYSIS_ROOT=/a bun /s/build-bundle.ts",
+        });
+        expect(appEnvironment(given)).toEqual({ ANALYSIS_PAYLOADS_DIR: "/a/payloads", APP_OUT: "/a/app" });
+    });
 });

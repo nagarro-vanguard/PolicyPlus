@@ -170,12 +170,12 @@ const Layer = Schema.Struct({
     ),
     role: Schema.String.annotate(
         about(
-            "What the layer does at the system's boundary, derived from the code: facesPerson, facesOtherSystems, runsOnSchedule, runsAsTooling, mixedEntry, reachesStore or decides.",
+            "What the layer does at the system's boundary, derived from the code: facesPerson, facesOtherSystems, runsOnSchedule, runsAsTooling, checksCode (every block is test code, which checks the rest), mixedEntry, reachesStore or decides.",
         ),
     ),
-    group: Schema.Literals(["ui", "api", "data", "batch", "mixed", "logic"]).annotate(
+    group: Schema.Literals(["ui", "api", "data", "batch", "mixed", "logic", "checks"]).annotate(
         about(
-            "The group a modernization reads the layer under, from its role: facesPerson is ui, facesOtherSystems api, reachesStore data, runsOnSchedule and runsAsTooling (entry points that are build or install scripts) batch, mixedEntry mixed, decides logic. A group no layer fills is simply absent.",
+            "The group a modernization reads the layer under, from its role: facesPerson is ui, facesOtherSystems api, reachesStore data, runsOnSchedule and runsAsTooling (entry points that are build or install scripts) batch, checksCode checks, mixedEntry mixed, decides logic. A group no layer fills is simply absent.",
         ),
     ),
     blocks: Count.annotate(about("How many blocks the capability's flows reach in this layer.")),

@@ -9,6 +9,7 @@ import {
     briefingFiles,
     briefingLabel,
     briefingReviewCall,
+    briefingReviewReadsOf,
     prepareBriefing,
     reviewedBriefingJob,
 } from "./briefing-job";
@@ -130,17 +131,18 @@ export const publishLoop = Effect.fnUntraced(function* (root: string) {
         review: (job) =>
             among(
                 job.key,
-                Effect.flatMap(feedbackArgument(briefingFiles(root)), (feedback) =>
-                    reviewCall(
+                Effect.gen(function* () {
+                    const feedback = yield* feedbackArgument(briefingFiles(root));
+                    return yield* reviewCall(
                         briefingReview(root),
                         reviewedBriefingJob(root),
                         {
                             checklist: analysisPaths(root).reviewChecklist("publish"),
-                            reads: [["what the writer worked from", analysisPaths(root).briefingBrief]],
+                            reads: yield* briefingReviewReadsOf(root),
                         },
                         briefingReviewCall(root, feedback, context),
-                    ),
-                ),
+                    );
+                }),
                 journeys.review(job.key),
                 conclusions.review(job.key),
             ),

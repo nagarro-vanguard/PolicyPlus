@@ -4,10 +4,11 @@
 import "../styles/journey.css";
 import Page from "../layouts/Page.astro";
 import Skeleton from "../components/ui/Skeleton.astro";
+import { bundleCommand } from "../lib/bundle";
 import { copy } from "../lib/copy";
 ---
 <Page title="Screen" lead="" trail={[{ text: copy.site.home, href: "index.html" }, { text: "Screen" }]} node="">
-    <div data-explorer="screen" data-bundle-place={copy.bundle.place}>
+    <div data-explorer="screen" data-bundle-command={bundleCommand("screen")}>
         <Skeleton lines={4} />
         <noscript><p class="note">This page is drawn in the browser from its data file. Turn on scripts to read it.</p></noscript>
     </div>

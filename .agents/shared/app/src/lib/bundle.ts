@@ -1,4 +1,5 @@
 import { capabilityBundle, screenBundle } from "../../../../skills/code-analysis/shared/read/bundle";
+import { copy } from "./copy";
 import type { BundleIndex, Capability, Knowledge, System } from "./types";
 
 type Held = ReturnType<typeof screenBundle>;
@@ -37,3 +38,16 @@ export const bundleOfCapability = (
     index: BundleIndex,
     id: string,
 ): Held => capabilityBundle({ system, capabilities, knowledge, index } as never, id);
+
+/**
+ * The command that builds a bundle, as the page offers it to copy: the one the build was given in `BUILD_BUNDLE` (the
+ * conductor names the analysis folder and the tool's full path), else the analysis tool's own with a placeholder for
+ * the folder.
+ * @param args what to bundle, such as `capability "<name>"` or `screen`
+ * @param run the command the build was given; `BUILD_BUNDLE` by default
+ * @returns the command line
+ */
+export const bundleCommand = (args: string, run: string | undefined = process.env.BUILD_BUNDLE): string =>
+    run === undefined || run.trim() === ""
+        ? `cd .agents/skills/code-analysis && CODE_ANALYSIS_ROOT=${copy.bundle.place} bun cli/build-bundle.ts ${args}`
+        : `${run.trim()} ${args}`;

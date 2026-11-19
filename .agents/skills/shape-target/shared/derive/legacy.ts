@@ -1,14 +1,16 @@
-import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { Schema } from "effect";
+import { fingerprintOf } from "../../../plan-modernization-backlog/shared/read/fingerprint";
 
 /*
  * What this skill reads of a code analysis: only the payload files, only the fields it uses, and never its code. Extra
- * fields are ignored. The analysis is renaming what holds a person's actions from screen to surface: for one version
- * either name is read (`screen` or `surface` on an action, `screens` or `surfaces` on the system), and neither is
- * required. The legacy sheet it writes is the one place the old system's own words are kept; designers never
- * receive it, only the challenger, the checks and the app's trace do.
+ * fields are ignored. The analysis now calls what holds an entry point a surface: an action's `surface` is the key of
+ * one of the system's `surfaces`, which carries its name, kind, noun and whether no one named it. An analysis made
+ * before that has only `screen` (a name) on an action and `screens` on the system; for one version either is read, and
+ * none is required. The fingerprint is the plan skill's, which the conductor shares, so all three agree on what counts.
+ * The legacy sheet it writes is the one place the old system's own words are kept; designers never receive it, only
+ * the challenger, the checks and the app's trace do.
  */
 const Place = Schema.Struct({ file: Schema.String, firstLine: Schema.Int, lastLine: Schema.Int });
 const Action = Schema.Struct({
@@ -34,11 +36,18 @@ const CapabilityPayload = Schema.Struct({
     ),
     data: Schema.Array(Schema.Struct({ id: Schema.String, name: Schema.String })),
 });
+const Surface = Schema.Struct({
+    key: Schema.String,
+    name: Schema.String,
+    kind: Schema.String,
+    noun: Schema.Struct({ one: Schema.String, many: Schema.String }),
+    unnamed: Schema.Boolean,
+});
 const SystemPayload = Schema.Struct({
     purpose: Schema.String,
     layers: Schema.Array(Schema.Struct({ name: Schema.String })),
     screens: Schema.optionalKey(Schema.Array(Schema.Struct({ name: Schema.String }))),
-    surfaces: Schema.optionalKey(Schema.Array(Schema.Struct({ name: Schema.String }))),
+    surfaces: Schema.optionalKey(Schema.Array(Surface)),
     externals: Schema.Array(Schema.Struct({ id: Schema.String, name: Schema.String, kind: Schema.String })),
     gaps: Schema.Struct({ unattributedBlocks: Schema.Int }),
 });
@@ -59,7 +68,10 @@ export type LegacyAction = {
     what: string;
     name: string;
     startedBy: string;
+    /** The name of what holds it; empty when the analysis names none. */
     surface: string;
+    /** The key of the surface that holds it, in the sheet's `surfaces`; absent for an older analysis or an unplaced one. */
+    surfaceKey?: string;
     owner: string;
     rules: string[];
     place: { file: string; firstLine: number; lastLine: number };
@@ -75,6 +87,8 @@ export type LegacySheet = {
     /** In the order that settles ownership: smallest first, then by name. */
     capabilities: { id: string; name: string; purpose: string }[];
     actions: Record<string, LegacyAction>;
+    /** The surfaces that hold the actions, by key; absent for an analysis made before surfaces. */
+    surfaces?: Record<string, { name: string; kind: string; noun: { one: string; many: string }; unnamed: boolean }>;
     rules: Record<string, LegacyRule>;
     entities: Record<string, { name: string; states: string[] }>;
     externals: Record<string, { name: string; kind: string }>;
@@ -84,27 +98,6 @@ export type LegacySheet = {
 };
 
 const readJson = (path: string) => JSON.parse(readFileSync(path, "utf8")) as unknown;
-
-/** What holds an action, under either name; empty when the analysis names none. */
-const holderOf = (action: typeof Action.Type) => action.surface ?? action.screen ?? "";
-
-/**
- * A fingerprint of the payload files, so a target can say which analysis it was made from.
- * @param payloads the payloads folder
- * @returns a hex digest
- */
-export const fingerprintOf = (payloads: string) => {
-    const hash = createHash("sha256");
-    const walk = (folder: string): string[] =>
-        readdirSync(folder, { withFileTypes: true })
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .flatMap((entry) => (entry.isDirectory() ? walk(join(folder, entry.name)) : [join(folder, entry.name)]));
-    for (const file of walk(payloads)) {
-        hash.update(file.slice(payloads.length));
-        hash.update(readFileSync(file));
-    }
-    return hash.digest("hex");
-};
 
 const isCodeName = (word: string) => word.length >= 4 && /[a-z][A-Z]|_|\./.test(word);
 
@@ -124,6 +117,13 @@ export const deriveLegacy = (payloads: string): LegacySheet => {
     const bundle = existsSync(bundlePath)
         ? Schema.decodeUnknownSync(BundlePayload)(readJson(bundlePath))
         : { blocks: [], controls: [] };
+    const surfaces = new Map((system.surfaces ?? []).map((each) => [each.key, each]));
+    /** What holds an action: the surface its key names, else the screen it names; empty when neither. */
+    const holderOf = (action: typeof Action.Type) => {
+        const surface = action.surface === undefined ? undefined : surfaces.get(action.surface);
+        if (surface !== undefined) return { surface: surface.name, surfaceKey: action.surface };
+        return { surface: action.screen ?? (system.surfaces === undefined ? (action.surface ?? "") : "") };
+    };
     const sizeOf = (payload: (typeof capabilities)[number]) =>
         payload.layers.reduce((sum, layer) => sum + layer.actions.length, 0);
     const ordered = [...capabilities].sort(
@@ -144,7 +144,7 @@ export const deriveLegacy = (payloads: string): LegacySheet => {
                     what: action.purpose,
                     name: action.name,
                     startedBy: action.startedBy,
-                    surface: holderOf(action),
+                    ...holderOf(action),
                     owner: payload.capability.id,
                     rules: [...action.rules],
                     place: action.place,
@@ -168,7 +168,9 @@ export const deriveLegacy = (payloads: string): LegacySheet => {
             ...system.layers.map((layer) => layer.name),
             ...(system.surfaces ?? system.screens ?? []).map((each) => each.name).filter((name) => !name.includes(" ")),
             ...capabilities
-                .flatMap((payload) => payload.layers.flatMap((layer) => layer.actions.map(holderOf)))
+                .flatMap((payload) =>
+                    payload.layers.flatMap((layer) => layer.actions.map((each) => holderOf(each).surface)),
+                )
                 .filter((name) => name !== "" && !name.includes(" ")),
             ...bundle.blocks.map((block) => block.container),
             ...bundle.controls.map((control) => control.name),
@@ -180,6 +182,16 @@ export const deriveLegacy = (payloads: string): LegacySheet => {
         purpose: system.purpose,
         capabilities: ordered.map((payload) => payload.capability),
         actions,
+        ...(system.surfaces === undefined
+            ? {}
+            : {
+                  surfaces: Object.fromEntries(
+                      system.surfaces.map((each) => [
+                          each.key,
+                          { name: each.name, kind: each.kind, noun: each.noun, unnamed: each.unnamed },
+                      ]),
+                  ),
+              }),
         rules,
         entities,
         externals: Object.fromEntries(system.externals.map((each) => [each.id, { name: each.name, kind: each.kind }])),

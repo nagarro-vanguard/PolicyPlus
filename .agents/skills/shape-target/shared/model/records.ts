@@ -166,7 +166,15 @@ export const Integration = Schema.Struct({
     how: Text.annotate(about("How the target reaches it, in one sentence.")),
 }).annotate(about("How one outside system is reached in the target."));
 
-export const Component = Schema.Struct({
+export const componentKinds = ["rules", "adapter", "data", "flow", "interface"] as const;
+
+export const ComponentKind = Schema.Literals(componentKinds).annotate(
+    about(
+        "What kind of job it does, which tells the plan where it is built: `rules` (decides the domain's rules), `adapter` (reaches one outside system; it has `adapts`), `data` (keeps and reads the domain's data), `flow` (carries a step from start to end, calling the others) or `interface` (where a person or another system takes part in a step; it serves at least one).",
+    ),
+);
+
+const componentFields = {
     name: Text.annotate(about("The component's name, unique in the architecture.")),
     domain: Text,
     responsibility: Text,
@@ -176,7 +184,17 @@ export const Component = Schema.Struct({
     enforces: Schema.Array(RuleId).annotate(about("The ids of the rules it enforces.")),
     adapts: Schema.optionalKey(ExternalId.annotate(about("The id of the outside system it adapts."))),
     platform: Schema.optionalKey(Text.annotate(about("Why it exists although it serves no step, such as sign-in."))),
-}).annotate(about("A part of a container that does one job for a domain."));
+};
+
+/** A component as a job proposes it: its kind is required. */
+export const Component = Schema.Struct({ ...componentFields, kind: ComponentKind }).annotate(
+    about("A part of a container that does one job for a domain."),
+);
+
+/** A component as it is read back: components written before kinds existed have none. */
+export const ComponentRecord = Schema.Struct({ ...componentFields, kind: Schema.optionalKey(ComponentKind) }).annotate(
+    about("A part of a container that does one job for a domain."),
+);
 
 export const RiskKind = Schema.Literals(["accepted", "question"]).annotate(
     about("accepted: the variant takes the risk on; question: something the person must settle before it is built."),
@@ -202,12 +220,12 @@ const architectureFields = {
     ),
     integrations: Schema.Array(Integration),
     domains: Schema.Array(Domain).check(Schema.isMinLength(1)),
-    components: Schema.optionalKey(Schema.Array(Component)),
 };
 
 /** A variant as the writer proposes it. */
 export const Architecture = Schema.Struct({
     ...architectureFields,
+    components: Schema.optionalKey(Schema.Array(Component)),
     risks: Schema.Array(Risk).check(Schema.isMinLength(1)),
     containers: Schema.Array(Container).check(Schema.isMinLength(1)),
 }).annotate(about("One way of building the target: domains, containers, and once chosen, components."));
@@ -218,6 +236,7 @@ export const Architecture = Schema.Struct({
  */
 export const ArchitectureRecord = Schema.Struct({
     ...architectureFields,
+    components: Schema.optionalKey(Schema.Array(ComponentRecord)),
     risks: Schema.Array(Schema.Union([Text, Risk])),
     containers: Schema.Array(ContainerRecord).check(Schema.isMinLength(1)),
 }).annotate(about("One way of building the target: domains, containers, and once chosen, components."));

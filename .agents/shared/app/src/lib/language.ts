@@ -27,7 +27,7 @@ const machinery: readonly [string, RegExp][] = [
     ],
     [
         "a name from the analysis's data model",
-        /\b(?:startedBy|externalSystem|crossCutting|sharedDomain|facesPerson|facesOtherSystems|runsOnSchedule|runsAsTooling|mixedEntry|reachesStore)\b/,
+        /\b(?:startedBy|externalSystem|crossCutting|sharedDomain|facesPerson|facesOtherSystems|runsOnSchedule|runsAsTooling|checksCode|mixedEntry|reachesStore)\b/,
     ],
 ];
 

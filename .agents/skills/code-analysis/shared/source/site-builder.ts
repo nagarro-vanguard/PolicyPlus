@@ -10,6 +10,7 @@ export interface SiteBuilderOps {
         readonly analysis: string;
         readonly plan?: string | undefined;
         readonly target?: string | undefined;
+        readonly bundleCommand?: string | undefined;
         readonly out: string;
     }) => Effect.Effect<string, SiteBuildFailed>;
 }
@@ -26,7 +27,7 @@ const template = join(skillRoot, "..", "..", "shared", "app");
  */
 const runStep = (step: string, args: readonly string[], environment: Record<string, string>) =>
     Effect.suspend(() => {
-        const { PLAN_DIR: _plan, TARGET_DIR: _target, ...inherited } = process.env;
+        const { PLAN_DIR: _plan, TARGET_DIR: _target, BUILD_BUNDLE: _bundle, ...inherited } = process.env;
         const ran = spawnSync("bun", [...args], {
             cwd: template,
             env: { ...inherited, ...environment },
@@ -44,6 +45,21 @@ const runStep = (step: string, args: readonly string[], environment: Record<stri
         return Effect.succeed(ran.stdout);
     });
 
+/**
+ * What the app reads from its environment: the folders, and the bundle command when the caller names one. The folders and
+ * the command are never inherited from this process, so a build shows only what it was given.
+ * @param input what the build was given
+ * @returns the environment variables
+ * @internal exported for the tests, which check it on its own
+ */
+export const appEnvironment = (input: Parameters<SiteBuilderOps["build"]>[0]): Record<string, string> => ({
+    ANALYSIS_PAYLOADS_DIR: input.analysis,
+    APP_OUT: input.out,
+    ...(input.plan === undefined ? {} : { PLAN_DIR: input.plan }),
+    ...(input.target === undefined ? {} : { TARGET_DIR: input.target }),
+    ...(input.bundleCommand === undefined ? {} : { BUILD_BUNDLE: input.bundleCommand }),
+});
+
 const siteBuilderOps: SiteBuilderOps = {
     /**
      * Build the pages of the app from a folder of analysis payloads and, when given, a plan: install the app's
@@ -54,17 +70,13 @@ const siteBuilderOps: SiteBuilderOps = {
      * @param input.analysis the folder write-payloads wrote
      * @param input.plan the folder that holds the plan's files (`.modernization-backlog/` and `work-items/`), when there is one
      * @param input.target the Output Root that holds the target's files (`target/` and `.shape-target/`), when there is one
+     * @param input.bundleCommand the command the pages offer to build a bundle with (`BUILD_BUNDLE`), when the caller names one
      * @param input.out the folder the pages are written to
      * @returns what the build printed
      */
-    build: ({ analysis, plan, target, out }) =>
+    build: ({ analysis, plan, target, bundleCommand, out }) =>
         Effect.gen(function* () {
-            const environment: Record<string, string> = {
-                ANALYSIS_PAYLOADS_DIR: analysis,
-                APP_OUT: out,
-                ...(plan === undefined ? {} : { PLAN_DIR: plan }),
-                ...(target === undefined ? {} : { TARGET_DIR: target }),
-            };
+            const environment = appEnvironment({ analysis, plan, target, bundleCommand, out });
             if (!existsSync(join(template, "node_modules"))) {
                 yield* runStep("install the app's dependencies", ["install", "--frozen-lockfile"], environment);
             }

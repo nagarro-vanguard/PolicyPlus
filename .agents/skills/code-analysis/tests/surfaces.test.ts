@@ -11,6 +11,7 @@ import { addressGaps, addressOf } from "../shared/read/addresses";
 import { entryKeysOf, ruleKeyOf } from "../shared/read/payload-keys";
 import { surfaceNameGaps, systemWordsGaps } from "../stages/publish/check-briefing";
 import { guidesFor } from "../stages/publish/presentation-guides";
+import { briefingReviewReads } from "../stages/publish/briefing-job";
 
 /**
  * The places of every starter: membership found by code over every entry point, a kind from a closed list (stated by
@@ -226,5 +227,12 @@ describe("the guides the briefing agent is given", () => {
             "tests-build-release.md",
         ]);
         expect(names(guidesFor(["library"], ["task"]))).toEqual(["generic.md", "scheduled-task.md"]);
+    });
+
+    test("the reviewer reads the same guides as the writer, after the brief", () => {
+        const guides = guidesFor(["program"], ["screen"]);
+        const reads = briefingReviewReads("/analysis", guides);
+        expect(reads[0]?.[1]).toMatch(/brief/);
+        expect(reads.slice(1).map(([, path]) => path)).toEqual(guides);
     });
 });

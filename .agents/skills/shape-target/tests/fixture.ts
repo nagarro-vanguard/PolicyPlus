@@ -297,6 +297,7 @@ export const build = (prefix = "") => {
             serves: [t2Step?.id],
             enforces: ["businessrule-3"],
             adapts: "external-1",
+            kind: "adapter",
         },
         {
             name: "policy-service",
@@ -306,6 +307,7 @@ export const build = (prefix = "") => {
             uses: ["template-reader"],
             serves: [t1Step?.id],
             enforces: ["businessrule-1", "businessrule-2"],
+            kind: "rules",
         },
     ]);
     return {

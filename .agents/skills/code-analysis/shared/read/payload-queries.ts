@@ -3,6 +3,7 @@ import type { SqlClient, SqlError } from "effect/sql";
 import type { RecordStore } from "../store/database";
 import { decodedRows, type Decoder } from "../store/stored-bodies";
 import { SurfaceKind } from "../model/schemas/surface-kind";
+import { settleRoles } from "./payload-facts";
 
 const Count = Schema.Number;
 const Text = Schema.String;
@@ -34,7 +35,7 @@ export const numberOf = Effect.fnUntraced(function* (store: RecordStore["Service
 });
 
 const LayerRow = Schema.Struct({ layer: Text, name: Text, blocks: Count, role: Text });
-const ToolingRow = Schema.Struct({ layer: Text, entryPoints: Count, scripts: Count });
+const FactsRow = Schema.Struct({ layer: Text, blocks: Count, entryPoints: Count, scripts: Count, testBlocks: Count });
 export const LayerRecordRow = Schema.Struct({ id: Text, purpose: Text, evidence: Text });
 export const AreaRow = Schema.Struct({ id: Text, name: Text, purpose: Text, capabilities: Text });
 export const CapabilityIndexRow = Schema.Struct({
@@ -289,28 +290,31 @@ const contextRows = Effect.fnUntraced(function* (store: RecordStore["Service"], 
 });
 
 /**
- * The layers with the role of each, derived from the code. A layer where at least half the entry points sit in build or
- * install scripts (shell, batch, PowerShell or MSBuild files) is `runsAsTooling`, whoever starts them, so it is never
- * read as a layer that faces a person.
+ * The layers with the role of each, derived from the code. A layer whose blocks all lie in a tests part or in a code kind
+ * whose places are test suites is `checksCode`; one where at least half the entry points sit in build or install scripts
+ * (shell, batch, PowerShell or MSBuild files) is `runsAsTooling`, whoever starts them; so neither is read as a layer that
+ * faces a person or other systems.
  * @param store the record store, read only
  * @returns each layer's id, name, blocks and role
  */
 export const layerRoles = Effect.fnUntraced(function* (store: RecordStore["Service"]) {
     const roles = yield* read(store, LayerRow, (sql) => sql`SELECT layer, name, blocks, role FROM v_layer_role`);
-    const tooling = yield* read(
+    const facts = yield* read(
         store,
-        ToolingRow,
-        (sql) => sql`SELECT l.id AS layer, count(*) AS entryPoints,
-                sum(lower(f.path) GLOB '*.ps1' OR lower(f.path) GLOB '*.psm1' OR lower(f.path) GLOB '*.cmd'
-                    OR lower(f.path) GLOB '*.bat' OR lower(f.path) GLOB '*.sh' OR lower(f.path) GLOB '*.targets'
-                    OR lower(f.path) GLOB '*.props') AS scripts
-            FROM entryPoint ep JOIN record b ON b.recordNumber = ep.recordNumber JOIN file f ON f.fileNumber = b.fileNumber
-            JOIN ref rk ON rk.fromRecord = b.recordNumber AND rk.role = 'codeKind'
+        FactsRow,
+        (sql) => sql`SELECT l.id AS layer, count(*) AS blocks, count(ep.recordNumber) AS entryPoints,
+                sum(ep.recordNumber IS NOT NULL AND (lower(f.path) GLOB '*.ps1' OR lower(f.path) GLOB '*.psm1'
+                    OR lower(f.path) GLOB '*.cmd' OR lower(f.path) GLOB '*.bat' OR lower(f.path) GLOB '*.sh'
+                    OR lower(f.path) GLOB '*.targets' OR lower(f.path) GLOB '*.props')) AS scripts,
+                sum(EXISTS (SELECT 1 FROM filePart fp JOIN record p ON p.recordNumber = fp.part
+                        WHERE fp.fileNumber = b.fileNumber AND json_extract(p.body, '$.kind') = 'tests')
+                    OR coalesce(json_extract(k.body, '$.surfaceKind'), '') = 'test') AS testBlocks
+            FROM record b JOIN file f ON f.fileNumber = b.fileNumber LEFT JOIN entryPoint ep ON ep.recordNumber = b.recordNumber
+            JOIN ref rk ON rk.fromRecord = b.recordNumber AND rk.role = 'codeKind' JOIN record k ON k.recordNumber = rk.toRecord
             JOIN ref rl ON rl.fromRecord = rk.toRecord AND rl.role = 'layer' JOIN record l ON l.recordNumber = rl.toRecord
-            GROUP BY l.id`,
+            WHERE b.type = 'Block' GROUP BY l.id`,
     );
-    const scripted = new Set(tooling.filter((row) => row.scripts * 2 >= row.entryPoints).map((row) => row.layer));
-    return roles.map((row) => (scripted.has(row.layer) ? { ...row, role: "runsAsTooling" } : row));
+    return settleRoles(roles, facts);
 });
 
 /**

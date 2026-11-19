@@ -27,8 +27,41 @@ const isProduct = (uses: readonly PartUse[]) => {
 };
 
 /**
+ * Each layer's role once what the boundary view cannot see is settled: a layer whose blocks all check other code (they
+ * lie in a tests part, or their code kind's places are test suites) is `checksCode`, whoever starts them; otherwise one
+ * where at least half the entry points sit in build or install scripts is `runsAsTooling`; otherwise its role stands.
+ * @param roles each layer with the role its entry points and store reach give it
+ * @param facts each layer's blocks, how many are test code, its entry points and how many of them sit in scripts
+ * @returns the same layers, each with its settled role, in the same order
+ */
+export const settleRoles = <L extends { readonly layer: string; readonly role: string }>(
+    roles: readonly L[],
+    facts: readonly {
+        readonly layer: string;
+        readonly blocks: number;
+        readonly entryPoints: number;
+        readonly scripts: number;
+        readonly testBlocks: number;
+    }[],
+) => {
+    const scripted = new Set(
+        facts.filter((row) => row.entryPoints > 0 && row.scripts * 2 >= row.entryPoints).map((row) => row.layer),
+    );
+    const checks = new Set(
+        facts.filter((row) => row.blocks > 0 && row.testBlocks === row.blocks).map((row) => row.layer),
+    );
+    return roles.map((row) =>
+        checks.has(row.layer)
+            ? { ...row, role: "checksCode" }
+            : scripted.has(row.layer)
+              ? { ...row, role: "runsAsTooling" }
+              : row,
+    );
+};
+
+/**
  * Each layer with whether it is the product. A layer is not the product when its blocks lie mostly in tooling or tests
- * parts, or when the code derives its role as build or install scripts.
+ * parts, or when the code derives its role as build or install scripts or as code that checks other code.
  * @param layers the layers with their roles
  * @param parts the parts each layer's blocks lie in
  * @returns the same layers, each with `product`, in the same order
@@ -39,7 +72,10 @@ export const judgeLayers = <L extends { readonly layer: string; readonly role: s
 ) =>
     layers.map((each) => ({
         ...each,
-        product: each.role !== "runsAsTooling" && isProduct(parts.filter((use) => use.id === each.layer)),
+        product:
+            each.role !== "runsAsTooling" &&
+            each.role !== "checksCode" &&
+            isProduct(parts.filter((use) => use.id === each.layer)),
     }));
 
 /**

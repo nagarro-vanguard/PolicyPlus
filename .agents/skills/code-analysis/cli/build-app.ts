@@ -1,4 +1,4 @@
-import { Console, Effect, Layer, Option, Schema } from "effect";
+import { Config, Console, Effect, Layer, Option, Schema } from "effect";
 import { Command, Flag } from "effect/cli";
 import { resolve } from "node:path";
 import { checkPayloadContract } from "../shared/read/payload-files";
@@ -25,7 +25,7 @@ const LanguageReport = Schema.Struct({
  * Build the pages and figures of the app from the payloads write-payloads wrote, into <analysis root>/app, or from the
  * folders the flags name, then say what a reader would stumble on: words of the analysis's own machinery or boilerplate
  * phrasing in what the pages say. A record id anywhere fails the build itself, and payloads written for another contract
- * version are refused before it starts.
+ * version are refused before it starts. `BUILD_BUNDLE`, when set, is the command the pages offer for building a bundle.
  * @param flags the folders: the payloads of the analysis, the folder holding a plan's files, the output folder
  * @param flags.analysis the folder of payloads; <analysis root>/payloads when omitted
  * @param flags.plan the folder holding the plan's files, when the pages should show a plan too
@@ -45,8 +45,9 @@ const buildApp = Effect.fn("buildApp")(function* (flags: {
     const analysis = flags.analysis === undefined ? `${root}/payloads` : resolve(flags.analysis);
     const plan = flags.plan === undefined ? undefined : resolve(flags.plan);
     const target = flags.target === undefined ? undefined : resolve(flags.target);
+    const bundleCommand = Option.getOrUndefined(yield* Config.option(Config.NonEmptyString("BUILD_BUNDLE")));
     yield* checkPayloadContract(analysis);
-    yield* (yield* SiteBuilder).build({ analysis, plan, target, out });
+    yield* (yield* SiteBuilder).build({ analysis, plan, target, bundleCommand, out });
     yield* Console.log(`app written to ${out}`);
     const reportPath = `${out}/language-report.json`;
     if (!(yield* files.exists(reportPath))) {
@@ -88,7 +89,7 @@ const command = Command.make(
         }),
 ).pipe(
     Command.withDescription(
-        "Builds the app, the pages a person reads an analysis through, from <analysis root>/payloads into <analysis root>/app: a page for the system, each area, capability, layer, action and screen, a search, and figures drawn from the payloads (what the product offers, who uses it and what it connects to, how it is built, how a capability runs, what a screen starts). `--analysis <folder>` names another folder of payloads, `--out <folder>` another output folder, and `--plan <folder>` the folder holding a modernization plan's files (`.modernization-backlog/` and `work-items/`), which adds the pages of the plan, and `--target <folder>` the Output Root holding the target's files (`target/` and `.shape-target/`), which adds the pages of the target. Run write-payloads first; payloads whose manifest names another contract version are refused. A payload that does not match its schema, a figure that does not hold (an unknown id, items over budget, an overlap, an arrow through an item) or a record id anywhere a reader can see fails the build. Words of the analysis's own machinery or boilerplate phrasing in what the pages say are listed in app/language-report.json and make the run need action. Replaces what is in the output folder.",
+        "Builds the app, the pages a person reads an analysis through, from <analysis root>/payloads into <analysis root>/app: a page for the system, each area, capability, layer, action and screen, a search, and figures drawn from the payloads (what the product offers, who uses it and what it connects to, how it is built, how a capability runs, what a screen starts). `--analysis <folder>` names another folder of payloads, `--out <folder>` another output folder, and `--plan <folder>` the folder holding a modernization plan's files (`.modernization-backlog/` and `work-items/`), which adds the pages of the plan, and `--target <folder>` the Output Root holding the target's files (`target/` and `.shape-target/`), which adds the pages of the target. `BUILD_BUNDLE=<command>` names the command the pages offer for building a bundle (the conductor passes one with the analysis folder and the tool's full path); without it they offer the tool's own with a placeholder for the folder. Run write-payloads first; payloads whose manifest names another contract version are refused. A payload that does not match its schema, a figure that does not hold (an unknown id, items over budget, an overlap, an arrow through an item) or a record id anywhere a reader can see fails the build. Words of the analysis's own machinery or boilerplate phrasing in what the pages say are listed in app/language-report.json and make the run need action. Replaces what is in the output folder.",
     ),
 );
 

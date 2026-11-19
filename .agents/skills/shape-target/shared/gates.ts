@@ -49,8 +49,8 @@ const recordAt = (path: string): { confirmedAt: number; subject: string | undefi
  * Where a decision stands. It is confirmed when the decision before it is confirmed and was confirmed no later than
  * it, and what it decides on still is what the person confirmed: the file has the hash the decision recorded. A
  * decision recorded before hashes were kept has none; it is judged by time, as before (its record is not older than
- * what it decides on, which was made after the decision before it), until it is confirmed again. The conductor, the
- * plan and the app keep their own copy of this rule and never import this skill.
+ * what it decides on, which was made after the decision before it), until it is confirmed again. The conductor
+ * (`cli/gates.ts`) and the plan (`read/confirmed.ts`) import this rule rather than copy it; the app keeps its own copy.
  * @param layout the run's folders
  * @param gate the decision
  * @returns not made (nothing to decide yet), blocked (the decision before it is not confirmed), waiting, confirmed, or changed since confirmed

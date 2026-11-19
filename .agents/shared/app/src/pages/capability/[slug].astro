@@ -7,7 +7,7 @@ import Skeleton from "../../components/ui/Skeleton.astro";
 import UsedIn from "../../components/journey/UsedIn.astro";
 import { journeyModel, linksTo } from "../../lib/journeys";
 import { bundleIndex, capabilities, knowledge, slugs, system } from "../../lib/payloads";
-import { bundleOfCapability } from "../../lib/bundle";
+import { bundleCommand, bundleOfCapability } from "../../lib/bundle";
 import { copy } from "../../lib/copy";
 import { ledeOf } from "../../lib/derive";
 
@@ -38,7 +38,7 @@ const trail = [{ text: copy.site.home, href: "../index.html" }, ...(area ? [{ te
         <summary>For a coding assistant <span class="muted">copy a brief</span></summary>
         <div class="fold-body">
             <p data-needs-js hidden><button type="button" class="btn" data-copy-brief>Copy brief for this capability</button></p>
-            <Bundle files={held === undefined ? [] : held.files} command={`cd .agents/skills/code-analysis && CODE_ANALYSIS_ROOT=${copy.bundle.place} bun cli/build-bundle.ts capability "${cap.capability.name}"`} />
+            <Bundle files={held === undefined ? [] : held.files} command={bundleCommand(`capability "${cap.capability.name}"`)} />
         </div>
     </details>
     <script>import "../../scripts/explorer.ts";</script>

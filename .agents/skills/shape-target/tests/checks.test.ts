@@ -9,8 +9,15 @@ import {
     variantGaps,
     type DesignContext,
 } from "../shared/derive/checks";
-import { gateShape } from "../shared/jobs/gates";
-import type { Architecture, ArchitectureRecord, Component, Journey } from "../shared/model/records";
+import { Schema } from "effect";
+import { gateComponents, gateShape } from "../shared/jobs/gates";
+import {
+    ArchitectureRecord as ArchitectureRecordSchema,
+    type Architecture,
+    type ArchitectureRecord,
+    type Component,
+    type Journey,
+} from "../shared/model/records";
 import { build, legacy, stack } from "./fixture";
 
 const f = build();
@@ -282,6 +289,55 @@ describe("components (C2 to C6 across the whole)", () => {
         });
         has(gaps, "belongs to domain");
         has(gaps, "uses nothing");
+    });
+    const templatesJob = () => ({
+        ...context,
+        architecture: f.architectures[0] as Architecture,
+        domain: "Templates",
+        available: [],
+        relevant: f.chosen[1]?.steps.map((step) => step.id) ?? [],
+    });
+    test("a job's gate refuses a component that declares no kind", () => {
+        const { kind: _kind, ...kindless } = f.components[0] as Component;
+        has(gateComponents({ components: [kindless] }, templatesJob()), "do not match their shape");
+        expect(gateComponents({ components: [f.components[0]] }, templatesJob())).toEqual([]);
+    });
+    test("an adapter is of kind adapter, and only an adapter is", () => {
+        const reader = f.components[0] as Component;
+        has(componentJobGaps([{ ...reader, kind: "data" }], templatesJob()), "so its kind is adapter, not data");
+        has(
+            componentJobGaps(
+                [
+                    { ...reader, adapts: undefined, platform: "x" },
+                    { ...reader, name: "other", module: "other" },
+                ],
+                templatesJob(),
+            ),
+            "is of kind adapter but adapts no outside system",
+        );
+    });
+    test("an interface serves at least one step", () =>
+        has(
+            componentJobGaps(
+                [
+                    {
+                        ...(f.components[0] as Component),
+                        kind: "interface",
+                        adapts: undefined,
+                        serves: [],
+                        platform: "x",
+                    },
+                ],
+                templatesJob(),
+            ),
+            "is of kind interface but serves no step",
+        ));
+    test("an architecture whose components were written before kinds existed still reads", () => {
+        const older = {
+            ...(f.architectures[0] as Architecture),
+            components: f.components.map(({ kind: _kind, ...rest }) => rest),
+        };
+        expect(Schema.decodeUnknownSync(ArchitectureRecordSchema)(older).components?.[0]?.kind).toBeUndefined();
     });
 });
 

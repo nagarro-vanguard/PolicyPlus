@@ -257,7 +257,7 @@ export const copy = {
         heading: "Take this to another stack",
         lead: "To rebuild this on another technology, take the context and the files below. Nothing is left out or hidden: a secret in the code is in the files.",
         files: (n: number) => `The files to take (${n})`,
-        command: "To get everything in one text, run this from the analysis skill's folder",
+        command: "To get everything in one text, run this command",
         place: "<the analysis folder>",
         why: "Why it is included",
     },

@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { categoryLabel, optionsOf, ruleAnchors, splitStatement } from "../src/lib/analysis";
+import { bundleCommand } from "../src/lib/bundle";
 import type { Rule } from "../src/lib/types";
 
 const root = join(import.meta.dir, "..");
@@ -180,5 +181,16 @@ describe.skipIf(!built)("the analysis pages as built", () => {
             const text = html(page);
             if (text.includes("data-a-pan")) expect(text).toContain("scroll or drag");
         }
+    });
+});
+
+describe("the bundle command a page offers to copy", () => {
+    test("is the one the build was given in BUILD_BUNDLE, with what to bundle after it", () => {
+        expect(bundleCommand('capability "Finding policies"', "CODE_ANALYSIS_ROOT=/a bun /s/code-analysis/cli/build-bundle.ts ")).toBe(
+            'CODE_ANALYSIS_ROOT=/a bun /s/code-analysis/cli/build-bundle.ts capability "Finding policies"',
+        );
+    });
+    test("is the analysis tool's own, with a placeholder for the folder, when the build was given none", () => {
+        expect(bundleCommand("screen", "")).toBe("cd .agents/skills/code-analysis && CODE_ANALYSIS_ROOT=<the analysis folder> bun cli/build-bundle.ts screen");
     });
 });

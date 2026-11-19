@@ -2,6 +2,9 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { Effect } from "effect";
 import { describe, expect, it } from "vitest";
+import { attachmentText } from "../../../plan-modernization-backlog/shared/derive/attachment";
+import type { AttachmentHeader } from "../../../plan-modernization-backlog/shared/model/header";
+import { attachmentWhatItIs, journeyChangesOf } from "../core/attachment";
 import { launchStory } from "../core/story";
 import { runLayout } from "../core/run-layout";
 import { servicesLayer } from "../core/services";
@@ -91,6 +94,47 @@ describe("the modernize tag", () => {
             () => undefined,
         );
         expect(existsSync(join(layout.work, "earlier", "1"))).toBe(true);
+    });
+
+    /** An attachment as the plan skill writes it, whose header says a step changes one rule. */
+    const withChanges = attachmentText("Edit a policy", {
+        story: "s-1" as AttachmentHeader["story"],
+        fingerprint: "f",
+        criteria: [{ ac: "AC-1", rules: [] }],
+        reliesOn: [],
+        data: [],
+        transitions: [],
+        outsideSystems: [],
+        steps: [
+            {
+                intent: "Save the policy",
+                change: "changed",
+                reason: "Fewer steps.",
+                system: "Saves it at once and says so.",
+                changes: [{ rule: "rule-1", says: "A save asks first.", to: "A save never asks." }],
+            },
+            { intent: "Open the policy", change: "kept", reason: "As today." },
+        ],
+        cited: [],
+    });
+
+    it("reads the rules the journey steps change from the attachment's header, and none from text without one", () => {
+        expect(journeyChangesOf(withChanges)).toEqual([
+            { step: "Save the policy", says: "A save asks first.", to: "A save never asks." },
+        ]);
+        expect(journeyChangesOf(reference)).toEqual([]);
+        expect(journeyChangesOf("```json\n{ not json\n```")).toEqual([]);
+        expect(attachmentWhatItIs(reference)).toBe("the story's legacy attachment; read it after the epic");
+    });
+
+    it("tells every agent to build what a changed rule does now, not what it says today", async () => {
+        expect(attachmentWhatItIs(withChanges)).toMatch(/change 1 legacy rule .*build and prove what each does now/);
+        const codebase = deliveryCodebase();
+        const launched = await start(codebase, "story, functional, modernize", withChanges);
+        const material = launched.launch.mode === "plan" ? (launched.launch.supportingMaterial ?? []) : [];
+        expect(material.find((one) => one.path === runLayout(codebase, storyNumber).reference)?.whatItIs).toBe(
+            attachmentWhatItIs(withChanges),
+        );
     });
 
     it("hands the attachment's path to every stage only when the run has one", () => {

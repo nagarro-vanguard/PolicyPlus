@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { Effect, Schema } from "effect";
+import { attachmentWhatItIs } from "./attachment";
 import { CodebaseContractBroken, RequestInvalid } from "./script-errors";
 import { contractGaps, readCodebase } from "./codebase";
 import { currentBranch } from "./git";
@@ -88,16 +89,14 @@ const digestOf = (text: string) => createHash("sha256").update(text.replaceAll("
  * @param layout the run's layout
  * @param kind the kind of work
  * @param hasEpic whether the story has an epic
- * @param hasReference whether the story has a legacy attachment
+ * @param reference the story's legacy attachment, when it has one
  * @returns the entries, as the plan request's supporting material
  */
-const materialOf = (layout: RunLayout, kind: Kind, hasEpic: boolean, hasReference: boolean) => [
+const materialOf = (layout: RunLayout, kind: Kind, hasEpic: boolean, reference: string | undefined) => [
     ...(hasEpic ? [{ path: layout.epic, whatItIs: "the story's epic; read it first" }] : []),
-    ...(hasReference
-        ? [{ path: layout.reference, whatItIs: "the story's legacy attachment; read it after the epic" }]
-        : []),
+    ...(reference === undefined ? [] : [{ path: layout.reference, whatItIs: attachmentWhatItIs(reference) }]),
     { path: profilePathOf(kind), whatItIs: "the profile this run is in" },
-    ...(hasReference ? [{ path: referenceProfilePath, whatItIs: "how to build from the attachment" }] : []),
+    ...(reference === undefined ? [] : [{ path: referenceProfilePath, whatItIs: "how to build from the attachment" }]),
 ];
 
 /**
@@ -317,7 +316,7 @@ export const launchStory = Effect.fn("Story.launchStory")(function* (input: Stor
     if (reference !== undefined) {
         yield* system.writeText(layout.reference, reference);
     }
-    const material = materialOf(layout, kind, epic !== undefined, reference !== undefined);
+    const material = materialOf(layout, kind, epic !== undefined, reference);
     yield* rememberProfile(layout, { kind, ...(earlier?.picked === undefined ? {} : { picked: earlier.picked }) });
     const fromDesign = yield* designBehind(layout, kind, earlier?.picked);
     const launch: DeliveryLaunch = {

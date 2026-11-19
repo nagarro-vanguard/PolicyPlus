@@ -98,8 +98,7 @@ const open = async () => {
         const screen = slice.screens.find((each) => each.key === key);
         if (screen === undefined) return fail("This screen is not part of that capability", `${slice.name} has no screen with the key ${key}.`);
         setHead(screen.name, screen.summary);
-        const place = host.dataset.bundlePlace ?? "";
-        host.replaceChildren(createScreenView(ctx, screen, `cd .agents/skills/code-analysis && CODE_ANALYSIS_ROOT=${place} bun cli/build-bundle.ts screen ${screen.key}`));
+        host.replaceChildren(createScreenView(ctx, screen, `${host.dataset.bundleCommand ?? ""} ${screen.key}`));
         document.dispatchEvent(
             new CustomEvent("app:node", {
                 detail: {

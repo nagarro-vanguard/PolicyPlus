@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { externalsOf, judgeLayers } from "../shared/read/payload-facts";
+import { externalsOf, judgeLayers, settleRoles } from "../shared/read/payload-facts";
+import { groupOf } from "../shared/read/payload-words";
 
 const layers = [
     { layer: "screens", role: "facesPerson" },
@@ -23,6 +24,35 @@ describe("payload facts", () => {
             ["build", false],
             ["empty", true],
         ]);
+    });
+
+    test("a layer whose blocks are all test code checks code, is not the product and is read under checks", () => {
+        const roles = [
+            { layer: "tests", role: "facesOtherSystems" },
+            { layer: "half", role: "facesOtherSystems" },
+            { layer: "build", role: "facesPerson" },
+            { layer: "nothing", role: "decides" },
+        ];
+        const facts = [
+            { layer: "tests", blocks: 12, testBlocks: 12, entryPoints: 4, scripts: 4 },
+            { layer: "half", blocks: 12, testBlocks: 6, entryPoints: 0, scripts: 0 },
+            { layer: "build", blocks: 3, testBlocks: 0, entryPoints: 2, scripts: 1 },
+            { layer: "nothing", blocks: 0, testBlocks: 0, entryPoints: 0, scripts: 0 },
+        ];
+        const settled = settleRoles(roles, facts);
+        expect(settled.map((each) => [each.layer, each.role])).toEqual([
+            ["tests", "checksCode"],
+            ["half", "facesOtherSystems"],
+            ["build", "runsAsTooling"],
+            ["nothing", "decides"],
+        ]);
+        expect(judgeLayers(settled, []).map((each) => [each.layer, each.product])).toEqual([
+            ["tests", false],
+            ["half", true],
+            ["build", false],
+            ["nothing", true],
+        ]);
+        expect(groupOf("checksCode")).toBe("checks");
     });
 
     test("external systems come most reached first, each once, with the layers that reach it", () => {

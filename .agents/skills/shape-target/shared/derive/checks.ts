@@ -379,6 +379,14 @@ export const componentJobGaps = (components: readonly Component[], context: Comp
         }
         if (component.serves.length === 0 && component.platform === undefined && component.adapts === undefined)
             gaps.push(`${label}: serves no step; list the steps it carries out, or say why it exists`);
+        if ((component.kind === "adapter") !== (component.adapts !== undefined))
+            gaps.push(
+                component.adapts === undefined
+                    ? `${label}: is of kind adapter but adapts no outside system`
+                    : `${label}: adapts ${component.adapts}, so its kind is adapter, not ${component.kind}`,
+            );
+        if (component.kind === "interface" && component.serves.length === 0)
+            gaps.push(`${label}: is of kind interface but serves no step`);
         for (const leak of leaksIn(component.name, context.legacy.identifiers))
             gaps.push(`${label}: carries the old system's name "${leak}"`);
     }

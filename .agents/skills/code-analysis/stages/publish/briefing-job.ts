@@ -100,6 +100,28 @@ const briefingReviewArguments = (root: string, job: WithFeedback, context: Reque
     reviewArguments(briefingFiles(root), briefingReviewCall(root, job, context));
 
 /**
+ * What the briefing's reviewer reads besides the findings: the brief the writer worked from, and the same guides on
+ * naming places the writer was given, so both judge the names by one rule.
+ * @param root the analysis root
+ * @param guides the writer's guides (`briefingGuides`)
+ * @returns what to read, each with why
+ * @internal exported for the tests, which check it on its own
+ */
+export const briefingReviewReads = (root: string, guides: readonly string[]) => [
+    ["what the writer worked from", analysisPaths(root).briefingBrief] as const,
+    ...guides.map((path) => ["a guide on naming places the writer was given", path] as const),
+];
+
+/**
+ * The reads of the briefing's review for this system: the writer's guides chosen by the same rule (`briefingGuides`).
+ * @param root the analysis root
+ * @returns what to read, each with why
+ */
+export const briefingReviewReadsOf = Effect.fnUntraced(function* (root: string) {
+    return briefingReviewReads(root, yield* briefingGuides(yield* readCatalogue()));
+});
+
+/**
  * What the briefing's reviewer is given besides its files: the source folder, the command that checks its review and the
  * job's feedback.
  * @param root the analysis root

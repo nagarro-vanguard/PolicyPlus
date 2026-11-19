@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fingerprintOf } from "../../plan-modernization-backlog/shared/read/fingerprint";
 import { deriveLegacy } from "../shared/derive/legacy";
 import { dropSteps, partLinks, risksOf, stackOf } from "../shared/derive/views";
 import type { Architecture, ArchitectureRecord, Drop } from "../shared/model/records";
@@ -79,7 +80,14 @@ describe("what code works out for readers", () => {
 });
 
 describe("the analysis's payloads, before and after it calls what holds an action a surface", () => {
-    const payloads = (names: { action: string; system: string }) => {
+    const surface = {
+        key: "Forms/DetailForm",
+        name: "Policy details",
+        kind: "screen",
+        noun: { one: "window", many: "windows" },
+        unnamed: false,
+    };
+    const payloads = (names: { action: string; system: string }, holder = "DetailForm", system: unknown[] = []) => {
         const folder = mkdtempSync(join(tmpdir(), "shape-legacy-"));
         mkdirSync(folder, { recursive: true });
         const place = { file: "Main.vb", firstLine: 1, lastLine: 2 };
@@ -88,7 +96,7 @@ describe("the analysis's payloads, before and after it calls what holds an actio
             JSON.stringify({
                 purpose: "Edits policies.",
                 layers: [{ name: "Forms" }],
-                [names.system]: [{ name: "MainForm" }],
+                [names.system]: system,
                 externals: [],
                 gaps: { unattributedBlocks: 0 },
             }),
@@ -107,7 +115,7 @@ describe("the analysis's payloads, before and after it calls what holds an actio
                                 name: "Open",
                                 purpose: "Opens.",
                                 startedBy: "person",
-                                [names.action]: "DetailForm",
+                                [names.action]: holder,
                                 place,
                                 rules: ["rule-1"],
                             },
@@ -122,17 +130,47 @@ describe("the analysis's payloads, before and after it calls what holds an actio
         return folder;
     };
     test("`screen` and `screens` are read as they are today", () => {
-        const sheet = deriveLegacy(payloads({ action: "screen", system: "screens" }));
+        const sheet = deriveLegacy(
+            payloads({ action: "screen", system: "screens" }, "DetailForm", [{ name: "MainForm" }]),
+        );
         expect(sheet.actions["block-1"]?.surface).toBe("DetailForm");
+        expect(sheet.actions["block-1"]?.surfaceKey).toBeUndefined();
+        expect(sheet.surfaces).toBeUndefined();
         expect(sheet.identifiers).toEqual(expect.arrayContaining(["MainForm", "DetailForm"]));
     });
-    test("`surface` and `surfaces` are read the same way", () => {
-        const sheet = deriveLegacy(payloads({ action: "surface", system: "surfaces" }));
-        expect(sheet.actions["block-1"]?.surface).toBe("DetailForm");
-        expect(sheet.identifiers).toEqual(expect.arrayContaining(["MainForm", "DetailForm"]));
+    test("an action's `surface` is a key of the system's `surfaces`: the sheet holds the key and shows the name", () => {
+        const sheet = deriveLegacy(
+            payloads({ action: "surface", system: "surfaces" }, surface.key, [
+                surface,
+                { ...surface, key: "Forms/MainForm", name: "MainForm", unnamed: true },
+            ]),
+        );
+        expect(sheet.actions["block-1"]).toMatchObject({ surface: "Policy details", surfaceKey: "Forms/DetailForm" });
+        expect(sheet.surfaces?.["Forms/DetailForm"]).toEqual({
+            name: "Policy details",
+            kind: "screen",
+            noun: { one: "window", many: "windows" },
+            unnamed: false,
+        });
+        expect(sheet.identifiers).toContain("MainForm");
+        expect(sheet.identifiers).not.toContain("Policy details");
+    });
+    test("an analysis with both reads `surfaces`, and an action's screen name still shows when its key is unknown", () => {
+        const folder = payloads({ action: "screen", system: "surfaces" }, "DetailForm", [surface]);
+        const sheet = deriveLegacy(folder);
+        expect(sheet.actions["block-1"]).toEqual(expect.objectContaining({ surface: "DetailForm" }));
+        expect(sheet.actions["block-1"]?.surfaceKey).toBeUndefined();
     });
     test("an action that names neither has no surface", () => {
         const sheet = deriveLegacy(payloads({ action: "other", system: "other" }));
         expect(sheet.actions["block-1"]?.surface).toBe("");
+    });
+    test("the sheet's fingerprint is the one the plan and the conductor compute", () => {
+        const folder = payloads({ action: "surface", system: "surfaces" }, surface.key, [surface]);
+        writeFileSync(join(folder, "journeys.json"), "{}");
+        const before = deriveLegacy(folder).fingerprint;
+        expect(before).toBe(fingerprintOf(folder));
+        writeFileSync(join(folder, "journeys.json"), '{"tasks": []}');
+        expect(deriveLegacy(folder).fingerprint).toBe(before);
     });
 });
