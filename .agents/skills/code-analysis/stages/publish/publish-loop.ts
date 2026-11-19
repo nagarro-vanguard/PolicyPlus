@@ -14,7 +14,10 @@ import {
 } from "./briefing-job";
 import { reviewCall } from "../../shared/jobs/review-sheet";
 import { briefingReview, checkBriefing } from "./check-briefing";
+import type { LoopServices } from "../../shared/jobs/loop-jobs";
+import type { ScriptError } from "../../shared/run/script-errors";
 import { finishBriefing } from "./finish-briefing";
+import { journeySteps } from "./journey-steps";
 
 const script = "publish-pages.ts";
 
@@ -28,6 +31,14 @@ export const publishConclusions = (root: string, sourceFolder: string) =>
     conclusionSteps({ root, stage: "publish", later: [], script, sourceFolder });
 
 /**
+ * The jobs of the journeys of today as the loop takes them.
+ * @param root the analysis root
+ * @param sourceFolder the folder record paths are relative to
+ * @returns the steps
+ */
+export const publishJourneys = (root: string, sourceFolder: string) => journeySteps(root, sourceFolder);
+
+/**
  * The briefing as the loop takes it: its key, label and files.
  * @param root the analysis root
  * @returns the job
@@ -38,9 +49,54 @@ const loopJob = (root: string) => {
 };
 
 /**
+ * Which of Publish's three kinds of job a key names, and so which of three effects to run for it: a job of the journeys
+ * by its job id, a concluding job by its key, else the briefing.
+ * @param journeys the jobs of the journeys
+ * @param conclusions the concluding jobs
+ * @returns the choice, given the key and one effect for each kind of job
+ */
+const amongJobs =
+    (journeys: ReturnType<typeof publishJourneys>, conclusions: ReturnType<typeof publishConclusions>) =>
+    <A, E1, R1, E2, R2, E3, R3>(
+        key: string,
+        briefing: Effect.Effect<A, E1, R1>,
+        journey: Effect.Effect<A, E2, R2>,
+        concluding: Effect.Effect<A, E3, R3>,
+    ): Effect.Effect<A, E1 | E2 | E3 | ScriptError, R1 | R2 | R3 | LoopServices> =>
+        Effect.flatMap(
+            journeys.isJourney(key),
+            (isJourney): Effect.Effect<A, E1 | E2 | E3 | ScriptError, R1 | R2 | R3 | LoopServices> =>
+                isJourney
+                    ? journey
+                    : Effect.flatMap(
+                          conclusions.isConcluding(key),
+                          (isConcluding): Effect.Effect<A, E1 | E3, R1 | R3> => (isConcluding ? concluding : briefing),
+                      ),
+        );
+
+/**
+ * `finish` as the loop takes it: the decision of the briefing, the journeys and the concluding jobs, and whether any
+ * job remains to run again.
+ * @param root the analysis root
+ * @returns the step
+ */
+const finishStep = (root: string) =>
+    Effect.map(finishBriefing(root), (decision) => ({
+        more:
+            !decision.written &&
+            (decision.briefing.outcome === "redo" || decision.concluding || decision.journeysPending),
+        said: [
+            `the briefing: ${decision.briefing.outcome}`,
+            ...(decision.journeysPending ? ["the journeys of today have a job to fix or to run"] : []),
+            ...(decision.concluding ? ["the topics every stage's facts leave open are concluded next"] : []),
+        ],
+    }));
+
+/**
  * Publish as the loop drives it (D56, D177, D225, 4.10): its briefing, brief-the-system and its review, which groups
- * the capabilities into areas; then the concluding jobs `finish` lists over every stage's facts, the entries' tier
- * and the system's; then `finish` writes the areas and the conclusions in one commit. It draws the
+ * the capabilities into areas; the journeys of today, one job per capability that writes its tasks and one that joins
+ * the tasks written twice, each reviewed; then the concluding jobs `finish` lists over every stage's facts, the entries'
+ * tier and the system's; then `finish` writes the areas, the journeys and the conclusions in one commit. It draws the
  * subject pages.
  * @param root the analysis root
  * @returns the stage's loop
@@ -48,28 +104,31 @@ const loopJob = (root: string) => {
 export const publishLoop = Effect.fnUntraced(function* (root: string) {
     const context = yield* briefingContext(root);
     const conclusions = publishConclusions(root, context.sourceFolder);
-    const either = <A, E, R>(key: string, briefing: Effect.Effect<A, E, R>, concluding: Effect.Effect<A, E, R>) =>
-        Effect.flatMap(conclusions.isConcluding(key), (isConcluding) => (isConcluding ? concluding : briefing));
+    const journeys = publishJourneys(root, context.sourceFolder);
+    const among = amongJobs(journeys, conclusions);
     return stageLoop({
         stage: "publish",
         root,
         begin: Effect.void,
-        keys: Effect.map(conclusions.keys, (keys) => [briefingLabel, ...keys]),
-        job: (key) => either(key, loopJob(root), conclusions.job(key)),
-        mayRun: (job) => either(job.key, Effect.succeed(true), conclusions.mayRun(job.key)),
+        keys: Effect.flatMap(journeys.keys, (journeyKeys) =>
+            Effect.map(conclusions.keys, (keys) => [briefingLabel, ...journeyKeys, ...keys]),
+        ),
+        job: (key) => among(key, loopJob(root), journeys.job(key), conclusions.job(key)),
+        mayRun: (job) => among(job.key, Effect.succeed(true), journeys.mayRun(job.key), conclusions.mayRun(job.key)),
         prepare: (keys) =>
             Effect.forEach(keys, (key) =>
-                either(
+                among(
                     key,
                     Effect.map(prepareBriefing(root, undefined), (prepared) => ({
                         key,
                         call: { agent: "publish/brief-the-system", arguments: prepared.briefing },
                     })),
+                    journeys.prepare(key),
                     conclusions.prepare(key),
                 ),
             ),
         review: (job) =>
-            either(
+            among(
                 job.key,
                 Effect.flatMap(feedbackArgument(briefingFiles(root)), (feedback) =>
                     reviewCall(
@@ -82,22 +141,22 @@ export const publishLoop = Effect.fnUntraced(function* (root: string) {
                         briefingReviewCall(root, feedback, context),
                     ),
                 ),
+                journeys.review(job.key),
                 conclusions.review(job.key),
             ),
-        check: (job) => either(job.key, checkBriefing(root), conclusions.check(job.key)),
+        check: (job) => among(job.key, checkBriefing(root), journeys.check(job.key), conclusions.check(job.key)),
         answer: (key, answer) =>
-            either(key, Effect.asVoid(prepareBriefing(root, answer)), conclusions.answer(key, answer)),
+            among(
+                key,
+                Effect.asVoid(prepareBriefing(root, answer)),
+                journeys.answer(key, answer),
+                conclusions.answer(key, answer),
+            ),
         registry: Effect.succeed(undefined),
         leftOver: Effect.succeed([]),
         afterClose: () => Effect.void,
         notices: (job) => assumptionNotices(job.label, job.outputPath),
         ownersOf: () => Effect.succeed([]),
-        finish: Effect.map(finishBriefing(root), (decision) => ({
-            more: !decision.written && (decision.briefing.outcome === "redo" || decision.concluding),
-            said: [
-                `the briefing: ${decision.briefing.outcome}`,
-                ...(decision.concluding ? ["the topics every stage's facts leave open are concluded next"] : []),
-            ],
-        })),
+        finish: finishStep(root),
     });
 });

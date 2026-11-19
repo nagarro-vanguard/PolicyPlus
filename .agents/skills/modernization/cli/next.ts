@@ -35,8 +35,13 @@ export const settingsFor = (root: string, firstSource: string | undefined): Sett
     parallel: 1,
 });
 
-/** The steps whose inputs are the target and the plan itself, which created work items depend on. */
-const lateStep = (name: string) => name.startsWith("target-") || name === "foundation" || name === "stories";
+/**
+ * The steps whose inputs are the target and the plan itself, which created work items depend on. Reading today's tasks
+ * from the analysis is not among them: it changes the target only when the file it writes changes, and the decision
+ * after it is the step that stops then.
+ */
+const lateStep = (name: string) =>
+    (name.startsWith("target-") && name !== "target-as-is") || name === "foundation" || name === "stories";
 
 /** Whether any work item has been created: from then on the target and the plan are not redone. */
 const itemsCreated = (ledger: string) =>

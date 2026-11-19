@@ -7,13 +7,31 @@ How the app talks about the system. It is read by business analysts, product own
 - Lead with what a thing means for the business; a name from the code comes after, smaller, as evidence.
 - One idea to a sentence, under 25 words. "We" for the analysis; never "I", never an agent, job or script.
 - Plain words: the same word for the same thing on every page. An action is something a person, a schedule or another system starts; a layer is a group of code with one job; a business rule is a decision the code makes.
-- No hedging filler, no sales words, no dash used as punctuation; say what we could not establish as plainly as what we found.
+
+## Voice: what we never write
+
+- Write like one careful colleague explaining to another: a concrete subject and a verb that does the work ("the program asks the registry", not "the retrieval of values is performed").
+- Say it once and stop. No punch line, no reveal ("the result:", "here is the thing"), no short line set apart for effect.
+- No contrast construction: not "not X but Y", not ", not Y" on the end, not "instead of" used only to praise the new way. Say what is so.
+- No stock word of the kind that sells (robust, seamless, leverage, streamline, comprehensive, crucial, key as an adjective, holistic, empower, unlock) and no "serves as", "acts as", "plays a role", "in order to", "a variety of".
+- No dash as punctuation, no exclamation, no rhetorical question as a heading or a lead-in, no "let's" or "here's", no promise in the future tense ("will help you").
+- No list of three kept for its rhythm, no run of sentences that open alike or have one length; let length follow the thought.
+- A number or a name where an adjective would go ("12 calls", "the Software key"), never "fewest steps" or "plainly" without the count or the fact. State a doubt or a limit once, where it applies, in the same plain words as a finding.
 
 ## Never shown
 
 - A record id, in text, an address or a file name. Pages are addressed by readable names.
 - A word of the analysis's own machinery (block, entry point, payload, record, verdict) or a name from its data model.
 - A number without its unit ("12 calls", "7 actions"), or a claim the payloads do not hold.
+
+## Reader first
+
+- Start from the reader's question at each level, not from the data model: the system (what is it, how risky, how big), a capability (what does it do, what can go wrong), a screen (what can a person do here and which rules apply), a rule (what exactly must hold, where it is decided). A page answers one of them and shows only what answers it; the rest is a link or a fold.
+- Overview first, then zoom and filter, then detail on demand. A list, filter, grouping or table control appears only when the list is long enough to need it (more than 15 rows); a short list is just shown.
+- A fact is said once, on the page that owns it: a rule's full text lives on its layer's page and everywhere else it is a row that links there; a number appears once per page; nothing restates the lead under it.
+- Every place has a short name (at most 8 words), a one-line purpose (at most 25 words) and the full text. A row shows the full sentence when it is 25 words or fewer, otherwise its first sentence; a row is never cut and never ends in an ellipsis. The short name serves the palette and the sidebar only.
+- Every claim carries its evidence (`file:line`) and how sure we are (stated by the code, inferred, assumed); the page never shows one without the other.
+- Nothing is empty without a word: a section with nothing in it says why and where to look instead. Volume is not a reason to print more: at 3M lines a page holds a screen's worth and folds the rest.
 
 ## Shape
 
@@ -25,4 +43,8 @@ How the app talks about the system. It is read by business analysts, product own
 
 ## What the code cannot settle
 
-- The words of the analysed code and of the agents that read it are not ours to rewrite: `language-report.json` lists the places that break these rules, and the run then needs action, to be reworded through the stage that wrote them.
+- The words of the analysed code and of the agents that read it are not ours to rewrite: `language-report.json` lists the places that break these rules, the voice detectors of `src/lib/voice.ts` included (a tell is removed, a probable tell is looked at), and the run then needs action, to be reworded through the stage that wrote them. A word quoted from a window or a message is the code's, not ours.
+
+## Where the look is written
+
+- Colours, sizes, the shell and the components are the app's, in `.agents/shared/app/docs/design-language.md` and `src/styles/tokens.css`, and follow Continuum's design language; this file says what the pages say and show, that one says how it looks. An app change to one is checked against the other.

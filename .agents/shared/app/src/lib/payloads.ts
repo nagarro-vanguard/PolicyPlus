@@ -57,13 +57,12 @@ export const capabilities = async (): Promise<Capability[]> =>
 export const rootOf = (depth: number) => (depth === 0 ? "./" : "../".repeat(depth));
 
 /**
- * The link to a screen: its key's folders are folders of the output.
+ * The link to a screen: the one screen page, which names the screen in its fragment and draws it from its capability's slice.
  * @param root the path to the root
  * @param key the screen's key
  * @returns the link
  */
-export const screenHref = (root: string, key: string) =>
-    `${root}screen/${key.split("/").map(encodeURIComponent).join("/")}.html`;
+export const screenHref = (root: string, key: string) => `${root}screen.html#s=${encodeURIComponent(key)}`;
 
 /**
  * The layer of a capability by id.

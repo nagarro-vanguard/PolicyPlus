@@ -1,0 +1,28 @@
+---
+// The kinds of data in a table: how each changes, who saves and who only reads it, and, when there is a modernized architecture,
+// which domain owns it now.
+import "../../styles/architecture.css";
+import { copy } from "../../lib/architecture-copy";
+import { plural } from "../../lib/text";
+import type { Kind } from "../../lib/architecture-owners";
+export interface Props {
+    kinds: readonly Kind[];
+    /** Whether a modernized architecture exists, so each kind can say who owns it now. */
+    owned: boolean;
+}
+const { kinds, owned } = Astro.props;
+const columns = copy.data.columns;
+---
+<div class="arch-table-wrap wide"><table class="arch-table">
+    <thead><tr>
+        <th scope="col">{columns.kind}</th><th scope="col">{columns.states}</th><th scope="col">{columns.saved}</th><th scope="col">{columns.read}</th>
+        {owned && <th scope="col">{columns.owner}</th>}
+    </tr></thead>
+    <tbody>{kinds.map((kind) => <tr>
+        <th scope="row">{kind.name}</th>
+        <td>{kind.states.length === 0 ? copy.data.noStates : plural(kind.states.length, "state")}</td>
+        <td>{kind.savedBy.join(", ")}</td>
+        <td>{kind.readBy.join(", ")}</td>
+        {owned && <td>{kind.owner === undefined ? copy.data.noOwner : `${kind.owner.domain}, as ${kind.owner.as}`}</td>}
+    </tr>)}</tbody>
+</table></div>

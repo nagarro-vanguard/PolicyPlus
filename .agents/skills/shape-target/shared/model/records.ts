@@ -27,13 +27,6 @@ export const Task = Schema.Struct({
         .annotate(about("How the task is done today, in order, each step citing its entry points.")),
 }).annotate(about("A task people do with the system: an outcome, not a screen."));
 
-export const Merge = Schema.Struct({
-    keep: Text.annotate(about("The id of the task that stays.")),
-    absorb: Schema.Array(Text)
-        .check(Schema.isMinLength(1))
-        .annotate(about("The ids of tasks that are the same task and join it.")),
-}).annotate(about("Tasks written in different jobs that are one task."));
-
 export const Change = Schema.Literals(["kept", "merged", "defaulted", "inferred", "deferred", "reordered", "split"]);
 
 export const Link = Schema.TaggedUnion({
@@ -190,7 +183,6 @@ export const Choice = Schema.Struct({
 
 export type CurrentStep = typeof CurrentStep.Type;
 export type Task = typeof Task.Type;
-export type Merge = typeof Merge.Type;
 export type Step = typeof Step.Type;
 export type Journey = typeof Journey.Type;
 export type StoredJourney = typeof StoredJourney.Type;

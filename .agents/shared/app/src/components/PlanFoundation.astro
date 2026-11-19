@@ -1,9 +1,13 @@
 ---
 import Page from "../layouts/Page.astro";
-import PlanPrompt from "./PlanPrompt.astro";
+import "../styles/plan.css";
+import Details from "./ui/Details.astro";
+import Section from "./ui/Section.astro";
+import PromptFold from "./plan/PromptFold.astro";
 import { copy } from "../lib/copy";
 import { decisionsByTopic, layerName, planHomePath, previewFolder, subjectOf } from "../lib/plan";
 import type { PlanData } from "../lib/plan-data";
+import { words } from "../lib/plan-words";
 export interface Props { data: PlanData; }
 const { data } = Astro.props;
 const { plan, prompts, previews } = data;
@@ -11,35 +15,32 @@ const root = "../";
 const names = new Map(plan.layers.map((layer) => [layer.id, layer.name] as const));
 const rootPreview = previews.get("");
 const layerKind = (kind: string) => copy.plan.layerKinds[kind as keyof typeof copy.plan.layerKinds] ?? kind;
+const withPreview = plan.layers.flatMap((layer) => { const text = previews.get(previewFolder(layer)); return text === undefined ? [] : [{ layer, text }]; });
 ---
-<Page title={copy.plan.foundationTitle} lead={copy.plan.foundationLead} depth={1} trail={[{ text: copy.site.home, href: `${root}index.html` }, { text: copy.plan.title, href: `${root}${planHomePath}.html` }, { text: copy.plan.foundationTitle }]}>
-    <h2>{copy.plan.layers} ({plan.layers.length})</h2>
-    <div class="table-wrap"><table class="data">
-        <thead><tr><th>{copy.plan.layerColumns.layer}</th><th>{copy.plan.layerColumns.folder}</th><th>{copy.plan.layerColumns.kind}</th><th>{copy.plan.layerColumns.purpose}</th><th>{copy.plan.layerColumns.dependsOn}</th></tr></thead>
-        <tbody>{plan.layers.map((layer) => <tr>
-            <td>{layer.name}</td>
-            <td><code>{layer.path}</code></td>
-            <td>{layerKind(layer.kind)}</td>
-            <td>{layer.purpose}<div class="sub">{copy.plan.layerColumns.check}: <code>{layer.check}</code></div></td>
-            <td>{layer.dependsOn.length === 0 ? copy.plan.layerNone : layer.dependsOn.map((id) => names.get(id) ?? id).join(", ")}</td>
-        </tr>)}</tbody>
-    </table></div>
-    <h2>{copy.plan.decisions} ({plan.decisions.length})</h2>
-    {decisionsByTopic(plan.decisions).map((group) => <section>
-        <h3>{copy.plan.decisionTopics[group.topic]} ({group.decisions.length})</h3>
-        {group.decisions.map((decision) => <div class="assume">
-            <div><strong>{subjectOf(decision, layerName(plan, decision.layer))}</strong> · {copy.plan.decisionChose}: {decision.chose}</div>
-            <div class="sub">{copy.plan.decisionWhy}: {decision.reason}</div>
-            {group.topic !== "convention" && <div class="sub">{copy.plan.decisionGoverns(layerName(plan, decision.layer))}</div>}
-        </div>)}
-    </section>)}
-    <h2>{copy.plan.rulesFiles}</h2>
-    <p class="note">{copy.plan.rulesFilesLead}</p>
-    {rootPreview !== undefined && <details open><summary>{copy.plan.rulesRoot}</summary><pre class="prompt">{rootPreview}</pre></details>}
-    {plan.layers.map((layer) => {
-        const text = previews.get(previewFolder(layer));
-        return text === undefined ? null : <details><summary>{layer.name}</summary><pre class="prompt">{text}</pre></details>;
-    })}
-    <h2 id="scaffold">{copy.plan.scaffoldHeading}</h2>
-    <PlanPrompt title={copy.plan.foundationTitle} text={prompts.scaffold} lead={copy.plan.scaffoldLead} />
+<Page wide title={words.foundationTitle} lead={copy.plan.foundationLead} depth={1} trail={[{ text: "Overview", href: `${root}index.html` }, { text: "Modernization plan", href: `${root}${planHomePath}.html` }, { text: words.foundationTitle }]}>
+    <Section title={words.layers}>
+        <ul class="pl-grid">{plan.layers.map((layer) => <li class="pl-panel pl-layer">
+            <div class="pl-head"><h3>{layer.name}</h3>{layer.kind !== "code" && <span class="pl-chip">{layerKind(layer.kind)}</span>}</div>
+            <p>{layer.purpose}</p>
+            <p class="pl-sub"><code>{layer.path}</code></p>
+            <p class="pl-meta"><span>{words.checkedBy}</span><code>{layer.check}</code></p>
+            {layer.dependsOn.length > 0 && <p class="pl-meta"><span>{words.dependsOn}</span>{layer.dependsOn.map((id) => <span class="pl-chip">{names.get(id) ?? id}</span>)}</p>}
+        </li>)}</ul>
+    </Section>
+    <Section title={words.decisions}>
+        <div class="pl-stack">{decisionsByTopic(plan.decisions).map((group) => <Details summary={`${copy.plan.decisionTopics[group.topic]} (${group.decisions.length})`}>
+            <ul class="pl-decisions">{group.decisions.map((decision) => <li class="pl-decision">
+                <p><strong>{subjectOf(decision, layerName(plan, decision.layer))}</strong></p>
+                <p>{decision.chose}</p>
+                <p class="pl-sub">{words.tradeOff}: {decision.reason}</p>
+                {group.topic !== "convention" && <p class="pl-meta"><span>{words.governs}</span><span class="pl-chip">{layerName(plan, decision.layer)}</span></p>}
+            </li>)}</ul>
+        </Details>)}</div>
+    </Section>
+    <Section title={words.rulesFiles}>
+        <p class="pl-note">{words.rulesFilesNote}</p>
+        {rootPreview !== undefined && <Details summary={words.rulesRoot}><pre class="prompt" tabindex="0">{rootPreview}</pre></Details>}
+        {withPreview.map(({ layer, text }) => <Details summary={layer.name}><pre class="prompt" tabindex="0">{text}</pre></Details>)}
+    </Section>
+    <PromptFold id="scaffold" summary={words.scaffold} note={words.scaffoldNote} text={prompts.scaffold} />
 </Page>

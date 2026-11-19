@@ -1,0 +1,407 @@
+/*
+ * The Architecture, Data and Risks pages. Imported only by the components under src/components/architecture. Tokens only:
+ * no colour, no pixel font size and no font name is written here. Colour carries severity and nothing else; the matrix reads by
+ * its numbers, and a stronger tint is only a second cue for the same number.
+ */
+
+.arch {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xxl);
+}
+
+.arch ul,
+.arch li,
+.arch p {
+    max-width: none;
+}
+
+/* ---------- The lens control: one segmented control, the pressed one filled ---------- */
+.arch-lens {
+    display: inline-flex;
+    align-self: flex-start;
+    border: 1px solid var(--input);
+    border-radius: var(--radius-control);
+    overflow: hidden;
+}
+
+.arch-lens button,
+.viewer .segmented .seg {
+    block-size: calc(var(--control-h) - 2px);
+    padding: 0 var(--space-lg);
+    border: 0;
+    border-inline-end: 1px solid var(--input);
+    background: var(--background);
+    color: var(--foreground);
+    font: inherit;
+    font-size: var(--text-meta);
+    cursor: pointer;
+}
+
+.arch-lens button:last-child,
+.viewer .segmented .seg:last-child {
+    border-inline-end: 0;
+}
+
+.arch-lens button[aria-pressed="true"],
+.viewer .segmented .seg[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-foreground);
+    font-weight: 700;
+}
+
+.arch-lens button:hover,
+.viewer .segmented .seg:hover {
+    background: var(--secondary);
+}
+
+.viewer .segmented {
+    display: inline-flex;
+    border: 1px solid var(--input);
+    border-radius: var(--radius-control);
+    overflow: hidden;
+}
+
+/* ---------- Which block shows in which lens ---------- */
+.arch[data-lens="today"] [data-show]:not([data-show~="today"]),
+.arch[data-lens="modernized"] [data-show]:not([data-show~="modernized"]),
+.arch[data-lens="landing"] [data-show]:not([data-show~="landing"]) {
+    display: none;
+}
+
+/* A drawing belongs to its own lens; the summary view shows lists only. */
+.arch[data-lens="landing"] [data-lens-only],
+.arch[data-lens="today"] [data-lens-only="modernized"],
+.arch[data-lens="modernized"] [data-lens-only="today"] {
+    display: none;
+}
+
+/* ---------- Where it lands ---------- */
+.arch-claim {
+    margin: 0;
+    font-size: var(--text-lead);
+    line-height: var(--text-lead--line-height);
+}
+
+/* Positioned, so the visually hidden words in the cells are clipped with the table and do not widen the page. */
+.arch-matrix-wrap {
+    position: relative;
+    overflow-x: auto;
+}
+
+.arch-matrix {
+    border-collapse: collapse;
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+    font-variant-numeric: tabular-nums;
+}
+
+.arch-matrix th,
+.arch-matrix td {
+    border: 1px solid var(--border);
+    padding: var(--space-lg) var(--space-md);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.arch-matrix thead th {
+    font-weight: 600;
+    min-inline-size: 5rem;
+    vertical-align: bottom;
+}
+
+.arch-matrix tbody th {
+    position: sticky;
+    inset-inline-start: 0;
+    background: var(--background);
+    text-align: start;
+    font-weight: 600;
+    min-inline-size: 14rem;
+}
+
+.arch-tag {
+    display: block;
+    color: var(--muted-foreground);
+    font-weight: 400;
+}
+
+.arch-zero {
+    color: var(--muted-foreground);
+}
+
+/* A zero is a faint dot to the eye and "0" to a screen reader. */
+.arch-zero::before {
+    content: "\00b7";
+}
+
+.arch-count {
+    font-weight: 700;
+    background: color-mix(in srgb, var(--primary) var(--strength, 20%), transparent);
+}
+
+.arch-col-none {
+    font-style: italic;
+}
+
+.arch-foot,
+.arch-note {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+/* ---------- Today and Modernized ---------- */
+.arch-cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xxl);
+}
+
+.arch[data-lens="landing"] .arch-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.arch-block h2 {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-md);
+    margin: 0 0 var(--space-md);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+}
+
+.arch-block h2 small,
+.arch-fold summary span,
+.arch-sub summary span {
+    margin-inline-start: auto;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    font-weight: 400;
+}
+
+.arch-block h2 small {
+    margin-inline-start: 0;
+}
+
+.arch-block h3,
+.arch-fold-body h3 {
+    margin: var(--space-lg) 0 var(--space-xs);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+}
+
+.arch-parts,
+.arch-plain {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.arch-parts li {
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+/* The summary beside the matrix names the parts; the sentence about each is for the lens that is about it. */
+.arch[data-lens="landing"] .arch-block h2 small,
+.arch[data-lens="landing"] .arch-more,
+.arch[data-lens="landing"] .arch-desc,
+.arch[data-lens="landing"] .arch-project-block,
+.arch[data-lens="landing"] .arch-domains,
+.arch[data-lens="landing"] .arch-note {
+    display: none;
+}
+
+.arch[data-lens="landing"] .arch-parts li {
+    padding: var(--space-xs) 0;
+}
+
+.arch-parts li:first-child {
+    padding-top: 0;
+}
+
+.arch-parts b {
+    display: block;
+    color: var(--foreground);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+}
+
+.arch-plain li {
+    padding: var(--space-xs) 0;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+}
+
+.arch-domains {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-xxl);
+    margin: var(--space-lg) 0 0;
+    font-size: var(--text-meta);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- The drawing's frame ---------- */
+.arch-drawing {
+    margin: 0 0 var(--space-lg);
+}
+
+.arch-wait {
+    margin: 0;
+    padding: var(--space-xxl);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-surface);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+}
+
+.arch-drawing:has(.viewer) {
+    inline-size: 100%;
+}
+
+/* ---------- The folds, opened one at a time ---------- */
+.arch-folds {
+    border-top: 1px solid var(--border);
+}
+
+.arch-fold,
+.arch-sub {
+    border-bottom: 1px solid var(--border);
+}
+
+.arch-sub {
+    margin-top: var(--space-xs);
+}
+
+.arch-fold > summary,
+.arch-sub > summary {
+    padding: var(--space-md) 0;
+}
+
+.arch-fold-body {
+    padding: var(--space-xs) 0 var(--space-xxl) var(--space-xxl);
+}
+
+.arch-fold-body > h3:first-child {
+    margin-top: 0;
+}
+
+/* ---------- Tables ---------- */
+.arch-table-wrap {
+    overflow-x: auto;
+}
+
+.arch-table {
+    border-collapse: collapse;
+    inline-size: 100%;
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.arch-table th,
+.arch-table td {
+    padding: var(--space-xs) var(--space-md);
+    border-bottom: 1px solid var(--border);
+    text-align: start;
+    vertical-align: top;
+    font-weight: 400;
+}
+
+.arch-table thead th,
+.arch-table tbody th {
+    font-weight: 600;
+}
+
+/* ---------- Data ---------- */
+.arch-lives > details {
+    border-bottom: 1px solid var(--border);
+}
+
+/* ---------- Risks: severity, then kind, as headings ---------- */
+.arch-riskbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-xxl);
+    margin: 0 0 var(--space-xxl);
+    font-size: var(--text-meta);
+}
+
+.arch-riskbar a {
+    color: var(--foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+.arch-risks > section + section {
+    margin-top: var(--space-6xl);
+}
+
+.arch-risks h2,
+.arch-risks h3 {
+    scroll-margin-top: var(--space-6xl);
+}
+
+.arch-risks h2 {
+    margin: 0 0 var(--space-md);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+}
+
+.arch-risks h3 {
+    margin: var(--space-xxl) 0 var(--space-xs);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    color: var(--muted-foreground);
+}
+
+.arch-risk-rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.arch-risk-rows > li {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: var(--space-xs) var(--space-xxl);
+    align-items: start;
+    max-width: none;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.arch-risk-rows a {
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+}
+
+.arch-touch {
+    display: block;
+    margin-top: var(--space-3xs);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+@media (max-width: 860px) {
+    .arch[data-lens="landing"] .arch-cols {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .arch-risk-rows > li {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .arch-matrix tbody th {
+        min-inline-size: 9rem;
+    }
+}
+
+/* The viewer's size read-out is for tests and for the person who builds the drawing, not for the reader. */
+.arch .viewer-hud {
+    display: none;
+}

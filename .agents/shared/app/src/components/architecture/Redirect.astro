@@ -1,0 +1,26 @@
+---
+// A page the site no longer has: it sends the reader on at once, and says where, with a link for a browser that does not follow.
+import { copy } from "../../lib/architecture-copy";
+import { hrefOf } from "../../lib/architecture-redirects";
+import type { Redirect } from "../../lib/architecture-redirects";
+export interface Props {
+    redirect: Redirect;
+}
+const { redirect } = Astro.props;
+const href = hrefOf(redirect);
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${href}`} />
+    <link rel="canonical" href={href} />
+    <title>{redirect.text}</title>
+</head>
+<body>
+    <p>{copy.redirect.moved} <a href={href}>{redirect.text}</a>.</p>
+</body>
+</html>

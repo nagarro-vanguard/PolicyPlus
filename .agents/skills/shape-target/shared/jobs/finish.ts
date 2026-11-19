@@ -1,12 +1,11 @@
 import { Schema } from "effect";
 import { finalGaps, isCopy, scoreOf } from "../derive/checks";
-import { deriveEssence } from "../derive/essence";
 import { journeyId, stepId } from "../model/ids";
 import type { Layout } from "../model/layout";
 import { Architecture, Component, Journey, type StoredJourney } from "../model/records";
-import { loadJourneys, loadLegacy, loadRequest, loadTasks } from "../run";
+import { loadJourneys, loadTasks } from "../run";
 import { join } from "node:path";
-import { chosenArchitecture, designContext, mergedTasks } from "./stages";
+import { chosenArchitecture, designContext } from "./stages";
 import { loadJobs, outputOf, writeJson, type Stage } from "./state";
 
 export type Finished = { ok: boolean; text: string };
@@ -26,13 +25,6 @@ export const finish = (layout: Layout, stage: Stage): Finished => {
     const disputes = mine.flatMap((job) => job.disputes.map((says) => ({ job: job.id, says })));
     writeJson(join(layout.records, `disputes-${stage}.json`), disputes);
     const note = `${disputes.length} challenges stayed disputed`;
-    if (stage === "as-is") {
-        const tasks = mergedTasks(layout, jobs);
-        writeJson(layout.tasksRecord, tasks);
-        writeJson(layout.current, { tasks });
-        writeJson(layout.essence, deriveEssence(loadLegacy(layout), tasks, loadRequest(layout), []));
-        return { ok: true, text: `${tasks.length} tasks accepted; ${note}` };
-    }
     if (stage === "journeys") {
         const tasks = loadTasks(layout);
         const journeys: StoredJourney[] = mine

@@ -1,8 +1,20 @@
 ---
+// An action: one thing a person can do. Its sentence is the title; below it the layers it passes through, then the business
+// rules along the way as links to the one page where each is written (its layer's).
 import Page from "../../../layouts/Page.astro";
-import Rows from "../../../components/Rows.astro";
+import Section from "../../../components/ui/Section.astro";
+import NoDataState from "../../../components/ui/NoDataState.astro";
+import EvidenceChip from "../../../components/ui/EvidenceChip.astro";
+import Meta from "../../../components/analysis/Meta.astro";
+import Chain from "../../../components/analysis/Chain.astro";
+import UsedIn from "../../../components/journey/UsedIn.astro";
+import { journeyModel, linksTo } from "../../../lib/journeys";
+import RuleLinks from "../../../components/analysis/RuleLinks.astro";
 import { capabilities, pathOf, screenHref, slugs, system } from "../../../lib/payloads";
+import { rulesByLayer } from "../../../lib/analysis";
+import { words } from "../../../lib/analysis-copy";
 import { copy } from "../../../lib/copy";
+import { titleOf } from "../../../lib/derive";
 import { startedWords, wordFor } from "../../../lib/words";
 import { where } from "../../../lib/text";
 
@@ -27,19 +39,27 @@ const action = owner?.actions.find((each) => each.id === aid);
 if (cap === undefined || action === undefined) throw new Error("no such action");
 const screen = sys.screens.find((each) => each.actionIds.includes(action.id));
 const capSlug = addresses.capability(cid);
+const used = linksTo((await journeyModel()).usingAction(aid), 2);
 const steps = pathOf(cap, action);
-const byRule = new Map(cap.layers.flatMap((layer) => layer.rules.map((rule) => [rule.id, { rule, layer }] as const)));
-const mine = action.rules.flatMap((rule) => { const found = byRule.get(rule); return found ? [found] : []; });
-const trail = [{ text: copy.site.home, href: "../../index.html" }, { text: cap.capability.name, href: `../../capability/${capSlug}.html` }, ...(screen ? [{ text: screen.name, href: screenHref("../../", screen.key) }] : action.screen !== "" ? [{ text: action.screen }] : [])];
+const groups = rulesByLayer(cap, steps, action.rules);
+const ruleTotal = groups.reduce((sum, group) => sum + group.rules.length, 0);
+const layerHref = (layer: { id: string }) => `../../layer/${capSlug}/${addresses.layer(cid, layer.id)}.html`;
+const trail = [{ text: copy.site.home, href: "../../index.html" }, { text: cap.capability.name, href: `../../capability/${capSlug}.html` }, ...(screen ? [{ text: screen.name, href: screenHref("../../", screen.key) }] : action.screen !== "" ? [{ text: action.screen }] : []), { text: titleOf(action.purpose) }];
 ---
-<Page title={action.purpose} lead={copy.action.startedBy(wordFor(startedWords, action.startedBy), where(action.place))} depth={2} brief={action.context.text} trail={trail}>
-    <h2>{copy.action.passes}</h2>
-    <div class="path">{steps.map((layer, i) => <>{i > 0 && <span class="arrow" aria-hidden="true">→</span>}<a href={`../../layer/${capSlug}/${addresses.layer(cid, layer.id)}.html`}>{layer.name}</a></>)}</div>
-    <p class="note">{copy.action.passesNote}</p>
-    <h2>{copy.action.rules(mine.length)}</h2>
-    {mine.length === 0 && <p class="empty">{copy.action.noRules}</p>}
-    {steps.map((layer) => { const here = mine.filter((entry) => entry.layer.id === layer.id); return here.length > 0 && <Fragment>
-        <div class="group-name">{layer.name}</div>
-        <Rows rows={here.map(({ rule }) => ({ text: rule.says, copy: rule.context.text, meta: rule.gates ? copy.words.changesState : undefined, sub: `${where(rule.place)}${rule.screens.length > 0 ? `  ·  ${copy.words.screensLabel}: ${rule.screens.join(", ")}` : ""}` }))} cap={8} noun="business rules" />
-    </Fragment>; })}
+<Page title={titleOf(action.purpose)} depth={2} brief={action.context.text} trail={trail}>
+    <Meta facts={[words.action.startedBy(wordFor(startedWords, action.startedBy)), { value: ruleTotal, unit: ruleTotal === 1 ? "business rule" : "business rules" }]}>
+        <li>{words.action.builtFrom}&nbsp;<EvidenceChip place={where(action.place)} /></li>
+    </Meta>
+    <UsedIn links={used} />
+    <Section title={words.action.passes} id="path">
+        {steps.length === 0
+            ? <NoDataState compact title={words.action.noPathTitle} message={words.action.noPath} />
+            : <Fragment>
+                <Chain label={words.action.passes} steps={steps.map((layer) => ({ text: layer.name, href: layerHref(layer) }))} />
+                <p class="a-note">{words.action.passesNote}</p>
+            </Fragment>}
+    </Section>
+    <Section title={words.action.rules(ruleTotal)} id="rules">
+        <RuleLinks groups={groups} layerHref={layerHref} action={addresses.action(cid, aid)} />
+    </Section>
 </Page>

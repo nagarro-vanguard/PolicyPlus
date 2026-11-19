@@ -1,0 +1,23 @@
+---
+// Where one decision stands, as a badge with an icon and a word: confirmed on a date, waiting for you, changed since it was
+// confirmed, blocked by an earlier one, or not made yet.
+import "../../styles/target.css";
+import Badge from "../ui/Badge.astro";
+import type { GateState } from "../../lib/confirmation";
+export interface Props {
+    state: GateState;
+    date?: string | undefined;
+    /** The number of the earlier decision that blocks this one, counting from 1. */
+    by?: number | undefined;
+}
+const { state, date, by } = Astro.props;
+const kinds = { confirmed: "stated", waiting: "medium", changed: "high", blocked: "low", "not made": "neutral" } as const;
+const words: Record<GateState, string> = {
+    confirmed: date === undefined ? "Confirmed" : `Confirmed ${date}`,
+    waiting: "Waiting for you",
+    changed: "Changed since confirmed",
+    blocked: by === undefined ? "Blocked by an earlier one" : `Blocked by decision ${by}`,
+    "not made": "Not made yet",
+};
+---
+<Badge kind={kinds[state]} label={words[state]} />

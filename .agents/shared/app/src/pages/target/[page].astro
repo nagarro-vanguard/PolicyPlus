@@ -1,0 +1,16 @@
+---
+// The architecture, system and lineage pages moved: each sends the reader to where its content now lives. Built only with a
+// target, and only the pages that existed.
+import Redirect from "../../components/architecture/Redirect.astro";
+import { targetRedirects } from "../../lib/architecture-redirects";
+import { hasTarget, targetData } from "../../lib/target-data";
+
+export function getStaticPaths() {
+    if (!hasTarget()) return [];
+    return targetRedirects(targetData())
+        .filter((each) => each.from.split("/").length === 2)
+        .map((redirect) => ({ params: { page: redirect.from.slice("target/".length) }, props: { redirect } }));
+}
+const { redirect } = Astro.props;
+---
+<Redirect redirect={redirect} />

@@ -1,0 +1,12 @@
+---
+// Loading, shaped like the content it stands for; never a spinner. Hidden from a screen reader, with a polite status.
+export interface Props {
+    lines?: number;
+    width?: string;
+    pill?: boolean;
+}
+const { lines = 1, width = "100%", pill = false } = Astro.props;
+---
+<div class="skeleton-group" role="status" aria-label="Loading">
+    {Array.from({ length: lines }, (_, i) => <span class={`skeleton${pill ? " skeleton-pill" : ""}`} style={`width:${i === lines - 1 && lines > 1 ? "60%" : width};margin-block:0.5rem`} aria-hidden="true"></span>)}
+</div>

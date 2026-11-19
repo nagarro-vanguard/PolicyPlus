@@ -1,6 +1,6 @@
 ---
 name: shape-target
-description: Designs the target of a modernization before it is planned, from a finished code analysis. It describes how people get their tasks done today, designs two or three better ways of doing each, and two or three architectures split into domains, and has the person confirm one of each. The design is stated in outcomes, steps and domains, so it holds for any stack and any kind of interface.
+description: Designs the target of a modernization before it is planned, from a finished code analysis. It reads how people get their tasks done today from the code analysis's journeys, designs two or three better ways of doing each, and two or three architectures split into domains, and has the person confirm one of each. The design is stated in outcomes, steps and domains, so it holds for any stack and any kind of interface.
 argument-hint: <Output Root>
 ---
 
@@ -10,16 +10,16 @@ Goal: a target the person has chosen, in four confirmed decisions (today's tasks
 
 ## How to run
 
-`${SKILL_ROOT}` is this skill's folder; `${ROOT}` is the Output Root. The analysis must already be in `${ROOT}/.code-analysis/payloads` and the request in `${ROOT}/request.json`. `S=MODERNIZATION_ROOT=${ROOT} bun ${SKILL_ROOT}/cli/stage.ts`.
+`${SKILL_ROOT}` is this skill's folder; `${ROOT}` is the Output Root. The analysis must already be in `${ROOT}/.code-analysis/payloads` (with its `journeys.json`, today's tasks) and the request in `${ROOT}/request.json`. `S=MODERNIZATION_ROOT=${ROOT} bun ${SKILL_ROOT}/cli/stage.ts`.
 
 1. `bun ${SKILL_ROOT}/cli/derive.ts legacy ${ROOT}` writes `target/legacy.json`, the old system's own words, kept apart.
-2. As-is: `S prepare as-is`, drive it, `S finish as-is`. Show the person today's tasks (the views the conductor builds before it asks) and take their marks; `bun ${SKILL_ROOT}/cli/choose.ts as-is ${ROOT} --reason <why> [--marks <file>]`. A step marked `wrong` blocks it: hand the jobs back with `redo <job> --instructions <the marks>`, finish, confirm.
+2. As-is: `bun ${SKILL_ROOT}/cli/derive.ts current ${ROOT}` reads the analysis's `payloads/journeys.json` (the tasks people get done today, written by the code analysis) into `target/current.json` and `essence.json`, and refuses journeys that do not hold every entry point and rule once; a run whose `target/current.json` exists and whose analysis has no `journeys.json` keeps that file as it is. There are no jobs: `S finish as-is` does the same. Show the person today's tasks (the views the conductor builds before it asks) and take their marks; `bun ${SKILL_ROOT}/cli/choose.ts as-is ${ROOT} --reason <why> [--marks <file>]`. A step marked `wrong` blocks it: the analysis writes the journeys again (its Publish journeys jobs, handed back with the marks), then `derive.ts current` and confirm.
 3. Journeys: `S prepare journeys`, drive it, `S finish journeys`. The person compares the variants of each task; `choose.ts journeys ${ROOT} --reason <why> [--all-recommended] [--pick <task>=<variant>]`.
 4. Architecture: `S prepare architecture`, drive it, `S finish architecture`. The person compares the variants; `choose.ts architecture ${ROOT} --pick <variant> --reason <why>`.
 5. Components: `S prepare components`, drive it, `S finish components`. It runs every check across the chosen architecture and writes `target/architecture.json` only when they pass; on a gap it names it, and the stage's jobs are run again with the gap as instructions. The person reviews the components and confirms: `choose.ts components ${ROOT} --reason <why>`.
 6. Tell the person what was written and where the views are (the app builds them).
 
-Every decision is confirmed the same way: the stage proposes, the views show it, the person confirms. A decision is confirmed while its `choice-*.json` is not older than the file it decides on and that file was made after the decision before it; when the person asks for a change, `redo` the jobs that wrote it (the as-is: `tasks-*` and `merge`; journeys: `variants-*`; architecture: `shape`; components: `components-<domain>` and every domain that depends on it) with their words, then `finish` the stage in the same drive, and ask again. `choose` refuses while the decision before it is not confirmed.
+Every decision is confirmed the same way: the stage proposes, the views show it, the person confirms. A decision is confirmed while its `choice-*.json` is not older than the file it decides on and that file was made after the decision before it; when the person asks for a change, record it with `choose.ts <gate> ${ROOT} --changes <their words> [--task <id> | --domain <name>]` (it withdraws the confirmation) and run `S apply-changes <gate>`, which hands back the jobs with their words; by hand, `redo` the jobs that wrote it (the as-is: the analysis's journeys jobs, `journeys-of-<capability>` and `journeys-merge`, handed back there; journeys: `variants-*`; architecture: `shape`; components: `components-<domain>` and every domain that depends on it) with their words, then `finish` the stage in the same drive, and ask again. `choose` refuses while the decision before it is not confirmed.
 
 Driving a stage: `S next --limit 4` prints one action as JSON.
 
@@ -32,7 +32,7 @@ A job runs write, gate, review (for those that have one) and at most one fix; a 
 
 ## Stages
 
-- As-is (`as-is`): `describe-current` finds the tasks per capability and joins duplicates; `challenge-target` reads each.
+- As-is (`as-is`): no jobs; the tasks are the analysis's journeys, read by `derive.ts current`.
 - Journeys (`journeys`): `propose-journeys` writes variants per task; `challenge-target` reads each.
 - Architecture (`architecture`): `propose-architecture` writes variants; `challenge-target` reads them.
 - Components (`components`): `propose-architecture` writes the components of each domain of the chosen variant, in dependency order.

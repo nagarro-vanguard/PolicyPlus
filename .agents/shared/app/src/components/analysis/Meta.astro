@@ -1,0 +1,13 @@
+---
+// The quiet line under a page's opening: each fact is a number with its unit word, or a few words; the slot holds a fact that is
+// a badge or an evidence chip.
+import "../../styles/analysis.css";
+export interface Props {
+    facts?: readonly ({ value: number | string; unit: string } | string)[];
+}
+const { facts = [] } = Astro.props;
+---
+<ul class="a-meta" aria-label="About this page">
+    {facts.map((fact) => <li>{typeof fact === "string" ? fact : <Fragment><b>{fact.value}</b> {fact.unit}</Fragment>}</li>)}
+    <slot />
+</ul>

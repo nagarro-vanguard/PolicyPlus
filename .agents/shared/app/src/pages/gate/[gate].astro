@@ -1,0 +1,69 @@
+---
+// A decision of the target, as a page to review: what you are asked to confirm, the recommended answer, what changes if you
+// confirm, the evidence beside it, one primary button that copies the command that confirms it, and a box to ask for
+// changes instead. The same four pages for as-is, journeys, architecture and components.
+import "../../styles/target.css";
+import Page from "../../layouts/Page.astro";
+import Button from "../../components/ui/Button.astro";
+import Section from "../../components/ui/Section.astro";
+import Details from "../../components/ui/Details.astro";
+import GateState from "../../components/target/GateState.astro";
+import { gates } from "../../lib/confirmation";
+import { ledeOf } from "../../lib/derive";
+import { gateReview } from "../../lib/gate";
+import { gateNames } from "../../lib/slice";
+import { blockedBy } from "../../lib/target-page";
+import { hasTarget, targetData } from "../../lib/target-data";
+
+export function getStaticPaths() {
+    return hasTarget() ? gates.map((gate) => ({ params: { gate }, props: { gate } })) : [];
+}
+const { gate } = Astro.props;
+const data = targetData();
+const review = gateReview(gate, data);
+const by = blockedBy(gate, data);
+const ready = review.state === "waiting" || review.state === "changed" || review.state === "confirmed";
+const shown = 5;
+---
+<Page title={review.name} lead={review.ask} depth={1} trail={[{ text: "Overview", href: "../index.html" }, { text: "Decisions", href: "../decisions.html" }, { text: review.name }]}>
+    <div class="tx-review" data-gate={review.gate}>
+        <section aria-label="State">
+            <GateState state={review.state} date={review.date} by={by === undefined ? undefined : gates.indexOf(by) + 1} />
+            {by !== undefined && <p class="tx-sub"><a href={`${by}.html`}>Confirm {gateNames[by]}</a> first; this decision rests on it.</p>}
+            {review.state === "changed" && <p class="tx-sub">The records it rests on were made again after you confirmed it. Read it again and confirm, or ask for changes.</p>}
+        </section>
+        <Section title="Recommended answer" id="recommended"><p class="tx-answer">{ledeOf(review.recommended)}</p></Section>
+        <Section title="What changes if you confirm" id="changes"><ul class="tx-bullets">{review.changes.map((line) => <li>{line}</li>)}</ul></Section>
+        {review.evidence.map((block, at) => <Section title={block.title} id={`evidence-${at}`}>
+            {block.items.length === 0
+                ? <p class="tx-sub">Nothing to show yet.</p>
+                : <Fragment>
+                    <ul class="tx-evidence">{block.items.slice(0, shown).map((item) => <li><span>{item.href !== undefined ? <a href={item.href}>{item.text}</a> : item.text}</span>{item.sub !== undefined && <span class="tx-meta">{item.sub}</span>}</li>)}</ul>
+                    {block.items.length > shown && <Details summary={`Show the other ${block.items.length - shown}`}>
+                        <ul class="tx-evidence">{block.items.slice(shown).map((item) => <li><span>{item.href !== undefined ? <a href={item.href}>{item.text}</a> : item.text}</span>{item.sub !== undefined && <span class="tx-meta">{item.sub}</span>}</li>)}</ul>
+                    </Details>}
+                </Fragment>}
+        </Section>)}
+        {review.pages.length > 0 && <Section title="Pages to review" id="pages"><ul class="tx-links">{review.pages.map((page) => <li><a href={page.href}>{page.text}</a></li>)}</ul></Section>}
+        <Section title={review.state === "confirmed" ? "Confirmed" : "Your decision"} id="decide">
+            {ready
+                ? <div class="tx-form" data-gate-form data-command={review.command} data-changes-base={review.changesCommand}>
+                    {review.state === "confirmed" && review.recorded !== undefined && <p class="tx-sub">Reason given: {review.recorded}</p>}
+                    <label for="gate-why">Your reason</label>
+                    <input id="gate-why" type="text" value="I reviewed this page and confirm the recommended answer" data-why />
+                    <div data-confirm><Button variant="primary" icon="copy" copy={review.command} copied="Copied">Copy confirm command</Button></div>
+                    <Details summary="Show the command"><pre aria-label="The command to confirm"><code data-command-text>{review.command}</code></pre></Details>
+                    <Details summary="Request changes instead" open={review.state === "changed"}>
+                        <div class="tx-form">
+                            <label for="gate-changes">What should change</label>
+                            <textarea id="gate-changes" rows="3" placeholder="Say what to change, in your own words" data-changes></textarea>
+                            <pre aria-label="The command to ask for changes"><code data-changes-command>{review.changesCommand} --changes '...'</code></pre>
+                            <div data-ask><Button icon="copy" copy={`${review.changesCommand} --changes '...'`} copied="Copied" disabled>Copy request-changes command</Button></div>
+                        </div>
+                    </Details>
+                </div>
+                : <p class="tx-sub">{by !== undefined ? `Blocked: confirm ${gateNames[by]} first.` : "Not made yet: this decision has no proposal to confirm."}</p>}
+        </Section>
+    </div>
+    <script>import "../../scripts/gate-form.ts";</script>
+</Page>

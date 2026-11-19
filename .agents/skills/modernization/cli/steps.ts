@@ -1,7 +1,19 @@
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { gateProblems, type Gate } from "./gates";
+
+export const changesFile = (records: string, gate: Gate) => join(records, `changes-${gate}.json`);
+const unapplied = (records: string, gate: Gate) => {
+    try {
+        return (JSON.parse(readFileSync(changesFile(records, gate), "utf8")) as { applied?: boolean }[]).some(
+            (each) => each.applied !== true,
+        );
+    } catch {
+        return false;
+    }
+};
 
 /** What the conductor asks of whoever drives it: one action at a time. It never does the work itself. */
 export type Action =
@@ -17,17 +29,26 @@ export type State = { request: string; settings: Settings; steps: Record<string,
 
 export const skillsOf = (conductorRoot: string) => resolve(conductorRoot, "..");
 
+/**
+ * The analysis's journeys of today are read by the as-is step and the app, which name the file themselves. A folder that
+ * holds them (the analysis's payloads) is hashed without them, so a run that adopts them does not run again the steps
+ * built from the rest of the analysis (the plan's agents among them).
+ */
+const namedByTheirReaders = new Set(["journeys.json", "journeys.schema.json"]);
+
 export const hashFiles = (paths: readonly string[]) => {
     const hash = createHash("sha256");
-    const walk = (path: string): string[] =>
+    const walk = (path: string, listed: boolean): string[] =>
         !existsSync(path)
             ? []
             : statSync(path).isDirectory()
               ? readdirSync(path)
                     .sort()
-                    .flatMap((name) => walk(join(path, name)))
-              : [path];
-    for (const file of paths.flatMap(walk)) {
+                    .flatMap((name) => walk(join(path, name), false))
+              : !listed && namedByTheirReaders.has(basename(path))
+                ? []
+                : [path];
+    for (const file of paths.flatMap((path) => walk(path, true))) {
         hash.update(file);
         hash.update(readFileSync(file));
     }
@@ -35,6 +56,18 @@ export const hashFiles = (paths: readonly string[]) => {
 };
 
 export type Paths = ReturnType<typeof pathsOf>;
+const here = dirname(fileURLToPath(import.meta.url));
+/** What builds the app: its source and styles, the shared design system's stylesheet and the build command. A change in any reaches a rerun. */
+const appSource = [
+    join(here, "../../../shared/app/src"),
+    join(here, "../../../shared/app/public"),
+    join(here, "../../../shared/app/scripts"),
+    join(here, "../../../shared/app/package.json"),
+    join(here, "../../../shared/app/bun.lock"),
+    join(here, "../../../shared/page-components/assets"),
+    join(here, "../../code-analysis/shared/source"),
+    join(here, "../../code-analysis/cli/build-app.ts"),
+];
 /** The folders of a run: the same fixed layout every skill uses under the Output Root. */
 export const pathsOf = (root: string) => ({
     root,
@@ -55,6 +88,7 @@ export const pathsOf = (root: string) => ({
     architecture: join(root, "target/architecture.json"),
     analysis: join(root, ".code-analysis"),
     payloads: join(root, ".code-analysis/payloads"),
+    journeysToday: join(root, ".code-analysis/payloads/journeys.json"),
     bundles: join(root, ".code-analysis/bundles"),
     records: join(root, ".modernization-backlog/work/records"),
     plan: join(root, ".modernization-backlog/payloads/plan.json"),
@@ -62,6 +96,7 @@ export const pathsOf = (root: string) => ({
     manifest: join(root, "work-items/manifest.json"),
     ledger: join(root, "work-items/ledger.json"),
     app: join(root, "app"),
+    appSource,
 });
 
 export type Step = {
@@ -81,8 +116,8 @@ const bun = (skills: string, skill: string, script: string, args: string) =>
 const chooseCommand = (skills: string) => `bun ${join(skills, "shape-target/cli/choose.ts")}`;
 
 /** What the person gives to change a decision: the jobs that wrote it, handed back with their words. */
-const changes = (jobs: string) =>
-    `To change something instead, hand back ${jobs} with \`redo <job> --instructions <their words>\` (shape-target's stage.ts), drive the jobs, finish the stage, then call next: the pages are built again and the question returns.`;
+const changes = (jobs: string, gate: Gate, skills: string, root: string) =>
+    `To change something instead, record their words with \`${chooseCommand(skills)} ${gate} ${root} --changes "<their words>" [--task <id> | --domain <name>]\`, then call next. (The jobs behind this decision: ${jobs}.)`;
 
 /**
  * One decision of the target, the same three steps each time: the stage proposes, the pages show the proposal, the
@@ -92,6 +127,8 @@ const changes = (jobs: string) =>
 const gate = (input: {
     gate: Gate;
     stage: string;
+    /** A command that makes the proposal, for a decision whose proposal is a read of the analysis and has no jobs. */
+    derive?: (skills: string, p: Paths) => { command: string; why: string };
     inputs: Step["inputs"];
     proposal: (p: Paths) => string;
     record: (p: Paths) => string[];
@@ -111,16 +148,19 @@ const gate = (input: {
             name,
             inputs: input.inputs,
             makes: (p) => [input.proposal(p)],
-            action: ({ paths, skills }) => ({
-                action: "invoke",
-                step: name,
-                skill: "shape-target",
-                instruction: `Run the shape-target skill's ${input.stage} stage for ${paths.root}: prepare it, drive its jobs, then finish it (see its SKILL.md; its scripts are in ${join(skills, "shape-target/cli")}).`,
-            }),
+            action: ({ paths, skills }) =>
+                input.derive === undefined
+                    ? {
+                          action: "invoke",
+                          step: name,
+                          skill: "shape-target",
+                          instruction: `Run the shape-target skill's ${input.stage} stage for ${paths.root}: prepare it, drive its jobs, then finish it (see its SKILL.md; its scripts are in ${join(skills, "shape-target/cli")}).`,
+                      }
+                    : { action: "run", step: name, ...input.derive(skills, paths) },
         },
         {
             name: `${name}-pages`,
-            inputs: (p) => [input.proposal(p), ...decided(p)],
+            inputs: (p) => [input.proposal(p), ...decided(p), ...p.appSource],
             makes: (p) => [p.pages(input.gate)],
             action: ({ paths, skills }) => ({
                 action: "run",
@@ -134,11 +174,19 @@ const gate = (input: {
             inputs: (p) => [input.proposal(p)],
             makes: (p) => input.record(p),
             valid: (p) => gateProblems(p, input.gate),
-            action: ({ paths, skills }) => ({
-                action: "wait",
-                step: `${name}-choose`,
-                message: `Open ${join(paths.app, input.pages)} and show the person the proposal (${input.gate}); say what you recommend. They confirm with: ${input.ask(skills, paths)}. ${changes(input.jobs)} Call next when it is recorded.`,
-            }),
+            action: ({ paths, skills }) =>
+                unapplied(paths.records, input.gate)
+                    ? {
+                          action: "invoke",
+                          step: `${name}-choose`,
+                          skill: "shape-target",
+                          instruction: `The person asked for changes to the ${input.gate} decision (${changesFile(paths.records, input.gate)}). Run \`MODERNIZATION_ROOT=${paths.root} bun ${join(skills, "shape-target/cli/stage.ts")} apply-changes ${input.gate}\`, drive the jobs it hands back, finish the ${input.gate} stage, then call next: the pages are built again and the question returns.`,
+                      }
+                    : {
+                          action: "wait",
+                          step: `${name}-choose`,
+                          message: `Open ${join(paths.app, input.pages)} and show the person the proposal (${input.gate}); say what you recommend. They confirm with: ${input.ask(skills, paths)}. ${changes(input.jobs, input.gate, skills, paths.root)} Call next when it is recorded.`,
+                      },
         },
     ];
 };
@@ -175,7 +223,7 @@ export const steps: Step[] = [
             action: "invoke",
             step: "analysis",
             skill: "code-analysis",
-            instruction: `Run the code-analysis skill on ${paths.analysisRequest} through Publish, then write its payloads with \`CODE_ANALYSIS_ROOT=${paths.analysis} bun ${join(skills, "code-analysis/cli/write-payloads.ts")}\`. Do not build its site: the app is built once, after the plan.`,
+            instruction: `Run the code-analysis skill on ${paths.analysisRequest} through Publish (its journeys jobs write how people get their tasks done today), then write its payloads with \`CODE_ANALYSIS_ROOT=${paths.analysis} bun ${join(skills, "code-analysis/cli/write-payloads.ts")}\`. Do not build its site: the app is built once, after the plan.`,
         }),
     },
     {
@@ -207,12 +255,16 @@ export const steps: Step[] = [
     ...gate({
         gate: "as-is",
         stage: "as-is",
-        inputs: (p) => [p.legacy, p.bundles],
+        derive: (skills, p) => ({
+            command: bun(skills, "shape-target", "derive.ts", `current ${p.root}`),
+            why: "read today's tasks from the analysis's journeys (payloads/journeys.json); a run made before the analysis wrote them keeps its target/current.json",
+        }),
+        inputs: (p) => [p.legacy, p.bundles, p.journeysToday],
         proposal: (p) => p.current,
         record: (p) => [p.choiceAsIs],
-        pages: "target.html",
+        pages: "gate/as-is.html",
         ask: (skills, p) => `${chooseCommand(skills)} as-is ${p.root} --reason "<why>" [--marks <file>]`,
-        jobs: "the tasks-* jobs and merge",
+        jobs: "the analysis's journeys jobs (`journeys-of-<capability>`, `journeys-merge`), handed back there",
     }),
     ...gate({
         gate: "journeys",
@@ -220,7 +272,7 @@ export const steps: Step[] = [
         inputs: (p) => [p.current, p.choiceAsIs],
         proposal: (p) => p.journeyVariants,
         record: (p) => [p.choiceJourneys, p.journeys],
-        pages: "target.html",
+        pages: "gate/journeys.html",
         ask: (skills, p) =>
             `${chooseCommand(skills)} journeys ${p.root} --reason "<why>" [--all-recommended] [--pick <task>=<variant>]`,
         jobs: "the variants-* jobs",
@@ -231,7 +283,7 @@ export const steps: Step[] = [
         inputs: (p) => [p.journeys],
         proposal: (p) => p.architectureVariants,
         record: (p) => [p.choiceArchitecture],
-        pages: "target/architecture.html",
+        pages: "gate/architecture.html",
         ask: (skills, p) => `${chooseCommand(skills)} architecture ${p.root} --pick "<variant>" --reason "<why>"`,
         jobs: "the shape job",
     }),
@@ -241,7 +293,7 @@ export const steps: Step[] = [
         inputs: (p) => [p.choiceArchitecture, p.journeys],
         proposal: (p) => p.architecture,
         record: (p) => [p.choiceComponents],
-        pages: "target/system.html",
+        pages: "gate/components.html",
         ask: (skills, p) => `${chooseCommand(skills)} components ${p.root} --reason "<why>"`,
         jobs: "the components-<domain> jobs of the domains to change and of every domain that depends on them",
     }),
@@ -285,7 +337,7 @@ export const steps: Step[] = [
     },
     {
         name: "app",
-        inputs: (p) => [p.plan, p.payloads, p.target],
+        inputs: (p) => [p.plan, p.payloads, p.journeysToday, p.target, ...p.appSource],
         makes: (p) => [join(p.app, "index.html")],
         action: ({ paths, skills }) => ({
             action: "run",

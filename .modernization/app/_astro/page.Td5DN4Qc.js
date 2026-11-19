@@ -1,0 +1,1 @@
+var e=e=>{e(),document.addEventListener(`astro:page-load`,e)},t=e=>e.dataset.ready===void 0&&(e.dataset.ready=`true`,!0);export{e as n,t};

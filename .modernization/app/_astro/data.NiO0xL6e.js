@@ -1,0 +1,1 @@
+var e=new Map,t=()=>document.body.dataset.root??`./`,n=n=>{let r=e.get(n);return r===void 0&&(r=fetch(`${t()}${n}`).then(e=>{if(!e.ok)throw Error(`${n}: ${e.status}`);return e.json()}),r.catch(()=>e.delete(n)),e.set(n,r)),r};export{t as n,n as t};

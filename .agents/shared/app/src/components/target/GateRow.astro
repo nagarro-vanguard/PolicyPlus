@@ -1,0 +1,30 @@
+---
+// One decision on the target's home page: its place in the order, its name, what it decided in one sentence, where it
+// stands, and the way to its review page.
+import "../../styles/target.css";
+import GateState from "./GateState.astro";
+import type { Gate } from "../../lib/confirmation";
+import { gateNames } from "../../lib/slice";
+import { blockedBy, decidedLine } from "../../lib/target-page";
+import type { TargetData } from "../../lib/target-types";
+import { gates } from "../../lib/confirmation";
+export interface Props {
+    gate: Gate;
+    data: TargetData;
+}
+const { gate, data } = Astro.props;
+const view = data.gates[gate];
+const by = blockedBy(gate, data);
+const action = view.state === "waiting" || view.state === "changed" ? "Review and confirm" : view.state === "confirmed" ? "Review" : "See why";
+---
+<li class="tx-gate">
+    <span class="tx-n">{gates.indexOf(gate) + 1}.</span>
+    <div>
+        <h3 class="tx-title">{gateNames[gate]}</h3>
+        <p class="tx-sub">{decidedLine(gate, data)}</p>
+    </div>
+    <div class="tx-gate-end">
+        <GateState state={view.state} date={view.date} by={by === undefined ? undefined : gates.indexOf(by) + 1} />
+        <a href={`gate/${gate}.html`}>{action}<span class="visually-hidden"> {gateNames[gate]}</span></a>
+    </div>
+</li>

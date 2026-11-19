@@ -1,0 +1,44 @@
+---
+// The picture the briefing chose for a place, drawn with the analysis pages' own figure and grid.
+import "../../styles/analysis.css";
+import Diagram from "./Diagram.astro";
+import { applies, diagrams } from "../../lib/diagram-config";
+import { copy } from "../../lib/copy";
+import { words } from "../../lib/analysis-copy";
+import { dataGridModel, integrationModel, partsModel, statesModel, tiersModel } from "../../lib/model";
+import type { FigureBrief, Knowledge, System } from "../../lib/types";
+import NoDataState from "../ui/NoDataState.astro";
+export interface Props {
+    brief: FigureBrief;
+    sys: System;
+    knowledge: Knowledge;
+    known: ReadonlySet<string>;
+    /** False when a section's own heading already names the picture. */
+    titled?: boolean;
+}
+const { brief, sys, knowledge, known, titled = true } = Astro.props;
+const lives = knowledge.lifecycles.filter((life) => brief.records.length === 0 || brief.records.includes(life.id));
+const grid = dataGridModel(knowledge, brief.records);
+const tiers = tiersModel(sys);
+const parts = partsModel(knowledge);
+const integration = integrationModel(sys, knowledge);
+const mark = (cell: string) => (cell === "both" ? "S R" : cell === "saves" ? "S" : cell === "reads" ? "R" : "");
+const cellWords = (cell: string) => (cell === "both" ? copy.data.both : cell === "saves" ? copy.data.saves : cell === "reads" ? copy.data.reads : copy.data.none);
+const verdict = applies("data", grid.facts);
+---
+{brief.kind === "parts" && <Diagram id="parts" titled={titled} facts={parts.facts} build={(limit) => partsModel(knowledge, limit).model} known={known} question={brief.question} caption={brief.caption} />}
+{brief.kind === "integration" && <Diagram id="integration" titled={titled} facts={integration.facts} build={(limit) => integrationModel(sys, knowledge, limit).model} known={known} question={brief.question} caption={brief.caption} />}
+{brief.kind === "layers" && <Diagram id="tiers" titled={titled} facts={tiers.facts} build={(limit) => tiersModel(sys, limit).model} known={known} question={brief.question} caption={brief.caption} />}
+{brief.kind === "states" && lives.map((life, i) => <Diagram id="states" title={copy.figures.statesTitle(life.entity.name)} question={i === 0 ? brief.question : diagrams.states.question} caption={i === 0 ? brief.caption : ""} facts={statesModel(life).facts} build={(limit) => statesModel(life, limit).model} known={known} />)}
+{brief.kind === "data" && (verdict.drawn
+    ? <figure class="a-figure" data-diagram="data">
+        <figcaption>{titled && <h3>{words.data.grid}</h3>}<p class="a-note">{brief.question}</p></figcaption>
+        {brief.caption !== "" && <p class="a-note">{brief.caption}</p>}
+        <div class="a-table-wrap wide"><table class="a-grid">
+            <caption class="visually-hidden">{words.data.grid}</caption>
+            <thead><tr><th scope="col">{copy.data.kind}</th>{grid.grid.capabilities.map((cap) => <th scope="col">{cap.name}</th>)}</tr></thead>
+            <tbody>{grid.grid.kinds.map((kind) => <tr><th scope="row">{kind.name}</th>{grid.grid.capabilities.map((cap) => { const cell = grid.grid.cell(kind.id, cap.id); return <td class={cell === "" ? "none" : "used"}><span aria-hidden="true">{mark(cell)}</span><span class="visually-hidden">{cellWords(cell)}</span></td>; })}</tr>)}</tbody>
+        </table></div>
+        <p class="a-note">{diagrams.data.legend}</p>
+    </figure>
+    : <NoDataState compact title={words.data.noneTitle} message={copy.notDrawn(verdict.reason)} />)}

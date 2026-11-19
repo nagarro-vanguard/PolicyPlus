@@ -1,0 +1,72 @@
+---
+// What stands behind a journey, each a fold with one line saying what is in it: what carries it, the rules it keeps and drops,
+// the actions dropped, the data it touches, the other ways considered, the evidence from the code and the stories that deliver
+// it. A fold with nothing in it is left out.
+import "../../styles/journey.css";
+import Details from "../ui/Details.astro";
+import EvidenceChip from "../ui/EvidenceChip.astro";
+import { journeyCopy } from "../../lib/journey-copy";
+import { stepIds } from "../../lib/journey-join";
+import type { Journey } from "../../lib/journey-join";
+import type { JourneyModel } from "../../lib/journeys";
+import type { Architecture } from "../../lib/target-types";
+import { plural } from "../../lib/text";
+import { titleOf } from "../../lib/derive";
+import { storyPath, statusOf } from "../../lib/plan";
+import type { Ledger, PlanStory } from "../../lib/plan";
+export interface Props {
+    journey: Journey;
+    model: JourneyModel;
+    architecture: Architecture | undefined;
+    stories: readonly PlanStory[];
+    ledger: Ledger | undefined;
+}
+const { journey, model, architecture, stories, ledger } = Astro.props;
+const way = journey.way;
+const words = journeyCopy.folds;
+const ids = new Set(stepIds(journey));
+// What carries it: the components that serve a step of the way, by domain.
+const serving = (architecture?.components ?? []).filter((component) => component.serves.some((id) => ids.has(id)));
+const domains = [...new Set(serving.map((component) => component.domain))];
+// The rules the way keeps and drops.
+const kept = [...new Set((way?.steps ?? []).flatMap((step) => (step.link._tag === "legacy" ? step.link.keeps : [])))];
+const droppedRules = (way?.drops ?? []).flatMap((drop) => drop.rules.map((id) => ({ id, reason: drop.reason })));
+const droppedActions = (way?.drops ?? []).flatMap((drop) => drop.actions.map((id) => ({ id, reason: drop.reason })));
+// The data it touches, by the kind of data the architecture's domains own; the old system's own name when it holds no owner.
+const touched = new Set((way?.steps ?? []).flatMap((step) => step.touches));
+const facts = (architecture?.domains ?? []).flatMap((domain) => domain.facts.filter((fact) => fact.from.some((id) => touched.has(id))).map((fact) => ({ name: fact.name, domain: domain.name, keys: fact.keys })));
+const known = new Set(facts.flatMap((fact) => (architecture?.domains ?? []).flatMap((domain) => domain.facts.filter((each) => each.name === fact.name).flatMap((each) => each.from))));
+const bare = [...touched].filter((id) => !known.has(id)).flatMap((id) => { const name = model.entityName(id); return name === undefined ? [] : [name]; });
+const rulesToday = journey.today.rules;
+const actionsToday = journey.today.actions;
+const here = (href: string) => `../${href}`;
+const rule = (id: string) => model.rule(id);
+const action = (id: string) => model.action(id);
+---
+{domains.length > 0 && <Details summary={`${words.carries}: ${domains.join(", ")}`}>
+    <ul class="jr-list">{domains.map((domain) => <li><b>{domain}</b> <span class="jr-sub">{serving.filter((component) => component.domain === domain).map((component) => component.name).join(", ")}</span></li>)}</ul>
+    <p class="jr-sub"><a href="../architecture.html#lens=modernized">The architecture, modernized</a></p>
+</Details>}
+{way !== undefined && (kept.length > 0 || droppedRules.length > 0) && <Details summary={`${words.rules}: ${kept.length} kept, ${droppedRules.length} dropped`}>
+    {kept.length > 0 && <ul class="jr-list">{kept.map((id) => { const hit = rule(id); return hit === undefined ? null : <li><a href={here(hit.href)}>{hit.text}</a> <EvidenceChip place={hit.place} /></li>; })}</ul>}
+    {droppedRules.length > 0 && <Fragment><h3 class="jr-h">Dropped</h3><ul class="jr-list">{droppedRules.map((drop) => { const hit = rule(drop.id); return <li>{hit === undefined ? "A rule of the old system" : <a href={here(hit.href)}>{hit.text}</a>}<span class="jr-sub"> {drop.reason}</span></li>; })}</ul></Fragment>}
+</Details>}
+{droppedActions.length > 0 && <Details summary={words.dropped(droppedActions.length)}>
+    <ul class="jr-list">{droppedActions.map((drop) => { const hit = action(drop.id); return <li>{hit === undefined ? "An entry point of the old system" : <a href={here(hit.href)}>{hit.text}</a>}<span class="jr-sub"> {drop.reason}</span></li>; })}</ul>
+</Details>}
+{(facts.length > 0 || bare.length > 0) && <Details summary={`${words.data}: ${[...new Set([...facts.map((fact) => fact.name), ...bare])].join(", ")}`}>
+    <ul class="jr-list" id="data">
+        {facts.map((fact) => <li><b>{fact.name}</b> <span class="jr-sub">Owned by {fact.domain}. Identified by {fact.keys.join(", ")}.</span></li>)}
+        {bare.map((name) => <li><b>{name}</b></li>)}
+    </ul>
+</Details>}
+{journey.others.length > 0 && <Details summary={`${words.others}: ${journey.others.length}`}>
+    <ul class="jr-list">{journey.others.map((other) => <li><b>{other.name}</b> <span class="jr-sub">{plural(other.steps.length, "step")}. {titleOf(other.idea)} Trade-off: {titleOf(other.tradeoff)}</span></li>)}</ul>
+</Details>}
+{(actionsToday.length > 0 || rulesToday.length > 0) && <Details summary={`${words.evidence}: ${plural(actionsToday.length, "action")}, ${plural(rulesToday.length, "rule")}`}>
+    {actionsToday.length > 0 && <ul class="jr-list">{actionsToday.map((id) => { const hit = action(id); return hit === undefined ? null : <li><a href={here(hit.href)}>{hit.text}</a> <EvidenceChip place={hit.place} /></li>; })}</ul>}
+    {rulesToday.length > 0 && <Fragment><h3 class="jr-h">Business rules</h3><ul class="jr-list">{rulesToday.map((id) => { const hit = rule(id); return hit === undefined ? null : <li><a href={here(hit.href)}>{hit.text}</a> <EvidenceChip place={hit.place} /></li>; })}</ul></Fragment>}
+</Details>}
+{stories.length > 0 && <Details summary={`${words.stories}: ${stories.length}`}>
+    <ul class="jr-list">{stories.map((story) => <li><a href={`../${storyPath(story)}.html`}>{story.title}</a> <span class="jr-sub">{statusOf(ledger, story.key)}</span></li>)}</ul>
+</Details>}

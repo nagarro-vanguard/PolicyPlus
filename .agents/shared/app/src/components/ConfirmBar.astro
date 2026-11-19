@@ -1,20 +1,27 @@
 ---
-import { confirmCommand, gates, type Gate } from "../lib/confirmation";
+// The decision bar: one line above the pages that are read to make a decision, saying where it stands and linking its review page.
+import "../styles/target.css";
+import GateState from "./target/GateState.astro";
+import { gates } from "../lib/confirmation";
+import type { Gate } from "../lib/confirmation";
+import { gateNames } from "../lib/slice";
+import { blockedBy } from "../lib/target-page";
 import type { TargetData } from "../lib/target-types";
-export interface Props { data: TargetData; show?: readonly Gate[]; }
-const { data, show = gates } = Astro.props;
-const names: Record<Gate, string> = { "as-is": "How tasks are done today", journeys: "How tasks should be done", architecture: "The architecture", components: "Its components" };
-const says = (gate: Gate) => {
-    const view = data.gates[gate];
-    return view.state === "confirmed" ? `confirmed ${view.date ?? ""}`
-        : view.state === "waiting" ? "waiting for you"
-        : view.state === "changed" ? "changed since confirmed"
-        : view.state === "blocked" ? "blocked: confirm the one before first"
-        : "not made yet";
-};
-const tone = (gate: Gate) => data.gates[gate].state === "confirmed" ? "correct" : data.gates[gate].state === "changed" ? "wrong" : "unused";
+export interface Props {
+    data: TargetData;
+    show: readonly Gate[];
+    /** The way up to the site's root from this page, such as `../`. */
+    root?: string;
+}
+const { data, show, root = "../" } = Astro.props;
+const names = gateNames;
 ---
-{show.map((gate) => <div class={`decision ${data.gates[gate].state === "confirmed" ? "done" : "todo"}`}>
-    <strong>{names[gate]}</strong>{" "}<span class={`badge ${tone(gate)}`}>{says(gate)}</span>
-    {(data.gates[gate].state === "waiting" || data.gates[gate].state === "changed") && <><p class="sub">Look through what is shown here, then confirm, or say what to change and it is made again.</p><pre class="prompt">{confirmCommand(gate, data.root)}</pre></>}
-</div>)}
+{show.map((gate) => {
+    const view = data.gates[gate];
+    const by = blockedBy(gate, data);
+    return <p class="tx-confirm">
+        <strong>{names[gate]}</strong>
+        <GateState state={view.state} date={view.date} by={by === undefined ? undefined : gates.indexOf(by) + 1} />
+        <a href={`${root}gate/${gate}.html`}>{view.state === "confirmed" ? "Review again" : "Review and confirm"}</a>
+    </p>;
+})}

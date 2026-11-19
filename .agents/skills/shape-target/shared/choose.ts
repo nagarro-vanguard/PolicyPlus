@@ -14,14 +14,14 @@ const stamp = () => new Date().toISOString();
 const refusal = (layout: Layout, gate: Gate): string | undefined => {
     const state = gateState(layout, gate);
     return state === "not made"
-        ? `nothing to confirm yet: finish the ${gate} stage first`
+        ? `nothing to confirm yet: ${gate === "as-is" ? "run `derive.ts current`" : `finish the ${gate} stage`} first`
         : state === "blocked"
           ? `${upstreamOf(gate)} is not confirmed (or changed since): confirm it first`
           : undefined;
 };
 
 /**
- * Confirms the as-is. A `wrong` mark blocks it, and marks of steps that no longer exist are dropped and named.
+ * Confirms the as-is, the analysis's journeys of today. A `wrong` mark blocks it, and marks of steps that no longer exist are dropped and named.
  * @param layout the run's folders
  * @param marks the person's marks
  * @param reason why they confirm
@@ -30,7 +30,10 @@ const refusal = (layout: Layout, gate: Gate): string | undefined => {
 export const chooseAsIs = (layout: Layout, marks: readonly Mark[], reason: string): Chosen => {
     const tasks = loadTasks(layout);
     if (tasks.length === 0)
-        return { ok: false, text: "there is no current journey to confirm: finish the as-is stage first" };
+        return {
+            ok: false,
+            text: "there is no current journey to confirm: run `derive.ts current` first, which reads the analysis's journeys",
+        };
     const refused = refusal(layout, "as-is");
     if (refused !== undefined) return { ok: false, text: refused };
     const valid = (mark: Mark) => {
@@ -48,7 +51,7 @@ export const chooseAsIs = (layout: Layout, marks: readonly Mark[], reason: strin
     if (wrong.length > 0)
         return {
             ok: false,
-            text: `${wrong.length} steps are marked wrong: run \`prepare as-is\` again with these as instructions, then confirm:\n${wrong.map((mark) => `- ${mark.of}: ${mark.note ?? ""}`).join("\n")}`,
+            text: `${wrong.length} steps are marked wrong: ask the analysis for its journeys again with these as instructions (a request for changes at this decision does it), then confirm:\n${wrong.map((mark) => `- ${mark.of}: ${mark.note ?? ""}`).join("\n")}`,
         };
     const choice: Choice = { decision: "as-is", picks: [], reason, confirmedAt: stamp(), marks: kept };
     writeJson(layout.choiceAsIs, choice);

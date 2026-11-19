@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, utimesSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { headline } from "../shared/derive/target-plan";
 import { deriveFacts, type Facts } from "../shared/derive/facts";
 import { evaluatePlan, recordFiles, runBuild, writeJson } from "../shared/derive/run";
 import { standin } from "../shared/derive/standin";
@@ -184,6 +185,19 @@ const setup = () => {
     return { root, layout, files, target, facts, foundation };
 };
 
+describe("a short headline", () => {
+    test("is the first clause, at most eight words, ending on a word that closes it", () => {
+        const long = headline(
+            "Renew a policy before it lapses, so that the customer keeps their cover and the account stays active",
+        );
+        expect(long).toBe("Renew a policy before it lapses");
+        const cut = headline("Look up the details of a policy that the customer holds and then update the");
+        expect(cut.split(" ").length).toBeLessThanOrEqual(8);
+        expect(cut).not.toMatch(/(\.\.\.|\b(a|an|the|of|that|and)$)/);
+        expect(headline("Short one.")).toBe("Short one");
+    });
+});
+
 describe.skipIf(!have)("a plan made from a confirmed target", () => {
     const run = setup();
     const evaluated = evaluatePlan(run.layout);
@@ -210,6 +224,11 @@ describe.skipIf(!have)("a plan made from a confirmed target", () => {
             expect(mine.at(-1)?.title.startsWith("Prove the journey")).toBe(true);
             expect(mine.at(-1)?.tags).not.toContain("modernize");
         }
+    });
+    test("no story title is clipped, and every title is unique", () => {
+        const titles = evaluated.plan.stories.map((story) => story.title);
+        expect(titles.filter((title) => title.endsWith("..."))).toEqual([]);
+        expect(new Set(titles).size).toBe(titles.length);
     });
     test("the order is strict: shared components first, every blocker earlier, journeys after what they call", () => {
         const sequence = new Map(evaluated.plan.stories.map((story) => [story.key, story.sequence]));

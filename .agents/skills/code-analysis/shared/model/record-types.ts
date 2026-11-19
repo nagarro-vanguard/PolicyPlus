@@ -20,6 +20,7 @@ import { BusinessRule } from "./schemas/business-rule";
 import { Review, reviewIdentity } from "./schemas/review";
 import { Technology } from "./schemas/technology";
 import { Fact } from "./schemas/fact";
+import { Journey, JourneyMerge } from "./schemas/journeys";
 
 type Decoded<S extends Schema.ConstraintDecoder<unknown>> = S["Type"];
 
@@ -318,6 +319,14 @@ const keptDeclarations = {
             (record: typeof Figure.Type) => record.records,
         ),
     ]),
+    Journey: unplaced(Journey, "account", byId, [
+        refTo("capability", ["Capability"], (record: typeof Journey.Type) => [record.capability]),
+        refTo("actions", ["Block"], (record: typeof Journey.Type) => record.actions),
+        refTo("rules", ["BusinessRule"], (record: typeof Journey.Type) => record.rules),
+        refTo("facts", ["Entity"], (record: typeof Journey.Type) => record.facts),
+        refTo("needs", ["ExternalSystem"], (record: typeof Journey.Type) => record.needs),
+    ]),
+    JourneyMerge: unplaced(JourneyMerge, "account", byId, []),
     Lifecycle: unplaced(
         Lifecycle,
         "finding",

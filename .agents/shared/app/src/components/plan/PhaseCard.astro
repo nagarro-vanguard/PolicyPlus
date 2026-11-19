@@ -1,0 +1,40 @@
+---
+// One phase as a card: its number, name, what it unlocks, its counts and state, and its epics as rows.
+import PlanState from "./PlanState.astro";
+import { epicPath } from "../../lib/plan";
+import { runsOf, stateWords } from "../../lib/plan-view";
+import type { PhaseCardModel } from "../../lib/plan-view";
+import { words } from "../../lib/plan-words";
+export interface Props {
+    phase: PhaseCardModel;
+}
+const { phase } = Astro.props;
+const shown = 4;
+const first = phase.epics.slice(0, shown);
+const rest = phase.epics.slice(shown);
+const row = (each: (typeof phase.epics)[number]) => ({ href: `${epicPath(each.epic)}.html`, title: each.epic.title, count: words.stories(each.stories) });
+---
+<li class="pl-card pl-phase" id={`phase-${phase.number}`} data-state={phase.state}>
+    <header class="pl-head">
+        <span class="pl-num" aria-hidden="true">{phase.number}</span>
+        <div class="pl-titles">
+            <h3><span class="visually-hidden">{words.phaseOf(phase.number)}: </span>{phase.name}</h3>
+            {phase.unlocks !== "" && <p class="pl-sub">{phase.unlocks}</p>}
+        </div>
+        <PlanState state={phase.state} label={stateWords[phase.state]} />
+    </header>
+    <p class="pl-meta">
+        <span>{words.epics(phase.epics.length)}</span>
+        <span>{words.stories(phase.stories)}</span>
+        {phase.needs.length > 0 && <span class="pl-chip">{words.needsPhases(runsOf(phase.needs), phase.needs.length > 1)}</span>}
+    </p>
+    <ul class="pl-rows">
+        {first.map(row).map((each) => <li><a href={each.href}><span class="pl-row-title">{each.title}</span><span class="pl-row-count">{each.count}</span></a></li>)}
+    </ul>
+    {rest.length > 0 && <details class="pl-more">
+        <summary>{words.more(rest.length)}</summary>
+        <ul class="pl-rows">
+            {rest.map(row).map((each) => <li><a href={each.href}><span class="pl-row-title">{each.title}</span><span class="pl-row-count">{each.count}</span></a></li>)}
+        </ul>
+    </details>}
+</li>

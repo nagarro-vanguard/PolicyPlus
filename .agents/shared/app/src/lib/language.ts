@@ -1,8 +1,17 @@
 // What a reader of the app must never meet: a record id (the analysis's own bookkeeping), a word of the analysis's own
 // machinery, or phrasing that reads as boilerplate. A record id is a hard failure; the rest is reported, because the words
-// of the analysed code and of the agents that read it are not ours to rewrite. See stages/publish/rules/narrative.md.
+// of the analysed code and of the agents that read it are not ours to rewrite. The voice detectors (voice.ts) add the
+// tells of machine-made text to the reported rules. See stages/publish/rules/narrative.md.
 
-export type Finding = { readonly rule: string; readonly hit: string; readonly where: string };
+import { voiceFindings, type Severity } from "./voice";
+
+export type Finding = {
+    readonly rule: string;
+    readonly hit: string;
+    readonly where: string;
+    /** Set by the voice detectors: "tell" or "probable tell". Older rules carry none. */
+    readonly severity?: Severity;
+};
 
 /** A record id: the kind of record, a hyphen and eight or more digits, as a whole word. */
 const recordId = /(?<![\p{L}\p{N}_-])[a-z]+(?:-[a-z]+)*-\d{8,}(?![\p{L}\p{N}_])/u;
@@ -27,12 +36,11 @@ const tells: readonly [string, RegExp][] = [
         "phrasing that reads as boilerplate",
         /\b(?:delve[sd]?|leverag(?:e|es|ed|ing)|seamless(?:ly)?|robust|comprehensive|crucial|pivotal|tapestry|testament|holistic|streamlin(?:e|es|ed|ing)|plethora|myriad)\b/i,
     ],
-    ["phrasing that reads as boilerplate", /\b(?:foster(?:s|ed|ing)?|elevat(?:e|es|ed|ing)|utiliz(?:e|es|ed|ing))\b/i],
+    ["phrasing that reads as boilerplate", /\b(?:foster(?:s|ed|ing)?|elevat(?:e|es|ing)|utiliz(?:e|es|ed|ing))\b/i],
     [
         "phrasing that reads as boilerplate",
         /(?:worth noting|important to note|in conclusion|furthermore|moreover|game-chang|cutting-edge|navigate the)/i,
     ],
-    ["a dash used as punctuation", /—/],
 ];
 
 /**
@@ -69,6 +77,10 @@ export const languageFindings = (text: string, where: string) => {
         if (hit !== undefined) {
             soft.push({ rule, hit, where });
         }
+    }
+    // A page's text has no sentence boundaries of its own, so only the detectors that read a phrase run on it.
+    for (const found of voiceFindings(text, { structure: false })) {
+        soft.push({ rule: found.rule, hit: found.hit, where, severity: found.severity });
     }
     return { hard, soft };
 };

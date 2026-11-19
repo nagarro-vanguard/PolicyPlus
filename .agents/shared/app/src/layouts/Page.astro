@@ -1,54 +1,99 @@
 ---
+import "../styles/app.css";
+import { ClientRouter } from "astro:transitions";
 import { copy } from "../lib/copy";
 import { rootOf } from "../lib/payloads";
 import { hasPlan } from "../lib/plan-data";
 import { hasTarget } from "../lib/target-data";
+import { nodeOf } from "../lib/node-of";
+import { navGroups, navOf } from "../lib/nav";
+import { sideModel } from "../lib/sidebar";
+import PageOpening from "../components/ui/PageOpening.astro";
+import Button from "../components/ui/Button.astro";
+import Icon from "../components/ui/Icon.astro";
+import Kbd from "../components/ui/Kbd.astro";
+import ThemeControl from "../components/ui/ThemeControl.astro";
 export interface Props {
     title: string;
     lead?: string;
+    /** The way down to the page; the page itself (the last step) is its heading and is left out of the small breadcrumb. */
     trail?: { text: string; href?: string }[];
     depth?: number;
+    /** A brief for a coding assistant, folded at the foot of the page. */
     brief?: string;
+    chips?: string[];
+    /** The index id of the page when its address does not say it. */
+    node?: string;
+    /** The page holds a table or a drawing that needs the wider column. */
+    wide?: boolean;
 }
-const { title, lead = "", trail = [], depth = 0, brief = "" } = Astro.props;
+const { title, lead = "", trail = [], depth = 0, brief = "", chips = [], node, wide = false } = Astro.props;
 const root = rootOf(depth);
-const plan = hasPlan();
-const target = hasTarget();
+const side = await sideModel();
+// Where the page sits, as a path below the site's root without its extension (`capability/orders`, `risks`, `index`).
+const here = Astro.url.pathname.replace(/^\/+|\/+$/g, "").replace(/\.html$/, "") || "index";
+const current = node ?? nodeOf(here);
+const place = navOf(here);
+const groups = navGroups({ risks: side.risks > 0, decisions: hasTarget(), plan: hasPlan() });
+const crumb = trail.slice(0, -1);
+const system = side.name === "" ? copy.site.home : side.name;
 ---
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
-    <link rel="stylesheet" href={`${root}page.css`} />
-    <link rel="stylesheet" href={`${root}ux.css`} />
+    <ClientRouter fallback="swap" />
+    <script is:inline>
+        try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+    </script>
 </head>
-<body data-root={root}>
-    <header class="top">
-        <a class="home" href={`${root}index.html`}>{copy.site.home}</a>
-        <nav class="sections" aria-label={copy.nav.label}>
-            <a href={`${root}index.html#does`}>{copy.nav.does}</a>
-            <a href={`${root}made-of.html`}>{copy.nav.madeOf}</a>
-            <a href={`${root}how-it-runs.html`}>{copy.nav.runs}</a>
-            <a href={`${root}connections.html`}>{copy.nav.connections}</a>
-            <a href={`${root}data.html`}>{copy.nav.data}</a>
-            <a href={`${root}risks.html`}>{copy.nav.risks}</a>
-            {target && <a href={`${root}target.html`}>{copy.nav.target}</a>}
-            {plan && <a href={`${root}plan.html`}>{copy.nav.plan}</a>}
+<body data-root={root} data-node={current} data-nav={place?.id} data-nav-exact={place?.exact ? "true" : "false"}>
+    <a class="skip" href="#main">Skip to the content</a>
+    <div class="app">
+        <nav id="sidebar" class="side" aria-label="Site" data-sidebar transition:persist="sidebar">
+            <a class="brand" href={`${root}index.html`} data-to="index.html" data-astro-prefetch="hover"><i aria-hidden="true"></i>{system}</a>
+            {groups.map((group) => <Fragment>
+                {group.title !== undefined && <h2 class="side-title">{group.title}</h2>}
+                {group.links.map((link) => <a href={`${root}${link.href}`} data-to={link.href} data-nav-id={link.id} data-astro-prefetch="hover" aria-current={place?.id === link.id ? (place.exact ? "page" : "true") : undefined}>{link.text}{link.dot === true && <span class="dot" role="img" aria-label="has risks"></span>}</a>)}
+            </Fragment>)}
         </nav>
-        <input id="search" type="search" placeholder={copy.site.search} aria-label={copy.site.search} />
-    </header>
-    <div id="results" hidden></div>
-    <main id="main">
-        {trail.length > 0 && <div class="trail">{trail.map((step, i) => <>{i > 0 && " › "}{step.href ? <a href={step.href}>{step.text}</a> : step.text}</>)}</div>}
-        <h1>{title}</h1>
-        {lead !== "" && <p class="lead">{lead}</p>}
-        {brief !== "" && <button class="copy" data-copy-text={brief} data-copied={copy.site.copied}><span data-label>{copy.site.copyBrief}</span></button>}
-        <slot />
-    </main>
+        <div class="main">
+            <header class="top">
+                <button type="button" class="menu-button" aria-controls="sidebar" aria-expanded="false" data-menu-toggle>
+                    <Icon name="menu" /><span class="visually-hidden">Menu</span>
+                </button>
+                <button type="button" class="palette-open" data-palette-open aria-keyshortcuts="/ Control+K Meta+K" aria-haspopup="dialog">
+                    <Icon name="search" /><span class="palette-open-text">Search or jump to</span><Kbd><span data-kbd>⌘K</span></Kbd>
+                </button>
+                <ThemeControl />
+            </header>
+            <main id="main" class="page" tabindex="-1" data-wide={wide ? "true" : undefined}>
+                <nav class="crumb" aria-label="Trail" data-crumb hidden={crumb.length === 0}>
+                    {crumb.map((step, at) => <Fragment>{at > 0 && <span aria-hidden="true"> / </span>}{step.href !== undefined ? <a href={step.href}>{step.text}</a> : <span>{step.text}</span>}</Fragment>)}
+                </nav>
+                <PageOpening title={title} summary={lead} chips={chips} />
+                <slot />
+                {brief !== "" && <details class="fold brief">
+                    <summary>For a coding assistant <span class="muted">copy a brief</span></summary>
+                    <div class="fold-body"><Button copy={brief} copied={copy.site.copied} icon="copy">{copy.site.copyBrief}</Button></div>
+                </details>}
+            </main>
+        </div>
+    </div>
+    <dialog id="palette" class="palette" aria-label="Search and commands" data-palette>
+        <form method="dialog" class="palette-form" role="search">
+            <label class="visually-hidden" for="palette-input">{copy.site.search}</label>
+            <input id="palette-input" type="text" role="combobox" aria-expanded="true" aria-controls="palette-list" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Jump to a journey, capability, screen or risk. Try screen:, rule:, risk:high" />
+            <ul id="palette-list" class="palette-list" role="listbox" aria-label="Results"></ul>
+            <p class="palette-help" id="palette-help">Arrow keys to move, Enter to open, Escape to close.</p>
+        </form>
+    </dialog>
     <script type="application/json" id="copy-strings" set:html={JSON.stringify({ copied: copy.site.copiedAnnounce, noMatch: copy.site.noMatch })}></script>
     <div id="announce" class="visually-hidden" aria-live="polite"></div>
-    <script is:inline src={`${root}site.js`}></script>
+    <script is:inline data-astro-rerun src={`${root}site.js`}></script>
+    <script>import "../scripts/shell.ts";</script>
 </body>
 </html>

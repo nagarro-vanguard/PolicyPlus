@@ -109,3 +109,14 @@ export const subjectWords: Record<string, string> = {
     capability: "Capability",
     entity: "Data",
 };
+
+/**
+ * The name the system goes by, read from the sentence that opens its briefing ("Policy Plus is a Windows desktop editor..."). The
+ * payloads carry no name of their own, so when the sentence does not say it, there is none.
+ * @param sys the system payload
+ * @returns the name, or empty when the briefing does not give one
+ */
+export const systemName = (sys: { readonly context: { readonly scope: string } }): string => {
+    const hit = /(?:^|\.\s+)((?:[A-Z][\w+&-]*)(?:\s+[A-Z][\w+&-]*){0,3})\s+(?:is|are)\s+(?:a|an|the)\s/.exec(sys.context.scope);
+    return hit?.[1] ?? "";
+};

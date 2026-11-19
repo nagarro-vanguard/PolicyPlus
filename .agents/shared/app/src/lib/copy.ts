@@ -28,7 +28,7 @@ export const copy = {
         offers: "What the product offers",
         built: "How the system is built",
         layersHeading: "The layers in plain words",
-        layersProject: "Project work, not part of the product",
+        layersProject: "Project work that is kept out of the product",
         gaps: "What we could not follow",
         gapsText: (calls: number, pieces: number) =>
             `${plural(calls, "call")} lead somewhere the code does not show, and ${plural(pieces, "piece of code", "pieces of code")} could not be tied to any capability. Each capability page lists its own gaps.`,
@@ -49,7 +49,7 @@ export const copy = {
         noOtherStarts: "Nothing in this capability is started by another system or on a schedule.",
         startedFrom: (name: string) => `Started from ${name}`,
         projectWork: (names: string[]) =>
-            `Project work, not part of the product, and left out here: ${names.join(", ")}.`,
+            `Left out here because it is project work: ${names.join(", ")}.`,
         layers: "Layers it uses",
         shared: "Code it shares with other capabilities",
         noShared: "None of this capability's work passes through code that we judged to be shared.",
@@ -123,7 +123,6 @@ export const copy = {
         data: "Data and how it changes",
         risks: "What can go wrong",
         plan: "Modernization plan",
-        target: "Target",
     },
     glance: {
         heading: "At a glance",
@@ -230,7 +229,7 @@ export const copy = {
         title: "What can go wrong",
         lead: "Each risk says what can happen, to whom and where, and rests on what the code shows. Open one to see every place it reaches.",
         none: "We found no risk that we could show from the code.",
-        count: (high: number, medium: number, low: number) => `${high} high, ${medium} medium and ${low} low.`,
+        count: (high: number, medium: number, low: number) => `By severity: high ${high}, medium ${medium}, low ${low}.`,
         severity: {
             high: "High: someone can read or change what they should not, data can be lost or corrupted, or a technology no longer gets security fixes.",
             medium: "Medium: harmful under conditions that can occur, such as a mistake, an unusual input or a failure.",
@@ -302,7 +301,7 @@ export const copy = {
         epicOutcome: "Outcome",
         epicOrder: (n: number, total: number) => `Epic ${n} of ${total}`,
         createFirst: "Create these epics first",
-        createFirstNone: "Nothing has to be created before this epic: it comes first.",
+        createFirstNone: "This epic comes first, so there is nothing to create before it.",
         createFirstPrevious: "The epic just before it in the order",
         epicStories: "Stories, in sequence",
         epicPrompt: "Prompt that creates this epic and its stories",
@@ -381,6 +380,6 @@ export const copy = {
     notDrawn: (reason: string) => `Not drawn: ${reason}.`,
     folded: (omitted: number, what: string) =>
         `${omitted} ${what} are folded into the “+${omitted} more” item; the text version names them.`,
-    leftOut: (names: string[]) => `Left out because it is project work, not part of the product: ${names.join(", ")}.`,
+    leftOut: (names: string[]) => `Left out because it is project work: ${names.join(", ")}.`,
     tooBig: "This figure is too large to read at the width of a page, even with items folded together. Read the text version, or pan and zoom.",
 } as const;

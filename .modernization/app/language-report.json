@@ -1,29 +1,257 @@
 {
-  "findings": 4,
+  "findings": 228,
   "byRule": {
-    "phrasing that reads as boilerplate": 3,
-    "a word of the analysis's own machinery": 1
+    "a contrast tacked on as , not Y": 180,
+    "a contrast built as X instead of Y": 9,
+    "a superlative or a sales word": 12,
+    "a closing clause that promises every rule is kept": 4,
+    "a claim that nothing is needed": 6,
+    "a list whose items open alike": 3,
+    "an adverb that vouches for itself": 3,
+    "an exclamation": 1,
+    "a contrast built as not X but Y": 7,
+    "a claim with no one behind it": 3
   },
   "examples": [
     {
-      "rule": "phrasing that reads as boilerplate",
-      "hit": "Home editions; assumes the service runs elevated when writing machine policy and that th",
-      "where": "plan/foundation.html"
+      "rule": "a contrast tacked on as , not Y",
+      "hit": "demand. A fold, open Opened by the page, not by a script. Dark A section with a rule A heading an",
+      "where": "kit.html",
+      "severity": "probable tell"
     },
     {
-      "rule": "a word of the analysis's own machinery",
-      "hit": "se 1: Platform Epic Set up knowledge in code Kind story technical Delivered with the shap",
-      "where": "plan/story/004-keep-behaviour-in-code-tests-and-short-agent-notes.html"
+      "rule": "a contrast tacked on as , not Y",
+      "hit": "ject work Run by the people who build it, not part of what people use. Build tooling Scripts a developer runs",
+      "where": "architecture.html",
+      "severity": "probable tell"
     },
     {
-      "rule": "phrasing that reads as boilerplate",
-      "hit": "nds on, a larger session domain, and an elevated screens process during installation. 11",
-      "where": "target/architecture.html"
+      "rule": "a contrast built as X instead of Y",
+      "hit": "ence store (PostgreSQL through Drizzle) instead of the program's own settings key. Generated version source file Data sto",
+      "where": "architecture.html",
+      "severity": "probable tell"
     },
     {
-      "rule": "phrasing that reads as boilerplate",
-      "hit": "em Where does it run? The program needs elevated Windows rights for its main work: it en",
-      "where": "how-it-runs.html"
+      "rule": "a superlative or a sales word",
+      "hit": "grade the same way. Cost of the choice: Simplest to build, run and test and the only cut",
+      "where": "architecture.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast tacked on as , not Y",
+      "hit": ", the person sees only which step failed, not the cause. Touches: Getting Microsoft policy defin",
+      "where": "risks.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast built as X instead of Y",
+      "hit": "derives the version as part of building instead of waiting for someone to run a separate stamping step. split Know which code this copy came f",
+      "where": "journey/tasks-building-and-versioning-policy-plus-stamp-program.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a closing clause that promises every rule is kept",
+      "hit": "hile keeping the committed record empty and every rule intact. Trade-off: Every build, even a throwaw",
+      "where": "journey/tasks-building-and-versioning-policy-plus-stamp-program.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a claim that nothing is needed",
+      "hit": "every time a copy is built or released, so nobody has to remember to stamp it. Removes a manual step that can be forg",
+      "where": "journey/tasks-building-and-versioning-policy-plus-stamp-program.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast built as X instead of Y",
+      "hit": "e person learns about an unclosed quote instead of silently getting wider results. Trade-off: Searching on every change d",
+      "where": "journey/tasks-finding-policies-find-policies-by-text.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a list whose items open alike",
+      "hit": "5 A text is a hit only when it contains every plain word as a whole word, every wildcard matching some word, and every quoted phrase as whole words together.",
+      "where": "journey/tasks-finding-policies-find-policies-by-text.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a superlative or a sales word",
+      "hit": "ed key The three outcomes for a key are genuinely different. 2 Forget a key or value comp",
+      "where": "journey/tasks-editing-policy-files-directly-remove-policy-file.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "an adverb that vouches for itself",
+      "hit": "be told to remove it or the file should simply forget it, then answers what that needs",
+      "where": "journey/tasks-editing-policy-files-directly-remove-policy-file.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a list whose items open alike",
+      "hit": "th a deletion entry, or on a key offers clear everything, clear first, or delete one value by name; nothing change",
+      "where": "journey/tasks-editing-policy-files-directly-remove-policy-file.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a superlative or a sales word",
+      "hit": ", saves it, and offers to apply it now. Smallest change that keeps every rule while maki",
+      "where": "journey/tasks-using-the-product-set-definition-language.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a closing clause that promises every rule is kept",
+      "hit": "ol a clear account of what was changed, while every rule stays. Trade-off: Inferring the area hides th",
+      "where": "journey/tasks-editing-policy-files-directly-open-raw-policy-editor.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "an exclamation",
+      "hit": "ue\"\"**delvals\"\"Delete all values\"\"Caution! PolicyPlus/Main.vb:783 In the section di",
+      "where": "journey/tasks-editing-policy-files-directly-open-raw-policy-editor.html",
+      "severity": "tell"
+    },
+    {
+      "rule": "a superlative or a sales word",
+      "hit": "state of the workspace once, and is the simplest to explain: what you left is what you g",
+      "where": "journey/tasks-using-the-product-open-the-workspace.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast tacked on as , not Y",
+      "hit": "Details are shown only for what has them, not as a dialog every time. 2 Confirm the identifier or give up. Ac",
+      "where": "journey/tasks-finding-policies-find-policy-by-id.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast built as X instead of Y",
+      "hit": "person is told when a policy is hidden instead of nothing happening. Trade-off: A mistyped identifier that",
+      "where": "journey/tasks-finding-policies-find-policy-by-id.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "an adverb that vouches for itself",
+      "hit": "person there in one step, telling them plainly when it cannot. One step from identifie",
+      "where": "journey/tasks-finding-policies-find-policy-by-id.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast tacked on as , not Y",
+      "hit": "ts; choosing another folder is an option, not a required step. The common case needs one request and o",
+      "where": "journey/tasks-getting-microsoft-policy-definitions-get-policy.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a closing clause that promises every rule is kept",
+      "hit": "a text can never be applied unchecked, while every reading, applying and failure rule stays. Trade-off: The person cannot apply a t",
+      "where": "journey/tasks-changing-policy-settings-import-policy-settings-from.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a claim that nothing is needed",
+      "hit": "aulted Apply what was read. Apply needs no separate check step before it. Why this way recommended The system re",
+      "where": "journey/tasks-changing-policy-settings-import-policy-settings-from.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a superlative or a sales word",
+      "hit": "rs to apply only when the text is good. Fewest steps and a text can never be applied u",
+      "where": "journey/tasks-changing-policy-settings-import-policy-settings-from.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast built as not X but Y",
+      "hit": "f files loaded earlier; when the parent is not found, the category has no parent but is still listed among the top-level categories. PolicyPlus/AdmxBundle.vb:128 A",
+      "where": "journey/tasks-getting-microsoft-policy-definitions-use-downloaded.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast built as X instead of Y",
+      "hit": "older and loading it become one request instead of a window followed by a load. split Be sure each template comes with",
+      "where": "journey/tasks-getting-microsoft-policy-definitions-use-downloaded.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a claim that nothing is needed",
+      "hit": "ents and the policies it relates to, so no step-by-step climbing is needed. Answers how a category relates to its",
+      "where": "journey/tasks-browsing-policy-definitions-view-category-details.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a superlative or a sales word",
+      "hit": "em loads it and says whether it worked. Smallest shape that meets the outcome: one reque",
+      "where": "journey/tasks-editing-policy-files-directly-import-policy-file.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a list whose items open alike",
+      "hit": "Smallest shape that meets the outcome: one request, one clear result, and nothing is written until the person save",
+      "where": "journey/tasks-editing-policy-files-directly-import-policy-file.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a superlative or a sales word",
+      "hit": "person only confirms, or picks another. Fewest steps for the common case, with the exp",
+      "where": "journey/tasks-choosing-and-saving-policy-sources-pick-user-profile.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a superlative or a sales word",
+      "hit": "and removed is confirmed before saving. Fewest steps, and the person sees every value",
+      "where": "journey/tasks-changing-policy-settings-set-policy-state.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a claim with no one behind it",
+      "hit": "e stored values named prefix1, prefix2, and so on, in order, until the first number that",
+      "where": "journey/tasks-changing-policy-settings-set-policy-state.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast tacked on as , not Y",
+      "hit": "can be used. Feedback comes while typing, not after pressing search. merged Get the policies that control th",
+      "where": "journey/tasks-finding-policies-find-policies-by-registry.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a closing clause that promises every rule is kept",
+      "hit": "ers the split and shows how it read it, while every matching and refusal rule is kept. Trade-off: The system may guess the sp",
+      "where": "journey/tasks-finding-policies-find-policies-by-registry.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a claim that nothing is needed",
+      "hit": "search runs from the entry itself, with no separate request step. Why this way recommended The person pa",
+      "where": "journey/tasks-finding-policies-find-policies-by-registry.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a superlative or a sales word",
+      "hit": "d which the value, checking as they go. Fewest steps and least to know: one entry, the",
+      "where": "journey/tasks-finding-policies-find-policies-by-registry.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast tacked on as , not Y",
+      "hit": "h is a property of one kind of interface, not of the task. Why this way recommended The list itsel",
+      "where": "journey/tasks-browsing-policy-definitions-review-loaded-template.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast built as X instead of Y",
+      "hit": "ributes. Inferred The system summarises instead of making the person open each file. 2 Look into one file. Shows only the p",
+      "where": "journey/tasks-browsing-policy-definitions-review-loaded-template.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a superlative or a sales word",
+      "hit": "ntributes. Trade-off: Two steps for the simplest question. Evidence from the code: 4 act",
+      "where": "journey/tasks-browsing-policy-definitions-review-loaded-template.html",
+      "severity": "probable tell"
+    },
+    {
+      "rule": "a contrast built as not X but Y",
+      "hit": "file may fail separately, so the result is a list rather than one message. What carries it: Policy Defini",
+      "where": "journey/tasks-browsing-policy-definitions-add-template-file.html",
+      "severity": "probable tell"
     }
   ]
 }

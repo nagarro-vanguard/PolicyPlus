@@ -10,7 +10,12 @@ import { SiteBuilder } from "../shared/source/site-builder";
 const LanguageReport = Schema.Struct({
     findings: Schema.Number,
     byRule: Schema.Record(Schema.String, Schema.Number),
-    examples: Schema.Array(Schema.Struct({ rule: Schema.String, hit: Schema.String, where: Schema.String })),
+    examples: Schema.Array(Schema.Struct({
+            rule: Schema.String,
+            hit: Schema.String,
+            where: Schema.String,
+            severity: Schema.optionalKey(Schema.String),
+        })),
 });
 
 /**

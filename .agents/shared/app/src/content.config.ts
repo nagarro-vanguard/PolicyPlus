@@ -7,6 +7,8 @@ import { knowledgeSchema } from "./generated/knowledge";
 import { ledgerSchema } from "./generated/ledger";
 import { planSchema } from "./generated/plan";
 import { systemSchema } from "./generated/system";
+import { todaySchema, waySchema } from "./lib/journey-schema";
+import { chosenSource, consideredSource, todaySource } from "./lib/journey-sources";
 
 const dir = process.env.ANALYSIS_PAYLOADS_DIR;
 if (dir === undefined || dir === "") {
@@ -50,4 +52,14 @@ const plan = {
     }),
 };
 
-export const collections = { ...analysis, ...plan };
+// The journeys: today's, read from the analysis (or, until a run has them, from the target's old file), and the ways proposed
+// for them. Each is validated against its schema, so a record that does not match fails the build; a folder without one of
+// the files simply has none.
+const targetDir = process.env.TARGET_DIR ?? "";
+const journeys = {
+    journeys: defineCollection({ loader: () => todaySource(dir, targetDir).records as { id: string }[], schema: todaySchema }),
+    ways: defineCollection({ loader: () => chosenSource(targetDir) as { id: string }[], schema: waySchema }),
+    considered: defineCollection({ loader: () => consideredSource(targetDir) as { id: string }[], schema: waySchema }),
+};
+
+export const collections = { ...analysis, ...plan, ...journeys };

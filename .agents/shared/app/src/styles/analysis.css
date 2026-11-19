@@ -1,0 +1,485 @@
+/*
+ * The analysis pages: action, layer, risks, risk, area, how it runs, made of, connections and data. Imported only by the
+ * components under src/components/analysis. Tokens only: no colour, no pixel font size, no font name is written here.
+ */
+
+/* The quiet line under a page's opening: a few facts, a middot between them. */
+.a-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs) var(--space-xxl);
+    margin: calc(-1 * var(--space-md)) 0 var(--space-xxl);
+    padding: 0;
+    list-style: none;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.a-meta li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    max-width: none;
+}
+
+.a-meta b {
+    color: var(--foreground);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* A section's note and its empty state sit close under its heading. */
+.a-note {
+    margin: 0 0 var(--space-lg);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+/* The layers an action passes through: chips in order with an arrow between. */
+.a-chain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+    margin: 0 0 var(--space-md);
+    padding: 0;
+    list-style: none;
+}
+
+.a-chain li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    max-width: none;
+}
+
+.a-chain li + li::before {
+    content: "\2192";
+    color: var(--muted-foreground);
+}
+
+.a-step {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: 0 var(--space-lg);
+    border: 1px solid var(--input);
+    border-radius: var(--radius-control);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+    text-decoration: none;
+}
+
+.a-step:hover {
+    background: var(--accent);
+}
+
+/* One list per concern: rows divided by a hair, never boxed. */
+.a-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--border);
+}
+
+.a-list > li {
+    max-width: none;
+    padding: var(--space-lg) var(--space-2xs);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+}
+
+.a-list > li[hidden] {
+    display: none;
+}
+
+.a-row-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0 var(--space-xl);
+}
+
+.a-row-line > .a-aside {
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    text-align: end;
+}
+
+.a-sub {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs) var(--space-lg);
+    margin-top: var(--space-xs);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.a-sub .badge {
+    margin: 0;
+}
+
+.a-text {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.a-list > li,
+.a-item-fold > .a-body {
+    overflow-wrap: anywhere;
+}
+
+/* A rule's one home: the row the links of the action pages point at. */
+.a-rule:target {
+    background: var(--accent);
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+}
+
+.a-rule {
+    scroll-margin-top: 4.5rem;
+}
+
+/* A group (a layer's rules on an action page, a group of answers) that opens to its rows. */
+.a-group {
+    border-bottom: 1px solid var(--border);
+}
+
+.a-group > summary {
+    padding: var(--space-lg) var(--space-2xs);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 600;
+}
+
+.a-group > summary .a-aside {
+    margin-inline-start: auto;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    font-weight: 400;
+}
+
+.a-group > .a-list {
+    border-top: 0;
+    margin: 0 0 var(--space-lg) var(--space-xxl);
+}
+
+.a-groups {
+    border-top: 1px solid var(--border);
+}
+
+.a-more {
+    margin: 0;
+}
+
+.a-more > summary {
+    padding: var(--space-lg) var(--space-2xs);
+    font-weight: 400;
+    color: var(--muted-foreground);
+}
+
+.a-more > .a-list {
+    border-top: 0;
+}
+
+/* The filter: a search box and chips, only above fifteen rows. */
+.a-filter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin: 0 0 var(--space-lg);
+}
+
+.a-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.a-filter-bar input {
+    flex: 1 1 14rem;
+    min-width: 8rem;
+    max-width: 24rem;
+}
+
+.a-filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.a-filter-group .chip {
+    margin: 0;
+    min-height: 1.75rem;
+}
+
+.a-filter-label {
+    margin-inline-end: var(--space-xs);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+}
+
+.a-filter-count {
+    margin-inline-start: var(--space-xs);
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+.a-status {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+/* Risks: severity, the sentence with its kind beneath it, and what it touches. */
+.a-risks > li {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr) 13rem;
+    align-items: baseline;
+    gap: var(--space-md) var(--space-xxl);
+}
+
+.a-risks-head {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr) 13rem;
+    gap: var(--space-xxl);
+    padding: var(--space-md) var(--space-2xs);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    font-weight: 600;
+}
+
+.a-risks .a-touch {
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.a-risks .a-kind {
+    display: block;
+    margin-top: var(--space-2xs);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+}
+
+.a-risks .badge {
+    margin: 0;
+}
+
+@media (max-width: 860px) {
+    .a-risks > li {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .a-risks-head {
+        display: none;
+    }
+}
+
+/* A drawing: at full size inside a frame that scrolls and drags, never shrunk below its text size. */
+.a-figure {
+    margin: 0 0 var(--space-5xl);
+}
+
+.a-figure > figcaption {
+    margin: 0 0 var(--space-md);
+}
+
+.a-figure h3 {
+    margin: 0 0 var(--space-2xs);
+}
+
+.a-pan {
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    background: var(--background);
+    cursor: grab;
+    overscroll-behavior: contain;
+}
+
+.a-pan[data-dragging="true"] {
+    cursor: grabbing;
+    user-select: none;
+}
+
+.a-pan svg.dg-svg {
+    display: block;
+    margin: var(--space-md);
+    width: var(--natural) !important;
+    max-width: none !important;
+    height: auto;
+    flex: none;
+}
+
+.a-figure details {
+    margin: var(--space-md) 0 0;
+}
+
+.a-figure ul {
+    margin: var(--space-xs) 0;
+    padding-inline-start: var(--space-5xl);
+}
+
+/* Tables: one for each concern, sticky first column, numbers to the right. */
+.a-table-wrap {
+    overflow-x: auto;
+    border-top: 1px solid var(--border);
+}
+
+.a-table-wrap table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.a-table-wrap th,
+.a-table-wrap td {
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--border);
+    text-align: start;
+    vertical-align: top;
+}
+
+.a-table-wrap thead th {
+    color: var(--muted-foreground);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.a-table-wrap tbody th {
+    font-weight: 600;
+    background: var(--background);
+}
+
+.a-table-wrap .num {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+
+.a-grid th[scope="col"] {
+    vertical-align: bottom;
+    max-width: 8rem;
+    white-space: normal;
+}
+
+.a-grid tbody th {
+    position: sticky;
+    inset-inline-start: 0;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.a-table-wrap table {
+    position: relative;
+}
+
+.a-grid td {
+    position: relative;
+    text-align: center;
+    min-width: 2.5rem;
+    font-weight: 700;
+}
+
+.a-grid td.used {
+    background: var(--accent);
+}
+
+/* An answer or an assumption: what it says, whom it is about, what it rests on. */
+.a-qa .a-question {
+    display: block;
+    margin-bottom: var(--space-3xs);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+}
+
+.a-item-fold {
+    border-bottom: 1px solid var(--border);
+}
+
+.a-item-fold > summary {
+    align-items: baseline;
+    padding: var(--space-lg) var(--space-2xs);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 400;
+}
+
+.a-item-fold > summary::before {
+    align-self: center;
+}
+
+.a-item-fold > .a-body {
+    padding: 0 var(--space-2xs) var(--space-lg) var(--space-xxl);
+    font-size: var(--text-body);
+}
+
+.a-item-fold dl {
+    margin: 0 0 var(--space-md);
+}
+
+.a-item-fold dt {
+    margin-top: var(--space-md);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    font-weight: 600;
+}
+
+.a-item-fold dd {
+    margin: var(--space-3xs) 0 0;
+}
+
+.a-evidence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+}
+
+.a-link-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    columns: 2 18rem;
+    column-gap: var(--space-5xl);
+}
+
+.a-link-list li {
+    max-width: none;
+    padding: var(--space-xs) 0;
+    break-inside: avoid;
+}
+
+.a-heading-sub {
+    margin: var(--space-xxl) 0 var(--space-md);
+    font-size: var(--text-body);
+    font-weight: 600;
+    color: var(--muted-foreground);
+}
+
+.a-scope {
+    margin: 0 0 var(--space-lg);
+    color: var(--foreground);
+}
+
+.a-also {
+    margin: var(--space-xs) 0 0;
+    color: var(--muted-foreground);
+}
+
+.a-also > summary {
+    font-weight: 400;
+    font-size: var(--text-meta);
+}

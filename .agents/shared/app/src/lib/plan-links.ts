@@ -60,3 +60,23 @@ export const analysisLinksOf = (actions: readonly string[], lookup: ActionLookup
         unresolved: actions.length - known.length,
     };
 };
+
+/**
+ * A lookup from a business rule's id to the place in the code that decides it, as `file:line`. A rule the analysis does
+ * not hold gives nothing.
+ * @param capabilities every capability payload
+ * @returns the lookup
+ */
+export const ruleLookup = (capabilities: readonly Capability[]) => {
+    const found = new Map<string, string>();
+    for (const cap of capabilities) {
+        for (const layer of cap.layers) {
+            for (const rule of layer.rules) {
+                if (!found.has(rule.id)) found.set(rule.id, `${rule.place.file}:${rule.place.firstLine}`);
+            }
+        }
+    }
+    return (id: string): string | undefined => found.get(id);
+};
+
+export type RuleLookup = ReturnType<typeof ruleLookup>;

@@ -1,0 +1,18 @@
+---
+// How a page opens: the heading (at most eight words), a one-line subheading, and chips when the page has them.
+export interface Props {
+    title: string;
+    summary?: string;
+    chips?: readonly string[];
+    /** 1 for a page's own opening; 2 when an opening is shown inside another page, as the kit does. */
+    level?: 1 | 2;
+}
+const { title, summary = "", chips = [], level = 1 } = Astro.props;
+const Heading = level === 1 ? "h1" : "h2";
+---
+<div class="opening">
+    <Heading>{title}</Heading>
+    {summary !== "" && <p class="lead">{summary}</p>}
+    {chips.length > 0 && <ul class="chips" aria-label="About this page">{chips.map((chip) => <li><span class="badge">{chip}</span></li>)}</ul>}
+    <slot />
+</div>

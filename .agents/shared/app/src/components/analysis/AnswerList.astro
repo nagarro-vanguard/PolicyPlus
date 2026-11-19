@@ -1,0 +1,37 @@
+---
+// What the analysis found, in the groups the page names. Every group is a fold with its count and closed, except the first when the
+// page holds fifteen answers or fewer. An answer is its sentence, whom it is about, and what it rests on (folded).
+import "../../styles/analysis.css";
+import NoDataState from "../ui/NoDataState.astro";
+import EvidenceChip from "../ui/EvidenceChip.astro";
+import { foldAbove } from "../../lib/analysis";
+import { words } from "../../lib/analysis-copy";
+import { compareText, plural, where } from "../../lib/text";
+import { subjectWords, wordFor } from "../../lib/words";
+import type { Knowledge } from "../../lib/types";
+export interface Props {
+    answers: Knowledge["answers"];
+    groups: readonly string[];
+    /** Name of the group to hold the answers of a page that has one group only; the fold is skipped. */
+    flat?: boolean;
+}
+const { answers, groups, flat = false } = Astro.props;
+const shown = groups.flatMap((group) => {
+    const here = answers.filter((answer) => answer.group === group);
+    return here.length === 0 ? [] : [{ group, here: here.toSorted((one, other) => compareText(one.question, other.question) || compareText(one.subject.name, other.subject.name)) }];
+});
+const total = shown.reduce((sum, group) => sum + group.here.length, 0);
+---
+{shown.length === 0 && <NoDataState compact title={words.runs.noneTitle} message={words.runs.none} />}
+{shown.length > 0 && <div class="a-groups">
+    {shown.map(({ group, here }, at) => <details class="a-group a-qa" open={flat || (total <= foldAbove ? true : at === 0)}>
+        <summary><span>{group}</span><span class="a-aside">{plural(here.length, "answer")}</span></summary>
+        <ul class="a-list">
+            {here.map((answer) => <li>
+                <span class="a-question">{answer.question}</span>
+                <span class="a-text">{answer.statement}</span>
+                <div class="a-sub"><span>{wordFor(subjectWords, answer.subject.kind)}: {answer.subject.name}</span>{answer.evidence.slice(0, 3).map((place) => <EvidenceChip place={where(place)} />)}{answer.evidence.length > 3 && <span>and {answer.evidence.length - 3} more places</span>}</div>
+            </li>)}
+        </ul>
+    </details>)}
+</div>}

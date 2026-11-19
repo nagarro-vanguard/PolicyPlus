@@ -1,0 +1,50 @@
+---
+// A layer's business rules, each sentence written here and nowhere else, in a list with no filter: the search finds a rule by
+// its words. A link from an action page (`?action=`) shows only the rules that action passes, with a line saying so and a
+// control to show all.
+import "../../styles/analysis.css";
+import Badge from "../ui/Badge.astro";
+import EvidenceChip from "../ui/EvidenceChip.astro";
+import NoDataState from "../ui/NoDataState.astro";
+import { ruleAnchors } from "../../lib/analysis";
+import { words } from "../../lib/analysis-copy";
+import { where } from "../../lib/text";
+import type { Rule } from "../../lib/types";
+export interface Props {
+    id: string;
+    rules: readonly Rule[];
+    usedBy: ReadonlyMap<string, number>;
+    /** The actions that pass some of these rules, with the ids of the rules each passes here. */
+    actions: readonly { slug: string; title: string; rules: readonly string[] }[];
+}
+const { id, rules, usedBy, actions } = Astro.props;
+const anchors = ruleAnchors(rules);
+const passedBy = new Map<string, number[]>();
+actions.forEach((action, at) => action.rules.forEach((rule) => passedBy.set(rule, [...(passedBy.get(rule) ?? []), at])));
+const scope = Object.fromEntries(actions.map((action, at) => [action.slug, { i: at, t: action.title, n: action.rules.length }]));
+---
+{rules.length === 0 && <NoDataState compact title={words.layer.noRulesTitle} message={words.layer.noRules} />}
+{rules.length > 0 && <Fragment>
+    <p class="a-status a-scope" data-a-scope={id} hidden>
+        <span data-a-scope-text></span>
+        <button type="button" class="link-button" data-a-scope-clear>{words.layer.showAll(rules.length)}</button>
+        <script type="application/json" data-a-scope-data set:html={JSON.stringify(scope)} />
+    </p>
+</Fragment>}
+{rules.length > 0 && <Fragment>
+    <ul class="a-list" data-a-list={id}>
+        {rules.map((rule) => {
+            const uses = usedBy.get(rule.id) ?? 0;
+            const bits = [rule.screens.length > 0 ? `${words.layer.screens} ${rule.screens.join(", ")}` : "", words.layer.usedBy(uses)].filter((bit) => bit !== "").join(" · ");
+            return <li class="a-rule" id={anchors.get(rule.id)} data-row data-a={(passedBy.get(rule.id) ?? []).join(",")}>
+                <span class="a-text">{rule.says}</span>
+                <div class="a-sub">
+                    {rule.gates && <Badge kind="changes-state" />}
+                    <EvidenceChip place={where(rule.place)} />
+                    <span>{bits}</span>
+                </div>
+            </li>;
+        })}
+    </ul>
+</Fragment>}
+<script>import "../../scripts/analysis-filter.ts";</script>

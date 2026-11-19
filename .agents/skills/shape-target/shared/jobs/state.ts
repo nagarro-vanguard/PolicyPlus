@@ -2,8 +2,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { Layout } from "../model/layout";
 
-export type Stage = "as-is" | "journeys" | "architecture" | "components";
-export type Kind = "tasks" | "merge" | "variants" | "shape" | "components";
+export type Stage = "journeys" | "architecture" | "components";
+export type Kind = "variants" | "shape" | "components";
 export type JobState = "toRun" | "toReview" | "toFix" | "decided" | "refused";
 export type Role = "writer" | "reviewer";
 

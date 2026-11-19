@@ -3,7 +3,8 @@ import { mkdirSync, mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { markDone, next } from "../cli/next";
-import { pathsOf } from "../cli/steps";
+import { existsSync } from "node:fs";
+import { hashFiles, pathsOf, steps } from "../cli/steps";
 
 const put = (path: string, text = "{}") => {
     mkdirSync(dirname(path), { recursive: true });
@@ -279,6 +280,75 @@ describe("delivery from the ledger", () => {
     });
 });
 
+describe("today's tasks are the analysis's journeys", () => {
+    const upToAsIs = () => {
+        const made = fresh();
+        const { root, request, paths } = made;
+        put(paths.requestJson, JSON.stringify({ sourceRoots: [root] }));
+        put(paths.analysisRequest, "x");
+        put(join(paths.payloads, "system.json"));
+        put(join(paths.bundles, "screen-a--b.md"), "x");
+        put(paths.legacy);
+        next(root, request);
+        for (const name of ["analysis-request", "analysis", "bundles", "derive-legacy"]) markDone(root, name);
+        return made;
+    };
+    test("`target-as-is` runs shape-target's `derive.ts current`, which reads the analysis's journeys, and invokes no agent", () => {
+        const { root, request } = upToAsIs();
+        const action = next(root, request);
+        expect(stepOf(action)).toBe("target-as-is");
+        expect(action.action).toBe("run");
+        expect(JSON.stringify(action)).toContain("derive.ts current");
+        expect(JSON.stringify(action)).toContain(root);
+    });
+    test("the analysis step asks for its journeys, which its Publish writes", () => {
+        const { root, request } = fresh();
+        const { paths } = fresh();
+        void paths;
+        put(pathsOf(root).requestJson, JSON.stringify({ sourceRoots: [root] }));
+        put(pathsOf(root).analysisRequest, "x");
+        const action = next(root, request);
+        expect(stepOf(action)).toBe("analysis");
+        expect(JSON.stringify(action)).toContain("journeys");
+    });
+    test("a run made before the analysis wrote journeys still holds: its target/current.json is the proposal and nothing runs again", () => {
+        const { root, request, paths } = upToAsIs();
+        put(paths.current);
+        markDone(root, "target-as-is");
+        // the analysis has no journeys.json: the step's inputs are what they were before the change
+        expect(existsSync(paths.journeysToday)).toBe(false);
+        put(paths.pages("as-is"));
+        expect(stepOf(next(root, request))).toBe("target-as-is-choose");
+    });
+    test("the analysis's journeys arriving make the step run again, even after work items exist, without stopping the run", () => {
+        const { root, request, paths } = upToAsIs();
+        put(paths.current);
+        markDone(root, "target-as-is");
+        put(paths.ledger, JSON.stringify({ items: { s0: { status: "created" } } }));
+        put(paths.journeysToday, JSON.stringify({ journeys: [] }));
+        // the steps built from the rest of the analysis do not run again for it
+        const action = next(root, request);
+        expect(action.action).toBe("run");
+        expect(stepOf(action)).toBe("target-as-is");
+        markDone(root, "target-as-is");
+        put(paths.pages("as-is"));
+        expect(stepOf(next(root, request))).toBe("target-as-is-choose");
+    });
+});
+
+describe("hashing the analysis's payloads", () => {
+    test("the journeys of today are not part of a folder's hash, but a file named on its own is", () => {
+        const { paths } = fresh();
+        put(join(paths.payloads, "system.json"), "one");
+        const folder = hashFiles([paths.payloads]);
+        const named = hashFiles([paths.payloads, paths.journeysToday]);
+        put(paths.journeysToday, "{}");
+        put(join(paths.payloads, "schema", "journeys.schema.json"), "{}");
+        expect(hashFiles([paths.payloads])).toBe(folder);
+        expect(hashFiles([paths.payloads, paths.journeysToday])).not.toBe(named);
+    });
+});
+
 describe("the target's decisions", () => {
     test("each decision waits for the person with the command that records it", () => {
         const { root, request, paths } = fresh();
@@ -300,7 +370,30 @@ describe("the target's decisions", () => {
         expect(action.action).toBe("wait");
         expect(stepOf(action)).toBe("target-as-is-choose");
         expect(JSON.stringify(action)).toContain("choose.ts");
-        expect(JSON.stringify(action)).toContain("redo");
+        expect(JSON.stringify(action)).toContain("--changes");
+    });
+    test("a request for changes makes the decision's step invoke apply-changes, then wait again once applied", () => {
+        const { root, request, paths } = fresh();
+        put(paths.requestJson, JSON.stringify({ sourceRoots: [root] }));
+        put(paths.analysisRequest, "x");
+        put(join(paths.payloads, "system.json"));
+        put(join(paths.bundles, "screen-a--b.md"), "x");
+        wholeTarget(paths);
+        next(root, request);
+        expect(next(root, request).action).not.toBe("wait");
+        const changes = join(paths.records, "changes-journeys.json");
+        rmSync(paths.choiceJourneys);
+        put(changes, JSON.stringify([{ gate: "journeys", text: "x", applied: false }]));
+        let action = next(root, request);
+        if (stepOf(action) === "target-journeys-pages") {
+            markDone(root, "target-journeys-pages");
+            action = next(root, request);
+        }
+        expect(stepOf(action)).toBe("target-journeys-choose");
+        expect(action.action).toBe("invoke");
+        expect(JSON.stringify(action)).toContain("apply-changes journeys");
+        put(changes, JSON.stringify([{ gate: "journeys", text: "x", applied: true }]));
+        expect(next(root, request).action).toBe("wait");
     });
     test("a decision is asked again when its proposal changed after it was confirmed, and no --done is needed once it holds", () => {
         const { root, request, paths } = fresh();
@@ -387,5 +480,15 @@ describe("the target's decisions", () => {
         const later = new Date(Date.now() + 60_000);
         utimesSync(paths.architecture, later, later);
         expect(JSON.stringify(next(root, request))).toContain("created items are locked");
+    });
+
+    test("the steps that build the app depend on what builds it, so a changed app reaches a rerun", () => {
+        const { paths } = fresh();
+        for (const path of paths.appSource) expect(existsSync(path)).toBe(true);
+        for (const name of ["app", "target-as-is-pages", "target-components-pages"]) {
+            const step = steps.find((each) => each.name === name);
+            expect(step?.inputs(paths)).toEqual(expect.arrayContaining([...paths.appSource]));
+        }
+        expect(hashFiles(paths.appSource)).toBe(hashFiles(paths.appSource));
     });
 });

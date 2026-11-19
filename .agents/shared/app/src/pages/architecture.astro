@@ -1,0 +1,44 @@
+---
+// The architecture on one page, three lenses: today's, the modernized one, and where today's behaviour lands. The matrix of
+// today's layers against the proposed domains comes first when a modernized architecture exists; the folds under it are opened one
+// at a time. Source and proposal use the same boxes and the same viewer.
+import Page from "../layouts/Page.astro";
+import NoDataState from "../components/ui/NoDataState.astro";
+import LensBar from "../components/architecture/LensBar.astro";
+import Landing from "../components/architecture/Landing.astro";
+import Today from "../components/architecture/Today.astro";
+import Modernized from "../components/architecture/Modernized.astro";
+import Folds from "../components/architecture/Folds.astro";
+import { capabilities, knowledge, system } from "../lib/payloads";
+import { knownIds } from "../lib/check";
+import { landing } from "../lib/architecture-data";
+import { copy } from "../lib/architecture-copy";
+import { defaultLens, lensesFor } from "../lib/architecture-page";
+import { hasTarget, targetData } from "../lib/target-data";
+
+const sys = await system();
+const caps = await capabilities();
+const know = await knowledge();
+const known = knownIds(sys, caps, know);
+const target = hasTarget() ? targetData() : undefined;
+const chosen = target?.architecture;
+const modernized = chosen !== undefined && (chosen.components ?? []).length > 0;
+const architecture = modernized ? chosen : undefined;
+const lenses = lensesFor(modernized);
+const current = defaultLens(modernized);
+const matrix = architecture === undefined ? undefined : landing(sys, caps, architecture);
+const alternatives = (target?.architectureVariants ?? []).filter((variant) => variant.name !== architecture?.name);
+---
+<Page wide title={copy.architecture.title} lead={modernized ? "" : copy.architecture.leadToday}>
+    <div class="arch" data-arch data-lenses={lenses.join(" ")} data-default={current} data-lens={current}>
+        {modernized && <LensBar lenses={lenses} current={current} />}
+        {matrix !== undefined && <div data-show="landing"><Landing matrix={matrix} /></div>}
+        <div class="arch-cols">
+            <div data-show="landing today"><Today sys={sys} /></div>
+            {architecture !== undefined && <div data-show="landing modernized"><Modernized architecture={architecture} /></div>}
+        </div>
+        {!modernized && <NoDataState compact title={copy.architecture.noModernizedTitle} message={copy.architecture.noModernized} />}
+        <Folds sys={sys} know={know} known={known} architecture={architecture} alternatives={alternatives} target={target} />
+    </div>
+    <script>import "../scripts/architecture.ts";</script>
+</Page>

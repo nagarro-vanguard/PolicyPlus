@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 import { isPlanPage, pathNamesRecordId, planFindings, visibleText } from "../src/lib/language";
 import {
     blockersOf,
@@ -19,6 +20,7 @@ import {
     subjectOf,
 } from "../src/lib/plan";
 import type { Ledger, Plan, PlanStory, Prompts } from "../src/lib/plan";
+import { epicNeeds, epicPhases, kindsOf, movedStatuses, phaseCards, phaseNeeds, runsOf, stateOfGroup, waitsFor } from "../src/lib/plan-view";
 import { planSearchEntries } from "../src/lib/plan-search";
 import { copy } from "../src/lib/copy";
 
@@ -231,5 +233,111 @@ describe.skipIf(planDir === undefined || !existsSync(`${payloads}/plan.json`) ||
         expect(parsed.success).toBe(true);
         const shown = read("plan.json") as Plan;
         expect(planProblems(shown, read("prompts.json") as Prompts)).toEqual([]);
+    });
+});
+
+describe("the plan home, derived", () => {
+    const ledger: Ledger = { items: { "story-000000000001": { status: "merged" }, "story-000000000002": { status: "built" } } };
+    test("a phase card counts its own stories and epics and its states come from the ledger", () => {
+        const cards = phaseCards(plan, undefined);
+        expect(cards.map((card) => [card.number, card.stories, card.epics.length, card.state])).toEqual([[1, 2, 1, "planned"], [2, 1, 1, "planned"]]);
+        const moved = phaseCards(plan, ledger);
+        expect(moved[0]?.state).toBe("progress");
+        expect(moved[1]?.state).toBe("planned");
+        expect(phaseCards(plan, { items: { "story-000000000001": { status: "merged" }, "story-000000000002": { status: "merged" } } })[0]?.state).toBe("done");
+        expect(phaseCards(plan, { items: { "story-000000000001": { status: "failed" } } })[0]?.state).toBe("blocked");
+    });
+    test("the rows of a card add up to the phase's stories, so no count is typed", () => {
+        for (const card of phaseCards(plan, undefined)) expect(card.epics.reduce((sum, each) => sum + each.stories, 0)).toBe(card.stories);
+    });
+    test("the order strip is proportional to the stories: shares add up to one and follow the counts", () => {
+        const cards = phaseCards(plan, undefined);
+        expect(cards.reduce((sum, card) => sum + card.share, 0)).toBeCloseTo(1, 10);
+        expect((cards[0]?.share ?? 0) / (cards[1]?.share ?? 1)).toBeCloseTo((cards[0]?.stories ?? 0) / (cards[1]?.stories ?? 1), 10);
+    });
+    test("a phase names the earlier phases its stories wait for, and a sentence a phase repeats is said once", () => {
+        expect(phaseNeeds(plan, 1)).toEqual([]);
+        expect(phaseNeeds(plan, 2)).toEqual([1]);
+        const same: Plan = { ...plan, phases: [{ number: 1, name: "A", why: "same", stories: ["story-000000000001"] }, { number: 2, name: "B", why: "same", stories: ["story-000000000002"] }] };
+        expect(phaseCards(same, undefined).map((card) => card.unlocks)).toEqual(["same", ""]);
+    });
+    test("runs of phase numbers are joined", () => {
+        expect(runsOf([2, 3, 4, 6])).toBe("2–4, 6");
+        expect(runsOf([3, 8])).toBe("3, 8");
+        expect(runsOf([5, 5])).toBe("5");
+        expect(runsOf([])).toBe("");
+    });
+    test("a group is blocked, done, in progress or planned", () => {
+        expect(stateOfGroup([])).toBe("planned");
+        expect(stateOfGroup(["planned", "created"])).toBe("progress");
+        expect(stateOfGroup(["merged", "merged"])).toBe("done");
+        expect(stateOfGroup(["merged", "blocked"])).toBe("blocked");
+    });
+    test("the legend names only statuses past planned that hold a story", () => {
+        expect(movedStatuses(progressOf(plan, undefined).byStatus)).toEqual([]);
+        expect(movedStatuses(progressOf(plan, ledger).byStatus)).toEqual([{ status: "merged", count: 1 }, { status: "built", count: 1 }]);
+    });
+});
+
+describe("the epic and story pages, derived", () => {
+    const chain: Plan = {
+        ...plan,
+        epics: [
+            { key: "a", kind: "technical", title: "A", outcome: "o", comesAfter: [], stories: [], sequence: 1 },
+            { key: "b", kind: "technical", title: "B", outcome: "o", comesAfter: ["a"], stories: [], sequence: 2 },
+            { key: "c", kind: "functional", title: "C", outcome: "o", comesAfter: ["a", "b"], stories: [], sequence: 3 },
+        ],
+    };
+    test("an epic names only the epics that its other predecessors do not already imply", () => {
+        expect(epicNeeds(chain, chain.epics[2] as never).map((each) => each.key)).toEqual(["b"]);
+        expect(epicNeeds(chain, chain.epics[0] as never)).toEqual([]);
+    });
+    test("an epic's phases are those of its stories", () => {
+        expect(epicPhases(plan, { key: "area:two" })).toEqual([2]);
+        expect(epicPhases(plan, { key: "area:one" })).toEqual([1]);
+    });
+    test("what a story waits for is one list: blockers and the stories whose rules it relies on, each once", () => {
+        const third = stories[0] as PlanStory;
+        expect(waitsFor(plan, third).map((each) => [each.story.sequence, each.rules])).toEqual([[1, 2], [2, 1]]);
+        expect(waitsFor(plan, stories[1] as PlanStory)).toEqual([]);
+    });
+    test("a story's kinds are its tags without the generic one", () => {
+        expect(kindsOf(story(1, { kind: "functional", tags: ["story", "functional", "modernize"] }))).toEqual(["functional", "modernize"]);
+        expect(kindsOf(story(1))).toEqual(["technical"]);
+    });
+});
+
+// The built pages, when a build is named: every link resolves, and a number or a title is said once.
+const buildDir = process.env.APP_BUILD_DIR ?? "";
+const built = buildDir !== "" && existsSync(join(buildDir, "plan.html"));
+const mainText = (html: string) => {
+    const body = /<main[\s\S]*?<\/main>/.exec(html)?.[0] ?? "";
+    return body.replaceAll(/<(script|style|pre)[\s\S]*?<\/\1>/g, " ").replaceAll(/<[^>]+>/g, " ").replaceAll(/&#39;|&#x27;/g, "'").replaceAll(/&amp;/g, "&").replaceAll(/\s+/g, " ");
+};
+describe.skipIf(!built)("the built plan pages", () => {
+    const pages = built ? ["plan.html", "plan/foundation.html", "plan/coverage.html", ...readdirSync(join(buildDir, "plan", "epic")).slice(0, 3).map((name) => `plan/epic/${name}`), ...readdirSync(join(buildDir, "plan", "story")).slice(0, 3).map((name) => `plan/story/${name}`)] : [];
+    test("every link of a plan page goes to a page that was built", () => {
+        for (const page of pages) {
+            const html = readFileSync(join(buildDir, page), "utf8");
+            for (const hit of html.matchAll(/<a [^>]*href="([^"#:]+)(?:#[^"]*)?"/g)) {
+                const target = resolve(dirname(join(buildDir, page)), hit[1] as string);
+                expect([page, hit[1], existsSync(target)]).toEqual([page, hit[1], true]);
+            }
+        }
+    });
+    test("the home says each total once: phases, epics, stories and the rules covered", () => {
+        const text = mainText(readFileSync(join(buildDir, "plan.html"), "utf8"));
+        for (const total of [/\b436 of 436\b/g, /\b147 stories\b/g, /\b45 epics\b/g, /\b10 phases\b/g]) expect([String(total), (text.match(total) ?? []).length]).toEqual([String(total), 1]);
+    });
+    test("a story page says its title once and an epic page its outcome once", () => {
+        const story = readdirSync(join(buildDir, "plan", "story"))[37] as string;
+        const html = readFileSync(join(buildDir, "plan", "story", story), "utf8");
+        const title = /<h1[^>]*>([^<]*)<\/h1>/.exec(html)?.[1]?.replaceAll("&#39;", "'") ?? "";
+        expect(title).not.toBe("");
+        expect(mainText(html).split(title).length - 1).toBe(1);
+        const epic = readdirSync(join(buildDir, "plan", "epic"))[7] as string;
+        const lead = /<p class="lead">([^<]*)<\/p>/.exec(readFileSync(join(buildDir, "plan", "epic", epic), "utf8"))?.[1]?.replaceAll("&#39;", "'") ?? "";
+        expect(lead).not.toBe("");
+        expect(mainText(readFileSync(join(buildDir, "plan", "epic", epic), "utf8")).split(lead).length - 1).toBe(1);
     });
 });

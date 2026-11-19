@@ -1,0 +1,534 @@
+/*
+ * The target pages: the four decisions, the tasks, the architectures, the system, the lineage and the data. Only the target
+ * components import this file. Every value is a token; colour is spent on state and provenance, through the Badge, and nowhere else.
+ */
+
+/* The shell caps every list item at the measure; a row fills the column it sits in. */
+.tx-rows,
+.tx-steps,
+.tx-plain,
+.tx-links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tx-rows > li,
+.tx-steps > li,
+.tx-plain > li,
+.tx-links > li {
+    max-width: none;
+}
+
+.tx-rows > li {
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.tx-rows > li:first-child {
+    padding-top: 0;
+}
+
+.tx-title {
+    margin: 0;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 700;
+}
+
+.tx-title a {
+    color: inherit;
+}
+
+.tx-sub,
+.tx-meta {
+    margin: var(--space-3xs) 0 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.tx-meta {
+    font-variant-numeric: tabular-nums;
+}
+
+.tx-n {
+    flex: none;
+    min-inline-size: 1.25rem;
+    color: var(--muted-foreground);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Decisions: four calm rows ---------- */
+.tx-gate {
+    display: grid;
+    grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+    gap: var(--space-xs) var(--space-lg);
+    align-items: start;
+}
+
+.tx-gate-end {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-xs);
+    font-size: var(--text-meta);
+}
+
+.tx-note {
+    margin: var(--space-lg) 0 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.tx-note.tx-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-lg);
+}
+
+/* The one line that says where a decision stands, above the pages that are read to make it. */
+.tx-confirm {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+    margin: 0 0 var(--space-md);
+    font-size: var(--text-meta);
+}
+
+.tx-confirm strong {
+    font-weight: 700;
+}
+
+/* ---------- Tasks ---------- */
+.tx-task {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-3xs) var(--space-lg);
+    align-items: baseline;
+}
+
+.tx-task .tx-meta {
+    margin: 0;
+    text-align: end;
+}
+
+.tx-groups > details.fold {
+    margin: 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.tx-groups > details.fold > summary {
+    padding: var(--space-xs) 0;
+}
+
+.tx-groups > details.fold > .fold-body {
+    padding: 0 0 var(--space-md) 0;
+}
+
+.tx-groups .tx-rows > li {
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.tx-groups .tx-rows > li:last-child {
+    border-bottom: 0;
+}
+
+.tx-count {
+    margin-inline-start: auto;
+    color: var(--muted-foreground);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Steps: a compact numbered list with a certainty chip ---------- */
+.tx-steps > li {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+    gap: var(--space-3xs) var(--space-md);
+    align-items: start;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.tx-steps > li:last-child {
+    border-bottom: 0;
+}
+
+.tx-steps .tx-sub,
+.tx-steps .tx-meta {
+    grid-column: 2;
+}
+
+.tx-steps .tx-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--space-xs);
+}
+
+.tx-step-text {
+    margin: 0;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 600;
+}
+
+.tx-tag {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 1.5rem;
+    padding: 0 var(--space-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: var(--text-chip);
+    line-height: var(--text-chip--line-height);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ---------- A way, an architecture: a name, a sentence, what it costs, a score ---------- */
+.tx-way-name {
+    font-weight: 700;
+}
+
+.tx-ways > details.fold > summary {
+    flex-wrap: wrap;
+}
+
+.tx-way h3 {
+    margin: 0;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 700;
+}
+
+.tx-way-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.tx-way-head .badge {
+    flex: none;
+}
+
+.tx-facts {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--space-3xs) var(--space-lg);
+    margin: var(--space-md) 0 0;
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.tx-facts dt {
+    color: var(--muted-foreground);
+}
+
+.tx-facts dd {
+    margin: 0;
+}
+
+.tx-pick {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.tx-pick select {
+    max-inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.tx-pick label {
+    font-size: var(--text-meta);
+    font-weight: 700;
+}
+
+/* ---------- Plain lists inside folds ---------- */
+.tx-plain > li {
+    padding: var(--space-xs) 0;
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.tx-plain strong {
+    font-weight: 700;
+}
+
+.tx-plain .tx-sub {
+    margin: 0;
+}
+
+/* ---------- Lineage: the number is a counter, so a row stays a few elements ---------- */
+.tx-line-list {
+    counter-reset: step;
+}
+
+.tx-line {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: var(--space-3xs) var(--space-md);
+    counter-increment: step;
+}
+
+.tx-line::before {
+    content: counter(step) ".";
+    grid-row: 1;
+    color: var(--muted-foreground);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.tx-line > * {
+    grid-column: 2;
+}
+
+.tx-line .tx-title {
+    font-weight: 600;
+}
+
+.tx-line details.fold {
+    margin: var(--space-3xs) 0 0;
+}
+
+.tx-line details.fold > summary {
+    font-weight: 400;
+    color: var(--muted-foreground);
+}
+
+.tx-line details.fold > :not(summary) {
+    margin-inline-start: var(--space-xxl);
+}
+
+.tx-line h4 {
+    margin: var(--space-md) 0 var(--space-3xs);
+    font-size: var(--text-meta);
+    color: var(--muted-foreground);
+}
+
+.tx-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+    margin: 0 0 var(--space-lg);
+    font-size: var(--text-meta);
+}
+
+.tx-filter label {
+    font-weight: 700;
+}
+
+.tx-filter select {
+    max-inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.tx-task-head {
+    margin: var(--space-5xl) 0 var(--space-md);
+    padding-bottom: var(--space-s);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 700;
+}
+
+.tx-lineage > section:first-of-type .tx-task-head {
+    margin-top: 0;
+}
+
+/* ---------- Data ---------- */
+.tx-erd {
+    overflow-x: auto;
+    max-inline-size: 100%;
+    padding: var(--space-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-surface);
+    background: var(--diagram-group);
+}
+
+.tx-erd svg.tg {
+    max-width: none;
+    height: auto;
+    margin: 0;
+}
+
+/* ---------- The viewer's frame ---------- */
+.tx-viewer {
+    margin-top: var(--space-md);
+}
+
+.tx-viewer-wait {
+    margin: 0;
+    padding: var(--space-xxl);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-surface);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+}
+
+/* ---------- The decision page ---------- */
+.tx-review > section {
+    margin-top: var(--space-5xl);
+}
+
+.tx-review > section:first-child {
+    margin-top: var(--space-xxl);
+}
+
+.tx-bullets {
+    margin: 0;
+    padding-inline-start: var(--space-5xl);
+}
+
+.tx-bullets li {
+    max-width: none;
+    margin: var(--space-xs) 0;
+}
+
+.tx-answer {
+    margin: 0;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+}
+
+.tx-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+}
+
+.tx-form label {
+    font-size: var(--text-meta);
+    font-weight: 700;
+}
+
+.tx-form input,
+.tx-form textarea,
+.tx-form pre {
+    inline-size: 100%;
+    box-sizing: border-box;
+}
+
+.tx-form textarea {
+    min-block-size: 5rem;
+    resize: vertical;
+}
+
+.tx-form pre {
+    margin: 0;
+    padding: var(--space-md) var(--space-lg);
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    background: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-chip);
+    line-height: var(--text-chip--line-height);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.tx-evidence {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tx-evidence > li {
+    max-width: none;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-lg);
+    padding: var(--space-xs) 0;
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.tx-evidence .tx-meta {
+    margin: 0;
+    flex: none;
+    text-align: end;
+}
+
+@media (max-width: 600px) {
+    .tx-gate {
+        grid-template-columns: 1.25rem minmax(0, 1fr);
+    }
+
+    .tx-gate-end {
+        grid-column: 2;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .tx-task {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tx-task .tx-meta {
+        text-align: start;
+    }
+
+    .tx-steps > li {
+        grid-template-columns: 1.5rem minmax(0, 1fr);
+    }
+
+    .tx-steps .tx-chips {
+        grid-column: 2;
+        justify-content: flex-start;
+    }
+}
+
+/* The folded list of what the system does keeps the numbers of the steps it describes. */
+.tx-subs {
+    padding-inline-start: var(--space-5xl);
+    list-style: decimal;
+}
+
+/* The viewer's switch between map, matrix and table: one control, the pressed one filled. */
+.viewer .segmented {
+    display: inline-flex;
+    border: 1px solid var(--input);
+    border-radius: var(--radius-control);
+    overflow: hidden;
+}
+
+.viewer .seg {
+    block-size: calc(var(--control-h) - 2px);
+    padding: 0 var(--space-lg);
+    border: 0;
+    border-inline-end: 1px solid var(--input);
+    background: var(--background);
+    color: var(--foreground);
+    font: inherit;
+    font-size: var(--text-meta);
+    cursor: pointer;
+}
+
+.viewer .seg:last-child {
+    border-inline-end: 0;
+}
+
+.viewer .seg[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-foreground);
+    font-weight: 700;
+}
+
+.viewer .seg:hover {
+    background: var(--secondary);
+}

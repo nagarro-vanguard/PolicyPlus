@@ -1,14 +1,43 @@
-// The pages' own script: search, copy, download a figure, and the capability filter of a screen. No framework.
+// The pages' own script: the theme control, copy to the clipboard and download of a figure. The shell (sidebar, palette) is
+// src/scripts/shell.ts. No framework. Pages are swapped by the view transition router, so this file runs again for each page
+// shown (`data-astro-rerun`): what belongs to the page is set up each time, what belongs to the document only once.
 (function () {
-  var root = document.body.dataset.root || "./";
-  var announce = document.getElementById("announce");
-  var strings = JSON.parse(document.getElementById("copy-strings").textContent);
-  function say(text) { if (announce) announce.textContent = text; }
+  function say(text) { var box = document.getElementById("announce"); if (box) box.textContent = text; }
+  function strings() { var node = document.getElementById("copy-strings"); return node ? JSON.parse(node.textContent) : {}; }
+  // The theme control: Auto follows the system; Light and Dark are kept in localStorage when the browser allows it.
+  var choices = document.querySelectorAll("[data-theme-choice]");
+  function showTheme(choice) {
+    if (choice === "light" || choice === "dark") document.documentElement.dataset.theme = choice; else delete document.documentElement.dataset.theme;
+    choices.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.themeChoice === choice)); });
+  }
+  var stored = "auto";
+  try { var saved = localStorage.getItem("theme"); if (saved === "light" || saved === "dark") stored = saved; } catch (e) {}
+  showTheme(stored);
+  choices.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var choice = b.dataset.themeChoice;
+      showTheme(choice);
+      try { if (choice === "auto") localStorage.removeItem("theme"); else localStorage.setItem("theme", choice); } catch (e) {}
+    });
+  });
+  document.querySelectorAll("[data-needs-js]").forEach(function (el) { el.hidden = false; });
+  if (window.__siteBound) return;
+  window.__siteBound = true;
+  // A page swapped in keeps the theme the reader chose. Its stylesheets and scripts are named relative to that page, but they are
+  // inserted while the address is still the old page's, so each is made absolute against the page that is coming first.
+  document.addEventListener("astro:before-swap", function (event) {
+    event.newDocument.querySelectorAll("link[href], script[src]").forEach(function (el) {
+      var name = el.hasAttribute("href") ? "href" : "src";
+      try { el.setAttribute(name, new URL(el.getAttribute(name), event.to).href); } catch (e) {}
+    });
+    var chosen = document.documentElement.dataset.theme;
+    if (chosen) event.newDocument.documentElement.dataset.theme = chosen; else delete event.newDocument.documentElement.dataset.theme;
+  });
   document.addEventListener("click", function (event) {
     var copy = event.target.closest("[data-copy-text]");
     if (copy) {
       var text = copy.dataset.copyText;
-      var done = function () { var label = copy.querySelector("[data-label]"); var was = label.textContent; label.textContent = copy.dataset.copied || "Copied"; say(strings.copied); setTimeout(function () { label.textContent = was; }, 1800); };
+      var done = function () { var label = copy.querySelector("[data-label]"); var was = label.textContent; label.textContent = copy.dataset.copied || "Copied"; say(strings().copied); setTimeout(function () { label.textContent = was; }, 1800); };
       if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done, done); } else { var area = document.createElement("textarea"); area.value = text; document.body.append(area); area.select(); document.execCommand("copy"); area.remove(); done(); }
       return;
     }
@@ -24,44 +53,5 @@
       link.click();
       URL.revokeObjectURL(link.href);
     }
-  });
-  var input = document.getElementById("search"), box = document.getElementById("results"), index;
-  function load() { return index ? Promise.resolve(index) : fetch(root + "search-index.json").then(function (r) { return r.json(); }).then(function (data) { index = data; return data; }); }
-  function link(text, href) { var a = document.createElement("a"); a.textContent = text; a.href = root + href; return a; }
-  if (input && box) input.addEventListener("input", function () {
-    var words = input.value.toLowerCase().split(/\s+/).filter(Boolean);
-    box.replaceChildren();
-    if (!words.length) { box.hidden = true; return; }
-    load().then(function (entries) {
-      var found = entries.filter(function (e) { return words.every(function (w) { return e.t.toLowerCase().indexOf(w) !== -1; }); });
-      box.hidden = false;
-      if (!found.length) { var none = document.createElement("div"); none.className = "none"; none.textContent = strings.noMatch; box.append(none); return; }
-      ["Capabilities", "Screens", "Risks", "Actions", "Business rules", "Plan", "Epics", "Stories"].forEach(function (kind) {
-        var of = found.filter(function (e) { return e.k === kind; });
-        if (!of.length) return;
-        var h = document.createElement("h4"); h.textContent = kind + " (" + of.length + ")"; box.append(h);
-        of.slice(0, 7).forEach(function (e) { var d = document.createElement("div"); d.append(link(e.l, e.h)); box.append(d); });
-        if (of.length > 7) { var more = document.createElement("div"); more.className = "none"; more.textContent = "…and " + (of.length - 7) + " more; narrow the search"; box.append(more); }
-      });
-    });
-  });
-  document.querySelectorAll("[data-needs-js]").forEach(function (el) { el.hidden = false; });
-  var chips = document.querySelectorAll("[data-capability-chip]");
-  function refilter() {
-    var on = new Set(); chips.forEach(function (c) { if (c.classList.contains("on")) on.add(c.dataset.capabilityChip); });
-    document.querySelectorAll("[data-capability]").forEach(function (el) { el.hidden = !on.has(el.dataset.capability); });
-    document.querySelectorAll("[data-by-capability]").forEach(function (row) {
-      var parts = JSON.parse(row.dataset.byCapability), actions = 0, rules = 0;
-      Object.keys(parts).forEach(function (c) { if (on.has(c)) { actions += parts[c][0]; rules += parts[c][1]; } });
-      row.querySelector("[data-actions]").textContent = actions; var cell = row.querySelector("[data-rules]"); cell.textContent = rules === 0 ? (cell.dataset.passes || "passes through") : rules;
-      row.classList.toggle("dim", rules === 0); row.hidden = actions === 0 && rules === 0;
-    });
-  }
-  chips.forEach(function (chip) {
-    chip.addEventListener("click", function () {
-      var on = document.querySelectorAll("[data-capability-chip].on").length;
-      if (chip.classList.contains("on") && on === 1) return;
-      chip.classList.toggle("on"); chip.setAttribute("aria-pressed", String(chip.classList.contains("on"))); refilter();
-    });
   });
 })();

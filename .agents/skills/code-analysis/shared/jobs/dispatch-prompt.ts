@@ -22,6 +22,7 @@ const agentBriefs: Readonly<Record<string, string>> = {
     "inventory/profile-tech-stack": "stages/inventory/agents",
     "map/map-blocks-and-links": "stages/map/agents",
     "publish/brief-the-system": "stages/publish/agents",
+    "publish/describe-journeys": "stages/publish/agents",
     "registry/assign-units": "stages/capabilities-and-entities/agents",
     "registry/propose-entries": "shared/agents",
     "review/review-agent-findings": "shared/agents",

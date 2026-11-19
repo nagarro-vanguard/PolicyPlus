@@ -98,15 +98,22 @@ export const integration = (architecture: Architecture, legacy: Legacy | undefin
     edges: architecture.integrations.map((each) => ({ from: `adapter:${each.need}`, to: `outside:${each.need}`, label: "reads or writes" })),
 });
 
-/** ERD of a journey: the facts its steps touch, marked with the domain that owns them; facts of other domains are grey. */
-export const erd = (architecture: Architecture, journey: Journey): Diagram => {
+/** The kinds of data a journey touches, each with the domain that owns it, and the kinds of other domains they relate to. */
+export const touchedFacts = (architecture: Architecture, journey: Journey) => {
     const touched = new Set(journey.steps.flatMap((step) => step.touches));
     const mine = architecture.domains.flatMap((domain) => domain.facts.filter((fact) => fact.from.some((id) => touched.has(id))).map((fact) => ({ fact, domain: domain.name })));
+    const names = new Set(mine.map((each) => each.fact.name));
+    const related = architecture.domains.flatMap((domain) => domain.facts.filter((fact) => !names.has(fact.name) && mine.some((each) => each.fact.relates.some((relation) => relation.to === fact.name))).map((fact) => ({ fact, domain: domain.name })));
+    return { mine, related };
+};
+
+/** ERD of a journey: the facts its steps touch, marked with the domain that owns them; facts of other domains are grey. */
+export const erd = (architecture: Architecture, journey: Journey): Diagram => {
+    const { mine, related } = touchedFacts(architecture, journey);
     const count = new Map<string, number>();
     for (const each of mine) count.set(each.domain, (count.get(each.domain) ?? 0) + 1);
     const lead = [...count.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
     const names = new Set(mine.map((each) => each.fact.name));
-    const related = architecture.domains.flatMap((domain) => domain.facts.filter((fact) => !names.has(fact.name) && mine.some((each) => each.fact.relates.some((relation) => relation.to === fact.name))).map((fact) => ({ fact, domain: domain.name })));
     return {
         title: `Data of ${journey.name}`,
         direction: "RIGHT",

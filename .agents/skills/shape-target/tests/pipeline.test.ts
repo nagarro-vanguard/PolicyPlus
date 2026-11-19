@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFile
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { chooseArchitecture, chooseAsIs, chooseComponents, chooseJourneys } from "../shared/choose";
+import { deriveCurrent } from "../shared/derive/current";
 import { gateState } from "../shared/gates";
 import { finalGaps } from "../shared/derive/checks";
 import { abandon, accept, done, next, redo } from "../shared/jobs/driver";
@@ -19,8 +20,7 @@ const write = (path: string, value: unknown) => {
 };
 const root = mkdtempSync(join(tmpdir(), "shape-target-"));
 const layout = layoutOf(root);
-const first = build("");
-const f = build("tasks-browsing.");
+const f = build("browsing.");
 
 type Dispatch = { action: "dispatch"; agents: { job: string; role: string; prompt: string }[] };
 const step = () => next(layout, "/skill", "run", 4) as unknown as Dispatch;
@@ -45,25 +45,24 @@ const play = (outputs: Record<string, unknown>, review = true): { action: string
 };
 
 describe("the whole flow with scripted agents", () => {
-    test("as-is: tasks, merge, finish, confirm", () => {
+    test("as-is: the analysis's journeys are read, then confirmed", () => {
         write(layout.requestJson, { stack, notes: [] });
         write(layout.legacy, legacy);
-        expect(prepare(layout, "as-is")).toBe("2 jobs prepared for as-is");
-        const outcome = play({ "tasks-browsing": { tasks: first.tasks }, merge: { merges: [] } });
-        expect(outcome.action).toBe("done");
-        const result = finish(layout, "as-is");
+        write(join(layout.payloads, "journeys.json"), { journeys: f.tasks });
+        const result = deriveCurrent(layout);
         expect(result.ok).toBe(true);
+        expect(result.text).toContain("2 tasks");
         const current = JSON.parse(readFileSync(layout.current, "utf8")) as { tasks: { id: string }[] };
-        expect(current.tasks.map((task) => task.id)).toEqual(["tasks-browsing.t1", "tasks-browsing.t2"]);
+        expect(current.tasks.map((task) => task.id)).toEqual(["browsing.t1", "browsing.t2"]);
         expect(existsSync(layout.essence)).toBe(true);
-        const wrong = chooseAsIs(layout, [{ of: "tasks-browsing.t1#3", verdict: "wrong", note: "not a step" }], "ok");
+        const wrong = chooseAsIs(layout, [{ of: "browsing.t1#3", verdict: "wrong", note: "not a step" }], "ok");
         expect(wrong.ok).toBe(false);
         expect(existsSync(layout.choiceAsIs)).toBe(false);
         const right = chooseAsIs(
             layout,
             [
-                { of: "tasks-browsing.t1#1", verdict: "hurts", note: "slow" },
-                { of: "tasks-browsing.gone#9", verdict: "unused" },
+                { of: "browsing.t1#1", verdict: "hurts", note: "slow" },
+                { of: "browsing.gone#9", verdict: "unused" },
             ],
             "reads right",
         );
@@ -80,7 +79,7 @@ describe("the whole flow with scripted agents", () => {
         expect(JSON.stringify(essence)).not.toContain("DetailPolicy");
         play({ "variants-1": { journeys: f.variants } });
         expect(finish(layout, "journeys").ok).toBe(true);
-        expect(chooseJourneys(layout, { "tasks-browsing.t1": "nothing" }, true, "x").ok).toBe(false);
+        expect(chooseJourneys(layout, { "browsing.t1": "nothing" }, true, "x").ok).toBe(false);
         expect(chooseJourneys(layout, {}, true, "take the recommendations").ok).toBe(true);
     });
 

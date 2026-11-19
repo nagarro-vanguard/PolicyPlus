@@ -1,61 +1,63 @@
 ---
 import Page from "../layouts/Page.astro";
-import Rows from "./Rows.astro";
-import { copy } from "../lib/copy";
-import { coveragePath, epicPath, epicsInOrder, foundationPath, phasesWithStories, progressOf, statusOf, statuses, storiesInOrder, storyPath } from "../lib/plan";
+import "../styles/plan.css";
+import Button from "./ui/Button.astro";
+import Details from "./ui/Details.astro";
+import Section from "./ui/Section.astro";
+import Stat from "./ui/Stat.astro";
+import OrderStrip from "./plan/OrderStrip.astro";
+import PhaseCard from "./plan/PhaseCard.astro";
+import { coveragePath, epicPath, epicsInOrder, foundationPath, progressOf, storiesInOrder, storyPath } from "../lib/plan";
+import { movedStatuses, phaseCards, stateOfStatus } from "../lib/plan-view";
 import type { PlanData } from "../lib/plan-data";
-import { plural } from "../lib/text";
+import { words } from "../lib/plan-words";
 export interface Props { data: PlanData; }
 const { data } = Astro.props;
 const { plan, ledger } = data;
 const progress = progressOf(plan, ledger);
-const epics = epicsInOrder(plan);
-const epicTitle = new Map(plan.epics.map((epic) => [epic.key, epic.title] as const));
-const first = storiesInOrder(plan)[0];
+const cards = phaseCards(plan, ledger);
+const moved = movedStatuses(progress.byStatus);
+const firstEpic = epicsInOrder(plan)[0];
+const firstStory = storiesInOrder(plan)[0];
 const date = ledger?.reviewed === undefined ? undefined : ledger.reviewed.slice(0, 10);
 ---
-<Page title={copy.plan.title} lead={copy.plan.lead} depth={0} trail={[{ text: copy.site.home, href: "index.html" }, { text: copy.plan.title }]}>
-    <div class="glance">
-        <div>{plural(plan.phases.length, "phase")}</div>
-        <div>{plural(plan.epics.length, "epic")}</div>
-        <div>{plural(plan.stories.length, "story", "stories")}</div>
-        <div>{plural(plan.layers.length, "layer")}</div>
-        <div>{plural(plan.decisions.length, "decision")}</div>
+<Page wide title={words.title} lead={words.lead} depth={0} trail={[{ text: "Overview", href: "index.html" }, { text: words.title }]}>
+    <div class="pl-panel pl-summary">
+        <div class="pl-stats">
+            <Stat value={plan.phases.length} unit="phases" />
+            <Stat value={plan.epics.length} unit="epics" />
+            <Stat value={plan.stories.length} unit="stories" />
+            <Stat value={`${plan.coverage.rulesBuilt} of ${plan.coverage.rulesTotal}`} unit={words.rulesCovered} />
+        </div>
+        <div class="pl-progress">
+            <div class="pl-caption"><span>{progress.merged === 0 ? words.noneMerged : words.merged(progress.merged)}</span><span>{date === undefined ? words.notReviewed : words.reviewed(date)}</span></div>
+            <div class="pl-bar" role="img" aria-label={words.progress(progress.merged, progress.stories)}>
+                {moved.map((each) => <i data-state={stateOfStatus(each.status)} style={`width:${(each.count / progress.stories) * 100}%`}></i>)}
+            </div>
+            {moved.length > 0 && <ul class="pl-legend">{moved.map((each) => <li data-state={stateOfStatus(each.status)}>{each.count} {each.status}</li>)}</ul>}
+        </div>
+        <div class="pl-ordered">
+            <div class="pl-caption"><span>{words.order}</span><span>{words.orderNote}</span></div>
+            <OrderStrip phases={cards} />
+        </div>
     </div>
-    <h2>{copy.plan.progress}</h2>
-    <p>{copy.plan.progressStories(progress.stories, progress.merged)}</p>
-    <progress max={progress.stories} value={progress.merged} aria-label={copy.plan.progressStories(progress.stories, progress.merged)}></progress>
-    <p>{copy.plan.progressRules(progress.rulesBuilt, progress.rulesTotal)}</p>
-    <progress max={progress.rulesTotal} value={progress.rulesBuilt} aria-label={copy.plan.progressRules(progress.rulesBuilt, progress.rulesTotal)}></progress>
-    <p class="sub">{copy.plan.progressPlanned(progress.rulesPlanned, progress.rulesTotal)}</p>
-    <div class="sub">{statuses.map((status) => <span class="chip">{copy.plan.status[status]}: {progress.byStatus[status]}</span>)}</div>
-    <p class="note">{date === undefined ? copy.plan.notReviewed : copy.plan.reviewed(date)}</p>
-    <h2>{copy.plan.howHeading}</h2>
-    <p class="note">{copy.plan.howLead}</p>
-    <ol class="how">
-        <li><strong>{copy.plan.howEpics}.</strong> {copy.plan.howEpicsText}
-            <div class="sub">{epics.map((epic, i) => <><a href={`${epicPath(epic)}.html`}>{epic.title}</a>{i < epics.length - 1 && <span class="arrow" aria-hidden="true">→</span>}</>)}</div>
-        </li>
-        <li><strong>{copy.plan.howScaffold}.</strong> {copy.plan.howScaffoldText} <a href={`${foundationPath}.html#scaffold`}>{copy.plan.foundationLink}</a></li>
-        <li><strong>{copy.plan.howDeliver}.</strong> {copy.plan.howDeliverText} {first && <>{copy.plan.firstStory}: <a href={`${storyPath(first)}.html`}>{first.title}</a>.</>}</li>
-    </ol>
-    <h2>{copy.plan.phases}</h2>
-    {phasesWithStories(plan).map((phase) => {
-        const own = progressOf(plan, ledger, phase.stories);
-        return <section class="phase">
-            <h3>{copy.plan.phaseName(phase.number, phase.name)}</h3>
-            <p>{phase.why}</p>
-            <p class="sub">{copy.plan.phaseLine(phase.stories.length, own.merged)}</p>
-            <details><summary>{copy.plan.showStories(phase.stories.length)}</summary>
-                <Rows rows={phase.stories.map((story) => ({ text: story.title, href: `${storyPath(story)}.html`, sub: epicTitle.get(story.epic) ?? "", meta: `${statusOf(ledger, story.key)}` }))} />
-            </details>
-        </section>;
-    })}
-    <h2>{copy.plan.epicsHeading}</h2>
-    <Rows rows={epics.map((epic) => ({ text: epic.title, href: `${epicPath(epic)}.html`, sub: epic.outcome, meta: copy.plan.epicLine(epic.stories.length) }))} />
-    <h2>{copy.plan.pages}</h2>
-    <div class="paths">
-        <a class="card" href={`${foundationPath}.html`}><h3>{copy.plan.foundationTitle}</h3><span class="sub">{copy.plan.foundationLead}</span></a>
-        <a class="card" href={`${coveragePath}.html`}><h3>{copy.plan.coverageTitle}</h3><span class="sub">{copy.plan.coverageLead}</span></a>
+    <div class="pl-actions">
+        {firstEpic && <Button variant="primary" href={`${epicPath(firstEpic)}.html`}>{words.start}</Button>}
     </div>
+    <Details summary={words.howTitle}>
+        <ol class="pl-steps">
+            <li><strong>{words.howEpics}</strong> {words.howEpicsNote}</li>
+            <li><strong>{words.howScaffold}</strong> {words.howScaffoldNote} <a href={`${foundationPath}.html#scaffold`}>Open it</a></li>
+            <li><strong>{words.howDeliver}</strong> {words.howDeliverNote} {firstStory && <a href={`${storyPath(firstStory)}.html`}>Open the first</a>}</li>
+        </ol>
+    </Details>
+    <Section title={words.phases}>
+        <ol class="pl-cards">{cards.map((phase) => <PhaseCard phase={phase} />)}</ol>
+    </Section>
+    <Section title="Foundation and coverage">
+        <ul class="pl-links">
+            <li><a class="pl-panel pl-link" href={`${foundationPath}.html`}><h3>{words.foundationTitle}</h3><p class="pl-sub">{words.foundationLine(plan.layers.length, plan.decisions.length)}</p></a></li>
+            <li><a class="pl-panel pl-link" href={`${coveragePath}.html`}><h3>{words.coverageTitle}</h3><p class="pl-sub">{words.coverageLine(plan.coverage.unplanned.length)}</p></a></li>
+        </ul>
+    </Section>
 </Page>

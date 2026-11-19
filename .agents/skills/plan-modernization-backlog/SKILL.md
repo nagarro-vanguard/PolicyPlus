@@ -21,7 +21,7 @@ Goal: a plan people review step by step and later skills build from, complete (e
     - `stop`: a job was refused; show its message to the person and stop.
     A job runs write, gate, review and at most one fix; a challenge that survives the fix stays as disputed and is shown to the person. Nothing waits for the person: assumptions are in each decision's `reason`.
 4. `bun ${SKILL_ROOT}/cli/plan.ts build ${ROOT} --work-tracking <the workspace AGENTS.md>` derives the plan from the accepted records and checks every gate. On exit 1 it prints each failing gate; run the stage that owns the gap again with `prepare`. On success it writes `plan.json`, `prompts.json`, the manifest, the bodies, the attachments and the AGENTS.md previews.
-5. Tell the person what was written and where the plan's pages are (the app builds them).
+5. Tell the person what was written and where the plan's pages are (the app builds them). How the plan reads, and what the agents' titles and criteria must look like, is `${SKILL_ROOT}/rules/presentation.md`.
 
 ## With a confirmed target
 

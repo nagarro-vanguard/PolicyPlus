@@ -31,8 +31,14 @@ export const statesOf = (seen: Readonly<Record<Gate, Seen>>): Record<Gate, GateS
     return states;
 };
 
+/** Today's journeys are proposed by the analysis's own file when a run has it, by the target's older one until then. */
+const todayFile = (root: string) => {
+    const own = join(process.env.ANALYSIS_PAYLOADS_DIR ?? "", "journeys.json");
+    return process.env.ANALYSIS_PAYLOADS_DIR !== undefined && existsSync(own) ? own : join(root, "target", "current.json");
+};
+
 const files = (root: string): Record<Gate, { proposal: string; record: string }> => ({
-    "as-is": { proposal: join(root, "target", "current.json"), record: join(root, "target", "choice-as-is.json") },
+    "as-is": { proposal: todayFile(root), record: join(root, "target", "choice-as-is.json") },
     journeys: { proposal: join(root, ".shape-target", "work", "records", "journey-variants.json"), record: join(root, "target", "choice-journeys.json") },
     architecture: { proposal: join(root, ".shape-target", "work", "records", "architecture-variants.json"), record: join(root, "target", "choice-architecture.json") },
     components: { proposal: join(root, "target", "architecture.json"), record: join(root, "target", "choice-components.json") },

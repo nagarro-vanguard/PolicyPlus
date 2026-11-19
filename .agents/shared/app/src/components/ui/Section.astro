@@ -1,0 +1,16 @@
+---
+// One section of a page: a heading with a thin rule under it, an action at the end of the heading line; never a card.
+export interface Props {
+    title: string;
+    id?: string;
+}
+const { title, id } = Astro.props;
+const headingId = id === undefined ? undefined : `${id}-heading`;
+---
+<section class="section" id={id} aria-labelledby={headingId} aria-label={headingId === undefined ? title : undefined}>
+    <div class="section-head">
+        <h2 id={headingId}>{title}</h2>
+        <slot name="action" />
+    </div>
+    <slot />
+</section>

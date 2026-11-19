@@ -11,7 +11,9 @@ import { registeredShapes } from "../shared/model/registered-shapes";
 import { briefingContext, briefingLabel, carryBriefing, prepareBriefing } from "../stages/publish/briefing-job";
 import { checkBriefing } from "../stages/publish/check-briefing";
 import { finishBriefing } from "../stages/publish/finish-briefing";
-import { publishConclusions, publishLoop } from "../stages/publish/publish-loop";
+import { publishConclusions, publishJourneys, publishLoop } from "../stages/publish/publish-loop";
+import { checkJourneyJob } from "../stages/publish/check-journeys";
+import { journeyJobNamed } from "../stages/publish/journeys-brief";
 
 /**
  * Publish's concluding jobs, for the analysis root this run works in.
@@ -23,22 +25,38 @@ const concluding = Effect.fnUntraced(function* () {
 });
 
 /**
- * Which of Publish's jobs a key names (D226): none, or the briefing's label, names the briefing; a concluding job's key
- * names it; any other key is refused, so a mistyped key never clears the briefing.
+ * Publish's jobs of the journeys of today, for the analysis root this run works in.
+ * @returns the steps
+ */
+const journeying = Effect.fnUntraced(function* () {
+    const { root } = yield* AnalysisRoot;
+    return publishJourneys(root, (yield* briefingContext(root)).sourceFolder);
+});
+
+type Named = "briefing" | "journeys" | "concluding";
+
+/**
+ * Which of Publish's jobs a key names (D226): none, or the briefing's label, names the briefing; the job id of a job of
+ * the journeys names it; a concluding job's key names it; any other key is refused, so a mistyped key never clears the
+ * briefing.
  * @param job the key given, if any
  * @returns which job it names; UsageInvalid for a key naming none
  */
 const jobNamed = Effect.fnUntraced(function* (job: string | undefined) {
     if (job === undefined || job === briefingLabel) {
-        const named: "briefing" | "concluding" = "briefing";
+        const named: Named = "briefing";
+        return named;
+    }
+    if (yield* (yield* journeying()).isJourney(job)) {
+        const named: Named = "journeys";
         return named;
     }
     if (yield* (yield* concluding()).isConcluding(job)) {
-        const named: "briefing" | "concluding" = "concluding";
+        const named: Named = "concluding";
         return named;
     }
     return yield* new UsageInvalid({
-        issue: `"${job}" names none of Publish's jobs: give no key, or "${briefingLabel}", for the briefing, or a concluding job's key as status lists it`,
+        issue: `"${job}" names none of Publish's jobs: give no key, or "${briefingLabel}", for the briefing, or the job id of a job of the journeys or a concluding job's key as status lists it`,
     });
 });
 
@@ -54,11 +72,28 @@ const prepareStep = Effect.fn("prepareStep")(function* (job: string | undefined,
     const { root } = yield* AnalysisRoot;
     yield* refuseWhileBatchOpen("publish");
     const conclusions = yield* concluding();
+    const named = yield* jobNamed(job);
     const prepared =
-        (yield* jobNamed(job)) === "concluding"
+        named === "concluding"
             ? yield* conclusions.prepare(String(job), words)
-            : yield* prepareBriefing(root, words);
+            : named === "journeys"
+              ? yield* (yield* journeying()).prepare(String(job), words)
+              : yield* prepareBriefing(root, words);
     yield* Console.log(JSON.stringify(prepared, null, 2));
+});
+
+/**
+ * One job of the journeys, by its job id; the key was named already.
+ * @param root the analysis root
+ * @param jobId the job id
+ * @returns the job
+ */
+const journeyJobOf = Effect.fnUntraced(function* (root: string, jobId: string) {
+    const found = yield* journeyJobNamed(root, jobId);
+    if (found === undefined) {
+        return yield* new UsageInvalid({ issue: `no job of the journeys has the job id ${jobId}` });
+    }
+    return found;
 });
 
 /**
@@ -70,8 +105,13 @@ const prepareStep = Effect.fn("prepareStep")(function* (job: string | undefined,
 const checkStep = Effect.fn("checkStep")(function* (job: string | undefined) {
     const { root } = yield* AnalysisRoot;
     const conclusions = yield* concluding();
+    const named = yield* jobNamed(job);
     const gaps =
-        (yield* jobNamed(job)) === "concluding" ? yield* conclusions.check(String(job)) : yield* checkBriefing(root);
+        named === "concluding"
+            ? yield* conclusions.check(String(job))
+            : named === "journeys"
+              ? yield* checkJourneyJob(root, yield* journeyJobOf(root, String(job)))
+              : yield* checkBriefing(root);
     yield* Console.log(gaps.length ? gaps.join("\n") : "no gap");
     if (gaps.length) {
         yield* needsAction;
@@ -85,6 +125,9 @@ const checkStep = Effect.fn("checkStep")(function* (job: string | undefined) {
 const finishStep = Effect.fn("finishStep")(function* () {
     const decision = yield* finishBriefing((yield* AnalysisRoot).root);
     yield* Console.log(`the briefing: ${decision.briefing.outcome}`);
+    if (decision.journeysPending) {
+        yield* Console.log("the journeys of today have a job to fix or to run: run next");
+    }
     if (decision.concluding) {
         yield* Console.log("the topics every stage's facts leave open are concluded next: run next");
     }
@@ -103,21 +146,24 @@ const subcommands = [
             withFresh("publish", fresh, prepareStep(Option.getOrUndefined(job), Option.getOrUndefined(words))),
     ).pipe(
         Command.withDescription(
-            "With no job: writes the briefing's brief from the capability view every page reads (each capability holding an entry point, with who starts its entry points, what they do, its parts, what it keeps, what it reaches, and the capabilities sharing its kinds of data); then clears the briefing's output, review and report, removes Publish's accepted records, and prints the agents' named arguments; --custom-instructions gives the person's feedback on the last briefing (refused before one was written). With a concluding job's key: clears its answers and prints its agent's arguments. Refused until Capabilities and entities has accepted records, and while a batch is open.",
+            "With no job: writes the briefing's brief from the capability view every page reads (each capability holding an entry point, with who starts its entry points, what they do, its parts, what it keeps, what it reaches, and the capabilities sharing its kinds of data); then clears the briefing's output, review and report, removes Publish's accepted records, and prints the agents' named arguments; --custom-instructions gives the person's feedback on the last briefing (refused before one was written). With the job id of a job of the journeys of today (`journeys-of-<capability>`, `journeys-merge`): writes its brief, clears its output and review and prints its agent's arguments. With a concluding job's key: clears its answers and prints its agent's arguments. Refused until Capabilities and entities has accepted records, and while a batch is open.",
         ),
     ),
     ...loopCommands(publishLoop),
     carryCommand("job", (root, job, leftOut) =>
         Effect.gen(function* () {
             const conclusions = yield* concluding();
-            return (yield* jobNamed(job)) === "concluding"
+            const named = yield* jobNamed(job);
+            return named === "concluding"
                 ? yield* conclusions.carry(job, leftOut)
-                : yield* carryBriefing(root, leftOut);
+                : named === "journeys"
+                  ? yield* (yield* journeying()).carry(String(job), leftOut)
+                  : yield* carryBriefing(root, leftOut);
         }),
     ),
     Command.make("check", { job: jobKey }, ({ job }) => checkStep(Option.getOrUndefined(job))).pipe(
         Command.withDescription(
-            "The gate on the briefing (every capability of the brief in exactly one area; its facts held to the facts' rules), or on a concluding job named by its key (each topic answered once, resting only on the facts beneath); once reviewed, every finding given one verdict that looked at its lines. Necessary, not sufficient.",
+            "The gate on the briefing (every capability of the brief in exactly one area; its facts held to the facts' rules), or on a job of the journeys of today (every entry point and rule of its brief in exactly one task, each step citing only its task's entry points, no control or code name in an outcome; the joining job's merges naming tasks of its brief), or on a concluding job named by its key (each topic answered once, resting only on the facts beneath); once reviewed, every finding given one verdict that looked at its lines. Necessary, not sufficient.",
         ),
     ),
     Command.make("finish", {}, () => finishStep()).pipe(
@@ -130,7 +176,7 @@ const subcommands = [
 runScript(
     Command.make("publish-pages").pipe(
         Command.withDescription(
-            "Publish: the last pass over the subject pages. Its briefing groups the capabilities into areas, reviewed; then every topic the stages' facts leave open is concluded, the system's overview last.",
+            "Publish: the last pass over the subject pages. Its briefing groups the capabilities into areas, reviewed; the journeys of today are written, one job per capability and one that joins the tasks written twice, each reviewed; then every topic the stages' facts leave open is concluded, the system's overview last.",
         ),
         Command.withSubcommands(subcommands),
     ),

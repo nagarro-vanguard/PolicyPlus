@@ -1,17 +1,15 @@
 ---
+// A capability: the opening and the places to look are static; everything else is drawn in the browser from the capability's
+// slice (data/cap/<slug>.json), so the page's weight does not grow with the capability.
 import Page from "../../layouts/Page.astro";
-import Figure from "../../components/Figure.astro";
-import Rows from "../../components/Rows.astro";
 import Bundle from "../../components/Bundle.astro";
-import RiskMarker from "../../components/RiskMarker.astro";
-import { bundleIndex, capabilities, knowledge, productLayers, screenHref, slugs, system } from "../../lib/payloads";
+import Skeleton from "../../components/ui/Skeleton.astro";
+import UsedIn from "../../components/journey/UsedIn.astro";
+import { journeyModel, linksTo } from "../../lib/journeys";
+import { bundleIndex, capabilities, knowledge, slugs, system } from "../../lib/payloads";
 import { bundleOfCapability } from "../../lib/bundle";
-import { risksOfCapability } from "../../lib/risks";
-import { capabilityModel } from "../../lib/model";
-import { knownIds } from "../../lib/check";
 import { copy } from "../../lib/copy";
-import { gapWords, verdictWords, accessKindWords, wordFor } from "../../lib/words";
-import { compareText, firstSentence, plural, where } from "../../lib/text";
+import { ledeOf } from "../../lib/derive";
 
 export async function getStaticPaths() {
     const all = await capabilities();
@@ -25,46 +23,23 @@ const know = await knowledge();
 const addresses = await slugs();
 const cap = all.find((each) => each.capability.id === id);
 if (cap === undefined) throw new Error("no such capability");
-const known = knownIds(sys, all, know);
-const risks = risksOfCapability(know, id);
 const held = bundleOfCapability(sys, all, know, await bundleIndex(), id);
-const product = productLayers(sys);
-const figure = capabilityModel(cap, undefined, product);
 const area = sys.areas.find((each) => each.name === cap.area);
-const trail = [{ text: copy.site.home, href: "../index.html" }, ...(area ? [{ text: area.name, href: `../area/${addresses.area(area.id)}.html` }] : []), { text: cap.capability.name }];
-const rules = cap.layers.flatMap((layer) => layer.rules);
-const mine = new Set(cap.layers.flatMap((layer) => layer.actions).map((action) => action.id));
-const pages = sys.screens.filter((screen) => screen.capabilities.includes(cap.capability.id));
-const inProduct = cap.layers.some((layer) => product.has(layer.id)) ? cap.layers.filter((layer) => product.has(layer.id)) : cap.layers;
-const projectLayers = cap.layers.filter((layer) => !inProduct.includes(layer));
-const others = inProduct.flatMap((layer) => layer.actions).filter((action) => action.startedBy !== "person");
-const layerOrder = inProduct.toSorted((one, other) => other.blocks - one.blocks);
-const actionHref = (actionId: string) => `../action/${addresses.capability(cap.capability.id)}/${addresses.action(cap.capability.id, actionId)}.html`;
+const used = linksTo((await journeyModel()).usingCapability(id), 1);
+const trail = [{ text: copy.site.home, href: "../index.html" }, ...(area ? [{ text: area.name, href: `../reference.html#${addresses.area(area.id)}` }] : []), { text: cap.capability.name }];
 ---
-<Page title={cap.capability.name} lead={cap.capability.purpose} depth={1} brief={cap.context.text} trail={trail}>
-    <RiskMarker risks={risks} root="../" slug={addresses.risk} />
-    <Figure id="capability-layers" facts={figure.facts} build={(limit) => capabilityModel(cap, limit, product).model} known={known} />
-    <p class="note">{copy.capability.rulesNote(rules.length, cap.totals.rulesOnNoScreen)}</p>
-    <h2>{copy.capability.screens(pages.length)}</h2>
-    {pages.length === 0 && <p class="empty">{copy.capability.noScreens}</p>}
-    <Rows rows={pages.map((screen) => ({ text: screen.name, href: screenHref("../", screen.key), meta: copy.capability.hereActions(screen.actionIds.filter((action) => mine.has(action)).length, screen.capabilities.length - 1) }))} cap={12} noun="screens" />
-    <h2>{copy.capability.otherStarts(others.length)}</h2>
-    {others.length === 0 && <p class="empty">{copy.capability.noOtherStarts}</p>}
-    <Rows rows={others.toSorted((one, other) => compareText(one.screen, other.screen)).map((action) => ({ text: action.purpose, href: actionHref(action.id), sub: action.screen === "" ? undefined : copy.capability.startedFrom(action.screen) }))} cap={12} noun="actions" />
-    <h2>{copy.capability.layers}</h2>
-    <Rows rows={layerOrder.map((layer) => ({ text: layer.name, href: `../layer/${addresses.capability(cap.capability.id)}/${addresses.layer(cap.capability.id, layer.id)}.html`, meta: `${plural(layer.actions.length, "action")} · ${plural(layer.rules.length, "rule")}`, sub: `${firstSentence(layer.purpose)}${layer.sharedBlocks > 0 ? ` ${copy.capability.alsoUsedElsewhere}` : ""}` }))} />
-    {projectLayers.length > 0 && <p class="note">{copy.capability.projectWork(projectLayers.map((layer) => `${layer.name} (${plural(layer.actions.length, "action")})`))}</p>}
-    <h2>{copy.capability.shared}</h2>
-    {cap.concerns.length === 0 && <p class="empty">{copy.capability.noShared}</p>}
-    <Rows rows={cap.concerns.map((concern) => ({ text: concern.name, meta: wordFor(verdictWords, concern.verdict), sub: concern.purpose }))} />
-    <h2>{copy.capability.data}</h2>
-    {cap.data.length === 0 && <p class="empty">{copy.capability.noData}</p>}
-    <Rows rows={cap.data.map((kind) => ({ text: kind.name, meta: wordFor(accessKindWords, kind.access), sub: kind.stores.length > 0 ? copy.capability.keptIn(kind.stores) : undefined }))} />
-    <h2>{copy.capability.assumptions(cap.openPoints.length)}</h2>
-    {cap.openPoints.length === 0 && <p class="empty">{copy.capability.noAssumptions}</p>}
-    <Rows rows={cap.openPoints.map((point) => ({ text: point.statement, sub: `${copy.capability.why}: ${point.why} ${copy.capability.ifWrong}: ${point.ifWrong}` }))} cap={4} noun="assumptions" />
-    <h2 class="gap">{copy.capability.gaps(cap.gaps.length)}</h2>
-    {cap.gaps.length === 0 && <p class="empty">{copy.capability.noGaps}</p>}
-    <Rows rows={cap.gaps.map((gap) => ({ text: copy.capability.gapTitle(wordFor(gapWords, gap.kind)), sub: `${gap.reason} ${copy.capability.gapWhere(where(gap.place))}` }))} cap={6} noun="gaps" />
-    <Bundle files={held === undefined ? [] : held.files} command={`cd .agents/skills/code-analysis && CODE_ANALYSIS_ROOT=${copy.bundle.place} bun cli/build-bundle.ts capability "${cap.capability.name}"`} />
+<Page title={cap.capability.name} lead={ledeOf(cap.capability.purpose)} depth={1} trail={trail}>
+    <UsedIn links={used} />
+    <div data-explorer="capability" data-slug={addresses.capability(id)}>
+        <Skeleton lines={4} />
+        <noscript><p class="note">This page is drawn in the browser from its data file. Turn on scripts to read it; the capability's details are also in the files under data/.</p></noscript>
+    </div>
+    <details class="fold-line">
+        <summary>For a coding assistant <span class="muted">copy a brief</span></summary>
+        <div class="fold-body">
+            <p data-needs-js hidden><button type="button" class="btn" data-copy-brief>Copy brief for this capability</button></p>
+            <Bundle files={held === undefined ? [] : held.files} command={`cd .agents/skills/code-analysis && CODE_ANALYSIS_ROOT=${copy.bundle.place} bun cli/build-bundle.ts capability "${cap.capability.name}"`} />
+        </div>
+    </details>
+    <script>import "../../scripts/explorer.ts";</script>
 </Page>

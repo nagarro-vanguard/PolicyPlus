@@ -1,0 +1,58 @@
+---
+// One drawing, always an SVG at full size: its text is never below the diagram token's size because the drawing is never scaled
+// to fit. A drawing wider than the column sits in a frame that scrolls and drags; the text version lists every item and
+// connection. No card: a heading, the question it answers, the drawing, a legend.
+import "../../styles/analysis.css";
+import { diagrams, applies } from "../../lib/diagram-config";
+import type { DiagramId } from "../../lib/diagram-config";
+import { words } from "../../lib/analysis-copy";
+import { copy } from "../../lib/copy";
+import { fitted } from "../../lib/fit";
+import { layoutProblems, modelProblems } from "../../lib/check";
+import { accessWordsOf } from "../../lib/figure-text";
+import type { FlowModel } from "../../lib/model";
+import Dag from "../Dag.astro";
+import NoDataState from "../ui/NoDataState.astro";
+export interface Props {
+    id: DiagramId;
+    facts: Record<string, number>;
+    build: (limit: number) => FlowModel;
+    known: ReadonlySet<string>;
+    title?: string;
+    question?: string;
+    caption?: string;
+    /** False when a section's own heading already names the drawing. */
+    titled?: boolean;
+}
+const { id, facts, build, known, title = diagrams[id].title, question = diagrams[id].question, caption = "", titled = true } = Astro.props;
+const verdict = applies(id, facts);
+const fit = verdict.drawn ? await fitted(id, build) : undefined;
+if (fit) {
+    const problems = [...modelProblems(fit.model, known), ...layoutProblems(fit.model, fit.laid)];
+    if (problems.length > 0) throw new Error(`The figure "${id}" does not hold:\n${problems.join("\n")}`);
+}
+const model = fit ? fit.model : build(0);
+const laid = fit?.laid;
+const label = new Map(model.nodes.map((node) => [node.id, node.label]));
+const lines = model.edges.map((edge) => accessWordsOf(label.get(edge.from) ?? edge.from, label.get(edge.to) ?? edge.to, edge.label));
+const more = model.nodes.find((node) => node.kind === "more");
+const pad = 10;
+---
+<figure class="a-figure" data-diagram={id}>
+    <figcaption>{titled && <h3>{title}</h3>}<p class="a-note">{question}</p></figcaption>
+    {caption !== "" && <p class="a-note">{caption}</p>}
+    {!verdict.drawn && <NoDataState compact title="Not drawn" message={copy.notDrawn(verdict.reason)} />}
+    {verdict.drawn && laid && <div class="a-pan" data-a-pan tabindex="0" role="region" aria-label={`${title}, drawn at full size`} style={`--natural:${laid.width + 2 * pad}px`}><Dag model={model} laid={laid} title={title} /></div>}
+    {verdict.drawn && more && <p class="a-note">{copy.folded(model.omitted, more.sub)}</p>}
+    {verdict.drawn && model.leftOut.length > 0 && <p class="a-note">{copy.leftOut([...model.leftOut])}</p>}
+    {verdict.drawn && <p class="a-note">{diagrams[id].legend} {words.diagram.scroll}</p>}
+    {verdict.drawn && <details class="fold">
+        <summary>{words.diagram.text(model.nodes.length, model.edges.length)}</summary>
+        <div class="fold-body">
+            <ul>{model.nodes.map((node) => <li><strong>{node.label}</strong> <span class="a-note">{node.sub}{node.members && node.members.length > 0 ? `: ${node.members.join(", ")}` : ""}</span></li>)}</ul>
+            <ul>{lines.map((line) => <li>{line}</li>)}</ul>
+        </div>
+    </details>}
+    {verdict.drawn && <p><button type="button" class="btn" data-download-svg><span data-label>{words.diagram.download}</span></button></p>}
+</figure>
+<script>import "../../scripts/analysis-pan.ts";</script>

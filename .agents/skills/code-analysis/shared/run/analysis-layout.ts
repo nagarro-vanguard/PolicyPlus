@@ -166,6 +166,24 @@ const conclusionsPaths = (stageWork: (stage: Stage, ...parts: readonly string[])
 });
 
 /**
+ * The paths of Publish's journeys of today: the list of their jobs, and each job's brief and files. Each job is named
+ * by its job id, `journeys-of-<capability>` or `journeys-merge`.
+ * @param stageWork a file or folder under a stage's work folder
+ * @returns the paths
+ */
+const journeysPaths = (stageWork: (stage: Stage, ...parts: readonly string[]) => string) => ({
+    list: stageWork("publish", "journeys", "jobs.json"),
+    folder: (jobId: string) => stageWork("publish", "journeys", jobId),
+    brief: (jobId: string) => stageWork("publish", "journeys", jobId, "brief.json"),
+    files: (jobId: string) => ({
+        outputPath: stageWork("publish", "journeys", jobId, "output.jsonl"),
+        reviewPath: stageWork("publish", "journeys", jobId, "review.jsonl"),
+        roundsFolder: stageWork("publish", "journeys", jobId, "rounds"),
+    }),
+    checklist: join(skillRoot, "stages", "publish", "checklist-journeys.md"),
+});
+
+/**
  * The paths of a whole stage's audit (plan 0004): the stage's accepted records as its findings, its review, its rounds,
  * its report and its feedback.
  * @param stageWork a file or folder under a stage's work folder
@@ -274,6 +292,7 @@ export function analysisPaths(root: string) {
         assumptionsAccepted: join(work, "assumptions-accepted.json"),
         conclusions: conclusionsPaths(stageWork),
         stageAudit: stageAuditPaths(stageWork),
+        journeys: journeysPaths(stageWork),
         pages: join(root, subjectFolder),
         /** Where the app, the pages a person reads the analysis through, is built by default. */
         app: join(root, "app"),

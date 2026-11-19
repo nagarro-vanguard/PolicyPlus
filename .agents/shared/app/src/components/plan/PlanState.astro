@@ -1,0 +1,10 @@
+---
+// A status as one word in a quiet pill. The word carries the meaning; the glyph and the colour only repeat it.
+import type { State } from "../../lib/plan-view";
+export interface Props {
+    state: State;
+    label: string;
+}
+const { state, label } = Astro.props;
+---
+<span class="pl-pill" data-state={state}>{label}</span>

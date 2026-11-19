@@ -1,11 +1,10 @@
 import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { relevantSteps, type ComponentContext, type DesignContext } from "../derive/checks";
 import { deriveEssence } from "../derive/essence";
 import { confirmed } from "../gates";
 import { slug } from "../model/ids";
 import type { Layout } from "../model/layout";
-import type { StoredArchitecture, Task } from "../model/records";
+import type { StoredArchitecture } from "../model/records";
 import {
     loadArchitectureVariants,
     loadChoice,
@@ -15,8 +14,6 @@ import {
     loadTasks,
     needsOf,
 } from "../run";
-import { Merge } from "../model/records";
-import { Schema } from "effect";
 import type { JobFile } from "./gates";
 import {
     jobPaths,
@@ -43,42 +40,6 @@ type Draft = {
 
 /** The most entry points plus rules one journeys job holds, so an agent can read every line it is given. */
 export const VARIANT_JOB_BUDGET = 70;
-
-/** The tasks written by the decided tasks jobs, their ids made unique by the job they came from. */
-export const acceptedTasks = (layout: Layout, jobs: Jobs): Task[] =>
-    jobs.jobs
-        .filter((job) => job.kind === "tasks" && job.state === "decided")
-        .flatMap((job) =>
-            (outputOf<{ tasks: Task[] }>(layout, job.id)?.tasks ?? []).map((task) => ({
-                ...task,
-                id: `${job.id}.${task.id}`,
-            })),
-        );
-
-/** The tasks after the merge job's decisions: each merged task takes in the ones it absorbs. */
-export const mergedTasks = (layout: Layout, jobs: Jobs): Task[] => {
-    const tasks = acceptedTasks(layout, jobs);
-    const merges = Schema.decodeUnknownSync(Schema.Array(Merge))(
-        outputOf<{ merges: unknown }>(layout, "merge")?.merges ?? [],
-    );
-    const absorbed = new Set(merges.flatMap((merge) => merge.absorb));
-    return tasks
-        .filter((task) => !absorbed.has(task.id))
-        .map((task) => {
-            const joined = merges.find((merge) => merge.keep === task.id);
-            if (joined === undefined) return task;
-            const others = joined.absorb.flatMap((id) => tasks.filter((each) => each.id === id));
-            const union = <T>(pick: (each: Task) => readonly T[]) => [...new Set([task, ...others].flatMap(pick))];
-            return {
-                ...task,
-                actions: union((each) => each.actions),
-                rules: union((each) => each.rules),
-                facts: union((each) => each.facts),
-                needs: union((each) => each.needs),
-                current: [task, ...others].flatMap((each) => each.current),
-            };
-        });
-};
 
 export const designContext = (layout: Layout): DesignContext => ({
     legacy: loadLegacy(layout),
@@ -112,54 +73,6 @@ export const componentContext = (layout: Layout, jobs: Jobs, domain: string): Co
 
 const drafts = (layout: Layout, stage: Stage, jobs: Jobs): Draft[] | string => {
     const request = loadRequest(layout);
-    if (stage === "as-is") {
-        if (!existsSync(layout.legacy)) return "the legacy sheet is missing: run `derive.ts legacy` first";
-        const legacy = loadLegacy(layout);
-        const made: Draft[] = [];
-        for (const capability of legacy.capabilities) {
-            const actions = Object.entries(legacy.actions).filter(([, action]) => action.owner === capability.id);
-            if (actions.length === 0) continue;
-            const rules = Object.entries(legacy.rules).filter(([, rule]) => rule.owner === capability.id);
-            const surfaces = [...new Set(actions.map(([, action]) => action.surface))].sort();
-            made.push({
-                id: `tasks-${slug(capability.name)}`,
-                kind: "tasks",
-                title: `Find the tasks of ${capability.name}`,
-                after: [],
-                review: true,
-                file: { kind: "tasks", actions: actions.map(([id]) => id), rules: rules.map(([id]) => id) },
-                context: {
-                    capability,
-                    surfaces: surfaces.map((name) => ({
-                        name: name === "" ? "entry points no window holds" : name,
-                        bundle: join(layout.bundles, `screen-${slug(name)}--${slug(capability.name)}.md`),
-                        actions: actions
-                            .filter(([, action]) => action.surface === name)
-                            .map(([id, action]) => ({
-                                id,
-                                what: action.what,
-                                startedBy: action.startedBy,
-                                rules: action.rules.filter((rule) => legacy.rules[rule]?.owner === capability.id),
-                                place: action.place,
-                            })),
-                    })),
-                    rules: rules.map(([id, rule]) => ({ id, statement: rule.statement, place: rule.place })),
-                    entities: Object.entries(legacy.entities).map(([id, each]) => ({ id, ...each })),
-                    externals: Object.entries(legacy.externals).map(([id, each]) => ({ id, ...each })),
-                },
-            });
-        }
-        made.push({
-            id: "merge",
-            kind: "merge",
-            title: "Join the tasks that were written twice",
-            after: made.map((draft) => draft.id),
-            review: false,
-            file: { kind: "merge", taskIds: [] },
-            context: { tasks: [] },
-        });
-        return made;
-    }
     if (stage === "journeys") {
         if (!confirmed(layout, "as-is"))
             return "the as-is is not confirmed (or changed since): run `choose.ts as-is` first";
@@ -313,19 +226,6 @@ export const refreshInputs = (layout: Layout, jobs: Jobs, id: string) => {
     const job = jobs.jobs.find((each) => each.id === id);
     if (job === undefined) return;
     const paths = jobPaths(layout, id);
-    if (job.kind === "merge") {
-        const tasks = acceptedTasks(layout, jobs);
-        writeJson(paths.job, { kind: "merge", taskIds: tasks.map((task) => task.id) });
-        writeJson(paths.context, {
-            tasks: tasks.map((task) => ({
-                id: task.id,
-                outcome: task.outcome,
-                actor: task.actor,
-                actions: task.actions.length,
-                rules: task.rules.length,
-            })),
-        });
-    }
     if (job.kind === "components") {
         const file = readJson<JobFile>(paths.job);
         const context = componentContext(layout, jobs, file.domain ?? "");

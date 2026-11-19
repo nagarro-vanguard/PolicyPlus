@@ -1,18 +1,8 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { Layout } from "../model/layout";
-import { loadLegacy, loadTasks } from "../run";
-import {
-    gateComponents,
-    gateMerge,
-    gateReview,
-    gateShape,
-    gateTasks,
-    gateVariants,
-    recordCount,
-    type JobFile,
-    type Output,
-} from "./gates";
+import { loadTasks } from "../run";
+import { gateComponents, gateReview, gateShape, gateVariants, recordCount, type JobFile, type Output } from "./gates";
 import { componentContext, designContext, refreshInputs } from "./stages";
 import { jobPaths, loadJobs, readJson, saveJobs, type Job, type Jobs, type Role } from "./state";
 
@@ -23,13 +13,7 @@ export type Action =
     | { action: "stop"; message: string };
 
 const agentOf = (job: Job, role: Role) =>
-    role === "reviewer"
-        ? "challenge-target"
-        : job.kind === "tasks" || job.kind === "merge"
-          ? "describe-current"
-          : job.kind === "variants"
-            ? "propose-journeys"
-            : "propose-architecture";
+    role === "reviewer" ? "challenge-target" : job.kind === "variants" ? "propose-journeys" : "propose-architecture";
 
 const promptOf = (layout: Layout, skillRoot: string, scriptsCommand: string, job: Job, role: Role) => {
     const p = jobPaths(layout, job.id);
@@ -55,8 +39,6 @@ export const checkJob = (layout: Layout, id: string): string[] => {
     if (!existsSync(p.output)) return [`no output file at ${p.output}`];
     const file = readJson<JobFile>(p.job);
     const output = readJson<Output>(p.output);
-    if (file.kind === "tasks") return gateTasks(file, output, loadLegacy(layout));
-    if (file.kind === "merge") return gateMerge(file, output);
     if (file.kind === "variants") return gateVariants(file, output, loadTasks(layout));
     if (file.kind === "shape") return gateShape(output, designContext(layout));
     const context = componentContext(layout, loadJobs(layout), file.domain ?? "");

@@ -1,7 +1,7 @@
 import { Schema } from "effect";
-import { Architecture, Component, Journey, Merge, Task } from "../shared/model/records";
+import { Architecture, Component, Journey, Task } from "../shared/model/records";
 
-const shapes = { Task, Merge, Journey, Architecture, Component } as const;
+const shapes = { Task, Journey, Architecture, Component } as const;
 const [name] = process.argv.slice(2);
 const schema = shapes[name as keyof typeof shapes];
 if (schema === undefined) {

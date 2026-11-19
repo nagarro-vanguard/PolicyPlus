@@ -1,0 +1,26 @@
+---
+// One story as a card: its place in the order, its title in full, its kind, what it waits for and its status.
+import PlanState from "./PlanState.astro";
+import { statusOf, storyPath } from "../../lib/plan";
+import type { Ledger, PlanStory } from "../../lib/plan";
+import { kindsOf, stateOfStatus } from "../../lib/plan-view";
+import { words } from "../../lib/plan-words";
+export interface Props {
+    story: PlanStory;
+    ledger: Ledger | undefined;
+    root: string;
+    /** The phase to name on the card, when the epic spans several. */
+    phase?: number | undefined;
+}
+const { story, ledger, root, phase } = Astro.props;
+const status = statusOf(ledger, story.key);
+---
+<li class="pl-card pl-story" data-state={stateOfStatus(status)}>
+    <div class="pl-top"><span class="pl-seq">{story.sequence}</span><PlanState state={stateOfStatus(status)} label={status} /></div>
+    <h3><a href={`${root}${storyPath(story)}.html`}>{story.title}</a></h3>
+    <p class="pl-meta">
+        {kindsOf(story).map((kind) => <span class="pl-chip">{kind}</span>)}
+        {phase !== undefined && <span class="pl-chip">{words.phaseOf(phase)}</span>}
+        {story.blockedBy.length > 0 && <span class="pl-chip">{words.waitsFor(story.blockedBy.length)}</span>}
+    </p>
+</li>

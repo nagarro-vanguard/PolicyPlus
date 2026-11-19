@@ -1,0 +1,18 @@
+---
+// One primary (the accent) per page, for the main action only; secondary for the rest; ghost for the quiet.
+import Icon, { type IconName } from "./Icon.astro";
+export interface Props {
+    variant?: "primary" | "secondary" | "ghost";
+    href?: string;
+    type?: "button" | "submit";
+    disabled?: boolean;
+    icon?: IconName;
+    copy?: string;
+    copied?: string;
+}
+const { variant = "secondary", href, type = "button", disabled = false, icon, copy, copied = "Copied" } = Astro.props;
+const className = `btn${variant === "secondary" ? "" : ` btn-${variant}`}`;
+---
+{href !== undefined
+    ? <a class={className} href={href}>{icon !== undefined && <Icon name={icon} />}<span data-label><slot /></span></a>
+    : <button class={className} type={type} disabled={disabled} data-copy-text={copy} data-copied={copy === undefined ? undefined : copied}>{icon !== undefined && <Icon name={icon} />}<span data-label><slot /></span></button>}

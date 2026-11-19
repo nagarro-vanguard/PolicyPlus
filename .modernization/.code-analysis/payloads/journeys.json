@@ -1,0 +1,2236 @@
+{
+  "journeys": [
+    {
+      "id": "tasks-building-and-versioning-policy-plus.stamp-program-version",
+      "outcome": "Make each built copy of the program carry the version of the code it was built from.",
+      "actor": "person",
+      "actions": [
+        "block-46722061090424791745"
+      ],
+      "rules": [
+        "businessrule-12414618955963878773"
+      ],
+      "facts": [],
+      "needs": [
+        "external-84087908423930356962"
+      ],
+      "current": [
+        {
+          "intent": "Build or release the program so it reports which version it is.",
+          "system": "The build script is run by someone, or by the release workflow, before the program is built.",
+          "from": [
+            "block-46722061090424791745"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Have the version reflect the exact code being built.",
+          "system": "The system asks git to describe the current commit: a tag, commit count and short commit name when tags exist, otherwise just a short commit name.",
+          "from": [
+            "block-46722061090424791745"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Get the program to carry that version.",
+          "system": "The system replaces the empty version in the generated source file with that description, so the built program carries it. The committed file keeps an empty version.",
+          "from": [
+            "block-46722061090424791745"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.get-policy-definitions",
+      "outcome": "Obtain Microsoft's current set of policy definitions and install them in a folder the program can use.",
+      "actor": "person",
+      "actions": [
+        "block-03053454096779816382",
+        "block-71707654079332679729",
+        "block-60182551583579953457",
+        "block-36474692648442947336"
+      ],
+      "rules": [
+        "businessrule-78945520165872370051",
+        "businessrule-75570169794845906057",
+        "businessrule-19284863828429321329",
+        "businessrule-34650805596483639458",
+        "businessrule-16960626064100495277",
+        "businessrule-17840470067823720423",
+        "businessrule-24154317128059319852",
+        "businessrule-33969702428946021999",
+        "businessrule-53408776186716933732",
+        "businessrule-70392920399990339776",
+        "businessrule-84139143444339961851",
+        "businessrule-91358402464075338920"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [
+        "external-47673734579321187695",
+        "external-90077838450756006603"
+      ],
+      "current": [
+        {
+          "intent": "Decide where the definitions should be installed.",
+          "system": "Proposes the Windows policy definitions folder each time and lets the person choose another folder; cancelling the choice keeps the current one.",
+          "from": [
+            "block-60182551583579953457",
+            "block-03053454096779816382"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Start the download and wait for it to finish.",
+          "system": "Locks the destination and the start and close choices, refuses to let the person leave while the work runs, fetches the one fixed Microsoft package, unpacks it, takes control of an existing destination for an administrator, and replaces same-named files with the new ones, adding the person's regional language and an English fallback.",
+          "from": [
+            "block-36474692648442947336",
+            "block-71707654079332679729"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Learn the outcome and choose whether to use the new definitions.",
+          "system": "Names the step that failed and stays open on failure; on success removes temporary files and asks whether to open the definitions now, reporting the folder only on Yes.",
+          "from": [
+            "block-36474692648442947336"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.accept-welcome-download-offer",
+      "outcome": "Be offered the full set of policy definitions the first time the program is used on an edition that lacks them.",
+      "actor": "person",
+      "actions": [
+        "block-31629065709184768465"
+      ],
+      "rules": [
+        "businessrule-02030966310880796596",
+        "businessrule-23603907625209300500",
+        "businessrule-44390406872239414183",
+        "businessrule-68766858893219046657",
+        "businessrule-87097618083601098949"
+      ],
+      "facts": [
+        "entity-40163170707735391190"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Start the program for the first time and find out whether definitions are missing.",
+          "system": "Once only, checks whether the computer edition has group policy support and whether many categories lack their parent, then records that the offer was considered.",
+          "from": [
+            "block-31629065709184768465"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Accept or decline the offer to download the definitions.",
+          "system": "Shows a welcome message explaining Home editions lack the full set; Yes starts the download.",
+          "from": [
+            "block-31629065709184768465"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-getting-microsoft-policy-definitions.use-downloaded-definitions",
+      "outcome": "Make the newly downloaded policy definitions the ones the program works with.",
+      "actor": "person",
+      "actions": [
+        "block-40092394967077955539"
+      ],
+      "rules": [
+        "businessrule-02094124658868396159",
+        "businessrule-05284912414586135547",
+        "businessrule-07376289294643129633",
+        "businessrule-07554086131159240838",
+        "businessrule-09527630769674812053",
+        "businessrule-09710935452747152124",
+        "businessrule-09965726926686583005",
+        "businessrule-11459402502484833685",
+        "businessrule-11674597249570802702",
+        "businessrule-12540995342195943001",
+        "businessrule-15417746115131960533",
+        "businessrule-16229847440499672368",
+        "businessrule-17641776170698884064",
+        "businessrule-18230757898637060853",
+        "businessrule-20341522967469767562",
+        "businessrule-22959538508130326801",
+        "businessrule-23440834431907337703",
+        "businessrule-24269573875592969564",
+        "businessrule-24413560949580370921",
+        "businessrule-24623125277050759553",
+        "businessrule-25143456587420753656",
+        "businessrule-25371901799273876158",
+        "businessrule-25475639870526854331",
+        "businessrule-25766167090873157702",
+        "businessrule-26710870928949391310",
+        "businessrule-26805667514169896082",
+        "businessrule-27318854358145723180",
+        "businessrule-28868424053274244047",
+        "businessrule-29495869201116213931",
+        "businessrule-29530054883116088403",
+        "businessrule-30168924374542565520",
+        "businessrule-31892600882792899810",
+        "businessrule-31928423765922463982",
+        "businessrule-32910542149714942665",
+        "businessrule-33872241894384295212",
+        "businessrule-34235271555130179948",
+        "businessrule-34301200927683901255",
+        "businessrule-35101409759930685557",
+        "businessrule-35533060170265013329",
+        "businessrule-35659935925800526059",
+        "businessrule-39179467487447053337",
+        "businessrule-40601471490811436933",
+        "businessrule-40646214351993665036",
+        "businessrule-40992022396445585276",
+        "businessrule-41440459272484897081",
+        "businessrule-43452052995976839356",
+        "businessrule-44253734408576510565",
+        "businessrule-46824143239519073718",
+        "businessrule-46883945724661990816",
+        "businessrule-46971412075927401870",
+        "businessrule-48352716870696272616",
+        "businessrule-48999549165964538717",
+        "businessrule-49748745950500666232",
+        "businessrule-50061101372023867676",
+        "businessrule-52005709614722807804",
+        "businessrule-53806388515964147870",
+        "businessrule-54518846821349856909",
+        "businessrule-55193519950925403263",
+        "businessrule-56421390704826486738",
+        "businessrule-58670284456856579605",
+        "businessrule-59268653642646332356",
+        "businessrule-60385862679195390671",
+        "businessrule-62728858792696794889",
+        "businessrule-66701495026848575269",
+        "businessrule-67323359061601595450",
+        "businessrule-67539343519248421601",
+        "businessrule-68278299005201189825",
+        "businessrule-69364776950274199547",
+        "businessrule-69876963387177556361",
+        "businessrule-70331897906623822249",
+        "businessrule-70397490486289456229",
+        "businessrule-70425663320377904356",
+        "businessrule-71909773168029429916",
+        "businessrule-73782132825452925601",
+        "businessrule-75568512748421119593",
+        "businessrule-77153890827857678995",
+        "businessrule-77397977946778263418",
+        "businessrule-79960316131030112593",
+        "businessrule-80037556468037401208",
+        "businessrule-81760746419124272603",
+        "businessrule-83755288267226589422",
+        "businessrule-84649532972995606012",
+        "businessrule-86313704517800761850",
+        "businessrule-87686960346106148106",
+        "businessrule-89165707538784213793",
+        "businessrule-89513911810275647919",
+        "businessrule-90470730563627765974",
+        "businessrule-90575686774382821065",
+        "businessrule-91228574547678345469",
+        "businessrule-92573318973236627036",
+        "businessrule-92873738128602220135",
+        "businessrule-92965345094444319678",
+        "businessrule-93437714727587946479",
+        "businessrule-93507723834804807958",
+        "businessrule-94371671563498468562",
+        "businessrule-95679837516811308115",
+        "businessrule-96701855986906093783",
+        "businessrule-97000243539037627331",
+        "businessrule-97301799709818271508",
+        "businessrule-97390301066419776959",
+        "businessrule-97862941341357225531",
+        "businessrule-98117161588141132501",
+        "businessrule-99096323836097983665",
+        "businessrule-99139491988760691407"
+      ],
+      "facts": [
+        "entity-92808062881922645840",
+        "entity-99683518011128701149",
+        "entity-52418278656387992812",
+        "entity-40163170707735391190"
+      ],
+      "needs": [
+        "external-25314431250146805945",
+        "external-45436197603688581519",
+        "external-08492831744411585027",
+        "external-97068941883605652538"
+      ],
+      "current": [
+        {
+          "intent": "Ask to acquire definitions from the Help menu and get them.",
+          "system": "Opens the download dialog and learns the new folder, if any.",
+          "from": [
+            "block-40092394967077955539"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Browse the new definitions in the program.",
+          "system": "Empties the workspace, loads the template and language files of the folder, remembers it as the definitions folder, reports problems found, and rebuilds the category tree and policy list with states, comments and filters.",
+          "from": [
+            "block-40092394967077955539"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.open-the-workspace",
+      "outcome": "Get back to the policy work where it was left: the last policy sources and policy definitions are ready to browse.",
+      "actor": "person",
+      "actions": [
+        "block-92411706700308938260"
+      ],
+      "rules": [
+        "businessrule-06218920206107794280",
+        "businessrule-15364695696024462204",
+        "businessrule-25353365313977612083",
+        "businessrule-27578488339642782673",
+        "businessrule-29585332630928853779",
+        "businessrule-31889487085995982343",
+        "businessrule-34447675520768722859",
+        "businessrule-35899140497190862562",
+        "businessrule-39262656033285451423",
+        "businessrule-40551856488084894130",
+        "businessrule-41547680626150552574",
+        "businessrule-49395771262191850050",
+        "businessrule-50808386816006011599",
+        "businessrule-51029550915449645879",
+        "businessrule-51554818045857630746",
+        "businessrule-58877134447436981389",
+        "businessrule-62563112935081932578",
+        "businessrule-67456626752221980743",
+        "businessrule-72200124994498270380",
+        "businessrule-72559528436656832979",
+        "businessrule-73847809349842629987",
+        "businessrule-74412475215137182202",
+        "businessrule-75428533810997783570",
+        "businessrule-76710184957379543464",
+        "businessrule-77499382636897144286",
+        "businessrule-78253526822536661517",
+        "businessrule-79173574861552738237",
+        "businessrule-83248377690419919134",
+        "businessrule-83542226215682203251",
+        "businessrule-84284160770896952745",
+        "businessrule-85204901615179220846",
+        "businessrule-93571958636080198306",
+        "businessrule-95699184013424603885",
+        "businessrule-98025569949322378254"
+      ],
+      "facts": [
+        "entity-40163170707735391190",
+        "entity-92808062881922645840",
+        "entity-52418278656387992812"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538",
+        "external-25314431250146805945",
+        "external-45436197603688581519",
+        "external-08492831744411585027"
+      ],
+      "current": [
+        {
+          "intent": "Start working with the same sources as last time",
+          "system": "Reads the remembered preferences (carrying on with defaults if they cannot be kept), uses the local policy files for both user and computer on a first start, and if the saved sources cannot be opened tells the person and falls back to the local policy files.",
+          "from": [
+            "block-92411706700308938260"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Have the policy definitions available",
+          "system": "Loads the remembered definitions folder, or the Windows default one. If problems are found asks whether to keep the partly loaded set; if loading fails offers to use the default folder, or says the definitions could not be loaded and leaves the workspace empty.",
+          "from": [
+            "block-92411706700308938260"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Know whether changes can be kept",
+          "system": "Names each source, checks if it can be written, loads its comments if it has a comment location, and warns when a source is not fully writable.",
+          "from": [
+            "block-92411706700308938260"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Start browsing policies",
+          "system": "Shows the categories for both user and computer policies.",
+          "from": [
+            "block-92411706700308938260"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.set-definition-language",
+      "outcome": "Choose the language in which policy definition text is shown and have it applied.",
+      "actor": "person",
+      "actions": [
+        "block-14667094343185527716",
+        "block-04864433854821115058"
+      ],
+      "rules": [
+        "businessrule-31456964891379452251",
+        "businessrule-93543924991745555552",
+        "businessrule-80947080049413275464"
+      ],
+      "facts": [
+        "entity-40163170707735391190",
+        "entity-92808062881922645840"
+      ],
+      "needs": [
+        "external-45436197603688581519",
+        "external-25314431250146805945"
+      ],
+      "current": [
+        {
+          "intent": "Enter the language wanted",
+          "system": "Shows the current language and checks the entered code has two parts around a hyphen; it is not checked as a real language. Entering the same code as the stored one changes nothing.",
+          "from": [
+            "block-14667094343185527716"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Keep the choice",
+          "system": "Saves the new language at once.",
+          "from": [
+            "block-04864433854821115058"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "See the new language in the definitions",
+          "system": "Asks whether to reload now; if yes, empties the workspace and reloads the saved definitions folder, otherwise the language applies the next time definitions are loaded.",
+          "from": [
+            "block-04864433854821115058"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.leave-the-program",
+      "outcome": "Finish the work and leave, releasing everything that was opened.",
+      "actor": "person",
+      "actions": [
+        "block-64319035576012171282",
+        "block-07512317177811313080"
+      ],
+      "rules": [
+        "businessrule-46972642019161394212",
+        "businessrule-59631775004799082543"
+      ],
+      "facts": [],
+      "needs": [
+        "external-97068941883605652538",
+        "external-90077838450756006603"
+      ],
+      "current": [
+        {
+          "intent": "Finish and leave",
+          "system": "Closes the program window.",
+          "from": [
+            "block-64319035576012171282"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Leave nothing locked behind",
+          "system": "Closes the open policy sources, unloading any mounted user hive, and tells the person when something stayed open in other programs.",
+          "from": [
+            "block-07512317177811313080"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-using-the-product.see-about-information",
+      "outcome": "Find out who made the program and which version is in use.",
+      "actor": "person",
+      "actions": [
+        "block-07316532942246428672"
+      ],
+      "rules": [
+        "businessrule-59853527376948406586"
+      ],
+      "facts": [],
+      "needs": [
+        "external-84087908423930356962"
+      ],
+      "current": [
+        {
+          "intent": "Learn who made the program and its version",
+          "system": "Shows the author and the web address, and the version only when one was built in.",
+          "from": [
+            "block-07316532942246428672"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.choose-policy-sources",
+      "outcome": "Decide where the user and computer policies are kept and start working against those sources.",
+      "actor": "person",
+      "actions": [
+        "block-43495097990247728689",
+        "block-16593836685470314086",
+        "block-07841055713983147509",
+        "block-18882497527396093425",
+        "block-22676943268795169202",
+        "block-53684119065030568086",
+        "block-07013931817450395539",
+        "block-39062072014858771500",
+        "block-52519148395305522333"
+      ],
+      "rules": [
+        "businessrule-58680491450946971024",
+        "businessrule-34260437212150300999",
+        "businessrule-60819102502476341284",
+        "businessrule-36363277387876573326",
+        "businessrule-75533700456390778594",
+        "businessrule-66851330016699676430",
+        "businessrule-10464012301936997836",
+        "businessrule-84588009124214109370"
+      ],
+      "facts": [
+        "entity-40163170707735391190",
+        "entity-99683518011128701149"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538",
+        "external-90078096462363044953"
+      ],
+      "current": [
+        {
+          "intent": "Say which kind of source holds the computer policies and where it is.",
+          "system": "Makes available only the location detail that belongs to the chosen kind of computer source; for a policy file, offers files of the policy file type only, including one that does not exist yet.",
+          "from": [
+            "block-43495097990247728689",
+            "block-07841055713983147509"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Say which kind of source holds the user policies and where it is: a policy file, a registry location, a user's profile hive or a user's own Group Policy object.",
+          "system": "Makes available only the location detail that belongs to the chosen kind of user source; offers policy files of the policy file type, and hands the person on to pick a user profile or a user account when those kinds are chosen.",
+          "from": [
+            "block-16593836685470314086",
+            "block-18882497527396093425",
+            "block-22676943268795169202",
+            "block-07013931817450395539"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Confirm the choices.",
+          "system": "Creates the computer and user sources from the choices, falling back to a scratch space when none is chosen; if either cannot be created tells the person why and keeps the choice open, otherwise accepts both.",
+          "from": [
+            "block-53684119065030568086"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Abandon the choice without changing anything.",
+          "system": "Closes the choice as cancelled.",
+          "from": [
+            "block-39062072014858771500"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "See the policies of the newly chosen sources.",
+          "system": "Opens the sources, shows the opening result, and moves the view to the nearest visible category, dropping a selected policy that moved or is now hidden.",
+          "from": [
+            "block-52519148395305522333"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.identify-user-for-policy",
+      "outcome": "Name the user account whose own Group Policy object is to be the user policy source.",
+      "actor": "person",
+      "actions": [
+        "block-94740465332149589219",
+        "block-85480965507959714722",
+        "block-75399435004242266349"
+      ],
+      "rules": [
+        "businessrule-91379498462935455610",
+        "businessrule-77474018484672211108",
+        "businessrule-88238619586671903040",
+        "businessrule-26724904229141688759"
+      ],
+      "facts": [],
+      "needs": [
+        "external-90078096462363044953"
+      ],
+      "current": [
+        {
+          "intent": "Find the account's identifier from a name.",
+          "system": "Translates the typed account name to its security identifier and shows it, or says the name could not be translated.",
+          "from": [
+            "block-94740465332149589219"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Confirm the account.",
+          "system": "If only a name was given, looks it up first and keeps the choice open when nothing results; requires a valid identifier, otherwise explains what to enter, and returns it when valid.",
+          "from": [
+            "block-85480965507959714722"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Give up choosing an account.",
+          "system": "Closes the choice as cancelled.",
+          "from": [
+            "block-75399435004242266349"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.pick-user-profile-for-policy",
+      "outcome": "Choose a user profile whose stored settings are to be the user policy source.",
+      "actor": "person",
+      "actions": [
+        "block-81482853098029816247",
+        "block-77449854280048805872"
+      ],
+      "rules": [
+        "businessrule-02848405191150173128",
+        "businessrule-37850254215893887157"
+      ],
+      "facts": [],
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538"
+      ],
+      "current": [
+        {
+          "intent": "Confirm the chosen profile.",
+          "system": "Does nothing until a profile is selected, then returns the location of that profile's settings file under the users folder.",
+          "from": [
+            "block-81482853098029816247"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Give up choosing a profile.",
+          "system": "Closes the choice as cancelled.",
+          "from": [
+            "block-77449854280048805872"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-choosing-and-saving-policy-sources.save-policy-changes",
+      "outcome": "Save the policy settings and comments to their sources, make them take effect where possible, and remember the chosen sources for next time.",
+      "actor": "person",
+      "actions": [
+        "block-66465089975119483214"
+      ],
+      "rules": [
+        "businessrule-00851565168679896073",
+        "businessrule-05545231242611046306",
+        "businessrule-09176393040056781958",
+        "businessrule-09208070518455812303",
+        "businessrule-13724150063390760319",
+        "businessrule-17212723393144190896",
+        "businessrule-19841193988434357732",
+        "businessrule-20632548312339129786",
+        "businessrule-24034386628405619971",
+        "businessrule-24339552780845919468",
+        "businessrule-25033115401021301399",
+        "businessrule-26056926835272364672",
+        "businessrule-28402048173344159866",
+        "businessrule-39804924157705575084",
+        "businessrule-41013546429447756519",
+        "businessrule-42987908693120337062",
+        "businessrule-43613259767674592997",
+        "businessrule-48799510965890913669",
+        "businessrule-48968387067309128566",
+        "businessrule-51421539020102170720",
+        "businessrule-57614366266507799597",
+        "businessrule-66651514909736203695",
+        "businessrule-67697422395860869033",
+        "businessrule-71273978078040008855",
+        "businessrule-72149976207795359606",
+        "businessrule-84817748081019740495",
+        "businessrule-86190343622453999219",
+        "businessrule-87767421628061265824",
+        "businessrule-90527876062459953686",
+        "businessrule-91552597921533368557",
+        "businessrule-98130638476370994041"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812",
+        "entity-40163170707735391190"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538",
+        "external-08492831744411585027",
+        "external-45436197603688581519"
+      ],
+      "current": [
+        {
+          "intent": "Keep the comments written on policies.",
+          "system": "Writes each source's comments, with generated text identifiers, replacing the earlier content of the comment file; sources without comment support are skipped.",
+          "from": [
+            "block-66465089975119483214"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Keep the policy settings in each source.",
+          "system": "Writes a source only if fully writable, otherwise reports it as not writable; stores values, deletions, clearances and forgotten values in the source's own form, with its numbers, texts and lists encoded.",
+          "from": [
+            "block-66465089975119483214"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Have the saved settings take effect.",
+          "system": "Depending on the kind of source, raises the policy version record and asks Windows to refresh, applies the difference to the running account's registry, or reports that it was already applied, will apply on closing, or was discarded.",
+          "from": [
+            "block-66465089975119483214"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Know the outcome and find the same sources next time.",
+          "system": "Remembers the chosen source kinds and locations, and tells the person Success with the user and computer outcomes, or that saving failed and why.",
+          "from": [
+            "block-66465089975119483214"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings.set-policy-state",
+      "outcome": "Set one policy to Enabled, Disabled or Not configured, with its options and comment, for the computer or the user.",
+      "actor": "person",
+      "actions": [
+        "block-29401732049948573203",
+        "block-49789533336413980059",
+        "block-18703182669260421228",
+        "block-75724566670057728491",
+        "block-89806020979547308639",
+        "block-57992755110790680579",
+        "block-51334849021361427410",
+        "block-96135191155885644109",
+        "block-38804446611751385293",
+        "block-77916892868646047596",
+        "block-06231454516231170585",
+        "block-48615537389470790613"
+      ],
+      "rules": [
+        "businessrule-65724709448091621197",
+        "businessrule-01560321201783674273",
+        "businessrule-20408685392954236399",
+        "businessrule-22919299514571743135",
+        "businessrule-23336067846798029987",
+        "businessrule-24534399091993971891",
+        "businessrule-33075335985104561108",
+        "businessrule-34769835898304277453",
+        "businessrule-37022902056569995834",
+        "businessrule-43638846001153509048",
+        "businessrule-47134496169701496073",
+        "businessrule-47891883049575092611",
+        "businessrule-49179499449653183223",
+        "businessrule-76476292137970655950",
+        "businessrule-90485587050957154914",
+        "businessrule-90493804689850695370",
+        "businessrule-92057272745409912098",
+        "businessrule-95995013385384587600",
+        "businessrule-98958969318255528192",
+        "businessrule-36860850025836880139",
+        "businessrule-67944280997214552078",
+        "businessrule-76178080166619590309",
+        "businessrule-11779280825123119273",
+        "businessrule-59619098183313284576",
+        "businessrule-47264131679601828501",
+        "businessrule-04152128046162000583",
+        "businessrule-14958427259964761169",
+        "businessrule-19622432139142313215",
+        "businessrule-30662593154265010717",
+        "businessrule-33456476599558212379",
+        "businessrule-37207468109369530089",
+        "businessrule-46516041958192928718",
+        "businessrule-49955247469929977676",
+        "businessrule-52553634867035971750",
+        "businessrule-53178349170981485484",
+        "businessrule-55949208713495428877",
+        "businessrule-56832565542674334637",
+        "businessrule-60358450731077326247",
+        "businessrule-60774486401252037450",
+        "businessrule-64524120751868809207",
+        "businessrule-66734059366331213205",
+        "businessrule-67842190900074642321",
+        "businessrule-75244076300039577548",
+        "businessrule-80911529766189561154",
+        "businessrule-84933301477035282498",
+        "businessrule-90058940824311429227",
+        "businessrule-92009750053258186072",
+        "businessrule-97175686457081101132",
+        "businessrule-53979609002646144363",
+        "businessrule-07359577675270518038"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "needs": [
+        "external-97068941883605652538",
+        "external-08492831744411585027"
+      ],
+      "current": [
+        {
+          "intent": "Look at a policy and see how it is set today.",
+          "system": "Shows the policy's name, help, supported-on text, its current state and option values and its comment, read from the chosen policy source; a policy for both computer and user starts on computer.",
+          "from": [
+            "block-49789533336413980059"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Switch between the computer and the user setting of the policy.",
+          "system": "Moves to that policy source, shows whether it can be written and whether it holds comments, and reloads the state and option values.",
+          "from": [
+            "block-51334849021361427410"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Choose the state the policy should have.",
+          "system": "Allows the options to be edited only while Enabled is chosen.",
+          "from": [
+            "block-57992755110790680579"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Fill in the options of the policy.",
+          "system": "Keeps numbers inside the policy's limits and refuses non-digit typing, limits text length, offers suggestions and choices, and lets the person edit lists of entries, refusing duplicate names for named lists.",
+          "from": [
+            "block-18703182669260421228",
+            "block-75724566670057728491",
+            "block-89806020979547308639",
+            "block-48615537389470790613"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Add a comment to the policy.",
+          "system": "Keeps the comment for storing when the source supports comments.",
+          "from": [
+            "block-49789533336413980059"
+          ],
+          "confidence": "inferred"
+        },
+        {
+          "intent": "Save the choice, either leaving the dialog or staying to make more changes.",
+          "system": "Forgets everything the source held for the policy, then writes the chosen state, every option and the comment; reports a change on leaving if anything was saved earlier.",
+          "from": [
+            "block-96135191155885644109",
+            "block-38804446611751385293",
+            "block-29401732049948573203",
+            "block-06231454516231170585"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Make room to read the help and comment.",
+          "system": "Shares extra width between the options and the help and comment text.",
+          "from": [
+            "block-77916892868646047596"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings.import-policy-settings-from-text",
+      "outcome": "Bring a set of policy settings in from a semantic policy text and apply them to the computer and user policy sources.",
+      "actor": "person",
+      "actions": [
+        "block-27933278213709856376",
+        "block-70742542454119360952",
+        "block-34107094698830091312",
+        "block-92467440283303600855",
+        "block-02431696381301467584",
+        "block-98990608667721641067",
+        "block-20479299247601531941",
+        "block-91334952261881723533"
+      ],
+      "rules": [
+        "businessrule-27078270365699057081",
+        "businessrule-14257585336729172869",
+        "businessrule-17846007911557610465",
+        "businessrule-21688833916465491468",
+        "businessrule-37953448968627114950",
+        "businessrule-38078267378406118840",
+        "businessrule-49239739229069713399",
+        "businessrule-64894609785645160893",
+        "businessrule-82283321913472173436",
+        "businessrule-85959955505766938318",
+        "businessrule-91520515189249767580",
+        "businessrule-97058087218177971913",
+        "businessrule-30078789996227150580",
+        "businessrule-53070511165338807522",
+        "businessrule-00415446495174126677",
+        "businessrule-12966156302506777327",
+        "businessrule-45692609540846356884",
+        "businessrule-47001836867625969953",
+        "businessrule-70167687024707690035",
+        "businessrule-78566706966921753288"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538",
+        "external-08492831744411585027"
+      ],
+      "current": [
+        {
+          "intent": "Provide the policy text, from a file or typed in, or start again from an empty one.",
+          "system": "Shows the whole file text in place of what was there, or after confirmation restores the empty header; discards any earlier result.",
+          "from": [
+            "block-27933278213709856376",
+            "block-92467440283303600855",
+            "block-98990608667721641067",
+            "block-20479299247601531941"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Check that the text is valid.",
+          "system": "Reads the text and says how many policy settings it holds or why it is refused, with the line it stopped at; nothing is applied.",
+          "from": [
+            "block-70742542454119360952"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Accept the text for applying.",
+          "system": "Hands the parsed text on, or refuses invalid text with the reason; leaving without accepting passes nothing on.",
+          "from": [
+            "block-34107094698830091312",
+            "block-02431696381301467584"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Apply all the settings.",
+          "system": "Applies each policy to the computer or user source by its section, wiping its earlier settings first and storing its comment, skipping and counting failures, then says it succeeded or how many could not be applied and refreshes the view.",
+          "from": [
+            "block-91334952261881723533"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-changing-policy-settings.inspect-policy-settings-as-text",
+      "outcome": "See policy settings as semantic policy text and copy it out to use elsewhere.",
+      "actor": "person",
+      "actions": [
+        "block-56021383816140036498",
+        "block-18241451168755948032",
+        "block-93851338452706207861",
+        "block-74794780607473579452"
+      ],
+      "rules": [
+        "businessrule-47036476815425257305"
+      ],
+      "facts": [
+        "entity-99683518011128701149"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Choose whether the text carries its header.",
+          "system": "Shows the heading and a blank line before the text only when asked.",
+          "from": [
+            "block-93851338452706207861"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Select the text.",
+          "system": "Selects all the text.",
+          "from": [
+            "block-18241451168755948032",
+            "block-74794780607473579452"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Copy the text.",
+          "system": "Selects and copies the whole text to the clipboard.",
+          "from": [
+            "block-56021383816140036498"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policy-by-id",
+      "outcome": "Go straight to a known category, product, support definition or policy by typing its identifier.",
+      "actor": "person",
+      "actions": [
+        "block-61877977111665770759",
+        "block-00880488620958939962",
+        "block-08747539546616381995",
+        "block-32698633467304016976",
+        "block-36457006871614893425",
+        "block-16750935830546567218"
+      ],
+      "rules": [
+        "businessrule-49813083192336894297",
+        "businessrule-81666786810242280110",
+        "businessrule-93221850558792273709",
+        "businessrule-34818300362920325745",
+        "businessrule-56645748073860464161",
+        "businessrule-73680018829588409732",
+        "businessrule-59811769233751713079",
+        "businessrule-79420398091956863443",
+        "businessrule-22485752927450345044",
+        "businessrule-27325316460229917481",
+        "businessrule-39702010276849006236",
+        "businessrule-49582367227471127226",
+        "businessrule-62209428351075007862",
+        "businessrule-73292110340688125936",
+        "businessrule-75178338270301910966",
+        "businessrule-86698236183201307158",
+        "businessrule-95233256539481592648",
+        "businessrule-97405551033143476269"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "needs": [
+        "external-25314431250146805945"
+      ],
+      "current": [
+        {
+          "intent": "Say which identifier to look for and in which area.",
+          "system": "Offers only the areas user or computer, user, and computer, and shows status symbols as the person types; the identifier is trimmed and looked up as a category, then a product, then a support definition, then a policy, showing what kind it found or that nothing matched.",
+          "from": [
+            "block-61877977111665770759",
+            "block-00880488620958939962",
+            "block-08747539546616381995"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Confirm the identifier or give up.",
+          "system": "Accepts whatever was typed, even when nothing matched, or abandons the request without a selection.",
+          "from": [
+            "block-32698633467304016976",
+            "block-36457006871614893425"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "See what was found.",
+          "system": "Opens a visible category, opens a policy for editing and moves the list to it, shows the details of a product or support definition, or says the category is not visible or the object could not be found.",
+          "from": [
+            "block-16750935830546567218"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-text",
+      "outcome": "Find policies whose title, description or comments contain words or phrases the person remembers.",
+      "actor": "person",
+      "actions": [
+        "block-47405947189671669922",
+        "block-30919896261988592289",
+        "block-14507530008177660767"
+      ],
+      "rules": [
+        "businessrule-20714647401379544771",
+        "businessrule-21915530910585082056",
+        "businessrule-31790508764365764837",
+        "businessrule-51916167191556979448",
+        "businessrule-63262725504588029346",
+        "businessrule-73561308167207352856",
+        "businessrule-86305970842078630022"
+      ],
+      "facts": [
+        "entity-52418278656387992812"
+      ],
+      "needs": [
+        "external-08492831744411585027"
+      ],
+      "current": [
+        {
+          "intent": "Describe the words, wildcards or phrases to look for and which attributes to search.",
+          "system": "Refuses empty text or no chosen attribute, splits the text into words, wildcard words and quoted phrases, and builds a test that matches a policy when any chosen attribute contains all of them; an unclosed phrase is silently dropped.",
+          "from": [
+            "block-30919896261988592289"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Start the search or abandon it.",
+          "system": "Starts a search with the entered terms, including comments of both areas, or closes without searching.",
+          "from": [
+            "block-14507530008177660767",
+            "block-47405947189671669922"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.find-policies-by-registry",
+      "outcome": "Find the policies that control a given system setting, named by its key or value.",
+      "actor": "person",
+      "actions": [
+        "block-71047013454784114585",
+        "block-80717492809988540545",
+        "block-83203327187612347635"
+      ],
+      "rules": [
+        "businessrule-27271850163543025066",
+        "businessrule-35545130062422334165",
+        "businessrule-54035538146675510973",
+        "businessrule-54588279423566663184",
+        "businessrule-71024372746156766440",
+        "businessrule-73898787083077319907",
+        "businessrule-95826639622119629666",
+        "businessrule-90661647574869686546"
+      ],
+      "facts": [
+        "entity-99683518011128701149"
+      ],
+      "needs": [
+        "external-97068941883605652538"
+      ],
+      "current": [
+        {
+          "intent": "Give the registry key and value to look for.",
+          "system": "Refuses when both are empty or the key begins with a root key, then builds a case-insensitive test matching policies with a registry value that meets every term, with key and value wildcards or prefixes interpreted.",
+          "from": [
+            "block-80717492809988540545"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Start the search or abandon it.",
+          "system": "Starts a search with the entered terms or closes without searching.",
+          "from": [
+            "block-83203327187612347635",
+            "block-71047013454784114585"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.review-search-results",
+      "outcome": "Work through the hits of a search and pick the policy to open.",
+      "actor": "person",
+      "actions": [
+        "block-64273399884973341208",
+        "block-36571577833746850164",
+        "block-05405434344126500839",
+        "block-57135383118787346557",
+        "block-25728253727728310343",
+        "block-37035950900396190507",
+        "block-49062346851945682165",
+        "block-27516887165549303737"
+      ],
+      "rules": [
+        "businessrule-17385510066480798684",
+        "businessrule-57749472934040708163",
+        "businessrule-79288582532948770219",
+        "businessrule-94342659396000502591",
+        "businessrule-15877826642522947109",
+        "businessrule-48840711587592938759",
+        "businessrule-35354684864210149934",
+        "businessrule-38090025507732480917",
+        "businessrule-80544887789558031281",
+        "businessrule-78338951417255409296",
+        "businessrule-17430127230259081557",
+        "businessrule-53914450774482291886"
+      ],
+      "facts": [
+        "entity-99683518011128701149"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Watch the search run and see its hits.",
+          "system": "Clears earlier results, tests every policy in turn, adds hits with their category, refreshes progress every 20 policies and reports the totals when finished or cancelled.",
+          "from": [
+            "block-64273399884973341208",
+            "block-05405434344126500839",
+            "block-37035950900396190507"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Stop a search that is taking too long or no longer wanted.",
+          "system": "Cancels the search when asked or when the results are closed, and settles the progress report.",
+          "from": [
+            "block-36571577833746850164",
+            "block-57135383118787346557"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Come back to earlier results without searching again.",
+          "system": "Reopens the last results with the previous choice reselected, or says no search has been run.",
+          "from": [
+            "block-49062346851945682165"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Pick a hit to open.",
+          "system": "Passes the selected policy back, opens it for editing in the current area and moves the list to it.",
+          "from": [
+            "block-25728253727728310343"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Move on to the next visible hit.",
+          "system": "Takes the next result that is visible, skipping hidden ones, or says there are no more matching the filter.",
+          "from": [
+            "block-27516887165549303737"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-finding-policies.narrow-policy-list-by-filter",
+      "outcome": "Limit the policy list to policies of a chosen type, state, comment status and supported products, and switch that limit on or off.",
+      "actor": "person",
+      "actions": [
+        "block-26736796202907003543",
+        "block-03044886867739368079",
+        "block-27559849759497597302",
+        "block-88991021756869656536",
+        "block-75494449832197867529",
+        "block-44706239895339562170",
+        "block-55576298759886274598",
+        "block-69596352550727046885",
+        "block-40488572982447813355"
+      ],
+      "rules": [
+        "businessrule-88807660791719489759",
+        "businessrule-57716378734614233724",
+        "businessrule-01575097247784730570",
+        "businessrule-26561900736287578271",
+        "businessrule-32591775124677875588",
+        "businessrule-59209755491778300947",
+        "businessrule-76306981111385169671",
+        "businessrule-81206266674090971597",
+        "businessrule-03237181236179074787",
+        "businessrule-70906412717211463954",
+        "businessrule-81055540068763556055",
+        "businessrule-90628240213834851721",
+        "businessrule-61457439461915744538",
+        "businessrule-58048189688698008638",
+        "businessrule-85052319902195299547",
+        "businessrule-36944318108231327872"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Review the limit currently in force.",
+          "system": "Shows the current choices for type, state, comment status and supported products, or the defaults when no condition is set.",
+          "from": [
+            "block-69596352550727046885"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Choose the conditions the policies must meet.",
+          "system": "Makes the product choice available only when supported-on is wanted, spreads a product choice to the products beneath it, ignores double choosing, and can return every choice to its default.",
+          "from": [
+            "block-26736796202907003543",
+            "block-27559849759497597302",
+            "block-44706239895339562170",
+            "block-55576298759886274598",
+            "block-75494449832197867529"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Apply the chosen conditions or leave them unchanged.",
+          "system": "Builds the filter from the choices and turns the filtered view on, moving to the nearest visible category, or leaves the filter as it was.",
+          "from": [
+            "block-88991021756869656536",
+            "block-03044886867739368079"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Turn the limit on or off.",
+          "system": "Switches whether the filter applies to the lists and moves to the nearest visible category.",
+          "from": [
+            "block-40488572982447813355"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.open-raw-policy-editor",
+      "outcome": "Open a policy file for direct editing of its raw keys and values, with a warning the first time, and leave the editor when done.",
+      "actor": "person",
+      "actions": [
+        "block-18043112458533276543",
+        "block-91792378122287310099",
+        "block-74715625061692366925",
+        "block-91089666300107221398",
+        "block-93573573421282575863",
+        "block-82351254846133371644"
+      ],
+      "rules": [
+        "businessrule-14969413888672404933",
+        "businessrule-40441510620479008895",
+        "businessrule-43194539708053716006",
+        "businessrule-44523725638753390545",
+        "businessrule-67529938588779257243",
+        "businessrule-81365817698028227620",
+        "businessrule-98676109650316370626",
+        "businessrule-64564273672622472190",
+        "businessrule-21403142511575039594",
+        "businessrule-18574755515767742264",
+        "businessrule-13057335115870748705",
+        "businessrule-32089237714667793315",
+        "businessrule-86296876237579429124"
+      ],
+      "facts": [
+        "entity-40163170707735391190"
+      ],
+      "needs": [
+        "external-90077838450756006603"
+      ],
+      "current": [
+        {
+          "intent": "Start raw editing of a policy file",
+          "system": "Tells the person if neither loaded policy source is backed by a policy file; otherwise warns the first time that raw editing is for advanced users and records acceptance.",
+          "from": [
+            "block-18043112458533276543"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Choose whether the user or computer policy source is edited",
+          "system": "Offers only the sources the caller allows and returns the chosen one; leaving cancels.",
+          "from": [
+            "block-91792378122287310099",
+            "block-74715625061692366925"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Browse the keys and values and see what can be done with the current selection",
+          "system": "Lists keys alphabetically with sub-keys and values, and makes available only the actions that suit what is selected.",
+          "from": [
+            "block-82351254846133371644"
+          ],
+          "confidence": "inferred"
+        },
+        {
+          "intent": "Finish editing",
+          "system": "Closes the editor; every change was already applied to the loaded policy source and reaches disk only when policies are saved, whether the person finishes or leaves.",
+          "from": [
+            "block-91089666300107221398",
+            "block-93573573421282575863"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.add-policy-file-key-or-value",
+      "outcome": "Add a new key, or a new value of a chosen kind, to a policy file.",
+      "actor": "person",
+      "actions": [
+        "block-54431974963440976475",
+        "block-33339374210388875839",
+        "block-56011203566573573100",
+        "block-73079666774281241997",
+        "block-12381913549521886903"
+      ],
+      "rules": [
+        "businessrule-21846002666758208174",
+        "businessrule-27239953863800337722",
+        "businessrule-65588006996628019814",
+        "businessrule-94140234913184124479",
+        "businessrule-13220028854331489804",
+        "businessrule-64891270751019389302",
+        "businessrule-87150598845683946147",
+        "businessrule-88605435114040098546"
+      ],
+      "facts": [],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Name a new key",
+          "system": "Asks for the key name, checks it is valid and not taken under the same parent, and adds it as an empty key, selected in the list.",
+          "from": [
+            "block-54431974963440976475",
+            "block-33339374210388875839",
+            "block-56011203566573573100"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Add a value to the selected key",
+          "system": "Asks for the value name and one of five kinds, then asks for the data and stores it, replacing a value of the same name without warning.",
+          "from": [
+            "block-73079666774281241997",
+            "block-12381913549521886903"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.change-policy-file-value-data",
+      "outcome": "Change the data of an existing value in a policy file.",
+      "actor": "person",
+      "actions": [
+        "block-04045695864978247457",
+        "block-93495413918984610841",
+        "block-80078734348197600769",
+        "block-50446188615114520824",
+        "block-72694376270340482080",
+        "block-89740736795318812041",
+        "block-20624708115873028291"
+      ],
+      "rules": [
+        "businessrule-05846735750774889498",
+        "businessrule-85571919984782494727"
+      ],
+      "facts": [],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Choose a value to change",
+          "system": "Offers a text, number or list-of-text entry by the kind of the value, and refuses kinds such as binary.",
+          "from": [
+            "block-04045695864978247457"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Enter the new data",
+          "system": "Takes text, a list of lines, or a number within the limits of its size, shown in decimal or hexadecimal; a too-large hexadecimal number becomes the largest allowed and non-numbers change nothing. Leaving keeps the old data.",
+          "from": [
+            "block-93495413918984610841",
+            "block-80078734348197600769",
+            "block-50446188615114520824",
+            "block-72694376270340482080",
+            "block-89740736795318812041",
+            "block-20624708115873028291"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Store the change",
+          "system": "Replaces the data, keeping name and kind, and keeps the value selected.",
+          "from": [
+            "block-04045695864978247457"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.remove-policy-file-entries",
+      "outcome": "Remove keys or values from a policy file, either leaving a deletion instruction for the machine or forgetting them entirely.",
+      "actor": "person",
+      "actions": [
+        "block-16970529596856009541",
+        "block-53120693124506724348",
+        "block-52241240840751807884",
+        "block-96284792383932228976",
+        "block-42642804897148691736"
+      ],
+      "rules": [
+        "businessrule-27194812132584860836",
+        "businessrule-63694206615951133419",
+        "businessrule-30359040357073744492",
+        "businessrule-84404651755849490179",
+        "businessrule-30251051045932916641",
+        "businessrule-04432638879352685329"
+      ],
+      "facts": [],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Mark a value for deletion, or clear a key",
+          "system": "Replaces a value with a deletion entry, or on a key offers clear everything, clear first, or delete one value by name; nothing changes until a choice is made.",
+          "from": [
+            "block-16970529596856009541",
+            "block-53120693124506724348",
+            "block-52241240840751807884",
+            "block-96284792383932228976"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Forget a key or value completely",
+          "system": "After confirming for a key, removes the key, its sub-keys, values and marks, or the value and its deletion entry, leaving no deletion behind.",
+          "from": [
+            "block-42642804897148691736"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.import-registry-file-into-policy-source",
+      "outcome": "Bring the contents of an exported set of machine settings into a policy source.",
+      "actor": "person",
+      "actions": [
+        "block-61484076288336240425",
+        "block-42014485464934566054",
+        "block-89194191501498123777",
+        "block-37220153383335897650",
+        "block-13677197335497518185"
+      ],
+      "rules": [
+        "businessrule-60060400053285241820",
+        "businessrule-00824990257185597112",
+        "businessrule-17451417049747776074",
+        "businessrule-18921117498420510792",
+        "businessrule-23306400970907693227",
+        "businessrule-52142616153788952070",
+        "businessrule-55584576559812010511",
+        "businessrule-57877192145861745927",
+        "businessrule-59618595788928559733",
+        "businessrule-75481654180830858390",
+        "businessrule-89009644626675244455",
+        "businessrule-59516130836014950967",
+        "businessrule-18627979551357993299",
+        "businessrule-45318436042524755037",
+        "businessrule-61966293182360194116",
+        "businessrule-97032716123610483497"
+      ],
+      "facts": [],
+      "needs": [
+        "external-90077838450756006603"
+      ],
+      "current": [
+        {
+          "intent": "Choose the area and start the import",
+          "system": "Applies to the policy source of the chosen area, or from the raw editor to the file being edited, and refreshes the view afterwards.",
+          "from": [
+            "block-61484076288336240425",
+            "block-42014485464934566054"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Pick the registry file",
+          "system": "Offers only registry files and guesses the key prefix from the first key, warning if the guess fails or the file holds default values.",
+          "from": [
+            "block-89194191501498123777"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Confirm the prefix and import",
+          "system": "Refuses without a file or prefix, loads the file and applies it directly to the policy source, saying only that it failed on any error. Leaving cancels.",
+          "from": [
+            "block-37220153383335897650",
+            "block-13677197335497518185"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.import-policy-file",
+      "outcome": "Load a policy file into the user or computer policy source.",
+      "actor": "person",
+      "actions": [
+        "block-75389740485334604011"
+      ],
+      "rules": [
+        "businessrule-69354381130041181167",
+        "businessrule-97686874157870392601"
+      ],
+      "facts": [],
+      "needs": [
+        "external-90077838450756006603"
+      ],
+      "current": [
+        {
+          "intent": "Choose a policy file and where it applies",
+          "system": "Reads the file and applies it to the chosen source, reporting success or that it could not be loaded; nothing reaches disk until policies are saved.",
+          "from": [
+            "block-75389740485334604011"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.export-policy-as-registry-file",
+      "outcome": "Write a policy source, or one branch of it, as an exported set of machine settings.",
+      "actor": "person",
+      "actions": [
+        "block-04644155608109103956",
+        "block-00156606002660817029",
+        "block-60201373498704616545",
+        "block-25624747884727551547",
+        "block-37048128904866618877"
+      ],
+      "rules": [
+        "businessrule-04261341694819838767",
+        "businessrule-25739450692106090110",
+        "businessrule-50297867320833369013",
+        "businessrule-62577216252619197563",
+        "businessrule-60632388568264259103",
+        "businessrule-14603482078338141941",
+        "businessrule-38615217867457911992",
+        "businessrule-57163770116853325546",
+        "businessrule-78788630170323770129",
+        "businessrule-98458070891453225274"
+      ],
+      "facts": [],
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538"
+      ],
+      "current": [
+        {
+          "intent": "Choose the area, or a branch of the file being edited, to export",
+          "system": "Hands the policy source to the export step; a registry-backed source is first rebuilt as a policy file.",
+          "from": [
+            "block-04644155608109103956",
+            "block-00156606002660817029"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Set the destination file, key prefix and branch",
+          "system": "Starts the prefix from the user or computer default and the branch from the selected key; an empty branch exports everything.",
+          "from": [
+            "block-60201373498704616545"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Write the registry file",
+          "system": "Refuses without a file name, writes the branch with deletion marks, and reports success or failure. Leaving cancels.",
+          "from": [
+            "block-25624747884727551547",
+            "block-37048128904866618877"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-editing-policy-files-directly.export-policy-file",
+      "outcome": "Save a policy source out as a policy file.",
+      "actor": "person",
+      "actions": [
+        "block-41514309757986060440"
+      ],
+      "rules": [
+        "businessrule-57982804566984189207"
+      ],
+      "facts": [],
+      "needs": [
+        "external-90077838450756006603",
+        "external-97068941883605652538"
+      ],
+      "current": [
+        {
+          "intent": "Choose the area and a file to write",
+          "system": "Uses a policy-file-backed source as is, rebuilds a registry-backed one from the three policy locations, and reports success or that it could not be saved.",
+          "from": [
+            "block-41514309757986060440"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.load-definitions-folder",
+      "outcome": "Load a folder of policy definitions into the workspace so its policies can be browsed.",
+      "actor": "person",
+      "actions": [
+        "block-13117547435582731450",
+        "block-59255999245406242607",
+        "block-30537692166592904451",
+        "block-20168653063977540452",
+        "block-73356074458344317029",
+        "block-13558804890992588767"
+      ],
+      "rules": [
+        "businessrule-88154451768954453608",
+        "businessrule-76226373219464614800",
+        "businessrule-43765682097437166867",
+        "businessrule-53176229115945924012",
+        "businessrule-98012095360980700253",
+        "businessrule-06850078746756456273",
+        "businessrule-19671296259932138006",
+        "businessrule-56221298079625729644"
+      ],
+      "facts": [
+        "entity-92808062881922645840",
+        "entity-40163170707735391190"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-25314431250146805945",
+        "external-90078096462363044953",
+        "external-45436197603688581519"
+      ],
+      "current": [
+        {
+          "intent": "Choose where the definitions come from: the Windows folder, the domain's shared folder, or a folder of their own.",
+          "system": "Starts on the own-folder choice, offers the domain choice only when the computer is joined to a domain and that shared folder exists, and lets the folder be typed or picked only for the own-folder choice.",
+          "from": [
+            "block-13117547435582731450",
+            "block-59255999245406242607",
+            "block-20168653063977540452"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Confirm the choice, or give up.",
+          "system": "Refuses a folder that does not exist and stays open; otherwise passes on the folder and whether to clear the workspace first (offered by default). Escape cancels with nothing chosen.",
+          "from": [
+            "block-30537692166592904451",
+            "block-73356074458344317029"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Have the definitions in that folder available to browse.",
+          "system": "Empties the workspace first only if asked, adds the folder's definitions, reports problems without stopping, and on failure says the folder could not be fully added. The folder is remembered for the next start only when the workspace was cleared and the load succeeded.",
+          "from": [
+            "block-13558804890992588767"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.add-template-file",
+      "outcome": "Add a single policy template file to the policies already loaded.",
+      "actor": "person",
+      "actions": [
+        "block-95818603562143517431"
+      ],
+      "rules": [
+        "businessrule-07200475892676201466",
+        "businessrule-61344191921921935952"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [
+        "external-90077838450756006603",
+        "external-25314431250146805945"
+      ],
+      "current": [
+        {
+          "intent": "Pick one template file to add.",
+          "system": "Accepts template files only and adds that file alone to the current workspace without emptying it or remembering it as the definitions folder.",
+          "from": [
+            "block-95818603562143517431"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Learn whether the file was accepted.",
+          "system": "Rebuilds the structures; when refused, says the file could not be added with the reason.",
+          "from": [
+            "block-95818603562143517431"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.clear-loaded-definitions",
+      "outcome": "Remove all loaded policy definitions from the workspace.",
+      "actor": "person",
+      "actions": [
+        "block-61070195191480277301"
+      ],
+      "rules": [
+        "businessrule-83939170310206178732"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Start over with no definitions loaded.",
+          "system": "Empties the workspace at once with no confirmation and rebuilds the view.",
+          "from": [
+            "block-61070195191480277301"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.review-loaded-template-files",
+      "outcome": "See which policy template files are loaded and what each one contributes.",
+      "actor": "person",
+      "actions": [
+        "block-64668818041164253976",
+        "block-55650905820560115513",
+        "block-39318096240988456545",
+        "block-04424586335392218217"
+      ],
+      "rules": [
+        "businessrule-31675843578661081361",
+        "businessrule-52722053913285909842"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [
+        "external-25314431250146805945"
+      ],
+      "current": [
+        {
+          "intent": "See the list of loaded template files.",
+          "system": "Lists the template files loaded in the workspace.",
+          "from": [
+            "block-64668818041164253976"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Look into one file.",
+          "system": "Shows only the policies, categories, products and support rules defined in that file. Opening by double-click does not check that a file is selected; Enter does.",
+          "from": [
+            "block-55650905820560115513",
+            "block-39318096240988456545"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Read the list comfortably as the window changes size.",
+          "system": "Keeps the namespace column filling the width left over.",
+          "from": [
+            "block-04424586335392218217"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-policy-tree",
+      "outcome": "Move through the categories and policies of the loaded definitions and read what each is for.",
+      "actor": "person",
+      "actions": [
+        "block-38981877830602633388",
+        "block-89406388478575619459",
+        "block-62656188540901169217",
+        "block-79379072249641546586",
+        "block-28869808154726861529",
+        "block-20560369235271632336",
+        "block-69879767786914075914",
+        "block-71012193977886609003",
+        "block-65211679249909420884",
+        "block-25872160162253268719"
+      ],
+      "rules": [
+        "businessrule-03031297687036444400",
+        "businessrule-29660896839160984241",
+        "businessrule-75222346168306051090",
+        "businessrule-41685454348767959653",
+        "businessrule-68891329302657284154",
+        "businessrule-57028469241171716582",
+        "businessrule-25501360175578063856",
+        "businessrule-36623707346851740456"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Choose which sections of policies to look at, and whether empty categories show.",
+          "system": "Shows user, computer or both kinds of policies; shows or hides categories with no visible policies and moves to the nearest visible category.",
+          "from": [
+            "block-79379072249641546586",
+            "block-28869808154726861529"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Pick a category and see its subcategories, policies and description.",
+          "system": "Makes it the current category, clears any selected policy and lists its contents. Highlighting a policy or category shows its description and clears the other.",
+          "from": [
+            "block-38981877830602633388",
+            "block-62656188540901169217",
+            "block-89406388478575619459",
+            "block-71012193977886609003"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Go into a category or open a policy.",
+          "system": "Opens a category as the current one, or opens the policy for editing in the section currently shown; nothing happens with no selection. Enter does the same.",
+          "from": [
+            "block-20560369235271632336",
+            "block-69879767786914075914"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "See the actions that fit the thing under the pointer.",
+          "system": "A secondary click selects a category in the tree and shows only the actions that fit a category or a policy; with no row selected in the list, nothing is shown.",
+          "from": [
+            "block-25872160162253268719",
+            "block-65211679249909420884"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.merge-duplicate-policies",
+      "outcome": "Merge identical user and computer policies into single policies that apply to both.",
+      "actor": "person",
+      "actions": [
+        "block-52477240354082269436"
+      ],
+      "rules": [
+        "businessrule-40351382289100643848",
+        "businessrule-92560631592608734086"
+      ],
+      "facts": [
+        "entity-99683518011128701149"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Tidy the list by combining twin policies.",
+          "system": "Merges pairs alone in the same category with the same name, explanation and registry key, one for users and one for computers, and tells how many were merged.",
+          "from": [
+            "block-52477240354082269436"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-policy-details",
+      "outcome": "See what a policy is, which section it applies to, where it sits and what it is supported on.",
+      "actor": "person",
+      "actions": [
+        "block-78252692403653225370",
+        "block-92180322422063221145",
+        "block-42055154505610373837"
+      ],
+      "rules": [
+        "businessrule-30888155476627040275",
+        "businessrule-59317523370985833904",
+        "businessrule-89677004946923202726"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Open the details of a policy from a list of policies.",
+          "system": "Shows the policy with its section (user, computer or both), its category and its support definition; unknown or missing ones are flagged as orphaned, uncategorized or missing and their buttons disabled.",
+          "from": [
+            "block-78252692403653225370",
+            "block-92180322422063221145"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Follow the policy to what it is supported on.",
+          "system": "Opens the support definition the policy names, when it exists.",
+          "from": [
+            "block-42055154505610373837"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.view-category-details",
+      "outcome": "See a category, its parent and how it relates to policies.",
+      "actor": "person",
+      "actions": [
+        "block-66828128113828383962",
+        "block-33894596800557045530",
+        "block-84939599421744669029"
+      ],
+      "rules": [
+        "businessrule-88550832449331267612"
+      ],
+      "facts": [
+        "entity-99683518011128701149"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "Open a category from a file's details or from a policy.",
+          "system": "Shows the category with its parent's name.",
+          "from": [
+            "block-66828128113828383962",
+            "block-84939599421744669029"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Walk up to the parent category.",
+          "system": "Shows the parent in the same window; a missing parent is flagged orphaned and a top-level category shows none.",
+          "from": [
+            "block-33894596800557045530"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-products",
+      "outcome": "Browse the products and their versions that the loaded definitions cover, and see the details of each.",
+      "actor": "person",
+      "actions": [
+        "block-08454163414443845831",
+        "block-70438482535332396460",
+        "block-21250694452518135903",
+        "block-85565043795242001799",
+        "block-78795492686610610516",
+        "block-27521638512866951547",
+        "block-75890035579964781740",
+        "block-68471089903278595698",
+        "block-94974939167069133577"
+      ],
+      "rules": [
+        "businessrule-93683837313593251984",
+        "businessrule-12357125815438552418",
+        "businessrule-69465149169735487446",
+        "businessrule-52738497804454297244",
+        "businessrule-77846110822300189675"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "See every product.",
+          "system": "Lists loaded products by name, each with its number of children.",
+          "from": [
+            "block-08454163414443845831"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Narrow down to a version.",
+          "system": "Lists major versions of the chosen product, then minor versions of the chosen major version, ordered by version; empty with a prompt when nothing is chosen.",
+          "from": [
+            "block-70438482535332396460",
+            "block-21250694452518135903"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Open a product's details.",
+          "system": "Opens details by double-click or Enter, doing nothing with no selection; a product from a template file opens the same way.",
+          "from": [
+            "block-85565043795242001799",
+            "block-78795492686610610516",
+            "block-27521638512866951547"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Move between a product's child versions and its parent.",
+          "system": "Shows the chosen child or the parent in the same window; nothing happens with no selection.",
+          "from": [
+            "block-68471089903278595698",
+            "block-94974939167069133577"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Read the version list comfortably.",
+          "system": "Name column fills the width beside the version column.",
+          "from": [
+            "block-75890035579964781740"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.browse-support-rules",
+      "outcome": "Find the support rules and see which products they cover.",
+      "actor": "person",
+      "actions": [
+        "block-82164480679050137750",
+        "block-33689568439379299743",
+        "block-80435818182674952821",
+        "block-64431347962942436201",
+        "block-45462513891449541466",
+        "block-82962493722270760078",
+        "block-53898486546586719743"
+      ],
+      "rules": [
+        "businessrule-84991051448916998249",
+        "businessrule-54625832347030556938",
+        "businessrule-82075493230431806208"
+      ],
+      "facts": [
+        "entity-92808062881922645840"
+      ],
+      "needs": [],
+      "current": [
+        {
+          "intent": "See every support rule and narrow the list by name.",
+          "system": "Lists all support definitions ordered by name with leading spaces ignored, filtered by typed text ignoring case.",
+          "from": [
+            "block-82164480679050137750",
+            "block-80435818182674952821"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Open a support rule's details.",
+          "system": "Opens by double-click (without checking selection) or Enter (which checks), also from a template file's details.",
+          "from": [
+            "block-33689568439379299743",
+            "block-64431347962942436201",
+            "block-45462513891449541466"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Follow an entry to a product or a nested support rule.",
+          "system": "Opens the product's details for a product entry, or shows a nested support rule in the same window; missing products do nothing.",
+          "from": [
+            "block-53898486546586719743"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Read the list comfortably.",
+          "system": "Name column fills the width beside the version columns.",
+          "from": [
+            "block-82962493722270760078"
+          ],
+          "confidence": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "tasks-browsing-policy-definitions.inspect-policy-technical-details",
+      "outcome": "Inspect the technical makeup of a policy: its stored setting, presentation, elements and semantic text, and copy it.",
+      "actor": "person",
+      "actions": [
+        "block-76908522554461045751",
+        "block-01358626545675013383"
+      ],
+      "rules": [
+        "businessrule-57016400965631502733",
+        "businessrule-01704207253788877148",
+        "businessrule-10913365400690794412",
+        "businessrule-20897965123834184786",
+        "businessrule-43141523484770952437",
+        "businessrule-49549620435870223174",
+        "businessrule-50694068263592934768",
+        "businessrule-77000026808397550095",
+        "businessrule-78281155676242942940",
+        "businessrule-79057744450548393955",
+        "businessrule-80096613073902079124",
+        "businessrule-94076713436940158385",
+        "businessrule-96393168223138786394"
+      ],
+      "facts": [
+        "entity-99683518011128701149",
+        "entity-52418278656387992812"
+      ],
+      "needs": [
+        "external-45436197603688581519",
+        "external-25314431250146805945"
+      ],
+      "current": [
+        {
+          "intent": "Choose an inspection of a policy.",
+          "system": "Offers the category, edit, details or inspection view for the chosen object.",
+          "from": [
+            "block-76908522554461045751"
+          ],
+          "confidence": "sure"
+        },
+        {
+          "intent": "Read how the policy is built.",
+          "system": "Shows registry value, client extension, presentation and element details, choices numbered from zero, and per-section semantic policy text with comments and, only when Enabled, option values.",
+          "from": [
+            "block-76908522554461045751"
+          ],
+          "confidence": "inferred"
+        },
+        {
+          "intent": "Copy a line for use elsewhere.",
+          "system": "Copies the selected line on Ctrl+C when a line is selected.",
+          "from": [
+            "block-01358626545675013383"
+          ],
+          "confidence": "sure"
+        }
+      ]
+    }
+  ]
+}

@@ -6,7 +6,7 @@ description: Writes the user and technical stories of a modernization, each one 
 # Create Stories
 
 Goal: stories a product owner can groom and a developer can build, which together cover every action, step, component and rule the job names exactly once. A rule missed is never built; a story in code words loses its reader.
-Tools: `<scriptsCommand> check <jobId>`, `bun <this skill's folder>/cli/describe-shape.ts Story`, Read, Grep, Write.
+Tools: `<scriptsCommand> check <jobId>` (titles and wording follow `<this skill's folder>/rules/presentation.md`), `bun <this skill's folder>/cli/describe-shape.ts Story`, Read, Grep, Write.
 
 ## Arguments
 

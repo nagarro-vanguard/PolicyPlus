@@ -1,0 +1,36 @@
+---
+// Risks as a table-like list: severity, the sentence with its kind, and what it touches. The filter appears above fifteen risks and
+// offers only the severities and kinds the risks hold.
+import "../../styles/analysis.css";
+import Badge from "../ui/Badge.astro";
+import NoDataState from "../ui/NoDataState.astro";
+import Filter from "./Filter.astro";
+import { categoryLabel, filterAbove, optionsOf } from "../../lib/analysis";
+import { words } from "../../lib/analysis-copy";
+import { titleOf } from "../../lib/derive";
+import { severityWords, wordFor } from "../../lib/words";
+export interface Props {
+    id: string;
+    rows: readonly { severity: string; category: string; categoryWords: string; statement: string; href: string; touches: readonly { text: string }[]; touchCount: number }[];
+}
+const { id, rows } = Astro.props;
+const severities = optionsOf(rows.map((row) => row.severity)).toSorted((one, other) => ["high", "medium", "low"].indexOf(one.value) - ["high", "medium", "low"].indexOf(other.value));
+const kinds = optionsOf(rows.map((row) => row.category));
+const groups = [
+    { key: "sev", label: words.risks.severity, options: severities.map((option) => ({ value: option.value, label: wordFor(severityWords, option.value), count: option.count })) },
+    { key: "cat", label: words.risks.category, options: kinds.map((option) => ({ value: option.value, label: categoryLabel(option.value), count: option.count })) },
+];
+---
+{rows.length === 0 && <NoDataState title={words.risks.noneTitle} message={words.risks.none} />}
+{rows.length > filterAbove && <Filter id={id} noun="risks" total={rows.length} label={words.risks.search} groups={groups} />}
+{rows.length > 0 && <Fragment>
+    <div class="a-risks-head" aria-hidden="true"><span>{words.risks.severity}</span><span>{words.risks.sentence}</span><span>{words.risks.touches}</span></div>
+    <ul class="a-list a-risks" data-a-list={id}>
+        {rows.map((row) => <li data-row data-search={`${row.statement} ${row.categoryWords} ${row.touches.map((touch) => touch.text).join(" ")}`.toLowerCase()} data-g-sev={row.severity} data-g-cat={row.category}>
+            <span><Badge kind={row.severity as "high" | "medium" | "low"} /></span>
+            <span><a href={row.href}>{titleOf(row.statement)}</a><span class="a-kind">{categoryLabel(row.category)}</span></span>
+            <span class="a-touch"><span class="visually-hidden">{words.risks.touches}: </span>{row.touches.length === 0 ? words.risks.touchesNone : row.touches.map((touch) => touch.text).join(", ")}{row.touchCount > row.touches.length ? ` ${words.risks.more(row.touchCount - row.touches.length)}` : ""}</span>
+        </li>)}
+    </ul>
+    <div data-a-empty={id} hidden><NoDataState compact title={words.risks.noMatchTitle} message={words.risks.noMatch} /></div>
+</Fragment>}

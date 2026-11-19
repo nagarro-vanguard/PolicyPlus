@@ -70,6 +70,8 @@ export const RecordIdPrefix = {
     Lifecycle: "lifecycle",
     Transition: "transition",
     BusinessRule: "businessrule",
+    Journey: "journey",
+    JourneyMerge: "journeymerge",
 } as const;
 
 /**
@@ -236,6 +238,10 @@ export const TransitionId = recordIdOf(RecordIdPrefix.Transition).pipe(Schema.br
 
 export const BusinessRuleId = recordIdOf(RecordIdPrefix.BusinessRule).pipe(Schema.brand("BusinessRuleId"));
 
+export const JourneyId = recordIdOf(RecordIdPrefix.Journey).pipe(Schema.brand("JourneyId"));
+
+export const JourneyMergeId = recordIdOf(RecordIdPrefix.JourneyMerge).pipe(Schema.brand("JourneyMergeId"));
+
 export const FindingId = Schema.Union([
     BlockId,
     LinkId,
@@ -259,6 +265,8 @@ export const FindingId = Schema.Union([
     LifecycleId,
     TransitionId,
     BusinessRuleId,
+    JourneyId,
+    JourneyMergeId,
 ]).annotate(about("Any finding a review can rule on, by its record id."));
 
 export const Lines = Schema.Struct({

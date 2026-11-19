@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gateViews } from "./confirmation";
+import { todaySource } from "./journey-sources";
 import type { TargetData } from "./target-types";
 
 /** Whether this build has a target to show: the Output Root that holds it is named in the environment. */
@@ -22,7 +23,8 @@ export const targetData = (): TargetData => {
     const records = join(root, ".shape-target", "work", "records");
     cache = {
         legacy: read(join(target, "legacy.json"), undefined),
-        tasks: read<{ tasks: TargetData["tasks"] }>(join(target, "current.json"), { tasks: [] }).tasks,
+        // Today's journeys: the analysis's own file when a run has it, the target's older one until then.
+        tasks: todaySource(process.env.ANALYSIS_PAYLOADS_DIR ?? "", root).records as TargetData["tasks"],
         variants: read(join(records, "journey-variants.json"), []),
         journeys: read(join(target, "journeys.json"), []),
         architectureVariants: read(join(records, "architecture-variants.json"), []),
@@ -30,6 +32,7 @@ export const targetData = (): TargetData => {
         choiceAsIs: read(join(target, "choice-as-is.json"), undefined),
         choiceJourneys: read(join(target, "choice-journeys.json"), undefined),
         choiceArchitecture: read(join(target, "choice-architecture.json"), undefined),
+        choiceComponents: read(join(target, "choice-components.json"), undefined),
         gates: gateViews(root),
         root,
     };

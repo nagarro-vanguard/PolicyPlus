@@ -1,0 +1,15 @@
+---
+// The phases in order as one thin strip; each segment is as wide as the phase has stories.
+import type { PhaseCardModel } from "../../lib/plan-view";
+import { stateWords } from "../../lib/plan-view";
+import { words } from "../../lib/plan-words";
+export interface Props {
+    phases: readonly PhaseCardModel[];
+}
+const { phases } = Astro.props;
+---
+<ol class="pl-order" aria-label={words.order}>
+    {phases.map((phase) => <li style={`flex-grow:${phase.stories}`}>
+        <a href={`#phase-${phase.number}`} data-state={phase.state} aria-label={`${words.phaseOf(phase.number)}: ${phase.name}, ${words.stories(phase.stories)}, ${stateWords[phase.state]}`} title={`${phase.name} · ${words.stories(phase.stories)}`}>{phase.number}</a>
+    </li>)}
+</ol>

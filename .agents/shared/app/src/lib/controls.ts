@@ -66,3 +66,48 @@ export const readableControl = (name: string, declaredAs: string): ReadableContr
         (typeName === "" ? "Control" : typeName.replaceAll(/([a-z])([A-Z])/g, "$1 $2"));
     return { text: shown.length > 0 ? shown.join(": ") : name, kind, name };
 };
+
+const windowKinds: Record<string, string> = {
+    form: "Window",
+    label: "Text",
+    textbox: "Text field",
+    button: "Button",
+    listview: "List",
+    treeview: "Tree",
+    columnheader: "Column",
+    checkbox: "Tick box",
+    radiobutton: "Option",
+    combobox: "Drop-down list",
+    panel: "Section",
+    groupbox: "Section",
+    datagridview: "Table",
+    menustrip: "Menu",
+    toolstripmenuitem: "Menu item",
+    picturebox: "Image",
+    tablelayoutpanel: "Table layout",
+    splitcontainer: "Split view",
+    numericupdown: "Number field",
+    linklabel: "Link",
+    contextmenustrip: "Context menu",
+    progressbar: "Progress bar",
+};
+
+/**
+ * A control as a person meets it, for the declarations of a desktop window as well as those of a web page: the words on it
+ * (its name when it shows none), its kind in plain words and its name. A declaration that reads `Friend WithEvents Name As
+ * Type [Text = "..."]` or `Type, caption "..."` is understood; any other goes to `readableControl`.
+ * @param name the control's name in the code
+ * @param declaredAs how the code declares it
+ * @returns the control in words
+ */
+export const controlOf = (name: string, declaredAs: string): ReadableControl => {
+    const decoded = declaredAs.replaceAll("&amp;", "&");
+    const caption = /(?:caption|Text)\s*=?\s*"([^"]*)"/.exec(decoded)?.[1];
+    const typed = /\bAs\s+(?:[\w.]+\.)?(\w+)/.exec(decoded)?.[1];
+    const lead = decoded.split(/[,;[(]/)[0]?.trim().split(/\s+/)[0] ?? "";
+    const type = typed ?? lead;
+    const known = windowKinds[type.toLowerCase()];
+    if (known === undefined && !decoded.includes(", ") && decoded.includes(";")) return readableControl(name, declaredAs);
+    const kind = known ?? (type === "" ? "Control" : type.replaceAll(/([a-z])([A-Z])/g, "$1 $2"));
+    return { text: caption === undefined || caption.trim() === "" ? name : caption.trim(), kind, name };
+};

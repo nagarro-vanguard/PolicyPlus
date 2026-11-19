@@ -20,7 +20,8 @@ What a diagram of the system may show, when one is worth drawing, and how it is 
 ## Drawing
 
 - Nothing is left out silently: what does not fit is folded into one box with its count, and the text version lists every box and arrow.
-- A figure is never shrunk below three quarters of its size to fit a page: it folds boxes, then runs the other way, and if it still does not fit it says so.
+- Text in a figure is at least 12 pixels at full size, always. A figure is never scaled down to fit a page; it shows one level at a time (context, then one group opened, then its parts), at most 12 boxes in view and about 30 in a drawing, folds the rest into one box with its count, and lets the reader pan and zoom, with a Fit that never goes below that size.
+- A dense relation (more than 12 groups, or many arrows between the same few) is a matrix or a table, not a tangle of lines; selecting a box shows its direct neighbours and dims the rest.
 - A label is wrapped and cut by the room it takes (a wide character counts twice), with the full text in the box's title.
 - Meaning is never by colour alone; light and dark both read; every figure has a title, a description and a text version, and downloads as it is.
 - The same payload gives the same figure.

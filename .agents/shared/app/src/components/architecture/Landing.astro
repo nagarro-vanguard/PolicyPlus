@@ -1,0 +1,37 @@
+---
+// Where it lands: today's layers against the proposed domains, each cell the number of business rules placed. One sentence
+// above it names the layer that spreads over the most domains; the line under it claims "exactly one domain" only when it is true.
+import "../../styles/architecture.css";
+import { copy } from "../../lib/architecture-copy";
+import { footerSentence, notPlaced, spreadSentence } from "../../lib/architecture-data";
+import type { Landing } from "../../lib/architecture-data";
+import { plural } from "../../lib/text";
+export interface Props {
+    matrix: Landing;
+}
+const { matrix } = Astro.props;
+const biggest = Math.max(1, ...matrix.cells.flat());
+const sentence = spreadSentence(matrix);
+---
+{sentence !== "" && <p class="arch-claim">{sentence}</p>}
+<div class="arch-matrix-wrap wide" role="region" aria-label={copy.architecture.matrixCorner} tabindex="0">
+    <table class="arch-matrix">
+        <caption class="visually-hidden">{copy.architecture.matrixCorner}: the number of business rules placed in each cell</caption>
+        <thead><tr>
+            <th scope="col" class="arch-corner" title={copy.architecture.matrixCorner}>{copy.architecture.matrixCornerShort}</th>
+            {matrix.columns.map((column) => <th scope="col" class={column === notPlaced ? "arch-col arch-col-none" : "arch-col"}>{column}</th>)}
+        </tr></thead>
+        <tbody>
+            {matrix.rows.map((row, at) => <tr>
+                <th scope="row">{row.name} <span class="arch-tag">{row.product ? plural(row.routines, "routine") : copy.architecture.projectWork}</span></th>
+                {matrix.columns.map((_, column) => {
+                    const count = matrix.cells[at]?.[column] ?? 0;
+                    return count === 0
+                        ? <td class="arch-zero"><span class="visually-hidden">0</span></td>
+                        : <td class="arch-count" style={`--strength:${10 + (45 * count) / biggest}%`}>{count}</td>;
+                })}
+            </tr>)}
+        </tbody>
+    </table>
+</div>
+<p class="arch-foot">{footerSentence(matrix)}</p>

@@ -1,34 +1,8 @@
 ---
-import Page from "../layouts/Page.astro";
-import Picture from "../components/Picture.astro";
-import Answers from "../components/Answers.astro";
-import { capabilities, knowledge, system } from "../lib/payloads";
-import { knownIds } from "../lib/check";
-import { briefsFor, kindsOf } from "../lib/figures";
-import { copy } from "../lib/copy";
-import { compareText } from "../lib/text";
-import { partKindWords, answerGroups, wordFor } from "../lib/words";
-
-const sys = await system();
-const caps = await capabilities();
-const know = await knowledge();
-const known = knownIds(sys, caps, know);
-const briefs = briefsFor(kindsOf.madeOf, sys, know);
-const partName = new Map(know.parts.map((part) => [part.id, part.name]));
-const usedBy = (parts: readonly string[]) => (parts.length === know.parts.length ? copy.madeOf.usedByAll(parts.length) : parts.map((id) => partName.get(id) ?? "").filter((name) => name !== "").toSorted(compareText).join(", "));
+// This page moved into the Architecture page.
+import Redirect from "../components/architecture/Redirect.astro";
+import { analysisRedirects } from "../lib/architecture-redirects";
+const redirect = analysisRedirects.find((each) => each.from === "made-of");
+if (redirect === undefined) throw new Error("no redirect for made-of");
 ---
-<Page title={copy.madeOf.title} lead={copy.madeOf.lead}>
-    {briefs.map((brief) => <Picture brief={brief} sys={sys} knowledge={know} known={known} />)}
-    <h2>{copy.madeOf.parts}</h2>
-    <div class="table-wrap"><table class="data">
-        <thead><tr><th scope="col">{copy.madeOf.columns.name}</th><th scope="col">{copy.madeOf.columns.kind}</th><th scope="col">{copy.madeOf.columns.purpose}</th><th scope="col">{copy.madeOf.columns.uses}</th><th scope="col">{copy.madeOf.columns.files}</th></tr></thead>
-        <tbody>{know.parts.map((part) => <tr><th scope="row">{part.name}</th><td>{wordFor(partKindWords, part.kind)}</td><td>{part.purpose}</td><td>{part.technologies.join(", ")}</td><td>{part.files}</td></tr>)}</tbody>
-    </table></div>
-    <h2>{copy.madeOf.technologies}</h2>
-    <div class="table-wrap"><table class="data">
-        <thead><tr><th scope="col">{copy.madeOf.columns.name}</th><th scope="col">{copy.madeOf.columns.kind}</th><th scope="col">{copy.madeOf.columns.versions}</th><th scope="col">{copy.madeOf.columns.usedBy}</th></tr></thead>
-        <tbody>{know.technologies.map((tech) => <tr><th scope="row">{tech.name}</th><td>{tech.kind}</td><td>{tech.versions.map((version) => version.label === "" ? copy.madeOf.noVersion : version.label).join(", ")}</td><td>{usedBy([...new Set(tech.versions.flatMap((version) => version.parts))])}</td></tr>)}</tbody>
-    </table></div>
-    <h2>{copy.madeOf.answers}</h2>
-    <Answers answers={know.answers.filter((answer) => answer.aspect !== "external-systems" && answer.aspect !== "connections")} groups={answerGroups.madeOf} />
-</Page>
+<Redirect redirect={redirect} />

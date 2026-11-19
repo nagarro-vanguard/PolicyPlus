@@ -20,7 +20,24 @@ export type TargetPlanInput = {
 const hashOf = (value: unknown) => createHash("sha1").update(JSON.stringify(value)).digest("hex").slice(0, 12);
 const keyOf = (value: unknown) => Schema.decodeUnknownSync(StoryKey)(`story-${hashOf(value)}`);
 const lowerFirst = (text: string) => (text.length === 0 ? text : text[0]!.toLowerCase() + text.slice(1));
-const clip = (text: string, size: number) => (text.length <= size ? text : `${text.slice(0, size - 3)}...`);
+const DANGLING = new Set(
+    "a an the to of and or for in on with by from that which as at into so but if is are be".split(" "),
+);
+
+/**
+ * A short headline of a sentence: its first clause, at most `words` words, ending on a word that closes it.
+ * @param text the sentence
+ * @param words the most words to keep
+ * @param chars the most characters to keep, dropping whole words
+ * @returns the headline, without a trailing mark or a dangling word
+ */
+export const headline = (text: string, words = 8, chars = Infinity): string => {
+    const clause = text.split(/\s*(?:[,;:()\u2014]|\s-\s|\.\s)\s*/)[0] ?? text;
+    const kept = clause.trim().split(/\s+/).filter(Boolean).slice(0, words);
+    while (kept.length > 1 && kept.join(" ").length > chars) kept.pop();
+    while (kept.length > 1 && DANGLING.has((kept[kept.length - 1] ?? "").toLowerCase().replace(/\W/g, ""))) kept.pop();
+    return kept.join(" ").replace(/[\s.,;:!?-]+$/, "");
+};
 
 export const SCAFFOLD_EPIC = "area:codebase";
 export const SHARED_COMPONENTS_EPIC = "area:shared components";
@@ -82,7 +99,7 @@ export const journeyTestStory = (journey: TargetJourney, outcome: string): Story
     const per = Math.max(1, Math.ceil(steps.length / 11));
     for (let at = 0; at < steps.length; at += per) groups.push(steps.slice(at, at + per));
     return {
-        title: clip(`Prove the journey: ${outcome}`, 72),
+        title: `Prove the journey: ${headline(outcome, 8, 46)}`,
         what: "an acceptance test that does the journey from its first step to its last, as people will do it",
         why: "the journey keeps working as the product changes, in the interface the team ships",
         actions: [],
@@ -156,6 +173,14 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
             index: 100000 + at,
         })),
     ];
+    // Two journeys can have the same headline: the later ones take a number, so titles stay unique.
+    const titles = new Set<string>();
+    for (const entry of all) {
+        let title = entry.story.title;
+        for (let n = 2; titles.has(title); n++) title = `${entry.story.title} (${n})`;
+        titles.add(title);
+        if (title !== entry.story.title) entry.story = { ...entry.story, title };
+    }
     const views = all.map(({ story, scaffold, test, index }) => {
         const stepIds = story.steps ?? [];
         const functional = story.actions.length > 0;

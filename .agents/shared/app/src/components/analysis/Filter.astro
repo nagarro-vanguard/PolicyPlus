@@ -1,0 +1,28 @@
+---
+// A filter for the list that follows it: a search box and chips for the values the rows really have. It appears only above
+// `filterAbove` rows; the page decides. Rows carry `data-search` and one `data-<group>` attribute per group; the script reads
+// them, keeps the choice in the address (`?q=`, `?<group>=`) and says how many rows show.
+import "../../styles/analysis.css";
+import { words } from "../../lib/analysis-copy";
+export interface Props {
+    id: string;
+    noun: string;
+    total: number;
+    label: string;
+    groups?: readonly { key: string; label: string; options: readonly { value: string; label: string; count: number }[] }[];
+}
+const { id, noun, total, label, groups = [] } = Astro.props;
+---
+<div class="a-filter" data-a-filter={id} data-noun={noun} data-total={total}>
+    <div class="a-filter-bar">
+        <label class="visually-hidden" for={`${id}-q`}>{label}</label>
+        <input id={`${id}-q`} type="search" placeholder={label} autocomplete="off" spellcheck="false" data-a-q />
+        <button type="button" class="btn btn-ghost" data-a-clear hidden>{words.risks.clear}</button>
+    </div>
+    {groups.filter((group) => group.options.length > 1).map((group) => <div class="a-filter-group" role="group" aria-label={group.label} data-a-group={group.key}>
+        <span class="a-filter-label" aria-hidden="true">{group.label}</span>
+        {group.options.map((option) => <button type="button" class="chip toggle" aria-pressed="false" data-value={option.value}>{option.label}<span class="a-filter-count">{option.count}</span></button>)}
+    </div>)}
+    <p class="a-status" aria-live="polite" data-a-status></p>
+</div>
+<script>import "../../scripts/analysis-filter.ts";</script>

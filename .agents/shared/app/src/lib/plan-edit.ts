@@ -96,7 +96,7 @@ export const messageOf = (status: number, outcome: Outcome | undefined) => {
     if (status === 200 && outcome?.ok === true) {
         return {
             accepted: true,
-            text: `Accepted${outcome.message ? `: ${outcome.message}` : ""}. Rebuild the app to see the plan written again.`,
+            text: `Accepted${outcome.message ? `: ${outcome.message}` : ""}. Build the app again to see the change.`,
             gaps: [] as string[],
         };
     }

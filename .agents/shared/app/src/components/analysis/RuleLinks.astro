@@ -1,0 +1,31 @@
+---
+// The rules an action passes, one row for each layer that decides some: how many, how many change a state, and a link to read
+// them. A rule's sentence is written once, on its layer's page; the link opens that page showing only this action's rules.
+import "../../styles/analysis.css";
+import NoDataState from "../ui/NoDataState.astro";
+import { words } from "../../lib/analysis-copy";
+import { plural } from "../../lib/text";
+import type { Layer, Rule } from "../../lib/types";
+export interface Props {
+    groups: readonly { layer: Layer; rules: readonly Rule[] }[];
+    /** The link to a layer's page, without a fragment. */
+    layerHref: (layer: Layer) => string;
+    /** The address part of the action, which the layer page uses to pick out the action's rules. */
+    action: string;
+}
+const { groups, layerHref, action } = Astro.props;
+const total = groups.reduce((sum, group) => sum + group.rules.length, 0);
+---
+{total === 0 && <NoDataState compact title={words.action.noRulesTitle} message={words.action.noRules} />}
+{total > 0 && <ul class="a-list">
+    {groups.map((group) => {
+        const changing = group.rules.filter((rule) => rule.gates).length;
+        return <li>
+            <div class="a-row-line">
+                <span class="a-text"><strong>{group.layer.name}</strong></span>
+                <a href={`${layerHref(group.layer)}?action=${encodeURIComponent(action)}#rules`}>{words.action.read(group.rules.length)}</a>
+            </div>
+            <div class="a-sub">{words.action.ruleCount(group.rules.length)}{changing > 0 ? `, ${changing} of which change a state` : ""}</div>
+        </li>;
+    })}
+</ul>}

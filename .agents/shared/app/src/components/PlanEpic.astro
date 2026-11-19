@@ -1,33 +1,39 @@
 ---
 import Page from "../layouts/Page.astro";
-import Rows from "./Rows.astro";
-import PlanPrompt from "./PlanPrompt.astro";
-import { copy } from "../lib/copy";
-import { blockersOf, epicPath, epicsBefore, epicsInOrder, planHomePath, statusOf, storiesOfEpic, storyPath } from "../lib/plan";
+import "../styles/plan.css";
+import Section from "./ui/Section.astro";
+import PromptFold from "./plan/PromptFold.astro";
+import PlanState from "./plan/PlanState.astro";
+import StoryCard from "./plan/StoryCard.astro";
+import { epicPath, epicsInOrder, planHomePath, storiesOfEpic } from "../lib/plan";
+import { epicImplements, epicNeeds, epicPhases, epicState, runsOf, stateWords } from "../lib/plan-view";
 import type { PlanData } from "../lib/plan-data";
+import { words } from "../lib/plan-words";
 export interface Props { data: PlanData; epicKey: string; }
 const { data, epicKey } = Astro.props;
 const { plan, prompts, ledger } = data;
 const epic = plan.epics.find((each) => each.key === epicKey);
 if (epic === undefined) throw new Error("no such epic");
 const root = "../../";
-const before = epicsBefore(plan, epic);
+const needs = epicNeeds(plan, epic);
 const stories = storiesOfEpic(plan, epic);
-const total = epicsInOrder(plan).length;
+const phases = epicPhases(plan, epic);
+const implemented = epicImplements(plan, epic);
+const state = epicState(plan, ledger, epic);
 const prompt = prompts.epics[epic.key] ?? "";
 ---
-<Page title={epic.title} lead={epic.outcome} depth={2} trail={[{ text: copy.site.home, href: `${root}index.html` }, { text: copy.plan.title, href: `${root}${planHomePath}.html` }, { text: epic.title }]}>
-    <p class="sub">{copy.plan.epicOrder(epic.sequence, total)} · {copy.plan.kindWords[epic.kind]} · {statusOf(ledger, epic.key)}</p>
-    <h2>{copy.plan.createFirst}</h2>
-    {before.first.length === 0 ? <p>{copy.plan.createFirstNone}</p> : <Rows rows={before.first.map((each) => ({ text: each.title, href: `${root}${epicPath(each)}.html`, sub: each.outcome, meta: copy.plan.epicOrder(each.sequence, total) }))} />}
-    {before.previous && <p class="note">{copy.plan.createFirstPrevious}: <a href={`${root}${epicPath(before.previous)}.html`}>{before.previous.title}</a>.</p>}
-    <h2>{copy.plan.epicStories}</h2>
-    <Rows rows={stories.map((story) => ({
-        text: story.title,
-        href: `${root}${storyPath(story)}.html`,
-        sub: blockersOf(plan, story).length === 0 ? copy.plan.storyNoBlockers : `${copy.plan.storyBlocked}: ${blockersOf(plan, story).map((each) => each.title).join("; ")}`,
-        meta: `${copy.plan.storyOrder(story.sequence, plan.stories.length)} · ${statusOf(ledger, story.key)}`,
-    }))} />
-    <h2>{copy.plan.epicPrompt}</h2>
-    <PlanPrompt title={epic.title} text={prompt} lead={copy.plan.epicPromptLead} />
+<Page wide title={epic.title} lead={epic.outcome} depth={2} trail={[{ text: "Overview", href: `${root}index.html` }, { text: "Modernization plan", href: `${root}${planHomePath}.html` }, { text: epic.title }]}>
+    <p class="pl-meta">
+        <PlanState state={state} label={stateWords[state]} />
+        <span>{words.epicOf(epic.sequence, epicsInOrder(plan).length)}</span>
+        <span>{words.phaseWord(runsOf(phases), phases.length > 1)}</span>
+        <span>{epic.kind}</span>
+        {implemented.length > 0 && <span>{implemented.join(", ")}</span>}
+        <span>{words.stories(stories.length)}</span>
+    </p>
+    {needs.length > 0 && <p class="pl-line"><span class="pl-k">{words.createAfter}</span>{needs.map((each) => <a class="pl-chip pl-chip-wrap" href={`${root}${epicPath(each)}.html`}>{each.title}</a>)}</p>}
+    <Section title={words.storiesHeading}>
+        <ol class="pl-grid">{stories.map((story) => <StoryCard story={story} ledger={ledger} root={root} phase={phases.length > 1 ? story.phase : undefined} />)}</ol>
+    </Section>
+    <PromptFold summary={words.createEpic} note={words.createEpicNote} text={prompt} />
 </Page>

@@ -1,0 +1,705 @@
+/*
+ * The plan pages: cards, pills, the order strip and the folds around prompts. Only the plan components import this file.
+ * Every value is a token; colour is spent on a status and nowhere else (a card's bar, a pill, a segment of the strip).
+ */
+
+/* ---------- Status: one accent per state, set once and read by every piece ---------- */
+[data-state] {
+    --pl-accent: var(--border);
+    --pl-text: var(--muted-foreground);
+    --pl-surface: var(--muted);
+    --pl-edge: var(--border);
+}
+
+[data-state="progress"] {
+    --pl-accent: var(--provenance-stated-edge);
+    --pl-text: var(--provenance-stated-text);
+    --pl-surface: var(--provenance-stated-surface);
+    --pl-edge: var(--provenance-stated-edge);
+}
+
+[data-state="done"] {
+    --pl-accent: var(--state-readonly-edge);
+    --pl-text: var(--state-readonly-text);
+    --pl-surface: var(--state-readonly-surface);
+    --pl-edge: var(--state-readonly-edge);
+}
+
+[data-state="blocked"] {
+    --pl-accent: var(--severity-high-edge);
+    --pl-text: var(--severity-high-text);
+    --pl-surface: var(--severity-high-surface);
+    --pl-edge: var(--severity-high-edge);
+}
+
+/* The shell caps every list item at the measure; a card or a row fills its grid cell. */
+.pl-cards > li,
+.pl-grid > li,
+.pl-links > li,
+.pl-rows li,
+.pl-waits li,
+.pl-decisions li,
+.pl-legend li,
+.pl-order li {
+    max-width: none;
+}
+
+/* ---------- Pieces ---------- */
+.pl-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    flex: none;
+    min-height: 1.5rem;
+    padding: 0 var(--space-md);
+    border: 1px solid var(--pl-edge);
+    border-radius: var(--radius-control);
+    background: var(--pl-surface);
+    color: var(--pl-text);
+    font-size: var(--text-chip);
+    line-height: var(--text-chip--line-height);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.pl-pill::before {
+    content: "";
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+}
+
+.pl-pill[data-state="progress"]::before {
+    background: linear-gradient(to right, currentColor 50%, transparent 50%);
+}
+
+.pl-pill[data-state="done"]::before {
+    background: currentColor;
+}
+
+.pl-pill[data-state="blocked"]::before {
+    border-radius: 0;
+    transform: rotate(45deg);
+    background: currentColor;
+}
+
+.pl-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.25rem;
+    padding: 0 var(--space-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    color: var(--muted-foreground);
+    font-size: var(--text-chip);
+    line-height: var(--text-chip--line-height);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+a.pl-chip {
+    color: var(--foreground);
+}
+
+a.pl-chip:hover {
+    background: var(--muted);
+}
+
+/* A chip that names a whole sentence wraps instead of being cut. */
+.pl-chip-wrap {
+    min-height: 1.5rem;
+    padding-block: var(--space-3xs);
+}
+
+.pl-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs) var(--space-md);
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.pl-meta > span:not(.pl-chip, .pl-pill):has(+ span:not(.pl-chip, .pl-pill))::after {
+    content: "·";
+    margin-inline-start: var(--space-md);
+}
+
+.pl-meta a {
+    color: var(--foreground);
+}
+
+.pl-note,
+.pl-sub {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+/* ---------- Cards ---------- */
+.pl-card,
+.pl-panel {
+    position: relative;
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-surface);
+    background: var(--card);
+    color: var(--card-foreground);
+    box-shadow: var(--shadow-elevation-1);
+}
+
+.pl-card {
+    padding: var(--space-xxl) var(--space-xxl) var(--space-xxl) calc(var(--space-xxl) + 0.25rem);
+    overflow: hidden;
+}
+
+.pl-panel {
+    padding: var(--space-xxl);
+}
+
+.pl-card::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 0.25rem;
+    background: var(--pl-accent);
+}
+
+.pl-card h3,
+.pl-panel h3 {
+    margin: 0;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 700;
+}
+
+.pl-cards,
+.pl-grid,
+.pl-links,
+.pl-rows,
+.pl-waits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.pl-cards {
+    display: grid;
+    gap: var(--space-lg);
+}
+
+.pl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap: var(--space-lg);
+}
+
+.pl-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-lg);
+}
+
+.pl-head {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-lg);
+}
+
+.pl-titles {
+    flex: 1;
+    min-width: 0;
+}
+
+.pl-titles .pl-sub {
+    margin-top: var(--space-3xs);
+}
+
+.pl-num {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--control-h);
+    block-size: var(--control-h);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    background: var(--muted);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.pl-phase .pl-meta {
+    margin: var(--space-md) 0 var(--space-xs);
+}
+
+/* Rows: a title that wraps and a count on the right. */
+.pl-rows li {
+    border-top: 1px solid var(--border);
+}
+
+.pl-rows a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xxl);
+    min-height: var(--control-h);
+    padding: var(--space-xs) 0;
+    color: inherit;
+    text-decoration: none;
+}
+
+.pl-rows a:hover .pl-row-title {
+    text-decoration: underline;
+}
+
+.pl-row-count {
+    flex: none;
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.pl-more {
+    margin: 0;
+}
+
+.pl-more > summary {
+    min-height: calc(var(--control-h) - 1px);
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+
+/* A story card: its place, its sentence, its kind. The title's link covers the card. */
+.pl-story {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.pl-story:hover {
+    background: var(--muted);
+}
+
+.pl-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+}
+
+.pl-seq {
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+.pl-story h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.pl-story h3 a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.pl-story:focus-within {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.pl-story h3 a:focus-visible {
+    outline: none;
+}
+
+/* ---------- Home: the summary, the progress bar, the order strip ---------- */
+.pl-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xxl);
+}
+
+.pl-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-xxl);
+}
+
+.pl-progress,
+.pl-ordered {
+    display: grid;
+    gap: var(--space-xs);
+    padding-top: var(--space-xxl);
+    border-top: 1px solid var(--border);
+}
+
+.pl-caption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-xxl);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.pl-bar {
+    display: flex;
+    block-size: 0.5rem;
+    border-radius: var(--radius-control);
+    background: var(--secondary);
+    overflow: hidden;
+}
+
+.pl-bar > i {
+    display: block;
+    block-size: 100%;
+    background: var(--pl-accent);
+}
+
+.pl-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-md);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pl-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+}
+
+.pl-legend li::before {
+    content: "";
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: var(--pl-accent);
+}
+
+.pl-order {
+    display: flex;
+    gap: var(--space-3xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pl-order li {
+    flex: 1 1 0;
+    min-inline-size: 1.5rem;
+}
+
+.pl-order a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    block-size: var(--control-h);
+    border: 1px solid var(--pl-edge);
+    border-radius: var(--radius-control);
+    background: var(--pl-surface);
+    color: var(--pl-text);
+    font-size: var(--text-chip);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+}
+
+.pl-order a:hover {
+    border-color: var(--foreground);
+}
+
+.pl-actions {
+    margin-top: var(--space-xxl);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+/* Foundation and coverage as two compact link cards. */
+.pl-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.pl-link:hover {
+    background: var(--muted);
+}
+
+.pl-link h3 {
+    margin-bottom: var(--space-3xs);
+}
+
+.pl-link h3::after {
+    content: "→";
+    margin-inline-start: var(--space-md);
+    color: var(--muted-foreground);
+}
+
+/* ---------- Epic and story ---------- */
+.pl-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs) var(--space-md);
+    margin: var(--space-md) 0 0;
+}
+
+.pl-line > .pl-k {
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+}
+
+.pl-waits {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+}
+
+.pl-prompt {
+    margin-top: var(--space-xxl);
+}
+
+.pl-prompt .pl-copy {
+    margin: var(--space-md) 0;
+}
+
+.pl-prompt pre.prompt {
+    margin: 0;
+}
+
+.pl-facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs) var(--space-lg);
+    margin: 0 0 var(--space-xxl);
+}
+
+.pl-brief {
+    display: grid;
+    gap: var(--space-3xs);
+}
+
+.pl-brief h2 {
+    margin: var(--space-lg) 0 0;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 700;
+}
+
+.pl-brief h2:first-child {
+    margin-top: 0;
+}
+
+.pl-prose {
+    margin: 0;
+    max-inline-size: var(--measure);
+}
+
+.pl-criteria {
+    margin: 0;
+    padding-inline-start: var(--space-5xl);
+    display: grid;
+    gap: var(--space-lg);
+}
+
+.pl-criteria > li::marker {
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+.pl-criteria p {
+    margin: 0;
+}
+
+.pl-ev {
+    margin: var(--space-3xs) 0 0;
+}
+
+.pl-ev > summary {
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+
+.pl-ev-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    padding: var(--space-xs) 0 var(--space-md) var(--space-xxl);
+}
+
+.pl-code {
+    display: contents;
+}
+
+.pl-terms {
+    display: grid;
+    gap: var(--space-md);
+    margin: 0;
+}
+
+.pl-terms dt {
+    font-weight: 700;
+}
+
+.pl-terms dd {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.pl-steps {
+    margin: var(--space-xs) 0 var(--space-md);
+    padding-inline-start: var(--space-5xl);
+}
+
+.pl-origin {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.pl-origin .pl-chips,
+.pl-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.pl-origin h4 {
+    margin: 0 0 var(--space-xs);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+    font-weight: 600;
+}
+
+/* ---------- Foundation and coverage ---------- */
+.pl-layer {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.pl-layer .pl-head {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pl-layer code,
+.pl-decision code {
+    font-family: var(--font-mono);
+    font-size: var(--text-chip);
+    overflow-wrap: anywhere;
+}
+
+.pl-layer p {
+    margin: 0;
+}
+
+.pl-decisions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+}
+
+.pl-decision {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-lg) 0;
+    border-top: 1px solid var(--border);
+}
+
+.pl-decision p {
+    margin: 0;
+}
+
+.pl-cap {
+    padding: 0;
+}
+
+.pl-cap > summary {
+    padding: var(--space-xxl) var(--space-xxl) var(--space-xxl) calc(var(--space-xxl) + 0.25rem);
+}
+
+.pl-cap > summary .pl-titles {
+    display: grid;
+    gap: var(--space-3xs);
+}
+
+.pl-cap-body {
+    padding: 0 var(--space-xxl) var(--space-xxl) calc(var(--space-xxl) + 0.25rem);
+    display: grid;
+    gap: var(--space-xxl);
+}
+
+.pl-cap-body h4 {
+    margin: 0 0 var(--space-xs);
+    font-size: var(--text-body);
+    font-weight: 700;
+}
+
+.pl-cap-body .pl-actions-list {
+    margin: var(--space-3xs) 0 0;
+    padding-inline-start: var(--space-5xl);
+    color: var(--muted-foreground);
+    font-size: var(--text-meta);
+}
+
+.pl-stack {
+    display: grid;
+    gap: var(--space-lg);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 480px) {
+    .pl-titles {
+        flex-basis: 12rem;
+    }
+
+    .pl-head > .pl-pill {
+        margin-inline-start: calc(var(--control-h) + var(--space-lg));
+    }
+}
+
+@media (max-width: 600px) {
+    .pl-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pl-card {
+        padding: var(--space-xl) var(--space-xl) var(--space-xl) calc(var(--space-xl) + 0.25rem);
+    }
+
+    .pl-panel {
+        padding: var(--space-xl);
+    }
+
+    .pl-head {
+        flex-wrap: wrap;
+    }
+
+    .pl-cap > summary,
+    .pl-cap-body {
+        padding-inline: var(--space-xl) var(--space-xl);
+    }
+
+    .pl-cap > summary {
+        padding-inline-start: calc(var(--space-xl) + 0.25rem);
+    }
+}

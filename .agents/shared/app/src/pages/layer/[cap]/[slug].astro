@@ -1,9 +1,19 @@
 ---
+// A layer of one capability, the one home of its business rules: every rule's full sentence is written here, with an anchor the
+// action pages link to.
 import Page from "../../../layouts/Page.astro";
-import Rows from "../../../components/Rows.astro";
+import Section from "../../../components/ui/Section.astro";
+import NoDataState from "../../../components/ui/NoDataState.astro";
+import Meta from "../../../components/analysis/Meta.astro";
+import UsedIn from "../../../components/journey/UsedIn.astro";
+import { journeyModel, linksTo } from "../../../lib/journeys";
+import RuleList from "../../../components/analysis/RuleList.astro";
 import { capabilities, slugs } from "../../../lib/payloads";
+import { actionsOfRules, alsoThrough, callersOf, filterAbove, usedByCounts } from "../../../lib/analysis";
+import { words } from "../../../lib/analysis-copy";
 import { copy } from "../../../lib/copy";
-import { firstSentence, plural, where } from "../../../lib/text";
+import { ledeOf, titleOf } from "../../../lib/derive";
+import { plural } from "../../../lib/text";
 
 export async function getStaticPaths() {
     const all = await capabilities();
@@ -17,21 +27,56 @@ export async function getStaticPaths() {
 }
 const { cid, lid } = Astro.props;
 const addresses = await slugs();
-const cap = (await capabilities()).find((each) => each.capability.id === cid);
+const all = await capabilities();
+const cap = all.find((each) => each.capability.id === cid);
 const layer = cap?.layers.find((each) => each.id === lid);
 if (cap === undefined || layer === undefined) throw new Error("no such layer");
-const lead = `${firstSentence(layer.purpose)} ${copy.layer.lead(cap.capability.name, layer.actions.length, layer.rules.length, layer.sharedBlocks > 0)}`;
 const capSlug = addresses.capability(cid);
-const ruleRows = layer.rules.map((rule) => ({ text: rule.says, copy: rule.context.text, meta: rule.gates ? copy.words.changesState : undefined, sub: `${where(rule.place)}${rule.screens.length > 0 ? `  ·  ${copy.words.screensLabel}: ${rule.screens.join(", ")}` : ""}` }));
+const used = linksTo((await journeyModel()).usingRules(layer.rules.map((rule) => rule.id)), 2);
+const callers = callersOf(cap, lid).filter((caller) => caller.layer.id !== lid);
+const others = alsoThrough(all, cid, layer);
+const actionHref = (id: string) => `../../action/${capSlug}/${addresses.action(cid, id)}.html`;
+const layerHref = (id: string) => `${addresses.layer(cid, id)}.html`;
+const firstActions = layer.actions.slice(0, filterAbove);
+const restActions = layer.actions.slice(filterAbove);
+const row = (action: (typeof layer.actions)[number]) => ({ text: titleOf(action.purpose), href: actionHref(action.id), screen: action.screen });
 ---
-<Page title={layer.name} lead={lead} depth={2} brief={layer.context.text} trail={[{ text: copy.site.home, href: "../../index.html" }, { text: cap.capability.name, href: `../../capability/${capSlug}.html` }, { text: layer.name }]}>
-    <h2>{copy.layer.started(layer.actions.length)}</h2>
-    {layer.actions.length === 0 && <p class="empty">{copy.layer.noStarted}</p>}
-    <Rows rows={layer.actions.map((action) => ({ text: action.purpose, href: `../../action/${capSlug}/${addresses.action(cid, action.id)}.html`, meta: action.screen === "" ? undefined : action.screen, sub: where(action.place) }))} cap={12} noun="actions" />
-    <h2>{copy.layer.rules(layer.rules.length)}</h2>
-    {layer.rules.length === 0 && <p class="empty">{copy.layer.noRules}</p>}
-    <Rows rows={ruleRows} cap={12} noun="business rules" />
-    <h2>{copy.layer.shapes(layer.shapes.length)}</h2>
-    {layer.shapes.length === 0 && <p class="empty">{copy.layer.noShapes}</p>}
-    <Rows rows={layer.shapes.map((shape) => ({ text: shape.name, meta: plural(shape.fields.length, "field"), sub: shape.fields.join(", ") }))} cap={12} noun="data structures" />
+<Page title={layer.name} lead={ledeOf(layer.purpose)} depth={2} brief={layer.context.text} trail={[{ text: copy.site.home, href: "../../index.html" }, { text: cap.capability.name, href: `../../capability/${capSlug}.html` }, { text: layer.name }]}>
+    <Meta facts={[{ value: layer.actions.length, unit: layer.actions.length === 1 ? "action started here" : "actions started here" }, { value: layer.rules.length, unit: layer.rules.length === 1 ? "business rule" : "business rules" }]} />
+    <UsedIn links={used} />
+    {others.length > 0 && <details class="a-also fold">
+        <summary>{plural(others.length, "other capability", "other capabilities")} also pass through this layer</summary>
+        <div class="fold-body"><ul class="a-link-list">{others.map((other) => <li><a href={`../../capability/${addresses.capability(other.id)}.html`}>{other.name}</a></li>)}</ul></div>
+    </details>}
+    <Section title={words.layer.started(layer.actions.length)} id="actions">
+        {layer.actions.length === 0 && <Fragment>
+            <NoDataState compact title={words.layer.noStartedTitle} message={words.layer.noStarted(callers.length)} />
+            {callers.length > 0 && <Fragment>
+                <h3 class="a-heading-sub">{words.layer.calledBy}</h3>
+                <ul class="a-list">{callers.map((caller) => <li><div class="a-row-line"><a href={layerHref(caller.layer.id)}>{caller.layer.name}</a><span class="a-aside">{plural(caller.actions, "action")} pass through here</span></div></li>)}</ul>
+            </Fragment>}
+        </Fragment>}
+        {layer.actions.length > 0 && <Fragment>
+            <ul class="a-list">
+                {firstActions.map((action) => { const r = row(action); return <li><div class="a-row-line"><a href={r.href}>{r.text}</a>{r.screen !== "" && <span class="a-aside">{r.screen}</span>}</div></li>; })}
+            </ul>
+            {restActions.length > 0 && <details class="a-more">
+                <summary>{words.layer.all(restActions.length)}</summary>
+                <ul class="a-list">
+                    {restActions.map((action) => { const r = row(action); return <li><div class="a-row-line"><a href={r.href}>{r.text}</a>{r.screen !== "" && <span class="a-aside">{r.screen}</span>}</div></li>; })}
+                </ul>
+            </details>}
+        </Fragment>}
+    </Section>
+    <Section title={words.layer.rules(layer.rules.length)} id="rules">
+        <RuleList id="layer-rules" rules={layer.rules} usedBy={usedByCounts(cap)} actions={actionsOfRules(cap, layer, (id) => addresses.action(cid, id))} />
+    </Section>
+    {layer.shapes.length > 0 && <details class="fold-line">
+        <summary>{words.layer.shapes(layer.shapes.length)}</summary>
+        <div class="fold-body">
+            <ul class="a-list">
+                {layer.shapes.map((shape) => <li><div class="a-row-line"><span>{shape.name}</span><span class="a-aside">{plural(shape.fields.length, "field")}</span></div>{shape.fields.length > 0 && <div class="a-sub">{shape.fields.join(", ")}</div>}</li>)}
+            </ul>
+        </div>
+    </details>}
 </Page>

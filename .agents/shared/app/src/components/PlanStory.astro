@@ -1,24 +1,30 @@
 ---
 import Page from "../layouts/Page.astro";
-import Rows from "./Rows.astro";
-import PlanPrompt from "./PlanPrompt.astro";
-import { copy } from "../lib/copy";
-import { blockersOf, epicPath, phaseOf, planHomePath, reliedOn, statusOf, storyPath } from "../lib/plan";
-import type { PlanData } from "../lib/plan-data";
+import "../styles/plan.css";
+import Details from "./ui/Details.astro";
+import EvidenceChip from "./ui/EvidenceChip.astro";
+import Section from "./ui/Section.astro";
+import PromptFold from "./plan/PromptFold.astro";
+import PlanState from "./plan/PlanState.astro";
 import PlanEdit from "./PlanEdit";
+import { epicPath, foundationPath, layerName, phaseOf, planHomePath, statusOf, storyPath, subjectOf } from "../lib/plan";
+import { kindsOf, stateOfStatus, waitsFor } from "../lib/plan-view";
+import type { PlanData } from "../lib/plan-data";
 import { isLocked, moveTargets, defaultEditUrl } from "../lib/plan-edit";
 import { analysisLinksOf } from "../lib/plan-links";
-import type { ActionLookup } from "../lib/plan-links";
-export interface Props { data: PlanData; storyKey: string; lookup: ActionLookup; }
-const { data, storyKey, lookup } = Astro.props;
+import type { ActionLookup, RuleLookup } from "../lib/plan-links";
+import { copy } from "../lib/copy";
+import { words } from "../lib/plan-words";
+export interface Props { data: PlanData; storyKey: string; lookup: ActionLookup; rules: RuleLookup; }
+const { data, storyKey, lookup, rules } = Astro.props;
 const { plan, prompts, ledger } = data;
 const story = plan.stories.find((each) => each.key === storyKey);
 if (story === undefined) throw new Error("no such story");
 const root = "../../";
 const epic = plan.epics.find((each) => each.key === story.epic);
 const phase = phaseOf(plan, story);
-const blockers = blockersOf(plan, story);
-const relied = reliedOn(plan, story);
+const status = statusOf(ledger, story.key);
+const waits = waitsFor(plan, story);
 const links = analysisLinksOf(story.actions, lookup);
 const editUrl = process.env.PLAN_EDIT_URL || defaultEditUrl;
 const editTargets = story.kind === "functional" ? moveTargets(plan.stories, story).map((each) => ({ key: each.key, title: each.title })) : [];
@@ -26,43 +32,67 @@ const editActions = story.kind === "functional" ? story.actions.map((id) => ({ i
 const titles = Object.fromEntries(plan.stories.map((each) => [each.key, each.title]));
 const prompt = prompts.deliver[story.key] ?? "";
 const builder = copy.plan.builderWords[story.builder as keyof typeof copy.plan.builderWords] ?? story.builder;
+const decisionOf = new Map(plan.decisions.map((each) => [each.id, each] as const));
+const evidenceOf = (criterion: (typeof story.criteria)[number]) => {
+    const from = ((criterion as { from?: readonly { _tag: string; id: string }[] }).from ?? []);
+    return {
+        places: from.flatMap((each) => (each._tag === "rule" ? [rules(each.id)] : [])).filter((place): place is string => place !== undefined),
+        decisions: from.flatMap((each) => { const found = each._tag === "decision" ? decisionOf.get(each.id) : undefined; return found === undefined ? [] : [subjectOf(found, layerName(plan, found.layer))]; }),
+        layers: from.flatMap((each) => (each._tag === "layer" ? [layerName(plan, each.id)] : [])),
+    };
+};
 ---
-<Page title={story.title} depth={2} trail={[{ text: copy.site.home, href: `${root}index.html` }, { text: copy.plan.title, href: `${root}${planHomePath}.html` }, ...(epic ? [{ text: epic.title, href: `${root}${epicPath(epic)}.html` }] : []), { text: story.title }]}>
-    <p class="sub">{copy.plan.storyOrder(story.sequence, plan.stories.length)} · {statusOf(ledger, story.key)}</p>
-    <dl class="facts">
-        <dt>{copy.plan.storyPhase}</dt><dd>{phase ? copy.plan.phaseName(phase.number, phase.name) : story.phase}</dd>
-        {epic && <><dt>{copy.plan.storyEpic}</dt><dd><a href={`${root}${epicPath(epic)}.html`}>{epic.title}</a></dd></>}
-        <dt>{copy.plan.storyKind}</dt><dd>{story.tags.map((tag) => <span class="chip">{tag}</span>)}</dd>
-        <dt>{copy.plan.storyBuilder}</dt><dd>{builder}</dd>
-    </dl>
-    <h2>{copy.plan.storyWhat}</h2>
-    <p>{story.what}</p>
-    <h2>{copy.plan.storyWhy}</h2>
-    <p>{story.why}</p>
-    <h2>{copy.plan.storyBlocked}</h2>
-    {blockers.length === 0 ? <p>{copy.plan.storyNoBlockers}</p> : <Rows rows={blockers.map((each) => ({ text: each.title, href: `${root}${storyPath(each)}.html`, meta: copy.plan.storyOrder(each.sequence, plan.stories.length) }))} />}
-    {relied.length > 0 && <Fragment>
-        <h2>{copy.plan.storyReliesOn}</h2>
-        <Rows rows={relied.map((each) => ({ text: each.story.title, href: `${root}${storyPath(each.story)}.html`, meta: copy.plan.storyReliesLine(each.rules) }))} />
-    </Fragment>}
-    {story.builds.length > 0 && <p class="note">{copy.plan.storyBuilds(story.builds.length)}</p>}
-    <h2>{copy.plan.storyCriteria} ({story.criteria.length})</h2>
-    <ol class="criteria">{story.criteria.map((criterion) => <li>{criterion.says}</li>)}</ol>
-    {story.terms.length > 0 && <Fragment>
-        <h2>{copy.plan.storyTerms}</h2>
-        {story.terms.map((term) => <div class="assume"><div><strong>{term.name}</strong></div><div class="sub">{term.means}</div></div>)}
-    </Fragment>}
-    {story.journey && <Fragment>
-        <h2>{copy.plan.storyJourney}: {story.journey.name}</h2>
-        <ol>{story.journey.steps.map((step) => <li>{step}</li>)}</ol>
-    </Fragment>}
-    <h2>{copy.plan.storyFrom}</h2>
-    {story.actions.length === 0 ? <p class="note">{copy.plan.storyFromNone}</p> : <Fragment>
-        {links.capabilities.length > 0 && <p><span class="note">{copy.plan.storyFromCapabilities}:</span> {links.capabilities.map((link) => <a class="chip" href={link.href}>{link.text}</a>)}</p>}
-        {links.screens.length > 0 && <p><span class="note">{copy.plan.storyFromScreens}:</span> {links.screens.map((link) => <a class="chip" href={link.href}>{link.text}</a>)}</p>}
-        {links.actions.length > 0 && <Fragment><h3>{copy.plan.storyFromActions} ({links.actions.length})</h3><Rows rows={links.actions.map((link) => ({ text: link.text, href: link.href }))} /></Fragment>}
-    </Fragment>}
+<Page title={story.title} depth={2} trail={[{ text: "Overview", href: `${root}index.html` }, { text: "Modernization plan", href: `${root}${planHomePath}.html` }, { text: story.title }]}>
+    <p class="pl-facts pl-meta">
+        <PlanState state={stateOfStatus(status)} label={status} />
+        <span>{words.storyOf(story.sequence, plan.stories.length)}</span>
+        {epic && <span><a href={`${root}${epicPath(epic)}.html`}>{epic.title}</a></span>}
+        {phase && <span>{words.phaseOf(phase.number)}</span>}
+        {kindsOf(story).map((kind) => <span class="pl-chip">{kind}</span>)}
+        {story.builds.length > 0 && <span>{words.builds(story.builds.length)}</span>}
+    </p>
+    <section class="pl-brief">
+        <h2>{words.delivers}</h2>
+        <p class="pl-prose">{story.what}</p>
+        <h2>{words.why}</h2>
+        <p class="pl-prose">{story.why}</p>
+    </section>
+    <Section title={words.criteria}>
+        <ol class="pl-criteria">{story.criteria.map((criterion) => {
+            const found = evidenceOf(criterion);
+            const count = found.places.length + found.decisions.length + found.layers.length;
+            return <li>
+                <p>{criterion.says}</p>
+                {count > 0 && <details class="pl-ev"><summary>{words.evidence(found.places.length, found.decisions.length, found.layers.length)}</summary>
+                    <div class="pl-ev-body">
+                        {found.places.map((place) => <code class="pl-code"><EvidenceChip place={place} /></code>)}
+                        {found.decisions.map((subject) => <a class="pl-chip" href={`${root}${foundationPath}.html`}>{words.decisionChip(subject)}</a>)}
+                        {found.layers.map((name) => <a class="pl-chip" href={`${root}${foundationPath}.html`}>{words.layerChip(name)}</a>)}
+                    </div>
+                </details>}
+            </li>;
+        })}</ol>
+    </Section>
+    <Section title={words.waits}>
+        {waits.length === 0 ? <p class="pl-note">{words.waitsNone}</p> : <ul class="pl-waits">{waits.map((each) => <li><a class="pl-chip pl-chip-wrap" href={`${root}${storyPath(each.story)}.html`}>{each.story.title}{each.rules > 0 && <span class="pl-note">&nbsp;· {words.usesRules(each.rules)}</span>}</a></li>)}</ul>}
+    </Section>
+    {story.journey && <Section title={words.journey(story.journey.name)}>
+        <ol class="pl-steps">{story.journey.steps.map((step) => <li>{step}</li>)}</ol>
+        {story.components && story.components.length > 0 && <p class="pl-line"><span class="pl-k">{words.components}</span>{story.components.map((name) => <span class="pl-chip">{name}</span>)}</p>}
+    </Section>}
+    {!story.journey && story.components && story.components.length > 0 && <Section title={words.components}>
+        <div class="pl-chips">{story.components.map((name) => <span class="pl-chip">{name}</span>)}</div>
+    </Section>}
+    {story.terms.length > 0 && <Details summary={words.terms(story.terms.length)}>
+        <dl class="pl-terms">{story.terms.map((term) => <div><dt>{term.name}</dt><dd>{term.means}</dd></div>)}</dl>
+    </Details>}
+    <Details summary={words.origin}>
+        {story.actions.length === 0 ? <p class="pl-note">{words.originNone}</p> : <div class="pl-origin">
+            {links.capabilities.length > 0 && <div><h4>{words.capabilities}</h4><div class="pl-chips">{links.capabilities.map((link) => <a class="pl-chip" href={link.href}>{link.text}</a>)}</div></div>}
+            {links.screens.length > 0 && <div><h4>{words.screens}</h4><div class="pl-chips">{links.screens.map((link) => <a class="pl-chip" href={link.href}>{link.text}</a>)}</div></div>}
+            {links.actions.length > 0 && <div><h4>{words.actions}</h4><ul class="pl-waits">{links.actions.map((link) => <li><a class="pl-chip pl-chip-wrap" href={link.href}>{link.text}</a></li>)}</ul></div>}
+        </div>}
+    </Details>
+    <PromptFold summary={words.deliverPrompt} note={words.deliverNote(builder)} text={prompt} />
     <div data-edit-url={editUrl}><PlanEdit client:only="react" storyKey={story.key} title={story.title} what={story.what} why={story.why} criteria={story.criteria.map((c) => c.says)} actions={editActions} targets={editTargets} titles={titles} locked={isLocked(ledger, story.key)} editUrl={editUrl} /></div>
-    <h2>{copy.plan.storyPrompt}</h2>
-    <PlanPrompt title={story.title} text={prompt} lead={copy.plan.storyPromptLead} />
 </Page>

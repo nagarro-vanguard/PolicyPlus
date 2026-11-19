@@ -1,0 +1,22 @@
+---
+// How each kind of data changes over time: one kind's states open at a time, each as the analysis's own state diagram.
+import "../../styles/architecture.css";
+import Diagram from "../analysis/Diagram.astro";
+import { copy as figureCopy } from "../../lib/copy";
+import { statesModel } from "../../lib/model";
+import { plural } from "../../lib/text";
+import type { Lifecycle } from "../../lib/types";
+export interface Props {
+    lives: readonly Lifecycle[];
+    known: ReadonlySet<string>;
+}
+const { lives, known } = Astro.props;
+---
+<div class="arch-lives">
+    {lives.map((life, at) => <details class="arch-fold" name="kind-life" open={at === 0}>
+        <summary>{life.entity.name}<span>{plural(life.states.length, "state")}</span></summary>
+        <div class="arch-fold-body">
+            <Diagram id="states" titled={false} title={figureCopy.figures.statesTitle(life.entity.name)} question="" facts={statesModel(life).facts} build={(limit) => statesModel(life, limit).model} known={known} />
+        </div>
+    </details>)}
+</div>

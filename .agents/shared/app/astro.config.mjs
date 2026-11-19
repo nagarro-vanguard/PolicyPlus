@@ -90,12 +90,13 @@ const readerCheck = () => ({
     },
 });
 
+// The stylesheet is never inlined: its font addresses are relative to it, so it must stay one file in _astro/.
 // Static pages, one file per place (`capability/<id>.html`). The payloads and the output folder come from the environment,
 // set by a skill's build-app command.
 export default defineConfig({
     integrations: [react(), relativeAssets(), readerCheck()],
     output: "static",
-    build: { format: "file", inlineStylesheets: "auto" },
+    build: { format: "file", inlineStylesheets: "never" },
     devToolbar: { enabled: false },
     telemetry: false,
 });

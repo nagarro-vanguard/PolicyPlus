@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { Context, Effect, Layer } from "effect";
 import { skillRoot } from "../run/analysis-layout";
@@ -16,7 +16,6 @@ export interface SiteBuilderOps {
 
 /** The shared app, which shows an analysis and, when it is given one, a modernization plan. */
 const template = join(skillRoot, "..", "..", "shared", "app");
-const designSystemStyles = join(skillRoot, "..", "..", "shared", "page-components", "assets", "page.css");
 
 /**
  * Run one step of the build in the template's folder, a failure or a non-zero exit being an error naming the step.
@@ -69,13 +68,6 @@ const siteBuilderOps: SiteBuilderOps = {
             if (!existsSync(join(template, "node_modules"))) {
                 yield* runStep("install the app's dependencies", ["install", "--frozen-lockfile"], environment);
             }
-            yield* Effect.try({
-                try: () => {
-                    mkdirSync(join(template, "public"), { recursive: true });
-                    copyFileSync(designSystemStyles, join(template, "public", "page.css"));
-                },
-                catch: (cause) => new SiteBuildFailed({ step: "copy the design system's stylesheet", cause }),
-            });
             yield* runStep("generate the validation schemas", ["scripts/generate-schemas.ts"], environment);
             return yield* runStep("build the pages", ["--bun", "x", "astro", "build", "--outDir", out], environment);
         }),

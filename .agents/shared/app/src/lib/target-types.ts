@@ -79,6 +79,7 @@ export type TargetData = {
     readonly choiceAsIs: Choice | undefined;
     readonly choiceJourneys: Choice | undefined;
     readonly choiceArchitecture: Choice | undefined;
+    readonly choiceComponents: Choice | undefined;
     readonly gates: Record<Gate, GateView>;
     readonly root: string;
 };

@@ -7,7 +7,7 @@ import PlanStory from "../components/PlanStory.astro";
 import PlanFoundation from "../components/PlanFoundation.astro";
 import PlanCoverage from "../components/PlanCoverage.astro";
 import { capabilities, slugs, system } from "../lib/payloads";
-import { actionLookup } from "../lib/plan-links";
+import { actionLookup, ruleLookup } from "../lib/plan-links";
 import { hasPlan, planData } from "../lib/plan-data";
 import { coveragePath, epicPath, foundationPath, planHomePath, storyPath } from "../lib/plan";
 
@@ -24,10 +24,11 @@ export async function getStaticPaths() {
 }
 const { kind, key } = Astro.props;
 const data = await planData();
+const rules = ruleLookup(await capabilities());
 const lookup = actionLookup(await system(), await capabilities(), await slugs(), "../".repeat((Astro.params.plan ?? "").split("/").length - 1));
 ---
 {kind === "home" && <PlanHome data={data} />}
 {kind === "foundation" && <PlanFoundation data={data} />}
 {kind === "coverage" && <PlanCoverage data={data} lookup={lookup} />}
 {kind === "epic" && <PlanEpic data={data} epicKey={key} />}
-{kind === "story" && <PlanStory data={data} storyKey={key} lookup={lookup} />}
+{kind === "story" && <PlanStory data={data} storyKey={key} lookup={lookup} rules={rules} />}

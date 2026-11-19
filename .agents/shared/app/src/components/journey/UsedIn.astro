@@ -1,0 +1,20 @@
+---
+// One line on a reference page: the journeys that use what the page is about, as links. The first few show; the rest are one
+// fold away. Nothing is drawn when no journey uses it.
+import "../../styles/journey.css";
+import { journeyCopy } from "../../lib/journey-copy";
+import type { JourneyLink } from "../../lib/journeys";
+export interface Props {
+    links: readonly JourneyLink[];
+}
+const { links } = Astro.props;
+const shown = 3;
+---
+{links.length > 0 && <p class="jr-used">
+    <span class="jr-used-label">{journeyCopy.reference.usedIn}</span>
+    {links.slice(0, shown).map((link) => <a href={link.href}>{link.text}</a>)}
+    {links.length > shown && <details class="jr-used-more">
+        <summary>{journeyCopy.reference.more(links.length - shown)}</summary>
+        {links.slice(shown).map((link) => <a href={link.href}>{link.text}</a>)}
+    </details>}
+</p>}

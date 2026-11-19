@@ -2,4 +2,3 @@ node_modules/
 .astro/
 dist/
 src/generated/
-public/page.css

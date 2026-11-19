@@ -37,7 +37,7 @@ describe("what the server's answer means", () => {
     test("accepted tells the person to rebuild", () => {
         const said = messageOf(200, { ok: true, message: "renamed" });
         expect(said.accepted).toBe(true);
-        expect(said.text).toContain("Rebuild the app");
+        expect(said.text).toContain("Build the app again");
     });
     test("a refusal names its reason and every gap", () => {
         const said = messageOf(422, { ok: false, message: "the change would break the plan", gaps: ["one", "two"] });
@@ -83,7 +83,7 @@ describe.skipIf(copy === undefined || !existsSync(`${copy}/.modernization-backlo
             const key = storyKeyOf(records[0]!);
             const ok = await send(base, "/api/revise", reviseBody(renameChange(key, "Set up the workspace again")!, "test"));
             expect(ok).toMatchObject({ accepted: true });
-            expect(ok.text).toContain("Rebuild the app");
+            expect(ok.text).toContain("Build the app again");
             expect((await loadEntries(base))?.length).toBe(1);
             // A title over 72 characters breaks a gate of the plan: refused, with the gaps named.
             const bad = await send(base, "/api/revise", reviseBody(renameChange(key, "x".repeat(90))!, ""));
