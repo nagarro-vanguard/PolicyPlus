@@ -36,7 +36,31 @@ export const skillsOf = (conductorRoot: string) => resolve(conductorRoot, "..");
  */
 const namedByTheirReaders = new Set(["journeys.json", "journeys.schema.json"]);
 
-export const hashFiles = (paths: readonly string[]) => {
+/**
+ * The bytes a file counts by: the file itself, or, for a JSON file named in `without`, the file with those top-level
+ * fields taken out. A file that has none of them counts by its own bytes, so adding the rule changes no stored hash.
+ */
+const contentOf = (file: string, without: Record<string, readonly string[]>) => {
+    const bytes = readFileSync(file);
+    const fields = without[basename(file)];
+    if (fields === undefined) return bytes;
+    try {
+        const value = JSON.parse(bytes.toString("utf8")) as Record<string, unknown>;
+        if (!fields.some((field) => field in value)) return bytes;
+        for (const field of fields) delete value[field];
+        return `${JSON.stringify(value, null, 2)}\n`;
+    } catch {
+        return bytes;
+    }
+};
+
+/**
+ * One fingerprint of files and folders.
+ * @param paths the files and folders
+ * @param without for a JSON file of that name, the top-level fields left out of the fingerprint
+ * @returns the first 16 hex digits of a sha256
+ */
+export const hashFiles = (paths: readonly string[], without: Record<string, readonly string[]> = {}) => {
     const hash = createHash("sha256");
     const walk = (path: string, listed: boolean): string[] =>
         !existsSync(path)
@@ -50,7 +74,7 @@ export const hashFiles = (paths: readonly string[]) => {
                 : [path];
     for (const file of paths.flatMap((path) => walk(path, true))) {
         hash.update(file);
-        hash.update(readFileSync(file));
+        hash.update(contentOf(file, without));
     }
     return hash.digest("hex").slice(0, 16);
 };
@@ -101,8 +125,10 @@ export const pathsOf = (root: string) => ({
 
 export type Step = {
     name: string;
-    /** Files or folders whose content decides whether the step must run again. */
-    inputs: (paths: Paths) => string[];
+    /** Files or folders whose content decides whether the step must run again; `request` is the request file. */
+    inputs: (paths: Paths, request: string) => string[];
+    /** Top-level fields of a JSON input, by file name, that the step does not read: a change in them does not run it again. */
+    without?: Record<string, readonly string[]>;
     /** What must exist when the step is done. */
     makes: (paths: Paths) => string[];
     /** Problems with what the step made, for a step whose record the person can leave stale; it then decides, not the inputs. */
@@ -191,11 +217,28 @@ const gate = (input: {
     ];
 };
 
+/**
+ * The fingerprint of a step's inputs, the one `next` compares and `--done` records.
+ * @param step the step
+ * @param paths the run's folders
+ * @param request the request file
+ * @returns the fingerprint
+ */
+export const inputsOf = (step: Step, paths: Paths, request: string) =>
+    hashFiles(step.inputs(paths, request), step.without);
+
+/**
+ * The person's Goals are kept in request.json for readers and given to no agent and no derived file, so a step built
+ * from the request does not run again when only they change.
+ */
+const goalsUnread = { "request.json": ["goals"] } as const;
+
 /** The steps in order, as data: a step is due when what it makes is missing or its inputs changed since it ran. */
 export const steps: Step[] = [
     {
         name: "request",
-        inputs: () => [],
+        // The request file itself, so an edited request is read again.
+        inputs: (_, request) => [request],
         makes: (p) => [p.requestJson],
         action: ({ skills, request }) => ({
             action: "run",
@@ -207,6 +250,7 @@ export const steps: Step[] = [
     {
         name: "analysis-request",
         inputs: (p) => [p.requestJson],
+        without: goalsUnread,
         makes: (p) => [p.analysisRequest],
         action: ({ skills, paths }) => ({
             action: "run",
@@ -300,6 +344,7 @@ export const steps: Step[] = [
     {
         name: "foundation",
         inputs: (p) => [p.payloads, p.requestJson, p.journeys, p.architecture, p.current],
+        without: goalsUnread,
         makes: (p) => [join(p.records, "layers.json"), join(p.records, "decisions.json")],
         action: ({ paths, skills }) => ({
             action: "invoke",

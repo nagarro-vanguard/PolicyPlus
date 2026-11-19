@@ -1,7 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { parseRequest, RequestInvalid } from "../shared/model/request";
+import { Schema } from "effect";
+import { ModernizationRequest, parseRequest, RequestInvalid } from "../shared/model/request";
 
 const base = mkdtempSync(`${tmpdir()}/req-`);
 const good = (stack = "- TypeScript on Bun\n- data: PostgreSQL") => `# Modernization Request
@@ -58,5 +59,22 @@ describe("the request", () => {
             "## Additional Notes\n- Old and new run side by side.\n- Money is exact.",
         );
         expect(parseRequest(text, base).notes).toHaveLength(2);
+    });
+    test("Goals are optional and absent when missing, empty or None", () => {
+        expect("goals" in parseRequest(good(), base)).toBe(false);
+        for (const body of ["", "None", "  \n<!-- say why -->\n"]) {
+            expect("goals" in parseRequest(`${good()}## Goals\n${body}\n`, base)).toBe(false);
+        }
+    });
+    test("Goals are kept as the person wrote them, lines and lists included", () => {
+        const goals =
+            "Staff stop editing policy files by hand.\n\n- Runs in a browser on the intranet\n- Every rule kept";
+        const request = parseRequest(`${good()}## Goals\n\n${goals}\n\n`, base);
+        expect(request.goals).toBe(goals);
+        expect(Schema.decodeUnknownSync(ModernizationRequest)(JSON.parse(JSON.stringify(request))).goals).toBe(goals);
+    });
+    test("a request.json written before Goals existed still decodes", () => {
+        const { goals: _, ...old } = { ...parseRequest(good(), base), goals: "x" };
+        expect(Schema.decodeUnknownSync(ModernizationRequest)(old).goals).toBeUndefined();
     });
 });

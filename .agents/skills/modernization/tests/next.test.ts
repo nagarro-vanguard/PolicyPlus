@@ -336,6 +336,38 @@ describe("today's tasks are the analysis's journeys", () => {
     });
 });
 
+describe("an edited request", () => {
+    /** A run done up to the analysis request, with request.json written from the request file. */
+    const readOnce = (json: object) => {
+        const { root, request, paths } = fresh();
+        put(paths.requestJson, `${JSON.stringify({ sourceRoots: [root], ...json }, null, 2)}\n`);
+        put(paths.analysisRequest, "x");
+        next(root, request);
+        expect(markDone(root, "request").ok).toBe(true);
+        expect(markDone(root, "analysis-request").ok).toBe(true);
+        return { root, request, paths };
+    };
+    test("is read again once the request file changes", () => {
+        const { root, request } = readOnce({});
+        expect(stepOf(next(root, request))).toBe("analysis");
+        put(request, "## Output Root\n\n## Goals\nStop editing policy files by hand.\n");
+        expect(stepOf(next(root, request))).toBe("request");
+    });
+    test("a change to Goals alone runs nothing built from request.json again", () => {
+        const { root, request, paths } = readOnce({});
+        put(paths.requestJson, `${JSON.stringify({ sourceRoots: [root], goals: "Run in a browser." }, null, 2)}\n`);
+        expect(stepOf(next(root, request))).toBe("analysis");
+        put(paths.requestJson, `${JSON.stringify({ sourceRoots: [root, "/elsewhere"] }, null, 2)}\n`);
+        expect(stepOf(next(root, request))).toBe("analysis-request");
+    });
+    test("a request.json without Goals keeps the fingerprint it had before Goals existed", () => {
+        const { paths } = fresh();
+        put(paths.requestJson, `${JSON.stringify({ sourceRoots: ["/a"] }, null, 2)}\n`);
+        const step = steps.find((each) => each.name === "foundation")!;
+        expect(hashFiles([paths.requestJson], step.without)).toBe(hashFiles([paths.requestJson]));
+    });
+});
+
 describe("hashing the analysis's payloads", () => {
     test("the journeys of today are not part of a folder's hash, but a file named on its own is", () => {
         const { paths } = fresh();
@@ -487,7 +519,7 @@ describe("the target's decisions", () => {
         for (const path of paths.appSource) expect(existsSync(path)).toBe(true);
         for (const name of ["app", "target-as-is-pages", "target-components-pages"]) {
             const step = steps.find((each) => each.name === name);
-            expect(step?.inputs(paths)).toEqual(expect.arrayContaining([...paths.appSource]));
+            expect(step?.inputs(paths, "")).toEqual(expect.arrayContaining([...paths.appSource]));
         }
         expect(hashFiles(paths.appSource)).toBe(hashFiles(paths.appSource));
     });

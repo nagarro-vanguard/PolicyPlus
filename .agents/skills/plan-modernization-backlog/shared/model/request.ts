@@ -23,6 +23,13 @@ export const ModernizationRequest = Schema.Struct({
         }),
     ).annotate(about("Documents that say what the product should be: an RFP, requirements, notes.")),
     notes: Schema.Array(Text).annotate(about("Anything else the person wants honoured, one statement each.")),
+    goals: Schema.optionalKey(
+        Text.annotate(
+            about(
+                "Why this modernization and what the target stack must achieve, written by the person and kept word for word; absent when not given. Shown to readers as written; no agent writes or rewrites it.",
+            ),
+        ),
+    ),
 }).annotate(about("The modernization's settings, read from the person's request."));
 
 export type ModernizationRequest = typeof ModernizationRequest.Type;
@@ -35,6 +42,7 @@ export const requestHelp = [
     "`## Target Stack`, one `- <line>` per line: required, never empty.",
     "`## Documents`, one `- <path>: <what it is>` per line, or `None`.",
     "`## Additional Notes`, one `- <statement>` per line, or `None`.",
+    "`## Goals` (optional): why this modernization and what the target stack must achieve, in your own words; kept as written. Leave it out, empty or `None` when there are none.",
     "Relative paths are read from the request's folder.",
 ].join(" ");
 
@@ -73,6 +81,15 @@ const firstLine = (lines: readonly string[] = []) => {
 };
 
 const isNone = (items: readonly string[]) => items.length === 1 && items[0]?.toLowerCase() === "none";
+
+/** A free-text section as written, without its surrounding blank lines; undefined when empty or `None`. */
+const proseOf = (lines: readonly string[] = []) => {
+    const text = lines
+        .map((line) => line.trimEnd())
+        .join("\n")
+        .trim();
+    return text === "" || text.toLowerCase() === "none" ? undefined : text;
+};
 
 /** `- <left>: <right>` split at the first colon that is followed by a space, so a Windows path keeps its colon. */
 const splitPair = (item: string): [string, string] | undefined => {
@@ -122,6 +139,7 @@ export const parseRequest = (text: string, baseDir: string): ModernizationReques
     const leaveOut = pairs("Leave Out", "pattern");
     const documents = pairs("Documents", "path");
     const notes = itemsOf(need("Additional Notes"));
+    const goals = proseOf(sections.get("Goals"));
     if (problems.length > 0) throw new RequestInvalid(problems);
     return Schema.decodeUnknownSync(ModernizationRequest)({
         outputRoot: abs(outputRoot ?? ""),
@@ -131,6 +149,7 @@ export const parseRequest = (text: string, baseDir: string): ModernizationReques
         stack,
         documents: documents.map(([path, whatItIs]) => ({ path: abs(path), whatItIs })),
         notes: isNone(notes) ? [] : notes,
+        ...(goals === undefined ? {} : { goals }),
     });
 };
 

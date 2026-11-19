@@ -17,7 +17,7 @@ The skills never invoke each other; this one tells whoever drives it which to in
     - `prompt`: show the person its `text` (a command that prints the prompt) and `why`; the person pastes it. Nothing here creates a work item or merges anything for them.
     - `wait`: tell the person its `message` (the four decisions of the target wait here: show them the pages the message names, then they confirm with the command it names or ask for a change, which is the `--changes` command the message names; the next call then returns `invoke` to apply it with shape-target's `apply-changes`, drive the jobs and finish the stage); call `next` again when they say it is done, no `--done` is needed for a decision. A decision holds while its record is not older than the proposal it decides on, and that was made after the decision before it. When one changes, every step after it runs again; once work items exist the run stops instead, since created items are locked.
     - `stop`: tell the person its `message` and stop. `done`: say so.
-3. A step runs again only when its inputs changed: its inputs' fingerprint is kept in `<root>/state.json`, with the repository's default branch, the worktrees folder and a limit of one worktree at a time.
+3. A step runs again only when its inputs changed (the request step's input is the request file, so an edited request is read again; a change to its `## Goals` alone runs nothing after it, since no step reads them): its inputs' fingerprint is kept in `<root>/state.json`, with the repository's default branch, the worktrees folder and a limit of one worktree at a time.
 
 ## Order
 

@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
-import { hashFiles, pathsOf, skillsOf, steps, type Action, type Paths, type Settings, type State } from "./steps";
+import { inputsOf, pathsOf, skillsOf, steps, type Action, type Paths, type Settings, type State } from "./steps";
 import { deliveryAction } from "./delivery";
 
 const conductorRoot = resolve(import.meta.dir, "..");
@@ -72,7 +72,7 @@ export const next = (root: string, request: string | undefined): Action => {
     for (const step of steps) {
         const missing = step.makes(paths).filter((path) => !existsSync(path));
         const recorded = state.steps[step.name]?.inputs;
-        const current = hashFiles(step.inputs(paths));
+        const current = inputsOf(step, paths, state.request);
         const problems = step.valid?.(paths) ?? [];
         // A step that says whether its record still holds is decided by that, not by the hash of its inputs.
         const stale = step.valid === undefined ? recorded !== undefined && recorded !== current : problems.length > 0;
@@ -107,7 +107,7 @@ export const markDone = (root: string, step: string): { ok: boolean; message: st
     const missing = entry.makes(paths).filter((path) => !existsSync(path));
     if (missing.length > 0) return { ok: false, message: `step ${step} did not make: ${missing.join(", ")}` };
     const state = read<State>(paths.state);
-    state.steps[step] = { inputs: hashFiles(entry.inputs(paths)), at: new Date().toISOString() };
+    state.steps[step] = { inputs: inputsOf(entry, paths, state.request), at: new Date().toISOString() };
     save(paths.state, state);
     return { ok: true, message: `${step}: done` };
 };

@@ -12,7 +12,7 @@ Goal: a plan people review step by step and later skills build from, complete (e
 
 `${SKILL_ROOT}` is this skill's folder; `${ROOT}` is the Output Root. The analysis must already be in `${ROOT}/.code-analysis/payloads`.
 
-1. `bun ${SKILL_ROOT}/cli/read-request.ts <request file>`; on exit 1, stop with its message (an empty Target Stack is one). It prints the Output Root.
+1. `bun ${SKILL_ROOT}/cli/read-request.ts <request file>`; on exit 1, stop with its message (an empty Target Stack is one). It prints the Output Root. Its `--help` lists the request's sections; the optional `## Goals` (why this modernization, what the target stack must achieve) is the person's text, kept word for word in `request.json` for readers. No agent reads, writes or rewrites it.
 2. Run the two stages in order, each with `S=MODERNIZATION_ROOT=${ROOT} bun ${SKILL_ROOT}/cli/stage.ts`: `S prepare foundation`, then drive it, then `S finish foundation`, then `S prepare stories`, drive it, `S finish stories`.
 3. Driving a stage: `S next --limit 4` prints one action as JSON.
     - `dispatch`: run every agent in `agents` in parallel, each as a subagent sent its `prompt` word for word; report each with `S done <job>` (`S abandon <job>` if it crashed); then call `next` again.
