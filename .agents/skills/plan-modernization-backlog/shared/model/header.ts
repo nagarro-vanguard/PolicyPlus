@@ -29,8 +29,24 @@ export const AttachmentHeader = Schema.Struct({
     transitions: Schema.Array(Schema.Struct({ entity: Text, from: Text, to: Text, where: Place })),
     outsideSystems: Schema.Array(Text),
     steps: Schema.optionalKey(
-        Schema.Array(Schema.Struct({ intent: Text, change: Text, reason: Text })).annotate(
-            about("The target journey's steps this story delivers, with how each differs from today and why."),
+        Schema.Array(
+            Schema.Struct({
+                intent: Text,
+                change: Text,
+                reason: Text,
+                system: Schema.optionalKey(Text.annotate(about("What the system does in the step, as confirmed."))),
+                changes: Schema.optionalKey(
+                    Schema.Array(Schema.Struct({ rule: Text, says: Schema.String, to: Text })).annotate(
+                        about(
+                            "The legacy rules the step applies differently: the rule, what it says today, and what it does now.",
+                        ),
+                    ),
+                ),
+            }),
+        ).annotate(
+            about(
+                "The target journey's steps this story delivers, with how each differs from today and why, what the system does now, and the rules it changes.",
+            ),
         ),
     ),
     components: Schema.optionalKey(

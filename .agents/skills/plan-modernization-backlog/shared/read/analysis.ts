@@ -1,7 +1,9 @@
-import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Schema } from "effect";
+import { fingerprintOf } from "./fingerprint";
+
+export { fingerprintOf };
 
 /*
  * What the plan reads of a code analysis: only the payload files, by their JSON Schema's shape, and only the fields it
@@ -102,24 +104,6 @@ export type Analysis = {
 };
 
 const readJson = (path: string) => JSON.parse(readFileSync(path, "utf8")) as unknown;
-
-/**
- * A fingerprint of the payload files, so a plan can say which analysis it was made from and refuse another.
- * @param payloads the payloads folder
- * @returns a hex digest
- */
-export const fingerprintOf = (payloads: string) => {
-    const hash = createHash("sha256");
-    const walk = (folder: string): string[] =>
-        readdirSync(folder, { withFileTypes: true })
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .flatMap((entry) => (entry.isDirectory() ? walk(join(folder, entry.name)) : [join(folder, entry.name)]));
-    for (const file of walk(payloads)) {
-        hash.update(file.slice(payloads.length));
-        hash.update(readFileSync(file));
-    }
-    return hash.digest("hex");
-};
 
 /**
  * Reads the analysis's payloads.

@@ -18,7 +18,7 @@ Tools: `<scriptsCommand> check <jobId>`, `bun <this skill's folder>/cli/describe
 ## Work
 
 Read both files and the documents the context names. Decide only what `kind` asks.
-- `layers`: one `TargetLayer` per responsibility with its own check and one reason to change. A capability is a folder inside a layer, never a layer. Carry every stack line. `check` is the command that verifies the layer and passes on the empty layer; `test` kind only for a black-box layer.
+- `layers`: one `TargetLayer` per responsibility with its own check and one reason to change. A capability is a folder inside a layer, never a layer. Carry every stack line. `check` is the command that verifies the layer and passes on the empty layer; `test` kind only for a black-box layer. Give each layer its `role` (contracts, rules, data, service, ui-kit, screens, e2e or tooling) and, when it builds a part of `architecture.containers`, that part's name as `container`; two layers never share a role in one part. Make one app (a folder under `apps/`) for each part of the architecture that runs, not more: a split the architecture does not show needs a `base` area decision named `deployables` that says why.
 - `integrations`: one `integration` decision per outside system, named exactly as given: the layer that carries it, or how the target replaces what the old code did.
 - `scope`: one `scope` decision per capability; `chose` starts with `carry`, `replace` or `drop`.
 - `notes`: one `note` decision per note, numbered as given: how it is honoured, and where.

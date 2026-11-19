@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { Schema } from "effect";
 import type { Layout } from "../model/layout";
@@ -41,8 +41,42 @@ const write = (path: string, text: string) => {
 };
 
 /**
+ * The ledger made to match the plan: every story of the plan has an entry (a new one is `planned`), and an entry whose
+ * story or epic left the plan is dropped while nothing was done with it yet. An entry that left the plan after its work
+ * item was created cannot be dropped silently: it is named, and the plan is not written.
+ * @param layout the run's folders
+ * @param plan the plan
+ * @returns the ledger to write, and what stops it
+ */
+export const syncLedger = (layout: Layout, plan: Plan): { ledger: Ledger; failing: string[] } => {
+    const before: Ledger = existsSync(layout.ledger)
+        ? Schema.decodeUnknownSync(Ledger)(JSON.parse(readFileSync(layout.ledger, "utf8")))
+        : { items: {} };
+    const keys = new Set<string>([...plan.stories.map((story) => story.key), ...plan.epics.map((epic) => epic.key)]);
+    const failing: string[] = [];
+    const items: Record<string, Ledger["items"][string]> = {};
+    for (const [key, entry] of Object.entries(before.items)) {
+        if (keys.has(key)) items[key] = entry;
+        else if (entry.status !== "planned")
+            failing.push(
+                `work item ${key}${entry.item === undefined ? "" : ` (${entry.item})`} is ${entry.status} but its story is no longer in the plan: put the story back, or set it planned in the ledger once the work item is closed`,
+            );
+    }
+    for (const story of plan.stories) items[story.key] ??= { status: "planned" };
+    return { ledger: { ...before, items }, failing };
+};
+
+/** Removes the markdown files of a folder that this build did not write. */
+const prune = (folder: string, written: ReadonlySet<string>) => {
+    if (!existsSync(folder)) return;
+    for (const name of readdirSync(folder))
+        if (name.endsWith(".md") && !written.has(name)) rmSync(join(folder, name), { force: true });
+};
+
+/**
  * Writes everything the plan hands on: `plan.json`, the manifest of work items with their bodies and attachments, the
- * AGENTS.md of every layer as a preview, and an empty ledger when none exists. Nothing here is written by an agent.
+ * AGENTS.md of every layer as a preview, and the ledger made to match the plan. The bodies and attachments of stories
+ * no longer in the plan are removed. Nothing here is written by an agent.
  * @param layout the run's folders
  * @param plan the plan
  * @param facts the analysis facts
@@ -61,6 +95,8 @@ export const publishPlan = (
 ) => {
     write(layout.plan, JSON.stringify(Schema.encodeSync(Plan)(plan), null, 2));
     const items: ManifestItem[] = [];
+    const bodies = new Set<string>();
+    const attachments = new Set<string>();
     for (const epic of plan.epics) {
         const key = `epic-${slug(epic.key)}`;
         items.push({
@@ -79,6 +115,7 @@ export const publishPlan = (
             attachment: null,
         });
         write(join(layout.bodies, `${key}.md`), `# ${epic.title}\n\n${epicBody(epic, plan)}`);
+        bodies.add(`${key}.md`);
     }
     for (const story of plan.stories) {
         // The bundle of every surface the story's entry points belong to, in the order they appear.
@@ -95,10 +132,12 @@ export const publishPlan = (
         const bundle = texts.length === 0 ? undefined : texts.join("\n\n---\n\n");
         const attached = story.builds.length > 0;
         write(join(layout.bodies, `${story.key}.md`), `# ${story.title}\n\n${storyBody(story, plan, facts)}`);
+        bodies.add(`${story.key}.md`);
+        if (attached) attachments.add(`${story.key}.md`);
         if (attached)
             write(
                 join(layout.attachments, `${story.key}.md`),
-                attachmentText(story.title, headerFor(story, plan, facts, target && { target, request }), bundle),
+                attachmentText(story.title, headerFor(story, plan, facts, target && { target }), bundle),
             );
         items.push({
             key: story.key,
@@ -142,13 +181,8 @@ export const publishPlan = (
     for (const layer of plan.layers)
         write(join(layout.agentsFiles, slug(layer.name), "AGENTS.md"), layerAgentsMd(layer, request, plan.decisions));
     write(join(layout.agentsFiles, "AGENTS.md"), rootAgentsMd(request, plan.layers, plan.decisions, workTracking));
-    if (!existsSync(layout.ledger)) {
-        const ledger: Ledger = {
-            items: Object.fromEntries(
-                plan.stories.map((story) => [story.key, { status: "planned" as const }]),
-            ) as never,
-        };
-        write(layout.ledger, JSON.stringify(Schema.encodeSync(Ledger)(ledger), null, 2));
-    }
+    prune(layout.bodies, bodies);
+    prune(layout.attachments, attachments);
+    write(layout.ledger, JSON.stringify(Schema.encodeSync(Ledger)(syncLedger(layout, plan).ledger), null, 2));
     return items;
 };

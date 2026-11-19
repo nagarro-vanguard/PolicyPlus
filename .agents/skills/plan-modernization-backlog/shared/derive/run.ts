@@ -12,7 +12,11 @@ import { buildTargetPlan } from "./target-plan";
 import { splitCycles } from "./cycles";
 import { carriedFrom } from "./scope";
 import { deriveFacts } from "./facts";
-import { publishPlan } from "./publish";
+import { publishPlan, syncLedger } from "./publish";
+import { builtFromNow } from "./built-from";
+import { dedupeCarriers } from "./carriers";
+import { planConflicts, targetConflicts } from "./conflicts";
+import type { Plan } from "../model/plan";
 import { sectionOf } from "./agents-md";
 import { applyAll, type Entry } from "./revisions";
 
@@ -62,17 +66,40 @@ export const evaluatePlan = (layout: Layout, entries: readonly Entry[] = loadRev
     const { layers, decisions } = records;
     const revised = applyAll(records.stories, entries);
     const target = loadTarget(layout);
-    // A story caught in a cycle of waits is split by component, so every story can be ordered.
-    const stories = target === undefined ? revised : splitCycles(revised, target).stories;
+    // A story caught in a cycle of waits is split by component, so every story can be ordered; an outside system a
+    // component adapts is built by that component's story alone.
+    const split = target === undefined ? revised : splitCycles(revised, target).stories;
+    const { stories, moved } =
+        target === undefined
+            ? { stories: split, moved: [] as string[] }
+            : dedupeCarriers(split, decisions, target, analysis.system.externals);
     // With a confirmed target every capability is planned: what is not carried was dropped there, step by step.
     const { ids } = carriedFrom(analysis, decisions);
     const facts = deriveFacts(analysis, target === undefined ? ids : undefined);
     const stamp = { root: analysis.root, fingerprint: analysis.fingerprint };
-    const { plan, problems } =
+    const built =
         target === undefined
             ? buildPlan({ analysis: stamp, facts, request, layers, decisions, stories })
             : buildTargetPlan({ analysis: stamp, facts, layers, decisions, stories, target });
-    const gaps = checkPlan({ analysis, facts, request, layers, decisions, stories, plan, problems, target });
+    const { problems } = built;
+    const bare: Plan = { ...built.plan, builtFrom: builtFromNow(layout, analysis.fingerprint) };
+    const plan: Plan = {
+        ...bare,
+        conflicts: [
+            ...(target === undefined
+                ? []
+                : targetConflicts(
+                      layout,
+                      target.architecture.components.map((component) => component.name),
+                  )),
+            ...planConflicts(layout, bare),
+        ],
+    };
+    const checked = checkPlan({ analysis, facts, request, layers, decisions, stories, plan, problems, target });
+    const gaps: Gaps = {
+        failing: [...checked.failing, ...syncLedger(layout, plan).failing],
+        advisory: [...checked.advisory, ...moved],
+    };
     return { plan, facts, request, gaps, stories, target };
 };
 

@@ -548,3 +548,175 @@ describe("stories that wait on each other", () => {
         );
     });
 });
+
+describe.skipIf(!have)("what the plan was built from, and what it carries on", () => {
+    test("the plan records the hash of each decision's subject; it is out of date only when one changes, never by a file's time", async () => {
+        const { changedSinceBuilt } = await import("../shared/derive/built-from");
+        const { subjectOf } = await import("../../shape-target/shared/gates");
+        const copy = setup();
+        // a decision recorded with a subject holds while its file has that hash, whatever its time
+        const architecture = copy.layout.targetArchitecture;
+        writeJson(join(copy.layout.target, "choice-components.json"), {
+            confirmedAt: new Date(Date.now() - 50_000).toISOString(),
+            subject: subjectOf(architecture),
+        });
+        const later = new Date(Date.now() + 60_000);
+        utimesSync(architecture, later, later);
+        expect(targetGaps(copy.layout)).toEqual([]);
+        expect(runBuild(copy.layout).written).toBe(true);
+        const plan = JSON.parse(readFileSync(copy.layout.plan, "utf8"));
+        expect(plan.builtFrom.analysis).toBe(plan.analysis.fingerprint);
+        expect(plan.builtFrom.decisions.components).toBe(subjectOf(architecture));
+        expect(Object.keys(plan.builtFrom.decisions).sort()).toEqual(
+            ["architecture", "as-is", "components", "journeys"].sort(),
+        );
+        expect(changedSinceBuilt(copy.layout, plan)).toEqual([]);
+        writeJson(architecture, { ...copy.target.architecture, name: "changed" });
+        expect(targetGaps(copy.layout)).toEqual(["the components changed after it was confirmed"]);
+        // the plan rests on what was confirmed: it is out of date once the person confirms the new file
+        expect(changedSinceBuilt(copy.layout, plan)).toEqual([]);
+        writeJson(join(copy.layout.target, "choice-components.json"), {
+            confirmedAt: new Date(Date.now() + 120_000).toISOString(),
+            subject: subjectOf(architecture),
+        });
+        expect(targetGaps(copy.layout)).toEqual([]);
+        expect(changedSinceBuilt(copy.layout, plan)).toEqual(["the components decision"]);
+        expect(changedSinceBuilt(copy.layout, {})).toBeUndefined();
+    });
+
+    test("every build makes the ledger match the plan and removes the files of stories that left it", () => {
+        const copy = setup();
+        writeJson(copy.layout.ledger, {
+            items: { "story-gone": { status: "planned" }, "story-made": { status: "created", item: "#7" } },
+        });
+        const stale = join(copy.layout.attachments, "story-gone.md");
+        writeJson(stale, "old");
+        const refused = runBuild(copy.layout);
+        expect(refused.written).toBe(false);
+        expect(refused.gaps.failing.join()).toContain("story-made (#7) is created");
+        writeJson(copy.layout.ledger, { items: { "story-gone": { status: "planned" } } });
+        expect(runBuild(copy.layout).written).toBe(true);
+        const plan = JSON.parse(readFileSync(copy.layout.plan, "utf8")) as { stories: { key: string }[] };
+        const ledger = JSON.parse(readFileSync(copy.layout.ledger, "utf8")) as { items: Record<string, unknown> };
+        expect(Object.keys(ledger.items).sort()).toEqual(plan.stories.map((story) => story.key).sort());
+        expect(existsSync(stale)).toBe(false);
+    });
+
+    test("the surviving challenges of the target and of the plan's own reviews are carried, each with what it is about", () => {
+        const copy = setup();
+        const records = join(copy.root, ".shape-target", "work", "records");
+        writeJson(join(copy.layout.target, "choice-architecture.json"), {
+            ...JSON.parse(readFileSync(join(copy.layout.target, "choice-architecture.json"), "utf8")),
+            picks: [{ of: "architecture", variant: "standin" }],
+        });
+        confirmTarget(copy.layout);
+        writeJson(join(copy.layout.target, "choice-architecture.json"), {
+            ...JSON.parse(readFileSync(join(copy.layout.target, "choice-architecture.json"), "utf8")),
+            picks: [{ of: "architecture", variant: "standin" }],
+        });
+        writeJson(join(records, "disputes-architecture.json"), [
+            { job: "shape", record: 0, variant: "standin", says: "The store is named twice." },
+            { job: "shape", record: 1, variant: "other", says: "Not chosen." },
+        ]);
+        const shared = copy.target.stories.find((story) => (story.components ?? []).includes("shared-rules"));
+        writeJobJson(jobPaths(copy.layout, "shared-1").output, { stories: [shared] });
+        writeJson(join(copy.layout.records, "disputes.json"), [
+            { job: "shared-1", says: "Record 0: A criterion is wider than its rule." },
+        ]);
+        const { plan } = evaluatePlan(copy.layout);
+        const conflicts = plan.conflicts ?? [];
+        expect(conflicts.filter((each) => each.stage === "architecture")).toEqual([
+            {
+                stage: "architecture",
+                job: "shape",
+                record: 0,
+                variant: "standin",
+                says: "The store is named twice.",
+                resolved: false,
+            },
+            { stage: "architecture", job: "shape", record: 1, variant: "other", says: "Not chosen.", resolved: true },
+        ]);
+        const own = conflicts.find((each) => each.job === "shared-1");
+        expect(own?.says).toBe("A criterion is wider than its rule.");
+        expect(own?.record).toBe(0);
+        expect(own?.variant).toBe(
+            plan.stories.find((story) => (story.components ?? []).includes("shared-rules"))?.key as never,
+        );
+    });
+
+    test("the platform is built lower layers first, and an architecture that runs as one part is not split into apps by accident", () => {
+        const copy = setup();
+        const layers = JSON.parse(readFileSync(copy.files.layers, "utf8")) as {
+            id: string;
+            path: string;
+            dependsOn: string[];
+        }[];
+        const [low, high] = layers;
+        writeJson(
+            copy.files.layers,
+            layers.map((layer, at) =>
+                at > 1 ? layer : { ...layer, path: `apps/app-${at}`, dependsOn: at === 1 ? [low?.id] : [] },
+            ),
+        );
+        const foundation = (title: string, layer: string) =>
+            ({
+                title,
+                what: "w",
+                why: "y",
+                actions: [],
+                terms: [],
+                criteria: [
+                    {
+                        says: "Given the layer, when its check runs, then it passes.",
+                        from: [{ _tag: "layer", id: layer }],
+                    },
+                ],
+            }) as unknown as Story;
+        writeJson(copy.files.stories, [
+            foundation("Serve the outside interface", high?.id ?? ""),
+            foundation("Define the contracts", low?.id ?? ""),
+            ...copy.foundation,
+            ...copy.target.stories,
+        ]);
+        const first = evaluatePlan(copy.layout);
+        expect(first.gaps.failing.join()).toContain('record why in an area decision named "deployables"');
+        const serve = first.plan.stories.find((story) => story.title === "Serve the outside interface");
+        const define = first.plan.stories.find((story) => story.title === "Define the contracts");
+        expect(serve?.layers).toEqual([high?.id] as never);
+        expect(serve?.blockedBy).toContain(define?.key as never);
+        expect(define?.blockedBy).not.toContain(serve?.key as never);
+        expect(first.plan.phases.map((phase) => phase.name).join()).not.toContain("level");
+        writeJson(copy.files.decisions, [
+            ...JSON.parse(readFileSync(copy.files.decisions, "utf8")),
+            {
+                id: "base.decision-99",
+                topic: { _tag: "area", name: "deployables" },
+                layer: "workspace",
+                chose: "two apps",
+                reason: "r",
+            },
+        ]);
+        expect(evaluatePlan(copy.layout).gaps.failing.join()).not.toContain("deployables");
+    });
+
+    test("a rule a journey step changes is built as the step says: the plan refuses a criterion that keeps the old behaviour", () => {
+        const copy = setup();
+        const journeys = copy.target.journeys as { steps: { id: string; honours: string[]; changes?: unknown }[] }[];
+        const step = journeys.find((journey) => (journey.steps[0]?.honours.length ?? 0) > 0)?.steps[0];
+        const rule = step?.honours[0] ?? "";
+        if (step) step.changes = [{ rule, to: "Says plainly when a quote was never closed." }];
+        writeJson(copy.layout.targetJourneys, journeys);
+        confirmTarget(copy.layout);
+        const failing = evaluatePlan(copy.layout).gaps.failing.join("\n");
+        expect(failing).toContain(`cites a rule that step ${step?.id} changes, but not the step`);
+        expect(failing).toContain("does not say what the rule does now");
+        const story = copy.target.stories.find((each) => (each.steps ?? []).includes(step?.id ?? ""));
+        const { headerFor } = require("../shared/derive/attachment") as typeof import("../shared/derive/attachment");
+        const evaluated = evaluatePlan(copy.layout);
+        const view = evaluated.plan.stories.find((each) => (each.steps ?? []).includes(step?.id ?? ""));
+        const header = headerFor(view!, evaluated.plan, evaluated.facts, { target: evaluated.target! });
+        expect(header.steps?.[0]?.changes?.[0]?.to).toBe("Says plainly when a quote was never closed.");
+        expect(header.steps?.[0]?.system).toBe("The system does it");
+        expect(story).toBeDefined();
+    });
+});

@@ -4,7 +4,14 @@ import type { Decision, Story, TargetLayer } from "../model/records";
 import type { Plan } from "../model/plan";
 import { AGENTS_MD_MAX_LINES, countedLines, layerAgentsMd } from "./agents-md";
 import { SHARED, type Facts } from "./facts";
-import { mechanicalProblems, readerProblems, recordIdProblems } from "./language";
+import {
+    CRITERION_LONG_WORDS,
+    CRITERION_MAX_WORDS,
+    mechanicalProblems,
+    readerProblems,
+    recordIdProblems,
+    wordCount,
+} from "./language";
 import type { Target } from "../read/target";
 import { targetGaps } from "./target-gates";
 
@@ -87,7 +94,7 @@ export const checkPlan = (input: Input): Gaps => {
     }
 
     if (input.target !== undefined) {
-        const found = targetGaps({ plan, facts, target: input.target, layers, request });
+        const found = targetGaps({ plan, facts, target: input.target, layers, request, decisions });
         failing.push(...found.failing);
         advisory.push(...found.advisory);
     } else {
@@ -171,6 +178,15 @@ export const checkPlan = (input: Input): Gaps => {
         const mechanical = mechanicalProblems(view.title);
         if (mechanical.length > 0) failing.push(`story "${short(view.title)}": ${some(mechanical)}`);
     }
+
+    // Criteria: refused over the cap where they are written; here the long ones are named for a second look.
+    const lengths = plan.stories.flatMap((view) => view.criteria.map((criterion) => wordCount(criterion.says)));
+    const overCap = lengths.filter((n) => n > CRITERION_MAX_WORDS).length;
+    const long = lengths.filter((n) => n > CRITERION_LONG_WORDS).length;
+    if (long > 0)
+        advisory.push(
+            `${long} criteria are over ${CRITERION_LONG_WORDS} words${overCap > 0 ? `, ${overCap} of them over ${CRITERION_MAX_WORDS}` : ""}: split their conditions and keep their exact messages`,
+        );
 
     // Advisory: every kind of data a carried capability touches has a term, once.
     const termOwners = new Map<string, number>();

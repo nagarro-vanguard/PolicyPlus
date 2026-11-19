@@ -6,6 +6,11 @@ export const Ref = Schema.TaggedUnion({
     transition: { id: TransitionId },
     decision: { id: DecisionId },
     layer: { id: LayerId },
-}).annotate(about("What a criterion rests on: a rule or a state change of the legacy system, a decision, or a layer."));
+    step: { id: Schema.String.annotate(about("The id of a step of a chosen journey.")) },
+}).annotate(
+    about(
+        "What a criterion rests on: a rule or a state change of the legacy system, a decision, a layer, or a journey step whose new behaviour it states.",
+    ),
+);
 
 export type Ref = typeof Ref.Type;

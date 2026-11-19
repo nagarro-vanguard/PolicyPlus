@@ -49,6 +49,7 @@ export const storyBody = (view: StoryView, plan: Plan, facts: Facts) => {
               ]
             : [];
     const terms = view.terms.map((term) => `${term.name}: ${term.means}`);
+    const builtIn = plan.layers.filter((layer) => (view.layers ?? []).includes(layer.id));
     if (view.kind === "functional") {
         const relies = [...new Set(view.reliesOn.map((each) => titleOf.get(each.builtBy) ?? ""))].filter(Boolean);
         return [
@@ -57,6 +58,7 @@ export const storyBody = (view: StoryView, plan: Plan, facts: Facts) => {
             ]),
             ...section("Context", [
                 `This ports behaviour of the existing product, described in the attachment: ${view.builds.length} rules it must keep and the reading of the code behind them.`,
+                ...(builtIn.length > 0 ? ["", `Built in: ${builtIn.map((layer) => layer.name).join(", ")}.`] : []),
                 ...(relies.length > 0
                     ? ["", `It relies on behaviour that other stories build first: ${relies.join("; ")}.`]
                     : []),
@@ -87,7 +89,9 @@ export const storyBody = (view: StoryView, plan: Plan, facts: Facts) => {
             .join("\n")
             .trim();
     }
-    const layerPaths = plan.layers.map((layer) => `${layer.path} (the ${layer.name} layer)`);
+    const layerPaths = (builtIn.length > 0 && view.builder !== "scaffold-codebase" ? builtIn : plan.layers).map(
+        (layer) => `${layer.path} (the ${layer.name} layer)`,
+    );
     return [
         ...section("Problem", bullets([view.why, ...(view.open ?? []).map((question) => `Open point: ${question}`)])),
         ...section("Goal", bullets([view.what])),

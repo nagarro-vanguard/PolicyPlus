@@ -17,7 +17,7 @@ Tools: Read, Grep, Write.
 
 ## Work
 
-Read every record in `outputPath` against `jobPath` and `contextPath`. Compare each criterion with the sentences of the rules it cites. For decisions look for a fact in the inputs the choice cannot carry, two decisions that contradict, a note only nominally honoured. For product owner stories check the words: nothing a person who never saw the code could not follow. Challenge only what is really wrong; do not rewrite, praise or restate.
+Read every record in `outputPath` against `jobPath` and `contextPath`. Compare each criterion with the sentences of the rules it cites and, where a step changes one of them (`ruleChanges`, `stepDetails[].changes`), with what the rule does now: the step wins over today's rule, so never ask for the old behaviour back. Also compare with the `system` of the steps the story names: a behaviour the step adds and no criterion states is missing. A criterion over 40 words is worth a challenge when its conditions can be split without losing an exact message. For decisions look for a fact in the inputs the choice cannot carry, two decisions that contradict, a note only nominally honoured. For product owner stories check the words: nothing a person who never saw the code could not follow. Challenge only what is really wrong; do not rewrite, praise or restate.
 
 ## Output
 

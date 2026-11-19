@@ -1,8 +1,10 @@
-import { createHash } from "node:crypto";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { basename, dirname, join, resolve } from "node:path";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { hashFiles as sharedHash } from "../../plan-modernization-backlog/shared/read/fingerprint";
 import { gateProblems, type Gate } from "./gates";
+import { changedSinceBuilt } from "../../plan-modernization-backlog/shared/derive/built-from";
+import { layoutOf as planLayoutOf } from "../../plan-modernization-backlog/shared/model/layout";
 
 export const changesFile = (records: string, gate: Gate) => join(records, `changes-${gate}.json`);
 const unapplied = (records: string, gate: Gate) => {
@@ -30,54 +32,14 @@ export type State = { request: string; settings: Settings; steps: Record<string,
 export const skillsOf = (conductorRoot: string) => resolve(conductorRoot, "..");
 
 /**
- * The analysis's journeys of today are read by the as-is step and the app, which name the file themselves. A folder that
- * holds them (the analysis's payloads) is hashed without them, so a run that adopts them does not run again the steps
- * built from the rest of the analysis (the plan's agents among them).
- */
-const namedByTheirReaders = new Set(["journeys.json", "journeys.schema.json"]);
-
-/**
- * The bytes a file counts by: the file itself, or, for a JSON file named in `without`, the file with those top-level
- * fields taken out. A file that has none of them counts by its own bytes, so adding the rule changes no stored hash.
- */
-const contentOf = (file: string, without: Record<string, readonly string[]>) => {
-    const bytes = readFileSync(file);
-    const fields = without[basename(file)];
-    if (fields === undefined) return bytes;
-    try {
-        const value = JSON.parse(bytes.toString("utf8")) as Record<string, unknown>;
-        if (!fields.some((field) => field in value)) return bytes;
-        for (const field of fields) delete value[field];
-        return `${JSON.stringify(value, null, 2)}\n`;
-    } catch {
-        return bytes;
-    }
-};
-
-/**
- * One fingerprint of files and folders.
+ * One fingerprint of files and folders: the plan's shared function (the same files count for the plan's `builtFrom`),
+ * cut to 16 hex digits as `state.json` has always kept it.
  * @param paths the files and folders
  * @param without for a JSON file of that name, the top-level fields left out of the fingerprint
  * @returns the first 16 hex digits of a sha256
  */
-export const hashFiles = (paths: readonly string[], without: Record<string, readonly string[]> = {}) => {
-    const hash = createHash("sha256");
-    const walk = (path: string, listed: boolean): string[] =>
-        !existsSync(path)
-            ? []
-            : statSync(path).isDirectory()
-              ? readdirSync(path)
-                    .sort()
-                    .flatMap((name) => walk(join(path, name), false))
-              : !listed && namedByTheirReaders.has(basename(path))
-                ? []
-                : [path];
-    for (const file of paths.flatMap((path) => walk(path, true))) {
-        hash.update(file);
-        hash.update(contentOf(file, without));
-    }
-    return hash.digest("hex").slice(0, 16);
-};
+export const hashFiles = (paths: readonly string[], without: Record<string, readonly string[]> = {}) =>
+    sharedHash(paths, { without }).slice(0, 16);
 
 export type Paths = ReturnType<typeof pathsOf>;
 const here = dirname(fileURLToPath(import.meta.url));
@@ -133,8 +95,27 @@ export type Step = {
     makes: (paths: Paths) => string[];
     /** Problems with what the step made, for a step whose record the person can leave stale; it then decides, not the inputs. */
     valid?: (paths: Paths) => string[];
+    /** What changed since the step's output was made, by what that output records it was made from; due again when any. */
+    outdated?: (paths: Paths) => string[];
     action: (ctx: { paths: Paths; skills: string; settings: Settings; request: string }) => Action;
 };
+
+/** What changed since the plan was built, by its `builtFrom`; nothing for a missing or older plan. */
+const planOutdated = (root: string, plan: string): string[] => {
+    if (!existsSync(plan)) return [];
+    try {
+        return changedSinceBuilt(planLayoutOf(root), JSON.parse(readFileSync(plan, "utf8")) as never) ?? [];
+    } catch {
+        return [];
+    }
+};
+
+/**
+ * The command that writes a bundle of the analysis, for the app's copy menu (the assistant copy): the app prints it as
+ * it is given, with a capability or screen after it.
+ */
+const buildBundle = (skills: string, p: Paths) =>
+    `BUILD_BUNDLE="CODE_ANALYSIS_ROOT=${p.analysis} bun ${join(skills, "code-analysis/cli/build-bundle.ts")}"`;
 
 const bun = (skills: string, skill: string, script: string, args: string) =>
     `bun ${join(skills, skill, "cli", script)} ${args}`;
@@ -191,7 +172,7 @@ const gate = (input: {
             action: ({ paths, skills }) => ({
                 action: "run",
                 step: `${name}-pages`,
-                command: `mkdir -p ${join(paths.root, ".shape-target/pages")} && CODE_ANALYSIS_ROOT=${paths.analysis} TARGET_CHOOSE="${chooseCommand(skills)}" ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --target ${paths.root} --out ${paths.app}`)}; test -f ${paths.app}/language-report.json && touch ${paths.pages(input.gate)}`,
+                command: `mkdir -p ${join(paths.root, ".shape-target/pages")} && CODE_ANALYSIS_ROOT=${paths.analysis} TARGET_CHOOSE="${chooseCommand(skills)}" ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --target ${paths.root} --out ${paths.app}`)}; test -f ${paths.app}/language-report.json && touch ${paths.pages(input.gate)}`,
                 why: `build the pages that show the ${input.gate} proposal, before the person is asked`,
             }),
         },
@@ -368,6 +349,9 @@ export const steps: Step[] = [
         name: "plan",
         inputs: (p) => [p.records],
         makes: (p) => [p.plan, p.manifest],
+        // The plan records what it was built from (`builtFrom`); a target confirmed again reaches it even when the
+        // stories' records came out the same. A plan made before it kept that is left as it is.
+        outdated: (p) => planOutdated(p.root, p.plan),
         action: ({ paths, skills }) => ({
             action: "run",
             step: "plan",
@@ -387,7 +371,7 @@ export const steps: Step[] = [
         action: ({ paths, skills }) => ({
             action: "run",
             step: "app",
-            command: `CODE_ANALYSIS_ROOT=${paths.analysis} TARGET_CHOOSE="${chooseCommand(skills)}" ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --plan ${paths.root} --target ${paths.root} --out ${paths.app}`)}`,
+            command: `CODE_ANALYSIS_ROOT=${paths.analysis} TARGET_CHOOSE="${chooseCommand(skills)}" ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --plan ${paths.root} --target ${paths.root} --out ${paths.app}`)}`,
             why: "build the one app that shows the analysis and the plan",
         }),
     },

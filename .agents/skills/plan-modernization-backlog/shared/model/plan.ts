@@ -1,5 +1,5 @@
 import { Schema } from "effect";
-import { about, ActionId, Count, RuleId, StoryKey, Text } from "./fields";
+import { about, ActionId, Count, LayerId, RuleId, StoryKey, Text } from "./fields";
 import { Decision, Story, TargetLayer } from "./records";
 
 export const Tag = Schema.Literals(["epic", "story", "functional", "technical", "modernize"]);
@@ -22,6 +22,19 @@ export const StoryView = Schema.Struct({
     ),
     capability: Schema.optionalKey(Text),
     surface: Schema.optionalKey(Text),
+    layers: Schema.optionalKey(
+        Schema.Array(LayerId).annotate(
+            about(
+                "The layers of the target codebase the story is built in, derived: the scaffold in every layer, an acceptance story in the test layer, a foundation story in the layers it and its decisions name, a component in the layer whose role its kind needs; empty when nothing says.",
+            ),
+        ),
+    ),
+    part: Schema.optionalKey(
+        Text.annotate(about("For a piece of a story split by component: the component the piece builds.")),
+    ),
+    splitFrom: Schema.optionalKey(
+        Text.annotate(about("For a piece of a story split by component: the title of the story it was split from.")),
+    ),
 }).annotate(about("A story as the plan carries it, with everything derived from the records."));
 
 export const Epic = Schema.Struct({
@@ -64,14 +77,62 @@ export const Coverage = Schema.Struct({
     ),
 }).annotate(about("What the plan covers of the analysis, so nothing is missed in silence."));
 
+const Sha = Text.annotate(about("A hex sha256."));
+
+export const BuiltFrom = Schema.Struct({
+    analysis: Sha.annotate(about("The fingerprint of the analysis's payloads, the same as `analysis.fingerprint`.")),
+    decisions: Schema.optionalKey(
+        Schema.Struct({ "as-is": Sha, journeys: Sha, architecture: Sha, components: Sha }).annotate(
+            about(
+                "For a plan made from a confirmed target: the hash of what each decision was made about, the `subject` its record kept, or the file's own hash for a record made before subjects were kept.",
+            ),
+        ),
+    ),
+}).annotate(
+    about(
+        "What the plan was built from. The plan is out of date when any of these differs from what holds now; `plan.ts status` compares them.",
+    ),
+);
+
+export const Conflict = Schema.Struct({
+    stage: Text.annotate(
+        about(
+            "Where the challenge was raised: a shape-target decision (`as-is`, `journeys`, `architecture`, `components`) or a stage of this plan (`foundation`, `stories`).",
+        ),
+    ),
+    job: Text.annotate(about("The job whose review raised it.")),
+    record: Schema.Int.annotate(
+        about("The position of the challenged record in the job's output, from 0; -1 when unknown."),
+    ),
+    variant: Schema.String.annotate(
+        about(
+            "What was challenged: a journey's id, an architecture's or a component's name, or the key of the story, the id of the layer or the decision the record became; empty when it no longer exists.",
+        ),
+    ),
+    says: Text.annotate(about("What the reviewer says is wrong, in one sentence.")),
+    resolved: Schema.Boolean.annotate(
+        about(
+            "True when the person settled it: they accepted it when confirming, or chose another variant than the one it is about. A challenge of this plan's own reviews is never settled by the plan.",
+        ),
+    ),
+}).annotate(about("A reviewer's challenge that survived the one fix its job gets."));
+
 export const Plan = Schema.Struct({
     analysis: Schema.Struct({ root: Text, fingerprint: Text }).annotate(about("The analysis the plan was made from.")),
+    builtFrom: Schema.optionalKey(BuiltFrom),
     layers: Schema.Array(TargetLayer),
     decisions: Schema.Array(Decision),
     epics: Schema.Array(Epic),
     phases: Schema.Array(Phase),
     stories: Schema.Array(StoryView),
     coverage: Coverage,
+    conflicts: Schema.optionalKey(
+        Schema.Array(Conflict).annotate(
+            about(
+                "The challenges that survived review, from the target's decisions and this plan's own stages, for the person to see.",
+            ),
+        ),
+    ),
 }).annotate(about("The strictly ordered, phase-wise modernization backlog."));
 
 export type StoryView = typeof StoryView.Type;
@@ -79,3 +140,5 @@ export type Epic = typeof Epic.Type;
 export type Phase = typeof Phase.Type;
 export type Coverage = typeof Coverage.Type;
 export type Plan = typeof Plan.Type;
+export type BuiltFrom = typeof BuiltFrom.Type;
+export type Conflict = typeof Conflict.Type;

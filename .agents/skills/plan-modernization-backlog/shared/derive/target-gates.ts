@@ -1,5 +1,7 @@
 import type { Plan } from "../model/plan";
-import type { TargetLayer } from "../model/records";
+import type { Decision, TargetLayer } from "../model/records";
+import { changedRuleProblems, ruleChangesOf } from "./consistency";
+import { componentLayer, roleOf } from "./layers";
 import type { Target } from "../read/target";
 import type { ModernizationRequest } from "../model/request";
 import { keptRules } from "./target-plan";
@@ -21,8 +23,11 @@ export const targetGaps = (input: {
     readonly target: Target;
     readonly layers: readonly TargetLayer[];
     readonly request: ModernizationRequest;
+    readonly decisions?: readonly Decision[];
 }) => {
     const { plan, facts, target, layers, request } = input;
+    const decisions = input.decisions ?? plan.decisions;
+    const changes = ruleChangesOf(target);
     const failing: string[] = [];
     const advisory: string[] = [];
     const components = new Map(target.architecture.components.map((component) => [component.name, component] as const));
@@ -51,6 +56,8 @@ export const targetGaps = (input: {
         if (new Set((story.steps ?? []).map((id) => stepJourney.get(id))).size > 1)
             failing.push(`${label} spans more than one journey`);
         if (story.criteria.length > 12) failing.push(`${label} has ${story.criteria.length} criteria, over 12`);
+        // A rule a journey step changes is built as the step says, not as the legacy did.
+        for (const problem of changedRuleProblems(story.criteria, changes)) failing.push(`${label}: ${problem}`);
         if (story.kind === "functional") {
             const wanted = new Set((story.steps ?? []).flatMap((id) => stepActions.get(id) ?? []));
             const have = new Set<string>(story.actions);
@@ -93,6 +100,61 @@ export const targetGaps = (input: {
         if (lines.length === 0 || !lines.some((n) => carried.has(n)))
             failing.push(`no layer carries what container ${container.name} is built with: "${short(container.tech)}"`);
     }
+    // The codebase's apps are the parts of the architecture that run: splitting one into several is a decision.
+    const running = target.architecture.containers.filter((container) => container.kind !== "store");
+    const apps = layers.filter((layer) => layer.kind === "code" && /^apps\//.test(layer.path));
+    const splitDecided = decisions.some(
+        (decision) => decision.topic._tag === "area" && /\bdeployables?\b/i.test(decision.topic.name),
+    );
+    if (apps.length > running.length && !splitDecided)
+        failing.push(
+            `the codebase has ${apps.length} apps (${apps.map((layer) => layer.name).join(", ")}) but the chosen architecture runs as ${running.length} (${running.map((container) => container.name).join(", ")}): keep one app for each, or record why in an area decision named "deployables"`,
+        );
+    // When the layers say what they are for and the components what they are, every component has its one layer.
+    if (layers.some((layer) => layer.role !== undefined)) {
+        const stack = { layers, decisions, target, externals: facts.externals };
+        const unplaced = target.architecture.components
+            .filter((component) => component.kind !== undefined || component.adapts !== undefined)
+            .filter((component) => componentLayer(component.name, stack) === undefined)
+            .map((component) => component.name);
+        if (unplaced.length > 0)
+            failing.push(
+                `${unplaced.length} components have no layer of the role their kind needs, or more than one: ${some(unplaced)}`,
+            );
+        const roles = layers.flatMap((layer) => {
+            const role = roleOf(layer);
+            return role === undefined ? [] : [role];
+        });
+        if (roles.length < layers.length)
+            advisory.push(`${layers.length - roles.length} layers do not say what they are for (their role)`);
+    }
+    // Each outside system is built once: a foundation story that still rests on how a system a component adapts is
+    // reached builds it a second time.
+    const adaptedSystems = new Set(
+        target.architecture.components.flatMap((component) =>
+            component.adapts === undefined
+                ? []
+                : [facts.externals.find((each) => each.id === component.adapts)?.name ?? component.adapts],
+        ),
+    );
+    const adaptedDecisions = new Set(
+        decisions
+            .filter((decision) => decision.topic._tag === "integration" && adaptedSystems.has(decision.topic.system))
+            .map((decision) => decision.id as string),
+    );
+    const twiceBuilt = plan.stories.filter(
+        (story) =>
+            (story.components ?? []).length === 0 &&
+            story.actions.length === 0 &&
+            story.builder !== "scaffold-codebase" &&
+            story.criteria.some((criterion) =>
+                criterion.from.some((ref) => ref._tag === "decision" && adaptedDecisions.has(ref.id)),
+            ),
+    );
+    if (twiceBuilt.length > 0)
+        advisory.push(
+            `${twiceBuilt.length} foundation stories still build an outside system a component adapts: ${some(twiceBuilt.map((story) => short(story.title)))}`,
+        );
     for (const journey of target.journeys) {
         const epic = plan.epics.find((each) => each.task === journey.task);
         if (epic === undefined) failing.push(`journey ${journey.name} has no epic`);

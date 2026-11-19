@@ -1,6 +1,7 @@
 import { Schema } from "effect";
 import { Decision, Story, TargetLayer } from "../model/records";
-import { mechanicalProblems, readerProblems, recordIdProblems } from "../derive/language";
+import { criterionLengthProblems, mechanicalProblems, readerProblems, recordIdProblems } from "../derive/language";
+import { changedRuleProblems } from "../derive/consistency";
 import { AGENTS_MD_MAX_LINES, countedLines, layerAgentsMd } from "../derive/agents-md";
 import type { Kind } from "./state";
 
@@ -27,6 +28,14 @@ export type JobFile = {
     layerIds?: string[];
     decisionIds?: string[];
     areaDecisionIds?: string[];
+    /** The rules of this job that a journey step changes, with the step and what the rule does now. */
+    ruleChanges?: Record<string, { step: string; to: string }[]>;
+    /** For the foundation stories: the outside systems a component of the architecture adapts, built by its story. */
+    adapted?: string[];
+    /** The integration decisions about those systems, filled in when the job is handed out. */
+    adaptedDecisionIds?: string[];
+    /** For the layers: the names of the parts of the chosen architecture. */
+    containers?: string[];
 };
 
 const short = (text: string) => (text.length > 60 ? `${text.slice(0, 57)}...` : text);
@@ -75,6 +84,17 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
             if (lines.length === 0 || !lines.some((n) => carried.has(n)))
                 gaps.push(`no layer carries what the architecture builds with: "${short(tech)}"`);
         }
+        const known = new Set(job.containers ?? []);
+        for (const layer of layers)
+            if (layer.container !== undefined && job.containers !== undefined && !known.has(layer.container))
+                gaps.push(
+                    `layer ${layer.name} builds a part the architecture does not have: ${short(layer.container)}`,
+                );
+        const placed = layers.flatMap((layer) =>
+            layer.role === undefined || layer.container === undefined ? [] : [`${layer.role} of ${layer.container}`],
+        );
+        for (const twice of new Set(placed.filter((each, at) => placed.indexOf(each) !== at)))
+            gaps.push(`two layers are the ${twice}: a component would not know which to go in`);
         const state = new Map<string, number>();
         const loops = (id: string): boolean => {
             if (state.get(id) === 2) return false;
@@ -175,12 +195,18 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
                 } else if (ref._tag === "decision") {
                     if (!decisions.has(ref.id))
                         gaps.push(`story "${short(story.title)}" cites a decision that does not exist`);
+                    if (job.kind === "foundation-stories" && (job.adaptedDecisionIds ?? []).includes(ref.id))
+                        gaps.push(
+                            `story "${short(story.title)}" builds how an outside system is reached, which the story of the component that adapts it builds`,
+                        );
                     citedDecisions.add(ref.id);
                 }
             }
         }
         const mech = mechanicalProblems(story.title);
         if (mech.length > 0) gaps.push(`story "${short(story.title)}": ${mech.join(", ")}`);
+        for (const problem of criterionLengthProblems(story.criteria.map((c) => c.says)))
+            gaps.push(`story "${short(story.title)}": ${problem}`);
         const functional = story.actions.length > 0;
         if (job.kind === "surfaces" && !functional)
             gaps.push(`story "${short(story.title)}" has no actions; a surface story ports actions`);
@@ -288,6 +314,15 @@ const targetStoryGaps = (job: JobFile, stories: readonly Story[]): string[] => {
             gaps.push(`${label} builds components whose ${missing.length} rules no criterion cites`);
         const mech = mechanicalProblems(story.title);
         if (mech.length > 0) gaps.push(`${label}: ${mech.join(", ")}`);
+        for (const problem of criterionLengthProblems(story.criteria.map((c) => c.says)))
+            gaps.push(`${label}: ${problem}`);
+        const changes = new Map(Object.entries(job.ruleChanges ?? {}));
+        for (const problem of changedRuleProblems(story.criteria, changes)) gaps.push(`${label}: ${problem}`);
+        const knownSteps = new Set([...(job.steps ?? []), ...[...changes.values()].flat().map((each) => each.step)]);
+        for (const criterion of story.criteria)
+            for (const ref of criterion.from)
+                if (ref._tag === "step" && !knownSteps.has(ref.id))
+                    gaps.push(`${label} cites a step that is not this job's and changes none of its rules`);
         const texts = [
             story.title,
             story.what,

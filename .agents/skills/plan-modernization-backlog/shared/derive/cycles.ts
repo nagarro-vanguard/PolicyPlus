@@ -1,5 +1,6 @@
 import type { Story } from "../model/records";
 import type { Target } from "../read/target";
+import { pieceTitle } from "./target-plan";
 
 /** Strongly connected groups of stories: stories that, through the components they build, wait on each other. */
 const groupsOf = (stories: readonly Story[], target: Target): number[][] => {
@@ -50,20 +51,18 @@ const groupsOf = (stories: readonly Story[], target: Target): number[][] => {
     return groups;
 };
 
-const clip = (text: string, size: number) => (text.length <= size ? text : `${text.slice(0, size - 3)}...`);
+/** A piece of a story split by component: the component it builds, and the title of the story it came from. */
+export type Piece = Story & { readonly part?: string; readonly splitFrom?: string };
 
 /**
  * Splits a story by the components it builds, each piece taking the rules those components enforce, the steps they
  * serve and the entry points of those steps. What belongs to no component in particular stays with the first piece.
+ * A piece is titled by what its component does, in full; `part` names the component and `splitFrom` the story's title.
  */
-const splitOf = (story: Story, target: Target): Story[] => {
+const splitOf = (story: Story, target: Target): Piece[] => {
     const names = story.components ?? [];
     const components = new Map(target.architecture.components.map((component) => [component.name, component] as const));
-    const stepFrom = new Map(
-        target.journeys.flatMap((journey) =>
-            journey.steps.map((step) => [step.id, step.link._tag === "legacy" ? step.link.from : []] as const),
-        ),
-    );
+    const steps = new Map(target.journeys.flatMap((journey) => journey.steps.map((step) => [step.id, step] as const)));
     const pieceOf = (name: string) => names.indexOf(name);
     const stepPiece = (id: string) =>
         Math.max(
@@ -76,31 +75,52 @@ const splitOf = (story: Story, target: Target): Story[] => {
             names.findIndex((name) => components.get(name)?.enforces.includes(rule)),
         );
     return names
-        .map((name, at) => {
-            const steps = (story.steps ?? []).filter((id) => stepPiece(id) === at);
+        .map((name, at): Piece => {
+            const own = (story.steps ?? []).filter((id) => stepPiece(id) === at);
             const criteria = story.criteria.filter((criterion) => {
                 const rules = criterion.from.flatMap((ref) => (ref._tag === "rule" ? [ref.id as string] : []));
                 return (rules.length === 0 ? 0 : rulePiece(rules[0] ?? "")) === at;
             });
-            const own = components.get(name);
+            const component = components.get(name);
+            // A piece shows only the steps it builds, as the journey states them.
+            const lived = own.flatMap((id) => {
+                const step = steps.get(id);
+                return step === undefined ? [] : [step.intent];
+            });
+            const { journey, open, ...rest } = story;
             return {
-                ...story,
-                title: names.length > 1 ? `${clip(story.title, Math.max(20, 70 - name.length))}: ${name}` : story.title,
-                actions: [...new Set(steps.flatMap((id) => stepFrom.get(id) ?? []))] as unknown as Story["actions"],
-                steps,
+                ...rest,
+                title: names.length > 1 ? pieceTitle(name, component?.responsibility ?? "") : story.title,
+                ...(names.length > 1 ? { part: name, splitFrom: story.title } : {}),
+                actions: [
+                    ...new Set(
+                        own.flatMap((id) => {
+                            const step = steps.get(id);
+                            return step?.link._tag === "legacy" ? step.link.from : [];
+                        }),
+                    ),
+                ] as unknown as Story["actions"],
+                steps: own,
                 components: [name],
                 criteria: (criteria.length > 0
                     ? criteria
                     : [
                           {
-                              says: `Given the parts it relies on are in place, when what depends on ${name} uses it, then it does its job: ${own?.responsibility ?? "its part of the work"}.`,
+                              says: `Given the parts it relies on are in place, when what depends on ${name} uses it, then it does its job: ${component?.responsibility ?? "its part of the work"}.`,
                               from: [],
                           },
                       ]) as unknown as Story["criteria"],
                 terms: at === 0 ? story.terms : [],
-                ...(at === 0 && story.journey !== undefined ? { journey: story.journey } : {}),
-                ...(at === 0 && story.open !== undefined ? { open: story.open } : {}),
-            } as Story;
+                ...(journey !== undefined && lived.length > 0
+                    ? {
+                          journey: {
+                              name: journey.name,
+                              steps: lived as unknown as NonNullable<Story["journey"]>["steps"],
+                          },
+                      }
+                    : {}),
+                ...(at === 0 && open !== undefined ? { open } : {}),
+            };
         })
         .filter((piece, at) => pieceOf(piece.components?.[0] ?? "") === at);
 };
@@ -113,10 +133,10 @@ const splitOf = (story: Story, target: Target): Story[] => {
  * @param target the confirmed target
  * @returns the stories, and the titles of those that were split
  */
-export const splitCycles = (stories: readonly Story[], target: Target): { stories: Story[]; split: string[] } => {
+export const splitCycles = (stories: readonly Story[], target: Target): { stories: Piece[]; split: string[] } => {
     const caught = new Set(groupsOf(stories, target).flat());
     const split: string[] = [];
-    const made = stories.flatMap((story, at) => {
+    const made = stories.flatMap((story, at): Piece[] => {
         if (!caught.has(at) || (story.components ?? []).length < 2) return [story];
         split.push(story.title);
         return splitOf(story, target);

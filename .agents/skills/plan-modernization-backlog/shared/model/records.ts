@@ -2,6 +2,17 @@ import { Schema } from "effect";
 import { about, ActionId, Count, DecisionId, LayerId, Text } from "./fields";
 import { Ref } from "./refs";
 
+export const LayerRole = Schema.Literals([
+    "contracts",
+    "rules",
+    "data",
+    "service",
+    "ui-kit",
+    "screens",
+    "e2e",
+    "tooling",
+]);
+
 export const TargetLayer = Schema.Struct({
     id: LayerId,
     name: Text.annotate(about("The layer's name in plain words, unique in the plan.")),
@@ -13,6 +24,16 @@ export const TargetLayer = Schema.Struct({
     carries: Schema.Array(Count).annotate(about("The numbers of the target stack lines this layer carries, from 1.")),
     check: Text.annotate(about("The command that verifies the layer, run from its folder.")),
     dependsOn: Schema.Array(LayerId).annotate(about("The layers this one may reach.")),
+    role: Schema.optionalKey(
+        LayerRole.annotate(
+            about(
+                "What the layer is for, from a closed list: contracts, rules (the business rules), data (data access), service (what runs logic and reaches outside systems), ui-kit (shared interface pieces), screens (what people use), e2e (tests of the running product), tooling. A component is built in the layer whose role its kind needs.",
+            ),
+        ),
+    ),
+    container: Schema.optionalKey(
+        Text.annotate(about("The name of the part of the chosen architecture this layer builds, when it builds one.")),
+    ),
 }).annotate(about("One layer of the target codebase, as its root AGENTS.md lists it."));
 
 export const Topic = Schema.TaggedUnion({
@@ -87,6 +108,7 @@ export const Story = Schema.Struct({
 }).annotate(about("One unit of work, written for its reader."));
 
 export type TargetLayer = typeof TargetLayer.Type;
+export type LayerRole = typeof LayerRole.Type;
 export type Topic = typeof Topic.Type;
 export type Decision = typeof Decision.Type;
 export type Story = typeof Story.Type;

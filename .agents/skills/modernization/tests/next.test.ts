@@ -524,3 +524,82 @@ describe("the target's decisions", () => {
         expect(hashFiles(paths.appSource)).toBe(hashFiles(paths.appSource));
     });
 });
+
+describe("one rule and one hash with the plan and shape-target", () => {
+    const upToTarget = (text = "one") => {
+        const made = fresh();
+        const { root, request, paths } = made;
+        put(paths.requestJson, JSON.stringify({ sourceRoots: [root] }));
+        put(paths.analysisRequest, "x");
+        put(join(paths.payloads, "system.json"));
+        put(join(paths.bundles, "screen-a--b.md"), "x");
+        wholeTarget(paths, text);
+        next(root, request);
+        return made;
+    };
+    test("the conductor's hash is the plan's shared function, cut as state.json keeps it", async () => {
+        const shared = await import("../../plan-modernization-backlog/shared/read/fingerprint");
+        const { paths } = fresh();
+        put(join(paths.payloads, "system.json"), "one");
+        expect(hashFiles([paths.payloads])).toBe(shared.hashFiles([paths.payloads]).slice(0, 16));
+    });
+    test("a decision recorded with the hash of what it decides on holds while the file keeps that hash, whatever its time", async () => {
+        const { subjectOf } = await import("../../shape-target/shared/gates");
+        const { root, request, paths } = upToTarget();
+        put(
+            paths.choiceArchitecture,
+            JSON.stringify({ confirmedAt: new Date().toISOString(), subject: subjectOf(paths.architectureVariants) }),
+        );
+        markDone(root, "target-architecture-pages");
+        const later = new Date(Date.now() + 60_000);
+        utimesSync(paths.architectureVariants, later, later);
+        expect(stepOf(next(root, request))).not.toBe("target-architecture-choose");
+        put(paths.architectureVariants, "two");
+        expect(stepOf(next(root, request))).toBe("target-architecture-pages");
+        markDone(root, "target-architecture-pages");
+        expect(stepOf(next(root, request))).toBe("target-architecture-choose");
+    });
+    test("the plan is built again when what it was built from changed, and a plan too old to say is left as it is", async () => {
+        const { root, request, paths } = upToTarget();
+        for (const name of ["layers", "decisions", "stories"]) put(join(paths.records, `${name}.json`), "[]");
+        put(paths.manifest, JSON.stringify({ items: [] }));
+        put(paths.app + "/index.html", "x");
+        put(paths.plan, "{}");
+        next(root, request);
+        for (const name of [
+            "foundation",
+            "stories",
+            "plan",
+            "app",
+            ...targetSteps,
+            "request",
+            "analysis-request",
+            "analysis",
+            "bundles",
+            "derive-legacy",
+        ])
+            markDone(root, name);
+        expect(next(root, request).action).not.toBe("run");
+        put(paths.plan, JSON.stringify({ builtFrom: { analysis: "an analysis that is no longer there" } }));
+        expect(stepOf(next(root, request))).toBe("plan");
+        const { builtFromNow } = await import("../../plan-modernization-backlog/shared/derive/built-from");
+        const { layoutOf } = await import("../../plan-modernization-backlog/shared/model/layout");
+        put(paths.plan, JSON.stringify({ builtFrom: builtFromNow(layoutOf(root)) }));
+        expect(stepOf(next(root, request))).not.toBe("plan");
+    });
+    test("the app is built with the command that writes a bundle, for the assistant copy", () => {
+        const { paths } = fresh();
+        for (const name of ["app", "target-as-is-pages"]) {
+            const step = steps.find((each) => each.name === name)!;
+            const action = step.action({
+                paths,
+                skills: "/skills",
+                settings: { worktrees: "", base: "", parallel: 1 },
+                request: "",
+            });
+            expect(JSON.stringify(action)).toContain(
+                `BUILD_BUNDLE=\\"CODE_ANALYSIS_ROOT=${paths.analysis} bun /skills/code-analysis/cli/build-bundle.ts\\"`,
+            );
+        }
+    });
+});

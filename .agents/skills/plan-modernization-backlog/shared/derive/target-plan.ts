@@ -7,6 +7,8 @@ import type { Target, TargetComponent, TargetJourney } from "../read/target";
 import type { Built } from "./plan";
 import { scaffoldStory } from "./plan";
 import type { Facts } from "./facts";
+import { DANGLING, OPEN_ENDED } from "./language";
+import { layerDepths, reachedFrom, storyLayers, type Stack } from "./layers";
 
 export type TargetPlanInput = {
     readonly analysis: { readonly root: string; readonly fingerprint: string };
@@ -20,10 +22,6 @@ export type TargetPlanInput = {
 const hashOf = (value: unknown) => createHash("sha1").update(JSON.stringify(value)).digest("hex").slice(0, 12);
 const keyOf = (value: unknown) => Schema.decodeUnknownSync(StoryKey)(`story-${hashOf(value)}`);
 const lowerFirst = (text: string) => (text.length === 0 ? text : text[0]!.toLowerCase() + text.slice(1));
-const DANGLING = new Set(
-    "a an the to of and or for in on with by from that which as at into so but if is are be".split(" "),
-);
-
 /**
  * A short headline of a sentence: its first clause, at most `words` words, ending on a word that closes it.
  * @param text the sentence
@@ -31,12 +29,61 @@ const DANGLING = new Set(
  * @param chars the most characters to keep, dropping whole words
  * @returns the headline, without a trailing mark or a dangling word
  */
-export const headline = (text: string, words = 8, chars = Infinity): string => {
-    const clause = text.split(/\s*(?:[,;:()\u2014]|\s-\s|\.\s)\s*/)[0] ?? text;
-    const kept = clause.trim().split(/\s+/).filter(Boolean).slice(0, words);
+export const headline = (text: string, words = 8, chars = Infinity, commas = false): string => {
+    const clause =
+        text.split(commas ? /\s*(?:[;:()\u2014]|\s-\s|\.\s)\s*/ : /\s*(?:[,;:()\u2014]|\s-\s|\.\s)\s*/)[0] ?? text;
+    const all = clause.trim().split(/\s+/).filter(Boolean);
+    const kept = all.slice(0, words);
     while (kept.length > 1 && kept.join(" ").length > chars) kept.pop();
-    while (kept.length > 1 && DANGLING.has((kept[kept.length - 1] ?? "").toLowerCase().replace(/\W/g, ""))) kept.pop();
+    // A clause kept whole may end on a particle ("brought in"); a cut one never ends on a word that waits for more.
+    const open = kept.length < all.length ? DANGLING : OPEN_ENDED;
+    while (kept.length > 1 && open.has((kept[kept.length - 1] ?? "").toLowerCase().replace(/\W/g, ""))) kept.pop();
     return kept.join(" ").replace(/[\s.,;:!?-]+$/, "");
+};
+
+const irregular: Readonly<Record<string, string>> = { does: "do", goes: "go", has: "have", is: "be" };
+
+/**
+ * The imperative of a sentence that opens on a verb in the third person ("Finds the files" gives "Find the files").
+ * @param sentence the sentence, such as a component's responsibility
+ * @returns the imperative, or nothing when the sentence does not open on such a verb
+ */
+export const imperativeOf = (sentence: string): string | undefined => {
+    const [first = "", ...rest] = sentence.trim().split(/\s+/);
+    const word = first.replace(/[^A-Za-z]/g, "");
+    const lower = word.toLowerCase();
+    if (word !== first.replace(/[,;:]$/, "") || !/^[A-Z][a-z]+$/.test(word) || !lower.endsWith("s")) return undefined;
+    if (irregular[lower] === undefined && /(ss|us|is)$/.test(lower)) return undefined;
+    const base =
+        irregular[lower] ??
+        (lower.endsWith("ies") && lower.length > 4
+            ? `${lower.slice(0, -3)}y`
+            : /(ches|shes|sses|xes|zes)$/.test(lower)
+              ? lower.slice(0, -2)
+              : lower.slice(0, -1));
+    return [base.charAt(0).toUpperCase() + base.slice(1), ...rest].join(" ");
+};
+
+/**
+ * The title of a piece of a story split by component: what the component does, as an imperative headline, or "Build the
+ * <component>" when its responsibility does not open on a verb.
+ * @param name the component's name
+ * @param responsibility what it does
+ * @returns a title of at most 72 characters, never cut mid-phrase
+ */
+export const pieceTitle = (name: string, responsibility: string) => {
+    const imperative = imperativeOf(responsibility) ?? "";
+    // A first clause of one or two words ("Build categories") says too little: the list it opens is kept.
+    const short = headline(imperative, 8, 72);
+    const whole = short.split(/\s+/).length >= 3 ? short : headline(imperative, 8, 72, true);
+    // A second verb joined by "and" stays in the third person ("Read a file and refuses ..."): the title ends before it
+    // when what comes before says enough on its own.
+    const [first = "", ...joined] = whole.split(/\s+and\s+/);
+    const title =
+        joined.length > 0 && first.split(/\s+/).length >= 4 && /s$/.test(joined[0]?.split(/\s+/)[0] ?? "")
+            ? first
+            : whole;
+    return title.split(/\s+/).length >= 2 ? title : headline(`Build the ${lowerFirst(name)}`, 12, 72);
 };
 
 export const SCAFFOLD_EPIC = "area:codebase";
@@ -132,6 +179,7 @@ const citedDecisions = (story: Story) =>
 export const buildTargetPlan = (input: TargetPlanInput): Built => {
     const { facts, layers, decisions, target } = input;
     const problems: string[] = [];
+    const stack: Stack = { layers, decisions, target, externals: facts.externals };
     const components = new Map(target.architecture.components.map((component) => [component.name, component] as const));
     const journeyOfStep = new Map(
         target.journeys.flatMap((journey) => journey.steps.map((step) => [step.id, journey] as const)),
@@ -217,7 +265,21 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                 : built.length > 0
                   ? [...built].sort()
                   : [...story.criteria.flatMap((c) => c.from.map((r) => `${r._tag}:${r.id}`))].sort();
-        return { story, scaffold, test, index, functional, journey, built, builds, klass, epic, key: keyOf(signature) };
+        const layerIds = storyLayers(story, { scaffold, acceptance: test !== undefined }, stack);
+        return {
+            story,
+            scaffold,
+            test,
+            index,
+            functional,
+            journey,
+            built,
+            builds,
+            klass,
+            epic,
+            layerIds,
+            key: keyOf(signature),
+        };
     });
 
     const ruleBuilder = new Map<string, string>();
@@ -236,6 +298,23 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
     const titleOf = new Map(views.map((view) => [view.key as string, view.story.title]));
     const byKey = new Map(views.map((view) => [view.key as string, view]));
 
+    // The platform is built in the order of its layers: a story waits for the platform stories of the layers its own
+    // layers reach, when those sit lower in the stack, so no two stories wait on each other.
+    const depth = layerDepths(layers);
+    const rank = (ids: readonly string[]) => Math.max(-1, ...ids.map((id) => depth.get(id) ?? 0));
+    const platform = views.filter((view) => view.klass === 1);
+    const platformBefore = (view: (typeof views)[number]) => {
+        if (view.klass !== 1) return [];
+        const reached = new Set(view.layerIds.flatMap((id) => [...reachedFrom(layers, id)]));
+        return platform
+            .filter(
+                (other) =>
+                    other.key !== view.key &&
+                    rank(other.layerIds) < rank(view.layerIds) &&
+                    other.layerIds.some((id) => reached.has(id)),
+            )
+            .map((other) => other.key as string);
+    };
     const derived = views.map((view) => {
         const used = [...new Set(view.built.flatMap((name) => components.get(name)?.uses ?? []))];
         const usedBuilders = used.flatMap((name) => {
@@ -253,7 +332,9 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                           (each) => each.test === undefined && each.journey?.id === view.test?.id && each.functional,
                       )
                       .map((each) => each.key as string);
-        const blockedBy = [...new Set([...usedBuilders.map((each) => each.builder), ...proves])];
+        const blockedBy = [
+            ...new Set([...usedBuilders.map((each) => each.builder), ...proves, ...platformBefore(view)]),
+        ];
         return { ...view, reliesOn, blockedBy };
     });
 
@@ -329,6 +410,7 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                 builds: view.builds as unknown as StoryView["builds"],
                 reliesOn: view.reliesOn as unknown as StoryView["reliesOn"],
                 ...(first ? { capability: first.c.name, surface: first.s.name } : {}),
+                layers: view.layerIds as unknown as NonNullable<StoryView["layers"]>,
             };
         })
         .sort((a, b) => a.sequence - b.sequence);
@@ -364,26 +446,42 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
     });
 
     const phaseNumbers = [...new Set(stories.map((story) => story.phase))].sort((a, b) => a - b);
-    const phases: Phase[] = phaseNumbers.map((number) => ({
-        number,
-        name:
-            number === 0
-                ? "Set up the codebase"
-                : number === 1
-                  ? "Platform"
-                  : number === 2
-                    ? "Shared components"
-                    : `Journeys, level ${number - 2}`,
-        why:
-            number === 0
-                ? "Nothing can be built until the codebase has its layers and each layer's check runs."
-                : number === 1
-                  ? "The decisions about libraries, data, outside systems and conventions are made real before any journey."
-                  : number === 2
-                    ? "Components several journeys call are built once, ahead of the journeys that rely on them."
-                    : "Stories whose blockers are all in earlier phases; the components a story calls are built before it.",
-        stories: stories.filter((story) => story.phase === number).map((story) => story.key),
-    }));
+    const layerName = new Map(layers.map((layer) => [layer.id as string, layer.name]));
+    /** The layers a phase's stories are built in, in the layers' order, as words; empty unless every story's are known. */
+    const builtIn = (number: number) => {
+        const mine = stories.filter((story) => story.phase === number);
+        if (mine.some((story) => (story.layers ?? []).length === 0)) return "";
+        const ids = new Set(mine.flatMap((story) => story.layers ?? []));
+        const names = layers.filter((layer) => ids.has(layer.id)).map((layer) => layer.name);
+        return names.length <= 1 ? (names[0] ?? "") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
+    };
+    const phases: Phase[] = phaseNumbers.map((number) => {
+        const where = builtIn(number);
+        return {
+            number,
+            name:
+                number === 0
+                    ? "Set up the codebase and its checks"
+                    : number === 1
+                      ? where === ""
+                          ? "Platform"
+                          : `Platform: ${where}`
+                      : number === 2
+                        ? "Shared components"
+                        : `Journeys, round ${number - 2}`,
+            why: [
+                number === 0
+                    ? "Nothing can be built until the codebase has its layers and each layer's check runs."
+                    : number === 1
+                      ? "The decisions about libraries, data, outside systems and conventions are made real before any journey, lower layers first."
+                      : number === 2
+                        ? "Components several journeys call are built once, ahead of the journeys that rely on them."
+                        : `Journey stories whose blockers are all in earlier phases${number > 3 ? `, the earlier rounds among them` : ""}; the components a story calls are built before it.`,
+                ...(where === "" || number <= 1 ? [] : [`Built in ${where}.`]),
+            ].join(" "),
+            stories: stories.filter((story) => story.phase === number).map((story) => story.key),
+        };
+    });
 
     const storyOfAction = new Map<string, string>();
     for (const story of stories) for (const id of story.actions) storyOfAction.set(id as string, story.key);

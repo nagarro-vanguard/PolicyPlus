@@ -2,32 +2,22 @@ import type { AttachmentHeader } from "../model/header";
 import type { Plan, StoryView } from "../model/plan";
 import type { Facts, Place } from "./facts";
 import type { Target } from "../read/target";
-import type { ModernizationRequest } from "../model/request";
+import { componentLayer } from "./layers";
 
+const lowerFirst = (text: string) => (text.length === 0 ? text : text[0]!.toLowerCase() + text.slice(1));
 const placeText = (place: Place) => `${place.file}:${place.firstLine}-${place.lastLine}`;
 
 /**
  * The typed front of a story's attachment, written from the analysis facts: each criterion with the rules it backs, what
- * the story relies on, its data, its changes of state, the outside systems, and every place cited.
+ * the story relies on, its data, its changes of state, the outside systems, and every place cited. With a target, the
+ * steps it delivers with what the system now does and the rules they change, and the components with the folder of the
+ * layer each is built in (empty when no fact places it).
  */
-/** The folder of the layer that carries a component: the one carrying the stack line that names its container's technology. */
-const layerFolderOf = (name: string, target: Target, request: ModernizationRequest, plan: Plan) => {
-    const component = target.architecture.components.find((each) => each.name === name);
-    const container = target.architecture.containers.find(
-        (each) => each.kind !== "store" && each.holds.includes(component?.domain ?? ""),
-    );
-    const tech = container?.tech.trim().toLowerCase() ?? "";
-    const lines = request.stack.flatMap((line, at) =>
-        tech !== "" && line.toLowerCase().includes(tech) ? [at + 1] : [],
-    );
-    return plan.layers.find((layer) => layer.carries.some((n) => lines.includes(n)))?.path ?? "";
-};
-
 export const headerFor = (
     view: StoryView,
     plan: Plan,
     facts: Facts,
-    extras?: { readonly target: Target; readonly request: ModernizationRequest },
+    extras?: { readonly target: Target },
 ): AttachmentHeader => {
     const titleOf = new Map(plan.stories.map((story) => [story.key as string, story.title]));
     const capability = facts.capabilities.find((each) => each.name === view.capability);
@@ -70,6 +60,16 @@ export const headerFor = (
                                   intent: step.intent,
                                   change: step.link._tag === "legacy" ? step.link.change : "new",
                                   reason: step.link.reason,
+                                  system: step.system,
+                                  ...((step.changes ?? []).length === 0
+                                      ? {}
+                                      : {
+                                            changes: (step.changes ?? []).map((change) => ({
+                                                rule: change.rule,
+                                                says: rule(change.rule)?.says ?? "",
+                                                to: change.to,
+                                            })),
+                                        }),
                               })),
                       ),
                   ),
@@ -80,7 +80,13 @@ export const headerFor = (
                                 {
                                     name,
                                     module: component.module,
-                                    layer: layerFolderOf(name, extras.target, extras.request, plan),
+                                    layer:
+                                        componentLayer(name, {
+                                            layers: plan.layers,
+                                            decisions: plan.decisions,
+                                            target: extras.target,
+                                            externals: facts.externals,
+                                        })?.path ?? "",
                                 },
                             ]
                           : [];
@@ -120,6 +126,19 @@ export const attachmentText = (title: string, header: AttachmentHeader, bundle?:
                   ])),
             "",
         ]),
+        ...((header.steps ?? []).some((step) => (step.changes ?? []).length > 0)
+            ? [
+                  "## What the journey changes",
+                  "",
+                  ...(header.steps ?? []).flatMap((step) =>
+                      (step.changes ?? []).map(
+                          (change) =>
+                              `- ${step.intent}: ${change.says === "" ? "a rule of today" : `today, ${lowerFirst(change.says)}`} Now: ${change.to}`,
+                      ),
+                  ),
+                  "",
+              ]
+            : []),
         ...(header.reliesOn.length === 0
             ? []
             : [

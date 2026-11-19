@@ -75,7 +75,9 @@ export const next = (root: string, request: string | undefined): Action => {
         const current = inputsOf(step, paths, state.request);
         const problems = step.valid?.(paths) ?? [];
         // A step that says whether its record still holds is decided by that, not by the hash of its inputs.
-        const stale = step.valid === undefined ? recorded !== undefined && recorded !== current : problems.length > 0;
+        const stale =
+            (step.valid === undefined ? recorded !== undefined && recorded !== current : problems.length > 0) ||
+            (step.outdated?.(paths) ?? []).length > 0;
         if (stale && lateStep(step.name) && itemsCreated(paths.ledger))
             return {
                 action: "stop",

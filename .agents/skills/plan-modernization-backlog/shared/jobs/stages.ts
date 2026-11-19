@@ -9,6 +9,7 @@ import { deriveFacts, type Facts, type Surface } from "../derive/facts";
 import { carriedFrom } from "../derive/scope";
 import { loadTarget, type Target } from "../read/target";
 import { componentOwners } from "../derive/target-plan";
+import { ruleChangesOf } from "../derive/consistency";
 import { readAnalysis } from "../read/analysis";
 import type { JobFile } from "./gates";
 import { jobPaths, readJson, saveJobs, slug, writeJson, type Job, type Jobs, type Kind } from "./state";
@@ -71,9 +72,23 @@ const contextOf = (request: ModernizationRequest, facts: Facts, accepted: Accept
         path: l.path,
         purpose: l.purpose,
         carries: l.carries,
+        ...(l.role === undefined ? {} : { role: l.role }),
+        ...(l.container === undefined ? {} : { container: l.container }),
     })),
     decisions: accepted.decisions.map((d) => ({ id: d.id, topic: d.topic, layer: d.layer, chose: d.chose })),
 });
+
+/** The names of the outside systems a component of the architecture adapts: that component's story builds them. */
+export const adaptedSystems = (target: Target, facts: Facts) => {
+    const names = new Map(facts.externals.map((external) => [external.id, external.name]));
+    return [
+        ...new Set(
+            target.architecture.components.flatMap((component) =>
+                component.adapts === undefined ? [] : [names.get(component.adapts) ?? component.adapts],
+            ),
+        ),
+    ];
+};
 
 const chunk = <T>(items: readonly T[], size: number) =>
     Array.from({ length: Math.ceil(items.length / size) }, (_, at) => items.slice(at * size, at * size + size));
@@ -104,6 +119,10 @@ const targetStories = (layout: Layout, facts: Facts, target: Target, allow: stri
             names.flatMap((name) => target.architecture.components.find((each) => each.name === name)?.enforces ?? []),
         ),
     ];
+    // The rules a journey step changes: a story citing one must cite the step and say what the rule does now.
+    const changes = ruleChangesOf(target);
+    const ruleChanges = (rules: readonly string[]) =>
+        Object.fromEntries(rules.flatMap((id) => (changes.has(id) ? [[id, [...(changes.get(id) ?? [])]]] : [])));
     const componentRules = Object.fromEntries(
         target.architecture.components.map((component) => [component.name, [...component.enforces]]),
     );
@@ -126,7 +145,13 @@ const targetStories = (layout: Layout, facts: Facts, target: Target, allow: stri
         kind: "components",
         title: `Write the stories of the shared components, part ${at + 1}`,
         after: [],
-        file: { kind: "components", components: names, cite: rulesOf(names), componentRules },
+        file: {
+            kind: "components",
+            components: names,
+            cite: rulesOf(names),
+            componentRules,
+            ruleChanges: ruleChanges(rulesOf(names)),
+        },
         extra: { componentDetails: names.map(detail) },
     }));
     const journeys: Draft[] = target.journeys.map((journey) => {
@@ -161,6 +186,7 @@ const targetStories = (layout: Layout, facts: Facts, target: Target, allow: stri
                 components: own,
                 cite: rulesOf(own),
                 componentRules,
+                ruleChanges: ruleChanges(rulesOf(own)),
                 allow,
             },
             extra: {
@@ -182,6 +208,11 @@ const targetStories = (layout: Layout, facts: Facts, target: Target, allow: stri
                               }))
                             : [],
                     keeps: step.link._tag === "legacy" ? step.link.keeps.map((id) => ({ id, says: says(id) })) : [],
+                    changes: (step.changes ?? []).map((change) => ({
+                        rule: change.rule,
+                        says: says(change.rule),
+                        to: change.to,
+                    })),
                 })),
                 ownComponents: own.map(detail),
                 usedComponents: sharedUsed.map(detail),
@@ -227,7 +258,10 @@ export const prepareStage = (
                 stack: [...request.stack],
                 ...(target === undefined
                     ? {}
-                    : { techs: target.architecture.containers.map((container) => container.tech) }),
+                    : {
+                          techs: target.architecture.containers.map((container) => container.tech),
+                          containers: target.architecture.containers.map((container) => container.name),
+                      }),
             },
         });
         drafts.push({
@@ -277,7 +311,10 @@ export const prepareStage = (
                 .map((d) => d.id)
                 .filter((id) => id !== "layers")
                 .concat("layers"),
-            file: { kind: "foundation-stories" },
+            file: {
+                kind: "foundation-stories",
+                ...(target === undefined ? {} : { adapted: adaptedSystems(target, facts) }),
+            },
         });
     } else if (target !== undefined) {
         drafts.push(...targetStories(layout, facts, target, allow));
@@ -426,8 +463,16 @@ export const refreshInputs = (layout: Layout, jobs: Jobs, id: string) => {
     const paths = jobPaths(layout, id);
     const accepted = acceptedSoFar(layout, jobs);
     const file = readJson<Record<string, unknown>>(paths.job);
+    const adapted = Array.isArray(file.adapted) ? (file.adapted as string[]) : undefined;
     writeJson(paths.job, {
         ...file,
+        ...(adapted === undefined
+            ? {}
+            : {
+                  adaptedDecisionIds: accepted.decisions
+                      .filter((d) => d.topic._tag === "integration" && adapted.includes(d.topic.system))
+                      .map((d) => d.id as string),
+              }),
         layerIds: accepted.layers.map((l) => l.id as string),
         decisionIds: accepted.decisions.map((d) => d.id as string),
         areaDecisionIds: accepted.decisions.filter((d) => d.topic._tag === "area").map((d) => d.id as string),
@@ -441,6 +486,8 @@ export const refreshInputs = (layout: Layout, jobs: Jobs, id: string) => {
             path: l.path,
             purpose: l.purpose,
             carries: l.carries,
+            ...(l.role === undefined ? {} : { role: l.role }),
+            ...(l.container === undefined ? {} : { container: l.container }),
         })),
         decisions: accepted.decisions.map((d) => ({
             id: d.id,

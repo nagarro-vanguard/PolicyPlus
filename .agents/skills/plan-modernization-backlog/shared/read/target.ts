@@ -12,6 +12,8 @@ const Step = Schema.Struct({
     system: Schema.String,
     touches: Schema.Array(Schema.String),
     honours: Schema.Array(Schema.String),
+    // Written by shape-target since steps may change a rule; older journeys have none.
+    changes: Schema.optionalKey(Schema.Array(Schema.Struct({ rule: Schema.String, to: Schema.String }))),
     link: Schema.Union([
         Schema.Struct({
             _tag: Schema.Literal("legacy"),
@@ -47,6 +49,8 @@ const Component = Schema.Struct({
     enforces: Schema.Array(Schema.String),
     adapts: Schema.optionalKey(Schema.String),
     platform: Schema.optionalKey(Schema.String),
+    // What kind of part it is (rules, adapter, data, flow, screen), when the architecture says; older ones do not.
+    kind: Schema.optionalKey(Schema.String),
 });
 const Architecture = Schema.Struct({
     name: Schema.String,

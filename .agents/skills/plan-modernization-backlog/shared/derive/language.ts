@@ -40,9 +40,37 @@ export const recordIdProblems = (text: string) => {
     return id ? [`a record id (${id[0]})`] : [];
 };
 
+/** Words a title or headline never ends on: they leave the phrase open. */
+export const DANGLING: ReadonlySet<string> = new Set(
+    (
+        "a an the to of and or for in on with by from that which as at into so but if is are be " +
+        "it its their his her our your my this these those where when who whose than then not no each every any some"
+    ).split(" "),
+);
+
 /**
- * The templates' mechanical rules for a work item: a title of at most 72 characters, no type prefix, no emoji, no line
- * crediting the tool, no empty section.
+ * The words a whole title cannot end on: an article, a joining word or a possessive, which always wait for more.
+ * Narrower than `DANGLING`: English lets a title end on a preposition, a particle or a pronoun ("Read what a policy is
+ * for", "Let a person sign in", "Save a copy of it").
+ */
+export const OPEN_ENDED: ReadonlySet<string> = new Set(
+    "a an the and or but nor their its his her our your my whose every each".split(" "),
+);
+
+/**
+ * Why a title reads as cut: it ends in an ellipsis or on a word that leaves the phrase open.
+ * @param title the title
+ * @returns the problem, if any
+ */
+export const cutTitleProblems = (title: string) => {
+    if (/(\.\.\.|\u2026)\s*$/.test(title)) return ["the title ends in an ellipsis"];
+    const last = (title.trim().split(/\s+/).at(-1) ?? "").toLowerCase().replace(/[^a-z']/g, "");
+    return OPEN_ENDED.has(last) ? [`the title ends on "${last}", which leaves it open`] : [];
+};
+
+/**
+ * The templates' mechanical rules for a work item: a title of at most 72 characters that is not cut, no type prefix, no
+ * emoji, no line crediting the tool, no empty section.
  * @param title the title
  * @param body the body, when it is known
  * @returns what is wrong, if anything
@@ -50,6 +78,7 @@ export const recordIdProblems = (text: string) => {
 export const mechanicalProblems = (title: string, body = "") => {
     const problems: string[] = [];
     if (title.length > 72) problems.push(`the title is ${title.length} characters, over 72`);
+    problems.push(...cutTitleProblems(title));
     if (/^(feat|fix|chore|refactor|docs|test)(\(.*\))?:/i.test(title)) problems.push("the title has a type prefix");
     if (emoji.test(title) || emoji.test(body)) problems.push("it holds an emoji");
     if (credit.test(title) || credit.test(body)) problems.push("it credits a tool");
@@ -61,3 +90,22 @@ export const mechanicalProblems = (title: string, body = "") => {
     }
     return problems;
 };
+
+/** The most words a criterion may have; a longer one is refused where it is written. */
+export const CRITERION_MAX_WORDS = 60;
+/** Over this many words a criterion is worth a second look: split its conditions, keep its exact messages. */
+export const CRITERION_LONG_WORDS = 40;
+
+export const wordCount = (text: string) => text.split(/\s+/).filter(Boolean).length;
+
+/**
+ * Criteria over the hard cap, each named by its number.
+ * @param criteria the criteria's texts
+ * @returns one line per criterion over the cap
+ */
+export const criterionLengthProblems = (criteria: readonly string[]) =>
+    criteria.flatMap((says, at) =>
+        wordCount(says) > CRITERION_MAX_WORDS
+            ? [`criterion ${at + 1} is ${wordCount(says)} words, over ${CRITERION_MAX_WORDS}`]
+            : [],
+    );

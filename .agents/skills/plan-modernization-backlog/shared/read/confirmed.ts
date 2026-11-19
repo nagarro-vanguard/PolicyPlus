@@ -1,35 +1,24 @@
-import { existsSync, readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { gates, gateState, proposalOf, recordOf, subjectOf, type Gate } from "../../../shape-target/shared/gates";
+import { layoutOf } from "../../../shape-target/shared/model/layout";
 import type { Layout } from "../model/layout";
 
 /*
- * Whether the person confirmed the target the plan is made from. Only the files shape-target writes are read; nothing
- * here imports that skill, and the rule is the one it, the conductor and the app keep: a decision is confirmed while its
- * record is not older than the file it decides on, and that file was made after the decision before it.
+ * Whether the person confirmed the target the plan is made from, and what each decision was made about. The rule is
+ * shape-target's own (`shared/gates.ts`), read from there so the plan, the conductor and that skill cannot disagree: a
+ * decision holds while the file it decides on still has the hash it recorded (`subject`), and the decision before it
+ * holds and was confirmed no later; a decision recorded before hashes were kept is judged by time until it is confirmed
+ * again.
  */
-const gates = [
-    { name: "as-is", record: "choice-as-is.json", proposal: ["target", "current.json"] },
-    {
-        name: "journeys",
-        record: "choice-journeys.json",
-        proposal: [".shape-target", "work", "records", "journey-variants.json"],
-    },
-    {
-        name: "architecture",
-        record: "choice-architecture.json",
-        proposal: [".shape-target", "work", "records", "architecture-variants.json"],
-    },
-    { name: "components", record: "choice-components.json", proposal: ["target", "architecture.json"] },
-] as const;
+export type { Gate };
+export const decisionGates = gates;
 
-const at = (path: string) => (existsSync(path) ? Math.floor(statSync(path).mtimeMs) : undefined);
-const confirmedAt = (path: string) => {
-    try {
-        return Date.parse((JSON.parse(readFileSync(path, "utf8")) as { confirmedAt?: string }).confirmedAt ?? "");
-    } catch {
-        return Number.NaN;
-    }
-};
+const problemOf = {
+    "not made": "has nothing proposed yet",
+    waiting: "is not confirmed",
+    blocked: "rests on a decision that is not confirmed",
+    changed: "changed after it was confirmed",
+} as const;
 
 /**
  * What stops the plan from being made on the target: each decision that is missing or no longer holds. A run with no
@@ -39,23 +28,30 @@ const confirmedAt = (path: string) => {
  */
 export const targetGaps = (layout: Layout): string[] => {
     if (!existsSync(layout.target)) return [];
-    const gaps: string[] = [];
-    let before: number | undefined;
-    for (const gate of gates) {
-        const record = confirmedAt(join(layout.target, gate.record));
-        const proposal = at(join(layout.outputRoot, ...gate.proposal));
-        const problem =
-            proposal === undefined
-                ? "has nothing proposed yet"
-                : Number.isNaN(record)
-                  ? "is not confirmed"
-                  : record < proposal
-                    ? "changed after it was confirmed"
-                    : before !== undefined && proposal < before
-                      ? "was made before the decision it rests on was confirmed again"
-                      : undefined;
-        if (problem !== undefined) gaps.push(`the ${gate.name} ${problem}`);
-        before = Number.isNaN(record) ? undefined : record;
+    const shaped = layoutOf(layout.outputRoot);
+    return gates.flatMap((gate) => {
+        const state = gateState(shaped, gate);
+        return state === "confirmed" ? [] : [`the ${gate} ${problemOf[state]}`];
+    });
+};
+
+/**
+ * The hash of what a decision was made about: the `subject` its record kept, or, for a record made before subjects were
+ * kept, the hash of the file it decides on as it is now (the same function shape-target uses).
+ * @param layout the run's folders
+ * @param gate the decision
+ * @returns the hex sha256, or nothing when the decision or its file is missing
+ */
+export const subjectNow = (layout: Layout, gate: Gate): string | undefined => {
+    const shaped = layoutOf(layout.outputRoot);
+    const record = recordOf(shaped, gate);
+    const proposal = proposalOf(shaped, gate);
+    if (!existsSync(record) || !existsSync(proposal)) return undefined;
+    try {
+        const subject = (JSON.parse(readFileSync(record, "utf8")) as { subject?: unknown }).subject;
+        if (typeof subject === "string" && subject !== "") return subject;
+    } catch {
+        // an unreadable record is judged by its file
     }
-    return gaps;
+    return subjectOf(proposal);
 };
