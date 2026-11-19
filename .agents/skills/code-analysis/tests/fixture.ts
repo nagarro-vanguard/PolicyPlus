@@ -6,6 +6,7 @@ import { SqliteClient } from "@effect/sql-sqlite-bun";
 import { Effect } from "effect";
 import * as Reactivity from "effect/reactivity/Reactivity";
 import { deriveGraphTables } from "../shared/graph/derive";
+import { recordShapes } from "../shared/model/record-shapes";
 import { analysisSchema } from "../shared/store/analysis-schema";
 
 /**
@@ -43,6 +44,7 @@ export type Spec = {
     }>;
     readonly rules?: ReadonlyArray<{ readonly id: string; readonly block: string; readonly says: string }>;
     readonly lines?: number;
+    readonly capabilityNames?: Readonly<Record<string, string>>;
     readonly reach?: ReadonlyArray<readonly [string, string]>;
 };
 
@@ -123,7 +125,8 @@ export const makeRoot = (spec: Spec): string => {
         ...spec.blocks.flatMap((block) => (block.capability === undefined ? [] : [block.capability])),
     ]);
     for (const id of capabilityIds) {
-        record(id, "Capability", { name: id, purpose: "A capability." });
+        const names = spec.capabilityNames ?? {};
+        record(id, "Capability", { name: names[id] ?? id, purpose: "A capability." });
     }
     for (const definition of spec.definitions ?? []) {
         record(
@@ -205,7 +208,12 @@ export const makeRoot = (spec: Spec): string => {
             numbers.get(block) ?? 0,
         ]);
     }
-    db.run("UPDATE analysis SET modelVersion = ?", [analysisSchema.modelIdentity ?? 0]);
+    // the fixture's records are written by hand, not by the stages, so the store is stamped as checked: a test of the
+    // record-shape check clears the stamp itself
+    db.run("UPDATE analysis SET modelVersion = ?, recordShapes = ?", [
+        analysisSchema.modelIdentity ?? 0,
+        recordShapes().digest,
+    ]);
     db.close();
     return root;
 };

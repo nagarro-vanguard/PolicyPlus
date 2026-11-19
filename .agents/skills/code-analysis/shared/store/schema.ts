@@ -1,3 +1,5 @@
+import type { RecordShapes } from "../model/record-shapes";
+
 export const schemaStatements: readonly string[] = [
     `CREATE TABLE file (
         fileNumber INTEGER PRIMARY KEY,
@@ -81,4 +83,5 @@ export type StoreSchema = {
     readonly statements: readonly string[];
     readonly identity: number;
     readonly modelIdentity: number | undefined;
+    readonly recordShapes?: () => RecordShapes;
 };

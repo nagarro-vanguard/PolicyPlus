@@ -8,6 +8,7 @@ import { BundlePayload } from "../shared/model/schemas/bundle-payload";
 import { CapabilityPayload } from "../shared/model/schemas/payloads";
 import { KnowledgePayload } from "../shared/model/schemas/knowledge-payload";
 import { SystemPayload } from "../shared/model/schemas/system-payload";
+import { capabilityFileOf } from "../shared/read/payload-files";
 import {
     bundleGaps,
     bundleText,
@@ -53,7 +54,7 @@ const written = async () => {
         Schema.decodeUnknownSync(schema)(JSON.parse(readFileSync(join(root, "payloads", name), "utf8")));
     const system = read("system.json", SystemPayload);
     const knowledge = read("knowledge.json", KnowledgePayload);
-    const capabilities = system.capabilities.map((each) => read(`${each.id}.json`, CapabilityPayload));
+    const capabilities = system.capabilities.map((each) => read(capabilityFileOf(each), CapabilityPayload));
     const index = read("bundle.json", BundlePayload);
     return { root, system, knowledge, capabilities, index };
 };

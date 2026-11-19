@@ -79,6 +79,7 @@ function briefingGaps(records: readonly Finding[], capabilities: readonly string
  * @param records the briefing's records
  * @param candidates the candidate blocks of the brief
  * @returns one line per gap
+ * @internal exported for the tests, which check this gate on its own
  */
 export function crossCuttingGaps(records: readonly Finding[], candidates: readonly string[]): string[] {
     return onceEach(
@@ -100,6 +101,7 @@ export function crossCuttingGaps(records: readonly Finding[], candidates: readon
  * @param records the briefing's records
  * @param candidates the candidate screens' keys
  * @returns one line per gap
+ * @internal exported for the tests, which check this gate on its own
  */
 export function screenGaps(records: readonly Finding[], candidates: readonly string[]): string[] {
     return onceEach(
@@ -126,6 +128,7 @@ const hasDigit = (text: string) => [...text].some((char) => char >= "0" && char 
  * @param records the briefing's records
  * @param menu the record ids each shape of picture can draw
  * @returns one line per gap
+ * @internal exported for the tests, which check this gate on its own
  */
 export function figureGaps(records: readonly Finding[], menu: ReadonlyMap<string, readonly string[]>): string[] {
     return ofType(records, RecordIdPrefix.Figure, Figure).flatMap((figure) => {

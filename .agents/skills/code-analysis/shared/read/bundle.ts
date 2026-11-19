@@ -22,6 +22,20 @@ const howToRead =
     "How to read it: paths are relative to the source root and `file:a-b` is an inclusive line range. `BR-` rules, `ACT-` actions, `TR-` changes of state and `RK-` risks have stable ids. A record marked disputed was challenged in review and kept; the reviewer's words are under Trust. All of it was read from the code; nothing was run.";
 
 /**
+ * Which code the bundle was read from: the repository and the commit, as the system payload names them; the context's
+ * statement when there is no commit to name (a folder outside git, or a run that recorded none).
+ * @param system the system payload
+ * @returns the line
+ */
+const sourceLine = (system: Payloads["system"]) =>
+    system.repository !== undefined &&
+    system.repository !== null &&
+    system.commit !== undefined &&
+    system.commit !== null
+        ? `Read from ${system.repository} at commit ${system.commit}.`
+        : `Commit: ${system.context.commit}.`;
+
+/**
  * A heading and its lines, or nothing when there are no lines.
  * @param heading the heading
  * @param body the lines
@@ -96,6 +110,7 @@ const bundleOf = (payloads: Payloads, slice: Slice): Bundle => {
         glanceLine(slice, files),
         "",
         howToRead,
+        sourceLine(payloads.system),
         ...section("Product context", [...productLines(payloads), "", ...systemDiagram(payloads, touched)]),
         ...section("Where this sits", [...placeLines(payloads, slice), "", ...positionDiagram(payloads, slice)]),
         ...section("Boundary", boundaryLines(slice)),

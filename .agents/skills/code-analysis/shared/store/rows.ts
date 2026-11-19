@@ -12,6 +12,18 @@ export const ModelVersionRow = Schema.Struct({ modelVersion: Count });
 
 export const CountRow = Schema.Struct({ count: Count });
 
+export const TopDecisionRow = Schema.Struct({ top: Schema.NullOr(Count) });
+
+export const DecisionRow = Schema.Struct({
+    decision: Count,
+    job: Count,
+    kind: Schema.String,
+    outcome: Schema.String,
+    round: Count,
+    note: Schema.NullOr(Schema.String),
+    at: Schema.String,
+});
+
 export const WriterRow = Schema.Struct({
     id: Schema.String,
     stage: Schema.Literals(stageNames),

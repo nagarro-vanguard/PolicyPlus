@@ -1,4 +1,6 @@
 import { assumptionNotices } from "../../shared/read/assumptions";
+import { rememberSource } from "../../shared/read/provenance";
+import { RecordStore } from "../../shared/store/database";
 import { Effect } from "effect";
 import { AnalysisConfig } from "../../shared/run/analysis-limits";
 import { AnalysisRequest } from "../../shared/run/analysis-request";
@@ -21,7 +23,8 @@ const job = "profile-tech-stack";
 
 /**
  * `list`: list and measure every file the source roots' repositories track, and write the inventory (everything listed)
- * and the file summary (files in scope after the request's Leave Out).
+ * and the file summary (files in scope after the request's Leave Out); the store keeps the repository and the commit
+ * each root was at, which every context names.
  * @param root the analysis root
  * @returns how many files were listed and are in scope, and what was skipped
  */
@@ -70,6 +73,13 @@ export const listInventory = Effect.fnUntraced(function* (root: string) {
         [first, ...rest],
     );
     yield* (yield* FileAccess).writeText(paths.fileSummary, JSON.stringify(summary, null, 2));
+    yield* rememberSource(
+        yield* RecordStore,
+        request.sourceRoots.flatMap((each, index) => {
+            const head = heads[index];
+            return head === undefined ? [] : [{ root: each, commit: head.commit }];
+        }),
+    );
     return { listed: files.length, inScope: inScope.length, skipped };
 });
 

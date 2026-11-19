@@ -122,7 +122,7 @@ const finishStep = Effect.fn("finishStep")(function* () {
 const subcommands = [
     Command.make("list", {}, listStep).pipe(
         Command.withDescription(
-            "Lists and measures every file the source roots' repositories track, so their .gitignore files are honoured, and every file of a root outside git; records how Read sees each; writes the inventory and the file summary.",
+            "Lists and measures every file the source roots' repositories track, so their .gitignore files are honoured, and every file of a root outside git; records how Read sees each; writes the inventory and the file summary, and keeps in the store the repository each root is in and the commit it was at, which every context names.",
         ),
     ),
     Command.make(

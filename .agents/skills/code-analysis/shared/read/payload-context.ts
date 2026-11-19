@@ -3,7 +3,10 @@ import { compareText } from "../run/collections";
 
 export type Context = CapabilityPayload["context"];
 
-/** How many of each list a context shows before it says how many it left out. */
+/**
+ * How many of each list a context shows before it says how many it left out.
+ * @internal exported for the tests, which check the caps
+ */
 export const shown = { files: 12, rules: 8, points: 4, children: 12 } as const;
 
 export type FileUse = { readonly file: string; readonly capabilities: number };

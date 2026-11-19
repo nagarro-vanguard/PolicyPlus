@@ -9,6 +9,7 @@ import { analysisSchema } from "./analysis-schema";
 import type { StoreSchema } from "./schema";
 import { CountRow, ModelVersionRow, SchemaVersionRow } from "./rows";
 import { countOf, decodedRows } from "./stored-bodies";
+import { recordShapesKept, settleRecordShapes } from "./record-shapes";
 
 const askEvery = Duration.millis(100);
 
@@ -43,8 +44,9 @@ const isConstraint = (error: unknown) => SqlError.isSqlError(error) && error.rea
  * Create the tables of an empty store, or refuse a store made with other table definitions. Run inside the write
  * lock, so two commands opening a new store at once create it once. The identity is derived from the statements
  * (`schemaIdentity`, P12.9), never kept by hand. A store of another identity is refused: the person deletes it and
- * runs each stage's finish again, since the store is always rebuilt from `work/` (there is no migration code). Each
- * index in `schemaStatements` is named for the reads it serves.
+ * runs each stage's finish again, since the store is always rebuilt from `work/`. No table is migrated: the one change
+ * made to an older store in place is the record-shape column, added and stamped by `settleRecordShapes` with nothing
+ * lost. Each index in `schemaStatements` is named for the reads it serves.
  * @param sql the client
  * @param path the store's file, named in the refusal
  * @returns nothing once the store's tables are current
@@ -76,7 +78,8 @@ const identityOf = Effect.fnUntraced(function* (sql: SqlClient.SqlClient) {
 });
 
 /**
- * Open the store's client: the connection settings every command uses, then the schema made current. The page cache
+ * Open the store's client: the connection settings every command uses, then the schema made current and the record
+ * shapes checked (`settleRecordShapes`, under the write lock only when the store's fingerprint is not these scripts'). The page cache
  * (`pageCacheKibibytes`, 256 MiB) is the most memory SQLite keeps for pages it has read: fixed, measured at 50M lines,
  * and re-measured only past 100M lines or a 30-minute finish. SQLite never waits inside a busy lock (`busyTimeout`
  * zero), since a wait there blocks Ctrl+C; `retryWhileBusy` waits instead.
@@ -98,6 +101,12 @@ const openClient = Effect.fnUntraced(function* (path: string, schema: StoreSchem
             return yield* Effect.die(
                 new RecordStoreOutdated({ path, found: model.modelVersion, expected: schema.modelIdentity }),
             );
+        }
+    }
+    if (schema.recordShapes !== undefined) {
+        const shapes = schema.recordShapes();
+        if (!(yield* recordShapesKept(client, shapes))) {
+            yield* retryWhileBusy(client.withTransaction(settleRecordShapes(client, path, shapes)), path);
         }
     }
     return client;

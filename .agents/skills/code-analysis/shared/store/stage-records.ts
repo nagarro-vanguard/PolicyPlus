@@ -11,7 +11,7 @@ import {
     type StageWriteFailure,
     type StageWriter,
 } from "./stage-writer";
-import { StageRow, StageWriteRow } from "./rows";
+import { DecisionRow, StageRow, StageWriteRow, TopDecisionRow } from "./rows";
 import { decodedRows, valuesOf } from "./stored-bodies";
 
 export type { StageWriter } from "./stage-writer";
@@ -32,7 +32,7 @@ export interface StageRecordsOps {
 
 class LeaveUnchanged<A> extends Data.TaggedError("LeaveUnchanged")<{
     readonly result: A;
-    readonly kept: ReadonlyArray<Record<string, unknown>>;
+    readonly kept: ReadonlyArray<typeof DecisionRow.Type>;
 }> {}
 
 /**
@@ -54,18 +54,19 @@ const writeStageRecordsIn = (store: RecordStore["Service"]): StageRecordsOps["wr
             .holdStore(
                 Effect.gen(function* () {
                     yield* store.query((sql) => startStageWrite(sql, stage));
-                    const before = yield* store.query(
-                        (sql) => sql<{ top: number | null }>`SELECT max(decision) AS top FROM decision`,
+                    const [before] = yield* store.query((sql) =>
+                        decodedRows(TopDecisionRow)(sql`SELECT max(decision) AS top FROM decision`),
                     );
                     const decision = yield* write(writer);
                     if (!decision.commit) {
                         // the job states decided in this write (a job set aside for its fix) outlive the rollback
-                        const top = before[0]?.top ?? 0;
-                        const kept = yield* store.query(
-                            (sql) =>
-                                sql<
-                                    Record<string, unknown>
-                                >`SELECT * FROM decision WHERE decision > ${top} ORDER BY decision`,
+                        // no decision yet is the same as decisions after number 0
+                        const top = before === undefined || before.top === null ? 0 : before.top;
+                        const kept = yield* store.query((sql) =>
+                            decodedRows(DecisionRow)(
+                                sql`SELECT decision, job, kind, outcome, round, note, at FROM decision
+                                    WHERE decision > ${top} ORDER BY decision`,
+                            ),
                         );
                         return yield* new LeaveUnchanged({ result: decision.result, kept });
                     }
@@ -87,7 +88,7 @@ const writeStageRecordsIn = (store: RecordStore["Service"]): StageRecordsOps["wr
                         Effect.forEach(left.kept, (row) =>
                             store.query(
                                 (sql) =>
-                                    sql`INSERT INTO decision (decision, job, kind, outcome, round, note, at) VALUES (${row["decision"] as number}, ${row["job"] as number}, ${row["kind"] as string}, ${row["outcome"] as string}, ${row["round"] as number}, ${row["note"] as string | null}, ${row["at"] as string})`,
+                                    sql`INSERT INTO decision (decision, job, kind, outcome, round, note, at) VALUES (${row.decision}, ${row.job}, ${row.kind}, ${row.outcome}, ${row.round}, ${row.note}, ${row.at})`,
                             ),
                         ),
                         left.result,

@@ -92,7 +92,11 @@ export const BundlePayload = Schema.Struct({
     ).annotate(about("The controls each window declares.")),
     unreached: Schema.Array(
         Schema.Struct({
-            what: Schema.String.annotate(about("The routine, as its class and name.")),
+            what: Schema.String.annotate(
+                about(
+                    "The routine, as its class and name; one the code gives no name or no class is called by the part it has, or by its file's name, and its first line.",
+                ),
+            ),
             file: Schema.String.annotate(about("The file, relative to the source folder.")),
             firstLine: Count.annotate(about("The first line of the routine.")),
             lastLine: Count.annotate(about("The last line of the routine.")),

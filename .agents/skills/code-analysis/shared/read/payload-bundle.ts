@@ -1,3 +1,4 @@
+import { posix } from "node:path";
 import { Effect, Schema } from "effect";
 import { compareText } from "../run/collections";
 import type { RecordStore } from "../store/database";
@@ -45,7 +46,13 @@ const TransitionRow = Schema.Struct({
     lastLine: Count,
 });
 const ControlRow = Schema.Struct({ container: Text, name: Text, declaredAs: Text });
-const UnreachedRow = Schema.Struct({ what: Text, file: Text, firstLine: Count, lastLine: Count });
+const UnreachedRow = Schema.Struct({
+    name: Schema.NullOr(Text),
+    container: Schema.NullOr(Text),
+    file: Text,
+    firstLine: Count,
+    lastLine: Count,
+});
 
 export type Readings = ReadonlyMap<string, { readonly label: string; readonly reason?: string }>;
 
@@ -180,7 +187,28 @@ const lifecyclesOf = Effect.fnUntraced(function* (store: RecordStore["Service"],
 });
 
 /**
- * The controls each window declares and the routines nothing reaches.
+ * What a routine is called where a reader sees it: its class and name as the code writes them. A block the map wrote
+ * with no name (a static initialiser, a page's markup) or no class (a page template) is called by the part it has and
+ * its first line, and a block with neither by its file's name and first line, so no routine goes unnamed. The view
+ * `v_unknown` joins class and name and leaves such a block without one; reading the blocks here keeps the stored view,
+ * and with it the store's identity, as it is.
+ * @param row the unreached block
+ * @returns its name
+ */
+const unreachedName = (row: typeof UnreachedRow.Type) => {
+    if (row.container !== null && row.name !== null) {
+        return `${row.container}.${row.name}`;
+    }
+    if (row.name !== null) {
+        return row.name;
+    }
+    const holder = row.container === null ? posix.basename(row.file) : row.container;
+    return `${holder}, line ${row.firstLine}`;
+};
+
+/**
+ * The controls each window declares and the routines nothing reaches, which are the blocks no capability reaches, as
+ * `v_unknown` lists them under `notReached`.
  * @param store the record store, read only
  * @returns the controls and the unreached routines
  */
@@ -194,10 +222,18 @@ const controlsAndUnreached = Effect.fnUntraced(function* (store: RecordStore["Se
     const unreached = yield* read(
         store,
         UnreachedRow,
-        (sql) =>
-            sql`SELECT what, file, firstLine, lastLine FROM v_unknown WHERE kind = 'notReached' ORDER BY file, firstLine`,
+        (sql) => sql`SELECT name, container, file, firstLine, lastLine FROM v_block
+            WHERE capabilities = 0 ORDER BY file, firstLine, block`,
     );
-    return { controls: [...controls], unreached: [...unreached] };
+    return {
+        controls: [...controls],
+        unreached: unreached.map((row) => ({
+            what: unreachedName(row),
+            file: row.file,
+            firstLine: row.firstLine,
+            lastLine: row.lastLine,
+        })),
+    };
 });
 
 /**

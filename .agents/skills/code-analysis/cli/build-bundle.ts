@@ -17,6 +17,7 @@ import {
     type Bundle,
     type Payloads,
 } from "../shared/read/bundle";
+import { capabilityFileOf, checkPayloadContract } from "../shared/read/payload-files";
 import { AnalysisRoot } from "../shared/run/analysis-root";
 import { analysisPaths, sourceBase } from "../shared/run/analysis-layout";
 import { AnalysisRequest } from "../shared/run/analysis-request";
@@ -39,16 +40,17 @@ const capabilityIdOf = (payloads: Payloads, name: string) => {
 };
 
 /**
- * Read every payload write-payloads wrote.
+ * Read every payload write-payloads wrote, once their manifest says they follow the contract these scripts read.
  * @param folder the payloads' folder
  * @returns the system's, the capabilities' and the knowledge payload
  */
 const readPayloads = Effect.fnUntraced(function* (folder: string) {
+    yield* checkPayloadContract(folder);
     const system = yield* readDocumentStrictly(join(folder, "system.json"), SystemPayload);
     const knowledge = yield* readDocumentStrictly(join(folder, "knowledge.json"), KnowledgePayload);
     const capabilities = [];
     for (const each of system.capabilities) {
-        capabilities.push(yield* readDocumentStrictly(join(folder, `${each.id}.json`), CapabilityPayload));
+        capabilities.push(yield* readDocumentStrictly(join(folder, capabilityFileOf(each)), CapabilityPayload));
     }
     const index = yield* readDocumentStrictly(join(folder, "bundle.json"), BundlePayload);
     const payloads: Payloads = { system, capabilities, knowledge, index };

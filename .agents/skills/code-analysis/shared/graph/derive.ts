@@ -204,6 +204,7 @@ const rebuildBlockFanIn = Effect.fnUntraced(function* (sql: SqlClient.SqlClient)
  * so they run after those are filled.
  * @param sql the client, inside the stage's write
  * @returns nothing once rebuilt
+ * @internal exported for the test fixture, which fills the derived tables of a store it builds by hand
  */
 export const deriveGraphTables = Effect.fnUntraced(function* (sql: SqlClient.SqlClient) {
     for (const table of ["filePart", "blockCapability", "layerEdge", "entryPointLayer", "blockFanIn"]) {

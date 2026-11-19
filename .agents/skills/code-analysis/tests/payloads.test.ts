@@ -53,7 +53,7 @@ describe("payloads", () => {
         const { out, code } = await run(root);
         expect(out).toContain("payloads written");
         expect(code).toBe(0);
-        const payload = JSON.parse(readFileSync(join(root, "payloads", "capability-1.json"), "utf8"));
+        const payload = JSON.parse(readFileSync(join(root, "payloads", "capability-capability-1.json"), "utf8"));
         expect(payload.totals).toEqual({ actions: 1, rules: 2, blocks: 3, rulesOnNoScreen: 0 });
         expect(payload.layers.map((layer: { name: string; group: string }) => [layer.name, layer.group])).toEqual([
             ["Screens", "ui"],

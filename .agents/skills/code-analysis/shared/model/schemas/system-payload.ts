@@ -4,17 +4,49 @@ import { ExternalSystem } from "./external-system";
 import { Count, ContextShape, LayerTouched } from "./payloads";
 
 export const SystemPayload = Schema.Struct({
+    name: Schema.optionalKey(
+        Schema.String.annotate(
+            about(
+                "The system's name, derived from the code: the source folder's name, or the source folders' names joined. Payloads written before it was derived have none.",
+            ),
+        ),
+    ),
+    repository: Schema.optionalKey(
+        Schema.NullOr(Schema.String).annotate(
+            about(
+                "The repository the code is in: its remote's address with no credentials, or its working tree's folder name when it has no remote; null when the source folder is not a git repository or the run recorded none.",
+            ),
+        ),
+    ),
+    commit: Schema.optionalKey(
+        Schema.NullOr(Schema.String).annotate(
+            about(
+                "The commit the analysis read, as it was when the files were listed (not today's); null when the source folder is not a git repository or the run recorded none.",
+            ),
+        ),
+    ),
     purpose: Schema.String.annotate(about("What the system is for and who uses it; empty when no fact states it.")),
     capabilities: Schema.Array(
         Schema.Struct({
-            id: Schema.String.annotate(about("The capability's record id, which names its payload file.")),
+            id: Schema.String.annotate(
+                about(
+                    "The capability's record id; it named the payload file of payloads written before `file` existed.",
+                ),
+            ),
+            file: Schema.optionalKey(
+                Schema.String.annotate(
+                    about(
+                        "The file holding the capability's payload, `capability-<slug>.json` from its name, which stays the same when a stage is run again from nothing.",
+                    ),
+                ),
+            ),
             name: Text.annotate(about("The capability's name.")),
             purpose: Text.annotate(about("What the capability offers, in one or two sentences.")),
             screens: Count.annotate(about("How many screens its entry points are grouped into.")),
             actions: Count.annotate(about("How many entry points it has.")),
             rules: Count.annotate(about("How many rules are decided in code it reaches.")),
         }).annotate(about("One capability and the file that holds its payload.")),
-    ).annotate(about("Every capability of the system, each with the record id that names its payload file.")),
+    ).annotate(about("Every capability of the system, each with the file that holds its payload.")),
     areas: Schema.Array(
         Schema.Struct({
             id: Schema.String.annotate(about("The area's record id.")),

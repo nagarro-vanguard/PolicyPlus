@@ -85,7 +85,6 @@ const LayerFileRow = Schema.Struct({ layer: Text, file: Text });
 const ActionDataRow = Schema.Struct({ entryPoint: Text, name: Text, kind: Text });
 const LayerDataRow = Schema.Struct({ layer: Text, name: Text, kind: Text });
 const OpenPointRow = Schema.Struct({ statement: Text, why: Text, ifWrong: Text });
-const CommitRow = Schema.Struct({ commitId: MaybeText });
 const PathRow = Schema.Struct({ entryPoint: Text, layer: Text, depth: Count });
 const ActionRuleRow = Schema.Struct({ entryPoint: Text, rule: Text });
 const ShapeRow = Schema.Struct({ id: Text, name: Text, layer: Text, fields: Text });
@@ -279,18 +278,6 @@ const contextRows = Effect.fnUntraced(function* (store: RecordStore["Service"], 
                 AND json_extract(f.body, '$.basis.assumed') IS NOT NULL ORDER BY f.recordNumber`,
     );
     return { fileUse, actionFiles, layerFiles, actionData, layerData, openPoints };
-});
-
-/**
- * The commit the analysis describes, as the store records it.
- * @param store the record store, read only
- * @returns the commit id, or a statement that none was recorded
- */
-export const commitOf = Effect.fnUntraced(function* (store: RecordStore["Service"]) {
-    const [row] = yield* read(store, CommitRow, (sql) => sql`SELECT commitId FROM analysis`);
-    return row === undefined || row.commitId === null
-        ? "not recorded: the folder was not a git repository"
-        : row.commitId;
 });
 
 /**

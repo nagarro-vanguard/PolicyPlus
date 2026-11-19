@@ -150,6 +150,15 @@ export class RecordStoreOutdated extends Schema.TaggedError<RecordStoreOutdated>
     }
 }
 
+export class RecordShapesChanged extends Schema.TaggedError<RecordShapesChanged>()("RecordShapesChanged", {
+    path: Schema.String,
+    types: Schema.Array(Schema.String),
+}) {
+    override get message() {
+        return `the records in ${this.path} were written in shapes these scripts no longer read (${this.types.join("; ")}): run again, from its finish, each stage that wrote those records, in order`;
+    }
+}
+
 export class RecordIdRepeated extends Schema.TaggedError<RecordIdRepeated>()("RecordIdRepeated", {
     ids: Schema.Array(Schema.String),
     jobs: Schema.Array(Schema.String),
@@ -205,6 +214,7 @@ const scriptErrors = [
     JobStateFailed,
     JobStateOutdated,
     RecordStoreOutdated,
+    RecordShapesChanged,
     RecordIdRepeated,
 ] as const;
 

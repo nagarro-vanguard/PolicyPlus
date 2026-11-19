@@ -13,12 +13,12 @@ import {
     ListOfText,
     PurposeRow,
     ScreenRecordRow,
-    commitOf,
     layerRoles,
     numberOf,
     read,
 } from "./payload-queries";
 import { layersTouchedOf, screenContext } from "./payload-screens";
+import { commitOf } from "./provenance";
 import { groupOf, plural, ruleLine, slugOf, type Group } from "./payload-words";
 import { externalUse, layerPartUse } from "./system-queries";
 
@@ -316,9 +316,14 @@ const entriesOf = (payloads: Capabilities, product: ReadonlySet<string>) => {
  * layers, and what could not be followed; each area and the system carry their context.
  * @param store the record store, read only
  * @param payloads every capability's payload, for what the areas and the system hold together
+ * @param source the system's name, the repository its code is in and the commit analysed
  * @returns the payload
  */
-export const systemPayload = Effect.fnUntraced(function* (store: RecordStore["Service"], payloads: Capabilities) {
+export const systemPayload = Effect.fnUntraced(function* (
+    store: RecordStore["Service"],
+    payloads: Capabilities,
+    source: { readonly name: string; readonly repository: string | null; readonly commit: string | null },
+) {
     const layers = (yield* layerRoles(store)).toSorted(
         (one, other) => compareText(one.name, other.name) || compareText(one.layer, other.layer),
     );
@@ -332,6 +337,7 @@ export const systemPayload = Effect.fnUntraced(function* (store: RecordStore["Se
     const judged = judgeLayers(layers, yield* layerPartUse(store));
     const purposeOfLayer = new Map(layerRecords.map((each) => [each.id, each.purpose] as const));
     const payload: SystemPayload = {
+        ...source,
         purpose,
         capabilities: capabilities.map((each) => ({ ...each })),
         areas: areasOfSystem(areas, capabilities, payloads, commit),

@@ -1,6 +1,7 @@
 import { Console, Effect, Layer, Option, Schema } from "effect";
 import { Command, Flag } from "effect/cli";
 import { resolve } from "node:path";
+import { checkPayloadContract } from "../shared/read/payload-files";
 import { AnalysisRoot } from "../shared/run/analysis-root";
 import { readDocumentStrictly } from "../shared/run/json-files";
 import { needsAction, runScript } from "../shared/run/run-script";
@@ -10,18 +11,21 @@ import { SiteBuilder } from "../shared/source/site-builder";
 const LanguageReport = Schema.Struct({
     findings: Schema.Number,
     byRule: Schema.Record(Schema.String, Schema.Number),
-    examples: Schema.Array(Schema.Struct({
+    examples: Schema.Array(
+        Schema.Struct({
             rule: Schema.String,
             hit: Schema.String,
             where: Schema.String,
             severity: Schema.optionalKey(Schema.String),
-        })),
+        }),
+    ),
 });
 
 /**
  * Build the pages and figures of the app from the payloads write-payloads wrote, into <analysis root>/app, or from the
  * folders the flags name, then say what a reader would stumble on: words of the analysis's own machinery or boilerplate
- * phrasing in what the pages say. A record id anywhere fails the build itself.
+ * phrasing in what the pages say. A record id anywhere fails the build itself, and payloads written for another contract
+ * version are refused before it starts.
  * @param flags the folders: the payloads of the analysis, the folder holding a plan's files, the output folder
  * @param flags.analysis the folder of payloads; <analysis root>/payloads when omitted
  * @param flags.plan the folder holding the plan's files, when the pages should show a plan too
@@ -41,6 +45,7 @@ const buildApp = Effect.fn("buildApp")(function* (flags: {
     const analysis = flags.analysis === undefined ? `${root}/payloads` : resolve(flags.analysis);
     const plan = flags.plan === undefined ? undefined : resolve(flags.plan);
     const target = flags.target === undefined ? undefined : resolve(flags.target);
+    yield* checkPayloadContract(analysis);
     yield* (yield* SiteBuilder).build({ analysis, plan, target, out });
     yield* Console.log(`app written to ${out}`);
     const reportPath = `${out}/language-report.json`;
@@ -83,7 +88,7 @@ const command = Command.make(
         }),
 ).pipe(
     Command.withDescription(
-        "Builds the app, the pages a person reads an analysis through, from <analysis root>/payloads into <analysis root>/app: a page for the system, each area, capability, layer, action and screen, a search, and figures drawn from the payloads (what the product offers, who uses it and what it connects to, how it is built, how a capability runs, what a screen starts). `--analysis <folder>` names another folder of payloads, `--out <folder>` another output folder, and `--plan <folder>` the folder holding a modernization plan's files (`.modernization-backlog/` and `work-items/`), which adds the pages of the plan, and `--target <folder>` the Output Root holding the target's files (`target/` and `.shape-target/`), which adds the pages of the target. Run write-payloads first. A payload that does not match its schema, a figure that does not hold (an unknown id, items over budget, an overlap, an arrow through an item) or a record id anywhere a reader can see fails the build. Words of the analysis's own machinery or boilerplate phrasing in what the pages say are listed in app/language-report.json and make the run need action. Replaces what is in the output folder.",
+        "Builds the app, the pages a person reads an analysis through, from <analysis root>/payloads into <analysis root>/app: a page for the system, each area, capability, layer, action and screen, a search, and figures drawn from the payloads (what the product offers, who uses it and what it connects to, how it is built, how a capability runs, what a screen starts). `--analysis <folder>` names another folder of payloads, `--out <folder>` another output folder, and `--plan <folder>` the folder holding a modernization plan's files (`.modernization-backlog/` and `work-items/`), which adds the pages of the plan, and `--target <folder>` the Output Root holding the target's files (`target/` and `.shape-target/`), which adds the pages of the target. Run write-payloads first; payloads whose manifest names another contract version are refused. A payload that does not match its schema, a figure that does not hold (an unknown id, items over budget, an overlap, an arrow through an item) or a record id anywhere a reader can see fails the build. Words of the analysis's own machinery or boilerplate phrasing in what the pages say are listed in app/language-report.json and make the run need action. Replaces what is in the output folder.",
     ),
 );
 
