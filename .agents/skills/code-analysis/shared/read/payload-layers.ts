@@ -5,8 +5,69 @@ import { contextOf, type FileUse } from "./payload-context";
 import { FieldNames, type capabilityRows } from "./payload-queries";
 import { Evidence, groupOf, groupRank, placeOf, plural, ruleLine, textOf } from "./payload-words";
 import type { Effect } from "effect";
+import { ruleKeyOf } from "./payload-keys";
+import { withoutRecordIds } from "./payload-checks";
+import type { SurfaceKind } from "../model/schemas/surface-kind";
 
 export type Rows = Effect.Success<ReturnType<typeof capabilityRows>>;
+
+/**
+ * What the payloads know of the entry points and rules beyond one capability's rows, derived by code once for the
+ * whole system: each entry point's key, place, address and whether tooling starts it, and each rule's second reading
+ * and the test suites reaching it.
+ */
+export type PayloadFacts = {
+    readonly entryKey: (id: string) => string | undefined;
+    readonly surfaceOf: (id: string) => string | undefined;
+    readonly surfaceNamed: (key: string) =>
+        | {
+              readonly name: string;
+              readonly kind: SurfaceKind;
+              readonly noun: { readonly one: string; readonly many: string };
+              readonly unnamed: boolean;
+          }
+        | undefined;
+    readonly addressOf: (id: string) => string | undefined;
+    readonly toolingOf: (id: string) => boolean;
+    readonly testsOf: (rule: string) => readonly string[];
+    readonly readingOf: (rule: string) => {
+        readonly reading: "reviewed" | "corrected" | "disputed" | "unread";
+        readonly why: string;
+    };
+};
+
+const AssumedPlaces = Schema.fromJsonString(
+    Schema.Array(Schema.Struct({ lines: Schema.Struct({ file: Schema.String }) })),
+);
+
+/**
+ * What is doubtful about one rule, derived from what is recorded: a second reading that disputes it, with the
+ * reviewer's words, and what the capability assumes about the rules it applies at lines of the rule's own file.
+ * @param rows the capability's rows
+ * @param rule the rule's file
+ * @param rule.file the file it is decided in
+ * @param reading where a second reading left it
+ * @param reading.reading the label
+ * @param reading.why the reviewer's words
+ * @returns the lines, none when nothing is in doubt
+ */
+const doubtOf = (
+    rows: Rows,
+    rule: { readonly file: string },
+    reading: { readonly reading: string; readonly why: string } | undefined,
+) => [
+    ...(reading !== undefined && reading.reading === "disputed"
+        ? [`Disputed in a second reading${reading.why === "" ? "" : `: ${withoutRecordIds(reading.why)}`}`]
+        : []),
+    ...rows.openPoints
+        .filter(
+            (point) =>
+                point.aspect === "rules-it-applies" &&
+                point.evidence !== null &&
+                Schema.decodeUnknownSync(AssumedPlaces)(point.evidence).some((place) => place.lines.file === rule.file),
+        )
+        .map((point) => `Assumed: ${point.statement} If wrong: ${point.ifWrong}`),
+];
 
 /**
  * What a place's context is built from, gathered from the capability's rows once.
@@ -89,9 +150,10 @@ type Where = { readonly layerName: string; readonly capabilityName: string; read
  * @param rows the capability's rows
  * @param layer the layer's id
  * @param where the layer's and capability's names and the commit
+ * @param facts what is known across the system of the rules; none leaves their key, reading and tests out
  * @returns the layer's rules
  */
-const rulesOfLayer = (rows: Rows, layer: string, where: Where) => {
+const rulesOfLayer = (rows: Rows, layer: string, where: Where, facts: PayloadFacts | undefined) => {
     const { filesOf } = lookups(rows);
     const screensOfRule = screensOfRules(rows);
     return rows.rules
@@ -100,12 +162,21 @@ const rulesOfLayer = (rows: Rows, layer: string, where: Where) => {
             const place = placeOf(row);
             const evidence = row.evidence === null ? [] : Schema.decodeUnknownSync(Evidence)(row.evidence).map(placeOf);
             const screens = screensOfRule.has(row.id) ? [...known(screensOfRule, row.id, "checked")].toSorted() : [];
+            const reading = facts === undefined ? undefined : facts.readingOf(row.id);
             return {
                 id: row.id,
                 says: row.says,
                 gates: row.gates !== null,
                 place,
                 alsoRestsOn: evidence.filter((each) => each.file !== place.file || each.firstLine !== place.firstLine),
+                ...(facts === undefined || reading === undefined
+                    ? {}
+                    : {
+                          key: ruleKeyOf({ file: row.file, firstLine: row.firstLine, says: row.says }),
+                          reading: reading.reading,
+                          why: reading.why,
+                          reachedByTests: [...facts.testsOf(row.id)],
+                      }),
                 screens,
                 context: contextOf({
                     scope: `Business rule decided in the ${where.layerName} layer of ${where.capabilityName}: ${row.says}`,
@@ -114,7 +185,7 @@ const rulesOfLayer = (rows: Rows, layer: string, where: Where) => {
                     saves: [],
                     reads: [],
                     rules: [],
-                    unconfirmed: [],
+                    unconfirmed: facts === undefined ? [] : doubtOf(rows, row, reading),
                     notFollowed: [],
                     commit: where.commit,
                 }),
@@ -135,9 +206,10 @@ const startersWords = (startedBy: string) =>
  * @param rows the capability's rows
  * @param layer the layer's id
  * @param where the layer's and capability's names and the commit
+ * @param facts what is known across the system of the entry points; none leaves their key, place and address out
  * @returns the layer's actions
  */
-const actionsOfLayer = (rows: Rows, layer: string, where: Where) => {
+const actionsOfLayer = (rows: Rows, layer: string, where: Where, facts: PayloadFacts | undefined) => {
     const { filesOf, dataOf } = lookups(rows);
     return rows.actions
         .filter((row) => row.layer === layer)
@@ -145,12 +217,19 @@ const actionsOfLayer = (rows: Rows, layer: string, where: Where) => {
             const files = rows.actionFiles.filter((each) => each.entryPoint === row.id).map((each) => each.file);
             const ruleIds = rows.actionRules.filter((each) => each.entryPoint === row.id).map((each) => each.rule);
             const screen = textOf(row.screen);
+            const key = facts === undefined ? undefined : facts.entryKey(row.id);
+            const surface = facts === undefined ? undefined : facts.surfaceOf(row.id);
+            const address = facts === undefined ? undefined : facts.addressOf(row.id);
             return {
                 id: row.id,
                 name: textOf(row.name),
                 purpose: row.purpose,
                 startedBy: row.startedBy,
                 screen,
+                ...(key === undefined ? {} : { key }),
+                ...(surface === undefined ? {} : { surface }),
+                ...(address === undefined ? {} : { address }),
+                ...(facts === undefined ? {} : { tooling: facts.toolingOf(row.id) }),
                 place: placeOf(row),
                 path: rows.paths
                     .filter((path) => path.entryPoint === row.id)
@@ -175,16 +254,22 @@ const actionsOfLayer = (rows: Rows, layer: string, where: Where) => {
  * @param rows the capability's rows
  * @param use the layer's use: its id, its blocks and how many another capability's flows reach too
  * @param commit the commit the analysis describes
+ * @param facts what is known across the system of the entry points and rules
  * @returns the layer
  */
-const layerOf = (rows: Rows, use: Rows["uses"][number], commit: string): CapabilityPayload["layers"][number] => {
+const layerOf = (
+    rows: Rows,
+    use: Rows["uses"][number],
+    commit: string,
+    facts: PayloadFacts | undefined,
+): CapabilityPayload["layers"][number] => {
     const roleRow = rows.roles.find((row) => row.layer === use.layer);
     const role = roleRow === undefined ? "decides" : roleRow.role;
     const layerName = roleRow === undefined ? use.layer : roleRow.name;
     const record = rows.layerRecords.find((row) => row.id === use.layer);
     const where = { layerName, capabilityName: rows.capability.name, commit };
-    const rules = rulesOfLayer(rows, use.layer, where);
-    const actions = actionsOfLayer(rows, use.layer, where);
+    const rules = rulesOfLayer(rows, use.layer, where, facts);
+    const actions = actionsOfLayer(rows, use.layer, where, facts);
     const layerFiles = rows.layerFiles.filter((row) => row.layer === use.layer).map((row) => row.file);
     const { filesOf, dataOf } = lookups(rows);
     return {
@@ -222,9 +307,10 @@ const layerOf = (rows: Rows, use: Rows["uses"][number], commit: string): Capabil
  * each with its context, entry layers first.
  * @param rows the capability's rows
  * @param commit the commit the analysis describes
+ * @param facts what is known of the entry points and rules across the system; none leaves those fields out
  * @returns the layers
  */
-export const layersOf = (rows: Rows, commit: string): CapabilityPayload["layers"] =>
+export const layersOf = (rows: Rows, commit: string, facts?: PayloadFacts): CapabilityPayload["layers"] =>
     rows.uses
-        .map((use) => layerOf(rows, use, commit))
+        .map((use) => layerOf(rows, use, commit, facts))
         .toSorted((one, other) => groupRank(one.group) - groupRank(other.group));

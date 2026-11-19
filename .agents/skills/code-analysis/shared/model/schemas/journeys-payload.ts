@@ -20,6 +20,16 @@ export const TaskPayload = Schema.Struct({
             "The task's stable id: the capability's name and the task's name, as `<capability-slug>.<task-slug>`; unique in the file.",
         ),
     ),
+    title: Schema.optionalKey(
+        Text.annotate(
+            about(
+                "The task's name as a title, from its short name: `stamp-program-version` is `Stamp program version`.",
+            ),
+        ),
+    ),
+    capability: Schema.optionalKey(
+        Schema.String.annotate(about("The record id of the capability whose entry points the task is made of.")),
+    ),
     outcome: Text.annotate(
         about("What the person gets done, one sentence in the business's words, naming no control, page or medium."),
     ),

@@ -5,7 +5,7 @@ Every rule is shown on its capability's page to people who must rebuild or chang
 ## Wrong
 
 - A mechanism written as a rule (logging, caching, mapping fields, retries that change no outcome): it costs the reader's trust. A mechanism that many capabilities share is not lost: Publish's briefing names it as a cross-cutting concern, found by rule from the shared blocks.
-- One decision split into several rules, or several decisions merged into one whose words a tester could not check.
+- One decision split into several rules, or several decisions merged into one whose words a tester could not check: a rule joining two decisions with `;`, `also` or a second condition is split, each part at its own lines.
 - A rule owned by the block that shows its message rather than the block that decides it.
 - A `gates` naming a transition the rule does not allow or refuse; a rule that gates a transition left without `gates`.
 - Words that are the code's, not the business's: a column, a flag or a procedure where the reader needs what it means.

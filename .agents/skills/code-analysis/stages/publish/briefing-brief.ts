@@ -13,7 +13,8 @@ import { ExternalSystem } from "../../shared/model/schemas/external-system";
 import { Technology } from "../../shared/model/schemas/technology";
 import { BlockId, CapabilityId, Text, about } from "../../shared/model/shared-fields";
 import { RecordStore } from "../../shared/store/database";
-import { pagePathOf, screenKeyOf } from "../../shared/read/payload-context";
+import { readCatalogue } from "../../shared/run/catalogue";
+import { BriefKind, BriefScreen, screenLines, systemPurpose } from "./briefing-places";
 import { decodedRows } from "../../shared/store/stored-bodies";
 
 const Count = Schema.Int.check(Schema.isGreaterThanOrEqualTo(0));
@@ -26,6 +27,8 @@ const BriefSystem = Schema.Struct({
     files: Count,
     lines: Count,
     externalSystems: Words.annotate(about("Every external system it talks to, with its kind.")),
+    purpose: Schema.optionalKey(Text.annotate(about("What the system is for, as How it runs stated it."))),
+    parts: Schema.optionalKey(Words.annotate(about("The names of its parts."))),
 }).annotate(about("The system as a whole: the brief's first line."));
 
 const BriefCapability = Schema.Struct({
@@ -59,23 +62,6 @@ const BriefCandidate = Schema.Struct({
     ),
 );
 
-const BriefScreen = Schema.Struct({
-    line: Schema.Literal("screen"),
-    key: Text.annotate(
-        about(
-            "The candidate screen's key: the path of its page file without its extension, or of the file a person's action starts in.",
-        ),
-    ),
-    files: Words.annotate(about("The files its actions start in.")),
-    actions: Count.annotate(about("How many actions a person starts there.")),
-    purposes: Words.annotate(about("What its first three actions do, as the Map wrote it.")),
-    capabilities: Words.annotate(about("The capabilities whose actions start there.")),
-}).annotate(
-    about(
-        "One place a person's actions start, found by script from where each entry point a person starts lies; the briefing groups these into screens a person would name.",
-    ),
-);
-
 const BriefMenu = Schema.Struct({
     line: Schema.Literal("menu"),
     kind: Schema.Literals(["parts", "integration", "states", "data", "layers"]).annotate(
@@ -87,7 +73,7 @@ const BriefMenu = Schema.Struct({
     about("One shape of picture the records can support, with what it could show; the briefing picks which to draw."),
 );
 
-const BriefLine = Schema.Union([BriefSystem, BriefCapability, BriefCandidate, BriefScreen, BriefMenu]);
+const BriefLine = Schema.Union([BriefSystem, BriefCapability, BriefCandidate, BriefScreen, BriefKind, BriefMenu]);
 
 const CandidateRow = Schema.Struct({
     block: Schema.String,
@@ -126,51 +112,7 @@ const candidateLines = Effect.fnUntraced(function* () {
     }));
 });
 
-const ActionRow = Schema.Struct({
-    purpose: Schema.NullOr(Schema.String),
-    file: Schema.String,
-    capability: Schema.NullOr(Schema.String),
-});
 const NamedRow = Schema.Struct({ id: Schema.String, name: Schema.String });
-
-/**
- * The candidate screens: every place a person's actions start, grouped the way the pages group them (a page's markup,
- * code behind and script together), with what its first actions do and the capabilities that hold them.
- * @returns the lines
- */
-const screenLines = Effect.fnUntraced(function* () {
-    const store = yield* RecordStore;
-    const rows = yield* Effect.orDie(
-        store.query((sql) =>
-            decodedRows(ActionRow)(
-                sql`SELECT e.purpose AS purpose, e.file AS file, json_extract(c.body, '$.name') AS capability
-                    FROM v_entry_point e LEFT JOIN record c ON c.id = e.capability
-                    WHERE e.startedBy = 'person' ORDER BY e.file, e.firstLine`,
-            ),
-        ),
-    );
-    const pages = unique(
-        rows.flatMap((row) => {
-            const page = pagePathOf(row.file);
-            return page === undefined ? [] : [page];
-        }),
-    );
-    const groups = new Map<string, (typeof ActionRow.Type)[]>();
-    for (const row of rows) {
-        const key = screenKeyOf({ startedBy: "person", place: { file: row.file } }, pages);
-        if (key !== undefined) {
-            getOrCreate(groups, key).push(row);
-        }
-    }
-    return [...groups].map(([key, group]): typeof BriefScreen.Encoded => ({
-        line: "screen",
-        key,
-        files: unique(group.map((row) => row.file)),
-        actions: group.length,
-        purposes: group.flatMap((row) => (row.purpose === null ? [] : [row.purpose])).slice(0, 3),
-        capabilities: unique(group.flatMap((row) => (row.capability === null ? [] : [row.capability]))),
-    }));
-});
 
 /**
  * The menu of pictures the records can support: what the system is made of, what it reaches outside itself, how a kind
@@ -272,14 +214,23 @@ const briefLines = Effect.fnUntraced(function* (root: string) {
                 }),
             ),
         }));
+    const parts = yield* Stream.runCollect(reads.recordsOfType("SystemPart", SystemPart));
     const system: typeof BriefSystem.Encoded = {
         line: "system",
         builtWith: named.map((entry) => entry.name),
         files: totals.files,
         lines: totals.lines,
         externalSystems: systems.map((each) => `${each.name}, ${externalSystemKinds[each.kind]}`),
+        ...(yield* systemPurpose()),
+        parts: parts.map((part) => part.name),
     };
-    return [system, ...capabilities, ...(yield* candidateLines()), ...(yield* screenLines()), ...(yield* menuLines())];
+    return [
+        system,
+        ...capabilities,
+        ...(yield* candidateLines()),
+        ...(yield* screenLines(yield* readCatalogue())),
+        ...(yield* menuLines()),
+    ];
 });
 
 /**
@@ -326,6 +277,29 @@ export const briefedCandidates = Effect.fnUntraced(function* (root: string) {
  */
 export const briefedScreens = Effect.fnUntraced(function* (root: string) {
     return (yield* readBriefLines(root)).flatMap((line) => (line.line === "screen" ? [line.key] : []));
+});
+
+/**
+ * The candidate places the briefing must name, with the names the code would give them and their files.
+ * @param root the analysis root
+ * @returns the candidates
+ */
+export const briefedPlaces = Effect.fnUntraced(function* (root: string) {
+    return (yield* readBriefLines(root)).flatMap((line) =>
+        line.line === "screen"
+            ? [{ key: line.key, name: line.name === undefined ? "" : line.name, files: line.files }]
+            : [],
+    );
+});
+
+/**
+ * The brief's words: every text it holds, as one text, which a name or a term the briefing writes must stand in.
+ * @param root the analysis root
+ * @returns the text; empty before `prepare` writes the brief
+ */
+export const briefedText = Effect.fnUntraced(function* (root: string) {
+    const path = analysisPaths(root).briefingBrief;
+    return (yield* (yield* FileAccess).exists(path)) ? yield* (yield* FileAccess).readText(path) : "";
 });
 
 /**

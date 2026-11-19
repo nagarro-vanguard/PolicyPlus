@@ -6,6 +6,7 @@ import { answersOf, readEvidence, readFacts } from "./payload-knowledge-facts";
 import { ListOfText, read } from "./payload-queries";
 import { risksOf } from "./payload-risks";
 import { structureOf } from "./payload-structure";
+import { entitiesOf } from "./payload-terms";
 
 const Text = Schema.String;
 
@@ -65,6 +66,7 @@ const partsAndTechnologies = Effect.fnUntraced(function* (store: RecordStore["Se
                 const used = usedBy.get(part.id);
                 return {
                     ...part,
+                    product: part.kind !== "tests" && part.kind !== "tool",
                     folders: [...part.folders],
                     technologies: unique(used === undefined ? [] : used).toSorted(compareText),
                 };
@@ -107,5 +109,6 @@ export const knowledgePayload = Effect.fnUntraced(function* (store: RecordStore[
         assumptions,
         ...(yield* structureOf(store)),
         risks: yield* risksOf(store, catalogue, facts, evidence),
+        entities: yield* entitiesOf(store),
     };
 });

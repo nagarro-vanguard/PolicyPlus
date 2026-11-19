@@ -1,6 +1,7 @@
 import { Schema } from "effect";
 import { CrossCuttingConcern } from "./briefing";
 import { Text, about } from "../shared-fields";
+import { CapabilitySurface } from "./surface-kind";
 
 export const Count = Schema.Int.check(Schema.isGreaterThanOrEqualTo(0));
 
@@ -71,6 +72,34 @@ const Action = Schema.Struct({
     purpose: Text.annotate(about("What it does, in one line, as the Map wrote it.")),
     startedBy: Schema.String.annotate(about("Who starts it: person, schedule or otherSystem.")),
     screen: Schema.String.annotate(about("The screen that holds it (its container); empty when it has none.")),
+    key: Schema.optionalKey(
+        Schema.String.annotate(
+            about(
+                "The entry point's key, which stays the same when a stage is run again from nothing: its file, `#`, and its class and routine as the code writes them (its first line when the code names none; `@<line>` added when two share a key). Prefer it to `id` when holding a reference across runs.",
+            ),
+        ),
+    ),
+    surface: Schema.optionalKey(
+        Schema.String.annotate(
+            about(
+                "The key of the place (surface) that holds it, in the system payload's `surfaces`; absent when it is unplaced.",
+            ),
+        ),
+    ),
+    address: Schema.optionalKey(
+        Schema.String.annotate(
+            about(
+                "For a web page or service operation: the address or route it is reached at, copied from how it is reached and kept only when it stands, character for character, in the lines that show it starts.",
+            ),
+        ),
+    ),
+    tooling: Schema.optionalKey(
+        Schema.Boolean.annotate(
+            about(
+                "Whether tests or tooling start it rather than the product's users: true for a test, a build step, or an entry point in a tests or tool part.",
+            ),
+        ),
+    ),
     place: Place,
     path: Schema.Array(
         Schema.Struct({
@@ -94,6 +123,30 @@ const Rule = Schema.Struct({
     gates: Schema.Boolean.annotate(about("Whether it decides a change of state of a kind of data.")),
     place: Place,
     alsoRestsOn: Schema.Array(Place).annotate(about("Further lines the rule rests on, besides where it is decided.")),
+    key: Schema.optionalKey(
+        Schema.String.annotate(
+            about(
+                "The rule's key, which stays the same when a stage is run again from nothing and the rule says the same: `<file>:<first line>#` and a short digest of its words.",
+            ),
+        ),
+    ),
+    reading: Schema.optionalKey(
+        Schema.Literals(["reviewed", "corrected", "disputed", "unread"]).annotate(
+            about(
+                "Where a second reading left the rule: reviewed, corrected, disputed (challenged and unchanged since) or unread. A disputed rule's doubt is in its context's `unconfirmed`.",
+            ),
+        ),
+    ),
+    why: Schema.optionalKey(
+        Schema.String.annotate(about("The reviewer's words when the rule is disputed; empty otherwise.")),
+    ),
+    reachedByTests: Schema.optionalKey(
+        Schema.Array(Schema.String).annotate(
+            about(
+                "The keys of the test suites whose tests reach the code that decides it. Reaching is not checking: a test may pass through without asserting the rule.",
+            ),
+        ),
+    ),
     screens: Schema.Array(Schema.String).annotate(
         about(
             "The screens whose actions reach the code that decides it, by name; empty only when no action of a named screen reaches it.",
@@ -216,6 +269,13 @@ export const CapabilityPayload = Schema.Struct({
     ),
     screens: Schema.Array(Screen).annotate(
         about("Its screens: its entry points grouped by the screen that holds them."),
+    ),
+    surfaces: Schema.optionalKey(
+        Schema.Array(CapabilitySurface).annotate(
+            about(
+                "The places (surfaces) its entry points are in, of every kind and starter, by key; `screens` is the older view of the screens alone, kept for one contract version.",
+            ),
+        ),
     ),
     concerns: Schema.Array(Concern).annotate(about("The judged shared code its flows pass through.")),
     data: Schema.Array(DataKind).annotate(about("The kinds of data it reads or saves.")),

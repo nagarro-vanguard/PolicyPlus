@@ -112,6 +112,8 @@ export type ScreenInput = {
     readonly layerOfRule: ReadonlyMap<string, string>;
     readonly groupOfLayer: ReadonlyMap<string, Group>;
     readonly commit: string;
+    /** What the place is, when it is not a screen a person works in: said in its own noun. */
+    readonly scope?: string;
 };
 
 /**
@@ -154,7 +156,10 @@ export const screenContext = (input: ScreenInput) => {
     const dataOf = (kind: "saves" | "reads") =>
         [...new Set(actions.flatMap((action) => action.context[kind]))].toSorted();
     return contextOf({
-        scope: `Screen ${name} of the whole system: ${plural(actions.length, "action", "actions")} that a person starts, in ${plural(caps.length, "capability", "capabilities")}. ${own === undefined ? "" : own.purpose}`,
+        scope:
+            input.scope === undefined
+                ? `Screen ${name} of the whole system: ${plural(actions.length, "action", "actions")} that a person starts, in ${plural(caps.length, "capability", "capabilities")}. ${own === undefined ? "" : own.purpose}`
+                : input.scope,
         startsAt: own === undefined ? undefined : `${own.place.file}:${own.place.firstLine}`,
         files: [...new Set(actions.map((action) => action.place.file))]
             .toSorted()

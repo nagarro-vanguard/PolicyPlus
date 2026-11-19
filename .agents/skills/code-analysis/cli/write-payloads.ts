@@ -16,7 +16,7 @@ import { capabilityPayload } from "../shared/read/payload-capability";
 import { payloadGaps } from "../shared/read/payload-checks";
 import { systemPayload } from "../shared/read/payload-system";
 import { AnalysisRoot } from "../shared/run/analysis-root";
-import { known } from "../shared/run/collections";
+import { addToCount, known } from "../shared/run/collections";
 import { PayloadManifest } from "../shared/model/schemas/payload-manifest";
 import {
     capabilityFiles,
@@ -31,6 +31,11 @@ import { needsAction, rootServices, runScript } from "../shared/run/run-script";
 import { FileAccess } from "../shared/source/file-access";
 import { RecordStore } from "../shared/store/database";
 import { decodedRows } from "../shared/store/stored-bodies";
+import { readPlaces } from "../shared/read/payload-places";
+import type { PayloadFacts } from "../shared/read/payload-layers";
+import type { Readings } from "../shared/read/payload-bundle";
+import { analysisTexts, systemWordsOf, termGaps, termsOf } from "../shared/read/payload-terms";
+import { wordsOutsideQuotes } from "../shared/model/rule-wording";
 
 const IdRow = Schema.Struct({ id: Schema.String });
 const AreaRow = Schema.Struct({ name: Schema.String, capabilities: Schema.String });
@@ -51,16 +56,22 @@ const writeFile = Effect.fnUntraced(function* (folder: string, payload: WrittenP
  * @param store the record store, read only
  * @param system the system's payload, for the ids of the outside systems and layers
  * @param folder the payloads' folder
+ * @param payloads every capability's payload, for the texts a glossary term must be used in
  * @returns how many gaps it printed, and the file written
  */
 const writeKnowledge = Effect.fnUntraced(function* (
     store: RecordStore["Service"],
     system: SystemPayload,
     folder: string,
+    payloads: readonly CapabilityPayloadOf[],
 ) {
-    const knowledge = yield* knowledgePayload(store, yield* readCatalogue());
+    const made = yield* knowledgePayload(store, yield* readCatalogue());
+    const texts = analysisTexts(system, payloads, made);
+    const entities = made.entities === undefined ? [] : made.entities;
+    const terms = termsOf(entities, (yield* systemWordsOf(store)).terms, texts);
+    const knowledge = { ...made, terms };
     const ids = new Set([...system.externals.map((each) => each.id), ...system.layers.map((each) => each.id)]);
-    const gaps = knowledgeGaps(knowledge, ids);
+    const gaps = [...knowledgeGaps(knowledge, ids), ...termGaps(terms, texts)];
     for (const gap of gaps) {
         yield* Console.log(`the knowledge payload does not add up: ${gap}`);
     }
@@ -74,15 +85,11 @@ const writeKnowledge = Effect.fnUntraced(function* (
 /**
  * Write the bundle payload: what a bundle needs beyond the other payloads, with where a second reading left each rule.
  * @param store the record store, read only
- * @param root the analysis root
+ * @param readings where a second reading left each rule and change of state
  * @param folder the payloads' folder
  * @returns the file written
  */
-const writeBundle = Effect.fnUntraced(function* (store: RecordStore["Service"], root: string, folder: string) {
-    const readings = new Map([
-        ...(yield* readSecondReadings(root, "BusinessRule")),
-        ...(yield* readSecondReadings(root, "Transition")),
-    ]);
+const writeBundle = Effect.fnUntraced(function* (store: RecordStore["Service"], readings: Readings, folder: string) {
     const text = payloadText(BundlePayload, yield* bundlePayload(store, readings));
     return yield* writeFile(folder, { path: "bundle.json", kind: "bundle", text });
 });
@@ -125,9 +132,14 @@ const writeJourneys = Effect.fnUntraced(function* (
  * Write each capability's payload, in its file named for the capability, checked to add up.
  * @param store the record store, read only
  * @param folder the payloads' folder
+ * @param facts what is known across the system of the entry points and rules
  * @returns the payloads, the files written and how many do not add up
  */
-const writeCapabilities = Effect.fnUntraced(function* (store: RecordStore["Service"], folder: string) {
+const writeCapabilities = Effect.fnUntraced(function* (
+    store: RecordStore["Service"],
+    folder: string,
+    facts: PayloadFacts,
+) {
     const ids = yield* Effect.orDie(
         store.query((sql) => decodedRows(IdRow)(sql`SELECT capability AS id FROM v_capability ORDER BY id`)),
     );
@@ -142,7 +154,7 @@ const writeCapabilities = Effect.fnUntraced(function* (store: RecordStore["Servi
     const payloads: CapabilityPayloadOf[] = [];
     for (const { id } of ids) {
         const area = areas.find((each) => each.capabilities.includes(`"${id}"`));
-        payloads.push(yield* capabilityPayload(store, id, area === undefined ? "" : area.name));
+        payloads.push(yield* capabilityPayload(store, id, area === undefined ? "" : area.name, facts));
     }
     const fileOf = capabilityFiles(payloads.map((payload) => payload.capability));
     const written: WrittenPayload[] = [];
@@ -195,6 +207,46 @@ const writeManifest = Effect.fnUntraced(function* (folder: string, written: read
 });
 
 /**
+ * Say what the places came to: how many of each kind, how many entry points are in one, how many the code named
+ * because no one did, how many web and service entry points have an address, and the rules no capability reaches.
+ * @param system the system payload
+ * @param addressed how many entry points have an address
+ * @returns nothing once said
+ */
+const reportPlaces = Effect.fnUntraced(function* (system: SystemPayload, addressed: number) {
+    const surfaces = system.surfaces === undefined ? [] : system.surfaces;
+    const kinds = new Map<string, number>();
+    surfaces.forEach((surface) => addToCount(kinds, surface.kind, 1));
+    const placed = surfaces.reduce((sum, surface) => sum + surface.actions, 0);
+    const unplaced = system.unplaced === undefined ? 0 : system.unplaced.entryPoints.length;
+    yield* Console.log(
+        `${surfaces.length} places (${[...kinds].map(([kind, count]) => `${count} ${kind}`).join(", ")}); ${placed} of ${placed + unplaced} entry points placed; ${surfaces.filter((surface) => surface.unnamed).length} named by the code because no one named them; ${addressed} entry points with an address`,
+    );
+    const lone = system.rulesInNoCapability;
+    if (lone !== undefined && lone.count > 0) {
+        yield* Console.log(`${lone.count} rules are reached by no capability; system.json lists them`);
+    }
+});
+
+/**
+ * Say how many rules state more than a reader takes in at once: over twenty-five words, and over forty, the length at
+ * which Capability rules now asks for a split into one rule per decision. The stored rules are not changed.
+ * @param payloads every capability's payload
+ * @returns nothing once said
+ */
+const reportRules = Effect.fnUntraced(function* (payloads: readonly CapabilityPayloadOf[]) {
+    const rules = new Map(
+        payloads.flatMap((payload) =>
+            payload.layers.flatMap((layer) => layer.rules.map((rule) => [rule.id, rule.says] as const)),
+        ),
+    );
+    const lengths = [...rules.values()].map(wordsOutsideQuotes);
+    yield* Console.log(
+        `${rules.size} rules: ${lengths.filter((count) => count > 25).length} over twenty-five words, ${lengths.filter((count) => count > 40).length} over forty`,
+    );
+});
+
+/**
  * Write one typed payload per place of a finished analysis: each capability with its layers, screens, shared code,
  * data, open points, gaps and the context of every place in it, then the system with its areas, its name, its
  * repository and the commit read. Each is checked to add up, and each context to have its documented shape, before it
@@ -207,9 +259,19 @@ const writePayloads = Effect.fn("writePayloads")(function* () {
     const { root } = yield* AnalysisRoot;
     const folder = `${root}/payloads`;
     yield* settleSource(store, root);
-    const capabilities = yield* writeCapabilities(store, folder);
+    const readings = new Map([
+        ...(yield* readSecondReadings(root, "BusinessRule")),
+        ...(yield* readSecondReadings(root, "Transition")),
+    ]);
+    const places = yield* readPlaces(store, root, yield* readCatalogue(), readings);
+    const capabilities = yield* writeCapabilities(store, folder, places.facts);
     const { payloads, fileOf } = capabilities;
-    const made = yield* systemPayload(store, payloads, yield* provenanceOf(store, root));
+    const source = yield* provenanceOf(store, root);
+    const named = (yield* systemWordsOf(store)).name;
+    const made = yield* systemPayload(store, payloads, named === undefined ? source : { ...source, name: named }, {
+        model: places.model,
+        testsOf: places.testsOf,
+    });
     const system: SystemPayload = {
         ...made,
         capabilities: made.capabilities.map((each) => ({ ...each, file: known(fileOf, each.id, "written above") })),
@@ -219,17 +281,22 @@ const writePayloads = Effect.fn("writePayloads")(function* () {
         kind: "system",
         text: payloadText(SystemPayload, system),
     });
-    const knowledge = yield* writeKnowledge(store, system, folder);
+    const knowledge = yield* writeKnowledge(store, system, folder, payloads);
     const journeys = yield* writeJourneys(store, payloads, folder);
     const written = [
         systemFile,
         ...capabilities.written,
         knowledge.written,
         ...journeys.written,
-        yield* writeBundle(store, root, folder),
+        yield* writeBundle(store, readings, folder),
     ];
     yield* writeManifest(folder, written);
-    const broken = capabilities.broken + knowledge.gaps + journeys.gaps;
+    for (const gap of places.gaps) {
+        yield* Console.log(`the places do not add up: ${gap}`);
+    }
+    yield* reportPlaces(system, places.addressed);
+    yield* reportRules(payloads);
+    const broken = capabilities.broken + knowledge.gaps + journeys.gaps + places.gaps.length;
     yield* Console.log(
         `${written.length} payloads written to ${folder}${broken === 0 ? "" : `; ${broken} do not add up`}`,
     );

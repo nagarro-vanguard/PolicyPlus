@@ -2,12 +2,13 @@ import { Schema } from "effect";
 import { Text, about } from "../shared-fields";
 import { ExternalSystem } from "./external-system";
 import { Count, ContextShape, LayerTouched } from "./payloads";
+import { SurfaceKind, SurfaceNoun } from "./surface-kind";
 
 export const SystemPayload = Schema.Struct({
     name: Schema.optionalKey(
         Schema.String.annotate(
             about(
-                "The system's name, derived from the code: the source folder's name, or the source folders' names joined. Payloads written before it was derived have none.",
+                "The system's name: the one the briefing gave in `SystemWords`, checked to appear in what the analysis read; else derived from the code, the source folder's name or the source folders' names joined. Payloads written before it was derived have none.",
             ),
         ),
     ),
@@ -69,6 +70,9 @@ export const SystemPayload = Schema.Struct({
                     "Whether the layer is the product: false when half or more of its blocks lie in tooling or tests parts, or when it is build or install scripts.",
                 ),
             ),
+            entryPoints: Schema.optionalKey(
+                Count.annotate(about("How many entry points the layer holds, whoever starts them.")),
+            ),
         }).annotate(about("One layer of the system.")),
     ).annotate(about("The layers of the system.")),
     screens: Schema.Array(
@@ -107,6 +111,95 @@ export const SystemPayload = Schema.Struct({
             "Every screen a person uses, merged by page across capabilities, so a page is one screen however many capabilities its actions serve. Actions that other systems or a schedule start belong to no screen.",
         ),
     ),
+    surfaces: Schema.optionalKey(
+        Schema.Array(
+            Schema.Struct({
+                key: Schema.String.annotate(
+                    about(
+                        "The place's key, which stays the same when a stage is run again from nothing: the path of its first candidate (a page's path without its extension, or the file its entry points start in).",
+                    ),
+                ),
+                name: Schema.String.annotate(
+                    about(
+                        "The place's name as its people say it; when no one named it (`unnamed`), the one class its entry points sit in, or its file's name.",
+                    ),
+                ),
+                purpose: Schema.String.annotate(about("What is done there, in one sentence; empty when unnamed.")),
+                kind: SurfaceKind,
+                noun: SurfaceNoun,
+                unnamed: Schema.Boolean.annotate(
+                    about(
+                        "Whether the name and kind are the code's because no one named the place: test suites always, and every place of an analysis made before the briefing named places of every starter. A presentation says so rather than show a class name as a name.",
+                    ),
+                ),
+                product: Schema.Boolean.annotate(
+                    about("Whether the place is part of the product: false for test suites and build steps."),
+                ),
+                places: Schema.Array(Schema.String).annotate(
+                    about("The candidate places, found by code, that make it up, by key."),
+                ),
+                files: Schema.Array(Schema.String).annotate(about("The files its entry points start in.")),
+                capabilities: Schema.Array(Schema.String).annotate(
+                    about("The record ids of the capabilities its entry points belong to."),
+                ),
+                actionIds: Schema.Array(Schema.String).annotate(
+                    about("The record ids of its entry points, whoever starts them."),
+                ),
+                actions: Count.annotate(about("How many entry points it holds.")),
+                startedBy: Schema.Struct({
+                    person: Count.annotate(about("How many a person starts.")),
+                    schedule: Count.annotate(about("How many a schedule starts.")),
+                    otherSystem: Count.annotate(about("How many another system or a test runner starts.")),
+                }).annotate(about("How many of its entry points a person, a schedule and another system start.")),
+                rules: Count.annotate(about("How many distinct rules its entry points reach.")),
+                reachedByTests: Schema.Array(Schema.String).annotate(
+                    about(
+                        "The keys of the test suites whose tests reach a rule its entry points reach; reaching is not checking.",
+                    ),
+                ),
+                layersTouched: Schema.Array(LayerTouched).annotate(
+                    about("The layers it touches, each entry point and rule counted once."),
+                ),
+                context: ContextShape,
+            }).annotate(
+                about(
+                    "One place the system is worked with through: a screen, page, service, scheduled task, command, build step or test suite.",
+                ),
+            ),
+        ).annotate(
+            about(
+                "Every place (surface) of the system, whoever starts its entry points, by key: each entry point is in exactly one, or listed in `unplaced`. Membership is found by code; names, purposes and kinds come from the briefing, or from the code when no one named the place. `screens` is the older view of the places a person works in, kept for one contract version.",
+            ),
+        ),
+    ),
+    unplaced: Schema.optionalKey(
+        Schema.Struct({
+            entryPoints: Schema.Array(Schema.String).annotate(
+                about("The record ids of the entry points no place holds."),
+            ),
+            why: Schema.String.annotate(about("Why they are held by no place.")),
+        }).annotate(
+            about("The entry points the briefing judged to be in no place a reader visits: said, never dropped."),
+        ),
+    ),
+    rulesInNoCapability: Schema.optionalKey(
+        Schema.Struct({
+            count: Count.annotate(about("How many rules no capability's flows reach.")),
+            rules: Schema.Array(
+                Schema.Struct({
+                    id: Schema.String.annotate(about("The rule's record id.")),
+                    key: Schema.String.annotate(about("The rule's key, as the capability payloads write it.")),
+                    says: Text.annotate(about("The rule.")),
+                    file: Schema.String.annotate(about("The file it is decided in.")),
+                    firstLine: Count.annotate(about("The first line that decides it.")),
+                }),
+            ).annotate(about("Each of them, by file and line.")),
+        }).annotate(
+            about(
+                "The rules decided in code no capability's entry points reach: in no capability payload, so listed here, never dropped.",
+            ),
+        ),
+    ),
     edges: Schema.Array(
         Schema.Struct({
             from: Schema.String.annotate(about("The layer a link leaves, by record id.")),
@@ -121,7 +214,11 @@ export const SystemPayload = Schema.Struct({
         person: Count.annotate(about("Entry points a person starts.")),
         otherSystem: Count.annotate(about("Entry points another system or the runtime starts.")),
         schedule: Count.annotate(about("Entry points a schedule starts.")),
-    }).annotate(about("How many entry points each kind of starter has, across the system.")),
+    }).annotate(
+        about(
+            "How many entry points each kind of starter has in the layers of the product, derived from the entry points: tests and build or install scripts are not counted here (`surfaces` holds them all).",
+        ),
+    ),
     externals: Schema.Array(
         Schema.Struct({
             id: Schema.String.annotate(about("The external system's record id.")),

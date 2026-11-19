@@ -21,6 +21,7 @@ import { layersTouchedOf, screenContext } from "./payload-screens";
 import { commitOf } from "./provenance";
 import { groupOf, plural, ruleLine, slugOf, type Group } from "./payload-words";
 import { externalUse, layerPartUse } from "./system-queries";
+import { entriesOf, placesOfSystem, type Places } from "./payload-surfaces";
 
 type Capabilities = readonly CapabilityPayload[];
 
@@ -295,21 +296,20 @@ const systemRows = Effect.fnUntraced(function* (store: RecordStore["Service"]) {
 });
 
 /**
- * How many entry points each kind of starter has, in the layers of the product only, so tests do not make the system
- * look driven by other systems.
- * @param payloads every capability's payload
- * @param product the ids of the layers of the product
- * @returns the counts
+ * What the analysis could not follow in the whole system: links that reach nothing the code shows, and blocks no
+ * entry point reaches.
+ * @param store the record store, read only
+ * @returns both counts
  */
-const entriesOf = (payloads: Capabilities, product: ReadonlySet<string>) => {
-    const starters = payloads.flatMap((each) =>
-        each.layers
-            .filter((layer) => product.has(layer.id))
-            .flatMap((layer) => layer.actions.map((action) => action.startedBy)),
-    );
-    const count = (who: string) => starters.filter((each) => each === who).length;
-    return { person: count("person"), otherSystem: count("otherSystem"), schedule: count("schedule") };
-};
+const unfollowedOf = Effect.fnUntraced(function* (store: RecordStore["Service"]) {
+    return {
+        unresolved: yield* numberOf(store, (sql) => sql`SELECT count(*) AS number FROM v_unresolved_link`),
+        unattributed: yield* numberOf(
+            store,
+            (sql) => sql`SELECT count(*) AS number FROM v_block WHERE capabilities = 0`,
+        ),
+    };
+});
 
 /**
  * The whole system's payload: its purpose, capabilities, areas, layers with the role of each, the links between
@@ -317,25 +317,25 @@ const entriesOf = (payloads: Capabilities, product: ReadonlySet<string>) => {
  * @param store the record store, read only
  * @param payloads every capability's payload, for what the areas and the system hold together
  * @param source the system's name, the repository its code is in and the commit analysed
+ * @param places the places of every starter and the test suites reaching each rule; none leaves `surfaces`,
+ * `unplaced` and the layers' entry point counts out
  * @returns the payload
  */
 export const systemPayload = Effect.fnUntraced(function* (
     store: RecordStore["Service"],
     payloads: Capabilities,
     source: { readonly name: string; readonly repository: string | null; readonly commit: string | null },
+    places?: Places,
 ) {
     const layers = (yield* layerRoles(store)).toSorted(
         (one, other) => compareText(one.name, other.name) || compareText(one.layer, other.layer),
     );
     const { areas, layerRecords, edges, capabilities, screenRecords, purpose } = yield* systemRows(store);
     const commit = yield* commitOf(store);
-    const unresolved = yield* numberOf(store, (sql) => sql`SELECT count(*) AS number FROM v_unresolved_link`);
-    const unattributed = yield* numberOf(
-        store,
-        (sql) => sql`SELECT count(*) AS number FROM v_block WHERE capabilities = 0`,
-    );
+    const { unresolved, unattributed } = yield* unfollowedOf(store);
     const judged = judgeLayers(layers, yield* layerPartUse(store));
     const purposeOfLayer = new Map(layerRecords.map((each) => [each.id, each.purpose] as const));
+    const placed = yield* placesOfSystem(store, payloads, places, { ...layerLookups(payloads, layers), commit });
     const payload: SystemPayload = {
         ...source,
         purpose,
@@ -349,8 +349,10 @@ export const systemPayload = Effect.fnUntraced(function* (
             group: groupOf(layer.role),
             blocks: layer.blocks,
             product: layer.product,
+            ...placed.countOf(layer.layer),
         })),
         screens: screensOfSystem(payloads, layers, commit, screenRecords),
+        ...placed.fields,
         edges: edges.map((edge) => ({ from: edge.fromLayer, to: edge.toLayer, kind: edge.kind, links: edge.links })),
         entries: entriesOf(payloads, new Set(judged.filter((each) => each.product).map((each) => each.layer))),
         externals: externalsOf(yield* externalUse(store)),

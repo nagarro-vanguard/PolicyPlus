@@ -4,7 +4,7 @@ import type { JsonRecord } from "./json-record";
 import { RecordIdPrefix } from "./shared-fields";
 import type { NoteSpan, Position, RecordKind, RecordType } from "./shape-registry";
 import { ResourceAssignment, ShapeAssignment, EntryPointAssignment } from "./schemas/assignment";
-import { CapabilityGroup, CrossCuttingConcern, Figure, Screen } from "./schemas/briefing";
+import { CapabilityGroup, CrossCuttingConcern, Figure, Screen, SystemWords } from "./schemas/briefing";
 import { SystemPart } from "./schemas/system-part";
 import { Capability } from "./schemas/capability";
 import { Entity } from "./schemas/entity";
@@ -312,6 +312,7 @@ const keptDeclarations = {
         refTo("blocks", ["Block"], (record: typeof CrossCuttingConcern.Type) => record.blocks),
     ]),
     Screen: unplaced(Screen, "account", byId, []),
+    SystemWords: unplaced(SystemWords, "account", byId, []),
     Figure: unplaced(Figure, "account", byId, [
         refTo(
             "records",

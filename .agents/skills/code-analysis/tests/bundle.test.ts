@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Schema } from "effect";
 import { derive, makeRoot, type Spec } from "./fixture";
-import { BundlePayload } from "../shared/model/schemas/bundle-payload";
+import { BundleIndex, BundlePayload } from "../shared/model/schemas/bundle-payload";
 import { CapabilityPayload } from "../shared/model/schemas/payloads";
 import { KnowledgePayload } from "../shared/model/schemas/knowledge-payload";
 import { SystemPayload } from "../shared/model/schemas/system-payload";
@@ -13,6 +13,7 @@ import {
     bundleGaps,
     bundleText,
     capabilityBundle,
+    capabilityBundleNames,
     screenBundle,
     slug,
     surfaceBundle,
@@ -170,7 +171,7 @@ describe("bundles", () => {
         expect(surfaceBundleName("Main", "Finding policies")).toBe("screen-main--finding-policies.md");
     });
 
-    test("build-bundle all writes one file per surface and capability from payloads and the request alone", async () => {
+    test("build-bundle all writes one file per surface and capability, one per capability, and an index, from payloads and the request alone", async () => {
         const payloads = await written();
         const folder = mkdtempSync(join(tmpdir(), "bundle-all-"));
         try {
@@ -188,12 +189,26 @@ describe("bundles", () => {
             });
             const out = await new Response(child.stdout).text();
             expect(await child.exited).toBe(0);
-            const expected = surfacePairs(payloads)
-                .map((pair) => surfaceBundleName(pair.surface, pair.capability))
-                .toSorted();
-            expect(readdirSync(join(folder, "bundles")).toSorted()).toEqual(expected);
+            const surfaces = surfacePairs(payloads).map((pair) => surfaceBundleName(pair.surface, pair.capability));
+            const capabilities = capabilityBundleNames(payloads).map((each) => each.file);
+            expect(capabilities.length).toBe(payloads.capabilities.length);
+            const expected = [...surfaces, ...capabilities].toSorted();
+            expect(readdirSync(join(folder, "bundles")).toSorted()).toEqual([...expected, "index.json"].toSorted());
             expect(out).toContain(`${expected.length} bundles written`);
             expect(out).toContain("the largest is");
+            const index = Schema.decodeUnknownSync(BundleIndex)(
+                JSON.parse(readFileSync(join(folder, "bundles", "index.json"), "utf8")),
+            );
+            expect(index.map((each) => each.file).toSorted()).toEqual(expected);
+            for (const each of index) {
+                expect(each.bytes).toBe(
+                    new TextEncoder().encode(readFileSync(join(folder, "bundles", each.file), "utf8")).length,
+                );
+                expect(each.surface === "").toBe(each.kind === "capability");
+            }
+            expect(index.filter((each) => each.kind === "capability").map((each) => each.capabilityId)).toEqual(
+                payloads.capabilities.map((each) => each.capability.id),
+            );
         } finally {
             rmSync(folder, { recursive: true, force: true });
         }

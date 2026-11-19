@@ -19,11 +19,12 @@ The system page lists what the system offers under these areas, read by people d
 - A candidate grouped with blocks that do different work, or one concern split across records where one name covers the blocks.
 - A concern the code applies without a call that the briefing left out of its facts.
 
-## Screens
+## Places
 
-- A `Screen` named by a file, class or folder, not by what a person does there; two records that are one screen to the people using it (a page and its dialog), or one that merges screens they would tell apart.
-- A `kind` `screen` on a command, build or install step, test or scheduled-task start; a `kind` `other` on a page, window or dialog a person works in.
-- A purpose that would fit any screen, or that its candidate's actions do not show.
+- A `Screen` named by a file, class or folder, not by what is done there; two records that are one place to the people using it (a page and its dialog), or one that merges places they would tell apart.
+- A `kind` the files do not show: `screen` on a page, a command, a build step or a scheduled task; `service` on tests; `other` on a page, window, dialog or service people work with.
+- A purpose that would fit any place, or that its candidate's entry points do not show.
+- A `SystemWords` name the brief and the code's titles do not show, or a term the brief never uses or defines by itself.
 
 ## Pictures
 

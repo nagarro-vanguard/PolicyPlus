@@ -9,6 +9,8 @@ const remedies = {
     "transition-of-another-life": "name the life this job writes",
     "state-beyond-life": "name only states the life holds, by their numbers",
     "rule-outside-blocks": "decide it inside a block of this job, or drop it",
+    "rule-of-several-decisions":
+        "split it into one rule per decision, each decided at its own lines, then drop this one with drop-record",
     "outside-listing": "cite lines of the listed files only",
     "unresolved-citation": "name a record that stands",
     "no-receipt": "list the line ranges you read in one Receipt, written last",

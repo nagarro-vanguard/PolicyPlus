@@ -3,10 +3,17 @@ import { addToCount } from "../../shared/run/collections";
 import type { JsonRecord } from "../../shared/model/json-record";
 import { ofType } from "../../shared/read/record-reading";
 import { checkReviewedJob } from "../../shared/jobs/review-rounds";
-import { CapabilityGroup, CrossCuttingConcern, Figure, Screen } from "../../shared/model/schemas/briefing";
+import { CapabilityGroup, CrossCuttingConcern, Figure, Screen, SystemWords } from "../../shared/model/schemas/briefing";
 import { readFactBase, stageFactGaps } from "../../shared/read/stage-facts";
 import { RecordIdPrefix } from "../../shared/model/shared-fields";
-import { briefedCandidates, briefedCapabilities, briefedMenu, briefedScreens } from "./briefing-brief";
+import {
+    briefedCandidates,
+    briefedCapabilities,
+    briefedMenu,
+    briefedPlaces,
+    briefedScreens,
+    briefedText,
+} from "./briefing-brief";
 import { briefingShapes, reviewedBriefingJob } from "./briefing-job";
 import { missedOutside } from "../../shared/jobs/review-verdicts";
 import type { Missed } from "../../shared/model/schemas/missed";
@@ -116,6 +123,93 @@ export function screenGaps(records: readonly Finding[], candidates: readonly str
 }
 
 /**
+ * Whether a name reads as code: two words run together with a capital inside (`TravelClassesManagement`), or a dot,
+ * an underscore or a slash in it.
+ * @param name the name
+ * @returns true when it does
+ */
+const readsAsCode = (name: string) => {
+    const chars = [...name];
+    const lower = (char: string) => char !== char.toUpperCase();
+    const upper = (char: string) => char !== char.toLowerCase();
+    return (
+        chars.slice(1).some((char, at) => {
+            const before = chars[at];
+            return before !== undefined && lower(before) && upper(char);
+        }) || ["_", "/", "\\"].some((mark) => name.includes(mark))
+    );
+};
+
+/**
+ * The places gate on names: a place is named in its people's words, never by the code's name for it (the class or file
+ * name the script falls back on) nor a name that reads as code, and is never given the kind `test`, which the script
+ * gives the test suites it groups itself.
+ * @param records the briefing's records
+ * @param places the candidate places of the brief, with the name the code gives each and its files
+ * @returns one line per gap
+ * @internal exported for the tests, which check this gate on its own
+ */
+export function surfaceNameGaps(
+    records: readonly Finding[],
+    places: ReadonlyArray<{ readonly key: string; readonly name: string; readonly files: readonly string[] }>,
+): string[] {
+    const codeNames = new Map(places.map((place) => [place.key, place] as const));
+    return ofType(records, RecordIdPrefix.Screen, Screen).flatMap((screen) => {
+        const own = screen.places.flatMap((key) => {
+            const place = codeNames.get(key);
+            return place === undefined
+                ? []
+                : [place.name, ...place.files.map((file) => file.split("/").at(-1)), key.split("/").at(-1)];
+        });
+        const lower = screen.name.trim().toLowerCase();
+        return [
+            ...(own.some((name) => name !== undefined && name.toLowerCase() === lower) || readsAsCode(screen.name)
+                ? [`${screen.id} is named ${screen.name}, which is the code's name: name it as its people would`]
+                : []),
+            ...(screen.kind === "test"
+                ? [`${screen.id} is of kind test: test suites are grouped by script and are never named here`]
+                : []),
+        ];
+    });
+}
+
+/**
+ * Whether a text holds some words, case aside.
+ * @param text the text
+ * @param words the words
+ * @returns true when it does
+ */
+const holds = (text: string, words: string) => text.toLowerCase().includes(words.trim().toLowerCase());
+
+/**
+ * The words gate: at most one `SystemWords`; its name at most five words and found in the brief; each term used in the
+ * brief, defined in at most twenty-five words and not by itself.
+ * @param records the briefing's records
+ * @param brief the brief's text
+ * @returns one line per gap
+ * @internal exported for the tests, which check this gate on its own
+ */
+export function systemWordsGaps(records: readonly Finding[], brief: string): string[] {
+    const words = ofType(records, RecordIdPrefix.SystemWords, SystemWords);
+    const count = (text: string) => text.split(" ").filter((word) => word !== "").length;
+    return [
+        ...(words.length > 1 ? [`${words.length} SystemWords are written: write at most one`] : []),
+        ...words.flatMap((each) => [
+            ...(each.name !== undefined && (count(each.name) > 5 || !holds(brief, each.name))
+                ? [
+                      `${each.id}: the name ${each.name} is not in the brief or is over five words; name only what is named`,
+                  ]
+                : []),
+            ...(each.terms === undefined ? [] : each.terms).flatMap((term) => [
+                ...(holds(brief, term.term) ? [] : [`${each.id}: the term ${term.term} is not used in the brief`]),
+                ...(count(term.means) > 25 ? [`${each.id}: ${term.term} is defined in over twenty-five words`] : []),
+                ...(holds(term.means, term.term) ? [`${each.id}: ${term.term} is defined by itself`] : []),
+            ]),
+        ]),
+    ];
+}
+
+/**
  * Whether a text holds a digit.
  * @param text the text
  * @returns true when it does
@@ -176,6 +270,8 @@ export const briefingReview = (root: string) => ({
             const capabilities = yield* briefedCapabilities(root);
             const candidates = yield* briefedCandidates(root);
             const screens = yield* briefedScreens(root);
+            const places = yield* briefedPlaces(root);
+            const brief = yield* briefedText(root);
             const menu = yield* briefedMenu(root);
             const lineCounts = yield* (yield* ScopeFiles).lineCountsFor(citedFiles(cited));
             const facts = { ...(yield* readFactBase()), lineCounts };
@@ -184,6 +280,8 @@ export const briefingReview = (root: string) => ({
                     ...briefingGaps(records, capabilities),
                     ...crossCuttingGaps(records, candidates),
                     ...screenGaps(records, screens),
+                    ...surfaceNameGaps(records, places),
+                    ...systemWordsGaps(records, brief),
                     ...figureGaps(records, menu),
                     ...stageFactGaps(records, facts),
                 ],

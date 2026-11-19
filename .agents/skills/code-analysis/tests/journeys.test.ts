@@ -296,8 +296,14 @@ describe("payloads/journeys.json", () => {
         const written = JSON.parse(readFileSync(join(root, "payloads", "journeys.json"), "utf8")) as unknown;
         const decoded = Schema.decodeUnknownSync(JourneysPayload)(written);
         expect(decoded.journeys.map((task) => task.id)).toEqual(["capability-1.find-by-number"]);
+        // the title and the capability are carried through from the record, not dropped
+        expect(decoded.journeys.map((task) => [task.title, task.capability])).toEqual([
+            ["Find by number", "capability-1"],
+        ]);
         expect(Object.keys((written as { journeys: object[] }).journeys[0] ?? {})).toEqual([
             "id",
+            "title",
+            "capability",
             "outcome",
             "actor",
             "actions",

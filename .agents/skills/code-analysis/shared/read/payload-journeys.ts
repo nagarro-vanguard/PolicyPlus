@@ -68,13 +68,29 @@ export const taskIdOf = (slug: string, task: string) => `${slug}.${task}`;
 const union = <T>(lists: ReadonlyArray<readonly T[]>) => [...new Set(lists.flat())];
 
 /**
- * One accepted journey as a task of the payload.
+ * A task's short name as a title: its words with the first in capitals (`stamp-program-version` is `Stamp program
+ * version`).
+ * @param task the task's short kebab-case name
+ * @returns the title
+ */
+const titleOf = (task: string) => {
+    const words = task
+        .split("-")
+        .filter((word) => word !== "")
+        .join(" ");
+    return `${words.slice(0, 1).toUpperCase()}${words.slice(1)}`;
+};
+
+/**
+ * One accepted journey as a task of the payload, carrying its title and its capability.
  * @param journey the journey
  * @param slug its capability's address
  * @returns the task
  */
 const taskOf = (journey: StoredJourney, slug: string): TaskPayload => ({
     id: taskIdOf(slug, journey.task),
+    title: titleOf(journey.task),
+    capability: journey.capability,
     outcome: journey.outcome,
     actor: journey.actor,
     actions: [...journey.actions],

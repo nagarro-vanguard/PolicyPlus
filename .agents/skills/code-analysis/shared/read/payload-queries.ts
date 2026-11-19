@@ -2,6 +2,7 @@ import { Effect, Schema } from "effect";
 import type { SqlClient, SqlError } from "effect/sql";
 import type { RecordStore } from "../store/database";
 import { decodedRows, type Decoder } from "../store/stored-bodies";
+import { SurfaceKind } from "../model/schemas/surface-kind";
 
 const Count = Schema.Number;
 const Text = Schema.String;
@@ -51,7 +52,7 @@ export const ScreenRecordRow = Schema.Struct({
     id: Text,
     name: Text,
     purpose: Text,
-    kind: Schema.Literals(["screen", "other"]),
+    kind: SurfaceKind,
     places: Schema.fromJsonString(Schema.Array(Schema.String)),
 });
 export const ListOfText = Schema.fromJsonString(Schema.Array(Schema.String));
@@ -84,7 +85,13 @@ const ActionFileRow = Schema.Struct({ entryPoint: Text, file: Text });
 const LayerFileRow = Schema.Struct({ layer: Text, file: Text });
 const ActionDataRow = Schema.Struct({ entryPoint: Text, name: Text, kind: Text });
 const LayerDataRow = Schema.Struct({ layer: Text, name: Text, kind: Text });
-const OpenPointRow = Schema.Struct({ statement: Text, why: Text, ifWrong: Text });
+const OpenPointRow = Schema.Struct({
+    statement: Text,
+    why: Text,
+    ifWrong: Text,
+    aspect: MaybeText,
+    evidence: MaybeText,
+});
 const PathRow = Schema.Struct({ entryPoint: Text, layer: Text, depth: Count });
 const ActionRuleRow = Schema.Struct({ entryPoint: Text, rule: Text });
 const ShapeRow = Schema.Struct({ id: Text, name: Text, layer: Text, fields: Text });
@@ -273,7 +280,8 @@ const contextRows = Effect.fnUntraced(function* (store: RecordStore["Service"], 
         (
             sql,
         ) => sql`SELECT json_extract(f.body, '$.statement') AS statement, json_extract(f.body, '$.basis.assumed.why') AS why,
-                json_extract(f.body, '$.basis.assumed.ifWrong') AS ifWrong
+                json_extract(f.body, '$.basis.assumed.ifWrong') AS ifWrong, json_extract(f.body, '$.aspect') AS aspect,
+                json_extract(f.body, '$.basis.assumed.evidence') AS evidence
             FROM record f WHERE f.type = 'Fact' AND json_extract(f.body, '$.subject.key') = ${id}
                 AND json_extract(f.body, '$.basis.assumed') IS NOT NULL ORDER BY f.recordNumber`,
     );

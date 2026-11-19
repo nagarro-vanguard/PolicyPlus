@@ -6,7 +6,7 @@ import { carryCommand } from "../shared/jobs/carry-command";
 import { requestIsCurrent } from "../shared/store/request-guard";
 import { needsAction, rootServices, runScript } from "../shared/run/run-script";
 import { registeredShapes } from "../shared/model/registered-shapes";
-import { carryJob, checkJob } from "../stages/capability-rules/check";
+import { carryJob, checkJob, jobNotices } from "../stages/capability-rules/check";
 import { gapKinds } from "../shared/jobs/gap-remedies";
 import { dropFromJob } from "../stages/capability-rules/drop";
 import { finishCapabilityRules, nextAfterFinish } from "../stages/capability-rules/finish";
@@ -52,13 +52,17 @@ const prepareStep = Effect.fn("prepareStep")(function* (
 
 /**
  * `check`: the stage's gate on one job, with the review's verdicts once the reviewer has written; prints every gap, or
- * `no gap`.
+ * `no gap`, then the rules to read again that are no gap (long, or hinting at a second decision).
  * @param jobId the job id
  * @returns the effect that checks and prints, marking the run as needing action when there are gaps
  */
 const checkStep = Effect.fn("checkStep")(function* (jobId: string) {
-    const gaps = yield* checkJob((yield* AnalysisRoot).root, jobId);
+    const { root } = yield* AnalysisRoot;
+    const gaps = yield* checkJob(root, jobId);
     yield* Console.log(gaps.length ? gaps.join("\n") : "no gap");
+    for (const notice of yield* jobNotices(root, jobId)) {
+        yield* Console.log(`to read again (not a gap): ${notice}`);
+    }
     if (gaps.length) {
         yield* needsAction;
     }

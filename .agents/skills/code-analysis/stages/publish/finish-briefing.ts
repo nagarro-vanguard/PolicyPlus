@@ -52,6 +52,7 @@ const briefedTypes = [
     ["CrossCuttingConcern", RecordIdPrefix.CrossCuttingConcern],
     ["Screen", RecordIdPrefix.Screen],
     ["Figure", RecordIdPrefix.Figure],
+    ["SystemWords", RecordIdPrefix.SystemWords],
 ] as const;
 
 /**

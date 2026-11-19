@@ -10,6 +10,7 @@ import {
     mergedFromOf,
     ownRecordId,
 } from "../shared-fields";
+import { SurfaceKind } from "./surface-kind";
 
 const codeKindFields = {
     id: CodeKindId.annotate(ownRecordId),
@@ -29,6 +30,13 @@ const codeKindFields = {
     ),
     evidence: Schema.NonEmptyArray(Lines).annotate(
         about("Lines of the analysed code that show its pieces, never framework documents; at least one."),
+    ),
+    surfaceKind: Schema.optionalKey(
+        SurfaceKind.annotate(
+            forAgent(
+                "For a code kind whose pieces start work (entry points): the kind of place a reader finds them in, from the closed list: `screen`, `page`, `service`, `task`, `command`, `buildStep`, `test` or `other`. Left out, the scripts derive it from who starts its pieces and the part they lie in.",
+            ),
+        ),
     ),
     mergedFrom: mergedFromOf(CodeKindId),
 };

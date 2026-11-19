@@ -47,26 +47,51 @@ const isWordCharacter = (character: string | undefined) =>
         character === "_");
 
 /**
- * Whether a text holds a record id: one of the kinds of record, a hyphen and eight or more digits, standing alone as a word.
+ * Where a text names record ids: one of the kinds of record, a hyphen and eight or more digits, standing alone as a
+ * word.
  * @param text the text
- * @returns true when a record id is named
+ * @returns the start and end of each, in order
  */
-const namesRecordId = (text: string) => {
-    return idKinds.some((kind) => {
+const recordIdSpans = (text: string) => {
+    const spans: Array<readonly [number, number]> = [];
+    for (const kind of idKinds) {
         const mark = `${kind}-`;
-        let from = text.indexOf(mark);
-        while (from !== -1) {
+        for (let from = text.indexOf(mark); from !== -1; from = text.indexOf(mark, from + 1)) {
             let end = from + mark.length;
             while (text.charCodeAt(end) >= 48 && text.charCodeAt(end) <= 57) {
                 end++;
             }
             if (end - from - mark.length >= 8 && !isWordCharacter(text[from - 1]) && !isWordCharacter(text[end])) {
-                return true;
+                spans.push([from, end]);
             }
-            from = text.indexOf(mark, from + 1);
         }
-        return false;
-    });
+    }
+    return spans.toSorted((one, other) => one[0] - other[0]);
+};
+
+/**
+ * Whether a text holds a record id.
+ * @param text the text
+ * @returns true when a record id is named
+ */
+const namesRecordId = (text: string) => recordIdSpans(text).length > 0;
+
+/**
+ * A text with each record id it names replaced by words, so a reviewer's words can be shown in a context, which names
+ * no record id.
+ * @param text the text
+ * @returns the text, with `another finding` where a record id stood
+ */
+export const withoutRecordIds = (text: string) => {
+    let out = "";
+    let at = 0;
+    for (const [from, end] of recordIdSpans(text)) {
+        if (from >= at) {
+            out += `${text.slice(at, from)}another finding`;
+            at = end;
+        }
+    }
+    return out + text.slice(at);
 };
 
 /**

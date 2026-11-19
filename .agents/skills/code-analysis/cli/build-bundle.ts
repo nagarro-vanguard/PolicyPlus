@@ -1,7 +1,7 @@
-import { Console, Effect, Layer, Option } from "effect";
+import { Console, Effect, Layer, Option, Schema } from "effect";
 import { Argument, Command, Flag } from "effect/cli";
 import { join } from "node:path";
-import { BundlePayload } from "../shared/model/schemas/bundle-payload";
+import { BundleIndex, BundlePayload } from "../shared/model/schemas/bundle-payload";
 import { CapabilityPayload } from "../shared/model/schemas/payloads";
 import { KnowledgePayload } from "../shared/model/schemas/knowledge-payload";
 import { SystemPayload } from "../shared/model/schemas/system-payload";
@@ -9,6 +9,7 @@ import {
     bundleGaps,
     bundleText,
     capabilityBundle,
+    capabilityBundleNames,
     screenBundle,
     slug as slugOf,
     surfaceBundle,
@@ -84,7 +85,7 @@ const sourcesOf = Effect.fnUntraced(function* (folder: string, paths: readonly s
  * @param input.bundle the bundle
  * @param input.path the file to write
  * @param input.sourceFolder the folder the source is read from; undefined when it is not to be embedded
- * @returns the size of the written text in lines, the files named and embedded, and whether it adds up
+ * @returns the size of the written text in lines and bytes, and how many things in it do not add up
  */
 const writeBundle = Effect.fnUntraced(function* (input: {
     readonly bundle: Bundle;
@@ -101,16 +102,18 @@ const writeBundle = Effect.fnUntraced(function* (input: {
               );
     const text = bundleText(bundle, (file) => sources.get(file));
     yield* (yield* FileAccess).writeText(path, text);
+    const bytes = new TextEncoder().encode(text).length;
     yield* Console.log(`${path}: ${bundle.files.length} files named, ${sources.size} embedded`);
     const gaps = bundleGaps(bundle);
     for (const gap of gaps) {
         yield* Console.log(`the bundle does not add up: ${gap}`);
     }
-    return { lines: text.split("\n").length - 1, gaps: gaps.length };
+    return { lines: text.split("\n").length - 1, gaps: gaps.length, bytes };
 });
 
 /**
- * Write the bundle of every surface of every capability, and sum up.
+ * Write the bundle of every surface of every capability, then the bundle of every capability, then
+ * `bundles/index.json`, which lists each with its kind, surface, capability and size, and sum up.
  * @param root the analysis root
  * @param payloads everything the analysis wrote
  * @param sourceFolder the folder the source is read from; undefined when it is not to be embedded
@@ -119,19 +122,48 @@ const writeBundle = Effect.fnUntraced(function* (input: {
 const buildAll = Effect.fnUntraced(function* (root: string, payloads: Payloads, sourceFolder: string | undefined) {
     let failing = 0;
     let largest = { path: "", lines: 0 };
-    const pairs = surfacePairs(payloads);
-    for (const pair of pairs) {
-        const bundle = surfaceBundle(payloads, pair.surface, pair.capabilityId);
-        if (bundle === undefined) {
+    const index: Array<(typeof BundleIndex.Type)[number]> = [];
+    const wanted = [
+        ...surfacePairs(payloads).map((pair) => ({
+            kind: "surface" as const,
+            surface: pair.surface,
+            capabilityId: pair.capabilityId,
+            capability: pair.capability,
+            file: surfaceBundleName(pair.surface, pair.capability),
+            bundle: surfaceBundle(payloads, pair.surface, pair.capabilityId),
+        })),
+        ...capabilityBundleNames(payloads).map((each) => ({
+            kind: "capability" as const,
+            surface: "",
+            capabilityId: each.capabilityId,
+            capability: each.capability,
+            file: each.file,
+            bundle: capabilityBundle(payloads, each.capabilityId),
+        })),
+    ];
+    for (const each of wanted) {
+        if (each.bundle === undefined) {
             continue;
         }
-        const path = `${root}/bundles/${surfaceBundleName(pair.surface, pair.capability)}`;
-        const done = yield* writeBundle({ bundle, path, sourceFolder });
+        const path = `${root}/bundles/${each.file}`;
+        const done = yield* writeBundle({ bundle: each.bundle, path, sourceFolder });
         failing += done.gaps;
         largest = done.lines > largest.lines ? { path, lines: done.lines } : largest;
+        index.push({
+            file: each.file,
+            kind: each.kind,
+            surface: each.surface,
+            capability: each.capability,
+            capabilityId: each.capabilityId,
+            bytes: done.bytes,
+        });
     }
+    yield* (yield* FileAccess).writeText(
+        `${root}/bundles/index.json`,
+        `${JSON.stringify(Schema.encodeSync(BundleIndex)(index), null, 2)}\n`,
+    );
     yield* Console.log(
-        `${pairs.length} bundles written to ${root}/bundles, ${failing} things that do not add up; the largest is ${largest.path} with ${largest.lines} lines`,
+        `${index.length} bundles written to ${root}/bundles (${index.filter((each) => each.kind === "capability").length} of whole capabilities), listed in index.json, ${failing} things that do not add up; the largest is ${largest.path} with ${largest.lines} lines`,
     );
     if (failing > 0) {
         yield* needsAction;
@@ -199,7 +231,7 @@ const command = Command.make(
         buildBundle(kind, Option.getOrUndefined(name), { capability: Option.getOrUndefined(capability), withSource }),
 ).pipe(
     Command.withDescription(
-        "Builds the bundle of one screen, one screen as one capability holds it, one capability, or every surface of every capability of a finished analysis, to modernise it to another stack, as one markdown text each, written to <analysis root>/bundles/. It reads only payloads/, work/analysis-request.json and the source, not the record store. It holds the product context with the system diagram, where the slice sits (diagram), the screens it opens and is opened by, what it must do (controls, actions and the rules it owns), the rules it relies on that other code decides, the data it touches with the life of each kind and its changes of state, what to doubt (records challenged in review, risks once each, assumptions, code nothing reaches) and the files to read in order, each with the lines to read. The source is referenced, not embedded; --with-source embeds the lines the file list names. Checks that each rule is listed once, every cited place is covered by the file list and no boilerplate is left; the run needs action when not. Run write-payloads first. Nothing is redacted: a secret in the code is in the bundle when the source is embedded. Arguments: `screen <address>` (file <kind>-<address>.md; the screen's address as its page shows it) with `--capability <name>` to cut it to the actions, rules and neighbours of that capability (file screen-<address>--<capability>.md); `capability <name>`; or `all`, which writes screen-<slug(surface)>--<slug(capability)>.md for every (surface, capability) pair, a surface being the screen an action names or `Entry points without a window`, prints one line per bundle and a summary with the largest.",
+        "Builds the bundle of one screen, one screen as one capability holds it, one capability, or every surface of every capability of a finished analysis, to modernise it to another stack, as one markdown text each, written to <analysis root>/bundles/. It reads only payloads/, work/analysis-request.json and the source, not the record store. It holds the product context with the system diagram, where the slice sits (diagram), the screens it opens and is opened by, what it must do (controls, actions and the rules it owns), the rules it relies on that other code decides, the data it touches with the life of each kind and its changes of state, what to doubt (records challenged in review, risks once each, assumptions, code nothing reaches) and the files to read in order, each with the lines to read. The source is referenced, not embedded; --with-source embeds the lines the file list names. Checks that each rule is listed once, every cited place is covered by the file list and no boilerplate is left; the run needs action when not. Run write-payloads first. Nothing is redacted: a secret in the code is in the bundle when the source is embedded. Arguments: `screen <address>` (file <kind>-<address>.md; the screen's address as its page shows it) with `--capability <name>` to cut it to the actions, rules and neighbours of that capability (file screen-<address>--<capability>.md); `capability <name>`; or `all`, which writes screen-<slug(surface)>--<slug(capability)>.md for every (surface, capability) pair, a surface being the screen an action names or `Entry points without a window`, then capability-<slug(capability)>.md for every capability, and bundles/index.json listing each file with its kind (`surface` or `capability`), surface, capability and size in bytes; it prints one line per bundle and a summary with the largest.",
     ),
 );
 

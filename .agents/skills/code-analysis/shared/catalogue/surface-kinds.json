@@ -1,0 +1,53 @@
+{
+    "version": 1,
+    "surfaceKinds": [
+        {
+            "id": "screen",
+            "one": "screen",
+            "many": "screens",
+            "means": "a window, dialog or terminal screen a person works in"
+        },
+        {
+            "id": "page",
+            "one": "page",
+            "many": "pages",
+            "means": "a web page a person opens in a browser, with its markup, the code behind it and its browser scripts"
+        },
+        {
+            "id": "service",
+            "one": "service",
+            "many": "services",
+            "means": "a set of operations other programs call, such as a web API resource or a remote procedure handler"
+        },
+        {
+            "id": "task",
+            "one": "scheduled task",
+            "many": "scheduled tasks",
+            "means": "work a timer or a job scheduler starts, even when the timer runs inside another program"
+        },
+        {
+            "id": "command",
+            "one": "command",
+            "many": "commands",
+            "means": "a command a person or an operator runs by hand, from a shell or a tool"
+        },
+        {
+            "id": "buildStep",
+            "one": "build step",
+            "many": "build steps",
+            "means": "a step that builds, versions, installs or releases the system, not part of what its users work with"
+        },
+        {
+            "id": "test",
+            "one": "test suite",
+            "many": "test suites",
+            "means": "a group of automated tests that check the code, grouped by the file that holds them"
+        },
+        {
+            "id": "other",
+            "one": "entry point",
+            "many": "entry points",
+            "means": "something started from outside that is no place a reader visits; kept out of the places shown"
+        }
+    ]
+}

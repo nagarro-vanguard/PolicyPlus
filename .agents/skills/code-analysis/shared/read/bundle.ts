@@ -208,6 +208,26 @@ export const surfacePairs = (payloads: Payloads) =>
     });
 
 /**
+ * The file name of every capability's bundle, `capability-<slug(name)>.md`, a number added after the second that
+ * shares a slug, in the capabilities' order.
+ * @param payloads everything the analysis wrote
+ * @returns each capability's record id, name and file
+ */
+export const capabilityBundleNames = (payloads: Payloads) => {
+    const used = new Map<string, number>();
+    return payloads.capabilities.map((each) => {
+        const base = slug(each.capability.name) || "capability";
+        const times = (used.get(base) === undefined ? 0 : Number(used.get(base))) + 1;
+        used.set(base, times);
+        return {
+            capabilityId: each.capability.id,
+            capability: each.capability.name,
+            file: `capability-${times === 1 ? base : `${base}-${times}`}.md`,
+        };
+    });
+};
+
+/**
  * The bundle of one capability.
  * @param payloads everything the analysis wrote
  * @param id the capability's record id

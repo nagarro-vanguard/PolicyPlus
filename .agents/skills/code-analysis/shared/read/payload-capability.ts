@@ -2,12 +2,13 @@ import { Effect } from "effect";
 import type { CapabilityPayload } from "../model/schemas/payloads";
 import type { RecordStore } from "../store/database";
 import { contextOf } from "./payload-context";
-import { gapLines, layersOf, lookups, pointLines, type Rows } from "./payload-layers";
+import { gapLines, layersOf, lookups, pointLines, type PayloadFacts, type Rows } from "./payload-layers";
 import { capabilityRows, read } from "./payload-queries";
 import { commitOf } from "./provenance";
 import { layersTouchedOf } from "./payload-screens";
 import { StoreRow } from "./system-queries";
 import { placeOf, plural, ruleLine, textOf } from "./payload-words";
+import { compareText, getOrCreate } from "../run/collections";
 
 type Layers = CapabilityPayload["layers"];
 
@@ -62,6 +63,41 @@ const screensOf = (rows: Rows, layers: Layers, commit: string): CapabilityPayloa
             }),
         };
     });
+};
+
+/**
+ * The places (surfaces) a capability's entry points are in, each with the capability's entry points there and the rules
+ * they reach, by key.
+ * @param layers the capability's layers
+ * @param facts what is known across the system of the entry points
+ * @returns the places
+ */
+const surfacesOf = (layers: Layers, facts: PayloadFacts): NonNullable<CapabilityPayload["surfaces"]> => {
+    const byKey = new Map<string, Layers[number]["actions"][number][]>();
+    for (const action of layers.flatMap((layer) => layer.actions)) {
+        const key = facts.surfaceOf(action.id);
+        if (key !== undefined) {
+            getOrCreate(byKey, key).push(action);
+        }
+    }
+    return [...byKey]
+        .toSorted(([one], [other]) => compareText(one, other))
+        .flatMap(([key, actions]) => {
+            const named = facts.surfaceNamed(key);
+            return named === undefined
+                ? []
+                : [
+                      {
+                          key,
+                          name: named.name,
+                          kind: named.kind,
+                          noun: { ...named.noun },
+                          unnamed: named.unnamed,
+                          actions: actions.map((action) => action.id),
+                          rules: [...new Set(actions.flatMap((action) => action.rules))],
+                      },
+                  ];
+        });
 };
 
 /**
@@ -142,16 +178,19 @@ const capabilityContext = (input: {
  * @param store the record store, read only
  * @param id the capability's record id
  * @param areaName the name of the area the capability belongs to; empty when none
+ * @param facts what is known across the system of the entry points and rules (keys, places, addresses, readings,
+ * tests); none leaves those fields and `surfaces` out
  * @returns the payload
  */
 export const capabilityPayload = Effect.fnUntraced(function* (
     store: RecordStore["Service"],
     id: string,
     areaName: string,
+    facts?: PayloadFacts,
 ) {
     const rows = yield* capabilityRows(store, id);
     const commit = yield* commitOf(store);
-    const layers = layersOf(rows, commit);
+    const layers = layersOf(rows, commit, facts);
     const screens = screensOf(rows, layers, commit);
     const data = yield* dataOfCapability(store, rows);
     const allRules = layers.flatMap((layer) => layer.rules);
@@ -161,6 +200,7 @@ export const capabilityPayload = Effect.fnUntraced(function* (
         area: areaName,
         layers,
         screens,
+        ...(facts === undefined ? {} : { surfaces: surfacesOf(layers, facts) }),
         concerns: rows.concerns.map((concern) => ({ ...concern, verdict: verdictOf(concern.verdict) })),
         data,
         gaps: rows.gaps.map((gap) => ({
@@ -169,7 +209,11 @@ export const capabilityPayload = Effect.fnUntraced(function* (
             layer: textOf(gap.layer),
             place: placeOf(gap),
         })),
-        openPoints: rows.openPoints,
+        openPoints: rows.openPoints.map((point) => ({
+            statement: point.statement,
+            why: point.why,
+            ifWrong: point.ifWrong,
+        })),
         totals: {
             actions: rows.actions.length,
             rules: rows.rules.length,

@@ -22,6 +22,8 @@ import { RecordIdPrefix, type Lines } from "../../shared/model/shared-fields";
 import { keepAsDrops } from "./drop";
 import { jobFiles, jobNamed, reviewedJob, shapesOf, type Listed } from "./jobs";
 import { acceptedLives } from "./lives";
+import { ruleNotices, splitReasons } from "../../shared/model/rule-wording";
+import { findingsIn } from "../../shared/jobs/review-files";
 
 type Finding = JsonRecord & { readonly id: string };
 
@@ -79,6 +81,48 @@ const innermostHolding = (blocks: ReadonlyArray<{ readonly block: string; readon
         .at(0);
 
 /**
+ * The gate on how a rule is written: one decision per rule. A rule over forty words, or one whose words outside what it
+ * quotes add a second decision (`also`, `and when`, `and if`, `and unless`, a second sentence with its own condition),
+ * is refused: split it into one rule per decision, each decided at its own lines. Conservative by design: a rule whose
+ * one outcome has two parts passes, and what only hints at a second decision is reported by `ruleNotices`, never
+ * refused.
+ * @param records the job's records
+ * @returns one line per rule to split
+ * @internal exported for the tests, which check this gate on real rules
+ */
+export function oneDecisionGaps(records: readonly Finding[]): string[] {
+    return ofType(records, RecordIdPrefix.BusinessRule, BusinessRule).flatMap((rule) => {
+        const reasons = splitReasons(rule.says);
+        return reasons.length === 0 ? [] : [gap("rule-of-several-decisions", `${rule.id} ${reasons.join(" and ")}`)];
+    });
+}
+
+/**
+ * What a rules job's check reports without refusing: each rule over twenty-five words, or with a semicolon or a second
+ * sentence starting `Otherwise`, which may hide a second decision. A reader judges these; the gate does not.
+ * @param root the analysis root
+ * @param jobId the job id
+ * @returns one line per rule to read again; none for a lifecycle job
+ */
+export const jobNotices = Effect.fnUntraced(function* (root: string, jobId: string) {
+    const job = yield* jobNamed(root, jobId);
+    if (job.kind !== "rules") {
+        return [];
+    }
+    const path = jobFiles(root, jobId, job.kind).outputPath;
+    if (!(yield* (yield* FileAccess).exists(path))) {
+        return [];
+    }
+    const records = yield* findingsIn(shapesOf[job.kind], path);
+    return ofType(records, RecordIdPrefix.BusinessRule, BusinessRule).flatMap((rule) => {
+        const notes = ruleNotices(rule.says);
+        return notes.length === 0
+            ? []
+            : [`${rule.id} ${notes.join(" and ")}: read it again as one decision a tester could check`];
+    });
+});
+
+/**
  * The gate on a rules job's records (D121): every rule is decided inside a block of the job. A block with no rule is
  * derived, never written: the writer's receipt covers its lines. That a rule's `gates` names an accepted transition is
  * the shared rule over cited ids, the accepted lives written beside the job. Necessary, not sufficient: a rule missed
@@ -88,7 +132,7 @@ const innermostHolding = (blocks: ReadonlyArray<{ readonly block: string; readon
  * @returns one line per gap
  */
 function rulesGaps(records: readonly Finding[], job: typeof RulesJob.Type): string[] {
-    const gaps: string[] = [];
+    const gaps: string[] = [...oneDecisionGaps(records)];
     for (const rule of ofType(records, RecordIdPrefix.BusinessRule, BusinessRule)) {
         if (innermostHolding(job.blocks, rule.decidedAt) === undefined) {
             gaps.push(

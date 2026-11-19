@@ -59,6 +59,11 @@ export const KnowledgePayload = Schema.Struct({
             folders: Schema.Array(Schema.String).annotate(about("The folders of the source it lives in.")),
             technologies: Schema.Array(Schema.String).annotate(about("The names of the technologies it uses.")),
             files: Count.annotate(about("How many files of the source it holds.")),
+            product: Schema.optionalKey(
+                Schema.Boolean.annotate(
+                    about("Whether the part is the product: false for a part of kind tests or tool."),
+                ),
+            ),
         }).annotate(about("One part of the system: something that is built, run or shipped.")),
     ).annotate(about("The parts of the system.")),
     technologies: Schema.Array(
@@ -142,6 +147,38 @@ export const KnowledgePayload = Schema.Struct({
             ),
         }).annotate(about("One picture the analysis judged a reader needs.")),
     ).annotate(about("The pictures a reader needs, in the order the briefing chose them.")),
+    entities: Schema.optionalKey(
+        Schema.Array(
+            Schema.Struct({
+                id: Schema.String.annotate(about("The kind of data's record id.")),
+                name: Text.annotate(about("Its business name.")),
+                purpose: Text.annotate(about("What it is, in one line.")),
+                stores: Schema.Array(Schema.String).annotate(
+                    about("The names of the stores it is kept in; none when the code shows none."),
+                ),
+                capabilities: Schema.Array(Schema.String).annotate(
+                    about("The record ids of the capabilities whose code saves or reads it."),
+                ),
+            }).annotate(about("One kind of data the business knows.")),
+        ).annotate(about("Every kind of data the analysis found, by name.")),
+    ),
+    terms: Schema.optionalKey(
+        Schema.Array(
+            Schema.Struct({
+                term: Text.annotate(about("The word or phrase, as the analysis writes it.")),
+                means: Text.annotate(about("What it means, in plain words, without the term itself.")),
+                from: Schema.Literals(["entity", "briefing"]).annotate(
+                    about(
+                        "Where it comes from: `entity`, a kind of data and its purpose, derived by code; `briefing`, a word the briefing defined.",
+                    ),
+                ),
+            }).annotate(about("One term a reader may not know.")),
+        ).annotate(
+            about(
+                "The glossary: terms a reader meets in the analysis's own text, each defined once; a term the text never uses is left out.",
+            ),
+        ),
+    ),
     risks: Schema.Array(
         Schema.Struct({
             id: Schema.String.annotate(about("The risk's record id.")),

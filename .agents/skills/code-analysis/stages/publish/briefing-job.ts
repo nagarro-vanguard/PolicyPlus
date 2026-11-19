@@ -16,11 +16,13 @@ import { readDocumentStrictly } from "../../shared/run/json-files";
 import { reviewArguments } from "../../shared/jobs/review-sheet";
 import { requireAcceptedRecords, startStageRun } from "../../shared/store/stage-guards";
 import { StageRecords } from "../../shared/store/stage-records";
-import { CapabilityGroup, CrossCuttingConcern, Figure, Screen } from "../../shared/model/schemas/briefing";
+import { CapabilityGroup, CrossCuttingConcern, Figure, Screen, SystemWords } from "../../shared/model/schemas/briefing";
 import { Fact } from "../../shared/model/schemas/fact";
 import { writeBriefingBrief } from "./briefing-brief";
+import { briefingGuides } from "./presentation-guides";
+import { readCatalogue } from "../../shared/run/catalogue";
 
-export const briefingShapes = { CapabilityGroup, CrossCuttingConcern, Screen, Figure, Fact };
+export const briefingShapes = { CapabilityGroup, CrossCuttingConcern, Screen, Figure, SystemWords, Fact };
 
 export const briefingLabel = briefingKey;
 
@@ -70,14 +72,16 @@ export const briefingContext = Effect.fnUntraced(function* (root: string) {
  * @param root the analysis root
  * @param job the job's feedback, when it has some
  * @param context the source folder, and whether the request lists Supporting Material
+ * @param guides the guides on naming places this system's media need, chosen by rule
  * @returns the arguments; `analysisRequestPath` only with Supporting Material, `customInstructions` only with feedback
  */
-const briefingArguments = (root: string, job: WithFeedback, context: RequestContext) => {
+const briefingArguments = (root: string, job: WithFeedback, context: RequestContext, guides: readonly string[]) => {
     const paths = analysisPaths(root);
     return {
         scriptsCommand: scriptsCommand(root),
         sourceFolder: context.sourceFolder,
         briefPath: paths.briefingBrief,
+        guides: guides.join(", "),
         ...(context.withSupportingMaterial ? { analysisRequestPath: paths.analysisRequest } : {}),
         outputPath: paths.briefingOutput,
         ...instructionsOf(job),
@@ -141,7 +145,7 @@ export const prepareBriefing = Effect.fnUntraced(function* (root: string, words:
     const feedback = yield* feedbackArgument(files);
     const context = yield* briefingContext(root);
     return {
-        briefing: briefingArguments(root, feedback, context),
+        briefing: briefingArguments(root, feedback, context, yield* briefingGuides(yield* readCatalogue())),
         review: briefingReviewArguments(root, feedback, context),
     };
 });

@@ -1,6 +1,7 @@
 # Writing business rules
 
 - Every decision a block makes is one `BusinessRule`, written as `describe-shape.ts BusinessRule` says, owned by the block whose lines decide it; `gates` where it allows or refuses a transition of the accepted lives. A check written twice in the code (on a screen and on a server) is two rules.
+- One rule states one decision, in at most twenty-five words where it can (a quoted message counts as one word). The check refuses a rule over forty words, or one that adds a second decision with `also`, `and when`, `and if`, `and unless` or a second sentence of its own condition: split it into one rule per decision, each at its own lines, never by shortening it so a condition is lost. It lists longer rules and those with a semicolon to read again.
 - Copies of one file kept in several folders sit side by side in your job: write each copy's rules in the same words where they decide the same thing, and say where a copy differs.
 - A block that decides nothing gets no record: read all of its lines, write nothing for it, and list what you read in your one `Receipt`, written last. The reviewer hunts missed rules inside every block, so a block you skim costs a rule.
 - A rule you find wrong or doubled is removed with `drop-record`, never by editing the output file; correct one you keep by appending it again with its id.

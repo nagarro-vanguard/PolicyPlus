@@ -62,7 +62,7 @@ export type Readings = ReadonlyMap<string, { readonly label: string; readonly re
  * @param id the record id
  * @returns the reading and the words
  */
-const readingOf = (readings: Readings, id: string) => {
+export const readingOf = (readings: Readings, id: string) => {
     const found = readings.get(id);
     const label = found === undefined ? "unread" : found.label;
     return {

@@ -12,12 +12,14 @@ import {
     Lines,
     ScreenId,
     SystemPartId,
+    SystemWordsId,
     Text,
     about,
     eachOnce,
     forPerson,
     ownRecordId,
 } from "../shared-fields";
+import { SurfaceKind } from "./surface-kind";
 
 export const CapabilityGroup = Schema.Struct({
     id: CapabilityGroupId.annotate(ownRecordId),
@@ -79,27 +81,23 @@ export const Screen = Schema.Struct({
     id: ScreenId.annotate(ownRecordId),
     name: Text.annotate(
         forPerson(
-            "The screen's name in the words of the people who use it (Book a flight, Manage aircraft), never a file or class name.",
+            "The place's name in the words of the people who use it (Book a flight, Manage aircraft, Nightly ping of weblog sites), never a file, class or method name.",
         ),
     ),
     purpose: Text.annotate(
-        forPerson("What a person does there, in one sentence, so the screen can be told from its neighbours."),
+        forPerson("What is done there, in one sentence, so the place can be told from its neighbours."),
     ),
-    kind: Schema.Literals(["screen", "other"]).annotate(
-        about(
-            "`screen`: a page, window or dialog a person works in. `other`: something a person starts that is no screen: a command, a build or install step, a test, the start of a scheduled task. `other` is kept out of the screens a reader sees.",
-        ),
-    ),
+    kind: SurfaceKind,
     places: Schema.NonEmptyArray(Schema.String)
         .check(eachOnce((key: string) => key, "places"))
         .annotate(
             about(
-                "The brief's candidate screens, by key, that make up this one: a page's markup, its code behind and its browser script are one screen. Every candidate is in exactly one record.",
+                "The brief's candidate places, by key, that make up this one: a page's markup, its code behind and its browser script are one page; one class's operations are one service. Every candidate is in exactly one record.",
             ),
         ),
 }).annotate(
     about(
-        "A screen as the people who use the system would name it, judged from what the candidates show: the unit the pages group a person's actions under. The candidates are found by script from where a person's actions start; this record names and judges them.",
+        "A place (surface) the system is worked with through, as its people would name it: a screen, a page, a service, a scheduled task, a command or a build step, judged from what the candidates show. The candidates are found by script from where every entry point lies, whoever starts it; tests are grouped by script and never named here. This record names the place, says what it is for and chooses its kind from the closed list; a candidate judged `other` is kept out of the places shown, its entry points listed as unplaced.",
     ),
 );
 
@@ -131,5 +129,36 @@ export const Figure = Schema.Struct({
 }).annotate(
     about(
         "A picture the system needs to be understood: the question it answers, the shape it takes, what it shows and what to take from it. The script draws it from the records named; the agent never draws an edge or writes a count.",
+    ),
+);
+
+const Term = Schema.Struct({
+    term: Text.annotate(forPerson("The word or phrase as the analysis writes it.")),
+    means: Text.annotate(
+        forPerson("What it means, in plain words, in at most twenty-five words, without the term itself."),
+    ),
+}).annotate(about("One term a reader of the analysis may not know."));
+
+export const SystemWords = Schema.Struct({
+    id: SystemWordsId.annotate(ownRecordId),
+    name: Schema.optionalKey(
+        Text.annotate(
+            forPerson(
+                "The system's name as its people say it, in at most five words, written as the brief, the code's own titles or the request's documents write it; left out when nothing names it, and the system is then named after its folder.",
+            ),
+        ),
+    ),
+    terms: Schema.optionalKey(
+        Schema.Array(Term)
+            .check(eachOnce((term: { readonly term: string }) => term.term.toLowerCase(), "terms"))
+            .annotate(
+                about(
+                    "The product's own words a newcomer would stop at (a kind of file, a setting, a trade term), each once and each used in the brief; kinds of data are defined by script and need no term here.",
+                ),
+            ),
+    ),
+}).annotate(
+    about(
+        "The words the system is read in: its name, and the terms a reader must be told on first use. At most one per briefing. The name becomes the system's name in the payloads; the terms join the glossary the script derives from the kinds of data.",
     ),
 );

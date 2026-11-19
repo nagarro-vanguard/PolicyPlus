@@ -4,6 +4,7 @@ import { skillRoot, stageNames } from "./analysis-layout";
 import { readDocumentStrictly } from "./json-files";
 import { DocumentInvalid } from "./script-errors";
 import { Text, about } from "../model/shared-fields";
+import { SurfaceKind, surfaceKinds } from "../model/schemas/surface-kind";
 
 export const catalogueFolder = join(skillRoot, "shared", "catalogue");
 
@@ -56,6 +57,14 @@ export const Catalogue = Schema.Struct({
         }),
     ),
     confirmWith: Schema.NonEmptyArray(Schema.Struct(Entry)),
+    surfaceKinds: Schema.NonEmptyArray(
+        Schema.Struct({
+            id: SurfaceKind,
+            one: Text.annotate(about("The reader's noun for one place of this kind.")),
+            many: Text.annotate(about("The reader's noun for several.")),
+            means: Text.annotate(about("What a place of this kind is, in plain words.")),
+        }),
+    ).annotate(about("The kinds of place, each with the noun a reader is given for it (the noun table).")),
 }).annotate(about("The catalogue: the reader's questions and the closed lists every fact is keyed by (D155)."));
 
 export type Catalogue = typeof Catalogue.Type;
@@ -91,6 +100,7 @@ const files = {
     severities: fileOf({ severities: Catalogue.fields.severities }),
     partKinds: fileOf({ partKinds: Catalogue.fields.partKinds }),
     confirmWith: fileOf({ confirmWith: Catalogue.fields.confirmWith }),
+    surfaceKinds: fileOf({ surfaceKinds: Catalogue.fields.surfaceKinds }),
 };
 
 /**
@@ -106,9 +116,14 @@ function catalogueGaps(catalogue: Catalogue): string[] {
         ["severities", catalogue.severities],
         ["part kinds", catalogue.partKinds],
         ["ways to confirm", catalogue.confirmWith],
+        ["surface kinds", catalogue.surfaceKinds],
     ];
     const stages = new Set<string>(stageNames);
+    const listed = catalogue.surfaceKinds.map((kind) => kind.id);
     return [
+        ...surfaceKinds
+            .filter((kind) => !listed.includes(kind))
+            .map((kind) => `the surface kind ${kind} has no noun in surface-kinds.json`),
         ...catalogue.riskCategories.flatMap((category) =>
             category.seenAt
                 .filter((stage) => !stages.has(stage))
@@ -141,6 +156,7 @@ export const readCatalogue = Effect.fnUntraced(function* () {
         severities: (yield* read("severity.json", files.severities)).severities,
         partKinds: (yield* read("part-kinds.json", files.partKinds)).partKinds,
         confirmWith: (yield* read("confirm-with.json", files.confirmWith)).confirmWith,
+        surfaceKinds: (yield* read("surface-kinds.json", files.surfaceKinds)).surfaceKinds,
     };
     const gaps = catalogueGaps(catalogue);
     if (gaps.length) {

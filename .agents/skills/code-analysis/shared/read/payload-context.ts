@@ -194,10 +194,32 @@ const looseName = (path: string) => {
 };
 
 /**
+ * The candidate place a file's entry points belong to, so every slice of one page (its markup, its code-behind class
+ * and its browser script) is one place. A page file is its own place, named by its path without the extension; a
+ * browser script joins the one page whose file name matches its own, and stands alone when none or several match; any
+ * other file is a place of its own, by its path.
+ * @param file the file an entry point starts in
+ * @param pages the path of every page file (without extension) that entry points start in
+ * @returns the place's key, a path
+ */
+export const placeKeyOf = (file: string, pages: readonly string[]): string => {
+    const page = pagePathOf(file);
+    if (page !== undefined) {
+        return page;
+    }
+    if (file.toLowerCase().endsWith(".js")) {
+        const same = pages.filter((each) => looseName(each) === looseName(file));
+        const [only] = same;
+        return same.length === 1 && only !== undefined ? only : file.slice(0, file.length - ".js".length);
+    }
+    return file;
+};
+
+/**
  * Where an action that a person starts belongs, so every slice of one page (its markup, its code-behind class and its
- * browser script) merges into one screen, whichever capability holds it. A page file is its own screen, named by its
- * path without the extension; a browser script joins the one page whose file name matches its own, and stands alone
- * when none or several match. An action another system or a schedule starts is no screen's.
+ * browser script) merges into one screen, whichever capability holds it (`placeKeyOf`). An action another system or a
+ * schedule starts is no screen's: the screens are the places a person works in, kept as they were for the readers of
+ * `screens`; the surfaces hold every starter.
  * @param action the action's starter and the file it starts in
  * @param pages the path of every page file (without extension) that a person's action starts in
  * @returns the screen's key, a path without extension; undefined for an action no screen holds
@@ -205,18 +227,4 @@ const looseName = (path: string) => {
 export const screenKeyOf = (
     action: { readonly startedBy: string; readonly place: { readonly file: string } },
     pages: readonly string[],
-): string | undefined => {
-    if (action.startedBy !== "person") {
-        return undefined;
-    }
-    const file = action.place.file;
-    const page = pagePathOf(file);
-    if (page !== undefined) {
-        return page;
-    }
-    if (file.toLowerCase().endsWith(".js")) {
-        const same = pages.filter((each) => looseName(each) === looseName(file));
-        return same.length === 1 ? same[0] : file.slice(0, file.length - ".js".length);
-    }
-    return file;
-};
+): string | undefined => (action.startedBy === "person" ? placeKeyOf(action.place.file, pages) : undefined);

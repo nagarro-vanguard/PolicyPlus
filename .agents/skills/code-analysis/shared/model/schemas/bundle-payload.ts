@@ -109,3 +109,22 @@ export const BundlePayload = Schema.Struct({
 );
 
 export type BundlePayload = typeof BundlePayload.Type;
+
+export const BundleIndex = Schema.Array(
+    Schema.Struct({
+        file: Schema.String.annotate(about("The bundle's file, relative to the bundles' folder.")),
+        kind: Schema.Literals(["surface", "capability"]).annotate(
+            about("Whether it is the bundle of one surface of one capability, or of a whole capability."),
+        ),
+        surface: Schema.String.annotate(
+            about("The surface's name as the actions name their screen; empty for a capability's bundle."),
+        ),
+        capability: Schema.String.annotate(about("The capability's name.")),
+        capabilityId: Schema.String.annotate(about("The capability's record id.")),
+        bytes: Count.annotate(about("The size of the bundle's text, in bytes.")),
+    }).annotate(about("One bundle `build-bundle all` wrote.")),
+).annotate(
+    about(
+        "Every bundle `build-bundle all` wrote, in the order written, so a reader finds a bundle by its surface and capability instead of rebuilding its file name.",
+    ),
+);
