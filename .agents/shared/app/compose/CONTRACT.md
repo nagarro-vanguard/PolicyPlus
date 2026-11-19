@@ -14,7 +14,7 @@ bun compose/cli.ts --payloads <dir> [--target <root>] [--plan <root>] [--source 
 | `--source` | The analysed code, for evidence excerpts. Defaults to the first source root in `<payloads>/../work/analysis-request.json`. When it cannot be read, rules have no excerpt; compose never fails for it. |
 | `--out` | The case folder. What was in it is replaced. |
 
-Exit codes: **0** every check passed; **1** a reconciliation check failed: the case is written so the failure can be read, its manifest says `"reconciled": false`, and the app must refuse it; **2** an input cannot be read, a required fact is missing, or an input's version is unknown: nothing is written.
+Exit codes: **0** the case is built; **2** an input cannot be read, a required fact is missing, or an input's version is unknown: nothing is written.
 
 What compose reads and never reads: payloads (through their manifest), `target/*.json`, `target/confirmed/*.json` (through shape-target's `changedSince`), `.shape-target/work/records/{journey-variants,architecture-variants,disputes-*}.json` (disputes through shape-target's `loadDisputes`), the plan, prompts, ledger statuses, attachments and `request.json`. Never SQLite, never the conductor's `state.json`, never a clock: the output holds no timestamp, only fingerprints of its inputs.
 
@@ -27,7 +27,7 @@ Determinism: every list is sorted by a stated key, every object's keys are sorte
 | Payloads | `manifest.json` `contractVersion` 1 | no manifest; another version; a file whose SHA-1 differs from the manifest |
 | Target | `target/manifest.json` `contractVersion` 2; a target written before manifests existed is read as written and the case says so | another version; a file whose SHA-256 differs from the manifest |
 | Plan | an optional `contractVersion` 1; plans written so far carry none and are read as written | another version |
-| Case | `manifest.json` `contractVersion` 1 (`caseContractVersion` in `contract.ts`) | the app refuses any other version and any case not `reconciled` |
+| Case | `manifest.json` `contractVersion` 1 (`caseContractVersion` in `contract.ts`) | the app refuses any other version |
 
 ## Files
 
@@ -89,28 +89,7 @@ One record per diagram whose facts exist: `organisation` (layers, or the target'
 
 - `evidence.json`: per rule id, at most 15 lines of the analysed code from the place the rule cites, with the file relative to the code's root; absent when the code cannot be read.
 - `search.json`: one record per node: name, the word for its level, the parent's name, a short text; no record id.
-- `assistant/<kind>.json` (`system`, `capability`, `surface`, `action`, `rule`, `story`, `journey`): the texts a reader copies for an assistant, by scope key; `assistant/index.json` gives each text's exact size in bytes. A capability's and a place's text is the analysis's own bundle, built by code-analysis's `capabilityBundle`/`surfaceBundle` and `bundleText` (without source). A rule's text holds that rule only. A story's text holds the story, how to deliver it and its legacy attachment. Every absolute path under the folder the run sits in (the parent of the `--plan` or `--target` root) or under the analysed code's root is made relative to it, so commands read from the repository and no home folder is copied; R-14 fails on any input folder or home folder left.
-
-## Reconciliation: `checks.json`
-
-Each check compares two independent counts, or proves that nothing was dropped. `pass`, `fail` (fails compose) or `skipped` (its facts are absent, with the reason).
-
-| Id | Check |
-|---|---|
-| R-01 | Every action is in exactly one place, or the analysis reports it as in none |
-| R-02 | Every capability is in exactly one area; every area's capabilities exist |
-| R-03 | A capability's actions summed over its places and the rest equal its declared totals, in its own payload and in the system payload |
-| R-04 | Rules counted once: each capability's distinct rules equal both declared counts; rules held plus rules in no capability equal every rule the analysis indexed; the system rule number equals the rules kept |
-| R-05 | Each place's declared actions and rules equal those of its actions, and its capabilities are its actions' capabilities |
-| R-06 | Every step a story names is a chosen step; steps with a story plus steps without equal the chosen steps |
-| R-07 | Every rule is built by at most one story; every rule a capability holds is built or dropped by design; rules built equal the plan's coverage |
-| R-08 | The journey by domain matrix: each row adds up to its journey's steps, each column to its total, all cells to the chosen steps |
-| R-09 | The uses drawn between domains equal the component uses that cross domains, counted from the target as written |
-| R-10 | Exactly one chosen way per journey of today, each resolving to a journey the target holds |
-| R-11 | Every story's tag set names a workflow |
-| R-12 | Every node is reachable from the overview and points only at nodes; every number shown is in the table with a scope and a source; combined numbers add up; no node shows more than three facts |
-| R-13 | Every diagram edge ends on a node, is in the legend and has its line of text |
-| R-14 | The inputs' versions (refused on reading when unknown); no copy text holds this machine's home folder or an input folder; a rule's text names no skill and no other rule beyond its own review note |
+- `assistant/<kind>.json` (`system`, `capability`, `surface`, `action`, `rule`, `story`, `journey`): the texts a reader copies for an assistant, by scope key; `assistant/index.json` gives each text's exact size in bytes. A capability's and a place's text is the analysis's own bundle, built by code-analysis's `capabilityBundle`/`surfaceBundle` and `bundleText` (without source). A rule's text holds that rule only. A story's text holds the story, how to deliver it and its legacy attachment. Every absolute path under the folder the run sits in (the parent of the `--plan` or `--target` root) or under the analysed code's root is made relative to it, so commands read from the repository and no home folder is copied.
 
 ## Corrections over the mockup's generators
 
@@ -129,4 +108,4 @@ The neutrality test fails when any real system takes 30 s or more. Most of a lar
 
 ## Tests
 
-`tests/compose/`: unit tests per module (`units.test.ts`), every check passing on a fixture and failing on its corruption plus the refused inputs (`reconcile.test.ts`), two runs and a moved copy identical and the exit codes (`determinism.test.ts`), and neutrality (`neutrality.test.ts`): a scan of compose's code for stack, medium and product words, and, when `COMPOSE_REAL_PAYLOADS` names a folder of `<system>/payloads` and `COMPOSE_REAL_RUN` a run's output root, real systems composed into cases of the same files and shape.
+`tests/compose/`: unit tests per module (`units.test.ts`), two runs and a moved copy identical and the exit codes (`determinism.test.ts`), and neutrality (`neutrality.test.ts`): a scan of compose's code for stack, medium and product words, and, when `COMPOSE_REAL_PAYLOADS` names a folder of `<system>/payloads` and `COMPOSE_REAL_RUN` a run's output root, real systems composed into cases of the same files and shape.

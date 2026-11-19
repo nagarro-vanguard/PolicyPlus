@@ -261,7 +261,7 @@ export const architectureOf = (target: Target, facts: Facts, slugs: Slugs): Arch
             const other = byName.get(used);
             if (other === undefined)
                 throw new ComposeError(
-                    "reconcile",
+                    "build",
                     `component ${component.name} uses ${used}, which the architecture does not hold`,
                 );
             if (other.domain !== component.domain) {

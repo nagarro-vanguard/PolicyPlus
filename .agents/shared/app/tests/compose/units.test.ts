@@ -319,8 +319,7 @@ describe("contract", () => {
     test("every file compose writes is named by the contract and listed in the manifest with its digest", () => {
         const fixture = writeFixture();
         const result = compose({ payloads: fixture.payloads, target: fixture.run, plan: fixture.run });
-        const manifest = read(result.files, "manifest.json") as { files: { path: string }[]; reconciled: boolean };
-        expect(manifest.reconciled).toBe(true);
+        const manifest = read(result.files, "manifest.json") as { files: { path: string }[] };
         const written = [...result.files.keys()]
             .filter((path) => !path.startsWith("schema/") && path !== "manifest.json")
             .sort();

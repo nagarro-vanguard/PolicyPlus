@@ -6,7 +6,7 @@ import { join } from "node:path";
 /*
  * A small made-up modernization: two capabilities in one area, three places of three kinds (one of them tests), five
  * rules (one in no capability, one shared by both capabilities), two journeys with their chosen ways, an architecture
- * of two domains, and a plan of three stories. Every reconciliation holds on it; each test corrupts one thing.
+ * of two domains, and a plan of three stories. Each test corrupts one thing.
  */
 
 const context = {

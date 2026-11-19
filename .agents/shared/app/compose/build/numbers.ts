@@ -37,7 +37,7 @@ export class Numbers {
         const known = this.entries.get(entry.key);
         if (known !== undefined && known.value !== entry.value) {
             throw new ComposeError(
-                "reconcile",
+                "build",
                 `two different values for ${entry.key}: ${known.value} (${known.source}) and ${entry.value} (${entry.source})`,
             );
         }
@@ -74,7 +74,7 @@ export class Numbers {
 
     value(key: string) {
         const entry = this.entries.get(key);
-        if (entry === undefined) throw new ComposeError("reconcile", `no number ${key}`);
+        if (entry === undefined) throw new ComposeError("build", `no number ${key}`);
         return entry.value;
     }
 

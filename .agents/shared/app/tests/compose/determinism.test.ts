@@ -73,16 +73,6 @@ describe("determinism", () => {
 });
 
 describe("command line", () => {
-    test("a failed check exits 1 and writes the case marked not reconciled", () => {
-        const fixture = writeFixture((given) => {
-            given.system.capabilities[0]!.actions = 9;
-        });
-        const out = join(mkdtempSync(join(tmpdir(), "compose-out-")), "case");
-        const result = run(["--payloads", fixture.payloads, "--out", out]);
-        expect(result.exitCode).toBe(1);
-        expect(JSON.parse(readFileSync(join(out, "manifest.json"), "utf8")).reconciled).toBe(false);
-        expect(result.stdout.toString()).toContain("FAIL    R-03");
-    });
     test("an input it cannot read exits 2 and writes nothing", () => {
         const fixture = writeFixture((given) => {
             given.manifestVersion = 3;

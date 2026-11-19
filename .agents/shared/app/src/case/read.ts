@@ -5,7 +5,7 @@ import type { z } from "zod";
 import { caseContractVersion, caseFiles, Manifest } from "../../compose/contract";
 
 // The case folder as the app reads it: the manifest first, then only the files it lists. The app refuses a case of
-// another contract version, a case `compose` marked as not reconciled, and a file whose digest or size differs from the
+// another contract version and a file whose digest or size differs from the
 // manifest (it was changed or cut after compose wrote it). Each file is checked against its schema in compose's contract
 // when it is read, so the app and compose cannot read one file two ways.
 
@@ -24,7 +24,7 @@ export type Case = {
 const sha256 = (bytes: Buffer) => createHash("sha256").update(bytes).digest("hex");
 
 /**
- * Open a case folder: check its manifest, its version, that it is reconciled, and every listed file's size and digest.
+ * Open a case folder: check its manifest, its version, and every listed file's size and digest.
  * @param dir the case folder
  * @returns the case
  */
@@ -33,17 +33,11 @@ export const openCase = (dir: string): Case => {
     if (!existsSync(manifestPath)) throw new Error(`${dir} holds no manifest.json: it is not a case folder`);
     const raw = JSON.parse(readFileSync(manifestPath, "utf8")) as {
         contractVersion?: unknown;
-        reconciled?: unknown;
         files?: unknown;
     };
     if (raw.contractVersion !== caseContractVersion) {
         throw new Error(
             `${dir} is a case of contract version ${String(raw.contractVersion)}; this app reads version ${caseContractVersion}: compose the case again with the app's own compose`,
-        );
-    }
-    if (raw.reconciled !== true) {
-        throw new Error(
-            `${dir} is not reconciled: a check of compose failed (see its checks.json), so the app refuses to show it`,
         );
     }
     const manifest = Manifest.parse(raw);

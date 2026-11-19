@@ -3,8 +3,8 @@
  * caught and turned into an empty result.
  */
 export class ComposeError extends Error {
-    /** What kind of failure: an input that cannot be read, a fact that is missing, or a reconciliation that fails. */
-    readonly kind: "input" | "missing" | "version" | "reconcile";
+    /** What kind of failure: an input that cannot be read, a fact that is missing, or a part that cannot be built. */
+    readonly kind: "input" | "missing" | "version" | "build";
 
     constructor(kind: ComposeError["kind"], message: string) {
         super(message);

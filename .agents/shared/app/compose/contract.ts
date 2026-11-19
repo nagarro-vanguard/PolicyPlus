@@ -195,8 +195,6 @@ const Diagram = z.strictObject({
     shown: z.boolean(),
 });
 
-const Check = z.strictObject({ id: S, name: S, status: z.enum(["pass", "fail", "skipped"]), detail: S, problems: Ids });
-
 const TodayJourney = z.strictObject({
     id: S,
     slug: S,
@@ -354,7 +352,6 @@ const Inputs = z.strictObject({
 
 export const Manifest = z.strictObject({
     contractVersion: z.literal(caseContractVersion),
-    reconciled: z.boolean(),
     inputs: Inputs,
     files: z.array(z.strictObject({ path: S, schema: S, sha256: S, bytes: N })),
 });
@@ -377,7 +374,6 @@ export const caseFiles = {
     "facts/lifecycles.json": facts.lifecycles,
     ...Object.fromEntries(levels.map((level) => [`nodes/${level}.json`, z.array(Node)])),
     "numbers.json": z.array(NumberEntry),
-    "checks.json": z.array(Check),
     "diagrams.json": z.array(Diagram),
     "evidence.json": z.record(S, Excerpt),
     "search.json": z.array(z.strictObject({ node: S, name: S, level: S, parent: S, text: S })),

@@ -92,7 +92,7 @@ const siteBuilderOps: SiteBuilderOps = {
     /**
      * Build the pages of the app from a folder of analysis payloads and, when given, a target and a plan: install the
      * app's dependencies when they are not there, compose the case (the one folder the app reads; compose fails on a
-     * missing fact, an unknown version or a failed reconciliation), generate the collections from compose's contract,
+     * missing fact, or an unknown version), generate the collections from compose's contract,
      * then build the static pages from the case into the output folder. Without a plan the pages are the analysis's alone.
      * @param input the folders
      * @param input.analysis the folder write-payloads wrote

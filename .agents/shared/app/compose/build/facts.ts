@@ -231,7 +231,7 @@ export const factsOf = (payloads: Payloads): Facts => {
         for (const layer of payload.layers) {
             for (const action of layer.actions) {
                 if (actionRecords.has(action.id)) {
-                    throw new ComposeError("reconcile", `entry point ${action.id} is in two capabilities' payloads`);
+                    throw new ComposeError("build", `entry point ${action.id} is in two capabilities' payloads`);
                 }
                 actions.push(action.id);
                 actionRecords.set(action.id, {
@@ -348,7 +348,7 @@ export const factsOf = (payloads: Payloads): Facts => {
             );
         }
         for (const id of surface.actionIds) {
-            if (surfaceOf.has(id)) throw new ComposeError("reconcile", `entry point ${id} is in two surfaces`);
+            if (surfaceOf.has(id)) throw new ComposeError("build", `entry point ${id} is in two surfaces`);
             surfaceOf.set(id, surface.key);
             if (!actionRecords.has(id)) {
                 const block = blocks.get(id);

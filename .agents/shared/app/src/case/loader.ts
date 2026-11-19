@@ -4,7 +4,7 @@ import { caseProblems } from "./integrity";
 import { type Case, openCase } from "./read";
 
 // The content loader: reads `case/` into the app's collections, one entry per record. Before any entry is stored the
-// whole case is opened (version, reconciliation and digests) and checked as a whole: every node, row, crumb, lateral
+// whole case is opened (version and digests) and checked as a whole: every node, row, crumb, lateral
 // link, fact reference and number key must resolve. Astro's own `reference()` only logs a broken reference and lets the
 // build pass, so this check throws, and a thrown loader fails the build.
 

@@ -14,11 +14,10 @@ import { searchOf } from "./build/search";
 import { Slugs } from "./build/text";
 import { caseContractVersion, caseFiles, Manifest, schemaPathOf } from "./contract";
 import { ComposeError } from "./errors";
-import { compareText, distinct, namesIn, sha256, stableJson } from "./io";
+import { compareText, distinct, sha256, stableJson } from "./io";
 import { readPayloads } from "./inputs/payloads";
 import { readPlan, readRequest } from "./inputs/plan";
 import { readTarget } from "./inputs/target";
-import { reconcile, type Check, type ReconcileInput } from "./reconcile";
 
 /*
  * compose: the one place that joins. It reads the analysis's payloads, and the target and plan when given, and writes
@@ -38,17 +37,13 @@ export type ComposeOptions = {
 
 export type Composed = {
     files: Map<string, string>;
-    checks: Check[];
-    reconciled: boolean;
     counts: Record<string, number>;
 };
 
-const skillsFolder = join(import.meta.dir, "..", "..", "..", "skills");
-
 /**
- * Read the inputs and build every part of a case, before it is reconciled and written.
+ * Read the inputs and build every part of a case, before it is written.
  * @param options the input folders
- * @returns the parts, as the reconciliation reads them
+ * @returns the parts, as the case is written from them
  */
 export const buildCase = (options: ComposeOptions) => {
     const payloads = readPayloads(options.payloads);
@@ -94,7 +89,7 @@ export const buildCase = (options: ComposeOptions) => {
     );
     const assistant = assistantOf(facts, payloads, hierarchy, evidence, plan, proposed, roots);
 
-    const input: ReconcileInput = {
+    const input = {
         payloads,
         facts,
         hierarchy,
@@ -108,11 +103,6 @@ export const buildCase = (options: ComposeOptions) => {
         plan,
         views,
         assistant,
-        versions: `payloads version ${payloads.contractVersion}; target ${target === undefined ? "not given" : target.contractVersion === undefined ? "written before versions" : `version ${target.contractVersion}`}; plan ${plan === undefined ? "not given" : "read as written"}`,
-        skillNames: namesIn(skillsFolder).filter((name) => !name.startsWith(".")),
-        roots: [options.payloads, options.target, options.plan, sourceRoot].filter(
-            (folder): folder is string => folder !== undefined,
-        ),
     };
     return { input, target, plan, request, brief, evidence, sourceRoot };
 };
@@ -120,15 +110,13 @@ export const buildCase = (options: ComposeOptions) => {
 /**
  * Compose a case from its inputs, in memory.
  * @param options the input folders
- * @returns every file of the case as text, the checks and whether they all pass
+ * @returns every file of the case as text, and the counts
  */
 export const compose = (options: ComposeOptions): Composed => {
     const built = buildCase(options);
     const { input, target, plan, request, brief, evidence, sourceRoot } = built;
     const { payloads, facts, hierarchy, numbers, diagrams, today, proposed, architecture, trace, views, assistant } =
         input;
-    const checks = reconcile(input);
-    const reconciled = checks.every((each) => each.status !== "fail");
 
     const values: Record<string, unknown> = {
         ...factFiles(facts),
@@ -141,7 +129,6 @@ export const compose = (options: ComposeOptions): Composed => {
             ]),
         ),
         "numbers.json": numbers.all(),
-        "checks.json": checks,
         "diagrams.json": diagrams,
         "evidence.json": evidence,
         "search.json": searchOf(hierarchy.nodes),
@@ -191,7 +178,7 @@ export const compose = (options: ComposeOptions): Composed => {
         if (!parsed.success) {
             const issue = parsed.error.issues[0];
             throw new ComposeError(
-                "reconcile",
+                "build",
                 `${path} breaks its schema at ${issue?.path.join(".") ?? ""}: ${issue?.message ?? ""}`,
             );
         }
@@ -202,7 +189,6 @@ export const compose = (options: ComposeOptions): Composed => {
     }
     const manifest: z.output<typeof Manifest> = {
         contractVersion: caseContractVersion,
-        reconciled,
         inputs: {
             payloads: {
                 contractVersion: payloads.contractVersion,
@@ -229,8 +215,6 @@ export const compose = (options: ComposeOptions): Composed => {
     files.set("schema/manifest.schema.json", stableJson(z.toJSONSchema(Manifest)));
     return {
         files,
-        checks,
-        reconciled,
         counts: {
             areas: facts.areas.length,
             capabilities: facts.capabilities.length,

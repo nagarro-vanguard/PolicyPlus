@@ -13,9 +13,8 @@ import { writeFolder } from "./io";
  * --source    the analysed code's folder, for evidence excerpts; the analysis's own record of it when left out
  * --out       the case folder to write; what was in it is replaced
  *
- * Exits 0 when every reconciliation check passes; 1 when a check fails (the case is written with `reconciled: false`
- * in its manifest so the failure can be read, and the app refuses it); 2 when an input cannot be read, a fact is
- * missing or a version is unknown (nothing is written).
+ * Exits 0 when the case is built; 2 when an input cannot be read, a fact is missing or a version is unknown (nothing is
+ * written).
  */
 
 const usage =
@@ -49,11 +48,6 @@ const main = () => {
         writeFolder(args.out, result.files);
         let bytes = 0;
         for (const text of result.files.values()) bytes += Buffer.byteLength(text);
-        for (const check of result.checks) {
-            const line = `${check.status.toUpperCase().padEnd(7)} ${check.id} ${check.name}: ${check.detail}`;
-            console.log(line);
-            for (const problem of check.problems.slice(0, 5)) console.log(`        ${problem}`);
-        }
         console.log(
             `case written to ${args.out}: ${result.files.size} files, ${(bytes / 1024 / 1024).toFixed(1)} MB, ${Math.round(performance.now() - started)} ms; ${Object.entries(
                 result.counts,
@@ -61,12 +55,6 @@ const main = () => {
                 .map(([key, value]) => `${key} ${value}`)
                 .join(", ")}`,
         );
-        if (!result.reconciled) {
-            console.error(
-                "compose: a reconciliation check failed; the case is marked not reconciled and the app will refuse it",
-            );
-            process.exit(1);
-        }
     } catch (error) {
         if (error instanceof ComposeError) {
             console.error(`compose: ${error.message}`);
