@@ -47,4 +47,4 @@ How the app talks about the system. It is read by business analysts, product own
 
 ## Where the look is written
 
-- Colours, sizes, the shell and the components are the app's, in `.agents/shared/app/docs/design-language.md` and `src/styles/tokens.css`, and follow Continuum's design language; this file says what the pages say and show, that one says how it looks. An app change to one is checked against the other.
+- Colours, sizes, the shell and the components are the app's, in `.agents/shared/app/docs/design-language.md`, Continuum UI's components and theme synced into `vendor/ui` and the reader's own values in `src/styles/reader-theme.css`, and follow Continuum's design language; this file says what the pages say and show, that one says how it looks. An app change to one is checked against the other.

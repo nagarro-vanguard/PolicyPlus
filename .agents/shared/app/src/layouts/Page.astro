@@ -1,13 +1,20 @@
 ---
 import "../styles/app.css";
 import { ClientRouter } from "astro:transitions";
+import { PageOpening } from "@continuum/ui/components/page-opening";
 import { copy } from "../lib/copy";
 import { siteOf } from "../case/site";
 import { rootOf } from "../case/routes";
 import { sectionOfPage } from "../case/sections";
-import Icon from "../components/ui/Icon.astro";
-import Kbd from "../components/ui/Kbd.astro";
-import ThemeControl from "../components/ui/ThemeControl.astro";
+import { SideNav } from "../components/shell/SideNav";
+import { MobileNav } from "../components/shell/MobileNav";
+import { SearchButton, ThemeControl } from "../components/shell/TopBar";
+import { Palette } from "../components/shell/Palette";
+// The frame of every page, built from the design system's components (vendor/ui) and rendered to HTML at build time.
+// The islands, the only components that ship a script, are listed here and nowhere else:
+//   MobileNav, `client:media` below Finch's `md`: the sheet that holds the menu on a narrow screen.
+// Everything else that moves (search, copy for an assistant, the detail at `#<key>`, the theme) is the page's own small
+// script, src/scripts/shell.ts and public/site.js, with no framework.
 export interface Props {
     title: string;
     lead?: string;
@@ -22,6 +29,17 @@ const { title, lead = "", page, writtenBy = "app", wide = false } = Astro.props;
 const root = rootOf(page);
 const site = await siteOf();
 const current = sectionOfPage(page, site.sections);
+const nav = {
+    name: site.name,
+    root,
+    sections: site.nav.map((section) => ({
+        id: section.id,
+        label: section.label,
+        href: section.href,
+        current: current === section.id ? (section.href === page ? ("page" as const) : ("true" as const)) : undefined,
+    })),
+    words: { sections: copy.site.sections, sectionsTitle: copy.site.sectionsTitle },
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -36,43 +54,27 @@ const current = sectionOfPage(page, site.sections);
     </script>
 </head>
 <body data-root={root} data-page={page}>
-    <a class="skip" href="#main" data-written-by="app">{copy.site.skip}</a>
-    <div class="app">
-        <nav id="sidebar" class="side" aria-label={copy.site.sections} data-sidebar transition:persist="sidebar">
-            <a class="brand" href={`${root}index.html`} data-astro-prefetch="hover" data-written-by="agent"><i aria-hidden="true"></i>{site.name}</a>
-            <h2 class="side-title" data-written-by="app">{copy.site.sectionsTitle}</h2>
-            {site.nav.map((section) => <a href={`${root}${section.href}`} data-section={section.id} data-astro-prefetch="hover" data-written-by="app" aria-current={current === section.id ? (section.href === page ? "page" : "true") : undefined}>{section.label}</a>)}
-        </nav>
-        <div class="main">
-            <header class="top">
-                <button type="button" class="menu-button" aria-controls="sidebar" aria-expanded="false" data-menu-toggle>
-                    <Icon name="menu" /><span class="visually-hidden" data-written-by="app">{copy.site.menu}</span>
-                </button>
-                <button type="button" class="palette-open" data-palette-open aria-keyshortcuts="/ Control+K Meta+K" aria-haspopup="dialog">
-                    <Icon name="search" /><span class="palette-open-text" data-written-by="app">{copy.site.searchOpen}</span><Kbd><span data-kbd>⌘K</span></Kbd>
-                </button>
-                <ThemeControl />
+    <a href="#main" class="sr-only z-50 rounded-control border border-input bg-popover px-spacing-lg py-spacing-xs text-popover-foreground focus:not-sr-only focus:fixed focus:start-spacing-md focus:top-spacing-md" data-written-by="app">{copy.site.skip}</a>
+    <div class="flex min-h-svh">
+        <SideNav {...nav} />
+        <div class="flex min-w-0 flex-1 flex-col">
+            <header class="sticky top-0 z-20 flex h-12 items-center gap-spacing-md border-b border-border bg-background px-spacing-xxl">
+                <MobileNav client:media="(max-width: 904px)" {...nav} menu={copy.site.menu} />
+                <SearchButton label={copy.site.searchOpen} />
+                <div class="ms-auto shrink-0"><ThemeControl /></div>
             </header>
-            <main id="main" class="page" tabindex="-1" data-wide={wide ? "true" : undefined}>
+            <main id="main" tabindex="-1" class:list={["mx-auto flex w-full flex-col gap-spacing-4xl px-spacing-xxl pt-spacing-4xl pb-spacing-5xl md:px-spacing-5xl", wide ? "max-w-wide" : "max-w-column"]} data-wide={wide ? "true" : undefined}>
                 <slot name="trail" />
-                <div class="opening">
-                    <h1 data-written-by={writtenBy}>{title}</h1>
-                    {lead !== "" && <p class="lead" data-written-by={writtenBy}>{lead}</p>}
+                <div data-written-by={writtenBy}>
+                    <PageOpening title={title} summary={lead === "" ? undefined : lead} />
                 </div>
                 <slot />
             </main>
         </div>
     </div>
-    <dialog id="palette" class="palette" aria-label={copy.site.search} data-palette>
-        <form method="dialog" class="palette-form" role="search">
-            <label class="visually-hidden" for="palette-input" data-written-by="app">{copy.site.search}</label>
-            <input id="palette-input" type="text" role="combobox" aria-expanded="true" aria-controls="palette-list" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder={copy.site.searchHint} />
-            <ul id="palette-list" class="palette-list" role="listbox" aria-label={copy.site.results}></ul>
-            <p class="palette-help" id="palette-help" data-written-by="app">{copy.site.searchHelp}</p>
-        </form>
-    </dialog>
+    <Palette words={{ search: copy.site.search, searchHint: copy.site.searchHint, results: copy.site.results, searchHelp: copy.site.searchHelp }} />
     <script type="application/json" id="copy-strings" set:html={JSON.stringify({ copied: copy.site.copiedAnnounce, noMatch: copy.site.noMatch, copyFailed: copy.site.copyFailed, loading: copy.explorer.loading, failed: copy.explorer.failed, checkedBy: copy.explorer.checkedBy("").trim(), trail: copy.site.trail })}></script>
-    <div id="announce" class="visually-hidden" aria-live="polite"></div>
+    <div id="announce" class="sr-only" aria-live="polite"></div>
     <script is:inline data-astro-rerun src={`${root}site.js`}></script>
     <script>import "../scripts/shell.ts";</script>
 </body>

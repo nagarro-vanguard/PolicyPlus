@@ -1,6 +1,6 @@
 ---
 import Page from "../layouts/Page.astro";
-import Rows from "../components/Rows.astro";
+import { NotFound } from "../components/NotFound";
 import { caseData } from "../case/data";
 import { viewOf } from "../case/view";
 import { copy } from "../lib/copy";
@@ -9,11 +9,5 @@ import { copy } from "../lib/copy";
 const view = viewOf("overview", await caseData());
 ---
 <Page title={copy.notFound.title} lead={copy.notFound.lead} page="404.html">
-    <div class="explorer" data-not-found>
-        <p><button type="button" class="btn" data-palette-open data-written-by="app">{copy.site.searchOpen}</button></p>
-        <section class="sec" aria-label={view.children.heading}>
-            <h2 data-written-by="agent">{view.children.heading}</h2>
-            <Rows rows={view.children.rows} root="./" />
-        </section>
-    </div>
+    <NotFound view={view} />
 </Page>

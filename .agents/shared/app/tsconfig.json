@@ -1,11 +1,12 @@
 {
     "extends": "astro/tsconfigs/strict",
-    "include": [".astro/types.d.ts", "src/**/*", "tests/**/*", "scripts/**/*", "compose/**/*"],
+    "include": [".astro/types.d.ts", "src/**/*", "tests/**/*", "scripts/**/*", "compose/**/*", "vendor/**/*"],
     "exclude": ["dist"],
     "compilerOptions": {
         "jsx": "react-jsx",
         "jsxImportSource": "react",
         "types": ["bun"],
-        "noUncheckedIndexedAccess": true
+        "noUncheckedIndexedAccess": true,
+        "paths": { "@continuum/ui/*": ["./vendor/ui/*"] }
     }
 }

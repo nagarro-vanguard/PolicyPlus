@@ -30,6 +30,12 @@
       var name = el.hasAttribute("href") ? "href" : "src";
       try { el.setAttribute(name, new URL(el.getAttribute(name), event.to).href); } catch (e) {}
     });
+    // An island's script addresses too, for the same reason.
+    event.newDocument.querySelectorAll("astro-island").forEach(function (el) {
+      ["component-url", "renderer-url", "before-hydration-url"].forEach(function (name) {
+        if (el.hasAttribute(name)) try { el.setAttribute(name, new URL(el.getAttribute(name), event.to).href); } catch (e) {}
+      });
+    });
     var chosen = document.documentElement.dataset.theme;
     if (chosen) event.newDocument.documentElement.dataset.theme = chosen; else delete event.newDocument.documentElement.dataset.theme;
   });

@@ -13,15 +13,20 @@ const rel = (path: string) => relative(root, path);
 const read = (path: string) => readFileSync(path, "utf8");
 
 const source = walk(join(root, "src"));
-const styled = source.filter((file) => /\.(astro|css)$/.test(file) && !file.endsWith("tokens.css"));
-const tokensFile = join(root, "src", "styles", "tokens.css");
-const tokens = read(tokensFile);
+// The theme is the design system's (vendor/ui, synced, never edited here) and the reader's few values of its own.
+const themeFiles = [join(root, "vendor", "ui", "styles", "theme.css"), join(root, "src", "styles", "reader-theme.css")];
+const styled = source.filter((file) => /\.(astro|css|tsx)$/.test(file) && !themeFiles.includes(file));
+const tokens = themeFiles.map(read).join("\n");
+const fonts = read(join(root, "vendor", "ui", "styles", "fonts.css"));
+/** The frame of every page: the layout and the shell's composites. */
+const shellText = () =>
+    [join(root, "src", "layouts", "Page.astro"), ...walk(join(root, "src", "components", "shell"))].map(read).join("\n");
 
 /** Strip comments so a rule written in prose (such as "never #fff") is not read as a value. */
 const code = (text: string) => text.replaceAll(/\/\*[\s\S]*?\*\//g, "");
 
-describe("the stylesheet is one file of tokens", () => {
-    test("no raw colour is written outside tokens.css", () => {
+describe("every design value comes from the theme", () => {
+    test("no raw colour is written outside the theme", () => {
         const found = styled.flatMap((file) =>
             [...code(read(file)).matchAll(/(?<![&\w])#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|hwb|lab|lch)\(/g)].map(
                 (hit) => `${rel(file)}: ${hit[0]}`,
@@ -30,9 +35,9 @@ describe("the stylesheet is one file of tokens", () => {
         expect(found).toEqual([]);
     });
 
-    test("no font size is written in pixels outside tokens.css", () => {
+    test("no font size is written in pixels outside the theme", () => {
         const found = styled.flatMap((file) =>
-            [...code(read(file)).matchAll(/font(?:-size)?\s*:[^;}"`]*?\d(?:\.\d+)?px/g)].map(
+            [...code(read(file)).matchAll(/font(?:-size)?\s*:[^;}"`]*?\d(?:\.\d+)?px|\btext-\[[\d.]+px\]/g)].map(
                 (hit) => `${rel(file)}: ${hit[0]}`,
             ),
         );
@@ -41,41 +46,52 @@ describe("the stylesheet is one file of tokens", () => {
 
     test("nothing refers to the retired stylesheets", () => {
         const files = [...source, join(root, "public", "site.js"), join(root, "astro.config.mjs")];
-        const found = files.filter((file) => /\b(?:ux|page)\.css\b/.test(read(file))).map(rel);
+        const found = files.filter((file) => /\b(?:ux|page|tokens)\.css\b/.test(read(file))).map(rel);
         expect(found).toEqual([]);
     });
 
-    test("the layout loads the one stylesheet and marks the current link", () => {
+    test("the layout loads the one stylesheet, built on the theme, and marks the current link", () => {
         const layout = read(join(root, "src", "layouts", "Page.astro"));
         expect(layout).toContain('import "../styles/app.css"');
         expect(layout).not.toContain("<link rel=\"stylesheet\"");
-        expect(layout).toContain("aria-current");
-        expect(layout).toContain('class="skip"');
+        expect(shellText()).toContain("aria-current");
+        expect(layout).toContain('<a href="#main"');
+        const css = read(join(root, "src", "styles", "app.css"));
+        expect(css).toContain('@import "../../vendor/ui/styles/theme.css"');
+        expect(css).toContain('@import "./reader-theme.css"');
     });
 
     test("the shell has its landmarks, labelled, and a palette a keyboard can open", () => {
         const layout = read(join(root, "src", "layouts", "Page.astro"));
-        expect(layout).toContain("aria-label={copy.site.sections}");
+        const shell = shellText();
+        expect(layout).toContain("sections: copy.site.sections");
+        expect(shell).toContain("aria-label={words.sections}");
         expect(layout).toContain('<main id="main"');
         expect(layout).toContain("<header");
-        expect(layout).toContain('aria-keyshortcuts="/ Control+K Meta+K"');
-        expect(layout).toContain("<dialog");
-        expect(layout).toContain('for="palette-input"');
-        expect(layout).toContain('role="combobox"');
-        expect(layout).toContain('aria-controls="sidebar"');
+        expect(shell).toContain('aria-keyshortcuts="/ Control+K Meta+K"');
+        expect(shell).toContain("<dialog");
+        expect(shell).toContain('htmlFor="palette-input"');
+        expect(shell).toContain('role="combobox"');
+        // On a narrow screen the menu is the design system's sheet, opened by its own button.
+        expect(layout).toContain("<MobileNav client:media=");
     });
 
     test("the shell is one sidebar of one level, a top bar and the page: no rail, no tree, no outline", () => {
         const layout = read(join(root, "src", "layouts", "Page.astro"));
         for (const gone of ["About this page", "On this page", "Related", "data-rail", "data-tree", "data-toc", "outline", "twisty"]) expect([gone, layout.includes(gone)]).toEqual([gone, false]);
         // Three headed groups at most, and no count of anything in the sidebar.
-        expect(layout.match(/<h2 class="side-title">/g)?.length ?? 0).toBeLessThanOrEqual(3);
-        expect(layout).not.toContain("counts");
+        const menu = read(join(root, "src", "components", "shell", "NavMenu.tsx"));
+        expect(menu.match(/<SidebarGroupLabel render=\{<h2 \/>\}/g)?.length ?? 0).toBeLessThanOrEqual(3);
+        expect(menu).not.toContain("counts");
         const css = code(read(join(root, "src", "styles", "app.css")));
         for (const gone of [".rail", ".outline", ".tree", ".twisty", ".toc", ".shell"]) expect([gone, new RegExp(`${gone.replace(".", "\\.")}(?![\\w-])`).test(css)]).toEqual([gone, false]);
-        // Below 860 pixels the sidebar is a menu.
-        expect(css).toContain("@media (max-width: 860px)");
-        expect(tokens).toMatch(/--size-navigation:\s*14\.5rem/);
+        // Below the theme's `md` the sidebar is a menu: the theme's breakpoint, the design system's hook and the island agree.
+        const md = Number(/--breakpoint-md:\s*(\d+)px/.exec(tokens)?.[1]);
+        expect(md).toBeGreaterThan(0);
+        expect(read(join(root, "vendor", "ui", "hooks", "use-mobile.ts"))).toContain(`MOBILE_BREAKPOINT = ${md}`);
+        expect(layout).toContain(`client:media="(max-width: ${md - 1}px)"`);
+        expect(tokens).toMatch(/--size-navigation:\s*[\d.]+rem/);
+        expect(read(join(root, "src", "components", "shell", "SideNav.tsx"))).toContain('"--sidebar-width": "var(--size-navigation)"');
         const shell = read(join(root, "src", "scripts", "shell.ts"));
         for (const gone of ["buildToc", "buildRelated", "nav-open", "plantHost", "outline"]) expect([gone, shell.includes(gone)]).toEqual([gone, false]);
     });
@@ -96,7 +112,7 @@ describe("the stylesheet is one file of tokens", () => {
     });
 
     test("fonts swap while they load", () => {
-        const faces = [...tokens.matchAll(/@font-face\s*{[^}]*}/g)].map((hit) => hit[0]);
+        const faces = [...fonts.matchAll(/@font-face\s*{[^}]*}/g)].map((hit) => hit[0]);
         expect(faces.length).toBeGreaterThan(0);
         for (const face of faces) expect(face).toContain("font-display: swap");
     });
@@ -113,7 +129,7 @@ describe("the stylesheet is one file of tokens", () => {
 /** The pixel value of a size token, following an alias to the token it names. */
 const sizePx = (name: string): number => {
     const hit = new RegExp(`${name}:\\s*([^;]+);`).exec(tokens);
-    if (hit === null) throw new Error(`${name} is not a token in tokens.css`);
+    if (hit === null) throw new Error(`${name} is not a token in the theme`);
     const value = (hit[1] ?? "").trim();
     const alias = /^var\((--[\w-]+)\)$/.exec(value);
     if (alias !== null) return sizePx(alias[1] as string);
@@ -122,53 +138,53 @@ const sizePx = (name: string): number => {
     return Number(rem[1]) * 16;
 };
 
+/** The pixel size of a Tailwind text class, from the theme. */
+const textClassPx = (size: string) => sizePx(`--text-${size}`);
+const appFiles = () => source.filter((file) => /\.(astro|tsx|ts)$/.test(file) && !file.includes(`${"generated"}`));
+
 describe("the type scale and the controls are small and few", () => {
-    test("body is 14 pixels on a 22 pixel line; meta 13; chips 12; the section heading 16; the page heading 28 to 30", () => {
-        expect(sizePx("--text-body")).toBe(14);
-        expect(sizePx("--text-body--line-height")).toBe(22);
-        expect(sizePx("--text-meta")).toBe(13);
-        expect(sizePx("--text-chip")).toBeGreaterThanOrEqual(12);
-        expect(sizePx("--text-chip")).toBeLessThanOrEqual(13);
-        expect(sizePx("--text-h2")).toBe(16);
-        expect(sizePx("--text-h1")).toBeGreaterThanOrEqual(28);
-        expect(sizePx("--text-h1")).toBeLessThanOrEqual(30);
+    test("body is 13 pixels on a 20 pixel line; chips 12; the section heading 16; the page heading 24", () => {
+        expect(textClassPx("sm")).toBe(13);
+        expect(sizePx("--text-sm--line-height")).toBe(20);
+        expect(textClassPx("xs")).toBe(12);
+        expect(textClassPx("base")).toBe(16);
+        expect(textClassPx("2xl")).toBe(24);
+        // The page heading is the design system's PageOpening, which sets it at `text-2xl`; the section heading at `text-base`.
+        expect(read(join(root, "vendor", "ui", "components", "page-opening.tsx"))).toContain('<h1 className="text-2xl');
+        expect(read(join(root, "vendor", "ui", "components", "details.tsx"))).toContain('<h2 className="text-base');
     });
 
-    test("no text token is above 30 pixels, and none but the heading and the figure is above 16", () => {
-        const names = [...tokens.matchAll(/^\s*(--text-[a-z0-9]+):/gm)].map((hit) => hit[1] as string);
-        expect(names.length).toBeGreaterThan(6);
-        for (const name of names) {
-            expect([name, sizePx(name) <= 30]).toEqual([name, true]);
-            if (!["--text-h1", "--text-figure"].includes(name)) expect([name, sizePx(name) <= 16]).toEqual([name, true]);
-        }
-        expect(sizePx("--text-figure")).toBeLessThanOrEqual(24);
-    });
-
-    test("every font size the stylesheet sets is a token, and the big two are used by the page heading and the figure only", () => {
-        const css = code(read(join(root, "src", "styles", "app.css")));
-        const uses = [...css.matchAll(/([^{}]+)\{[^{}]*?font-size:\s*([^;]+);/g)].map((hit) => ({ selector: (hit[1] ?? "").trim(), value: (hit[2] ?? "").trim() }));
-        expect(uses.length).toBeGreaterThan(50);
-        for (const { selector, value } of uses) {
-            expect([selector, /^var\(--(?:text|diagram-text)[\w-]*\)(?: !important)?$/.test(value)]).toEqual([selector, true]);
-            if (/--text-h1|--text-figure/.test(value)) expect([selector, /\.opening h[12]|\.stat-value|\.kit-h1/.test(selector)]).toEqual([selector, true]);
-        }
-    });
-
-    test("a control is one height: the token, which is at most 36 pixels", () => {
-        expect(sizePx("--control-h")).toBeLessThanOrEqual(36);
-        const css = code(read(join(root, "src", "styles", "app.css")));
-        const controls = /(?:^|,|\s)(?:\.btn|input|select|\.palette-open|\.menu-button|\.theme)(?![\w-])/;
-        let checked = 0;
-        for (const hit of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
-            const selector = (hit[1] ?? "").trim();
-            if (!controls.test(selector) || /[\s>]/.test(selector.replace(/,\s*/g, ",").split(",")[0] ?? "") && !/^\.btn/.test(selector)) continue;
-            for (const size of (hit[2] ?? "").matchAll(/(?:^|[\s;])(?:min-height|height|block-size|inline-size):\s*([^;]+);/g)) {
-                const value = (size[1] ?? "").trim();
-                checked += 1;
-                expect([selector, value, /^(?:calc\()?var\(--(?:control-h)\)/.test(value) || /^(?:0|auto|none|[\d.]+rem|min\(.*\))$/.test(value) && !/^(?:[3-9]|[1-9]\d)(?:\.\d+)?rem$/.test(value)]).toEqual([selector, value, true]);
+    test("no text the app sets is above the page heading's 24 pixels, and none but a heading is above 16", () => {
+        const found: string[] = [];
+        for (const file of appFiles())
+            for (const hit of code(read(file)).matchAll(/\btext-(xs|sm|base|lg|[2-9]?xl)\b/g)) {
+                const px = textClassPx(hit[1] as string);
+                if (px > 24) found.push(`${rel(file)}: text-${hit[1]}`);
+                if (px > 16 && !/<h[1-6][^>]*$|"h[1-6]"/.test(code(read(file)).slice(Math.max(0, (hit.index ?? 0) - 80), hit.index))) found.push(`${rel(file)}: text-${hit[1]} outside a heading`);
             }
+        expect(found).toEqual([]);
+    });
+
+    test("no stylesheet of the app sets a font size but through the theme", () => {
+        for (const file of source.filter((each) => each.endsWith(".css"))) {
+            for (const hit of code(read(file)).matchAll(/font-size:\s*([^;]+);/g)) expect([rel(file), /^var\(--(?:text|diagram-text)[\w-]*\)$/.test((hit[1] ?? "").trim())]).toEqual([rel(file), true]);
         }
-        expect(checked).toBeGreaterThan(3);
+        expect(sizePx("--diagram-text")).toBeGreaterThanOrEqual(12);
+    });
+
+    test("a control is at most 36 pixels: every button size the app uses", () => {
+        const all = read(join(root, "vendor", "ui", "components", "button.tsx"));
+        const button = all.slice(all.indexOf("size: {"));
+        const heightOf = (size: string) => {
+            const recipe = new RegExp(`(?:^|\\s)"?${size.replace("-", "\\-")}"?:\\s*\\n?\\s*"([^"]+)"`, "m").exec(button)?.[1] ?? "";
+            const step = /(?:^|\s)(?:h|size)-(\d+(?:\.\d+)?)(?:\s|$)/.exec(recipe)?.[1];
+            if (step === undefined) throw new Error(`button size ${size} has no height in button.tsx`);
+            return Number(step) * 4;
+        };
+        const used = new Set(["default"]);
+        for (const file of appFiles()) for (const hit of read(file).matchAll(/<Button\b[^>]*?\ssize="([\w-]+)"/g)) used.add(hit[1] as string);
+        for (const size of used) expect([size, heightOf(size) <= 36]).toEqual([size, true]);
+        expect(used.size).toBeGreaterThan(1);
     });
 });
 
@@ -185,7 +201,7 @@ describe("computed on the kit page", () => {
         const probe = `<script>addEventListener("load", function () { setTimeout(function () {
             var out = { tallest: 0, tallestOf: "", biggest: 0, biggestOf: "", smallest: 99, smallestOf: "", controls: 0 };
             var shown = function (el) { var r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
-            document.querySelectorAll("button, input, select, a.btn").forEach(function (el) {
+            document.querySelectorAll("button, input, select, a[data-slot=button]").forEach(function (el) {
                 if (!shown(el)) return;
                 out.controls += 1;
                 var h = el.getBoundingClientRect().height;
@@ -195,10 +211,11 @@ describe("computed on the kit page", () => {
             for (var n = walker.nextNode(); n; n = walker.nextNode()) {
                 if (!n.nodeValue.trim()) continue;
                 var el = n.parentElement;
-                if (!el || el.closest("script,style,svg,[hidden],#measure") || !shown(el)) continue;
+                if (!el || el.closest("script,style,svg,[hidden],template,#measure") || !shown(el)) continue;
                 var px = parseFloat(getComputedStyle(el).fontSize);
-                var heading = /^H[1-6]$/.test(el.tagName) || el.closest(".opening") !== null;
-                var limit = el.classList.contains("stat-value") ? 24 : heading ? 30 : 16;
+                // A heading, or a title the design system draws as a block (its empty and error states' title).
+                var heading = /^H[1-6]$/.test(el.tagName) || /-title$/.test(el.dataset.slot || "");
+                var limit = heading ? 30 : 16;
                 if (px > limit && px > out.biggest) { out.biggest = px; out.biggestOf = el.outerHTML.slice(0, 60); }
                 if (px < out.smallest) { out.smallest = px; out.smallestOf = el.outerHTML.slice(0, 60); }
             }
@@ -226,7 +243,7 @@ describe("computed on the kit page", () => {
 /** A token's two colours, the light one and the dark one. */
 const pair = (name: string): { light: string; dark: string } => {
     const hit = new RegExp(`${name}:\\s*light-dark\\(\\s*(#[0-9a-fA-F]{6})\\s*,\\s*(#[0-9a-fA-F]{6})\\s*\\)`).exec(tokens);
-    if (hit === null) throw new Error(`${name} is not a light-dark pair of two six-digit colours in tokens.css`);
+    if (hit === null) throw new Error(`${name} is not a light-dark pair of two six-digit colours in the theme`);
     return { light: hit[1] as string, dark: hit[2] as string };
 };
 

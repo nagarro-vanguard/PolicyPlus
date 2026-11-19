@@ -1,0 +1,333 @@
+/*
+ * ui's theme, and the single source of every design value: each role's colour in light and dark, and each scale.
+ * Finch 2.0 (Nagarro's design system, 17 September 2026) is the contract: its role names, switching, breakpoints and
+ * spacing steps. Its colour values, type scale and depth are re-based here, each with its reason beside it. Change a
+ * value here, then run `bun run --filter @continuum/ui tokens:check`, which proves every pair below meets WCAG 2.2 in
+ * both themes and that the surface levels differ. An app's Tailwind entry imports `tailwindcss`, then this file, then
+ * sources its own files; this file sources only ui's, relative to itself. Why: packages/ui/docs/components.md#tokens.
+ */
+@import "tw-animate-css";
+@import "./fonts.css";
+
+@source "../components";
+
+/*
+ * Dark mode is Finch's switch: `data-theme="dark"` on an ancestor, or the system's dark preference unless
+ * `data-theme="light"` says otherwise. With no attribute, the system decides in CSS alone, so the first paint is right.
+ * Colours follow `color-scheme` below; this variant is for `dark:` utilities, and the nearer attribute wins, one
+ * level deep: a light panel in a dark page is light, and a dark one in a light page dark.
+ */
+@custom-variant dark {
+    &:where([data-theme="dark"], [data-theme="dark"] *):not(
+            :where([data-theme="dark"] [data-theme="light"], [data-theme="dark"] [data-theme="light"] *)
+        ) {
+        @slot;
+    }
+    @media (prefers-color-scheme: dark) {
+        &:not(:where([data-theme="light"], [data-theme="light"] *)) {
+            @slot;
+        }
+    }
+}
+
+/*
+ * Which colour of each `light-dark()` pair applies: the system's choice, unless the nearest `data-theme` says
+ * otherwise. `color-scheme` inherits, so a themed panel at any depth paints its own theme.
+ */
+:root {
+    color-scheme: light dark;
+}
+
+[data-theme="light"] {
+    color-scheme: light;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+/*
+ * The roles every component paints with, shadcn's names, each once: `light-dark(<light>, <dark>)`. The scheme is
+ * neutral: a grey ramp from one near-black, tinted a little towards blue, with one accent hue that marks the main action
+ * and the focus ring and is never a status; `destructive` keeps a colour of its own.
+ *
+ * Surface levels, from the page up: background, card, popover. A level is a lighter shade in both themes, so depth
+ * reads in dark, where a shadow barely shows. `tokens:check` proves each is a different shade from the one below:
+ * surface levels: background, card, popover
+ *
+ * Contrast pairs, checked by `tokens:check` in light and dark (WCAG 2.2: 4.5:1 for text, 3:1 for UI parts):
+ * contrast: foreground on background, text
+ * contrast: card-foreground on card, text
+ * contrast: popover-foreground on popover, text
+ * contrast: primary-foreground on primary, text
+ * contrast: primary on background, ui
+ * contrast: primary on card, ui
+ * contrast: primary on popover, ui
+ * contrast: secondary-foreground on secondary, text
+ * contrast: muted-foreground on muted, text
+ * contrast: muted-foreground on background, text
+ * contrast: muted-foreground on card, text
+ * contrast: muted-foreground on popover, text
+ * contrast: accent-foreground on accent, text
+ * contrast: popover-foreground on accent, text
+ * contrast: sidebar-foreground on sidebar, text
+ * contrast: sidebar-primary-foreground on sidebar-primary, text
+ * contrast: sidebar-accent-foreground on sidebar-accent, text
+ * contrast: sidebar-ring on sidebar, ui
+ * contrast: destructive on background, text
+ * contrast: destructive on card, text
+ * contrast: destructive on popover, text
+ * contrast: input on background, ui
+ * contrast: input on card, ui
+ * contrast: input on popover, ui
+ * contrast: ring on background, ui
+ * contrast: ring on card, ui
+ * contrast: ring on popover, ui
+ * contrast exempt: border, it separates content and identifies no control (WCAG 1.4.11), as `input` and `ring` do
+ * contrast exempt: sidebar-border, it separates the navigation from the page and identifies no control
+ *
+ * Declared on every themed element too, not only :root: a production build turns `light-dark()` into variables set
+ * where `color-scheme` is, and a custom property resolves where it is declared, so a nested theme needs its own.
+ */
+:root,
+[data-theme] {
+    /* Level 0, the page and anything flat on it. Dark is the deepest near-black; the layers above it are lifted, so depth reads without a shadow. */
+    --background: light-dark(#f0f0f3, #08090a);
+    --foreground: light-dark(#18181b, #ececee);
+    /* Level 1, a grouped region on the page. */
+    --card: light-dark(#f9f9fb, #121317);
+    --card-foreground: light-dark(#18181b, #ececee);
+    /* Level 2, whatever opens above a card: menus, sheets, dialogs. */
+    --popover: light-dark(#ffffff, #1c1d21);
+    --popover-foreground: light-dark(#18181b, #ececee);
+    /* The main action: the one accent hue, with white text, the strongest mark on a page. Never a status, never a link. */
+    --primary: light-dark(#4a50cf, #5f66e0);
+    --primary-foreground: light-dark(#ffffff, #ffffff);
+    /* A quiet fill beside a level, such as a secondary button or a badge. Dark is lifted well off the card and the popover, or it would not show. */
+    --secondary: light-dark(#e6e6ea, #292b32);
+    --secondary-foreground: light-dark(#18181b, #ececee);
+    --muted: light-dark(#e9e9ed, #14161a);
+    /* Secondary text; 4.5:1 on every level, which is why dark stops at a mid grey rather than a dimmer one. */
+    --muted-foreground: light-dark(#52525b, #a1a1aa);
+    /* Hover and selection: a quiet step off the level it sits on (lighter in dark, darker in light), never a hue. */
+    --accent: light-dark(#dedee3, #2f3138);
+    --accent-foreground: light-dark(#18181b, #ececee);
+    --destructive: light-dark(#b42318, #f87171);
+    --border: light-dark(#d4d4d8, #2b2d33);
+    /* A control's edge needs 3:1 against the surface it sits on. */
+    --input: light-dark(#71717a, #71717a);
+    /* The focus ring is the accent, a deeper shade on light and a lighter one on dark, so it clears 3:1 on every level. */
+    --ring: light-dark(#4a50cf, #8d93f2);
+    /* The navigation takes the page's level and is set off by its border. */
+    --sidebar: light-dark(#f0f0f3, #08090a);
+    --sidebar-foreground: light-dark(#18181b, #ececee);
+    --sidebar-primary: light-dark(#4a50cf, #5f66e0);
+    --sidebar-primary-foreground: light-dark(#ffffff, #ffffff);
+    --sidebar-accent: light-dark(#dedee3, #2f3138);
+    --sidebar-accent-foreground: light-dark(#18181b, #ececee);
+    --sidebar-border: light-dark(#d4d4d8, #2b2d33);
+    --sidebar-ring: light-dark(#4a50cf, #8d93f2);
+}
+
+@theme inline {
+    /* Finch replaces Tailwind's palette, shadows, breakpoints and fonts, so a class outside the theme can't compile. */
+    --color-*: initial;
+    --shadow-*: initial;
+    --breakpoint-*: initial;
+    --font-*: initial;
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* `static`: every scale exists at runtime, used by a class or not, so the Foundations pages can show each one. */
+@theme static {
+    /* Finch's typeface first, self-hosted by fonts.css, then the system's while it loads. */
+    --font-sans: "Mulish", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    /*
+     * The type scale for dense, long reading: the smallest sizes are for rows, hints and counts, and body text is
+     * one step below Tailwind's. Mulish's small sizes run loose, so the two smallest take a hair of negative
+     * tracking and, at the smallest, a medium weight; the Typography story shows each beside its rule, and a
+     * change of any value here is judged there, since only a render settles it. Large sizes keep Tailwind's steps.
+     */
+    --text-xs: 0.75rem;
+    --text-xs--line-height: 1rem;
+    /* Mulish's smallest size runs loose; a hair of negative tracking closes it. */
+    --text-xs--letter-spacing: -0.006em;
+    /* Medium weight keeps the smallest size legible in rows, hints and counts. */
+    --text-xs--font-weight: 500;
+    /* Body text for dense reading: 13px, one step below Tailwind's 0.875rem, so more fits a row. */
+    --text-sm: 0.8125rem;
+    --text-sm--line-height: 1.25rem;
+    /* Half the smallest size's tracking: Mulish runs loose here too, but less. */
+    --text-sm--letter-spacing: -0.004em;
+    --text-base: 1rem;
+    --text-base--line-height: 1.5rem;
+    --text-lg: 1.125rem;
+    --text-lg--line-height: 1.5rem;
+    --text-xl: 1.25rem;
+    --text-xl--line-height: 1.75rem;
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: 2.25rem;
+    --text-3xl: 2rem;
+    --text-3xl--line-height: 3rem;
+    --text-4xl: 2.5rem;
+    --text-4xl--line-height: 3.5rem;
+    --text-5xl: 3rem;
+    --text-5xl--line-height: 4rem;
+    --text-6xl: 3.5rem;
+    --text-6xl--line-height: 5rem;
+    --text-7xl: 4rem;
+    --text-7xl--line-height: 6rem;
+
+    /*
+     * Tailwind's numeric spacing stays for sizes (`h-8`, `size-4`) and for primitives the stories don't show. The
+     * primitives the stories show take their padding and gaps from Finch's named steps, compact here, the default,
+     * and cozy under `data-density` below, which keep Finch's `spacing-` names (`p-spacing-md`), because
+     * `--spacing-md` would take over `max-w-md` and `w-md` from Tailwind's container sizes.
+     */
+    --spacing-spacing-null: 0;
+    --spacing-spacing-3xs: 0.125rem;
+    --spacing-spacing-2xs: 0.25rem;
+    --spacing-spacing-xs: 0.375rem;
+    --spacing-spacing-s: 0.375rem;
+    --spacing-spacing-md: 0.5rem;
+    --spacing-spacing-lg: 0.75rem;
+    --spacing-spacing-xl: 0.75rem;
+    --spacing-spacing-xxl: 1rem;
+    --spacing-spacing-3xl: 1rem;
+    --spacing-spacing-4xl: 1.25rem;
+    --spacing-spacing-5xl: 1.5rem;
+
+    /*
+     * Three corner roles, and a circle (`rounded-full`) for avatars and dots. A control (button, field, badge, menu row)
+     * is 6px; a surface (card, menu, row group) is 10px, so a control with a 4px margin inside one nests evenly; an
+     * overlay (dialog, sheet) is 14px.
+     */
+    --radius-control: 0.375rem;
+    --radius-surface: 0.625rem;
+    --radius-overlay: 0.875rem;
+
+    /*
+     * Three depths, one geometry in both themes. In dark a shadow barely shows against a near-black page, so depth
+     * comes first from the lighter surface level and the shadow only closes the edge; hence the heavier dark alpha.
+     */
+    /* The main action's top edge: a faint light line that lifts it off the page, the same in both themes. */
+    --shadow-highlight: inset 0px 1px 0px 0px light-dark(#ffffff3d, #ffffff2e);
+    /* A card's edge: a hair of shadow, since the lighter level does the lifting. */
+    --shadow-elevation-1: 0px 1px 2px 0px light-dark(#18181b14, #00000066);
+    /* Menus and popovers: a soft, wider shadow that separates them from the card below. */
+    --shadow-elevation-2: 0px 4px 16px 0px light-dark(#18181b1f, #0000008c);
+    /* Dialogs and sheets: the widest and darkest, for the layer furthest above the page. */
+    --shadow-elevation-3: 0px 16px 48px 0px light-dark(#18181b33, #000000b3);
+
+    /*
+     * The navigation's two widths: open (240px) and a rail of icons (56px). The sidebar reads its widths from inline
+     * custom properties, so the app hands these to its provider, which a stylesheet rule could not override.
+     */
+    --size-navigation: 15rem;
+    --size-navigation-rail: 3.5rem;
+
+    /* Finch's tiers. Storybook's viewports read them from here. */
+    --breakpoint-sm: 600px;
+    --breakpoint-md: 905px;
+    --breakpoint-lg: 1240px;
+    --breakpoint-xl: 1440px;
+
+    /* Hover, focus and press: shorter than a person waits to see a response, so a control feels immediate. */
+    --motion-duration-quick: 100ms;
+    /* A layer opening from a control, such as a menu or a tooltip: long enough to read as coming from it. */
+    --motion-duration-standard: 150ms;
+    /* A region that moves, such as the navigation folding or a window over the page: the most a movement takes. */
+    --motion-duration-slow: 200ms;
+    /* Something arriving or leaving starts fast and settles, so it reads as responding to the person. */
+    --motion-ease-out: cubic-bezier(0.2, 0, 0, 1);
+    /* Something that stays on the page and moves, such as a fold, speeds up and slows down evenly. */
+    --motion-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Finch's cozy density, a person's choice that replaces compact on every screen: the named spacing steps only. */
+[data-density="cozy"] {
+    --spacing-spacing-3xs: 0.25rem;
+    --spacing-spacing-2xs: 0.375rem;
+    --spacing-spacing-xs: 0.5rem;
+    --spacing-spacing-s: 0.75rem;
+    --spacing-spacing-md: 1rem;
+    --spacing-spacing-lg: 1.25rem;
+    --spacing-spacing-xl: 1.5rem;
+    --spacing-spacing-xxl: 2rem;
+    --spacing-spacing-3xl: 2.25rem;
+    --spacing-spacing-4xl: 2.5rem;
+    --spacing-spacing-5xl: 3rem;
+}
+
+/* shadcn's sidebar hides the scrollbar of its content with this. */
+@utility no-scrollbar {
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/*
+ * Motion respects the person (WCAG 2.3.3): no animation or transition when they ask for reduced motion. axe doesn't
+ * check motion, and tw-animate-css 1.4.0 has no rule of its own. Unlayered, so it wins over Tailwind's utilities. 0.01ms,
+ * not 0s, so `transitionend` and `animationend` still fire for code that waits on them. In Storybook, emulate the
+ * preference in the browser's devtools.
+ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+        animation-duration: 0.01ms;
+        animation-iteration-count: 1;
+        transition-duration: 0.01ms;
+        scroll-behavior: auto;
+    }
+}
+
+/* One even stroke for every icon, the same width in pixels at every size, so a 14px and a 20px icon weigh alike. */
+@layer base {
+    svg.lucide {
+        stroke-width: 1.25;
+    }
+
+    svg.lucide :where(path, circle, line, polyline, polygon, rect, ellipse) {
+        vector-effect: non-scaling-stroke;
+    }
+}

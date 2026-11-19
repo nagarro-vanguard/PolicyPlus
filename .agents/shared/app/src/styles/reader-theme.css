@@ -1,0 +1,94 @@
+/*
+ * The reader app's own design values, the few the design system does not hold: the semantic scales for analysis content
+ * (severity, state, provenance), the diagram tokens and the reading column. Every other value (roles, type scale,
+ * spacing, corners, depth, breakpoints, motion, fonts) is Continuum UI's theme, vendor/ui/styles/theme.css, imported
+ * before this file. Each colour is `light-dark(<light>, <dark>)`, so `color-scheme` picks the side as the theme does.
+ * tests/design.test.ts proves the contrast of every pair named there and that nothing outside the two theme files
+ * names a colour. A value here that the product needs too belongs in Continuum UI first.
+ */
+:root,
+[data-theme] {
+    /*
+     * Semantic scales: three tokens each, text on surface (4.5:1) and an edge (3:1 on the page).
+     * Colour is never the only signal: a badge always carries an icon and a word.
+     */
+    --severity-high-text: light-dark(#a1180d, #ffb4ab);
+    --severity-high-surface: light-dark(#fdeceb, #3a1613);
+    --severity-high-edge: light-dark(#c4392d, #e5604f);
+    --severity-medium-text: light-dark(#7a4300, #f6c56b);
+    --severity-medium-surface: light-dark(#fdf1dc, #33260a);
+    --severity-medium-edge: light-dark(#b86a00, #c9922b);
+    --severity-low-text: light-dark(#3d4a5c, #b9c4d4);
+    --severity-low-surface: light-dark(#e8ecf2, #1f2631);
+    --severity-low-edge: light-dark(#6f7d92, #6f7d92);
+
+    --state-changes-text: light-dark(#6a2aa8, #d6b8fa);
+    --state-changes-surface: light-dark(#f3eafc, #2a1a41);
+    --state-changes-edge: light-dark(#8b4fd0, #9b6fd8);
+    --state-readonly-text: light-dark(#14634a, #86dcb8);
+    --state-readonly-surface: light-dark(#e3f4ec, #11302a);
+    --state-readonly-edge: light-dark(#2a8a69, #3e9d7b);
+
+    --provenance-stated-text: light-dark(#1b4f8c, #a9cdf8);
+    --provenance-stated-surface: light-dark(#e6eff9, #14263d);
+    --provenance-stated-edge: light-dark(#3a76bd, #4a86cc);
+    --provenance-inferred-text: light-dark(#8a2459, #f4b0d2);
+    --provenance-inferred-surface: light-dark(#fbe9f2, #3a1628);
+    --provenance-inferred-edge: light-dark(#b64a85, #c8628f);
+    --provenance-assumed-text: light-dark(#5e5a00, #dbd466);
+    --provenance-assumed-surface: light-dark(#f6f4d6, #2b2a0b);
+    --provenance-assumed-edge: light-dark(#8c8700, #a5a021);
+
+    /* Diagram tokens: box, edge, group, selected and dimmed, and the kinds of box the drawings tell apart. */
+    --diagram-box: light-dark(#ffffff, #1c1d21);
+    --diagram-box-text: light-dark(#18181b, #ececee);
+    --diagram-box-edge: light-dark(#71717a, #71717a);
+    --diagram-edge: light-dark(#52525b, #a1a1aa);
+    --diagram-group: light-dark(#e9e9ed, #14161a);
+    --diagram-selected: light-dark(#4a50cf, #8d93f2);
+    --diagram-dimmed: light-dark(#a1a1aa, #52525b);
+    --diagram-store: light-dark(#e6eff9, #14263d);
+    --diagram-outside: light-dark(#fdf1dc, #33260a);
+    --diagram-system: light-dark(#e8e9fb, #22244d);
+    --diagram-halo: light-dark(#f0f0f3, #08090a);
+    /* What a selected box uses (solid) and what uses it (dashed): colour and line style say it together. */
+    --diagram-uses: light-dark(#a8480a, #fb923c);
+    --diagram-usedby: light-dark(#1d4ed8, #7aa2ff);
+}
+
+@theme inline {
+    --color-severity-high-text: var(--severity-high-text);
+    --color-severity-high-surface: var(--severity-high-surface);
+    --color-severity-high-edge: var(--severity-high-edge);
+    --color-severity-medium-text: var(--severity-medium-text);
+    --color-severity-medium-surface: var(--severity-medium-surface);
+    --color-severity-medium-edge: var(--severity-medium-edge);
+    --color-severity-low-text: var(--severity-low-text);
+    --color-severity-low-surface: var(--severity-low-surface);
+    --color-severity-low-edge: var(--severity-low-edge);
+    --color-state-changes-text: var(--state-changes-text);
+    --color-state-changes-surface: var(--state-changes-surface);
+    --color-state-changes-edge: var(--state-changes-edge);
+    --color-state-readonly-text: var(--state-readonly-text);
+    --color-state-readonly-surface: var(--state-readonly-surface);
+    --color-state-readonly-edge: var(--state-readonly-edge);
+    --color-provenance-stated-text: var(--provenance-stated-text);
+    --color-provenance-stated-surface: var(--provenance-stated-surface);
+    --color-provenance-stated-edge: var(--provenance-stated-edge);
+    --color-provenance-inferred-text: var(--provenance-inferred-text);
+    --color-provenance-inferred-surface: var(--provenance-inferred-surface);
+    --color-provenance-inferred-edge: var(--provenance-inferred-edge);
+    --color-provenance-assumed-text: var(--provenance-assumed-text);
+    --color-provenance-assumed-surface: var(--provenance-assumed-surface);
+    --color-provenance-assumed-edge: var(--provenance-assumed-edge);
+}
+
+@theme static {
+    /* One column for prose and lists (`max-w-column`), a wider one only for a table or a drawing (`max-w-wide`). */
+    --container-column: 47.5rem;
+    --container-wide: 65rem;
+    /* Text inside a drawing never renders below 12px at full size. */
+    --diagram-text: 0.8125rem;
+    --diagram-text-small: 0.75rem;
+    --diagram-text-title: 0.875rem;
+}

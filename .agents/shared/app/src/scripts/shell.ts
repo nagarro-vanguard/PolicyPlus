@@ -1,7 +1,8 @@
-// The shell of every page: the narrow-screen menu, the shortcut hint, the search, the copy for a reader's assistant and
-// the detail of an action or a rule, opened on the page that holds it at `#<key>`. The search reads `data/search.json`,
-// the detail `data/node/<key>.json`, the assistant's text `assistant/<key>.txt`; all are written at build time, so the
-// shell never grows with the system shown. No framework.
+// The shell of every page: the shortcut hint, the search, the copy for a reader's assistant and the detail of an action
+// or a rule, opened on the page that holds it at `#<key>`. The search reads `data/search.json`, the detail
+// `data/node/<key>.json`, the assistant's text `assistant/<key>.txt`; all are written at build time, so the shell never
+// grows with the system shown. No framework: the detail is drawn from the pieces the server rendered into `#parts` with
+// the design system's components, and the menu on a narrow screen is the MobileNav island.
 import { navigate } from "astro:transitions/client";
 import { detailOf } from "../case/routes";
 import type { NodeView, RowView } from "../case/view";
@@ -23,14 +24,7 @@ const el = <K extends keyof HTMLElementTagNameMap>(tag: K, className = "", text 
     return node;
 };
 
-/* ---------- the menu on narrow screens ---------- */
 const mac = /Mac|iPhone|iPad/.test(navigator.platform);
-let menuButton: HTMLButtonElement | null = null;
-let sidebar: HTMLElement | null = null;
-const closeMenu = () => {
-    if (sidebar !== null) sidebar.dataset.open = "false";
-    menuButton?.setAttribute("aria-expanded", "false");
-};
 
 /* ---------- the search ---------- */
 type Hit = { name: string; level: string; parent: string; text: string; href: string };
@@ -57,20 +51,20 @@ const render = () => {
     if (list === null || input === null) return;
     list.replaceChildren();
     if (rows.length === 0) {
-        const none = el("li", "palette-none", strings().noMatch ?? "", "app");
+        const none = el("li", "px-spacing-md py-spacing-lg text-sm text-muted-foreground", strings().noMatch ?? "", "app");
         none.setAttribute("role", "presentation");
         list.append(none);
         input.removeAttribute("aria-activedescendant");
         return;
     }
     rows.forEach((row, at) => {
-        const li = el("li", "palette-row");
+        const li = el("li", "flex cursor-pointer flex-col gap-spacing-3xs rounded-control px-spacing-md py-spacing-xs hover:bg-accent/60 aria-selected:bg-accent aria-selected:text-accent-foreground");
         li.id = `palette-row-${at}`;
         li.setAttribute("role", "option");
         li.setAttribute("aria-selected", String(at === active));
-        if (row.level !== "") li.append(el("span", "palette-kind", row.level, "agent"));
-        li.append(el("span", "palette-name", row.name, "agent"));
-        if (row.parent !== "") li.append(el("span", "palette-sub", row.parent, "agent"));
+        if (row.level !== "") li.append(el("span", "text-xs text-muted-foreground", row.level, "agent"));
+        li.append(el("span", "text-sm font-medium", row.name, "agent"));
+        if (row.parent !== "") li.append(el("span", "text-xs text-muted-foreground", row.parent, "agent"));
         li.addEventListener("click", () => choose(row));
         list?.append(li);
     });
@@ -110,11 +104,6 @@ const openPalette = () => {
     void update();
 };
 document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && sidebar?.dataset.open === "true") {
-        closeMenu();
-        menuButton?.focus();
-        return;
-    }
     const target = event.target as HTMLElement | null;
     const typing = target !== null && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT" || target.isContentEditable);
     if ((event.key === "k" || event.key === "K") && (event.metaKey || event.ctrlKey)) {
@@ -131,7 +120,7 @@ document.addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-assistant-file]");
     if (button === null) return;
     const label = button.querySelector("[data-label]");
-    const fallback = button.parentElement?.querySelector<HTMLTextAreaElement>(".assistant-fallback") ?? null;
+    const fallback = button.parentElement?.querySelector<HTMLTextAreaElement>("[data-assistant-fallback]") ?? null;
     void (async () => {
         const text = await fetch(button.dataset.assistantFile ?? "").then((response) => (response.ok ? response.text() : Promise.reject(new Error(String(response.status)))));
         try {
@@ -155,77 +144,123 @@ document.addEventListener("click", (event) => {
 });
 
 /* ---------- the detail of an action or a rule ---------- */
-const link = (href: string, className: string, name: string) => {
-    const a = el("a", className, name, "agent");
-    a.href = `${root}${href}`;
-    return a;
+/** A copy of one of the pieces the server rendered into `#parts`, with the design system's classes. */
+const part = (name: string): HTMLElement => {
+    const template = document.getElementById("parts") as HTMLTemplateElement | null;
+    const found = template?.content.querySelector<HTMLElement>(`[data-part="${name}"]`);
+    if (found === null || found === undefined) throw new Error(`the page has no piece ${name}`);
+    const copy = found.cloneNode(true) as HTMLElement;
+    copy.removeAttribute("data-part");
+    return copy;
 };
+/** Replaces an element's words and keeps its icon. */
+const words = (host: HTMLElement, text: string) => {
+    for (const node of [...host.childNodes]) if (node.nodeType === Node.TEXT_NODE) node.remove();
+    host.append(text);
+};
+const slot = (host: HTMLElement, name: string) => host.querySelector<HTMLElement>(`[data-slot="${name}"]`);
 const rowsOf = (items: readonly RowView[]) => {
-    const host = el("div", "list");
+    const host = part("rows");
     for (const row of items) {
-        const item = row.href === undefined ? el("div", "row") : link(row.href, "row", "");
-        item.removeAttribute("data-written-by");
-        item.append(el("span", "t", row.name, "agent"));
-        const right = el("span", "r");
-        if (row.kind !== undefined) right.append(el("span", "badge", row.kind, "agent"));
-        if (row.risk !== undefined) right.append(el("span", `badge badge-${row.risk.badge}`, row.risk.word, "app"));
-        if (row.count !== undefined) {
-            const count = el("span", "", row.count.text, "app");
-            count.title = row.count.scope;
-            right.append(count);
+        const item = part(row.href === undefined ? "row-plain" : "row-link");
+        if (row.href !== undefined) item.setAttribute("href", `${root}${row.href}`);
+        const title = slot(item, "item-title");
+        if (title !== null) title.textContent = row.name;
+        const line = slot(item, "item-description");
+        if (row.line === undefined) line?.remove();
+        else if (line !== null) line.textContent = row.line;
+        const actions = slot(item, "item-actions");
+        const kind = actions?.querySelector<HTMLElement>('[data-part="kind"]');
+        if (row.kind === undefined) kind?.remove();
+        else if (kind !== null && kind !== undefined) {
+            kind.removeAttribute("data-part");
+            words(kind, row.kind);
         }
-        item.append(right);
-        if (row.line !== undefined) item.append(el("span", "d", row.line, "agent"));
+        const count = actions?.querySelector<HTMLElement>('[data-part="count"]');
+        if (row.count === undefined) count?.remove();
+        else if (count !== null && count !== undefined) {
+            count.removeAttribute("data-part");
+            count.textContent = row.count.text;
+            count.title = row.count.scope;
+        }
+        if (row.risk !== undefined) {
+            const risk = part(`risk-${row.risk.badge}`);
+            words(risk, row.risk.word);
+            count === null || count === undefined ? actions?.append(risk) : count.before(risk);
+        }
         host.append(item);
     }
     return host;
 };
-/** The view of a node as the Explorer draws it on the server, for the detail read on demand. */
-const draw = (view: NodeView, words: Record<string, string>) => {
-    const host = el("article", "explorer detail-view");
-    const trail = el("nav", "trail");
-    trail.setAttribute("aria-label", words.trail ?? "");
-    const ol = el("ol");
-    for (const crumb of view.crumbs) {
-        const li = el("li");
-        li.append(link(crumb.href, "", crumb.name));
-        ol.append(li);
+/** A section of the design system with its heading, a level below the detail's own heading. */
+const sectionOf = (title: string, writtenBy: "agent" | "app", body: HTMLElement) => {
+    const wrapper = part("section");
+    wrapper.dataset.writtenBy = writtenBy;
+    const section = wrapper.querySelector("section");
+    section?.setAttribute("aria-label", title);
+    const h2 = section?.querySelector("h2");
+    if (h2 !== null && h2 !== undefined) {
+        const h3 = el("h3", h2.className, title);
+        h2.replaceWith(h3);
     }
-    trail.append(ol);
-    host.append(trail, el("p", "node-noun", view.noun.one, "agent"), el("h2", "detail-title", view.name, "agent"));
-    if (view.summary !== "") host.append(el("p", "lead", view.summary, "agent"));
+    section?.append(body);
+    return wrapper;
+};
+/** The view of a node as the Explorer draws it on the server, for the detail read on demand. */
+const draw = (view: NodeView, strings: Record<string, string>) => {
+    const host = el("article", "flex flex-col gap-spacing-xl");
+    const trail = part("trail");
+    trail.dataset.writtenBy = "agent";
+    trail.querySelector("nav")?.setAttribute("aria-label", strings.trail ?? "");
+    const ol = trail.querySelector("ol");
+    const step = ol?.querySelector("li");
+    step?.remove();
+    for (const crumb of view.crumbs) {
+        const li = step?.cloneNode(true) as HTMLElement | undefined;
+        const a = li?.querySelector("a");
+        if (li === undefined || a === null || a === undefined) continue;
+        a.href = `${root}${crumb.href}`;
+        a.textContent = crumb.name;
+        ol?.append(li);
+    }
+    // The last step names the place the detail sits under: no separator follows it.
+    ol?.lastElementChild?.querySelector('[aria-hidden="true"]')?.remove();
+    const opening = el("div", "flex flex-col gap-spacing-xs");
+    const noun = part("noun");
+    noun.textContent = view.noun.one;
+    opening.append(el("p"), el("h2", "text-xl font-semibold", view.name, "agent"));
+    opening.firstElementChild?.append(noun);
+    if (view.summary !== "") opening.append(el("p", "text-base text-muted-foreground", view.summary, "agent"));
+    host.append(trail, opening);
     if (view.facts.length > 0) {
-        const facts = el("ul", "facts");
-        for (const fact of view.facts) {
-            const li = el("li", "", fact.text, "app");
-            li.title = fact.scope;
+        const facts = part("facts");
+        const sample = facts.querySelector("li");
+        facts.replaceChildren();
+        const fact = (text: string, scope: string) => {
+            const li = (sample?.cloneNode(false) as HTMLElement | undefined) ?? el("li");
+            li.textContent = text;
+            li.title = scope;
             facts.append(li);
-        }
-        if (view.tests !== null) {
-            const li = el("li", "", `${words.checkedBy ?? ""} ${view.tests.text}`, "app");
-            li.title = view.tests.scope;
-            facts.append(li);
-        }
+        };
+        for (const each of view.facts) fact(each.text, each.scope);
+        if (view.tests !== null) fact(`${strings.checkedBy ?? ""} ${view.tests.text}`, view.tests.scope);
         host.append(facts);
     }
-    if (view.children.rows.length > 0) {
-        const section = el("section", "sec");
-        section.append(el("h3", "", view.children.heading, "agent"), rowsOf(view.children.rows));
-        host.append(section);
+    if (view.children.rows.length > 0) host.append(sectionOf(view.children.heading, "agent", rowsOf(view.children.rows)));
+    if (view.folds.length > 0) {
+        const folds = el("div", "flex flex-col border-t border-border");
+        for (const fold of view.folds) {
+            const details = part("fold");
+            details.dataset.fold = fold.kind;
+            const summary = details.querySelector("summary [data-written-by]");
+            if (summary !== null) summary.textContent = fold.title;
+            details.querySelector('[data-part="fold-body"]')?.append(rowsOf(fold.rows));
+            folds.append(details);
+        }
+        host.append(folds);
     }
-    for (const fold of view.folds) {
-        const details = el("details", "fold-line");
-        details.dataset.fold = fold.kind;
-        const body = el("div", "fold-body");
-        body.append(rowsOf(fold.rows));
-        details.append(el("summary", "", fold.title, "app"), body);
-        host.append(details);
-    }
-    for (const group of view.lateral) {
-        const section = el("section", "sec");
-        section.append(el("h3", "", group.label, "app"), rowsOf(group.links.map((each) => ({ href: each.href, name: each.name, ...(each.count === undefined ? {} : { count: each.count }) }))));
-        host.append(section);
-    }
+    for (const group of view.lateral)
+        host.append(sectionOf(group.label, "app", rowsOf(group.links.map((each) => ({ href: each.href, name: each.name, ...(each.count === undefined ? {} : { count: each.count }) })))));
     return host;
 };
 const showDetail = async () => {
@@ -237,17 +272,17 @@ const showDetail = async () => {
         panel.replaceChildren();
         return;
     }
-    const words = strings();
+    const said = strings();
     panel.hidden = false;
-    panel.replaceChildren(el("p", "muted", words.loading ?? "", "app"));
+    panel.replaceChildren(el("p", "text-muted-foreground", said.loading ?? "", "app"));
     try {
         const response = await fetch(`${root}${detailOf(key)}`);
         if (!response.ok) throw new Error(String(response.status));
         const view = (await response.json()) as NodeView;
-        panel.replaceChildren(draw(view, words));
+        panel.replaceChildren(draw(view, said));
         panel.scrollIntoView({ block: "start" });
     } catch {
-        panel.replaceChildren(el("p", "note", words.failed ?? "", "app"));
+        panel.replaceChildren(el("p", "text-muted-foreground", said.failed ?? "", "app"));
     }
 };
 addEventListener("hashchange", () => void showDetail());
@@ -266,28 +301,11 @@ const recover = async () => {
 /* ---------- each page ---------- */
 const start = () => {
     root = document.body.dataset.root ?? "./";
-    sidebar = document.querySelector<HTMLElement>("[data-sidebar]");
-    menuButton = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
     palette = document.querySelector<HTMLDialogElement>("[data-palette]");
     input = document.getElementById("palette-input") as HTMLInputElement | null;
     list = document.getElementById("palette-list");
     const hint = document.querySelector("[data-kbd]");
     if (hint !== null && !mac) hint.textContent = "Ctrl K";
-    // The sidebar is kept from the first page; its links are made for that page's depth, so each points at this page's root.
-    for (const anchor of sidebar?.querySelectorAll<HTMLAnchorElement>("a[data-section]") ?? []) {
-        const href = anchor.getAttribute("href") ?? "";
-        const own = href.replace(/^(?:\.\.\/|\.\/)+/, "");
-        anchor.setAttribute("href", `${root}${own}`);
-    }
-    closeMenu();
-    if (menuButton !== null && menuButton.dataset.bound === undefined) {
-        menuButton.dataset.bound = "true";
-        menuButton.addEventListener("click", () => {
-            const next = sidebar?.dataset.open !== "true";
-            if (sidebar !== null) sidebar.dataset.open = String(next);
-            menuButton?.setAttribute("aria-expanded", String(next));
-        });
-    }
     for (const open of document.querySelectorAll<HTMLElement>("[data-palette-open]")) {
         if (open.dataset.bound !== undefined) continue;
         open.dataset.bound = "true";

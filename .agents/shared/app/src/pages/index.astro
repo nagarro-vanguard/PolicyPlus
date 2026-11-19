@@ -1,11 +1,10 @@
 ---
 import Page from "../layouts/Page.astro";
-import Rows from "../components/Rows.astro";
+import { Overview } from "../components/Overview";
 import { caseData } from "../case/data";
 import { theCase } from "../case/loader";
 import { siteOf } from "../case/site";
 import { viewOf } from "../case/view";
-import { copy } from "../lib/copy";
 // The home page: what the system is, the goals of the work as the people who asked for it wrote them ("Not provided"
 // when they wrote none), the first level of the hierarchy, and the way into the reference.
 const data = await caseData();
@@ -16,22 +15,5 @@ const site = await siteOf();
 const reference = site.nav.find((section) => section.id === "reference");
 ---
 <Page title={view.name} lead={view.summary} page="index.html" writtenBy="agent">
-    <div class="explorer">
-        {view.facts.length > 0 && <ul class="facts" aria-label={copy.explorer.facts}>{view.facts.map((fact) => <li title={fact.scope} data-written-by="app">{fact.text}</li>)}</ul>}
-        {brief !== null && <section class="sec" aria-label={copy.overview.goals}>
-            <h2 data-written-by="app">{copy.overview.goals}</h2>
-            {brief.goals.provided && brief.goals.text !== null
-                ? <Fragment><p class="note" data-written-by="app">{copy.overview.goalsNote}</p><p class="goals" data-written-by="agent">{brief.goals.text}</p></Fragment>
-                : <p class="muted" data-written-by="app">{copy.overview.notProvided}</p>}
-        </section>}
-        <section class="sec" aria-label={view.children.heading}>
-            <h2 data-written-by="agent">{view.children.heading}</h2>
-            <Rows rows={view.children.rows} root="./" />
-        </section>
-        {view.folds.filter((fold) => fold.kind === "checkFirst").map((fold) => <section class="sec" aria-label={fold.title}>
-            <h2 data-written-by="app">{fold.title}</h2>
-            <Rows rows={fold.rows} root="./" />
-        </section>)}
-        {reference !== undefined && <p><a class="btn" href={`./${reference.href}`} data-written-by="app">{copy.overview.open}</a></p>}
-    </div>
+    <Overview view={view} goals={brief === null ? null : brief.goals} reference={reference === undefined ? null : reference.href} />
 </Page>
