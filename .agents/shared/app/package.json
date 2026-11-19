@@ -11,10 +11,7 @@
         "generate": "bun scripts/generate-schemas.ts",
         "check": "bun run generate && astro check",
         "build": "bun run generate && astro build",
-        "test": "bun test",
-        "test:contract": "bun test ./tests/contract/reader-contract.contract.ts ./tests/contract/site.contract.ts",
-        "test:contract:offline": "bun tests/contract/offline.ts",
-        "contract:report": "bun tests/contract/run.ts"
+        "test": "bun test"
     },
     "dependencies": {
         "@astrojs/react": "7.1.9",

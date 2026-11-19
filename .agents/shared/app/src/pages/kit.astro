@@ -13,9 +13,41 @@ import Button from "../components/ui/Button.astro";
 import Trail from "../components/ui/Trail.astro";
 import PageOpening from "../components/ui/PageOpening.astro";
 import KitPair from "../components/ui/KitPair.astro";
+import Explorer from "../components/Explorer.astro";
+import type { NodeView } from "../case/view";
 
 // The kit page is the app's Storybook: every component in every variant and state, in both themes. It is built to
 // kit.html and linked from no menu.
+// A node as the Explorer shows it, written by hand so the kit needs no case.
+const sample: NodeView = {
+    key: "capability/keeping-records",
+    level: "capability",
+    href: "#",
+    name: "Keeping records",
+    summary: "People add, change and remove the records they keep.",
+    noun: { one: "capability", many: "capabilities" },
+    crumbs: [{ href: "#", name: "Example system" }, { href: "#", name: "Records" }],
+    facts: [
+        { text: "16 places: 9 pages, 7 services", scope: "places this capability's people and callers use, each counted once", value: 16 },
+        { text: "42 business rules", scope: "business rules this capability decides, each counted once", value: 42 },
+        { text: "1 risk", scope: "risks that name this capability", value: 1 },
+    ],
+    tests: { text: "3 test suites", scope: "groups of automated tests that check this capability", value: 3 },
+    children: {
+        heading: "Places",
+        rows: [
+            { href: "#", name: "Record list", line: "Lists the records and opens one.", count: { text: "4 actions", scope: "actions of this page that this capability uses", value: 4 }, kind: "page" },
+            { href: "#", name: "Records service", line: "Other programs read and save records here.", count: { text: "1 action", scope: "actions of this service that this capability uses", value: 1 }, kind: "service", risk: { word: "Medium risk", badge: "medium" } },
+        ],
+    },
+    folds: [{ kind: "openPoints", title: "Open points", rows: [{ name: "Whether a removed record can come back is not said in the code." }] }],
+    up: { href: "#", name: "Records" },
+    prev: null,
+    next: { href: "#", name: "Reporting" },
+    lateral: [{ label: "Also used by", links: [{ href: "#", name: "Reporting", count: { text: "2 actions", scope: "actions of this page that this capability uses", value: 2 } }] }],
+    assistant: { file: "#", kilobytes: 12, fuller: null },
+    diagrams: [{ key: "flow/keeping-records", title: "How the work passes through it", question: null, legend: ["calls"], text: ["Record list calls Records service"] }],
+};
 const roles = ["background", "card", "popover", "primary", "secondary", "muted", "accent", "border", "input", "ring", "destructive", "foreground", "muted-foreground"];
 const scales = [
     { name: "Severity", kinds: ["high", "medium", "low"] },
@@ -25,7 +57,7 @@ const scales = [
 const sizes = [["chip", "chip and evidence, 12 pixels"], ["meta", "meta and captions, 13 pixels"], ["body", "body, 14 pixels on a 22 pixel line"], ["lead", "lede and section heading, 16 pixels"]];
 const steps = ["3xs", "2xs", "xs", "md", "lg", "xxl", "4xl", "5xl"];
 ---
-<Page wide title="Design kit" lead="Every component in each variant and state, in the light and the dark theme, and in both densities.">
+<Page wide page="kit.html" title="Design kit" lead="Every component in each variant and state, in the light and the dark theme, and in both densities.">
     <Section title="Colour roles">
         <p class="note">One accent marks the main action and the focus ring only. A met rule stays in the text colour.</p>
         <div class="kit-swatches">
@@ -66,6 +98,11 @@ const steps = ["3xs", "2xs", "xs", "md", "lg", "xxl", "4xl", "5xl"];
             <Trail steps={[{ text: "Overview", href: "#" }, { text: "Policy changes", href: "#" }, { text: "Edit a policy" }]} />
             <PageOpening level={2} title="Edit a policy" summary="Change one setting and see what it does to the file." chips={["Main window", "12 actions"]} />
         </KitPair>
+    </Section>
+
+    <Section title="Explorer">
+        <p class="note">One node of the hierarchy, the same anatomy at every level.</p>
+        <KitPair><Explorer view={sample} root="./" /></KitPair>
     </Section>
 
     <Section title="Section and details">

@@ -1,8 +1,0 @@
----
-// This page moved into the Architecture page.
-import Redirect from "../components/architecture/Redirect.astro";
-import { analysisRedirects } from "../lib/architecture-redirects";
-const redirect = analysisRedirects.find((each) => each.from === "made-of");
-if (redirect === undefined) throw new Error("no redirect for made-of");
----
-<Redirect redirect={redirect} />

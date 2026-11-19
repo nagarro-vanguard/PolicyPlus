@@ -55,7 +55,7 @@ describe("the stylesheet is one file of tokens", () => {
 
     test("the shell has its landmarks, labelled, and a palette a keyboard can open", () => {
         const layout = read(join(root, "src", "layouts", "Page.astro"));
-        expect(layout).toContain('aria-label="Site"');
+        expect(layout).toContain("aria-label={copy.site.sections}");
         expect(layout).toContain('<main id="main"');
         expect(layout).toContain("<header");
         expect(layout).toContain('aria-keyshortcuts="/ Control+K Meta+K"');
@@ -86,13 +86,6 @@ describe("the stylesheet is one file of tokens", () => {
         expect(found).toEqual([]);
     });
 
-    test("no capability page offers tabs or a single-page toggle", () => {
-        for (const file of ["capability-view.ts", "explorer.ts"]) {
-            const text = read(join(root, "src", "scripts", file));
-            for (const gone of ["tablist", 'role: "tab"', "Single page", "single:"]) expect([file, gone, text.includes(gone)]).toEqual([file, gone, false]);
-        }
-    });
-
     test("the scripts name no colour and no pixel font size: they paint with classes", () => {
         const scripts = walk(join(root, "src", "scripts")).filter((file) => file.endsWith(".ts"));
         expect(scripts.length).toBeGreaterThan(0);
@@ -100,15 +93,6 @@ describe("the stylesheet is one file of tokens", () => {
             [...code(read(file)).matchAll(/(?<![&\w])#[0-9a-fA-F]{6}\b|\b(?:rgba?|hsla?)\(|font-size:\s*[\d.]+px/g)].map((hit) => `${rel(file)}: ${hit[0]}`),
         );
         expect(found).toEqual([]);
-    });
-
-    test("the diagram viewer never draws text below 12 pixels and stops Fit at full size", () => {
-        const viewer = read(join(root, "src", "scripts", "viewer.ts"));
-        expect(Number(/export const MIN_TEXT = (\d+)/.exec(viewer)?.[1])).toBeGreaterThanOrEqual(12);
-        expect(viewer).toContain("Math.max(1, state.scale * factor)");
-        expect(viewer).toContain("minTextPx");
-        // The drawing's text sizes come from tokens, which are at least 12 pixels (tested above).
-        expect(read(join(root, "src", "styles", "app.css"))).toContain("font-size: var(--diagram-text-small)");
     });
 
     test("fonts swap while they load", () => {

@@ -1,70 +1,29 @@
-// The shell of every page: the narrow-screen menu, the shortcut hint, the sidebar's current item and the command palette.
-// The sidebar itself is plain links written at build time (layouts/Page.astro); the palette reads `data/index.json`, so the
-// shell never grows with the code analysed. No framework.
-import { parseQuery, search } from "../lib/palette-match";
-import type { Entry } from "../lib/palette-match";
-import type { AppIndex, CapSlice, IndexItem } from "../lib/slice-types";
+// The shell of every page: the narrow-screen menu, the shortcut hint, the search, the copy for a reader's assistant and
+// the detail of an action or a rule, opened on the page that holds it at `#<key>`. The search reads `data/search.json`,
+// the detail `data/node/<key>.json`, the assistant's text `assistant/<key>.txt`; all are written at build time, so the
+// shell never grows with the system shown. No framework.
 import { navigate } from "astro:transitions/client";
-import { fetchJson } from "./data";
+import { detailOf } from "../case/routes";
+import type { NodeView, RowView } from "../case/view";
 
-/** The way up to the site's root from the page being shown; it changes with every navigation. */
 let root = document.body.dataset.root ?? "./";
+const strings = (): Record<string, string> => {
+    const node = document.getElementById("copy-strings");
+    return node === null ? {} : (JSON.parse(node.textContent ?? "{}") as Record<string, string>);
+};
 const say = (text: string) => {
     const box = document.getElementById("announce");
     if (box !== null) box.textContent = text;
 };
-const el = <K extends keyof HTMLElementTagNameMap>(tag: K, className = "", text = "") => {
+const el = <K extends keyof HTMLElementTagNameMap>(tag: K, className = "", text = "", writtenBy?: "app" | "agent") => {
     const node = document.createElement(tag);
     if (className !== "") node.className = className;
     if (text !== "") node.textContent = text;
+    if (writtenBy !== undefined) node.dataset.writtenBy = writtenBy;
     return node;
 };
 
-/* ---------- the index ---------- */
-type Model = {
-    index: AppIndex;
-    byId: Map<string, IndexItem>;
-};
-const modelOf = (index: AppIndex): Model => ({ index, byId: new Map(index.items.map((item) => [item.id, item] as const)) });
-let model: Model | undefined;
-let planLoaded: Promise<void> | undefined;
-let current = document.body.dataset.node ?? "";
-
-const labels: Record<string, string> = {
-    system: "System",
-    area: "Area",
-    capability: "Capability",
-    screen: "Screen",
-    risk: "Risk",
-    journey: "Journey",
-    gate: "Confirmation",
-    phase: "Phase",
-    epic: "Epic",
-    story: "Story",
-    page: "Page",
-    rule: "Rule",
-    action: "Command",
-};
-const hrefOf = (item: IndexItem) => {
-    const parent = item.parent ?? "";
-    const withCap = item.kind === "screen" && parent.startsWith("capability:") ? `&c=${parent.slice("capability:".length)}` : "";
-    return `${root}${item.href}${withCap}`;
-};
-
-/**
- * Fetches the plan's items the first time something needs them and adds them to the model, so stories and epics can be found.
- * Without a plan the file is empty and nothing changes.
- * @returns when the items are in
- */
-const ensurePlan = () => {
-    planLoaded ??= (async () => {
-        const [index, plan] = await Promise.all([ensureIndex(), fetchJson<{ items: IndexItem[] }>("data/plan.json")]);
-        model = modelOf({ ...index, items: [...index.items, ...plan.items] });
-    })();
-    return planLoaded;
-};
-
-/* ---------- the shortcut hint, and the menu on narrow screens ---------- */
+/* ---------- the menu on narrow screens ---------- */
 const mac = /Mac|iPhone|iPad/.test(navigator.platform);
 let menuButton: HTMLButtonElement | null = null;
 let sidebar: HTMLElement | null = null;
@@ -72,83 +31,35 @@ const closeMenu = () => {
     if (sidebar !== null) sidebar.dataset.open = "false";
     menuButton?.setAttribute("aria-expanded", "false");
 };
-document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && sidebar?.dataset.open === "true") {
-        closeMenu();
-        menuButton?.focus();
-    }
-});
 
-/* ---------- the command palette ---------- */
-let dialog: HTMLDialogElement | null = null;
+/* ---------- the search ---------- */
+type Hit = { name: string; level: string; parent: string; text: string; href: string };
+let records: Promise<Hit[]> | undefined;
+let palette: HTMLDialogElement | null = null;
 let input: HTMLInputElement | null = null;
 let list: HTMLElement | null = null;
-type Row = { entry: Entry; href?: string; run?: () => void; marks: readonly number[] };
-let rows: Row[] = [];
+let rows: Hit[] = [];
 let active = 0;
-let busy = "";
-let ruleEntries: (Entry & { href: string })[] | undefined;
-let rulesLoading: Promise<void> | undefined;
-
-const commands: (Entry & { run: () => void })[] = [
-    {
-        id: "command:copy-brief",
-        kind: "action",
-        headline: "Copy brief",
-        summary: "Copy a ready-made brief for this page's scope",
-        run: () => document.dispatchEvent(new CustomEvent("app:copy-brief")),
-    },
-    {
-        id: "command:toggle-theme",
-        kind: "action",
-        headline: "Toggle theme",
-        summary: "Switch between light and dark",
-        run: () => {
-            const root = document.documentElement;
-            const dark = root.dataset.theme === undefined ? matchMedia("(prefers-color-scheme: dark)").matches : root.dataset.theme === "dark";
-            document.querySelector<HTMLButtonElement>(`[data-theme-choice="${dark ? "light" : "dark"}"]`)?.click();
-        },
-    },
-];
-
-const loadRules = () => {
-    rulesLoading ??= (async () => {
-        const index = await ensureIndex();
-        const caps = index.items.filter((item) => item.kind === "capability");
-        // The slices are the rules; above forty capabilities only the one being read is searched, so a palette never pulls the whole system.
-        const wanted = caps.length <= 40 ? caps : caps.filter((item) => item.id === current || item.id === `capability:${new URLSearchParams(location.hash.slice(1)).get("c") ?? ""}`);
-        const slices = await Promise.all(wanted.map((item) => fetchJson<CapSlice>(`data/cap/${item.id.slice("capability:".length)}.json`)));
-        // A rule opens on the screen whose action passes it, where it is read in its list; a rule no screen reaches opens its capability.
-        ruleEntries = slices.flatMap((slice) => {
-            const screenOf = new Map<string, string>();
-            for (const action of slice.actions) {
-                if (action.screen === "") continue;
-                for (const rule of action.rules) if (!screenOf.has(rule)) screenOf.set(rule, action.screen);
-            }
-            return slice.rules.map((rule) => {
-                const screen = screenOf.get(rule.id);
-                return {
-                    id: `rule:${slice.slug}:${rule.id}`,
-                    kind: "rule",
-                    headline: rule.headline,
-                    summary: rule.detail,
-                    tags: [rule.gates ? "refuses" : "plain"],
-                    href: screen === undefined ? `capability/${slice.slug}.html` : `screen.html#${new URLSearchParams({ s: screen, c: slice.slug, rule: rule.id }).toString()}`,
-                };
-            });
-        });
-    })();
-    return rulesLoading;
+const searchable = () => {
+    records ??= fetch(`${root}data/search.json`).then((response) => response.json() as Promise<Hit[]>);
+    return records;
 };
-
+/** Every word typed must start a word of the name, the parent or the text; the name's matches come first. */
+export const matches = (all: readonly Hit[], typed: string, limit = 12): Hit[] => {
+    const words = typed.toLowerCase().split(/\s+/).filter((word) => word !== "");
+    if (words.length === 0) return all.slice(0, limit);
+    const starts = (text: string, word: string) => new RegExp(`(^|[^\\p{L}\\p{N}])${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "u").test(text.toLowerCase());
+    const found = all.filter((hit) => words.every((word) => starts(`${hit.name} ${hit.parent} ${hit.text}`, word)));
+    const inName = found.filter((hit) => words.every((word) => starts(hit.name, word)));
+    return [...inName, ...found.filter((hit) => !inName.includes(hit))].slice(0, limit);
+};
 const render = () => {
-    const listNode = list;
-    if (listNode === null || input === null) return;
-    listNode.replaceChildren();
+    if (list === null || input === null) return;
+    list.replaceChildren();
     if (rows.length === 0) {
-        const none = el("li", "palette-none", busy !== "" ? busy : input.value.trim() === "" ? "Nothing to show." : "Nothing matches. Try screen:, rule: or risk:high.");
+        const none = el("li", "palette-none", strings().noMatch ?? "", "app");
         none.setAttribute("role", "presentation");
-        listNode.append(none);
+        list.append(none);
         input.removeAttribute("aria-activedescendant");
         return;
     }
@@ -157,31 +68,11 @@ const render = () => {
         li.id = `palette-row-${at}`;
         li.setAttribute("role", "option");
         li.setAttribute("aria-selected", String(at === active));
-        const kind = el("span", "palette-kind", labels[row.entry.kind] ?? row.entry.kind);
-        const name = el("span", "palette-name");
-        const marks = new Set(row.marks);
-        let run = "";
-        let on = false;
-        for (const [i, letter] of [...row.entry.headline].entries()) {
-            if (marks.has(i) !== on) {
-                if (run !== "") name.append(on ? Object.assign(el("mark"), { textContent: run }) : document.createTextNode(run));
-                run = "";
-                on = marks.has(i);
-            }
-            run += letter;
-        }
-        if (run !== "") name.append(on ? Object.assign(el("mark"), { textContent: run }) : document.createTextNode(run));
-        li.append(kind, name);
-        const sub = row.entry.kind === "rule" ? "" : (row.entry.summary ?? "");
-        if (sub !== "") li.append(el("span", "palette-sub", sub));
+        if (row.level !== "") li.append(el("span", "palette-kind", row.level, "agent"));
+        li.append(el("span", "palette-name", row.name, "agent"));
+        if (row.parent !== "") li.append(el("span", "palette-sub", row.parent, "agent"));
         li.addEventListener("click", () => choose(row));
-        li.addEventListener("pointermove", () => {
-            if (active !== at) {
-                active = at;
-                mark();
-            }
-        });
-        listNode.append(li);
+        list?.append(li);
     });
     input.setAttribute("aria-activedescendant", `palette-row-${active}`);
 };
@@ -190,75 +81,40 @@ const mark = () => {
     input?.setAttribute("aria-activedescendant", `palette-row-${active}`);
     document.getElementById(`palette-row-${active}`)?.scrollIntoView({ block: "nearest" });
 };
-const choose = (row: Row) => {
-    dialog?.close();
-    if (row.run !== undefined) {
-        row.run();
-        return;
-    }
-    if (row.href === undefined) return;
-    const target = new URL(`${root}${row.href}`, location.href);
+const go = (href: string) => {
+    const target = new URL(`${root}${href}`, location.href);
     if (target.pathname === location.pathname && target.hash !== "") location.hash = target.hash;
     else void navigate(target.href);
 };
-const ensureIndex = async (): Promise<AppIndex> => {
-    if (model !== undefined) return model.index;
-    const index = await fetchJson<AppIndex>("data/index.json");
-    model = modelOf(index);
-    return index;
+const choose = (row: Hit) => {
+    palette?.close();
+    if (row.href !== "") go(row.href);
 };
 let sequence = 0;
 const update = async () => {
     if (input === null) return;
     const mine = ++sequence;
-    const typed = input.value;
-    const query = parseQuery(typed);
-    const index = await ensureIndex();
+    const all = await searchable();
     if (mine !== sequence) return;
-    let pool: (Entry & { href?: string; run?: () => void })[] = [...index.items.map((item) => ({ id: item.id, kind: item.kind, headline: item.headline, summary: item.summary, tags: item.tags, href: hrefOf(item).slice(root.length) })), ...commands];
-    if (query.kind === "rule") {
-        if (ruleEntries === undefined) {
-            busy = "Loading the rules of every capability…";
-            rows = [];
-            render();
-            say("Loading rules");
-        }
-        await loadRules();
-        busy = "";
-        if (mine !== sequence) return;
-        pool = ruleEntries ?? [];
-    }
-    if (typed.trim() === "") {
-        const first = pool.filter((entry) => entry.kind === "action");
-        const caps = pool.filter((entry) => entry.kind === "capability").slice(0, 8);
-        rows = [...caps, ...first].map((entry) => ({ entry, href: entry.href, run: (entry as { run?: () => void }).run, marks: [] }));
-    } else {
-        const kindAction = query.kind === "" || query.kind === "action";
-        const found = search(pool.filter((entry) => kindAction || entry.kind !== "action"), query, 12);
-        const byId = new Map(pool.map((entry) => [entry.id, entry] as const));
-        rows = found.map(({ entry, marks }) => {
-            const full = byId.get(entry.id);
-            return { entry, href: full?.href, run: full?.run, marks };
-        });
-    }
+    rows = matches(all, input.value);
     active = 0;
     render();
-    say(`${rows.length} results`);
 };
 const openPalette = () => {
-    if (dialog === null || dialog.open) return;
-    dialog.showModal();
+    if (palette === null || palette.open) return;
+    palette.showModal();
     if (input !== null) {
         input.value = "";
         input.focus();
     }
     void update();
-    // Stories and epics are searchable too, once their file is in.
-    void ensurePlan().then(() => {
-        if (dialog?.open === true) void update();
-    });
 };
 document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && sidebar?.dataset.open === "true") {
+        closeMenu();
+        menuButton?.focus();
+        return;
+    }
     const target = event.target as HTMLElement | null;
     const typing = target !== null && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT" || target.isContentEditable);
     if ((event.key === "k" || event.key === "K") && (event.metaKey || event.ctrlKey)) {
@@ -269,43 +125,159 @@ document.addEventListener("keydown", (event) => {
         openPalette();
     }
 });
-const bindInput = (element: HTMLInputElement) => {
-    element.addEventListener("input", () => void update());
-    element.addEventListener("keydown", (event) => {
-        if (event.key === "ArrowDown") {
-            event.preventDefault();
-            active = Math.min(rows.length - 1, active + 1);
-            mark();
-        } else if (event.key === "ArrowUp") {
-            event.preventDefault();
-            active = Math.max(0, active - 1);
-            mark();
-        } else if (event.key === "Enter") {
-            event.preventDefault();
-            const row = rows[active];
-            if (row !== undefined) choose(row);
+
+/* ---------- the copy for a reader's assistant: fetched when asked for, and the result of the copy is checked ---------- */
+document.addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-assistant-file]");
+    if (button === null) return;
+    const label = button.querySelector("[data-label]");
+    const fallback = button.parentElement?.querySelector<HTMLTextAreaElement>(".assistant-fallback") ?? null;
+    void (async () => {
+        const text = await fetch(button.dataset.assistantFile ?? "").then((response) => (response.ok ? response.text() : Promise.reject(new Error(String(response.status)))));
+        try {
+            if (navigator.clipboard === undefined) throw new Error("no clipboard");
+            await navigator.clipboard.writeText(text);
+            const was = label?.textContent ?? "";
+            if (label !== null) label.textContent = button.dataset.copied ?? "";
+            say(strings().copied ?? "");
+            setTimeout(() => {
+                if (label !== null) label.textContent = was;
+            }, 1800);
+        } catch {
+            if (fallback !== null) {
+                fallback.value = text;
+                fallback.hidden = false;
+                fallback.select();
+            }
+            say(strings().copyFailed ?? "");
         }
-    });
+    })().catch(() => say(strings().failed ?? ""));
+});
+
+/* ---------- the detail of an action or a rule ---------- */
+const link = (href: string, className: string, name: string) => {
+    const a = el("a", className, name, "agent");
+    a.href = `${root}${href}`;
+    return a;
+};
+const rowsOf = (items: readonly RowView[]) => {
+    const host = el("div", "list");
+    for (const row of items) {
+        const item = row.href === undefined ? el("div", "row") : link(row.href, "row", "");
+        item.removeAttribute("data-written-by");
+        item.append(el("span", "t", row.name, "agent"));
+        const right = el("span", "r");
+        if (row.kind !== undefined) right.append(el("span", "badge", row.kind, "agent"));
+        if (row.risk !== undefined) right.append(el("span", `badge badge-${row.risk.badge}`, row.risk.word, "app"));
+        if (row.count !== undefined) {
+            const count = el("span", "", row.count.text, "app");
+            count.title = row.count.scope;
+            right.append(count);
+        }
+        item.append(right);
+        if (row.line !== undefined) item.append(el("span", "d", row.line, "agent"));
+        host.append(item);
+    }
+    return host;
+};
+/** The view of a node as the Explorer draws it on the server, for the detail read on demand. */
+const draw = (view: NodeView, words: Record<string, string>) => {
+    const host = el("article", "explorer detail-view");
+    const trail = el("nav", "trail");
+    trail.setAttribute("aria-label", words.trail ?? "");
+    const ol = el("ol");
+    for (const crumb of view.crumbs) {
+        const li = el("li");
+        li.append(link(crumb.href, "", crumb.name));
+        ol.append(li);
+    }
+    trail.append(ol);
+    host.append(trail, el("p", "node-noun", view.noun.one, "agent"), el("h2", "detail-title", view.name, "agent"));
+    if (view.summary !== "") host.append(el("p", "lead", view.summary, "agent"));
+    if (view.facts.length > 0) {
+        const facts = el("ul", "facts");
+        for (const fact of view.facts) {
+            const li = el("li", "", fact.text, "app");
+            li.title = fact.scope;
+            facts.append(li);
+        }
+        if (view.tests !== null) {
+            const li = el("li", "", `${words.checkedBy ?? ""} ${view.tests.text}`, "app");
+            li.title = view.tests.scope;
+            facts.append(li);
+        }
+        host.append(facts);
+    }
+    if (view.children.rows.length > 0) {
+        const section = el("section", "sec");
+        section.append(el("h3", "", view.children.heading, "agent"), rowsOf(view.children.rows));
+        host.append(section);
+    }
+    for (const fold of view.folds) {
+        const details = el("details", "fold-line");
+        details.dataset.fold = fold.kind;
+        const body = el("div", "fold-body");
+        body.append(rowsOf(fold.rows));
+        details.append(el("summary", "", fold.title, "app"), body);
+        host.append(details);
+    }
+    for (const group of view.lateral) {
+        const section = el("section", "sec");
+        section.append(el("h3", "", group.label, "app"), rowsOf(group.links.map((each) => ({ href: each.href, name: each.name, ...(each.count === undefined ? {} : { count: each.count }) }))));
+        host.append(section);
+    }
+    return host;
+};
+const showDetail = async () => {
+    const panel = document.getElementById("detail");
+    if (panel === null) return;
+    const key = decodeURIComponent(location.hash.slice(1));
+    if (!/^[a-z]+\/[a-z0-9-]+$/.test(key)) {
+        panel.hidden = true;
+        panel.replaceChildren();
+        return;
+    }
+    const words = strings();
+    panel.hidden = false;
+    panel.replaceChildren(el("p", "muted", words.loading ?? "", "app"));
+    try {
+        const response = await fetch(`${root}${detailOf(key)}`);
+        if (!response.ok) throw new Error(String(response.status));
+        const view = (await response.json()) as NodeView;
+        panel.replaceChildren(draw(view, words));
+        panel.scrollIntoView({ block: "start" });
+    } catch {
+        panel.replaceChildren(el("p", "note", words.failed ?? "", "app"));
+    }
+};
+addEventListener("hashchange", () => void showDetail());
+
+/* ---------- an address with no page: an old action or rule address is sent on to the page that now holds it ---------- */
+const recover = async () => {
+    if (document.querySelector("[data-not-found]") === null) return;
+    const path = location.pathname.replace(/\.html$/, "");
+    const key = /([a-z]+\/[a-z0-9-]+)$/.exec(path)?.[1];
+    if (key === undefined) return;
+    const all = await searchable();
+    const hit = all.find((each) => each.href.endsWith(`#${key}`) || each.href === `${key}.html`);
+    if (hit !== undefined) location.replace(`${root}${hit.href}`);
 };
 
-/* ---------- each page: the parts of the shell that the router replaces, and the sidebar it keeps ---------- */
+/* ---------- each page ---------- */
 const start = () => {
     root = document.body.dataset.root ?? "./";
-    current = document.body.dataset.node ?? "";
     sidebar = document.querySelector<HTMLElement>("[data-sidebar]");
     menuButton = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
-    dialog = document.querySelector<HTMLDialogElement>("[data-palette]");
+    palette = document.querySelector<HTMLDialogElement>("[data-palette]");
     input = document.getElementById("palette-input") as HTMLInputElement | null;
     list = document.getElementById("palette-list");
     const hint = document.querySelector("[data-kbd]");
     if (hint !== null && !mac) hint.textContent = "Ctrl K";
     // The sidebar is kept from the first page; its links are made for that page's depth, so each points at this page's root.
-    const nav = document.body.dataset.nav ?? "";
-    const exact = document.body.dataset.navExact === "true";
-    for (const link of sidebar?.querySelectorAll<HTMLAnchorElement>("a[data-to]") ?? []) {
-        link.setAttribute("href", `${root}${link.dataset.to ?? ""}`);
-        if (link.dataset.navId !== undefined && link.dataset.navId === nav) link.setAttribute("aria-current", exact ? "page" : "true");
-        else link.removeAttribute("aria-current");
+    for (const anchor of sidebar?.querySelectorAll<HTMLAnchorElement>("a[data-section]") ?? []) {
+        const href = anchor.getAttribute("href") ?? "";
+        const own = href.replace(/^(?:\.\.\/|\.\/)+/, "");
+        anchor.setAttribute("href", `${root}${own}`);
     }
     closeMenu();
     if (menuButton !== null && menuButton.dataset.bound === undefined) {
@@ -314,53 +286,33 @@ const start = () => {
             const next = sidebar?.dataset.open !== "true";
             if (sidebar !== null) sidebar.dataset.open = String(next);
             menuButton?.setAttribute("aria-expanded", String(next));
-            if (next) sidebar?.querySelector<HTMLElement>("a")?.focus({ preventScroll: true });
         });
     }
-    if (sidebar !== null && sidebar.dataset.bound === undefined) {
-        sidebar.dataset.bound = "true";
-        sidebar.addEventListener("click", (event) => {
-            if ((event.target as HTMLElement).closest("a") !== null) closeMenu();
-        });
-    }
-    const open = document.querySelector<HTMLElement>("[data-palette-open]");
-    if (open !== null && open.dataset.bound === undefined) {
+    for (const open of document.querySelectorAll<HTMLElement>("[data-palette-open]")) {
+        if (open.dataset.bound !== undefined) continue;
         open.dataset.bound = "true";
         open.addEventListener("click", openPalette);
     }
     if (input !== null && input.dataset.bound === undefined) {
         input.dataset.bound = "true";
-        bindInput(input);
-    }
-    if (dialog !== null && dialog.dataset.bound === undefined) {
-        dialog.dataset.bound = "true";
-        const self = dialog;
-        dialog.addEventListener("click", (event) => {
-            if (event.target === self) self.close();
+        input.addEventListener("input", () => void update());
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowDown") {
+                event.preventDefault();
+                active = Math.min(rows.length - 1, active + 1);
+                mark();
+            } else if (event.key === "ArrowUp") {
+                event.preventDefault();
+                active = Math.max(0, active - 1);
+                mark();
+            } else if (event.key === "Enter") {
+                event.preventDefault();
+                const row = rows[active];
+                if (row !== undefined) choose(row);
+            }
         });
     }
+    void showDetail();
+    void recover();
 };
 document.addEventListener("astro:page-load", start);
-start();
-
-/* ---------- what pages can tell the shell ---------- */
-// The screen page names itself when its data is in: `app:node` carries the index id and the breadcrumb.
-document.addEventListener("app:node", (event) => {
-    const detail = (event as CustomEvent<{ id: string; capability?: string; trail?: { text: string; href?: string }[] }>).detail;
-    current = detail.id;
-    document.body.dataset.node = detail.id;
-    const host = document.querySelector<HTMLElement>("[data-crumb]");
-    if (detail.trail !== undefined && host !== null) {
-        const steps = detail.trail.slice(0, -1);
-        host.replaceChildren();
-        steps.forEach((step, at) => {
-            if (at > 0) host.append(el("span", "", " / "));
-            if (step.href !== undefined) {
-                const a = el("a", "", step.text);
-                a.href = step.href;
-                host.append(a);
-            } else host.append(el("span", "", step.text));
-        });
-        host.hidden = steps.length === 0;
-    }
-});

@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { Context, Effect, Layer } from "effect";
 import { skillRoot } from "../run/analysis-layout";
 import { SiteBuildFailed } from "../run/script-errors";
@@ -12,10 +12,11 @@ export interface SiteBuilderOps {
         readonly target?: string | undefined;
         readonly bundleCommand?: string | undefined;
         readonly out: string;
+        readonly caseDir?: string | undefined;
     }) => Effect.Effect<string, SiteBuildFailed>;
 }
 
-/** The shared app, which shows an analysis and, when it is given one, a modernization plan. */
+/** The shared app, which shows an analysis and, when it is given one, a modernization plan, through the case compose writes. */
 const template = join(skillRoot, "..", "..", "shared", "app");
 
 /**
@@ -27,7 +28,14 @@ const template = join(skillRoot, "..", "..", "shared", "app");
  */
 const runStep = (step: string, args: readonly string[], environment: Record<string, string>) =>
     Effect.suspend(() => {
-        const { PLAN_DIR: _plan, TARGET_DIR: _target, BUILD_BUNDLE: _bundle, ...inherited } = process.env;
+        const {
+            CASE_DIR: _case,
+            BUILD_BUNDLE: _bundle,
+            PLAN_DIR: _plan,
+            TARGET_DIR: _target,
+            ANALYSIS_PAYLOADS_DIR: _payloads,
+            ...inherited
+        } = process.env;
         const ran = spawnSync("bun", [...args], {
             cwd: template,
             env: { ...inherited, ...environment },
@@ -46,41 +54,68 @@ const runStep = (step: string, args: readonly string[], environment: Record<stri
     });
 
 /**
- * What the app reads from its environment: the folders, and the bundle command when the caller names one. The folders and
- * the command are never inherited from this process, so a build shows only what it was given.
+ * The case folder the app is built from: beside the output folder (`<root>/case` for `<root>/app`) unless one is named.
+ * @param input what the build was given
+ * @returns the folder
+ */
+const caseDirOf = (input: Parameters<SiteBuilderOps["build"]>[0]) =>
+    input.caseDir === undefined ? join(dirname(input.out), "case") : input.caseDir;
+
+/**
+ * compose's arguments: the payloads, the target's and the plan's Output Roots when given, and the case folder it writes.
+ * @param input what the build was given
+ * @returns bun's arguments, run in the app's folder
+ */
+const composeArgs = (input: Parameters<SiteBuilderOps["build"]>[0]): string[] => [
+    "compose/cli.ts",
+    "--payloads",
+    input.analysis,
+    ...(input.target === undefined ? [] : ["--target", input.target]),
+    ...(input.plan === undefined ? [] : ["--plan", input.plan]),
+    "--out",
+    caseDirOf(input),
+];
+
+/**
+ * What the app reads from its environment: the case folder and, when the caller names one, the bundle command (the
+ * assistant copy). Neither is ever inherited from this process, so a build shows only what it was given.
  * @param input what the build was given
  * @returns the environment variables
  * @internal exported for the tests, which check it on its own
  */
 export const appEnvironment = (input: Parameters<SiteBuilderOps["build"]>[0]): Record<string, string> => ({
-    ANALYSIS_PAYLOADS_DIR: input.analysis,
-    APP_OUT: input.out,
-    ...(input.plan === undefined ? {} : { PLAN_DIR: input.plan }),
-    ...(input.target === undefined ? {} : { TARGET_DIR: input.target }),
+    CASE_DIR: caseDirOf(input),
     ...(input.bundleCommand === undefined ? {} : { BUILD_BUNDLE: input.bundleCommand }),
 });
 
 const siteBuilderOps: SiteBuilderOps = {
     /**
-     * Build the pages of the app from a folder of analysis payloads and, when given, a plan: install the app's
-     * dependencies when they are not there, copy the design system's stylesheet beside the pages, generate the validation
-     * schemas from the payload schemas, then build the static pages into the output folder, failing on any payload that
-     * does not match its schema and on any figure that does not hold. Without a plan the pages are the analysis's alone.
+     * Build the pages of the app from a folder of analysis payloads and, when given, a target and a plan: install the
+     * app's dependencies when they are not there, compose the case (the one folder the app reads; compose fails on a
+     * missing fact, an unknown version or a failed reconciliation), generate the collections from compose's contract,
+     * then build the static pages from the case into the output folder. Without a plan the pages are the analysis's alone.
      * @param input the folders
      * @param input.analysis the folder write-payloads wrote
      * @param input.plan the folder that holds the plan's files (`.modernization-backlog/` and `work-items/`), when there is one
      * @param input.target the Output Root that holds the target's files (`target/` and `.shape-target/`), when there is one
      * @param input.bundleCommand the command the pages offer to build a bundle with (`BUILD_BUNDLE`), when the caller names one
      * @param input.out the folder the pages are written to
+     * @param input.caseDir the case folder compose writes; beside the output folder when omitted
      * @returns what the build printed
      */
-    build: ({ analysis, plan, target, bundleCommand, out }) =>
+    build: (input) =>
         Effect.gen(function* () {
-            const environment = appEnvironment({ analysis, plan, target, bundleCommand, out });
+            const { out } = input;
+            const environment = appEnvironment(input);
             if (!existsSync(join(template, "node_modules"))) {
                 yield* runStep("install the app's dependencies", ["install", "--frozen-lockfile"], environment);
             }
-            yield* runStep("generate the validation schemas", ["scripts/generate-schemas.ts"], environment);
+            yield* runStep("compose the case the app reads", composeArgs(input), environment);
+            yield* runStep(
+                "generate the collections from compose's contract",
+                ["scripts/generate-schemas.ts"],
+                environment,
+            );
             return yield* runStep("build the pages", ["--bun", "x", "astro", "build", "--outDir", out], environment);
         }),
 };

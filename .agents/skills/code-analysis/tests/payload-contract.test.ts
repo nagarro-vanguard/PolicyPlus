@@ -351,13 +351,13 @@ describe("the record-shape fingerprint", () => {
 });
 
 describe("what the app build is given", () => {
-    test("the bundle command the caller names reaches the app as BUILD_BUNDLE, and nothing when it names none", () => {
+    test("the app reads only the case folder, and the bundle command the caller names reaches it as BUILD_BUNDLE", () => {
         const given = { analysis: "/a/payloads", out: "/a/app" };
         expect(appEnvironment({ ...given, bundleCommand: "CODE_ANALYSIS_ROOT=/a bun /s/build-bundle.ts" })).toEqual({
-            ANALYSIS_PAYLOADS_DIR: "/a/payloads",
-            APP_OUT: "/a/app",
+            CASE_DIR: "/a/case",
             BUILD_BUNDLE: "CODE_ANALYSIS_ROOT=/a bun /s/build-bundle.ts",
         });
-        expect(appEnvironment(given)).toEqual({ ANALYSIS_PAYLOADS_DIR: "/a/payloads", APP_OUT: "/a/app" });
+        expect(appEnvironment(given)).toEqual({ CASE_DIR: "/a/case" });
+        expect(appEnvironment({ ...given, caseDir: "/c" })).toEqual({ CASE_DIR: "/c" });
     });
 });

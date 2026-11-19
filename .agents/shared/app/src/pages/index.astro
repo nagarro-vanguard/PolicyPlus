@@ -1,60 +1,37 @@
 ---
 import Page from "../layouts/Page.astro";
-import Badge from "../components/ui/Badge.astro";
-import Stat from "../components/ui/Stat.astro";
-import { capabilities, knowledge, slugs, system } from "../lib/payloads";
-import { sideModel } from "../lib/sidebar";
-import { ledeOf, titleOf } from "../lib/derive";
-import { wantedPictures } from "../lib/figures";
-import { severityCounts } from "../lib/risks";
+import Rows from "../components/Rows.astro";
+import { caseData } from "../case/data";
+import { theCase } from "../case/loader";
+import { siteOf } from "../case/site";
+import { viewOf } from "../case/view";
 import { copy } from "../lib/copy";
-import { plural } from "../lib/text";
-
-const sys = await system();
-const caps = await capabilities();
-const know = await knowledge();
-const addresses = await slugs();
-const side = await sideModel();
-const counts = severityCounts(know.risks);
-const rules = new Set(caps.flatMap((cap) => cap.layers.flatMap((layer) => layer.rules.map((rule) => rule.id)))).size;
-const rank = { high: 0, medium: 1, low: 2 } as const;
-const top = [...know.risks].sort((a, b) => rank[a.severity as keyof typeof rank] - rank[b.severity as keyof typeof rank]).slice(0, 5);
-const wanted = wantedPictures(know);
-const worst = [counts.high > 0 ? `${counts.high} high` : "", counts.medium > 0 ? `${counts.medium} medium` : ""].filter((part) => part !== "").join(", ");
-const heading = side.name === "" ? copy.system.title : side.name;
+// The home page: what the system is, the goals of the work as the people who asked for it wrote them ("Not provided"
+// when they wrote none), the first level of the hierarchy, and the way into the reference.
+const data = await caseData();
+const view = viewOf("overview", data);
+const kase = theCase();
+const brief = kase.has("brief.json") ? (kase.json("brief.json") as { goals: { provided: boolean; text: string | null } }) : null;
+const site = await siteOf();
+const reference = site.nav.find((section) => section.id === "reference");
 ---
-<Page title={heading} lead={ledeOf(sys.purpose === "" ? copy.system.noPurpose : sys.purpose)} brief={sys.context.text}>
-    <div class="stats strip" aria-label={copy.glance.heading}>
-        <Stat value={sys.capabilities.length} unit="capabilities" />
-        <Stat value={sys.screens.length} unit="screens" />
-        <Stat value={rules} unit="business rules" />
-        <Stat value={know.risks.length} unit={worst === "" ? "risks" : `risks · ${worst}`} />
+<Page title={view.name} lead={view.summary} page="index.html" writtenBy="agent">
+    <div class="explorer">
+        {view.facts.length > 0 && <ul class="facts" aria-label={copy.explorer.facts}>{view.facts.map((fact) => <li title={fact.scope} data-written-by="app">{fact.text}</li>)}</ul>}
+        {brief !== null && <section class="sec" aria-label={copy.overview.goals}>
+            <h2 data-written-by="app">{copy.overview.goals}</h2>
+            {brief.goals.provided && brief.goals.text !== null
+                ? <Fragment><p class="note" data-written-by="app">{copy.overview.goalsNote}</p><p class="goals" data-written-by="agent">{brief.goals.text}</p></Fragment>
+                : <p class="muted" data-written-by="app">{copy.overview.notProvided}</p>}
+        </section>}
+        <section class="sec" aria-label={view.children.heading}>
+            <h2 data-written-by="agent">{view.children.heading}</h2>
+            <Rows rows={view.children.rows} root="./" />
+        </section>
+        {view.folds.filter((fold) => fold.kind === "checkFirst").map((fold) => <section class="sec" aria-label={fold.title}>
+            <h2 data-written-by="app">{fold.title}</h2>
+            <Rows rows={fold.rows} root="./" />
+        </section>)}
+        {reference !== undefined && <p><a class="btn" href={`./${reference.href}`} data-written-by="app">{copy.overview.open}</a></p>}
     </div>
-    {top.length > 0 && <section class="sec" aria-labelledby="top-risks-heading">
-        <h2 id="top-risks-heading">{copy.home.topRisks}</h2>
-        <div class="list">
-            {top.map((risk) => <a class="row" href={`risk/${addresses.risk(risk.id)}.html`}><span class="t">{titleOf(risk.statement)}</span><span class="r"><Badge kind={risk.severity as "high" | "medium" | "low"} /></span></a>)}
-        </div>
-        {know.risks.length > top.length && <p class="more"><a href="risks.html">{copy.home.allRisks(know.risks.length)} →</a></p>}
-    </section>}
-    {side.groups.map(({ area, caps: members }) => <section class="sec" aria-labelledby={`area-${area === undefined ? "none" : area.id.slice(5)}`}>
-        <h2 id={`area-${area === undefined ? "none" : area.id.slice(5)}`}>{area === undefined ? copy.system.inNoArea : area.headline}</h2>
-        <div class="list">
-            {members.map((item) => <a class="row" href={item.href}>
-                <span class="t">{item.headline}</span>
-                <span class="r">{(item.counts?.screens ?? 0) > 0 ? plural(item.counts?.screens ?? 0, "screen") : plural(item.counts?.rules ?? 0, "rule")}</span>
-                {item.summary !== undefined && <span class="d">{item.summary}</span>}
-            </a>)}
-        </div>
-    </section>)}
-    <details class="fold">
-        <summary>What we could not follow</summary>
-        <div class="fold-body">
-            <p class="note">{copy.system.gapsText(sys.gaps.unresolvedLinks, sys.gaps.unattributedBlocks)}</p>
-            {wanted.length > 0 && <Fragment>
-                <p class="note">{copy.home.wantedLead}</p>
-                {wanted.map((item) => <div class="assume"><div>{item.question}</div><div class="sub">{item.wanted}</div></div>)}
-            </Fragment>}
-        </div>
-    </details>
 </Page>

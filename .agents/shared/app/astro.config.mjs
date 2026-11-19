@@ -1,9 +1,11 @@
-import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
 import { addressesIn, isPlanPage, languageFindings, pathNamesRecordId, planFindings, visibleText } from "./src/lib/language.ts";
-import react from "@astrojs/react";
+import { buildConfig } from "./src/case/build-config.ts";
+import { openCase } from "./src/case/read.ts";
+import { assistantTexts } from "./src/case/raw-data.ts";
 
 /**
  * After the build, every `/_astro/` address in a page becomes a path relative to the page, so the output folder opens
@@ -28,6 +30,24 @@ const relativeAssets = () => ({
                     file,
                     html.replaceAll('"/_astro/', `"${prefix}_astro/`).replaceAll("'/_astro/", `'${prefix}_astro/`),
                 );
+            }
+        },
+    },
+});
+
+/**
+ * After the build, the texts a reader copies for an assistant are written beside the pages, one file per node, read from
+ * the case on demand by the copy button: a large system holds tens of megabytes of them, so no page carries them.
+ * @returns the integration
+ */
+const assistantFiles = () => ({
+    name: "assistant-files",
+    hooks: {
+        "astro:build:done": ({ dir }) => {
+            const out = fileURLToPath(dir);
+            for (const [path, text] of assistantTexts(openCase(buildConfig().caseDir))) {
+                mkdirSync(dirname(join(out, path)), { recursive: true });
+                writeFileSync(join(out, path), text);
             }
         },
     },
@@ -91,10 +111,11 @@ const readerCheck = () => ({
 });
 
 // The stylesheet is never inlined: its font addresses are relative to it, so it must stay one file in _astro/.
-// Static pages, one file per place (`capability/<id>.html`). The payloads and the output folder come from the environment,
-// set by a skill's build-app command.
+// Static pages, one file per node of a page level (`capability/<slug>.html`). The app's only input is the case folder
+// compose wrote, named by src/case/build-config.ts (checked once; the build fails without it).
+buildConfig();
 export default defineConfig({
-    integrations: [react(), relativeAssets(), readerCheck()],
+    integrations: [relativeAssets(), assistantFiles(), readerCheck()],
     output: "static",
     build: { format: "file", inlineStylesheets: "never" },
     devToolbar: { enabled: false },

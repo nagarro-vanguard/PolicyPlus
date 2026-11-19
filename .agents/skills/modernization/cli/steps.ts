@@ -43,8 +43,9 @@ export const hashFiles = (paths: readonly string[], without: Record<string, read
 
 export type Paths = ReturnType<typeof pathsOf>;
 const here = dirname(fileURLToPath(import.meta.url));
-/** What builds the app: its source and styles, the shared design system's stylesheet and the build command. A change in any reaches a rerun. */
+/** What builds the app: compose, its source and styles, the shared design system's stylesheet and the build command. A change in any reaches a rerun. */
 const appSource = [
+    join(here, "../../../shared/app/compose"),
     join(here, "../../../shared/app/src"),
     join(here, "../../../shared/app/public"),
     join(here, "../../../shared/app/scripts"),
@@ -82,6 +83,7 @@ export const pathsOf = (root: string) => ({
     manifest: join(root, "work-items/manifest.json"),
     ledger: join(root, "work-items/ledger.json"),
     app: join(root, "app"),
+    case: join(root, "case"),
     appSource,
 });
 
@@ -172,7 +174,8 @@ const gate = (input: {
             action: ({ paths, skills }) => ({
                 action: "run",
                 step: `${name}-pages`,
-                command: `mkdir -p ${join(paths.root, ".shape-target/pages")} && CODE_ANALYSIS_ROOT=${paths.analysis} TARGET_CHOOSE="${chooseCommand(skills)}" ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --target ${paths.root} --out ${paths.app}`)}; test -f ${paths.app}/language-report.json && touch ${paths.pages(input.gate)}`,
+                // compose reads a target only once it is finished, so the pages of a decision are built from the analysis.
+                command: `mkdir -p ${join(paths.root, ".shape-target/pages")} && CODE_ANALYSIS_ROOT=${paths.analysis} ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --out ${paths.app} --case ${paths.case}`)}; test -f ${paths.app}/language-report.json && touch ${paths.pages(input.gate)}`,
                 why: `build the pages that show the ${input.gate} proposal, before the person is asked`,
             }),
         },
@@ -371,8 +374,8 @@ export const steps: Step[] = [
         action: ({ paths, skills }) => ({
             action: "run",
             step: "app",
-            command: `CODE_ANALYSIS_ROOT=${paths.analysis} TARGET_CHOOSE="${chooseCommand(skills)}" ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --plan ${paths.root} --target ${paths.root} --out ${paths.app}`)}`,
-            why: "build the one app that shows the analysis and the plan",
+            command: `CODE_ANALYSIS_ROOT=${paths.analysis} ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --plan ${paths.root} --target ${paths.root} --out ${paths.app} --case ${paths.case}`)}`,
+            why: "compose the case from the analysis, the target and the plan, then build the one app that shows it",
         }),
     },
 ];

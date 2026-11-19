@@ -396,7 +396,9 @@ describe("the target's decisions", () => {
         const pages = next(root, request);
         expect(pages.action).toBe("run");
         expect(stepOf(pages)).toBe("target-as-is-pages");
-        expect(JSON.stringify(pages)).toContain("--target");
+        // compose reads a target only once it is finished: the pages of a decision are composed from the analysis
+        expect(JSON.stringify(pages)).not.toContain("--target");
+        expect(JSON.stringify(pages)).toContain(`--case ${paths.case}`);
         put(paths.pages("as-is"));
         const action = next(root, request);
         expect(action.action).toBe("wait");

@@ -2693,3 +2693,63 @@ pre.command {
     margin-top: var(--space-6xl);
     border-top: 1px solid var(--border);
 }
+
+/* The Explorer: what kind of node this is, the way up, back and on, the detail of an action or a rule, the copy for an
+   assistant. */
+.node-noun {
+    margin: 0 0 var(--space-md);
+}
+
+.pager {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md) var(--space-xxl);
+    margin-top: var(--space-6xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+}
+
+.pager a {
+    display: flex;
+    flex-direction: column;
+    color: inherit;
+    text-decoration: none;
+}
+
+.pager a[rel="next"] {
+    margin-inline-start: auto;
+    text-align: end;
+}
+
+.pager-word {
+    color: var(--muted-foreground);
+}
+
+.detail:not([hidden]) {
+    margin-top: var(--space-6xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border);
+}
+
+.detail-title {
+    margin: 0 0 var(--space-xs);
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+}
+
+.assistant {
+    margin-top: var(--space-6xl);
+}
+
+.assistant-fallback {
+    inline-size: 100%;
+    min-block-size: 8rem;
+    margin-top: var(--space-md);
+}
+
+.diagram-lines {
+    margin: 0;
+    padding-inline-start: var(--space-xl);
+}
