@@ -108,6 +108,7 @@ export const copy = {
         sectionsTitle: "Sections",
         pageErrorTitle: "Something on this page did not work",
         pageError: "Open the page again, or go on from the menu.",
+        onThisPage: "On this page",
     },
     reference: {
         /** The Reference section's label: the capability noun and the places noun the case gives. */
@@ -128,6 +129,10 @@ export const copy = {
         loading: "Loading",
         failed: "This part did not load. Open the page again to try once more.",
         kind: "Kind",
+        close: "Close",
+        filterRows: "Filter these rows",
+        filterHint: "A few words",
+        detailPager: "Other actions and rules here",
     },
     overview: {
         goals: "Goals",

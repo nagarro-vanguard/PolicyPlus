@@ -20,7 +20,7 @@ const Heading = level;
 ---
 <figure class="flex min-w-0 flex-col gap-spacing-md" data-diagram={diagram.key}>
     <div class="flex flex-col gap-spacing-2xs">
-        <Heading class="text-sm font-medium" data-written-by="app">{diagram.title}</Heading>
+        <Heading class="text-sm font-medium" data-written-by="app" data-contents-entry>{diagram.title}</Heading>
         {diagram.caption === null ? null : <p class="text-muted-foreground" data-written-by="agent">{diagram.caption}</p>}
         {diagram.question === null ? null : <p class="text-sm text-muted-foreground" data-written-by="agent">{diagram.question}</p>}
     </div>

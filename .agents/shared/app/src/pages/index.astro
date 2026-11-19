@@ -14,6 +14,6 @@ const brief = kase.has("brief.json") ? (kase.json("brief.json") as { goals: { pr
 const site = await siteOf();
 const reference = site.nav.find((section) => section.id === "reference");
 ---
-<Page title={view.name} lead={view.summary} page="index.html" writtenBy="agent">
+<Page title={view.name} lead={view.summary} page="index.html" writtenBy="agent" facts={{ facts: view.facts, tests: null }}>
     <Overview view={view} goals={brief === null ? null : brief.goals} reference={reference === undefined ? null : reference.href} />
 </Page>

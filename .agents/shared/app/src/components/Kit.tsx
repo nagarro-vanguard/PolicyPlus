@@ -29,6 +29,7 @@ const sample: NodeView = {
     level: "capability",
     href: "#",
     name: "Keeping records",
+    code: null,
     summary: "People add, change and remove the records they keep.",
     noun: { one: "capability", many: "capabilities" },
     crumbs: [{ href: "#", name: "Example system" }, { href: "#r", name: "Records" }],
@@ -49,7 +50,7 @@ const sample: NodeView = {
     up: { href: "#", name: "Records" },
     prev: null,
     next: { href: "#", name: "Reporting" },
-    lateral: [{ label: "Also used by", links: [{ href: "#", name: "Reporting", count: { text: "2 actions", scope: "actions of this page that this capability uses", value: 2 } }] }],
+    lateral: [{ relation: "alsoUsedBy", label: "Also used by", links: [{ href: "#", name: "Reporting", count: { text: "2 actions", scope: "actions of this page that this capability uses", value: 2 } }] }],
     assistant: { file: "#", kilobytes: 12, fuller: null },
     diagrams: [{ key: "flow/keeping-records", title: "How the work passes through it", question: null, legend: ["calls"], text: ["Record list calls Records service"] }],
 };

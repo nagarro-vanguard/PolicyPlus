@@ -1,8 +1,7 @@
 ---
 import "../styles/app.css";
 import { ClientRouter } from "astro:transitions";
-import { PageOpening } from "@continuum/ui/components/page-opening";
-import { copy } from "../lib/copy";
+import { copy, relationLabels } from "../lib/copy";
 import { siteOf } from "../case/site";
 import { rootOf } from "../case/routes";
 import { sectionOfPage } from "../case/sections";
@@ -11,11 +10,18 @@ import { MobileNav } from "../components/shell/MobileNav";
 import { SearchButton, ThemeControl } from "../components/shell/TopBar";
 import { Palette } from "../components/shell/Palette";
 import { ErrorState } from "@continuum/ui/components/error-state";
-// The frame of every page, built from the design system's components (vendor/ui) and rendered to HTML at build time.
+import { PageHeader, type PageAssistant } from "../components/shell/PageHeader";
+import { ContentsFold, ContentsRail, contentsFrom } from "../components/shell/Contents";
+import { DetailDrawer } from "../components/DetailDrawer";
+import type { CountView } from "../case/format";
+import { pageHeadings } from "../lib/headings";// The frame of every page, built from the design system's components (vendor/ui) and rendered to HTML at build time.
 // The islands, the only components that ship a script, are listed here and nowhere else:
 //   MobileNav, `client:media` below Finch's `md`: the sheet that holds the menu on a narrow screen.
-// Everything else that moves (search, copy for an assistant, the detail at `#<key>`, the theme) is the page's own small
-// script, src/scripts/shell.ts and public/site.js, with no framework. After the build the offline packager
+// Everything else that moves (search, copy for an assistant, the drawer of an action or rule at `#<key>`, the list of the
+// page's headings, the theme) is the page's own small script, src/scripts/shell.ts, src/scripts/contents.ts and
+// public/site.js, with no framework.
+// Every page opens the same way (PageHeader): its kind, title, one sentence and its actions at the top right, then its
+// facts. A page of four or more headings lists them (Contents): a rail beside it from 1280 pixels, a fold at its top below. After the build the offline packager
 // (scripts/package/) turns every script into a classic one, adds the page's Content-Security-Policy and moves repeated
 // class lists into one shared stylesheet, so the folder works from `file://` and from any subfolder of a site.
 export interface Props {
@@ -27,8 +33,18 @@ export interface Props {
     writtenBy?: "agent" | "app";
     /** The page holds a table or a drawing that needs the wider column. */
     wide?: boolean;
+    /** What kind of thing the page is about, when it is one of many (the case's noun). */
+    label?: string;
+    /** The page's few facts, said under its title. */
+    facts?: { facts: readonly CountView[]; tests: CountView | null };
+    /** The page's text for a reader's assistant, when it has one. */
+    assistant?: PageAssistant | null;
+    /** The page opens actions and rules in the drawer beside it. */
+    drawer?: boolean;
 }
-const { title, lead = "", page, writtenBy = "app", wide = false } = Astro.props;
+const { title, lead = "", page, writtenBy = "app", wide = false, label, facts, assistant = null, drawer = false } = Astro.props;
+const content = pageHeadings(await Astro.slots.render("default"));
+const listed = content.entries.length >= contentsFrom ? content.entries : [];
 const root = rootOf(page);
 const site = await siteOf();
 const current = sectionOfPage(page, site.sections);
@@ -69,22 +85,25 @@ const nav = {
                 <SearchButton label={copy.site.searchOpen} />
                 <div class="ms-auto shrink-0"><ThemeControl /></div>
             </header>
-            <main id="main" tabindex="-1" class:list={["mx-auto flex w-full flex-col gap-spacing-4xl px-spacing-xxl pt-spacing-4xl pb-spacing-5xl md:px-spacing-5xl", wide ? "max-w-wide" : "max-w-column"]} data-wide={wide ? "true" : undefined}>
-                <div id="page-error" hidden data-written-by="app">
-                    <ErrorState compact title={copy.site.pageErrorTitle} message={copy.site.pageError} />
-                </div>
-                <slot name="trail" />
-                <div data-written-by={writtenBy}>
-                    <PageOpening title={title} summary={lead === "" ? undefined : lead} />
-                </div>
-                <slot />
-            </main>
+            <div class="flex w-full min-w-0 justify-center gap-spacing-xl min-[1280px]:in-data-[drawer=open]:pe-[27rem]">
+                <main id="main" tabindex="-1" class:list={["flex w-full min-w-0 flex-col gap-spacing-4xl px-spacing-xxl pt-spacing-4xl pb-spacing-5xl md:px-spacing-5xl", wide ? "max-w-wide" : "max-w-column"]} data-wide={wide ? "true" : undefined}>
+                    <div id="page-error" hidden data-written-by="app">
+                        <ErrorState compact title={copy.site.pageErrorTitle} message={copy.site.pageError} />
+                    </div>
+                    <slot name="trail" />
+                    <PageHeader label={label} title={title} summary={lead === "" ? undefined : lead} writtenBy={writtenBy} assistant={assistant} facts={facts} />
+                    {listed.length === 0 ? null : <ContentsFold entries={listed} />}
+                    <Fragment set:html={content.html} />
+                </main>
+                {listed.length === 0 ? null : <ContentsRail entries={listed} />}
+            </div>
         </div>
     </div>
     <Palette words={{ search: copy.site.search, searchHint: copy.site.searchHint, results: copy.site.results, searchHelp: copy.site.searchHelp }} />
-    <script type="application/json" id="copy-strings" set:html={JSON.stringify({ copied: copy.site.copiedAnnounce, noMatch: copy.site.noMatch, copyFailed: copy.site.copyFailed, loading: copy.explorer.loading, failed: copy.explorer.failed, checkedBy: copy.explorer.checkedBy("").trim(), trail: copy.site.trail })}></script>
+    <script type="application/json" id="copy-strings" set:html={JSON.stringify({ copied: copy.site.copiedAnnounce, noMatch: copy.site.noMatch, copyFailed: copy.site.copyFailed, loading: copy.explorer.loading, failed: copy.explorer.failed, checkedBy: copy.explorer.checkedBy("").trim(), trail: copy.site.trail, previous: copy.explorer.previous, next: copy.explorer.next, detailPager: copy.explorer.detailPager, livesIn: relationLabels.livesIn })}></script>
+    {drawer ? <DetailDrawer /> : null}
     <div id="announce" class="sr-only" aria-live="polite"></div>
     <script is:inline data-astro-rerun src={`${root}site.js`}></script>
-    <script>import "../scripts/shell.ts";</script>
+    <script>import "../scripts/shell.ts"; import "../scripts/contents.ts";</script>
 </body>
 </html>

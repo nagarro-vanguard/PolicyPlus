@@ -1,20 +1,15 @@
-import { Badge } from "@continuum/ui/components/badge";
-import { Button } from "@continuum/ui/components/button";
 import { DetailsSection, Sections } from "@continuum/ui/components/details";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@continuum/ui/components/item";
-import { Textarea } from "@continuum/ui/components/textarea";
-import { Copy } from "lucide-react";
 import type { ReactNode } from "react";
-import { heading } from "../case/format";
 import type { CountView } from "../case/format";
 import type { Link, NodeView } from "../case/view";
 import { copy } from "../lib/copy";
 import { Fold } from "./Fold";
 import { Rows } from "./Rows";
 
-// One node of the hierarchy, the same anatomy at every level: what kind of thing it is, at most three facts, what checks
-// it, its diagrams as text, the next level as rows, folds for the rest, links to the same thing elsewhere, the way up,
-// back and on, and the text a reader can hand to an assistant. Every count comes from the case's numbers table with its
+// One node of the hierarchy, the same anatomy at every level: its diagrams as text, the next level as rows, folds for
+// the rest, links to the same thing elsewhere, and the way up, back and on. What kind of thing it is, its few facts and
+// the text a reader can hand to an assistant are in the page's header (src/components/shell/PageHeader.tsx). Every count comes from the case's numbers table with its
 // scope as the explanation; every name and sentence is the analysis's own. Built from the design system's primitives;
 // a section's heading is marked with who wrote it on the section's wrapper, since the design system's section takes
 // its heading as words only.
@@ -69,6 +64,19 @@ const PagerLink = ({ link, word, rel, root }: { readonly link: Link; readonly wo
 );
 
 /**
+ * A link to another node as a row: its name, the name from code or a second line, and its count.
+ * @param link the link
+ * @returns the row
+ */
+export const rowOfLink = (link: Link & { count?: CountView }) => ({
+    href: link.href,
+    name: link.name,
+    ...(link.code === undefined ? {} : { code: link.code }),
+    ...(link.line === undefined ? {} : { line: link.line }),
+    ...(link.count === undefined ? {} : { count: link.count }),
+});
+
+/**
  * The node.
  * @param props the node's view and the address of the site's root from this page
  * @returns the node, as the page shows it
@@ -76,14 +84,6 @@ const PagerLink = ({ link, word, rel, root }: { readonly link: Link; readonly wo
 export function Explorer({ view, root }: { readonly view: NodeView; readonly root: string }) {
     return (
         <div className="flex flex-col gap-spacing-5xl" data-node-view>
-            <div className="flex flex-col gap-spacing-md">
-                <p>
-                    <Badge variant="secondary" data-written-by="agent">
-                        {heading(view.noun.one)}
-                    </Badge>
-                </p>
-                <Facts facts={view.facts} tests={view.tests} />
-            </div>
             <Sections>
                 {view.diagrams.map((diagram) => (
                     <div key={diagram.key} data-diagram={diagram.key}>
@@ -135,7 +135,7 @@ export function Explorer({ view, root }: { readonly view: NodeView; readonly roo
                 )}
                 {view.lateral.map((group) => (
                     <Section key={group.label} title={group.label} writtenBy="app">
-                        <Rows rows={group.links.map((each) => ({ href: each.href, name: each.name, ...(each.count === undefined ? {} : { count: each.count }) }))} root={root} />
+                        <Rows rows={group.links.map(rowOfLink)} root={root} />
                     </Section>
                 ))}
             </Sections>
@@ -145,25 +145,6 @@ export function Explorer({ view, root }: { readonly view: NodeView; readonly roo
                     {view.up === null ? null : <PagerLink link={view.up} word={copy.explorer.up} root={root} />}
                     {view.next === null ? null : <PagerLink link={view.next} word={copy.explorer.next} rel="next" root={root} />}
                 </nav>
-            )}
-            {view.assistant === null ? null : (
-                <div className="flex flex-col items-start gap-spacing-md" data-for-assistant>
-                    <Button variant="outline" data-assistant-file={`${root}${view.assistant.file}`} data-copied={copy.site.copied}>
-                        <Copy aria-hidden="true" />
-                        <span data-label data-written-by="app">
-                            {copy.explorer.copyForAssistant}
-                        </span>
-                        <span className="text-muted-foreground" data-written-by="app">
-                            {copy.explorer.size(view.assistant.kilobytes)}
-                        </span>
-                    </Button>
-                    {view.assistant.fuller === null ? null : (
-                        <p className="text-sm text-muted-foreground" data-written-by="app">
-                            {copy.explorer.fullerText} <code>{view.assistant.fuller}</code>
-                        </p>
-                    )}
-                    <Textarea className="font-mono text-xs" readOnly hidden aria-label={copy.explorer.forAssistant} data-assistant-fallback rows={8} />
-                </div>
             )}
         </div>
     );

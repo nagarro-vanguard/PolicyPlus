@@ -14,12 +14,12 @@ import { Fold } from "./Fold";
 
 const words = copy.architecture;
 
-/** A heading inside a section. */
-export function Sub({ title, lead, children }: { readonly title: string; readonly lead?: string; readonly children: ReactNode }) {
+/** A heading inside a section; `listed` puts it in the page's list of headings, under its section's. */
+export function Sub({ title, lead, listed = false, children }: { readonly title: string; readonly lead?: string; readonly listed?: boolean; readonly children: ReactNode }) {
     return (
         <div className="flex flex-col gap-spacing-md" data-part="subsection">
             <div className="flex flex-col gap-spacing-2xs">
-                <h3 className="text-sm font-semibold" data-written-by="app">
+                <h3 className="text-sm font-semibold" data-written-by="app" data-contents-entry={listed ? "" : undefined}>
                     {title}
                 </h3>
                 {lead === undefined ? null : (
@@ -71,7 +71,7 @@ export function TodayData({ today }: { readonly today: TodayView }) {
     return (
         <>
             {today.entities.length === 0 ? null : (
-                <Sub title={words.entities}>
+                <Sub title={words.entities} listed>
                     {today.entities.length > 15 ? <Filter label={words.entitiesFilter} target="entities" /> : null}
                     <div id="entities" className="flex flex-col">
                         {today.entities.map((each) => (
@@ -91,7 +91,7 @@ export function TodayData({ today }: { readonly today: TodayView }) {
                 </Sub>
             )}
             {today.stores.length === 0 ? null : (
-                <Sub title={words.stores}>
+                <Sub title={words.stores} listed>
                     <ul className="flex list-disc flex-col gap-spacing-2xs ps-spacing-4xl">
                         {today.stores.map((each) => (
                             <li key={each} data-written-by="agent">

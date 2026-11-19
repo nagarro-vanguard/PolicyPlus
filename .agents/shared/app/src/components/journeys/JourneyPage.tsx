@@ -1,8 +1,5 @@
-import { Button } from "@continuum/ui/components/button";
 import { Sections } from "@continuum/ui/components/details";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@continuum/ui/components/item";
-import { Textarea } from "@continuum/ui/components/textarea";
-import { Copy } from "lucide-react";
 import type { JourneyView, PairRow, StepView, TodayStepView } from "../../case/journeys";
 import type { Link } from "../../case/view";
 import { copy } from "../../lib/copy";
@@ -305,20 +302,6 @@ export function JourneyPage({ view, root }: { readonly view: JourneyView; readon
                     {view.prev === null ? null : <PagerLink link={view.prev} word={words.previous} rel="prev" root={root} />}
                     {view.next === null ? null : <PagerLink link={view.next} word={words.next} rel="next" root={root} />}
                 </nav>
-            )}
-            {view.assistant === null ? null : (
-                <div className="flex flex-col items-start gap-spacing-md" data-for-assistant>
-                    <Button variant="outline" data-assistant-file={`${root}${view.assistant.file}`} data-copied={copy.site.copied}>
-                        <Copy aria-hidden="true" />
-                        <span data-label data-written-by="app">
-                            {copy.explorer.copyForAssistant}
-                        </span>
-                        <span className="text-muted-foreground" data-written-by="app">
-                            {copy.explorer.size(view.assistant.kilobytes)}
-                        </span>
-                    </Button>
-                    <Textarea className="font-mono text-xs" readOnly hidden aria-label={copy.explorer.forAssistant} data-assistant-fallback rows={8} />
-                </div>
             )}
         </div>
     );

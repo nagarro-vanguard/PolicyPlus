@@ -2,10 +2,10 @@ import { Button } from "@continuum/ui/components/button";
 import { Sections } from "@continuum/ui/components/details";
 import type { NodeView } from "../case/view";
 import { copy } from "../lib/copy";
-import { Facts, Section } from "./Explorer";
+import { Section } from "./Explorer";
 import { Rows } from "./Rows";
 
-// The home page's body: the system's facts, the goals of the work as the people who asked for it wrote them ("Not
+// The home page's body (its facts are in the page's header): the goals of the work as the people who asked for it wrote them ("Not
 // provided" when they wrote none), the first level of the hierarchy, what to check first, and the way into the reference.
 
 /**
@@ -24,7 +24,6 @@ export function Overview({
 }) {
     return (
         <div className="flex flex-col gap-spacing-5xl">
-            <Facts facts={view.facts} tests={null} />
             <Sections>
                 {goals === null ? null : (
                     <Section title={copy.overview.goals} writtenBy="app">

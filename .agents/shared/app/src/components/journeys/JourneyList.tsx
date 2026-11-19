@@ -5,7 +5,7 @@ import { Label } from "@continuum/ui/components/label";
 import { NoDataState } from "@continuum/ui/components/no-data-state";
 import type { DropView, JourneysView, ListRow } from "../../case/journeys";
 import { copy } from "../../lib/copy";
-import { Facts, Section } from "../Explorer";
+import { Section } from "../Explorer";
 import { ChangeChips, LinkRows } from "./Parts";
 
 // The list of journeys: what today and the new way mean in one sentence, the numbers, a plain filter, the journeys
@@ -102,7 +102,6 @@ export function JourneyList({ view, root }: { readonly view: JourneysView; reado
                 <p className="text-muted-foreground" data-written-by="app">
                     {view.hasWays ? words.meaning : words.meaningToday}
                 </p>
-                <Facts facts={view.facts} tests={null} />
             </div>
             <form role="search" aria-label={words.filter} className="flex flex-wrap items-end gap-spacing-xl" data-journey-filter data-needs-js hidden>
                 <div className="flex min-w-48 flex-1 flex-col gap-spacing-xs">

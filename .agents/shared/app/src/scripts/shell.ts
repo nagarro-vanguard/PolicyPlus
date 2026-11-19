@@ -1,5 +1,5 @@
-// The shell of every page: the shortcut hint, the search, the copy for a reader's assistant and the detail of an action
-// or a rule, opened on the page that holds it at `#<key>`. The search reads `data/search.json`, the detail
+// The shell of every page: the shortcut hint, the search, the copy for a reader's assistant and the drawer of an action
+// or a rule, opened beside the page that holds it at `#<key>`. The search reads `data/search.json`, the detail
 // `data/node/<key>.json` and the pieces it is drawn from `data/parts.html`, the assistant's text `assistant/<key>.txt`;
 // all are written at build time and read as classic scripts (load.ts), so they work from `file://` too, and the shell
 // never grows with the system shown. An error in a page's script shows a plain message at the top of the page instead
@@ -133,7 +133,7 @@ document.addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-assistant-file]");
     if (button === null) return;
     const label = button.querySelector("[data-label]");
-    const fallback = button.parentElement?.querySelector<HTMLTextAreaElement>("[data-assistant-fallback]") ?? null;
+    const fallback = (button.closest("[data-assistant-scope]") ?? button.closest("[data-for-assistant]"))?.querySelector<HTMLTextAreaElement>("[data-assistant-fallback]") ?? null;
     void (async () => {
         const text = await loadFile<string>(button.dataset.assistantFile ?? "", false);
         const done = () => {
@@ -172,8 +172,8 @@ document.addEventListener("click", (event) => {
     })().catch(() => say(strings().failed ?? ""));
 });
 
-/* ---------- the detail of an action or a rule ---------- */
-/** The pieces the server rendered once for the site (`data/parts.html`), read the first time a detail opens. */
+/* ---------- the drawer of an action or a rule ---------- */
+/** The pieces the server rendered once for the site (`data/parts.html`), read the first time a drawer opens. */
 let pieces: Promise<HTMLTemplateElement> | undefined;
 let template: HTMLTemplateElement | null = null;
 const loadPieces = () => {
@@ -208,6 +208,12 @@ const rowsOf = (items: readonly RowView[]) => {
         if (row.href !== undefined) item.setAttribute("href", `${root}${row.href}`);
         const title = slot(item, "item-title");
         if (title !== null) title.textContent = row.name;
+        const code = item.querySelector<HTMLElement>('[data-part="code"]');
+        if (row.code === undefined) code?.remove();
+        else if (code !== null) {
+            code.removeAttribute("data-part");
+            code.textContent = row.code;
+        }
         const line = slot(item, "item-description");
         if (row.line === undefined) line?.remove();
         else if (line !== null) line.textContent = row.line;
@@ -234,7 +240,31 @@ const rowsOf = (items: readonly RowView[]) => {
     }
     return host;
 };
-/** A section of the design system with its heading, a level below the detail's own heading. */
+/** A list longer than this gets a filter above it. */
+const filterFrom = 16;
+/** The rows, with a filter over them when they are many. */
+const filteredRows = (items: readonly RowView[]) => {
+    const rows = rowsOf(items);
+    if (items.length < filterFrom) return rows;
+    const box = el("div", "flex flex-col gap-spacing-md");
+    const filter = part("filter");
+    const input = filter.querySelector("input");
+    const none = part("no-match");
+    none.hidden = true;
+    input?.addEventListener("input", () => {
+        const wanted = input.value.toLowerCase().split(/\s+/).filter((word) => word !== "");
+        let shown = 0;
+        for (const row of rows.children) {
+            const keep = wanted.every((word) => (row.textContent ?? "").toLowerCase().includes(word));
+            (row as HTMLElement).hidden = !keep;
+            if (keep) shown += 1;
+        }
+        none.hidden = shown > 0;
+    });
+    box.append(filter, rows, none);
+    return box;
+};
+/** A section of the design system with its heading, a level below the drawer's own heading. */
 const sectionOf = (title: string, writtenBy: "agent" | "app", body: HTMLElement) => {
     const wrapper = part("section");
     wrapper.dataset.writtenBy = writtenBy;
@@ -248,85 +278,217 @@ const sectionOf = (title: string, writtenBy: "agent" | "app", body: HTMLElement)
     section?.append(body);
     return wrapper;
 };
-/** The view of a node as the Explorer draws it on the server, for the detail read on demand. */
-const draw = (view: NodeView, strings: Record<string, string>) => {
-    const host = el("article", "flex flex-col gap-spacing-xl");
-    const trail = part("trail");
-    trail.dataset.writtenBy = "agent";
-    trail.querySelector("nav")?.setAttribute("aria-label", strings.trail ?? "");
-    const ol = trail.querySelector("ol");
-    const step = ol?.querySelector("li");
-    step?.remove();
-    for (const crumb of view.crumbs) {
-        const li = step?.cloneNode(true) as HTMLElement | undefined;
-        const a = li?.querySelector("a");
-        if (li === undefined || a === null || a === undefined) continue;
-        a.href = `${root}${crumb.href}`;
-        a.textContent = crumb.name;
-        ol?.append(li);
-    }
-    // The last step names the place the detail sits under: no separator follows it.
-    ol?.lastElementChild?.querySelector('[aria-hidden="true"]')?.remove();
-    const opening = el("div", "flex flex-col gap-spacing-xs");
-    const noun = part("noun");
-    noun.textContent = view.noun.one;
-    opening.append(el("p"), el("h2", "text-xl font-semibold", view.name, "agent"));
-    opening.firstElementChild?.append(noun);
-    if (view.summary !== "") opening.append(el("p", "text-base text-muted-foreground", view.summary, "agent"));
-    host.append(trail, opening);
-    if (view.facts.length > 0) {
-        const facts = part("facts");
-        const sample = facts.querySelector("li");
-        facts.replaceChildren();
+const rowOfLink = (link: NodeView["lateral"][number]["links"][number]): RowView => ({
+    href: link.href,
+    name: link.name,
+    ...(link.code === undefined ? {} : { code: link.code }),
+    ...(link.line === undefined ? {} : { line: link.line }),
+    ...(link.count === undefined ? {} : { count: link.count }),
+});
+/** The body of the drawer: what it does, its facts, its rules, where its code lives (once), its other links, the copy for an assistant and the way to the ones beside it. */
+const draw = (view: NodeView, said: Record<string, string>) => {
+    const host = document.createDocumentFragment();
+    if (view.summary !== "") host.append(el("p", "text-base text-muted-foreground", view.summary, "agent"));
+    const facts = view.facts.slice(0, view.tests === null ? 3 : 2);
+    if (facts.length > 0 || view.tests !== null) {
+        const list = part("facts");
+        const sample = list.querySelector("li");
+        list.replaceChildren();
         const fact = (text: string, scope: string) => {
             const li = (sample?.cloneNode(false) as HTMLElement | undefined) ?? el("li");
             li.textContent = text;
             li.title = scope;
-            facts.append(li);
+            list.append(li);
         };
-        for (const each of view.facts) fact(each.text, each.scope);
-        if (view.tests !== null) fact(`${strings.checkedBy ?? ""} ${view.tests.text}`, view.tests.scope);
-        host.append(facts);
+        for (const each of facts) fact(each.text, each.scope);
+        if (view.tests !== null) fact(`${said.checkedBy ?? ""} ${view.tests.text}`, view.tests.scope);
+        host.append(list);
     }
-    if (view.children.rows.length > 0) host.append(sectionOf(view.children.heading, "agent", rowsOf(view.children.rows)));
-    if (view.folds.length > 0) {
+    if (view.assistant !== null) {
+        const block = part("assistant-block");
+        const button = block.querySelector<HTMLElement>("[data-assistant-file]");
+        button?.setAttribute("data-assistant-file", `${root}${view.assistant.file}`);
+        const size = button?.querySelector<HTMLElement>('[data-part="assistant-size"]');
+        if (size !== null && size !== undefined) size.textContent = (size.textContent ?? "").replace(/\d+/, String(view.assistant.kilobytes));
+        host.append(block);
+    }
+    if (view.children.rows.length > 0) host.append(sectionOf(view.children.heading, "agent", filteredRows(view.children.rows)));
+    for (const fold of view.folds.filter((each) => each.kind !== "layers")) {
+        const details = part("fold");
+        details.dataset.fold = fold.kind;
+        const summary = details.querySelector("summary [data-written-by]");
+        if (summary !== null) summary.textContent = fold.title;
+        details.querySelector('[data-part="fold-body"]')?.append(filteredRows(fold.rows));
         const folds = el("div", "flex flex-col border-t border-border");
-        for (const fold of view.folds) {
-            const details = part("fold");
-            details.dataset.fold = fold.kind;
-            const summary = details.querySelector("summary [data-written-by]");
-            if (summary !== null) summary.textContent = fold.title;
-            details.querySelector('[data-part="fold-body"]')?.append(rowsOf(fold.rows));
-            folds.append(details);
-        }
+        folds.append(details);
         host.append(folds);
     }
-    for (const group of view.lateral)
-        host.append(sectionOf(group.label, "app", rowsOf(group.links.map((each) => ({ href: each.href, name: each.name, ...(each.count === undefined ? {} : { count: each.count }) })))));
+    // Where its code lives, said once: the place it is in and the layers its work passes through, together.
+    const lives = view.lateral.find((group) => group.relation === "livesIn");
+    const layers = view.folds.find((fold) => fold.kind === "layers");
+    const where = [...(lives?.links.map(rowOfLink) ?? []), ...(layers?.rows ?? [])];
+    if (where.length > 0) host.append(sectionOf(lives?.label ?? said.livesIn ?? "", "app", filteredRows(where)));
+    for (const group of view.lateral.filter((each) => each.relation !== "livesIn")) host.append(sectionOf(group.label, "app", filteredRows(group.links.map(rowOfLink))));
+    if (view.prev !== null || view.next !== null) {
+        const pager = el("nav", "flex flex-wrap gap-spacing-md border-t border-border pt-spacing-xl");
+        pager.setAttribute("aria-label", said.detailPager ?? "");
+        for (const [link, word, rel] of [
+            [view.prev, said.previous ?? "", "prev"],
+            [view.next, said.next ?? "", "next"],
+        ] as const) {
+            if (link === null) continue;
+            const item = part("pager-link");
+            item.setAttribute("href", `${root}${link.href}`);
+            item.setAttribute("rel", rel);
+            const description = slot(item, "item-description");
+            if (description !== null) description.textContent = word;
+            const title = slot(item, "item-title");
+            if (title !== null) title.textContent = link.name;
+            pager.append(item);
+        }
+        host.append(pager);
+    }
     return host;
 };
-const showDetail = async () => {
-    const panel = document.getElementById("detail");
-    if (panel === null) return;
+
+const drawer = () => document.querySelector<HTMLDialogElement>("[data-detail-drawer]");
+const wideDrawer = matchMedia("(min-width: 900px)");
+/** The key of the action or rule the address opens, or null. */
+const detailKey = () => {
     const key = decodeURIComponent(location.hash.slice(1));
-    if (!/^[a-z]+\/[a-z0-9-]+$/.test(key)) {
-        panel.hidden = true;
-        panel.replaceChildren();
-        return;
-    }
+    return /^[a-z]+\/[a-z0-9-]+$/.test(key) ? key : null;
+};
+/** The row of the page that opens a key. */
+const rowFor = (key: string) =>
+    [...document.querySelectorAll<HTMLAnchorElement>("main a[href*='#']")].find((link) => link.hash !== "" && decodeURIComponent(link.hash.slice(1)) === key) ?? null;
+let shownKey: string | null = null;
+let returnTo: HTMLElement | null = null;
+let switching = false;
+let drawing = 0;
+/** Opens the dialog in the way the screen wants: beside the page on a wide screen, over it on a narrow one. */
+const showDrawer = (dialog: HTMLDialogElement) => {
+    if (wideDrawer.matches) dialog.show();
+    else dialog.showModal();
+    document.body.dataset.drawer = "open";
+    for (const rail of document.querySelectorAll<HTMLElement>("aside[data-contents]")) rail.hidden = true;
+};
+const markRow = (key: string | null) => {
+    for (const link of document.querySelectorAll<HTMLElement>("main a[aria-current='true']")) link.removeAttribute("aria-current");
+    if (key !== null) rowFor(key)?.setAttribute("aria-current", "true");
+};
+const openDetail = async (key: string) => {
+    const dialog = drawer();
+    if (dialog === null) return;
+    const title = dialog.querySelector<HTMLElement>("#detail-title");
+    const noun = dialog.querySelector<HTMLElement>("[data-detail-noun]");
+    const code = dialog.querySelector<HTMLElement>("[data-detail-code]");
+    const body = dialog.querySelector<HTMLElement>("[data-detail-body]");
     const said = strings();
-    panel.hidden = false;
-    panel.replaceChildren(el("p", "text-muted-foreground", said.loading ?? "", "app"));
+    const first = !dialog.open;
+    if (first) {
+        returnTo ??= rowFor(key) ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+        showDrawer(dialog);
+    }
+    shownKey = key;
+    markRow(key);
+    const row = rowFor(key);
+    if (title !== null) title.textContent = row?.querySelector('[data-slot="item-title"]')?.textContent ?? "";
+    code?.replaceChildren();
+    if (noun !== null) noun.textContent = "";
+    body?.replaceChildren(el("p", "text-sm text-muted-foreground", said.loading ?? "", "app"));
+    title?.focus();
+    const mine = ++drawing;
     try {
         const [view, box] = await Promise.all([loadFile<NodeView>(`${root}${detailOf(key)}`), loadPieces()]);
+        if (mine !== drawing) return;
         template = box;
-        panel.replaceChildren(draw(view, said));
-        panel.scrollIntoView({ block: "start" });
+        if (title !== null) title.textContent = view.name;
+        if (noun !== null) noun.textContent = view.noun.one === "" ? "" : `${view.noun.one[0]?.toUpperCase() ?? ""}${view.noun.one.slice(1)}`;
+        if (view.code !== null && code !== null) {
+            const tag = part("code");
+            tag.textContent = view.code;
+            code.append(tag);
+        }
+        body?.replaceChildren(draw(view, said));
+        if (body !== null) body.scrollTop = 0;
     } catch {
-        panel.replaceChildren(el("p", "text-muted-foreground", said.failed ?? "", "app"));
+        if (mine === drawing) body?.replaceChildren(el("p", "text-sm text-muted-foreground", said.failed ?? "", "app"));
     }
 };
-addEventListener("hashchange", () => void showDetail());
+const closeDetail = () => {
+    const dialog = drawer();
+    if (dialog?.open === true) dialog.close();
+};
+/** Shows what the address asks for: the drawer of a key, or no drawer. */
+const syncDetail = () => {
+    // The router may say the address changed before it says the page did: the root is read from the page shown.
+    root = document.body.dataset.root ?? "./";
+    const key = detailKey();
+    if (key === null) closeDetail();
+    else if (key !== shownKey || drawer()?.open !== true) void openDetail(key);
+};
+const bindDrawer = () => {
+    const dialog = drawer();
+    if (dialog === null || dialog.dataset.bound !== undefined) return;
+    dialog.dataset.bound = "true";
+    dialog.querySelector("[data-detail-close]")?.addEventListener("click", closeDetail);
+    // A click on the backdrop of the modal sheet closes it.
+    dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) closeDetail();
+    });
+    dialog.addEventListener("close", () => {
+        if (switching) return;
+        delete document.body.dataset.drawer;
+        for (const rail of document.querySelectorAll<HTMLElement>("aside[data-contents]")) rail.hidden = false;
+        const key = shownKey;
+        shownKey = null;
+        drawing += 1;
+        markRow(null);
+        if (detailKey() !== null) history.replaceState(history.state, "", `${location.pathname}${location.search}`);
+        const back = (key === null ? null : rowFor(key)) ?? returnTo;
+        returnTo = null;
+        back?.focus();
+    });
+};
+// The drawer beside the page has no Escape of its own (it is not modal): Escape closes it, unless a modal is over it.
+document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    const dialog = drawer();
+    if (dialog?.open !== true || dialog.matches(":modal") || palette?.open === true) return;
+    event.preventDefault();
+    closeDetail();
+});
+// A screen that crosses 900 pixels with the drawer open shows it the other way.
+wideDrawer.addEventListener("change", () => {
+    const dialog = drawer();
+    if (dialog?.open !== true) return;
+    switching = true;
+    dialog.close();
+    switching = false;
+    showDrawer(dialog);
+});
+// A link to an action or a rule of this page opens the drawer and puts its key in the address. The view transition
+// router takes a link to the same page without a hashchange, so the click is taken first and the address set by hand.
+addEventListener(
+    "click",
+    (event: MouseEvent) => {
+        if (drawer() === null || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const link = (event.target as HTMLElement | null)?.closest<HTMLAnchorElement>("a[href]");
+        if (link === null || link === undefined || link.hash === "") return;
+        const target = new URL(link.href, location.href);
+        if (target.pathname !== location.pathname || target.search !== location.search) return;
+        const key = decodeURIComponent(target.hash.slice(1));
+        if (!/^[a-z]+\/[a-z0-9-]+$/.test(key)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (!(drawer()?.open ?? false)) returnTo = link;
+        history.pushState(history.state, "", `${location.pathname}${location.search}#${encodeURI(key)}`);
+        syncDetail();
+    },
+    true,
+);
+addEventListener("hashchange", syncDetail);
+addEventListener("popstate", syncDetail);
 
 /* ---------- an address with no page: an old action or rule address is sent on to the page that now holds it ---------- */
 const recover = async () => {
@@ -385,7 +547,10 @@ const start = () => {
             }
         });
     }
-    void showDetail();
+    shownKey = null;
+    returnTo = null;
+    bindDrawer();
+    syncDetail();
     void recover();
 };
 document.addEventListener("astro:page-load", start);

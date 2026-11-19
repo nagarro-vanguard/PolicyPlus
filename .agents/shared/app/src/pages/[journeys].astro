@@ -11,7 +11,7 @@ export const getStaticPaths = async () =>
     (await siteOf()).nav.some((section) => section.id === "journeys") ? [{ params: { journeys: "journeys" } }] : [];
 const view = await journeysView();
 ---
-<Page title={copy.journeys.title} lead={view.hasWays ? copy.journeys.lead : copy.journeys.leadToday} page="journeys.html">
+<Page title={copy.journeys.title} lead={view.hasWays ? copy.journeys.lead : copy.journeys.leadToday} page="journeys.html" facts={{ facts: view.facts, tests: null }}>
     <JourneyList view={view} root="./" />
     <script>import "../scripts/journeys.ts";</script>
 </Page>

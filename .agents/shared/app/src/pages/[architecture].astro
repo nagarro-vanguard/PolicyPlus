@@ -40,7 +40,7 @@ const hasToday = today.organisation !== null || today.context !== null || today.
                         <ProposedHead view={proposed} />
                         <SinceFold since={proposed.since} />
                         {proposed.containers.length === 0 ? null : (
-                            <Sub title={words.parts} lead={words.partsLead}>
+                            <Sub listed title={words.parts} lead={words.partsLead}>
                                 <Containers view={proposed} />
                             </Sub>
                         )}
@@ -48,33 +48,33 @@ const hasToday = today.organisation !== null || today.context !== null || today.
                         {proposed.domainsDiagram === null ? null : <Diagram diagram={proposed.domainsDiagram} />}
                         {proposed.domains.length === 0 ? null : (
                             <div class="flex flex-col gap-spacing-md">
-                                {proposed.domainsDiagram === null ? <Sub title={words.domains} lead={words.domainsLead}><Domains view={proposed} /></Sub> : <><p class="text-muted-foreground" data-written-by="app">{words.domainsLead}</p><Domains view={proposed} /></>}
+                                {proposed.domainsDiagram === null ? <Sub listed title={words.domains} lead={words.domainsLead}><Domains view={proposed} /></Sub> : <><p class="text-muted-foreground" data-written-by="app">{words.domainsLead}</p><Domains view={proposed} /></>}
                                 <Components view={proposed} />
                             </div>
                         )}
                         {proposed.landing === null ? null : (
-                            <Sub title={words.landing} lead={words.landingLead}>
+                            <Sub listed title={words.landing} lead={words.landingLead}>
                                 <Landing view={proposed.landing} />
                                 {proposed.unplaced === null ? null : <Unplaced view={proposed.unplaced} />}
                             </Sub>
                         )}
                         {proposed.stack.length === 0 ? null : (
-                            <Sub title={words.stack} lead={words.stackLead}>
+                            <Sub listed title={words.stack} lead={words.stackLead}>
                                 <Stack view={proposed} />
                             </Sub>
                         )}
                         {proposed.outside.length === 0 ? null : (
-                            <Sub title={words.outside} lead={words.outsideLead}>
+                            <Sub listed title={words.outside} lead={words.outsideLead}>
                                 <OutsideTable view={proposed} />
                             </Sub>
                         )}
                         {proposed.risks.length === 0 ? null : (
-                            <Sub title={words.risks} lead={words.risksLead}>
+                            <Sub listed title={words.risks} lead={words.risksLead}>
                                 <Risks items={proposed.risks} />
                             </Sub>
                         )}
                         {proposed.questions.length === 0 ? null : (
-                            <Sub title={words.questions} lead={words.questionsLead}>
+                            <Sub listed title={words.questions} lead={words.questionsLead}>
                                 <Risks items={proposed.questions} />
                             </Sub>
                         )}

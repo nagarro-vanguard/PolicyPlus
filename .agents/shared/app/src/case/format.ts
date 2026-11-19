@@ -39,5 +39,13 @@ export const countOf = (entry: NumberRecord): CountView => {
 /** A size in kilobytes, at least one. */
 export const kilobytes = (bytes: number) => Math.max(1, Math.round(bytes / 1024));
 
+/**
+ * Whether a name is a name from code (`OkButton_Click`, `About.aspx`, `accept`): one token, no spaces. Such a name says
+ * little to a reader, so a row shows the node's own summary as its title and the name as a small code tag beside it.
+ * @param text the name
+ * @returns true for one token of letters, digits and the marks code names use
+ */
+export const isCodeName = (text: string) => /^[\w$.\-/:<>[\]()]+$/u.test(text) && /[A-Za-z]/.test(text);
+
 /** The first letter in capitals, for a noun used as a heading. */
 export const heading = (text: string) => (text === "" ? text : `${text[0]?.toUpperCase() ?? ""}${text.slice(1)}`);
