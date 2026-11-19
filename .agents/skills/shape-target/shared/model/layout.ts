@@ -31,6 +31,8 @@ export const layoutOf = (outputRoot: string) => {
         choiceComponents: join(target, "choice-components.json"),
         journeys: join(target, "journeys.json"),
         architecture: join(target, "architecture.json"),
+        confirmed: join(target, "confirmed"),
+        manifest: join(target, "manifest.json"),
         schemas: join(outputRoot, ".shape-target", "payloads", "schema"),
     };
 };

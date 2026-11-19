@@ -20,8 +20,8 @@ Tools: Read, Grep, Write.
 Read every record in `outputPath` against `jobPath`, `contextPath` and `legacyPath`.
 
 - Tasks: an entry point put in a task it does not belong to, today's journey that misstates what the entry points do, an outcome that is really a surface of the old system.
-- Journeys: compare each step's rules with their sentences in `legacyPath`: a condition dropped, a number changed, a refusal lost. Look for a variant that repeats today's shape, a step the person could not do from the words, a recommendation the trade-off does not support.
-- Architectures: a domain that is the old system's layer in disguise, a rule in a domain that does not decide it, a variant that differs only in names, a container the Target Stack cannot build, a risk missing.
+- Journeys: compare each step's rules with their sentences in `legacyPath`: a condition dropped, a number changed, a refusal lost. Look for a variant that repeats today's shape, a step the person could not do from the words, a recommendation the trade-off does not support, a rule in `keeps` whose behaviour the step changes (it belongs in `changes`), a `changes` entry whose `to` misstates the new behaviour.
+- Architectures: a domain that is the old system's layer in disguise, a rule in a domain that does not decide it, a variant that differs only in names or packaging (not in where parts run or data lives), a trade-off charged to one variant that all share, a container the Target Stack cannot build, a risk missing or citing the wrong part.
 
 Challenge only what is really wrong; do not rewrite, praise or restate.
 

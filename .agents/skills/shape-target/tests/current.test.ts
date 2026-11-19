@@ -5,6 +5,7 @@ import { dirname, join } from "node:path";
 import { chooseAsIs } from "../shared/choose";
 import { deriveCurrent, journeyGaps } from "../shared/derive/current";
 import { gateState } from "../shared/gates";
+import { CONTRACT_VERSION } from "../shared/manifest";
 import { layoutOf } from "../shared/model/layout";
 import { build, legacy, stack } from "./fixture";
 
@@ -100,5 +101,40 @@ describe("today's tasks are the analysis's journeys", () => {
         const prepared = run("stage.ts", "prepare", "as-is", "--root", layout.outputRoot);
         expect(prepared.code).toBe(1);
         expect(prepared.out).toContain("has no jobs");
+    });
+});
+
+describe("what the analysis writes about a task beyond what this skill reads", () => {
+    test("a task's title and capability are kept in target/current.json", () => {
+        const layout = fresh();
+        const titled = f.tasks.map((task, at) => ({ ...task, title: `Task ${at + 1}`, capability: "capability-1" }));
+        write(journeysOf(layout), { journeys: titled });
+        expect(deriveCurrent(layout).ok).toBe(true);
+        const current = JSON.parse(readFileSync(layout.current, "utf8")) as {
+            tasks: { title?: string; capability?: string }[];
+        };
+        expect(current.tasks.map((task) => [task.title, task.capability])).toEqual([
+            ["Task 1", "capability-1"],
+            ["Task 2", "capability-1"],
+        ]);
+    });
+});
+
+describe("the manifest of target/", () => {
+    test("names the contract version and is not written again when nothing changed", () => {
+        const layout = fresh();
+        write(journeysOf(layout), { journeys: f.tasks });
+        deriveCurrent(layout);
+        const manifest = JSON.parse(readFileSync(layout.manifest, "utf8")) as {
+            contractVersion: number;
+            files: Record<string, string>;
+        };
+        expect(manifest.contractVersion).toBe(CONTRACT_VERSION);
+        expect(Object.keys(manifest.files).sort()).toEqual(["current.json", "essence.json", "legacy.json"]);
+        const past = new Date(Date.now() - 60_000);
+        utimesSync(layout.manifest, past, past);
+        const before = statSync(layout.manifest).mtimeMs;
+        deriveCurrent(layout);
+        expect(statSync(layout.manifest).mtimeMs).toBe(before);
     });
 });

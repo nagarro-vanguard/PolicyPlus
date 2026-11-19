@@ -1,7 +1,7 @@
-import { createHash } from "node:crypto";
-import { existsSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
-import { gates, gateState, type Gate } from "./gates";
+import { gates, gateState, proposalOf, recordOf, subjectOf, type Gate } from "./gates";
+import { writeManifest } from "./manifest";
 import { redo } from "./jobs/driver";
 import type { JobFile } from "./jobs/gates";
 import { jobPaths, loadJobs, readJson, writeJson } from "./jobs/state";
@@ -21,20 +21,6 @@ export type ChangeRequest = {
 
 export const changesPath = (layout: Layout, gate: Gate) => join(layout.records, `changes-${gate}.json`);
 
-const proposalOf = (layout: Layout, gate: Gate) =>
-    ({
-        "as-is": layout.current,
-        journeys: layout.journeyVariants,
-        architecture: layout.architectureVariants,
-        components: layout.architecture,
-    })[gate];
-const recordOf = (layout: Layout, gate: Gate) =>
-    ({
-        "as-is": layout.choiceAsIs,
-        journeys: layout.choiceJourneys,
-        architecture: layout.choiceArchitecture,
-        components: layout.choiceComponents,
-    })[gate];
 /** The copy in `target/` that a confirmation wrote, which goes with it. */
 const copyOf = (layout: Layout, gate: Gate) => (gate === "journeys" ? layout.journeys : undefined);
 
@@ -70,12 +56,13 @@ export const requestChanges = (
             text,
             scope,
             requestedAt: new Date().toISOString(),
-            subject: createHash("sha256").update(readFileSync(proposal)).digest("hex"),
+            subject: subjectOf(proposal),
             applied: false,
         } satisfies ChangeRequest,
     ]);
     for (const path of [recordOf(layout, gate), copyOf(layout, gate)])
         if (path !== undefined) rmSync(path, { force: true });
+    writeManifest(layout);
     const after = gates.slice(gates.indexOf(gate) + 1);
     return {
         ok: true,

@@ -2,7 +2,8 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { Schema } from "effect";
 import { layoutOf } from "../shared/model/layout";
-import { Architecture, Choice, StoredArchitecture, StoredJourney, Task } from "../shared/model/records";
+import { Manifest } from "../shared/manifest";
+import { ArchitectureRecord, Choice, Dispute, StoredArchitecture, StoredJourney, Task } from "../shared/model/records";
 
 const [rootArg] = process.argv.slice(2);
 if (rootArg === undefined || rootArg === "--help") {
@@ -16,9 +17,11 @@ mkdirSync(folder, { recursive: true });
 for (const [name, schema] of Object.entries({
     task: Task,
     journey: StoredJourney,
-    architecture: Architecture,
+    architecture: ArchitectureRecord,
     "architecture-variant": StoredArchitecture,
     choice: Choice,
+    dispute: Dispute,
+    manifest: Manifest,
 }))
     writeFileSync(
         join(folder, `${name}.schema.json`),

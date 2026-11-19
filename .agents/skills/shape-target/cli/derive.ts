@@ -3,6 +3,7 @@ import { dirname, resolve } from "node:path";
 import { deriveCurrent } from "../shared/derive/current";
 import { deriveEssence, essenceLeaks } from "../shared/derive/essence";
 import { deriveLegacy } from "../shared/derive/legacy";
+import { writeManifest } from "../shared/manifest";
 import { layoutOf } from "../shared/model/layout";
 import { loadChoice, loadLegacy, loadRequest, loadTasks } from "../shared/run";
 
@@ -23,6 +24,7 @@ const write = (path: string, value: unknown) => {
 if (what === "legacy") {
     const sheet = deriveLegacy(layout.payloads);
     write(layout.legacy, sheet);
+    writeManifest(layout);
     console.log(
         `${Object.keys(sheet.actions).length} entry points, ${Object.keys(sheet.rules).length} rules, ${Object.keys(sheet.entities).length} kinds of data, ${Object.keys(sheet.externals).length} outside systems`,
     );
@@ -39,6 +41,7 @@ if (what === "legacy") {
         loadChoice(layout.choiceAsIs)?.marks ?? [],
     );
     write(layout.essence, essence);
+    writeManifest(layout);
     const leaks = essenceLeaks(essence, legacy);
     console.log(
         `${essence.tasks.length} tasks written${leaks.length > 0 ? `; ${leaks.length} names of the old system leak:\n${leaks.slice(0, 20).join("\n")}` : ""}`,

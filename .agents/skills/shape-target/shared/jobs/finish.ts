@@ -1,10 +1,11 @@
 import { Schema } from "effect";
+import { disputeOf, disputesPath } from "../disputes";
+import { writeManifest } from "../manifest";
 import { finalGaps, isCopy, scoreOf } from "../derive/checks";
 import { journeyId, stepId } from "../model/ids";
 import type { Layout } from "../model/layout";
 import { Architecture, Component, Journey, type StoredJourney } from "../model/records";
 import { loadJourneys, loadTasks } from "../run";
-import { join } from "node:path";
 import { chosenArchitecture, designContext } from "./stages";
 import { loadJobs, outputOf, writeJson, type Stage } from "./state";
 
@@ -22,8 +23,8 @@ export const finish = (layout: Layout, stage: Stage): Finished => {
     const mine = jobs.jobs.filter((job) => job.stage === stage);
     if (mine.length === 0 || mine.some((job) => job.state !== "decided"))
         return { ok: false, text: `the ${stage} stage is not finished` };
-    const disputes = mine.flatMap((job) => job.disputes.map((says) => ({ job: job.id, says })));
-    writeJson(join(layout.records, `disputes-${stage}.json`), disputes);
+    const disputes = mine.flatMap((job) => job.disputes.map((kept) => disputeOf(layout, job.id, kept)));
+    writeJson(disputesPath(layout, stage), disputes);
     const note = `${disputes.length} challenges stayed disputed`;
     if (stage === "journeys") {
         const tasks = loadTasks(layout);
@@ -83,6 +84,7 @@ export const finish = (layout: Layout, stage: Stage): Finished => {
             text: `${gaps.map((gap) => `- ${gap}`).join("\n")}\nRun the job of the domain that should fix a gap again with \`redo <job> --instructions <the gap>\`, then finish again.`,
         };
     writeJson(layout.architecture, whole);
+    writeManifest(layout);
     return {
         ok: true,
         text: `${components.length} components in ${whole.domains.length} domains accepted, every check passes; ${note}`,

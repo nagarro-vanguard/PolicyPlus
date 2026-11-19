@@ -137,6 +137,7 @@ const drafts = (layout: Layout, stage: Stage, jobs: Jobs): Draft[] | string => {
                             touches: step.touches,
                             honours: step.honours,
                             keeps: step.link._tag === "legacy" ? step.link.keeps : [],
+                            ...(step.changes === undefined ? {} : { changes: step.changes }),
                         })),
                     })),
                     needs: needsOf(loadTasks(layout)).map((id) => ({
@@ -168,7 +169,12 @@ const drafts = (layout: Layout, stage: Stage, jobs: Jobs): Draft[] | string => {
             integrations: architecture.integrations
                 .filter((each) => each.domain === domain.name)
                 .map((each) => ({ ...each, name: base.legacy.externals[each.need]?.name ?? "" })),
-            rules: domain.rules.map((id) => ({ id, statement: legacyRules[id]?.statement ?? "" })),
+            rules: domain.rules.map((id) => {
+                const to = base.journeys
+                    .flatMap((journey) => journey.steps.flatMap((step) => step.changes ?? []))
+                    .find((change) => change.rule === id)?.to;
+                return { id, statement: legacyRules[id]?.statement ?? "", ...(to === undefined ? {} : { to }) };
+            }),
             steps: base.journeys.flatMap((journey) =>
                 journey.steps
                     .filter((step) => relevantSteps(domain, [journey]).includes(step.id))

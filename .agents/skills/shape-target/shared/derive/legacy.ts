@@ -5,7 +5,9 @@ import { Schema } from "effect";
 
 /*
  * What this skill reads of a code analysis: only the payload files, only the fields it uses, and never its code. Extra
- * fields are ignored. The legacy sheet it writes is the one place the old system's own words are kept; designers never
+ * fields are ignored. The analysis is renaming what holds a person's actions from screen to surface: for one version
+ * either name is read (`screen` or `surface` on an action, `screens` or `surfaces` on the system), and neither is
+ * required. The legacy sheet it writes is the one place the old system's own words are kept; designers never
  * receive it, only the challenger, the checks and the app's trace do.
  */
 const Place = Schema.Struct({ file: Schema.String, firstLine: Schema.Int, lastLine: Schema.Int });
@@ -14,7 +16,8 @@ const Action = Schema.Struct({
     name: Schema.String,
     purpose: Schema.String,
     startedBy: Schema.String,
-    screen: Schema.String,
+    screen: Schema.optionalKey(Schema.String),
+    surface: Schema.optionalKey(Schema.String),
     place: Place,
     rules: Schema.Array(Schema.String),
 });
@@ -34,7 +37,8 @@ const CapabilityPayload = Schema.Struct({
 const SystemPayload = Schema.Struct({
     purpose: Schema.String,
     layers: Schema.Array(Schema.Struct({ name: Schema.String })),
-    screens: Schema.Array(Schema.Struct({ name: Schema.String })),
+    screens: Schema.optionalKey(Schema.Array(Schema.Struct({ name: Schema.String }))),
+    surfaces: Schema.optionalKey(Schema.Array(Schema.Struct({ name: Schema.String }))),
     externals: Schema.Array(Schema.Struct({ id: Schema.String, name: Schema.String, kind: Schema.String })),
     gaps: Schema.Struct({ unattributedBlocks: Schema.Int }),
 });
@@ -80,6 +84,9 @@ export type LegacySheet = {
 };
 
 const readJson = (path: string) => JSON.parse(readFileSync(path, "utf8")) as unknown;
+
+/** What holds an action, under either name; empty when the analysis names none. */
+const holderOf = (action: typeof Action.Type) => action.surface ?? action.screen ?? "";
 
 /**
  * A fingerprint of the payload files, so a target can say which analysis it was made from.
@@ -137,7 +144,7 @@ export const deriveLegacy = (payloads: string): LegacySheet => {
                     what: action.purpose,
                     name: action.name,
                     startedBy: action.startedBy,
-                    surface: action.screen,
+                    surface: holderOf(action),
                     owner: payload.capability.id,
                     rules: [...action.rules],
                     place: action.place,
@@ -159,9 +166,9 @@ export const deriveLegacy = (payloads: string): LegacySheet => {
     const identifiers = [
         ...new Set([
             ...system.layers.map((layer) => layer.name),
-            ...system.screens.map((screen) => screen.name).filter((name) => !name.includes(" ")),
+            ...(system.surfaces ?? system.screens ?? []).map((each) => each.name).filter((name) => !name.includes(" ")),
             ...capabilities
-                .flatMap((payload) => payload.layers.flatMap((layer) => layer.actions.map((action) => action.screen)))
+                .flatMap((payload) => payload.layers.flatMap((layer) => layer.actions.map(holderOf)))
                 .filter((name) => name !== "" && !name.includes(" ")),
             ...bundle.blocks.map((block) => block.container),
             ...bundle.controls.map((control) => control.name),

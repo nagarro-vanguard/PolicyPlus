@@ -1,7 +1,8 @@
 import { existsSync } from "node:fs";
+import { variantOf } from "../disputes";
 import { join } from "node:path";
 import type { Layout } from "../model/layout";
-import { loadTasks } from "../run";
+import { loadLegacy, loadTasks } from "../run";
 import { gateComponents, gateReview, gateShape, gateVariants, recordCount, type JobFile, type Output } from "./gates";
 import { componentContext, designContext, refreshInputs } from "./stages";
 import { jobPaths, loadJobs, readJson, saveJobs, type Job, type Jobs, type Role } from "./state";
@@ -39,7 +40,13 @@ export const checkJob = (layout: Layout, id: string): string[] => {
     if (!existsSync(p.output)) return [`no output file at ${p.output}`];
     const file = readJson<JobFile>(p.job);
     const output = readJson<Output>(p.output);
-    if (file.kind === "variants") return gateVariants(file, output, loadTasks(layout));
+    if (file.kind === "variants")
+        return gateVariants(
+            file,
+            output,
+            loadTasks(layout),
+            existsSync(layout.legacy) ? loadLegacy(layout) : undefined,
+        );
     if (file.kind === "shape") return gateShape(output, designContext(layout));
     const context = componentContext(layout, loadJobs(layout), file.domain ?? "");
     return context === undefined
@@ -109,6 +116,12 @@ export const next = (layout: Layout, skillRoot: string, scriptsCommand: string, 
     };
 };
 
+/** A challenge as its writer is told it: the record, what it is, and what is wrong. */
+const challengeLine = (layout: Layout, id: string, challenge: { record: number; says: string }) => {
+    const variant = variantOf(layout, id, challenge.record);
+    return `Record ${challenge.record}${variant === "" ? "" : ` (${variant})`}: ${challenge.says}`;
+};
+
 /** The agent of a job has finished: gate its output, or read its review, and move the job on. */
 export const done = (layout: Layout, id: string): string => {
     const jobs = loadJobs(layout);
@@ -146,10 +159,10 @@ export const done = (layout: Layout, id: string): string => {
         else if (job.fixes < 1) {
             job.fixes += 1;
             job.state = "toFix";
-            job.feedback = review.challenges.map((each) => `Record ${each.record}: ${each.says}`).join("\n");
+            job.feedback = review.challenges.map((each) => challengeLine(layout, id, each)).join("\n");
         } else {
             job.state = "decided";
-            job.disputes = review.challenges.map((each) => `Record ${each.record}: ${each.says}`);
+            job.disputes = review.challenges.map((each) => ({ record: each.record, says: each.says }));
         }
     }
     saveJobs(layout, jobs);
@@ -207,7 +220,7 @@ export const accept = (layout: Layout, id: string): string => {
     const challenges = existsSync(p.review)
         ? readJson<{ challenges: { record: number; says: string }[] }>(p.review).challenges
         : [];
-    job.disputes = challenges.map((each) => `Record ${each.record}: ${each.says}`);
+    job.disputes = challenges.map((each) => ({ record: each.record, says: each.says }));
     job.state = "decided";
     job.feedback = "";
     job.running = undefined;

@@ -1,7 +1,10 @@
+import { copyFileSync, mkdirSync } from "node:fs";
 import type { Layout } from "./model/layout";
-import type { Choice, Mark } from "./model/records";
+import type { Choice, Dispute, Mark } from "./model/records";
 import { finalGaps } from "./derive/checks";
-import { gateState, upstreamOf, type Gate } from "./gates";
+import { loadDisputes } from "./disputes";
+import { gateState, proposalOf, recordOf, snapshotOf, subjectOf, upstreamOf, type Gate } from "./gates";
+import { writeManifest } from "./manifest";
 import { loadArchitecture, loadArchitectureVariants, loadJourneyVariants, loadTasks } from "./run";
 import { designContext } from "./jobs/stages";
 import { writeJson } from "./jobs/state";
@@ -9,6 +12,32 @@ import { writeJson } from "./jobs/state";
 export type Chosen = { ok: boolean; text: string };
 
 const stamp = () => new Date().toISOString();
+
+/**
+ * Records a decision: the hash of what it was made about, and a copy of that file as it stood, so what changed since
+ * can be found by comparing the two.
+ * @param layout the run's folders
+ * @param gate the decision
+ * @param choice what the person decided, without the hash
+ */
+const record = (layout: Layout, gate: Gate, choice: Omit<Choice, "subject">) => {
+    const proposal = proposalOf(layout, gate);
+    mkdirSync(layout.confirmed, { recursive: true });
+    copyFileSync(proposal, snapshotOf(layout, gate));
+    writeJson(recordOf(layout, gate), { ...choice, subject: subjectOf(proposal) } satisfies Choice);
+    writeManifest(layout);
+};
+
+/**
+ * The challenges still open on what is picked, which the person must have seen and accepted before it is confirmed.
+ * @param open the disputes about the picked variants
+ * @param accepted whether the person accepted them
+ * @returns why it is refused, or nothing when it may go ahead
+ */
+const disputed = (open: readonly Dispute[], accepted: boolean): string | undefined =>
+    open.length === 0 || accepted
+        ? undefined
+        : `${open.length} challenges of the reviewer are still open on what is picked. Show them to the person; confirm again with --accept-disputes once they accept them, or pick another variant:\n${open.map((each) => `- ${each.variant}: ${each.says}`).join("\n")}`;
 
 /** Why a decision cannot be recorded now, or nothing when it can. */
 const refusal = (layout: Layout, gate: Gate): string | undefined => {
@@ -53,8 +82,7 @@ export const chooseAsIs = (layout: Layout, marks: readonly Mark[], reason: strin
             ok: false,
             text: `${wrong.length} steps are marked wrong: ask the analysis for its journeys again with these as instructions (a request for changes at this decision does it), then confirm:\n${wrong.map((mark) => `- ${mark.of}: ${mark.note ?? ""}`).join("\n")}`,
         };
-    const choice: Choice = { decision: "as-is", picks: [], reason, confirmedAt: stamp(), marks: kept };
-    writeJson(layout.choiceAsIs, choice);
+    record(layout, "as-is", { decision: "as-is", picks: [], reason, confirmedAt: stamp(), marks: kept });
     return {
         ok: true,
         text: `as-is confirmed with ${kept.length} marks${dropped.length > 0 ? `; dropped ${dropped.length} marks of steps that no longer exist: ${dropped.map((mark) => mark.of).join(", ")}` : ""}`,
@@ -67,6 +95,7 @@ export const chooseAsIs = (layout: Layout, marks: readonly Mark[], reason: strin
  * @param picks `task id` to variant name; tasks missing from it take the recommended variant when `recommended` is set
  * @param recommended take the recommended variant of every task not named
  * @param reason why they confirm
+ * @param acceptDisputes the person has seen the challenges still open on the picked variants and accepts them
  * @returns whether it was confirmed
  */
 export const chooseJourneys = (
@@ -74,6 +103,7 @@ export const chooseJourneys = (
     picks: Readonly<Record<string, string>>,
     recommended: boolean,
     reason: string,
+    acceptDisputes = false,
 ): Chosen => {
     const variants = loadJourneyVariants(layout);
     const tasks = loadTasks(layout);
@@ -97,18 +127,30 @@ export const chooseJourneys = (
     }
     for (const task of Object.keys(picks)) if (!tasks.some((each) => each.id === task)) gaps.push(`no task ${task}`);
     if (gaps.length > 0) return { ok: false, text: gaps.join("\n") };
+    const ids = new Set(chosen.map((variant) => variant.id));
+    const open = loadDisputes(layout, "journeys").filter((each) => ids.has(each.variant));
+    const refusedForDisputes = disputed(open, acceptDisputes);
+    if (refusedForDisputes !== undefined) return { ok: false, text: refusedForDisputes };
     writeJson(layout.journeys, chosen);
-    const choice: Choice = {
+    record(layout, "journeys", {
         decision: "journeys",
-        picks: chosen.map((variant) => ({ of: variant.task, variant: variant.name })),
+        picks: chosen.map((variant) => ({ of: variant.task, variant: variant.name, id: variant.id })),
         reason,
         confirmedAt: stamp(),
-    };
-    writeJson(layout.choiceJourneys, choice);
+        ...(open.length > 0 ? { acceptedDisputes: open } : {}),
+    });
     return { ok: true, text: `${chosen.length} journeys confirmed, one for each task` };
 };
 
-export const chooseArchitecture = (layout: Layout, name: string, reason: string): Chosen => {
+/**
+ * Confirms one architecture by name.
+ * @param layout the run's folders
+ * @param name the variant's name
+ * @param reason why they confirm
+ * @param acceptDisputes the person has seen the challenges still open on it and accepts them
+ * @returns whether it was confirmed
+ */
+export const chooseArchitecture = (layout: Layout, name: string, reason: string, acceptDisputes = false): Chosen => {
     const refused = refusal(layout, "architecture");
     if (refused !== undefined) return { ok: false, text: refused };
     const variants = loadArchitectureVariants(layout);
@@ -117,13 +159,16 @@ export const chooseArchitecture = (layout: Layout, name: string, reason: string)
             ok: false,
             text: `no architecture "${name}"; the variants are ${variants.map((variant) => `"${variant.name}"`).join(", ")}`,
         };
-    const choice: Choice = {
+    const open = loadDisputes(layout, "architecture").filter((each) => each.variant === name);
+    const refusedForDisputes = disputed(open, acceptDisputes);
+    if (refusedForDisputes !== undefined) return { ok: false, text: refusedForDisputes };
+    record(layout, "architecture", {
         decision: "architecture",
         picks: [{ of: "architecture", variant: name }],
         reason,
         confirmedAt: stamp(),
-    };
-    writeJson(layout.choiceArchitecture, choice);
+        ...(open.length > 0 ? { acceptedDisputes: open } : {}),
+    });
     return { ok: true, text: `architecture "${name}" confirmed` };
 };
 
@@ -141,12 +186,11 @@ export const chooseComponents = (layout: Layout, reason: string): Chosen => {
         return { ok: false, text: "there are no components: finish the components stage first" };
     const gaps = finalGaps(architecture, designContext(layout));
     if (gaps.length > 0) return { ok: false, text: gaps.map((gap) => `- ${gap}`).join("\n") };
-    const choice: Choice = {
+    record(layout, "components", {
         decision: "components",
         picks: [{ of: "components", variant: architecture.name }],
         reason,
         confirmedAt: stamp(),
-    };
-    writeJson(layout.choiceComponents, choice);
+    });
     return { ok: true, text: `${architecture.components?.length ?? 0} components of "${architecture.name}" confirmed` };
 };

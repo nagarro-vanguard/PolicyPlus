@@ -1,6 +1,19 @@
-import type { Architecture, Component, CurrentStep, Domain, Journey, StoredJourney, Task } from "../model/records";
+import { slug } from "../model/ids";
+import type {
+    Architecture,
+    ArchitectureRecord,
+    Component,
+    CurrentStep,
+    Domain,
+    Journey,
+    StoredJourney,
+    Task,
+} from "../model/records";
+import { runsOnIds } from "../model/runs-on";
 import { cycleIn, missing } from "./graph";
 import { leaksIn, type LegacySheet } from "./legacy";
+import { risksOf } from "./views";
+import { voiceGaps } from "./voice";
 import { wordsIn } from "./words";
 
 /** The limits of check C7, tuned on fixtures: a variant above both is a copy of today. */
@@ -29,13 +42,15 @@ export const isCopy = (variant: Journey, current: readonly CurrentStep[]) => {
 };
 
 /**
- * The gate of a journeys job: C1 and C7 for every variant of every task of the job, and the shape the variants must
- * have. Returns every gap.
+ * The gate of a journeys job: C1 and C7 for every variant of every task of the job, the shape the variants must have,
+ * how each rule is accounted for (kept as it is, changed with what it does now, or dropped with its entry point) and
+ * the voice of every reason. Returns every gap.
  * @param task the task the variants are for
  * @param variants its variants
+ * @param legacy the legacy sheet, to tell which entry point decides a dropped rule; without it that check is skipped
  * @returns the gaps
  */
-export const journeyGaps = (task: Task, variants: readonly Journey[]): string[] => {
+export const journeyGaps = (task: Task, variants: readonly Journey[], legacy?: LegacySheet): string[] => {
     const gaps: string[] = [];
     const actions = new Set<string>(task.actions);
     const rules = new Set<string>(task.rules);
@@ -46,11 +61,17 @@ export const journeyGaps = (task: Task, variants: readonly Journey[]): string[] 
         gaps.push(`task ${task.id}: exactly one variant is recommended (found ${recommended.length})`);
     if (new Set(variants.map((variant) => variant.name)).size !== variants.length)
         gaps.push(`task ${task.id}: two variants share a name`);
+    else if (new Set(variants.map((variant) => slug(variant.name))).size !== variants.length)
+        gaps.push(
+            `task ${task.id}: two variants' names differ only in spaces, case or punctuation, so they would get one id; name them apart`,
+        );
     for (const variant of variants) {
         const label = `task ${task.id}, variant "${variant.name}"`;
         if (variant.task !== task.id) gaps.push(`${label}: names task ${variant.task}`);
         const covered = new Set<string>();
-        const kept = new Set<string>();
+        const accounted = new Set<string>();
+        const keptAt = new Map<string, number>();
+        const changedAt = new Map<string, number>();
         variant.steps.forEach((step, at) => {
             const where = `${label}, step ${at + 1}`;
             if (step.touches.length + step.honours.length === 0)
@@ -59,17 +80,34 @@ export const journeyGaps = (task: Task, variants: readonly Journey[]): string[] 
                 if (!facts.has(id)) gaps.push(`${where}: touches data ${id}, which is not the task's`);
             for (const id of step.honours)
                 if (!rules.has(id)) gaps.push(`${where}: honours rule ${id}, which is not the task's`);
+            const changed = (step.changes ?? []).map((change) => change.rule as string);
+            for (const change of step.changes ?? []) {
+                accounted.add(change.rule);
+                changedAt.set(change.rule, changedAt.get(change.rule) ?? at + 1);
+                if (!step.honours.includes(change.rule))
+                    gaps.push(`${where}: changes rule ${change.rule} without honouring it`);
+                gaps.push(...voiceGaps(`${where}: what rule ${change.rule} does now`, change.to, true));
+            }
+            if (new Set(changed).size !== changed.length) gaps.push(`${where}: changes the same rule twice`);
             if (step.link._tag === "legacy") {
                 for (const id of step.link.from) {
                     covered.add(id);
                     if (!actions.has(id)) gaps.push(`${where}: cites entry point ${id}, which is not the task's`);
                 }
                 for (const id of step.link.keeps) {
-                    kept.add(id);
+                    accounted.add(id);
+                    keptAt.set(id, keptAt.get(id) ?? at + 1);
                     if (!rules.has(id)) gaps.push(`${where}: keeps rule ${id}, which is not the task's`);
                     else if (!step.honours.includes(id)) gaps.push(`${where}: keeps rule ${id} without honouring it`);
                 }
+                // `honours` and `keeps` are two lists of one thing: what the step applies, as it is or changed.
+                for (const id of step.honours)
+                    if (!step.link.keeps.includes(id) && !changed.includes(id))
+                        gaps.push(
+                            `${where}: honours rule ${id} but neither keeps nor changes it; keep it, or say in \`changes\` what it does now`,
+                        );
             }
+            gaps.push(...voiceGaps(`${where}: the reason`, step.link.reason));
             for (const [field, text] of [
                 ["intent", step.intent],
                 ["system", step.system],
@@ -79,24 +117,48 @@ export const journeyGaps = (task: Task, variants: readonly Journey[]): string[] 
                     gaps.push(`${where}: the ${field} names a medium, control or technology (${words.join(", ")})`);
             }
         });
-        for (const drop of variant.drops) {
+        for (const [id, kept] of keptAt) {
+            const changed = changedAt.get(id);
+            if (changed !== undefined)
+                gaps.push(
+                    `${label}: rule ${id} is kept as it is in step ${kept} and changed in step ${changed}; a rule works one way in a journey, so list it in one of them`,
+                );
+        }
+        const droppedActions = new Set<string>(variant.drops.flatMap((drop) => drop.actions as readonly string[]));
+        variant.drops.forEach((drop, at) => {
+            const where = `${label}, drop ${at + 1}`;
+            if (drop.actions.length === 0 && drop.rules.length === 0)
+                gaps.push(`${where}: leaves out nothing; remove it`);
+            else if (drop.actions.length === 0)
+                gaps.push(
+                    `${where}: leaves out ${drop.rules.join(", ")} without an entry point; dropping a rule alone changes how its entry point behaves: drop the entry point with it, or keep the rule in the step that carries that entry point and say in its \`changes\` what the rule does now`,
+                );
             for (const id of drop.actions) {
                 covered.add(id);
                 if (!actions.has(id)) gaps.push(`${label}: drops entry point ${id}, which is not the task's`);
             }
             for (const id of drop.rules) {
-                kept.add(id);
+                accounted.add(id);
                 if (!rules.has(id)) gaps.push(`${label}: drops rule ${id}, which is not the task's`);
+                else if (
+                    legacy !== undefined &&
+                    drop.actions.length > 0 &&
+                    ![...droppedActions].some((action) => legacy.actions[action]?.rules.includes(id) ?? false)
+                )
+                    gaps.push(
+                        `${where}: drops rule ${id}, which belongs to no entry point the variant drops; drop the entry point that decides it, or keep the rule in the step that carries that entry point and say in its \`changes\` what it does now`,
+                    );
             }
-        }
+            gaps.push(...voiceGaps(`${where}: the reason`, drop.reason));
+        });
         const lostActions = missing(actions, covered);
         if (lostActions.count > 0)
             gaps.push(
                 `${label}: ${lostActions.count} entry points are neither in a step nor dropped: ${lostActions.text}`,
             );
-        const lostRules = missing(rules, kept);
+        const lostRules = missing(rules, accounted);
         if (lostRules.count > 0)
-            gaps.push(`${label}: ${lostRules.count} rules are neither kept nor dropped: ${lostRules.text}`);
+            gaps.push(`${label}: ${lostRules.count} rules are neither kept, changed nor dropped: ${lostRules.text}`);
         for (const [field, text] of [
             ["idea", variant.idea],
             ["tradeoff", variant.tradeoff],
@@ -106,6 +168,9 @@ export const journeyGaps = (task: Task, variants: readonly Journey[]): string[] 
             if (words.length > 0)
                 gaps.push(`${label}: the ${field} names a medium, control or technology (${words.join(", ")})`);
         }
+        gaps.push(...voiceGaps(`${label}: the tradeoff`, variant.tradeoff, true));
+        if (variant.recommended !== undefined)
+            gaps.push(...voiceGaps(`${label}: the recommendation`, variant.recommended));
         if (isCopy(variant, task.current) && variant.recommended !== undefined)
             gaps.push(`${label}: mirrors today's journey and cannot be the recommended variant`);
     }
@@ -125,10 +190,14 @@ export type DesignContext = {
 export const techInStack = (tech: string, stack: readonly string[]) =>
     tech.trim().length >= 2 && stack.some((line) => line.toLowerCase().includes(tech.trim().toLowerCase()));
 
+/** The rules the chosen steps carry: those they keep as they are and those they change. */
 const keptRules = (journeys: readonly StoredJourney[]) =>
     new Set<string>(
         journeys.flatMap((journey) =>
-            journey.steps.flatMap((step) => (step.link._tag === "legacy" ? step.link.keeps : [])),
+            journey.steps.flatMap((step) => [
+                ...(step.link._tag === "legacy" ? step.link.keeps : []),
+                ...(step.changes ?? []).map((change) => change.rule),
+            ]),
         ),
     );
 const touched = (journeys: readonly StoredJourney[]) =>
@@ -145,7 +214,7 @@ const dependsGraph = (domains: readonly Domain[]) =>
  * @param context what the chosen journeys and the request say
  * @returns the gaps
  */
-export const variantGaps = (variant: Architecture, context: DesignContext): string[] => {
+export const variantGaps = (variant: ArchitectureRecord, context: DesignContext): string[] => {
     const gaps: string[] = [];
     const kept = keptRules(context.journeys);
     const data = touched(context.journeys);
@@ -218,6 +287,22 @@ export const variantGaps = (variant: Architecture, context: DesignContext): stri
             gaps.push(`${label}: outside system ${need} has ${needs.get(need) ?? 0} integrations, not one`);
     for (const need of needs.keys())
         if (!context.needs.includes(need)) gaps.push(`${label}: integration for ${need}, which no chosen task reaches`);
+    const parts = new Set(variant.containers.map((container) => container.name));
+    const components = new Set((variant.components ?? []).map((component) => component.name));
+    for (const container of variant.containers)
+        if (container.runsOn !== undefined && !runsOnIds.includes(container.runsOn))
+            gaps.push(
+                `${label}: container ${container.name} runs on "${container.runsOn}", which is none of ${runsOnIds.join(", ")}`,
+            );
+    risksOf(variant).forEach((risk, at) => {
+        for (const name of risk.cites)
+            if (!known.has(name) && !parts.has(name) && !components.has(name))
+                gaps.push(`${label}: risk ${at + 1} cites ${name}, which is no domain, container or component`);
+        if (risk.containedBy !== undefined && !parts.has(risk.containedBy) && !components.has(risk.containedBy))
+            gaps.push(
+                `${label}: risk ${at + 1} is contained by ${risk.containedBy}, which is no container or component`,
+            );
+    });
     return gaps;
 };
 
@@ -235,13 +320,22 @@ export const shapeGaps = (variants: readonly Architecture[], context: DesignCont
     if (recommended.length !== 1) gaps.push(`exactly one variant is recommended (found ${recommended.length})`);
     if (new Set(variants.map((variant) => variant.name)).size !== variants.length)
         gaps.push("two variants share a name");
-    for (const variant of variants) gaps.push(...variantGaps(variant, context));
+    for (const variant of variants) {
+        gaps.push(...variantGaps(variant, context));
+        const label = `variant "${variant.name}"`;
+        gaps.push(...voiceGaps(`${label}: the tradeoff`, variant.tradeoff, true));
+        if (variant.recommended !== undefined)
+            gaps.push(...voiceGaps(`${label}: the recommendation`, variant.recommended));
+        variant.risks.forEach((risk, at) => gaps.push(...voiceGaps(`${label}: risk ${at + 1}`, risk.statement, true)));
+        for (const container of variant.containers)
+            gaps.push(...voiceGaps(`${label}: what container ${container.name} does`, container.does, true));
+    }
     return gaps;
 };
 
 /** What a domain's components job needs besides the architecture. */
 export type ComponentContext = DesignContext & {
-    architecture: Architecture;
+    architecture: ArchitectureRecord;
     domain: string;
     /** Names of components already written by the domains this one depends on. */
     available: readonly string[];
@@ -312,7 +406,7 @@ export const componentJobGaps = (components: readonly Component[], context: Comp
  * @param context what the chosen journeys and the request say
  * @returns the gaps
  */
-export const finalGaps = (architecture: Architecture, context: DesignContext): string[] => {
+export const finalGaps = (architecture: ArchitectureRecord, context: DesignContext): string[] => {
     const gaps = variantGaps({ ...architecture, components: undefined }, context);
     const components = architecture.components ?? [];
     const byName = new Map(components.map((component) => [component.name, component]));
@@ -355,10 +449,23 @@ export const finalGaps = (architecture: Architecture, context: DesignContext): s
                 !(domains.get(component.domain)?.dependsOn ?? []).includes(used.domain)
             )
                 gaps.push(
-                    `component ${component.name} reaches domain ${used.domain}, which its domain does not depend on`,
+                    `component ${component.name} reaches domain ${used.domain}, which its domain ${component.domain} does not depend on: add ${used.domain} to what ${component.domain} depends on, or stop the use`,
                 );
         }
     }
+    // A dependency is declared exactly when a component uses one of the other domain's.
+    for (const domain of architecture.domains)
+        for (const dep of domain.dependsOn)
+            if (
+                !components.some(
+                    (component) =>
+                        component.domain === domain.name &&
+                        component.uses.some((use) => byName.get(use)?.domain === dep),
+                )
+            )
+                gaps.push(
+                    `domain ${domain.name} depends on ${dep}, but none of its components uses one of ${dep}'s: remove ${dep} from what ${domain.name} depends on, or name the component that needs it`,
+                );
     for (const domain of architecture.domains)
         if (!components.some((component) => component.domain === domain.name))
             gaps.push(`domain ${domain.name} has no component`);
@@ -382,7 +489,7 @@ export const finalGaps = (architecture: Architecture, context: DesignContext): s
  * @param journeys the chosen journeys
  * @returns steps served, rules assigned and the domains that serve no step
  */
-export const scoreOf = (architecture: Architecture, journeys: readonly StoredJourney[]) => {
+export const scoreOf = (architecture: ArchitectureRecord, journeys: readonly StoredJourney[]) => {
     const steps = journeys.flatMap((journey) => journey.steps);
     const serves = (domain: Domain, step: (typeof steps)[number]) =>
         step.honours.some((id) => domain.rules.includes(id)) ||

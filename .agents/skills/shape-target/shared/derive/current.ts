@@ -4,6 +4,7 @@ import { isDeepStrictEqual } from "node:util";
 import { Schema } from "effect";
 import type { Layout } from "../model/layout";
 import { Task } from "../model/records";
+import { writeManifest } from "../manifest";
 import { loadChoice, loadLegacy, loadRequest } from "../run";
 import { deriveEssence } from "./essence";
 import { missing } from "./graph";
@@ -133,6 +134,7 @@ export const deriveCurrent = (layout: Layout): Derived => {
     writeIfChanged(layout.tasksRecord, tasks);
     const marks = loadChoice(layout.choiceAsIs)?.marks ?? [];
     writeIfChanged(layout.essence, deriveEssence(legacy, tasks, loadRequest(layout), marks));
+    writeManifest(layout);
     return {
         ok: true,
         text: `${tasks.length} tasks from the analysis's journeys${wrote ? "" : " (target/current.json already holds them)"}`,

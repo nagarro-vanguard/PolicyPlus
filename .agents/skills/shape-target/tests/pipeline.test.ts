@@ -113,26 +113,29 @@ describe("the whole flow with scripted agents", () => {
         expect(gateState(layout, "components")).toBe("confirmed");
     });
 
-    test("a decision changes with what it rests on: a newer proposal or a newer decision before it", () => {
+    test("a decision changes with what it rests on: a changed proposal or a decision before it confirmed later", () => {
         const later = new Date(Date.now() + 60_000);
         utimesSync(layout.architecture, later, later);
-        expect(gateState(layout, "components")).toBe("changed");
-        expect(chooseComponents(layout, "again").ok).toBe(true);
-        expect(gateState(layout, "components")).toBe("changed");
-        const now = new Date();
-        utimesSync(layout.architecture, now, now);
-        expect(chooseComponents(layout, "again").ok).toBe(true);
         expect(gateState(layout, "components")).toBe("confirmed");
+        const text = readFileSync(layout.architecture, "utf8");
+        writeFileSync(layout.architecture, `${text} `);
+        expect(gateState(layout, "components")).toBe("changed");
+        writeFileSync(layout.architecture, text);
+        expect(gateState(layout, "components")).toBe("confirmed");
+        Bun.sleepSync(5);
         expect(chooseArchitecture(layout, "modular", "same again").ok).toBe(true);
         expect(gateState(layout, "components")).toBe("changed");
+        Bun.sleepSync(5);
         expect(chooseJourneys(layout, {}, true, "same again").ok).toBe(true);
         expect(gateState(layout, "architecture")).toBe("changed");
         expect(gateState(layout, "components")).toBe("blocked");
         expect(chooseComponents(layout, "too early").ok).toBe(false);
-        const rebuilt = new Date();
-        utimesSync(layout.architectureVariants, rebuilt, rebuilt);
+        Bun.sleepSync(5);
         expect(chooseArchitecture(layout, "modular", "after the journeys").ok).toBe(true);
         expect(gateState(layout, "architecture")).toBe("confirmed");
+        Bun.sleepSync(5);
+        expect(chooseComponents(layout, "after the architecture").ok).toBe(true);
+        expect(gateState(layout, "components")).toBe("confirmed");
     });
 
     test("a gate failure gives one fix, then the job is refused; accept and abandon work", () => {

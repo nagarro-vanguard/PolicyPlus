@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { gateState } from "../shared/gates";
+import { gateState, subjectOf } from "../shared/gates";
 import { layoutOf } from "../shared/model/layout";
 
 const layout = layoutOf(mkdtempSync(join(tmpdir(), "shape-gates-")));
@@ -18,7 +18,7 @@ const decided = (path: string, step: number) => {
     writeFileSync(path, JSON.stringify({ confirmedAt: at(step).toISOString() }));
 };
 
-describe("where a decision stands, by time alone", () => {
+describe("where a decision recorded before hashes were kept stands, by time alone", () => {
     test("nothing proposed is not made, and a decision waits on the one before it", () => {
         expect(gateState(layout, "as-is")).toBe("not made");
         made(layout.current, 0);
@@ -44,5 +44,33 @@ describe("where a decision stands, by time alone", () => {
     test("a record without a date does not confirm", () => {
         writeFileSync(layout.choiceAsIs, "{}");
         expect(gateState(layout, "as-is")).toBe("waiting");
+    });
+});
+
+describe("where a decision stands, by the hash it recorded", () => {
+    const fresh = layoutOf(mkdtempSync(join(tmpdir(), "shape-gates-hash-")));
+    const confirm = (path: string, proposal: string, step: number) => {
+        mkdirSync(dirname(path), { recursive: true });
+        writeFileSync(path, JSON.stringify({ confirmedAt: at(step).toISOString(), subject: subjectOf(proposal) }));
+    };
+    test("touching what it decides on, or copying it, changes nothing; changing one byte does", () => {
+        made(fresh.current, 5);
+        confirm(fresh.choiceAsIs, fresh.current, 1);
+        expect(gateState(fresh, "as-is")).toBe("confirmed");
+        utimesSync(fresh.current, at(50), at(50));
+        expect(gateState(fresh, "as-is")).toBe("confirmed");
+        writeFileSync(fresh.current, "[ ]");
+        expect(gateState(fresh, "as-is")).toBe("changed");
+        writeFileSync(fresh.current, "[]");
+        expect(gateState(fresh, "as-is")).toBe("confirmed");
+    });
+    test("a decision confirmed before the one it rests on was confirmed again has changed", () => {
+        made(fresh.journeyVariants, 3);
+        confirm(fresh.choiceJourneys, fresh.journeyVariants, 4);
+        expect(gateState(fresh, "journeys")).toBe("confirmed");
+        confirm(fresh.choiceAsIs, fresh.current, 6);
+        expect(gateState(fresh, "journeys")).toBe("changed");
+        confirm(fresh.choiceJourneys, fresh.journeyVariants, 7);
+        expect(gateState(fresh, "journeys")).toBe("confirmed");
     });
 });

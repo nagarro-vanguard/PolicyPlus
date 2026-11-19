@@ -101,7 +101,7 @@ const raw = (prefix: string) => {
         _tag: "legacy",
         from,
         change,
-        reason: "fewer steps for the same result",
+        reason: "the person gets the same result with less to give",
         keeps,
     });
     const variant = (
@@ -122,7 +122,7 @@ const raw = (prefix: string) => {
         ...extra,
     });
     const journeys = [
-        variant(t1, "streamlined", { recommended: "one step does what three did" }, [
+        variant(t1, "streamlined", { recommended: "the person reviews the policy and notes the comment in one go" }, [
             step({
                 intent: "Review the policy and note a comment",
                 system: "Shows the policy and stores a valid comment",
@@ -192,7 +192,14 @@ const raw = (prefix: string) => {
     const architecture = (name: string, split: boolean, recommended: boolean) => ({
         name,
         idea: split ? "an interface and a service apart" : "one application with a module per domain",
-        risks: ["more to run"],
+        risks: [
+            {
+                statement: split ? "Two parts have to be released together." : "One release carries every change.",
+                kind: "accepted",
+                cites: ["Policies"],
+                containedBy: split ? "service" : "application",
+            },
+        ],
         tradeoff: split ? "more parts" : "one deployment",
         ...(recommended ? { recommended: "fits a small team" } : {}),
         integrations: [{ need: "external-1", domain: "Templates", how: "reads the files of a folder" }],
@@ -223,10 +230,33 @@ const raw = (prefix: string) => {
         ],
         containers: split
             ? [
-                  { name: "interface", kind: "interface", tech: "TypeScript", holds: ["Policies"] },
-                  { name: "service", kind: "service", tech: "TypeScript on Bun", holds: ["Templates"] },
+                  {
+                      name: "interface",
+                      kind: "interface",
+                      tech: "TypeScript",
+                      holds: ["Policies"],
+                      does: "Lets people review policies and note comments.",
+                      runsOn: "server",
+                  },
+                  {
+                      name: "service",
+                      kind: "service",
+                      tech: "TypeScript on Bun",
+                      holds: ["Templates"],
+                      does: "Loads the templates of a folder.",
+                      runsOn: "server",
+                  },
               ]
-            : [{ name: "application", kind: "service", tech: "TypeScript on Bun", holds: ["Policies", "Templates"] }],
+            : [
+                  {
+                      name: "application",
+                      kind: "service",
+                      tech: "TypeScript on Bun",
+                      holds: ["Policies", "Templates"],
+                      does: "Keeps policies, their comments and their templates.",
+                      runsOn: "server",
+                  },
+              ],
     });
     return {
         tasks,

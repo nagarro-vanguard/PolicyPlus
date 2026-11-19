@@ -1,5 +1,6 @@
 import { Schema } from "effect";
 import { componentJobGaps, journeyGaps, shapeGaps, type ComponentContext, type DesignContext } from "../derive/checks";
+import type { LegacySheet } from "../derive/legacy";
 import { Architecture, Component, Journey, type Task } from "../model/records";
 
 /** What a job hands its gate: its own inputs, written when the stage was prepared. */
@@ -27,7 +28,7 @@ export const recordCount = (output: Output) =>
     [output.journeys, output.architectures, output.components].flatMap((each) => (Array.isArray(each) ? each : []))
         .length;
 
-export const gateVariants = (job: JobFile, output: Output, tasks: readonly Task[]): string[] => {
+export const gateVariants = (job: JobFile, output: Output, tasks: readonly Task[], legacy?: LegacySheet): string[] => {
     const parsed = decodeWith(Schema.Array(Journey), output.journeys);
     if (!parsed.ok) return [`journeys do not match their shape: ${parsed.problem}`];
     const gaps: string[] = [];
@@ -41,6 +42,7 @@ export const gateVariants = (job: JobFile, output: Output, tasks: readonly Task[
             ...journeyGaps(
                 task,
                 parsed.value.filter((journey) => journey.task === id),
+                legacy,
             ),
         );
     }

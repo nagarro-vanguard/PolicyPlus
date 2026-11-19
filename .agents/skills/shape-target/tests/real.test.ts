@@ -13,7 +13,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { deriveCurrent } from "../shared/derive/current";
 import { deriveLegacy } from "../shared/derive/legacy";
+import { loadDisputes } from "../shared/disputes";
+import { risksOf } from "../shared/derive/views";
 import { layoutOf } from "../shared/model/layout";
+import {
+    loadArchitecture,
+    loadArchitectureVariants,
+    loadChoice,
+    loadJourneys,
+    loadJourneyVariants,
+    loadTasks,
+} from "../shared/run";
 
 const seed = join(import.meta.dir, "../../../../.modernization/.code-analysis/payloads");
 
@@ -54,6 +64,31 @@ describe.skipIf(!existsSync(join(run, "target/current.json")) || !existsSync(see
             expect(payload.journeys).toHaveLength(tasks.length);
             expect(deriveCurrent(layout)).toMatchObject({ ok: true });
             expect(statSync(layout.current).mtimeMs).toBe(before);
+        });
+    },
+);
+
+describe.skipIf(!existsSync(join(run, "target/architecture.json")))(
+    "the example run's records, read with today's readers",
+    () => {
+        test("every record written before this version still decodes; its risks read as unlinked and its disputes name their variant", () => {
+            const layout = layoutOf(run);
+            expect(loadTasks(layout).length).toBeGreaterThan(0);
+            expect(loadJourneys(layout).length).toBeGreaterThan(0);
+            expect(loadJourneyVariants(layout).length).toBeGreaterThan(0);
+            expect(loadArchitectureVariants(layout).length).toBeGreaterThan(0);
+            const architecture = loadArchitecture(layout);
+            expect(architecture).toBeDefined();
+            expect(risksOf(architecture as never).every((risk) => risk.unlinked || risk.cites.length > 0)).toBe(true);
+            for (const path of [
+                layout.choiceAsIs,
+                layout.choiceJourneys,
+                layout.choiceArchitecture,
+                layout.choiceComponents,
+            ])
+                expect(() => loadChoice(path)).not.toThrow();
+            for (const stage of ["journeys", "architecture"] as const)
+                expect(loadDisputes(layout, stage).every((each) => each.variant !== "")).toBe(true);
         });
     },
 );

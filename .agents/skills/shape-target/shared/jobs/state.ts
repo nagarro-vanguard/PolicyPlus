@@ -20,8 +20,10 @@ export type Job = {
     feedback: string;
     /** The role last dispatched and not yet reported. */
     running?: Role;
-    disputes: string[];
+    /** The challenges that survived the fix; jobs decided before they carried their record hold `Record <n>: <says>`. */
+    disputes: (JobDispute | string)[];
 };
+export type JobDispute = { record: number; says: string };
 export type Batch = { id: string; stage: string; jobs: { job: string; role: Role; reported: boolean }[] };
 export type Jobs = { jobs: Job[]; batch?: Batch; batches: number };
 
