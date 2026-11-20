@@ -18,9 +18,9 @@ const Viewpoint = Schema.Literals(["functional", "technical", "deployment"]).ann
 
 const Box = Schema.Struct({
     id: Text.annotate({ description: "A short name for the box, unique within the view; arrows and groups refer to it." }),
-    label: Text.annotate(person("What the box is called, as its people would say it.")),
+    label: Text.annotate(person("What the box is called, as its people would say it; at most 6 words.")),
     note: Schema.optionalKey(
-        Text.annotate(person("One or two sentences on what the box is or does; shown when the box is opened.")),
+        Text.annotate(person("One or two sentences on what the box is or does, at most 40 words; shown when the box is opened.")),
     ),
     group: Schema.optionalKey(
         Text.annotate({
@@ -37,7 +37,7 @@ const Box = Schema.Struct({
 const Arrow = Schema.Struct({
     from: Text.annotate({ description: "The id of the box the arrow starts at." }),
     to: Text.annotate({ description: "The id of the box the arrow reaches." }),
-    label: Schema.optionalKey(Text.annotate(person("What the arrow means, in a word or a few; never a count."))),
+    label: Schema.optionalKey(Text.annotate(person("What the arrow means, in a word or a few, at most 4 words; never a count."))),
 }).annotate({ description: "One arrow between two boxes of a view." });
 
 /** The fields of a view, without an id, so a record can carry its own id beside them. */

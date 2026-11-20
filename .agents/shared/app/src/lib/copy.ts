@@ -299,6 +299,7 @@ export const copy = {
         nothing: "nothing",
         noun: "In this picture",
         rests: "Rests on",
+        marked: "A number on a line stands for words that did not fit beside it; they are listed here.",
         loading: "Drawing the diagram",
         failed: "The drawing did not load. The text version says the same.",
         scroll: "The drawing is larger than its frame. Scroll inside it to see the rest.",

@@ -97,6 +97,26 @@ An ordered list of the pictures of the case, as the model wrote them: `{ key, se
 6. Every view has a text version, made by script from its boxes and arrows.
 7. A target variant draws every domain as a box of a functional view and every container as a box of a deployment view.
 8. The same input gives the same case.
+9. Every text is short enough to be placed: a box name at most 6 words, a note 40, an arrow label 4 (`viewLimits` beside the guard). The guard refuses a longer one when it is written; compose refuses it again when it builds, and refuses a text version that leaves out a box or an arrow, so a view that reaches the app can always be drawn and always be read.
+
+#### Labels never cover anything
+
+Compose cannot lay a picture out, so it enforces only the limits above and the text version. That no text covers another is the renderer's layout: each arrow's label goes to the layout engine (ELK) with its measured size, which reserves room beside the line; a label that would still cover a box, a frame's name or another label is drawn as a numbered mark on its line, its words listed under the drawing and the reading notes saying so. It is verified in a browser, not by a test: open a page with the views, scroll each drawing into view with real wheel scrolling (the islands load only when scrolled to), and run this in the page:
+
+```js
+const hit = (a, b) => a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+const box = (el) => { const r = el.getBBox(); return { x: r.x, y: r.y, width: r.width, height: r.height }; };
+[...document.querySelectorAll('svg[role=group]')].map((svg) => {
+  const boxes = [...svg.querySelectorAll('g[role=button] > rect')].map(box);
+  const titles = [...svg.querySelectorAll('text[role=button]')].map(box);
+  const texts = [...svg.querySelectorAll('text[data-line-label], g[data-line-mark]')].map(box);
+  let n = 0;
+  texts.forEach((t, i) => { n += boxes.filter((b) => hit(t, b)).length + titles.filter((f) => hit(t, f)).length + texts.filter((u, j) => j > i && hit(t, u)).length; });
+  return { boxes: boxes.length, labels: texts.length, overlaps: n };
+});
+```
+
+Every `overlaps` is 0 for a drawing that holds.
 
 ### `evidence.json`, `search.json`, `assistant/`
 

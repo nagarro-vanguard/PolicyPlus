@@ -1,4 +1,5 @@
-import { textOf } from "../../../../skills/code-analysis/shared/views/guard";
+import { coverageGaps, limitGaps, textOf } from "../../../../skills/code-analysis/shared/views/guard";
+import { ComposeError } from "../errors";
 import type { AuthoredView } from "../inputs/view";
 import type { Target } from "../inputs/target";
 import type { Facts } from "./facts";
@@ -77,9 +78,24 @@ export const viewsOf = (facts: Facts, nodeOf: ReadonlyMap<string, string>, targe
             .filter((each) => each.name !== target?.architecture?.name)
             .map((each) => [`variant.${each.name}`, each.views ?? []] as [string, readonly AuthoredView[]]),
     ];
-    return sections.flatMap(([section, views]) =>
+    const pictures = sections.flatMap(([section, views]) =>
         order
             .flatMap((viewpoint) => views.filter((view) => view.viewpoint === viewpoint))
             .map((view, number) => picture(section, number, view)),
     );
+    // What a script can check without drawing: every text is short enough to be placed, and the text version holds every
+    // box and arrow. That no label covers another is the renderer's layout, which places each label in room it reserved.
+    const gaps = pictures.flatMap((each) => {
+        const view = {
+            viewpoint: each.viewpoint,
+            title: each.title,
+            caption: each.caption,
+            boxes: each.boxes.map((box) => ({ id: box.id, label: box.label, note: box.note ?? undefined })),
+            arrows: each.arrows.map((arrow) => ({ from: arrow.from, to: arrow.to, label: arrow.label ?? undefined })),
+        };
+        const where = `${each.section} view "${each.title}"`;
+        return [...limitGaps(view, where), ...coverageGaps(view, each.text, where)];
+    });
+    if (gaps.length > 0) throw new ComposeError("build", `a view cannot be drawn as written:\n${gaps.join("\n")}`);
+    return pictures;
 };

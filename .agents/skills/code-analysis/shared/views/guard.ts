@@ -16,6 +16,36 @@ export type GuardedView = {
 /** The room a view may take: more than this is a table or several views, not one picture. */
 const viewBudget = { boxes: 24, arrows: 48 } as const;
 
+/** How long a text of a view may be, in words, so that every label can be placed in a drawing without covering another. */
+const viewLimits = { boxLabelWords: 6, noteWords: 40, arrowLabelWords: 4 } as const;
+
+const words = (text: string) => text.split(/\s+/).filter((each) => each !== "").length;
+
+/**
+ * The gaps of a view's texts that are too long to place: a box name, a note or an arrow label over its limit.
+ * @param view the view
+ * @param where where the view is, for the message
+ * @returns one line per text over its limit
+ * @public used by the app's compose, which cannot be seen from here
+ */
+export const limitGaps = (view: GuardedView, where: string): string[] => [
+    ...view.boxes.flatMap((box) => [
+        ...(words(box.label) > viewLimits.boxLabelWords
+            ? [`${where}: the label of ${box.id} is ${words(box.label)} words; at most ${viewLimits.boxLabelWords}`]
+            : []),
+        ...(box.note !== undefined && words(box.note) > viewLimits.noteWords
+            ? [`${where}: the note of ${box.id} is ${words(box.note)} words; at most ${viewLimits.noteWords}`]
+            : []),
+    ]),
+    ...view.arrows.flatMap((arrow) =>
+        arrow.label !== undefined && words(arrow.label) > viewLimits.arrowLabelWords
+            ? [
+                  `${where}: the arrow from ${arrow.from} to ${arrow.to} is labelled with ${words(arrow.label)} words ("${arrow.label}"); at most ${viewLimits.arrowLabelWords}`,
+              ]
+            : [],
+    ),
+];
+
 export type ViewGuard = {
     /** Where the view is, for the message. */
     readonly where: string;
@@ -53,6 +83,7 @@ export const viewGaps = (view: GuardedView, guard: ViewGuard): string[] => {
         if (arrow.label !== undefined && isCount(arrow.label))
             gaps.push(`${where}: an arrow is labelled "${arrow.label}", a count; say what it means`);
     }
+    gaps.push(...limitGaps(view, where));
     const holder = new Map(view.boxes.flatMap((box) => (box.group === undefined ? [] : [[box.id, box.group] as const])));
     for (const [id, group] of holder) {
         if (!ids.has(group)) gaps.push(`${where}: box ${id} is in the group ${group}, which is no box of the view`);
@@ -110,5 +141,35 @@ export const textOf = (view: GuardedView): string[] => {
                 `${label.get(arrow.from) ?? arrow.from} ${arrow.label ?? "connects to"} ${label.get(arrow.to) ?? arrow.to}`,
         ),
         ...view.boxes.filter((box) => !touched.has(box.id)).map((box) => box.label),
+    ];
+};
+
+/**
+ * The gaps between a view and the text version written for it: every arrow and every box must be in it, in the words of
+ * the view, so a drawing never carries what its text does not.
+ * @param view the view
+ * @param text the text version
+ * @param where where the view is, for the message
+ * @returns one line per box or arrow the text leaves out
+ * @public used by the app's compose, which cannot be seen from here
+ */
+export const coverageGaps = (view: GuardedView, text: readonly string[], where: string): string[] => {
+    const label = new Map(view.boxes.map((box) => [box.id, box.label]));
+    return [
+        ...view.arrows
+            .filter((arrow) => {
+                const from = label.get(arrow.from) ?? arrow.from;
+                const to = label.get(arrow.to) ?? arrow.to;
+                return !text.some(
+                    (line) =>
+                        line.startsWith(from) &&
+                        line.endsWith(to) &&
+                        (arrow.label === undefined || line.includes(arrow.label)),
+                );
+            })
+            .map((arrow) => `${where}: the text version leaves out the arrow from ${arrow.from} to ${arrow.to}`),
+        ...view.boxes
+            .filter((box) => !text.some((line) => line.includes(box.label)))
+            .map((box) => `${where}: the text version leaves out the box ${box.id}`),
     ];
 };

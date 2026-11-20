@@ -95,6 +95,7 @@ export const viewOf = (record: ViewRecord): DiagramView => {
                 pick: copy.diagram.pick,
                 noun: copy.diagram.noun,
                 rests: copy.diagram.rests,
+                marked: copy.diagram.marked,
             },
         },
     };

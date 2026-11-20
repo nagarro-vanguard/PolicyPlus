@@ -248,13 +248,14 @@ const drawsName = (view: ViewBody, name: string) =>
  * @param context what the chosen journeys and the request say
  * @returns the gaps
  */
-const variantViewGaps = (variant: Architecture, context: DesignContext): string[] => {
+const variantViewGaps = (variant: Architecture, context: DesignContext, more: readonly string[] = []): string[] => {
     const label = `variant "${variant.name}"`;
     const steps = new Set(context.journeys.flatMap((journey) => journey.steps.map((step) => step.id as string)));
     const names = new Set<string>([
         ...variant.domains.map((domain) => domain.name),
         ...variant.containers.map((container) => container.name),
         ...(variant.components ?? []).map((component) => component.name),
+        ...more,
         ...context.needs,
     ]);
     const gaps = setGaps(variant.views, {
@@ -310,7 +311,7 @@ export const componentViewGaps = (
  * @param context what the chosen journeys and the request say
  * @returns the gaps
  */
-export const variantGaps = (variant: Architecture, context: DesignContext): string[] => {
+export const variantGaps = (variant: Architecture, context: DesignContext, componentNames: readonly string[] = []): string[] => {
     const gaps: string[] = [];
     const kept = keptRules(context.journeys);
     const data = touched(context.journeys);
@@ -378,7 +379,7 @@ export const variantGaps = (variant: Architecture, context: DesignContext): stri
             gaps.push(`${label}: outside system ${need} has ${needs.get(need) ?? 0} integrations, not one`);
     for (const need of needs.keys())
         if (!context.needs.includes(need)) gaps.push(`${label}: integration for ${need}, which no chosen task reaches`);
-    gaps.push(...variantViewGaps(variant, context));
+    gaps.push(...variantViewGaps(variant, context, componentNames));
     // A step's data must be within reach of the domains that decide it: their own facts or those of a domain they depend on.
     const reachOfDomain = reachOf(variant.domains);
     for (const journey of context.journeys)
@@ -502,7 +503,11 @@ export const componentJobGaps = (components: readonly Component[], context: Comp
  * @returns the gaps
  */
 export const finalGaps = (architecture: Architecture, context: DesignContext): string[] => {
-    const gaps = variantGaps({ ...architecture, components: undefined }, context);
+    const gaps = variantGaps(
+        { ...architecture, components: undefined },
+        context,
+        (architecture.components ?? []).map((component) => component.name),
+    );
     const components = architecture.components ?? [];
     const byName = new Map(components.map((component) => [component.name, component]));
     if (byName.size !== components.length) gaps.push("two components share a name");

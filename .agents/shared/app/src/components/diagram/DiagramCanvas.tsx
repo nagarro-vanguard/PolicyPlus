@@ -6,7 +6,7 @@ import { loadScript } from "../../scripts/load";
 // comes into view. The layout engine (ELK, about 1.5 MB) runs in a worker made from a `blob:` address, off the page's
 // thread; its source is the classic script `_astro/elk-layout.js` the offline packager writes (scripts/package/), read
 // once per page, so it works from `file://` too. One grammar for every kind: boxes with their full names (wrapped, never cut), lines
-// with arrowheads from one box to another, a line's style for its kind, groups drawn as labelled boundaries, no number on a line. Text keeps the diagram tokens' size; a drawing larger than its frame
+// with arrowheads from one box to another, a line's style for its kind, groups drawn as labelled boundaries. A line's words are given to the layout engine as labels with their measured size, so it reserves room and places them beside the line; a label that still would cover a box, a frame's name or another label is drawn as a numbered mark on the line, its words listed under the drawing, so no text ever covers another. Text keeps the diagram tokens' size; a drawing larger than its frame
 // scrolls inside it and is never scaled down. Selecting a box (click, Enter or Space) brightens what it reaches and what
 // reaches it, says so in words below the drawing and opens what the box is and says in the page's detail drawer (when the
 // page has one). Escape clears the selection.
@@ -35,6 +35,8 @@ export type GraphWords = {
     pick: string;
     noun: string;
     rests: string;
+    /** Says what a numbered mark on a line stands for; shown with the list of the marks' words. */
+    marked: string;
 };
 export type GraphProps = {
     label: string;
@@ -46,7 +48,9 @@ export type GraphProps = {
 
 type Box = { id: string; x: number; y: number; width: number; height: number; lines: string[] };
 type Frame = { id: string; words: string; x: number; y: number; width: number; height: number };
-type Line = { key: string; from: string; to: string; label: string | null; labelAt: { x: number; y: number }; path: string };
+type Rect = { x: number; y: number; width: number; height: number };
+/** A line's words: placed beside it (`at`), or, when no room is left, a numbered mark on it (`mark`) with its words listed apart. */
+type Line = { key: string; from: string; to: string; label: string | null; at: Rect | null; mark: { number: number; x: number; y: number } | null; path: string };
 type Layout = { width: number; height: number; boxes: Box[]; frames: Frame[]; lines: Line[]; lineHeight: number; padX: number; padY: number };
 
 type ElkPoint = { x: number; y: number };
@@ -57,10 +61,16 @@ type ElkNode = {
     width?: number;
     height?: number;
     children?: ElkNode[];
-    edges?: { id: string; sections?: { startPoint: ElkPoint; endPoint: ElkPoint; bendPoints?: ElkPoint[] }[] }[];
+    edges?: { id: string; labels?: Rect[]; sections?: { startPoint: ElkPoint; endPoint: ElkPoint; bendPoints?: ElkPoint[] }[] }[];
 };
 
 const maxText = 208;
+/** The side of a numbered mark, and the room kept between a text and what it must not touch. */
+const markSize = 20;
+const clearance = 2;
+
+const overlaps = (one: Rect, other: Rect) =>
+    one.x < other.x + other.width + clearance && other.x < one.x + one.width + clearance && one.y < other.y + other.height + clearance && other.y < one.y + one.height + clearance;
 
 type Layouter = { layout: (graph: unknown) => Promise<unknown> };
 let engine: Promise<Layouter> | undefined;
@@ -143,6 +153,19 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
             id: `edge:${at}`,
             sources: [elkId(edge.from)],
             targets: [elkId(edge.to)],
+            // The words go to the layout engine with their measured size, so it reserves the room beside the line.
+            labels:
+                edge.label === null
+                    ? []
+                    : [
+                          {
+                              id: `edge:${at}:label`,
+                              text: edge.label,
+                              width: Math.ceil(measure(edge.label)) + 8,
+                              height: lineHeight + 2,
+                              layoutOptions: { "elk.edgeLabels.placement": "CENTER" },
+                          },
+                      ],
         }));
     const outs = new Map<string, number>();
     for (const edge of edges) outs.set(edge.sources[0] ?? "", (outs.get(edge.sources[0] ?? "") ?? 0) + 1);
@@ -159,6 +182,10 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
             "elk.spacing.nodeNode": "20",
             "elk.spacing.edgeNode": "14",
             "elk.spacing.edgeEdge": "8",
+            "elk.spacing.edgeLabel": "4",
+            "elk.spacing.labelNode": "6",
+            "elk.layered.edgeLabels.sideSelection": "SMART_UP",
+            "elk.layered.edgeLabels.centerLabelPlacementStrategy": "MEDIAN_LAYER",
             "elk.layered.considerModelOrder.strategy": "NODES_AND_EDGES",
             "elk.padding": "[top=16,left=16,bottom=16,right=16]",
             "elk.json.shapeCoords": "ROOT",
@@ -181,23 +208,65 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
         }
     };
     visit(done);
-    const routed = (done.edges ?? []).flatMap((edge) => {
+    const wanted = props.edges.filter((each) => (known.has(each.from) || grouped.has(each.from)) && (known.has(each.to) || grouped.has(each.to)));
+    // What a line's words may not cover: every box and the name of every frame, then each other.
+    const smallSize = Math.round(font.size * 0.92);
+    const taken: Rect[] = [
+        ...boxes.map((box) => ({ x: box.x, y: box.y, width: box.width, height: box.height })),
+        ...frames.map((frame) => ({ x: frame.x + 12, y: frame.y + 4, width: Math.ceil(measure(frame.words) * (smallSize / font.size)) + 8, height: lineHeight })),
+    ];
+    const drawn = (done.edges ?? []).flatMap((edge) => {
         const at = Number(edge.id.slice("edge:".length));
-        const source = props.edges.filter((each) => (known.has(each.from) || grouped.has(each.from)) && (known.has(each.to) || grouped.has(each.to)))[at];
+        const source = wanted[at];
         const section = edge.sections?.[0];
         if (source === undefined || section === undefined) return [];
         const points = [section.startPoint, ...(section.bendPoints ?? []), section.endPoint];
-        return [
-            {
-                key: edge.id,
-                from: source.from,
-                to: source.to,
-                label: source.label,
-                labelAt: points[Math.floor(points.length / 2)] ?? section.startPoint,
-                path: points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" "),
-            },
-        ];
+        return [{ key: edge.id, source, points, placed: edge.labels?.[0] ?? null, path: points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ") }];
     });
+    const texts: Rect[] = [];
+    // A label sits where the layout engine put it unless that covers a box, a frame's name or a label already placed.
+    const fits = (rect: Rect) => !taken.some((other) => overlaps(rect, other)) && !texts.some((other) => overlaps(rect, other));
+    const settled = new Map<string, Rect>();
+    for (const line of drawn) {
+        if (line.source.label === null || line.placed === null) continue;
+        const rect = { x: line.placed.x, y: line.placed.y, width: line.placed.width, height: line.placed.height };
+        if (fits(rect)) {
+            texts.push(rect);
+            settled.set(line.key, rect);
+        }
+    }
+    // Otherwise a numbered mark on the line, at the spot along it with the most room; its words are listed under the drawing.
+    const marks = new Map<string, { number: number; x: number; y: number }>();
+    for (const line of drawn) {
+        if (line.source.label === null || settled.has(line.key)) continue;
+        const number = marks.size + 1;
+        let best: { x: number; y: number; hit: number } | null = null;
+        for (let segment = 0; segment + 1 < line.points.length; segment++) {
+            const from = line.points[segment] ?? { x: 0, y: 0 };
+            const to = line.points[segment + 1] ?? from;
+            for (const t of [0.5, 0.45, 0.55, 0.4, 0.6, 0.35, 0.65, 0.3, 0.7, 0.25, 0.75, 0.2, 0.8, 0.15, 0.85, 0.1, 0.9, 0.05, 0.95]) {
+                const x = from.x + (to.x - from.x) * t;
+                const y = from.y + (to.y - from.y) * t;
+                const rect = { x: x - markSize / 2, y: y - markSize / 2, width: markSize, height: markSize };
+                const hit = [...taken, ...texts].filter((other) => overlaps(rect, other)).length;
+                if (best === null || hit < best.hit) best = { x, y, hit };
+                if (hit === 0) break;
+            }
+            if (best !== null && best.hit === 0) break;
+        }
+        const spot = best ?? { x: line.points[0]?.x ?? 0, y: line.points[0]?.y ?? 0, hit: 0 };
+        texts.push({ x: spot.x - markSize / 2, y: spot.y - markSize / 2, width: markSize, height: markSize });
+        marks.set(line.key, { number, x: spot.x, y: spot.y });
+    }
+    const routed: Line[] = drawn.map((line) => ({
+        key: line.key,
+        from: line.source.from,
+        to: line.source.to,
+        label: line.source.label,
+        at: settled.get(line.key) ?? null,
+        mark: marks.get(line.key) ?? null,
+        path: line.path,
+    }));
     return { width: Math.ceil(done.width ?? 0), height: Math.ceil(done.height ?? 0), boxes, frames, lines: routed, lineHeight, padX, padY };
 };
 
@@ -283,6 +352,7 @@ export function DiagramCanvas(props: GraphProps) {
                 {props.words.loading}
             </p>
         );
+    const marked = layout.lines.filter((line) => line.mark !== null).toSorted((one, other) => (one.mark?.number ?? 0) - (other.mark?.number ?? 0));
     const lineState = (line: Line) =>
         selected === null ? "normal" : line.from === selected ? "uses" : line.to === selected ? "usedby" : "dim";
     const stroke = { normal: "stroke-(--diagram-edge)", uses: "stroke-(--diagram-uses)", usedby: "stroke-(--diagram-usedby)", dim: "stroke-(--diagram-dimmed)" };
@@ -331,10 +401,18 @@ export function DiagramCanvas(props: GraphProps) {
                     return (
                         <g key={line.key} data-state={state}>
                             <path d={line.path} fill="none" strokeWidth={state === "uses" || state === "usedby" ? 2 : 1.25} className={stroke[state]} markerEnd={`url(#${id}-${state})`} />
-                            {line.label === null ? null : (
-                                <text x={line.labelAt.x} y={line.labelAt.y - 4} textAnchor="middle" className={state === "dim" ? "fill-(--diagram-dimmed)" : "fill-(--diagram-box-text)"} style={{ paintOrder: "stroke", stroke: "var(--background)", strokeWidth: 3 }} data-written-by="agent">
+                            {line.at === null || line.label === null ? null : (
+                                <text x={line.at.x + line.at.width / 2} y={line.at.y + line.at.height / 2} textAnchor="middle" dominantBaseline="central" className={state === "dim" ? "fill-(--diagram-dimmed)" : "fill-(--diagram-box-text)"} style={{ paintOrder: "stroke", stroke: "var(--background)", strokeWidth: 3 }} data-written-by="agent" data-line-label="">
                                     {line.label}
                                 </text>
+                            )}
+                            {line.mark === null ? null : (
+                                <g data-line-mark="">
+                                    <circle cx={line.mark.x} cy={line.mark.y} r={markSize / 2} className={`fill-(--diagram-box) ${state === "dim" ? "stroke-(--diagram-dimmed)" : "stroke-(--diagram-box-edge)"}`} />
+                                    <text x={line.mark.x} y={line.mark.y} textAnchor="middle" dominantBaseline="central" className={state === "dim" ? "fill-(--diagram-dimmed)" : "fill-(--diagram-box-text)"} data-written-by="app">
+                                        {line.mark.number}
+                                    </text>
+                                </g>
                             )}
                         </g>
                     );
@@ -396,6 +474,20 @@ export function DiagramCanvas(props: GraphProps) {
                             </span>{" "}
                             <span data-written-by="agent">{list(near.reachedFrom)}</span>
                         </p>
+                    </>
+                )}
+                {marked.length === 0 ? null : (
+                    <>
+                        <p className="text-muted-foreground" data-written-by="app">
+                            {props.words.marked}
+                        </p>
+                        <ol className="flex flex-col gap-spacing-2xs">
+                            {marked.map((line) => (
+                                <li key={line.key} data-written-by="agent">
+                                    {line.mark?.number}. {line.label} ({names.get(line.from)} → {names.get(line.to)})
+                                </li>
+                            ))}
+                        </ol>
                     </>
                 )}
                 {overflows ? (
