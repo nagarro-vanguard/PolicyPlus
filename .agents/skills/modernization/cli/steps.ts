@@ -181,8 +181,8 @@ const gate = (input: {
                 action: "run",
                 step: `${name}-pages`,
                 // compose reads a target only once it is finished, so the pages of a decision are built from the analysis.
-                // The old report goes first and the chain stops at the first failure, so a build that failed can never pass for the report of an earlier one.
-                command: `rm -f ${paths.app}/language-report.json && mkdir -p ${join(paths.root, ".shape-target/pages")} && CODE_ANALYSIS_ROOT=${paths.analysis} ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --out ${paths.app} --case ${paths.case}`)} && test -f ${paths.app}/language-report.json && touch ${paths.pages(input.gate)}`,
+                // The old report goes first, so a build that failed before writing its report cannot pass for the report of an earlier one; a report that says places need a look is the person's to read and does not stop the step.
+                command: `rm -f ${paths.app}/language-report.json && mkdir -p ${join(paths.root, ".shape-target/pages")} && CODE_ANALYSIS_ROOT=${paths.analysis} ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --out ${paths.app} --case ${paths.case}`)}; test -f ${paths.app}/language-report.json && touch ${paths.pages(input.gate)}`,
                 why: `build the pages that show the ${input.gate} proposal, before the person is asked`,
             }),
         },
@@ -283,7 +283,7 @@ export const steps: Step[] = [
                 command:
                     store === paths.analysis
                         ? `CODE_ANALYSIS_ROOT=${store} ${write}`
-                        : `CODE_ANALYSIS_ROOT=${store} ${write} && mkdir -p ${paths.payloads} && rsync -a --delete --exclude journeys.json ${store}/payloads/ ${paths.payloads}/`,
+                        : `CODE_ANALYSIS_ROOT=${store} ${write} && mkdir -p ${paths.payloads} && rsync -a --delete --exclude journeys.json ${store}/payloads/ ${paths.payloads}/ && ${bun(skills, "modernization", "keep-journeys.ts", paths.payloads)}`,
                 why: "write the payloads again from the analysis's store, for the contract these scripts read",
             };
         },

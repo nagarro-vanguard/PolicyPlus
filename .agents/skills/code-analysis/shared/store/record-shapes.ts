@@ -1,6 +1,6 @@
 import { Effect, Option, Schema } from "effect";
 import type { SqlClient } from "effect/sql";
-import type { RecordShapes } from "../model/record-shapes";
+import { type RecordShapes, retiredRecordTypes } from "../model/record-shapes";
 import { RecordShapesChanged } from "../run/script-errors";
 import { decodedRows, recordsPerPage } from "./stored-bodies";
 
@@ -55,6 +55,9 @@ const undecodable = Effect.fnUntraced(function* (sql: SqlClient.SqlClient, shape
                 ORDER BY recordNumber LIMIT ${recordsPerPage}`,
         );
         for (const row of page) {
+            if (retiredRecordTypes.has(row.type)) {
+                continue;
+            }
             const schema = shapes.schemas.get(row.type);
             const decoded =
                 schema === undefined

@@ -3,6 +3,9 @@ import { compareText } from "../run/collections";
 import { sha1Hex } from "../run/hashing-and-random";
 import { recordTypes } from "./record-types";
 
+/** Record types no stage writes or reads any more: a store may still hold them, and they are skipped, never refused. */
+export const retiredRecordTypes: ReadonlySet<string> = new Set(["Figure"]);
+
 export type RecordShapes = {
     readonly digest: string;
     readonly schemas: ReadonlyMap<string, Schema.ConstraintDecoder<unknown>>;
