@@ -4,7 +4,7 @@ import type { JsonRecord } from "./json-record";
 import { RecordIdPrefix } from "./shared-fields";
 import type { NoteSpan, Position, RecordKind, RecordType } from "./shape-registry";
 import { ResourceAssignment, ShapeAssignment, EntryPointAssignment } from "./schemas/assignment";
-import { CapabilityGroup, CrossCuttingConcern, Figure, Screen, SystemWords } from "./schemas/briefing";
+import { CapabilityGroup, CrossCuttingConcern, Screen, SystemWords, View } from "./schemas/briefing";
 import { SystemPart } from "./schemas/system-part";
 import { Capability } from "./schemas/capability";
 import { Entity } from "./schemas/entity";
@@ -313,11 +313,11 @@ const keptDeclarations = {
     ]),
     Screen: unplaced(Screen, "account", byId, []),
     SystemWords: unplaced(SystemWords, "account", byId, []),
-    Figure: unplaced(Figure, "account", byId, [
+    View: unplaced(View, "account", byId, [
         refTo(
-            "records",
-            ["SystemPart", "ExternalSystem", "Lifecycle", "Entity", "Layer"],
-            (record: typeof Figure.Type) => record.records,
+            "boxes.cites",
+            ["SystemPart", "ExternalSystem", "Lifecycle", "Entity", "Layer", "Capability", "Screen"],
+            (record: typeof View.Type) => record.boxes.flatMap((box) => box.cites ?? []),
         ),
     ]),
     Journey: unplaced(Journey, "account", byId, [

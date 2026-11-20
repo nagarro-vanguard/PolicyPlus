@@ -1,9 +1,9 @@
 import { ComposeError } from "../errors";
-import { compareText, distinct } from "../io";
+import { distinct } from "../io";
 import type { Payloads } from "../inputs/payloads";
 import type { Target, TargetArchitecture, TargetJourney } from "../inputs/target";
 import type { Facts } from "./facts";
-import { firstSentence, Slugs, sortByText } from "./text";
+import { Slugs, sortByText } from "./text";
 
 /*
  * Today's journeys (the analysis's tasks, or the target's copy of them), the chosen ways of doing each, and the trace of
@@ -205,7 +205,6 @@ export type ArchitectureView = {
         name: string;
         slug: string;
         concept: string;
-        why: string;
         rules: string[];
         dependsOn: string[];
         facts: string[];
@@ -216,34 +215,16 @@ export type ArchitectureView = {
         kind: string;
         tech: string;
         holds: string[];
-        does: string | null;
-        runsOn: string | null;
-        runsOnWords: string | null;
     }[];
     components: Component[];
     integrations: { outside: string; name: string; domain: string; how: string }[];
-    risks: { statement: string; summary: string; kind: string | null; cites: string[]; containedBy: string | null }[];
-    /** How the containers talk: each pair of parts some component use crosses. */
-    talks: { from: string; to: string }[];
-    /** Each pair of domains one of whose components uses a component of the other. */
-    domainEdges: { from: string; to: string }[];
+    risks: string[];
     alternatives: {
         name: string;
         idea: string;
         tradeoff: string;
         score: Score | null;
-        /** The option's own parts that run, domains and outside systems, when its record keeps them. */
-        containers: {
-            name: string;
-            kind: string;
-            tech: string | null;
-            holds: string[];
-            does: string | null;
-            runsOn: string | null;
-            runsOnWords: string | null;
-        }[];
-        domains: { name: string; concept: string | null }[];
-        integrations: { outside: string; name: string; domain: string; how: string }[];
+        risks: string[];
     }[];
     /** The chosen option's score, when its record keeps one. */
     score: Score | null;
@@ -273,23 +254,6 @@ const scoreOf = (score: Score | undefined): Score | null =>
           };
 
 /**
- * The names a plain risk text says, exactly as written: the domains, the parts that run and the components it names.
- * @param text the risk's words
- * @param names every name of the architecture
- * @returns the names it says, in the architecture's order
- */
-const namedIn = (text: string, names: readonly string[]) =>
-    distinct(
-        names.filter((name) => {
-            const at = text.indexOf(name);
-            if (at < 0) return false;
-            const before = text[at - 1] ?? " ";
-            const after = text[at + name.length] ?? " ";
-            return !/[\p{L}\p{N}]/u.test(before) && !/[\p{L}\p{N}]/u.test(after);
-        }),
-    );
-
-/**
  * The chosen architecture with its joins: distinct components per domain, how the containers talk and the uses that
  * cross domains.
  * @param target the target
@@ -317,45 +281,13 @@ export const architectureOf = (
         kind: each.kind ?? null,
     }));
     const byName = new Map(components.map((each) => [each.name, each]));
-    const runner = (domain: string) =>
-        sortByText(
-            architecture.containers.filter(
-                (container) => container.kind !== "store" && container.holds.includes(domain),
-            ),
-            (each) => each.name,
-        )[0]?.name ??
-        sortByText(
-            architecture.containers.filter((container) => container.holds.includes(domain)),
-            (each) => each.name,
-        )[0]?.name ??
-        "";
-    const talks = new Set<string>();
-    const domainEdges = new Set<string>();
-    for (const component of components) {
-        for (const used of component.uses) {
-            const other = byName.get(used);
-            if (other === undefined)
+    for (const component of components)
+        for (const used of component.uses)
+            if (!byName.has(used))
                 throw new ComposeError(
                     "build",
                     `component ${component.name} uses ${used}, which the architecture does not hold`,
                 );
-            if (other.domain !== component.domain) {
-                const key = `${component.domain}\u0000${other.domain}`;
-                domainEdges.add(key);
-            }
-            const from = runner(component.domain);
-            const to = runner(other.domain);
-            if (from !== to && from !== "" && to !== "")
-                talks.add(`${from}\u0000${to}`);
-        }
-    }
-    const pairs = (set: Set<string>) =>
-        [...set]
-            .sort((one, other) => compareText(one, other))
-            .map((key) => {
-                const [from = "", to = ""] = key.split("\u0000");
-                return { from, to };
-            });
     const outsideName = new Map(facts.outside.map((each) => [each.id, each.name]));
     return {
         confirmed: target.architectureConfirmed,
@@ -367,7 +299,6 @@ export const architectureOf = (
             name: domain.name,
             slug: slugs.of("domain", domain.name, domain.name),
             concept: domain.concept,
-            why: domain.why,
             rules: distinct(domain.rules),
             dependsOn: distinct(domain.dependsOn),
             facts: domain.facts.map((fact) => fact.name),
@@ -379,9 +310,6 @@ export const architectureOf = (
             kind: container.kind,
             tech: container.tech,
             holds: [...container.holds],
-            does: container.does ?? null,
-            runsOn: container.runsOn ?? null,
-            runsOnWords: container.runsOn === undefined ? null : (target.runsOn.get(container.runsOn) ?? null),
         })),
         components,
         integrations: architecture.integrations.map((each) => ({
@@ -390,29 +318,7 @@ export const architectureOf = (
             domain: each.domain,
             how: each.how,
         })),
-        risks: architecture.risks.map((risk) =>
-            typeof risk === "string"
-                ? {
-                      statement: risk,
-                      summary: firstSentence(risk),
-                      kind: null,
-                      cites: namedIn(risk, [
-                          ...architecture.domains.map((each) => each.name),
-                          ...architecture.containers.map((each) => each.name),
-                          ...components.map((each) => each.name),
-                      ]),
-                      containedBy: null,
-                  }
-                : {
-                      statement: risk.statement,
-                      summary: firstSentence(risk.statement),
-                      kind: risk.kind,
-                      cites: [...risk.cites],
-                      containedBy: risk.containedBy ?? null,
-                  },
-        ),
-        talks: pairs(talks),
-        domainEdges: pairs(domainEdges),
+        risks: [...architecture.risks],
         alternatives: sortByText(
             target.alternatives.filter((each) => each.name !== architecture.name),
             (each) => each.name,
@@ -421,22 +327,7 @@ export const architectureOf = (
             idea: each.idea,
             tradeoff: each.tradeoff,
             score: scoreOf(each.score),
-            containers: (each.containers ?? []).map((container) => ({
-                name: container.name,
-                kind: container.kind,
-                tech: container.tech ?? null,
-                holds: [...(container.holds ?? [])],
-                does: container.does ?? null,
-                runsOn: container.runsOn ?? null,
-                runsOnWords: container.runsOn === undefined ? null : (target.runsOn.get(container.runsOn) ?? null),
-            })),
-            domains: (each.domains ?? []).map((domain) => ({ name: domain.name, concept: domain.concept ?? null })),
-            integrations: (each.integrations ?? []).map((integration) => ({
-                outside: integration.need,
-                name: outsideName.get(integration.need) ?? "",
-                domain: integration.domain,
-                how: integration.how,
-            })),
+            risks: [...(each.risks ?? [])],
         })),
         score: scoreOf(target.alternatives.find((each) => each.name === architecture.name)?.score),
         ...landingOf(facts, architecture.domains, journeys, slugs),

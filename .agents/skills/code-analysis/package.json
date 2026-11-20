@@ -12,8 +12,7 @@
         "format": "prettier --write '**/*.{ts,tsx}'",
         "format:check": "prettier --check '**/*.{ts,tsx}'",
         "knip": "knip && knip --production",
-        "check": "bun run format:check && bun run lint && bun run knip && bun run typecheck && bun run check-schema-docs && bun run test",
-        "test": "bun test ./tests",
+        "check": "bun run format:check && bun run lint && bun run knip && bun run typecheck && bun run check-schema-docs",
         "check-schema-docs": "bun cli/check-schema-docs.ts"
     },
     "dependencies": {

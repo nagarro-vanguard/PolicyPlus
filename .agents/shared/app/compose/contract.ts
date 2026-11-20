@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { viewpoints } from "./build/views";
 import { foldKinds, levels } from "./build/hierarchy";
 import { workLabels, type WorkLabel } from "./build/work";
 
@@ -187,24 +186,20 @@ const facts = {
 const View = z.strictObject({
     key: S,
     section: S,
-    viewpoint: z.enum(viewpoints),
+    viewpoint: z.enum(["functional", "technical", "deployment"]),
     title: S,
-    caption: S.nullable(),
-    nodes: z.array(
+    caption: S,
+    boxes: z.array(
         z.strictObject({
             id: S,
             label: S,
-            kind: z.enum(["system", "store", "outside", "plain"]),
-            kindWords: S,
+            note: S.nullable(),
             group: S.nullable(),
-            sentence: S.nullable(),
+            cites: z.array(z.strictObject({ id: S, text: S, node: S.nullable() })),
         }),
     ),
-    groups: z.array(z.strictObject({ id: S, words: S })),
-    edges: z.array(z.strictObject({ from: S, to: S, relation: S })),
-    legend: z.array(z.strictObject({ relation: S, words: S })),
+    arrows: z.array(z.strictObject({ from: S, to: S, label: S.nullable() })),
     text: Ids,
-    shown: z.boolean(),
 });
 
 const TodayJourney = z.strictObject({
@@ -256,7 +251,6 @@ const ProposedJourney = z.strictObject({
 
 const Since = z.strictObject({ added: Ids, removed: Ids, changed: Ids, names: z.record(S, S) });
 const Score = z.strictObject({ steps: N, stepsServed: N, rules: N, rulesAssigned: N });
-const Pair = z.strictObject({ from: S, to: S });
 
 const Architecture = z.strictObject({
     /** Whether the person confirmed it with its components; otherwise it is the recommended variant, proposed. */
@@ -266,19 +260,9 @@ const Architecture = z.strictObject({
     tradeoff: S,
     recommended: S.nullable(),
     domains: z.array(
-        z.strictObject({ name: S, slug: S, concept: S, why: S, rules: Ids, dependsOn: Ids, facts: Ids, components: N }),
+        z.strictObject({ name: S, slug: S, concept: S, rules: Ids, dependsOn: Ids, facts: Ids, components: N }),
     ),
-    containers: z.array(
-        z.strictObject({
-            name: S,
-            kind: S,
-            tech: S,
-            holds: Ids,
-            does: S.nullable(),
-            runsOn: S.nullable(),
-            runsOnWords: S.nullable(),
-        }),
-    ),
+    containers: z.array(z.strictObject({ name: S, kind: S, tech: S, holds: Ids })),
     components: z.array(
         z.strictObject({
             name: S,
@@ -293,32 +277,8 @@ const Architecture = z.strictObject({
         }),
     ),
     integrations: z.array(z.strictObject({ outside: S, name: S, domain: S, how: S })),
-    risks: z.array(
-        z.strictObject({ statement: S, summary: S, kind: S.nullable(), cites: Ids, containedBy: S.nullable() }),
-    ),
-    talks: z.array(Pair),
-    domainEdges: z.array(Pair),
-    alternatives: z.array(
-        z.strictObject({
-            name: S,
-            idea: S,
-            tradeoff: S,
-            score: Score.nullable(),
-            containers: z.array(
-                z.strictObject({
-                    name: S,
-                    kind: S,
-                    tech: S.nullable(),
-                    holds: Ids,
-                    does: S.nullable(),
-                    runsOn: S.nullable(),
-                    runsOnWords: S.nullable(),
-                }),
-            ),
-            domains: z.array(z.strictObject({ name: S, concept: S.nullable() })),
-            integrations: z.array(z.strictObject({ outside: S, name: S, domain: S, how: S })),
-        }),
-    ),
+    risks: Ids,
+    alternatives: z.array(z.strictObject({ name: S, idea: S, tradeoff: S, score: Score.nullable(), risks: Ids })),
     score: Score.nullable(),
     landing: z.strictObject({
         layers: z.array(z.strictObject({ layer: S.nullable(), name: S, rules: N, number: S })),
@@ -373,10 +333,7 @@ const Brief = z.strictObject({
     changes: z
         .strictObject({
             stack: z.array(z.strictObject({ line: S, layers: Ids })),
-            containers: z.array(
-                z.strictObject({ name: S, does: S.nullable(), runsOn: S.nullable(), tech: S, holds: Ids }),
-            ),
-            talks: z.array(Pair),
+            containers: z.array(z.strictObject({ name: S, tech: S, holds: Ids })),
         })
         .nullable(),
     risks: z.strictObject({ rule: S, top: Ids, ranked: Ids }),

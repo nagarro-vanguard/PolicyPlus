@@ -206,7 +206,7 @@ const rebuildBlockFanIn = Effect.fnUntraced(function* (sql: SqlClient.SqlClient)
  * @returns nothing once rebuilt
  * @internal exported for the test fixture, which fills the derived tables of a store it builds by hand
  */
-export const deriveGraphTables = Effect.fnUntraced(function* (sql: SqlClient.SqlClient) {
+const deriveGraphTables = Effect.fnUntraced(function* (sql: SqlClient.SqlClient) {
     for (const table of ["filePart", "blockCapability", "layerEdge", "entryPointLayer", "blockFanIn"]) {
         yield* sql.unsafe(`DELETE FROM ${table}`);
     }

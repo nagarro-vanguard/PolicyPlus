@@ -2,7 +2,7 @@
 import Page from "../layouts/Page.astro";
 import Diagram from "../components/diagram/Diagram.astro";
 import { Section } from "../components/Explorer";
-import { Challenges, Containers, Domains, Landing, Options, ProposedHead, Risks, SinceFold, Stack, Sub, TodayData, Unplaced } from "../components/Architecture";
+import { Challenges, Domains, Landing, ProposedHead, Risks, SinceFold, Sub, TodayData, Unplaced, Variant } from "../components/Architecture";
 import { proposedView, todayView } from "../case/architecture-view";
 import { siteOf } from "../case/site";
 import { copy } from "../lib/copy";
@@ -38,11 +38,6 @@ const hasToday = today.views.length > 0 || today.entities.length > 0;
                     <div class="flex flex-col gap-spacing-4xl">
                         <ProposedHead view={proposed} />
                         <SinceFold since={proposed.since} />
-                        {proposed.containers.length === 0 ? null : (
-                            <Sub listed title={words.parts} lead={words.partsLead}>
-                                <Containers view={proposed} />
-                            </Sub>
-                        )}
                         {proposed.views.map((view) => <Diagram diagram={view} />)}
                         {proposed.domains.length === 0 ? null : (
                             <Sub listed title={words.domains} lead={words.domainsLead}>
@@ -55,41 +50,26 @@ const hasToday = today.views.length > 0 || today.entities.length > 0;
                                 {proposed.unplaced === null ? null : <Unplaced view={proposed.unplaced} />}
                             </Sub>
                         )}
-                        {proposed.stack.length === 0 ? null : (
-                            <Sub listed title={words.stack} lead={words.stackLead}>
-                                <Stack view={proposed} />
-                            </Sub>
-                        )}
                         {proposed.risks.length === 0 ? null : (
                             <Sub listed title={words.risks} lead={words.risksLead}>
                                 <Risks items={proposed.risks} />
-                            </Sub>
-                        )}
-                        {proposed.questions.length === 0 ? null : (
-                            <Sub listed title={words.questions} lead={words.questionsLead}>
-                                <Risks items={proposed.questions} />
                             </Sub>
                         )}
                     </div>
                 </Section>
             </div>
         )}
-        {proposed === null || proposed.options.length < 2 ? null : (
+        {proposed === null || proposed.variants.length === 0 ? null : (
             <div id="options">
                 <Section title={words.options} writtenBy="app">
-                    <p class="text-muted-foreground" data-written-by="app">{proposed.confirmed ? words.optionsLead : words.unconfirmed.optionsLead}</p>
-                    <Options options={proposed.options} confirmed={proposed.confirmed} />
-                    {proposed.variants.every((each) => each.views.length === 0) ? null : (
-                        <div class="mt-spacing-4xl flex flex-col gap-spacing-4xl">
-                            <p class="text-muted-foreground" data-written-by="app">{proposed.confirmed ? words.variantsLead : words.unconfirmed.variantsLead}</p>
-                            {proposed.variants.filter((each) => each.views.length > 0).map((variant) => (
-                                <div class="flex flex-col gap-spacing-xl">
-                                    <h3 class="text-sm font-semibold" data-written-by="agent">{variant.name}</h3>
-                                    {variant.views.map((view) => <Diagram diagram={view} level="h4" />)}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    <p class="text-muted-foreground" data-written-by="app">{proposed.confirmed ? words.variantsLead : words.unconfirmed.variantsLead}</p>
+                    <div class="mt-spacing-4xl flex flex-col gap-spacing-4xl">
+                        {proposed.variants.map((variant) => (
+                            <Variant variant={variant}>
+                                {variant.views.map((view) => <Diagram diagram={view} level="h4" />)}
+                            </Variant>
+                        ))}
+                    </div>
                 </Section>
             </div>
         )}

@@ -2,10 +2,11 @@ import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { relevantSteps, type ComponentContext, type DesignContext } from "../derive/checks";
 import { deriveEssence } from "../derive/essence";
+import { evidenceOf } from "../derive/evidence";
 import { confirmed } from "../gates";
 import { slug } from "../model/ids";
 import type { Layout } from "../model/layout";
-import type { StoredArchitecture } from "../model/records";
+import type { Architecture, StoredArchitecture } from "../model/records";
 import {
     loadArchitectureVariants,
     loadChoice,
@@ -240,6 +241,18 @@ export const refreshInputs = (layout: Layout, jobs: Jobs, id: string) => {
     const job = jobs.jobs.find((each) => each.id === id);
     if (job === undefined) return;
     const paths = jobPaths(layout, id);
+    if (job.kind === "shape") {
+        const written = outputOf<{ architectures?: unknown }>(layout, "shape")?.architectures;
+        if (Array.isArray(written))
+            try {
+                writeJson(paths.context, {
+                    ...readJson<Record<string, unknown>>(paths.context),
+                    evidence: evidenceOf(written as Architecture[], loadJourneys(layout)),
+                });
+            } catch {
+                // An output that does not match its shape has no figures yet; the writer's own check says why.
+            }
+    }
     if (job.kind === "components") {
         const file = readJson<JobFile>(paths.job);
         const context = componentContext(layout, jobs, file.domain ?? "");

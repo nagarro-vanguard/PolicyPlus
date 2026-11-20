@@ -22,9 +22,8 @@ const wordy = (char: string | undefined) =>
  * @param text the text
  * @param term the term
  * @returns true when it does
- * @internal exported for the tests, which check it on its own
  */
-export const usesTerm = (text: string, term: string) => {
+const usesTerm = (text: string, term: string) => {
     const haystack = text.toLowerCase();
     const needle = term.trim().toLowerCase();
     if (needle === "") {

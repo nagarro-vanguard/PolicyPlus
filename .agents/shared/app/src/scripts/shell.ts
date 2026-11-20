@@ -454,7 +454,7 @@ const bindDrawer = () => {
 window.addEventListener("view:note", (event) => {
     const dialog = drawer();
     if (dialog === null) return;
-    const note = (event as CustomEvent<{ noun: string; title: string; body: string | null }>).detail;
+    const note = (event as CustomEvent<{ noun: string; title: string; body: string | null; rests: string; cites: { text: string; href: string | null }[] }>).detail;
     bindDrawer();
     const first = !dialog.open;
     if (first) {
@@ -469,7 +469,20 @@ window.addEventListener("view:note", (event) => {
     if (noun !== null) noun.textContent = note.noun;
     dialog.querySelector<HTMLElement>("[data-detail-code]")?.replaceChildren();
     const body = dialog.querySelector<HTMLElement>("[data-detail-body]");
-    body?.replaceChildren(...(note.body === null ? [] : [el("p", "text-sm", note.body, "agent")]));
+    body?.replaceChildren(
+        ...(note.body === null ? [] : [el("p", "text-sm", note.body, "agent")]),
+        ...(note.cites.length === 0
+            ? []
+            : [
+                  el("p", "text-sm font-medium", note.rests, "app"),
+                  ...note.cites.map((cite) => {
+                      if (cite.href === null) return el("p", "text-sm", cite.text, "agent");
+                      const link = el("a", "text-sm underline", cite.text, "agent");
+                      link.setAttribute("href", cite.href);
+                      return link;
+                  }),
+              ]),
+    );
 });
 // The drawer beside the page has no Escape of its own (it is not modal): Escape closes it, unless a modal is over it.
 document.addEventListener("keydown", (event) => {

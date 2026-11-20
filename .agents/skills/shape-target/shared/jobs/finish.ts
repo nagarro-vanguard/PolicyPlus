@@ -5,6 +5,7 @@ import { finalGaps, isCopy, scoreOf } from "../derive/checks";
 import { journeyId, stepId } from "../model/ids";
 import type { Layout } from "../model/layout";
 import { Architecture, Component, Journey, type StoredJourney } from "../model/records";
+import { ViewBody } from "../model/view";
 import { loadJourneys, loadTasks } from "../run";
 import { chosenArchitecture, designContext } from "./stages";
 import { loadJobs, outputOf, writeJson, type Stage } from "./state";
@@ -75,8 +76,12 @@ export const finish = (layout: Layout, stage: Stage): Finished => {
             outputOf<{ components: unknown }>(layout, job.id)?.components ?? [],
         ),
     );
+    const componentViews = mine.flatMap((job) => {
+        const view = outputOf<{ view?: unknown }>(layout, job.id)?.view;
+        return view === undefined ? [] : [Schema.decodeUnknownSync(ViewBody)(view)];
+    });
     const { score: _score, ...architecture } = chosen;
-    const whole = { ...architecture, components };
+    const whole = { ...architecture, views: [...architecture.views, ...componentViews], components };
     const gaps = finalGaps(whole, designContext(layout));
     if (gaps.length > 0)
         return {

@@ -1,7 +1,7 @@
 import { copy } from "../lib/copy";
 import { caseData } from "./data";
-import { type DiagramView, viewOf, viewsOfCase, viewsOfSection } from "./diagram-view";
-import { type CountView, countOf, heading } from "./format";
+import { type DiagramView, viewOf, viewsOfSection } from "./diagram-view";
+import { type CountView, countOf } from "./format";
 import { theCase } from "./loader";
 
 // What the Architecture and Choices pages show, read from the case: its views of today, of the chosen architecture and
@@ -16,19 +16,9 @@ type Architecture = {
     idea: string;
     tradeoff: string;
     recommended: string | null;
-    domains: { name: string; slug: string; concept: string; why: string }[];
-    containers: { name: string; kind: string; tech: string; holds: string[]; does: string | null; runsOn: string | null; runsOnWords: string | null }[];
-    integrations: { outside: string; name: string; domain: string; how: string }[];
-    risks: { statement: string; summary: string; kind: string | null; cites: string[]; containedBy: string | null }[];
-    domainEdges: { from: string; to: string }[];
-    alternatives: {
-        name: string;
-        idea: string;
-        tradeoff: string;
-        containers: { name: string; kind: string }[];
-        domains: { name: string }[];
-        integrations: { outside: string; name: string }[];
-    }[];
+    domains: { name: string; slug: string; concept: string; dependsOn: string[] }[];
+    risks: string[];
+    alternatives: { name: string; idea: string; tradeoff: string; risks: string[] }[];
     landing: {
         layers: { layer: string | null; name: string; number: string }[];
         domains: string[];
@@ -36,7 +26,6 @@ type Architecture = {
     };
     unplaced: { rule: string; reason: string | null }[];
 };
-type Brief = { changes: { stack: { line: string; layers: string[] }[] } | null };
 type Changed = { gate: string; state: string; since: { added: string[]; removed: string[]; changed: string[]; names?: Record<string, string> } | null };
 type Conflict = { stage: string; variant: string; says: string; resolved: boolean | null };
 type Entity = { name: string; purpose: string };
@@ -71,16 +60,12 @@ const sinceOf = (gate: string, nameOf: (key: string) => string | undefined): Sin
 const joined = (one: Since | null, other: Since | null): Since | null =>
     one === null ? other : other === null ? one : { added: [...one.added, ...other.added], removed: [...one.removed, ...other.removed], changed: [...one.changed, ...other.changed] };
 
-export type RiskItem = { title: string; detail: string | null; about: string[]; containedBy: string | null };
 export type Option = {
     name: string;
     idea: string;
     cost: string;
     chosen: boolean;
     why: string | null;
-    /** The parts that run and the domains, when the option's record keeps them. */
-    parts: string[];
-    domains: string[];
 };
 
 export type LandingView = {
@@ -102,18 +87,14 @@ export type ProposedView = {
     idea: string;
     why: string | null;
     facts: CountView[];
-    containers: { name: string; kind: string | null; does: string | null; runsOn: string | null; holds: string[] }[];
     /** The views of the chosen architecture, in the case's order. */
     views: DiagramView[];
-    /** Each option not chosen, drawn the way the chosen one is. */
-    variants: { name: string; views: DiagramView[] }[];
-    domains: { name: string; concept: string; why: string; uses: string[]; usedBy: string[]; counts: string[] }[];
-    stack: { label: string; line: string; carriedBy: string[] }[];
-    risks: RiskItem[];
-    questions: RiskItem[];
+    risks: string[];
+    /** Each option not chosen: what it is, what it costs, what it risks and its own views. */
+    variants: { name: string; idea: string; cost: string; risks: string[]; views: DiagramView[] }[];
+    domains: { name: string; concept: string; uses: string[]; usedBy: string[]; counts: string[] }[];
     landing: LandingView | null;
     unplaced: { title: string; scope: string; rules: { says: string; reason: string | null }[] } | null;
-    options: Option[];
     challenges: { says: string; other: string | null }[];
     since: Since | null;
 };
@@ -124,33 +105,12 @@ export const todayView = (): TodayView => ({
     entities: (read<Entity[]>("facts/entities.json") ?? []).map((each) => ({ name: each.name, line: each.purpose })),
 });
 
-const riskOf = (risk: Architecture["risks"][number]): RiskItem => ({
-    title: risk.summary,
-    detail: risk.statement === risk.summary ? null : risk.statement,
-    about: risk.cites,
-    containedBy: risk.containedBy,
-});
-
-/**
- * A stack line of the request as what it is for and what it names: the words before its first colon, when it has one,
- * say what the line is for.
- */
-const stackLineOf = (line: string) => {
-    const at = line.indexOf(": ");
-    return at <= 0 ? { label: "", line } : { label: heading(line.slice(0, at)), line: line.slice(at + 2) };
-};
-
 /** The proposal, when the case holds an architecture. */
 export const proposedView = async (): Promise<ProposedView | null> => {
     const architecture = read<Architecture>("architecture.json");
     if (architecture === null) return null;
-    const brief = read<Brief>("brief.json");
     const facts = (await Promise.all(["architecture/domains", "architecture/containers", "architecture/components"].map(numberOf))).filter(
         (each): each is CountView => each !== null,
-    );
-    // What each part is, in the case's words: the kind of its box in the view that draws it.
-    const kindOf = new Map(
-        (viewsOfCase().find((view) => view.section === "target.deployment")?.nodes ?? []).map((node) => [node.label, node.kindWords]),
     );
     // A challenge about an option the person did not choose says nothing about the design they did.
     const conflicts = (read<Conflict[]>("plan/conflicts.json") ?? []).filter(
@@ -169,7 +129,6 @@ export const proposedView = async (): Promise<ProposedView | null> => {
                   { text: copy.architecture.scoreSteps(countOf(served).text, countOf(steps).text), scope: served.scope, value: served.value },
                   { text: copy.architecture.scoreRules(countOf(assigned).text, countOf(scored).text), scope: assigned.scope, value: assigned.value },
               ];
-    const domainSlug = new Map(architecture.domains.map((domain) => [domain.name, domain.slug]));
     const columnName = (domain: string) => (domain === "" ? copy.architecture.notPlaced : domain);
     const rowName = (name: string) => (name === "" ? copy.architecture.noLayer : name);
     const landing = ((): LandingView | null => {
@@ -199,32 +158,25 @@ export const proposedView = async (): Promise<ProposedView | null> => {
         idea: architecture.idea,
         why: architecture.recommended,
         facts: [...facts, ...score],
-        containers: architecture.containers.map((each) => ({
-            name: each.name,
-            kind: kindOf.get(each.name) ?? null,
-            does: each.does,
-            runsOn: each.runsOnWords ?? each.runsOn,
-            holds: each.holds,
-        })),
         views: viewsOfSection("target").map(viewOf),
-        variants: architecture.alternatives.map((each, at) => ({
+        risks: architecture.risks,
+        variants: architecture.alternatives.map((each) => ({
             name: each.name,
-            views: viewsOfSection(`variant.${at + 1}`).map(viewOf),
+            idea: each.idea,
+            cost: each.tradeoff,
+            risks: each.risks,
+            views: viewsOfSection(`variant.${each.name}`).map(viewOf),
         })),
         domains: architecture.domains.map((domain) => ({
             name: domain.name,
             concept: domain.concept,
-            why: domain.why,
             counts: [`architecture/domain/${domain.slug}/components`, `architecture/domain/${domain.slug}/rules`].flatMap((key) => {
                 const entry = valueOf(key);
                 return entry === undefined ? [] : [countOf(entry).text];
             }),
-            uses: architecture.domainEdges.filter((edge) => edge.from === domain.name).map((edge) => edge.to),
-            usedBy: architecture.domainEdges.filter((edge) => edge.to === domain.name).map((edge) => edge.from),
+            uses: domain.dependsOn,
+            usedBy: architecture.domains.filter((other) => other.dependsOn.includes(domain.name)).map((other) => other.name),
         })),
-        stack: (brief?.changes?.stack ?? []).map((each) => ({ ...stackLineOf(each.line), carriedBy: each.layers })),
-        risks: architecture.risks.filter((risk) => risk.kind !== "question").map(riskOf),
-        questions: architecture.risks.filter((risk) => risk.kind === "question").map(riskOf),
         landing,
         unplaced:
             unplacedNumber === undefined || architecture.unplaced.length === 0
@@ -234,7 +186,6 @@ export const proposedView = async (): Promise<ProposedView | null> => {
                       scope: unplacedNumber.scope,
                       rules: architecture.unplaced.map((each) => ({ says: ruleSays(each.rule), reason: each.reason })).filter((each) => each.says !== ""),
                   },
-        options: optionsOf(architecture),
         challenges: conflicts.map((each) => ({ says: each.says, other: each.variant === architecture.name ? null : each.variant })),
         since: joined(sinceOf("architecture", (key) => key), sinceOf("components", (key) => key)),
     };
@@ -248,8 +199,6 @@ const optionsOf = (architecture: Architecture): Option[] => [
         cost: architecture.tradeoff,
         chosen: true,
         why: architecture.recommended,
-        parts: architecture.containers.map((each) => each.name),
-        domains: architecture.domains.map((each) => each.name),
     },
     ...architecture.alternatives.map((each) => ({
         name: each.name,
@@ -257,8 +206,6 @@ const optionsOf = (architecture: Architecture): Option[] => [
         cost: each.tradeoff,
         chosen: false,
         why: null,
-        parts: each.containers.map((container) => container.name),
-        domains: each.domains.map((domain) => domain.name),
     })),
 ];
 

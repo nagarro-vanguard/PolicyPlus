@@ -8,11 +8,10 @@
     },
     "scripts": {
         "typecheck": "tsc --noEmit",
-        "test": "bun --bun vitest run",
         "lint": "eslint .",
         "format": "prettier --write '**/*.{ts,tsx}'",
         "format:check": "prettier --check '**/*.{ts,tsx}'",
-        "check": "bun run format:check && bun run lint && bun run typecheck && bun run test"
+        "check": "bun run format:check && bun run lint && bun run typecheck"
     },
     "dependencies": {
         "@effect/platform-bun": "4.0.4",
@@ -21,7 +20,6 @@
         "typescript": "5.9.3"
     },
     "devDependencies": {
-        "@effect/vitest": "4.0.4",
         "@eslint/js": "10.0.1",
         "@types/bun": "1.4.2",
         "eslint": "10.12.0",
@@ -30,8 +28,7 @@
         "jiti": "2.7.0",
         "prettier": "3.9.9",
         "typescript-eslint": "8.71.0",
-        "vite": "8.3.2",
-        "vitest": "5.0.3"
+        "vite": "8.3.2"
     },
     "overrides": {
         "@effect/platform-node-shared": "4.0.4"

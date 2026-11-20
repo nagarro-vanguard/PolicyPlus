@@ -4,6 +4,7 @@ import { ComposeError } from "../errors";
 import { compareText, distinct, readJson } from "../io";
 import type { Payloads } from "../inputs/payloads";
 import type { Noun } from "./numbers";
+import type { AuthoredView } from "../inputs/view";
 import { firstSentence, Slugs, sortByText } from "./text";
 
 /*
@@ -144,7 +145,7 @@ export type Facts = {
     terms: Term[];
     lifecycles: Lifecycle[];
     dataUse: { capability: string; entity: string; reads: boolean; saves: boolean }[];
-    figures: { kind: string; question: string; caption: string; records: string[] }[];
+    views: AuthoredView[];
     unplacedWhy: string;
     /** Every rule id the analysis indexed, owned by a capability or not. */
     ruleIndex: string[];
@@ -576,12 +577,7 @@ export const factsOf = (payloads: Payloads): Facts => {
             reads: each.reads,
             saves: each.saves,
         })),
-        figures: (knowledge.figures ?? []).map((each) => ({
-            kind: each.kind,
-            question: each.question,
-            caption: each.caption,
-            records: [...(each.records ?? [])],
-        })),
+        views: (knowledge.views ?? []).map(({ id: _id, ...view }) => view),
         unplacedWhy: system.unplaced.why,
         ruleIndex: distinct([...index.rules.map((each) => each.id), ...ruleRecords.keys()]),
     };

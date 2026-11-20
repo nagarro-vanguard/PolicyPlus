@@ -26,8 +26,8 @@ The system page lists what the system offers under these areas, read by people d
 - A purpose that would fit any place, or that its candidate's entry points do not show.
 - A `SystemWords` name the brief and the code's titles do not show, or a term the brief never uses or defines by itself.
 
-## Pictures
+## Views
 
-- A `Figure` whose question no reader would ask, or whose caption says what its records do not show, or that restates its title.
-- A plain question about the system (what it is made of, what it reaches outside itself, how a kind of data changes, who keeps what) answered by no figure, or a figure that answers nothing.
-- Records named so the picture hides what matters (one lifecycle of many, the parts of one kind only) where the question needs them all.
+- A `View` whose title no reader would ask, whose caption says what its boxes do not show, or that restates a table beside it.
+- No functional or technical view, or one that mixes levels so that it answers no question.
+- Boxes that hide what matters (one part of many) where the question needs them all, or a box that cites nothing where records exist.

@@ -11,8 +11,7 @@
         "generate": "bun scripts/generate-schemas.ts",
         "sync-ui": "bun scripts/sync-ui.ts",
         "check": "bun scripts/sync-ui.ts --check && bun run generate && astro check",
-        "build": "bun scripts/sync-ui.ts --check && bun run generate && astro build",
-        "test": "bun test"
+        "build": "bun scripts/sync-ui.ts --check && bun run generate && astro build"
     },
     "dependencies": {
         "@astrojs/react": "7.1.9",

@@ -3,13 +3,13 @@ import { addToCount } from "../../shared/run/collections";
 import type { JsonRecord } from "../../shared/model/json-record";
 import { ofType } from "../../shared/read/record-reading";
 import { checkReviewedJob } from "../../shared/jobs/review-rounds";
-import { CapabilityGroup, CrossCuttingConcern, Figure, Screen, SystemWords } from "../../shared/model/schemas/briefing";
+import { CapabilityGroup, CrossCuttingConcern, Screen, SystemWords, View } from "../../shared/model/schemas/briefing";
+import { setGaps } from "../../shared/views/guard";
 import { readFactBase, stageFactGaps } from "../../shared/read/stage-facts";
 import { RecordIdPrefix } from "../../shared/model/shared-fields";
 import {
     briefedCandidates,
     briefedCapabilities,
-    briefedMenu,
     briefedPlaces,
     briefedScreens,
     briefedText,
@@ -86,9 +86,8 @@ function briefingGaps(records: readonly Finding[], capabilities: readonly string
  * @param records the briefing's records
  * @param candidates the candidate blocks of the brief
  * @returns one line per gap
- * @internal exported for the tests, which check this gate on its own
  */
-export function crossCuttingGaps(records: readonly Finding[], candidates: readonly string[]): string[] {
+function crossCuttingGaps(records: readonly Finding[], candidates: readonly string[]): string[] {
     return onceEach(
         candidates,
         timesNamed(
@@ -108,9 +107,8 @@ export function crossCuttingGaps(records: readonly Finding[], candidates: readon
  * @param records the briefing's records
  * @param candidates the candidate screens' keys
  * @returns one line per gap
- * @internal exported for the tests, which check this gate on its own
  */
-export function screenGaps(records: readonly Finding[], candidates: readonly string[]): string[] {
+function screenGaps(records: readonly Finding[], candidates: readonly string[]): string[] {
     return onceEach(
         candidates,
         timesNamed(ofType(records, RecordIdPrefix.Screen, Screen).map((screen) => screen.places)),
@@ -147,9 +145,8 @@ const readsAsCode = (name: string) => {
  * @param records the briefing's records
  * @param places the candidate places of the brief, with the name the code gives each and its files
  * @returns one line per gap
- * @internal exported for the tests, which check this gate on its own
  */
-export function surfaceNameGaps(
+function surfaceNameGaps(
     records: readonly Finding[],
     places: ReadonlyArray<{ readonly key: string; readonly name: string; readonly files: readonly string[] }>,
 ): string[] {
@@ -187,9 +184,8 @@ const holds = (text: string, words: string) => text.toLowerCase().includes(words
  * @param records the briefing's records
  * @param brief the brief's text
  * @returns one line per gap
- * @internal exported for the tests, which check this gate on its own
  */
-export function systemWordsGaps(records: readonly Finding[], brief: string): string[] {
+function systemWordsGaps(records: readonly Finding[], brief: string): string[] {
     const words = ofType(records, RecordIdPrefix.SystemWords, SystemWords);
     const count = (text: string) => text.split(" ").filter((word) => word !== "").length;
     return [
@@ -217,23 +213,18 @@ export function systemWordsGaps(records: readonly Finding[], brief: string): str
 const hasDigit = (text: string) => [...text].some((char) => char >= "0" && char <= "9");
 
 /**
- * The figures gate: a figure names only records the menu line of its family offers, and its caption states no count.
+ * The views gate: each view holds together (ids, arrows, groups, room), its title and caption state no count, and a
+ * functional and a technical view are among them.
  * @param records the briefing's records
- * @param menu the record ids each shape of picture can draw
  * @returns one line per gap
- * @internal exported for the tests, which check this gate on its own
  */
-export function figureGaps(records: readonly Finding[], menu: ReadonlyMap<string, readonly string[]>): string[] {
-    return ofType(records, RecordIdPrefix.Figure, Figure).flatMap((figure) => {
-        const offered = menu.get(figure.kind) ?? [];
-        return [
-            ...figure.records
-                .filter((id) => !offered.includes(id))
-                .map((id) => `${figure.id} names ${id}, which the ${figure.kind} line of the menu does not offer`),
-            ...(hasDigit(figure.caption)
-                ? [`${figure.id}: the caption states a count or a number; the page counts, so say it in words`]
-                : []),
-        ];
+function viewGaps(records: readonly Finding[]): string[] {
+    return setGaps(ofType(records, RecordIdPrefix.View, View), {
+        where: "the system",
+        textGaps: (where, text, kind) =>
+            (kind === "caption" || kind === "title") && hasDigit(text)
+                ? [`${where} states a count or a number; the page counts, so say it in words`]
+                : [],
     });
 }
 
@@ -253,7 +244,6 @@ export const briefingReview = (root: string) => ({
             const screens = yield* briefedScreens(root);
             const places = yield* briefedPlaces(root);
             const brief = yield* briefedText(root);
-            const menu = yield* briefedMenu(root);
             const lineCounts = yield* (yield* ScopeFiles).lineCountsFor(citedFiles(cited));
             const facts = { ...(yield* readFactBase()), lineCounts };
             return {
@@ -263,7 +253,7 @@ export const briefingReview = (root: string) => ({
                     ...screenGaps(records, screens),
                     ...surfaceNameGaps(records, places),
                     ...systemWordsGaps(records, brief),
-                    ...figureGaps(records, menu),
+                    ...viewGaps(records),
                     ...stageFactGaps(records, facts),
                 ],
                 placement: (missed: ReadonlyArray<typeof Missed.Type>) => missedOutside(missed, lineCounts, "manifest"),

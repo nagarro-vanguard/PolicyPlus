@@ -125,7 +125,7 @@ export default tseslint.config(
         rules: { "no-restricted-syntax": ["error", ...baseRules, ...codeRules, ...noFallbacks] },
     },
     {
-        files: ["__tests__/**/*.ts", "*.config.ts"],
+        files: ["*.config.ts"],
         rules: {
             "jsdoc/require-jsdoc": "off",
             "jsdoc/require-param": "off",

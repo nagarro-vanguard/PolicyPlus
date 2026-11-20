@@ -1,10 +1,9 @@
-import { Badge } from "@continuum/ui/components/badge";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@continuum/ui/components/input-group";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@continuum/ui/components/item";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@continuum/ui/components/table";
-import { CircleCheck, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import type { ReactNode } from "react";
-import type { Option, ProposedView, RiskItem, Since, TodayView } from "../case/architecture-view";
+import type { ProposedView, Since, TodayView } from "../case/architecture-view";
 import { copy } from "../lib/copy";
 import { Fold } from "./Fold";
 
@@ -121,36 +120,6 @@ export function ProposedHead({ view }: { readonly view: ProposedView }) {
     );
 }
 
-/** The parts that run: each with its kind, what it does and where it runs when the case says, and the domains it holds. */
-export function Containers({ view }: { readonly view: ProposedView }) {
-    return (
-        <div className="flex flex-col gap-spacing-md">
-            {view.containers.map((each) => (
-                <Item key={each.name} variant="outline" size="sm" className="items-start">
-                    <ItemContent className="min-w-0 gap-spacing-xs">
-                        <ItemTitle className="line-clamp-none" data-written-by="agent">
-                            {each.name}
-                            {each.kind === null ? null : (
-                                <>
-                                    {" "}
-                                    <Badge variant="secondary" data-written-by="agent">
-                                        {each.kind}
-                                    </Badge>
-                                </>
-                            )}
-                        </ItemTitle>
-                        <div className="flex flex-col gap-spacing-2xs text-sm">
-                            {each.does === null ? null : <Pair label={words.does}>{each.does}</Pair>}
-                            {each.runsOn === null ? null : <Pair label={words.runsOn}>{each.runsOn}</Pair>}
-                            <Pair label={words.holds}>{each.holds.join(", ")}</Pair>
-                        </div>
-                    </ItemContent>
-                </Item>
-            ))}
-        </div>
-    );
-}
-
 /** Each domain, folded: what it is, why it stands alone, what it uses and what uses it. */
 export function Domains({ view }: { readonly view: ProposedView }) {
     return (
@@ -159,7 +128,6 @@ export function Domains({ view }: { readonly view: ProposedView }) {
                 <Fold key={domain.name} summary={domain.name} writtenBy="agent">
                     <div className="flex flex-col gap-spacing-xs">
                         <p data-written-by="agent">{domain.concept}</p>
-                        <Pair label={words.domainWhy}>{domain.why}</Pair>
                         <Pair label={words.uses}>{domain.uses.length === 0 ? words.nothing : domain.uses.join(", ")}</Pair>
                         <Pair label={words.usedBy}>{domain.usedBy.length === 0 ? words.nothing : domain.usedBy.join(", ")}</Pair>
                         {domain.counts.length === 0 ? null : (
@@ -174,67 +142,16 @@ export function Domains({ view }: { readonly view: ProposedView }) {
     );
 }
 
-/** The target stack: each line of the request, what it is for and the parts of the new code that carry it. */
-export function Stack({ view }: { readonly view: ProposedView }) {
-    return (
-        <div className="flex flex-col">
-            {view.stack.map((each) => (
-                <Item key={each.line} size="xs" className="items-start">
-                    <ItemContent className="min-w-0">
-                        {each.label === "" ? null : (
-                            <ItemTitle className="line-clamp-none" data-written-by="agent">
-                                {each.label}
-                            </ItemTitle>
-                        )}
-                        <ItemDescription className="line-clamp-none text-foreground" data-written-by="agent">
-                            {each.line}
-                        </ItemDescription>
-                        {each.carriedBy.length === 0 ? null : (
-                            <ItemDescription className="line-clamp-none">
-                                <span data-written-by="app">{words.carriedBy}:</span> <span data-written-by="agent">{each.carriedBy.join(", ")}</span>
-                            </ItemDescription>
-                        )}
-                    </ItemContent>
-                </Item>
-            ))}
-        </div>
-    );
-}
-
-/** Risks or open questions, one item each: the first sentence as its title, the rest on opening, what it is about and what keeps it in check. */
-export function Risks({ items }: { readonly items: readonly RiskItem[] }) {
+/** Risks and open questions, one plain sentence each. */
+export function Risks({ items }: { readonly items: readonly string[] }) {
     return (
         <div className="flex flex-col border-t border-border">
-            {items.map((risk) => {
-                const more = risk.detail !== null || risk.about.length > 0 || risk.containedBy !== null;
-                if (!more)
-                    return (
-                        <p key={risk.title} className="border-b border-border py-spacing-xs" data-written-by="agent">
-                            {risk.title}
-                        </p>
-                    );
-                return (
-                    <Fold key={risk.title} summary={risk.title} writtenBy="agent">
-                        <div className="flex flex-col gap-spacing-xs">
-                            {risk.detail === null ? null : <p data-written-by="agent">{risk.detail}</p>}
-                            {risk.about.length === 0 ? null : <Pair label={words.about}>{risk.about.join(", ")}</Pair>}
-                            {risk.containedBy === null ? null : <Pair label={words.containedBy}>{risk.containedBy}</Pair>}
-                        </div>
-                    </Fold>
-                );
-            })}
+            {items.map((risk) => (
+                <p key={risk} className="border-b border-border py-spacing-xs" data-written-by="agent">
+                    {risk}
+                </p>
+            ))}
         </div>
-    );
-}
-
-/** Names in one cell, or the plain word for an option whose record keeps none. */
-function Listed({ names }: { readonly names: readonly string[] }) {
-    return names.length === 0 ? (
-        <span className="text-muted-foreground" data-written-by="app">
-            {words.notKept}
-        </span>
-    ) : (
-        <span data-written-by="agent">{names.join(", ")}</span>
     );
 }
 
@@ -322,62 +239,18 @@ export function Unplaced({ view }: { readonly view: NonNullable<ProposedView["un
     );
 }
 
-/** The options considered, compared one aspect per row and one option per column, the chosen one first. */
-export function Options({ options, confirmed = true }: { readonly options: readonly Option[]; readonly confirmed?: boolean }) {
-    const rows: { label: string; cell: (option: Option) => ReactNode }[] = [
-        { label: words.idea, cell: (option) => <span data-written-by="agent">{option.idea}</span> },
-        { label: words.cost, cell: (option) => <span data-written-by="agent">{option.cost}</span> },
-        { label: words.partsRow, cell: (option) => <Listed names={option.parts} /> },
-        { label: words.domainsRow, cell: (option) => <Listed names={option.domains} /> },
-        {
-            label: confirmed ? words.whyChosen : words.unconfirmed.why,
-            cell: (option) =>
-                option.chosen && option.why !== null ? (
-                    <span data-written-by="agent">{option.why}</span>
-                ) : (
-                    <span className="text-muted-foreground" data-written-by="app">
-                        {option.chosen ? words.chosenYes : confirmed ? words.chosenNo : words.unconfirmed.other}
-                    </span>
-                ),
-        },
-    ];
+/** The options not chosen: what each is, what it costs, what it risks and its own views, drawn by the page. */
+export function Variant({ variant, children }: { readonly variant: ProposedView["variants"][number]; readonly children: ReactNode }) {
     return (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-32" data-written-by="app">
-                        {words.aspect}
-                    </TableHead>
-                    {options.map((option) => (
-                        <TableHead key={option.name} className="h-auto min-w-56 py-spacing-xs align-top whitespace-normal">
-                            <span className="flex flex-col items-start gap-spacing-2xs">
-                                <span data-written-by="agent">{option.name}</span>
-                                {option.chosen ? (
-                                    <Badge variant="outline" data-written-by="app">
-                                        <CircleCheck aria-hidden="true" />
-                                        {confirmed ? words.chosen : words.unconfirmed.badge}
-                                    </Badge>
-                                ) : null}
-                            </span>
-                        </TableHead>
-                    ))}
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {rows.map((row) => (
-                    <TableRow key={row.label}>
-                        <TableHead scope="row" className="h-auto py-spacing-xs align-top font-medium whitespace-normal" data-written-by="app">
-                            {row.label}
-                        </TableHead>
-                        {options.map((option) => (
-                            <TableCell key={option.name} className="align-top whitespace-normal">
-                                {row.cell(option)}
-                            </TableCell>
-                        ))}
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+        <div className="flex flex-col gap-spacing-xl">
+            <h3 className="text-sm font-semibold" data-written-by="agent">
+                {variant.name}
+            </h3>
+            <p data-written-by="agent">{variant.idea}</p>
+            <Pair label={words.cost}>{variant.cost}</Pair>
+            {variant.risks.length === 0 ? null : <Risks items={variant.risks} />}
+            {children}
+        </div>
     );
 }
 

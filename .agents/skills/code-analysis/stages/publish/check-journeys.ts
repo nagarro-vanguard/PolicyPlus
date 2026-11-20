@@ -115,9 +115,8 @@ const taskGaps = (journey: typeof Journey.Type, brief: TasksBrief): string[] => 
  * @param records the job's records
  * @param brief what the job was given
  * @returns one line per gap
- * @internal exported for the tests, which check this gate on its own
  */
-export const journeyGaps = (records: readonly Finding[], brief: TasksBrief): string[] => {
+const journeyGaps = (records: readonly Finding[], brief: TasksBrief): string[] => {
     const journeys = ofType(records, RecordIdPrefix.Journey, Journey);
     const tasks = journeys.map((journey) => journey.task);
     return [
@@ -144,9 +143,8 @@ export const journeyGaps = (records: readonly Finding[], brief: TasksBrief): str
  * @param records the job's records
  * @param brief what the job was given
  * @returns one line per gap
- * @internal exported for the tests, which check this gate on its own
  */
-export const mergeGaps = (records: readonly Finding[], brief: MergeBrief): string[] => {
+const mergeGaps = (records: readonly Finding[], brief: MergeBrief): string[] => {
     const known = new Set(brief.tasks.map((task) => task.id));
     const seen = new Set<string>();
     const gaps: string[] = [];

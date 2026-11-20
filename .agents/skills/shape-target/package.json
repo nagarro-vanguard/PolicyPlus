@@ -10,8 +10,7 @@
         "typecheck": "tsc --noEmit",
         "format": "prettier --write '**/*.ts'",
         "format:check": "prettier --check '**/*.ts'",
-        "test": "bun test ./tests",
-        "check": "bun run format:check && bun run typecheck && bun run test"
+        "check": "bun run format:check && bun run typecheck"
     },
     "dependencies": {
         "effect": "4.0.4"

@@ -276,9 +276,8 @@ function proposingGaps(
  * @param registries.standing the registry as last accepted; none before it is
  * @param registries.written the entries the Map's jobs wrote; none before they run
  * @returns one line per gap
- * @internal exported for the tests, which check this gate on its own
  */
-export function registryGaps(
+function registryGaps(
     kept: RegistryEntries,
     registries: { readonly standing: RegistryEntries; readonly written: RegistryEntries },
 ): string[] {

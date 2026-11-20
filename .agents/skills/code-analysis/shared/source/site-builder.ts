@@ -81,9 +81,8 @@ const composeArgs = (input: Parameters<SiteBuilderOps["build"]>[0]): string[] =>
  * assistant copy). Neither is ever inherited from this process, so a build shows only what it was given.
  * @param input what the build was given
  * @returns the environment variables
- * @internal exported for the tests, which check it on its own
  */
-export const appEnvironment = (input: Parameters<SiteBuilderOps["build"]>[0]): Record<string, string> => ({
+const appEnvironment = (input: Parameters<SiteBuilderOps["build"]>[0]): Record<string, string> => ({
     CASE_DIR: caseDirOf(input),
     ...(input.bundleCommand === undefined ? {} : { BUILD_BUNDLE: input.bundleCommand }),
 });

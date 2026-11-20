@@ -16,13 +16,13 @@ import { readDocumentStrictly } from "../../shared/run/json-files";
 import { reviewArguments } from "../../shared/jobs/review-sheet";
 import { requireAcceptedRecords, startStageRun } from "../../shared/store/stage-guards";
 import { StageRecords } from "../../shared/store/stage-records";
-import { CapabilityGroup, CrossCuttingConcern, Figure, Screen, SystemWords } from "../../shared/model/schemas/briefing";
+import { CapabilityGroup, CrossCuttingConcern, Screen, SystemWords, View } from "../../shared/model/schemas/briefing";
 import { Fact } from "../../shared/model/schemas/fact";
 import { writeBriefingBrief } from "./briefing-brief";
 import { briefingGuides } from "./presentation-guides";
 import { readCatalogue } from "../../shared/run/catalogue";
 
-export const briefingShapes = { CapabilityGroup, CrossCuttingConcern, Screen, Figure, SystemWords, Fact };
+export const briefingShapes = { CapabilityGroup, CrossCuttingConcern, Screen, View, SystemWords, Fact };
 
 export const briefingLabel = briefingKey;
 
@@ -105,9 +105,8 @@ const briefingReviewArguments = (root: string, job: WithFeedback, context: Reque
  * @param root the analysis root
  * @param guides the writer's guides (`briefingGuides`)
  * @returns what to read, each with why
- * @internal exported for the tests, which check it on its own
  */
-export const briefingReviewReads = (root: string, guides: readonly string[]) => [
+const briefingReviewReads = (root: string, guides: readonly string[]) => [
     ["what the writer worked from", analysisPaths(root).briefingBrief] as const,
     ...guides.map((path) => ["a guide on naming places the writer was given", path] as const),
 ];

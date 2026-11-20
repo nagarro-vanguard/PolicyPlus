@@ -62,18 +62,18 @@ const BriefCandidate = Schema.Struct({
     ),
 );
 
-const BriefMenu = Schema.Struct({
-    line: Schema.Literal("menu"),
+const BriefKnown = Schema.Struct({
+    line: Schema.Literal("known"),
     kind: Schema.Literals(["parts", "integration", "states", "data", "layers"]).annotate(
-        about("A family of facts the records can draw."),
+        about("A family of records the analysis holds."),
     ),
-    records: Schema.Array(Text).annotate(about("The record ids the picture can draw, each by its id.")),
+    records: Schema.Array(Text).annotate(about("The record ids of the family, each by its id; a box of a view may cite them.")),
     names: Words.annotate(about("What each of those is, in the same order.")),
 }).annotate(
-    about("One family of facts the records can draw, with what it could show; a picture is drawn from one of these."),
+    about("One family of records the analysis holds, with what each is called: the parts, outside systems, kinds of data, lifecycles and layers a view may draw and cite."),
 );
 
-const BriefLine = Schema.Union([BriefSystem, BriefCapability, BriefCandidate, BriefScreen, BriefKind, BriefMenu]);
+const BriefLine = Schema.Union([BriefSystem, BriefCapability, BriefCandidate, BriefScreen, BriefKind, BriefKnown]);
 
 const CandidateRow = Schema.Struct({
     block: Schema.String,
@@ -115,12 +115,11 @@ const candidateLines = Effect.fnUntraced(function* () {
 const NamedRow = Schema.Struct({ id: Schema.String, name: Schema.String });
 
 /**
- * The menu of pictures the records can support: what the system is made of, what it reaches outside itself, how a kind
- * of data changes over time, which capabilities keep which kinds of data, and how the code is layered. Each is offered
- * only where it has something to show.
+ * The records a view can draw and cite: what the system is made of, what it reaches outside itself, its kinds of data,
+ * how a kind of data changes over time, and how the code is layered. Each family is listed only where it holds enough.
  * @returns the lines
  */
-const menuLines = Effect.fnUntraced(function* () {
+const knownLines = Effect.fnUntraced(function* () {
     const store = yield* RecordStore;
     const rows = (
         kind: "parts" | "integration" | "states" | "data" | "layers",
@@ -130,7 +129,7 @@ const menuLines = Effect.fnUntraced(function* () {
         found.length >= minimum
             ? [
                   {
-                      line: "menu" as const,
+                      line: "known" as const,
                       kind,
                       records: found.map((row) => row.id),
                       names: found.map((row) => row.name),
@@ -229,7 +228,7 @@ const briefLines = Effect.fnUntraced(function* (root: string) {
         ...capabilities,
         ...(yield* candidateLines()),
         ...(yield* screenLines(yield* readCatalogue())),
-        ...(yield* menuLines()),
+        ...(yield* knownLines()),
     ];
 });
 
@@ -300,17 +299,4 @@ export const briefedPlaces = Effect.fnUntraced(function* (root: string) {
 export const briefedText = Effect.fnUntraced(function* (root: string) {
     const path = analysisPaths(root).briefingBrief;
     return (yield* (yield* FileAccess).exists(path)) ? yield* (yield* FileAccess).readText(path) : "";
-});
-
-/**
- * The menu of pictures the brief offers: for each shape, the record ids it can draw.
- * @param root the analysis root
- * @returns the offered records by shape
- */
-export const briefedMenu = Effect.fnUntraced(function* (root: string) {
-    return new Map(
-        (yield* readBriefLines(root)).flatMap((line) =>
-            line.line === "menu" ? [[line.kind, line.records] as const] : [],
-        ),
-    );
 });

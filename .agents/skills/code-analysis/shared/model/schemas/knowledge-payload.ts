@@ -1,5 +1,6 @@
 import { Schema } from "effect";
 import { Text, about } from "../shared-fields";
+import { viewFields } from "../../views/view";
 import { Count } from "./payloads";
 
 const Evidence = Schema.Struct({
@@ -133,19 +134,12 @@ export const KnowledgePayload = Schema.Struct({
             reads: Schema.Boolean.annotate(about("Whether the capability's code reads it.")),
         }),
     ).annotate(about("Which capability's code saves or reads which kind of data.")),
-    figures: Schema.Array(
+    views: Schema.Array(
         Schema.Struct({
-            id: Schema.String.annotate(about("The figure's record id.")),
-            kind: Schema.Literals(["parts", "integration", "states", "data", "layers"]).annotate(
-                about("The family of facts the picture draws."),
-            ),
-            question: Text.annotate(about("The question the picture answers.")),
-            caption: Text.annotate(about("What to take from it.")),
-            records: Schema.Array(Schema.String).annotate(
-                about("The record ids to draw; empty draws everything of that shape."),
-            ),
-        }).annotate(about("One picture the analysis judged a reader needs.")),
-    ).annotate(about("The pictures a reader needs, in the order the briefing chose them.")),
+            id: Schema.String.annotate(about("The view's record id.")),
+            ...viewFields,
+        }).annotate(about("One picture of the system the briefing wrote for a reader.")),
+    ).annotate(about("The pictures of the system as it is, in the order the briefing wrote them.")),
     entities: Schema.optionalKey(
         Schema.Array(
             Schema.Struct({

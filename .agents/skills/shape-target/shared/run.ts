@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { Schema } from "effect";
 import type { Layout } from "./model/layout";
-import { ArchitectureRecord, Choice, StoredArchitecture, StoredJourney, Task } from "./model/records";
+import { Architecture, Choice, StoredArchitecture, StoredJourney, Task } from "./model/records";
 import { RequestView } from "./model/request-view";
 import type { LegacySheet } from "./derive/legacy";
 
@@ -25,7 +25,7 @@ export const loadArchitectureVariants = (layout: Layout) =>
         : [];
 export const loadArchitecture = (layout: Layout) =>
     existsSync(layout.architecture)
-        ? Schema.decodeUnknownSync(ArchitectureRecord)(readJson(layout.architecture))
+        ? Schema.decodeUnknownSync(Architecture)(readJson(layout.architecture))
         : undefined;
 export const loadChoice = (path: string) =>
     existsSync(path) ? Schema.decodeUnknownSync(Choice)(readJson(path)) : undefined;

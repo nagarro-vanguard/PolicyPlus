@@ -19,8 +19,7 @@ export type Brief = {
     goals: { provided: boolean; text: string | null };
     changes: {
         stack: { line: string; layers: string[] }[];
-        containers: { name: string; does: string | null; runsOn: string | null; tech: string; holds: string[] }[];
-        talks: { from: string; to: string }[];
+        containers: { name: string; tech: string; holds: string[] }[];
     } | null;
     risks: { rule: string; top: string[]; ranked: string[] };
     plan: { phases: string; epics: string; stories: string; readyFirst: string; phaseNames: string[] } | null;
@@ -102,12 +101,9 @@ export const briefOf = (
                       stack: (request?.stack ?? []).map((line, number) => ({ line, layers: layersOf(number) })),
                       containers: (architecture?.containers ?? []).map((container) => ({
                           name: container.name,
-                          does: container.does,
-                          runsOn: container.runsOnWords,
                           tech: container.tech,
                           holds: container.holds,
                       })),
-                      talks: architecture?.talks ?? [],
                   },
         risks: {
             rule: riskRankRule,

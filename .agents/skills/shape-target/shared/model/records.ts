@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 import { about, ActionId, Actions, EntityId, ExternalId, RuleId, StepId, TaskId, Text } from "./fields";
-import { runsOnIds, runsOnMeanings } from "./runs-on";
+import { ViewBody } from "./view";
 
 const Confidence = Schema.Literals(["sure", "inferred"]).annotate(
     about("sure when the code states it, inferred when it was concluded from the code."),
@@ -108,14 +108,11 @@ export const StoredJourney = Schema.Struct({
     baseline: Schema.Boolean.annotate(about("True when the variant mirrors today's journey; derived, never written.")),
 });
 
-const Relation = Schema.Struct({ to: Text.annotate(about("The name of the fact it points to.")), how: Text });
 export const Fact = Schema.Struct({
     name: Text.annotate(about("The fact's name in the words of the business.")),
     from: Schema.Array(EntityId)
         .check(Schema.isMinLength(1))
         .annotate(about("The ids of the legacy kinds of data it carries.")),
-    keys: Schema.Array(Text).annotate(about("What identifies one of it.")),
-    relates: Schema.Array(Relation),
 }).annotate(about("A kind of data the target keeps."));
 
 export const Domain = Schema.Struct({
@@ -124,7 +121,6 @@ export const Domain = Schema.Struct({
     facts: Schema.Array(Fact),
     rules: Schema.Array(RuleId).annotate(about("The ids of the rules the domain decides.")),
     dependsOn: Schema.Array(Text).annotate(about("The names of the domains it relies on.")),
-    why: Text,
 }).annotate(about("A part of the business with its own data and rules."));
 
 export const ContainerKind = Schema.Literals(["interface", "service", "job", "store", "library"]).annotate(
@@ -133,7 +129,7 @@ export const ContainerKind = Schema.Literals(["interface", "service", "job", "st
     ),
 );
 
-const containerFields = {
+export const Container = Schema.Struct({
     name: Text,
     kind: ContainerKind,
     tech: Text.annotate(about("A phrase quoted from the Target Stack naming what it is built with.")),
@@ -142,22 +138,6 @@ const containerFields = {
             "The names of the domains it holds; for a `store`, the domains whose data it keeps, which are also held by the part that runs them. Every part but a store holds at least one domain.",
         ),
     ),
-};
-const does = Text.annotate(about("What the part does for the people who use the system, in one plain sentence."));
-const runsOnAbout = about(`Where the part runs, one of: ${runsOnMeanings}.`);
-
-/** A part as a variant proposes it: what it does and where it runs are required. */
-export const Container = Schema.Struct({
-    ...containerFields,
-    does,
-    runsOn: Schema.Literals(runsOnIds).annotate(runsOnAbout),
-}).annotate(about("A part of the system that is built and run as one."));
-
-/** A part as it is read back: proposals made before `does` and `runsOn` existed have neither. */
-export const ContainerRecord = Schema.Struct({
-    ...containerFields,
-    does: Schema.optionalKey(does),
-    runsOn: Schema.optionalKey(Schema.String.annotate(runsOnAbout)),
 }).annotate(about("A part of the system that is built and run as one."));
 
 export const Integration = Schema.Struct({
@@ -186,59 +166,35 @@ const componentFields = {
     platform: Schema.optionalKey(Text.annotate(about("Why it exists although it serves no step, such as sign-in."))),
 };
 
-/** A component as a job proposes it: its kind is required. */
 export const Component = Schema.Struct({ ...componentFields, kind: ComponentKind }).annotate(
     about("A part of a container that does one job for a domain."),
 );
 
-/** A component as it is read back: components written before kinds existed have none. */
-export const ComponentRecord = Schema.Struct({ ...componentFields, kind: Schema.optionalKey(ComponentKind) }).annotate(
-    about("A part of a container that does one job for a domain."),
-);
+const Sentence = Text.annotate(about("One plain sentence."));
 
-export const RiskKind = Schema.Literals(["accepted", "question"]).annotate(
-    about("accepted: the variant takes the risk on; question: something the person must settle before it is built."),
-);
-
-export const Risk = Schema.Struct({
-    statement: Text.annotate(about("What can go wrong, in one plain sentence.")),
-    kind: RiskKind,
-    cites: Schema.Array(Text)
-        .check(Schema.isMinLength(1))
-        .annotate(about("The names of the domains, containers or components the risk is about; at least one.")),
-    containedBy: Schema.optionalKey(
-        Text.annotate(about("The name of the container or component that limits the damage, when one does.")),
-    ),
-}).annotate(about("One risk a variant carries, tied to the parts it is about."));
-
-const architectureFields = {
+export const Architecture = Schema.Struct({
     name: Text,
-    idea: Text,
+    idea: Text.annotate(about("How the variant is cut and where its parts run, in a few plain sentences.")),
     tradeoff: Text.annotate(about("What the variant costs that the others do not, in one sentence.")),
     recommended: Schema.optionalKey(
         Text.annotate(about("Why this is the recommended variant; leave out on the others.")),
     ),
+    risks: Schema.Array(Sentence)
+        .check(Schema.isMinLength(1))
+        .annotate(
+            about(
+                "What can go wrong or must be settled by the person before it is built, one plain sentence each; say what limits the damage where something does.",
+            ),
+        ),
     integrations: Schema.Array(Integration),
     domains: Schema.Array(Domain).check(Schema.isMinLength(1)),
-};
-
-/** A variant as the writer proposes it. */
-export const Architecture = Schema.Struct({
-    ...architectureFields,
-    components: Schema.optionalKey(Schema.Array(Component)),
-    risks: Schema.Array(Risk).check(Schema.isMinLength(1)),
     containers: Schema.Array(Container).check(Schema.isMinLength(1)),
-}).annotate(about("One way of building the target: domains, containers, and once chosen, components."));
-
-/**
- * A variant as it is read back. Proposals made before risks were structured hold each risk as a plain sentence, and
- * their parts have no `does` or `runsOn`; `risksOf` reads both kinds of risk alike.
- */
-export const ArchitectureRecord = Schema.Struct({
-    ...architectureFields,
-    components: Schema.optionalKey(Schema.Array(ComponentRecord)),
-    risks: Schema.Array(Schema.Union([Text, Risk])),
-    containers: Schema.Array(ContainerRecord).check(Schema.isMinLength(1)),
+    views: Schema.Array(ViewBody).annotate(
+        about(
+            "The pictures of this variant: a functional view with a box for every domain, a technical view of the parts and how they work together with a box for every container, and a deployment view of where each container runs and what it needs, with a box for every container. Name whatever the Target Stack and the request say, as they say it.",
+        ),
+    ),
+    components: Schema.optionalKey(Schema.Array(Component)),
 }).annotate(about("One way of building the target: domains, containers, and once chosen, components."));
 
 export const Score = Schema.Struct({
@@ -249,7 +205,7 @@ export const Score = Schema.Struct({
     idleDomains: Schema.Array(Text),
 }).annotate(about("What a variant scores at domain level against the chosen journeys; derived, never written."));
 
-export const StoredArchitecture = Schema.Struct({ ...ArchitectureRecord.fields, score: Score });
+export const StoredArchitecture = Schema.Struct({ ...Architecture.fields, score: Score });
 
 export const Mark = Schema.Struct({
     of: Text.annotate(about("A step of a task's current journey, as `<task id>#<number>`.")),
@@ -308,8 +264,6 @@ export type Domain = typeof Domain.Type;
 export type Container = typeof Container.Type;
 export type Component = typeof Component.Type;
 export type Architecture = typeof Architecture.Type;
-export type ArchitectureRecord = typeof ArchitectureRecord.Type;
-export type Risk = typeof Risk.Type;
 export type Dispute = typeof Dispute.Type;
 export type StoredArchitecture = typeof StoredArchitecture.Type;
 export type Choice = typeof Choice.Type;

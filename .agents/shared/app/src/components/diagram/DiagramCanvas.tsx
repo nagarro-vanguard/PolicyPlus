@@ -11,17 +11,19 @@ import { loadScript } from "../../scripts/load";
 // reaches it, says so in words below the drawing and opens what the box is and says in the page's detail drawer (when the
 // page has one). Escape clears the selection.
 
+export type GraphCite = { text: string; href: string | null };
 export type GraphNode = {
     id: string;
     label: string;
+    /** The frame that holds it, when one does. */
     group: string | null;
-    tone: "box" | "store" | "outside" | "system";
-    /** What the box is, in the case's words. */
-    kindWords: string;
-    /** What the record behind the box says about itself. */
-    sentence: string | null;
+    /** What the writer says the box is or does, and the records it rests on. */
+    note: string | null;
+    cites: readonly GraphCite[];
 };
-export type GraphEdge = { from: string; to: string; style: number };
+/** A box that holds others, drawn as a frame named for it. */
+export type GraphGroup = { id: string; words: string; group: string | null; note: string | null; cites: readonly GraphCite[] };
+export type GraphEdge = { from: string; to: string; label: string | null };
 export type GraphWords = {
     drawing: string;
     loading: string;
@@ -31,21 +33,20 @@ export type GraphWords = {
     reachedFrom: string;
     nothing: string;
     pick: string;
+    noun: string;
+    rests: string;
 };
 export type GraphProps = {
     label: string;
     nodes: readonly GraphNode[];
-    groups: readonly { id: string; words: string }[];
-    edges: readonly GraphEdge[];
+    groups: readonly GraphGroup[];
+    edges: readonly GraphEdge[]; 
     words: GraphWords;
 };
 
-/** The dash pattern of each line style; the legend draws the same patterns beside their words. */
-export const dashes = ["", "7 4", "2 3", "10 3 2 3", "1 4", "12 5", "4 2 1 2 1 2", "14 3 3 3", "6 2 6 6"] as const;
-
 type Box = { id: string; x: number; y: number; width: number; height: number; lines: string[] };
 type Frame = { id: string; words: string; x: number; y: number; width: number; height: number };
-type Line = { key: string; from: string; to: string; style: number; path: string };
+type Line = { key: string; from: string; to: string; label: string | null; labelAt: { x: number; y: number }; path: string };
 type Layout = { width: number; height: number; boxes: Box[]; frames: Frame[]; lines: Line[]; lineHeight: number; padX: number; padY: number };
 
 type ElkPoint = { x: number; y: number };
@@ -123,20 +124,25 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
     };
     const grouped = new Set(props.groups.map((group) => group.id));
     const groupTop = lineHeight + 12;
-    const children: ElkNode[] = [
-        ...props.groups.map((group) => ({
-            id: `group:${group.id}`,
-            layoutOptions: { "elk.padding": `[top=${groupTop},left=12,bottom=12,right=12]`, "elk.nodeSize.minimum": `(${Math.ceil(measure(group.words)) + 24}, 0)`, "elk.nodeSize.constraints": "MINIMUM_SIZE" },
-            children: props.nodes.filter((node) => node.group === group.id).map(sized),
-        })),
-        ...props.nodes.filter((node) => node.group === null || !grouped.has(node.group)).map(sized),
+    // A frame holds the boxes and the frames that name it; a group no frame names, or a loop, is not nested.
+    const holds = (parent: string | null): ElkNode[] => [
+        ...props.groups
+            .filter((group) => (group.group !== null && grouped.has(group.group) ? group.group : null) === parent)
+            .map((group) => ({
+                id: `group:${group.id}`,
+                layoutOptions: { "elk.padding": `[top=${groupTop},left=12,bottom=12,right=12]`, "elk.nodeSize.minimum": `(${Math.ceil(measure(group.words)) + 24}, 0)`, "elk.nodeSize.constraints": "MINIMUM_SIZE" },
+                children: holds(group.id),
+            })),
+        ...props.nodes.filter((node) => (node.group !== null && grouped.has(node.group) ? node.group : null) === parent).map(sized),
     ];
+    const children = holds(null);
+    const elkId = (id: string) => (grouped.has(id) ? `group:${id}` : id);
     const edges = props.edges
-        .filter((edge) => known.has(edge.from) && known.has(edge.to))
+        .filter((edge) => (known.has(edge.from) || grouped.has(edge.from)) && (known.has(edge.to) || grouped.has(edge.to)))
         .map((edge, at) => ({
             id: `edge:${at}`,
-            sources: [edge.from],
-            targets: [edge.to],
+            sources: [elkId(edge.from)],
+            targets: [elkId(edge.to)],
         }));
     const outs = new Map<string, number>();
     for (const edge of edges) outs.set(edge.sources[0] ?? "", (outs.get(edge.sources[0] ?? "") ?? 0) + 1);
@@ -177,7 +183,7 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
     visit(done);
     const routed = (done.edges ?? []).flatMap((edge) => {
         const at = Number(edge.id.slice("edge:".length));
-        const source = props.edges.filter((each) => known.has(each.from) && known.has(each.to))[at];
+        const source = props.edges.filter((each) => (known.has(each.from) || grouped.has(each.from)) && (known.has(each.to) || grouped.has(each.to)))[at];
         const section = edge.sections?.[0];
         if (source === undefined || section === undefined) return [];
         const points = [section.startPoint, ...(section.bendPoints ?? []), section.endPoint];
@@ -186,19 +192,13 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
                 key: edge.id,
                 from: source.from,
                 to: source.to,
-                style: source.style,
+                label: source.label,
+                labelAt: points[Math.floor(points.length / 2)] ?? section.startPoint,
                 path: points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" "),
             },
         ];
     });
     return { width: Math.ceil(done.width ?? 0), height: Math.ceil(done.height ?? 0), boxes, frames, lines: routed, lineHeight, padX, padY };
-};
-
-const toneClass: Record<GraphNode["tone"], string> = {
-    box: "fill-(--diagram-box)",
-    store: "fill-(--diagram-store)",
-    outside: "fill-(--diagram-outside)",
-    system: "fill-(--diagram-system)",
 };
 
 /**
@@ -237,7 +237,7 @@ export function DiagramCanvas(props: GraphProps) {
         observer.observe(region);
         return () => observer.disconnect();
     }, [layout]);
-    const names = useMemo(() => new Map(props.nodes.map((node) => [node.id, node.label])), [props.nodes]);
+    const names = useMemo(() => new Map([...props.nodes.map((node) => [node.id, node.label] as const), ...props.groups.map((group) => [group.id, group.words] as const)]), [props.nodes, props.groups]);
     const near = useMemo(() => {
         if (selected === null) return null;
         const reaches = props.edges.filter((edge) => edge.from === selected).map((edge) => edge.to);
@@ -247,9 +247,22 @@ export function DiagramCanvas(props: GraphProps) {
     const toggle = (node: string) => {
         const now = selected === node ? null : node;
         setSelected(now);
-        const box = now === null ? undefined : props.nodes.find((each) => each.id === now);
-        // The page's drawer, when it has one, says what the box is and what its record says (when the record says anything).
-        if (box !== undefined && box.sentence !== null) window.dispatchEvent(new CustomEvent("view:note", { detail: { noun: box.kindWords, title: box.label, body: box.sentence } }));
+        const box = now === null ? undefined : (props.nodes.find((each) => each.id === now) ?? props.groups.find((each) => each.id === now));
+        // The page's drawer, when it has one, says what the writer says the box is and the records it rests on.
+        if (box !== undefined && (box.note !== null || box.cites.length > 0)) {
+            const root = document.body.dataset.root ?? "./";
+            window.dispatchEvent(
+                new CustomEvent("view:note", {
+                    detail: {
+                        noun: props.words.noun,
+                        title: "label" in box ? box.label : box.words,
+                        body: box.note,
+                        rests: props.words.rests,
+                        cites: box.cites.map((cite) => ({ text: cite.text, href: cite.href === null ? null : `${root}${cite.href}` })),
+                    },
+                }),
+            );
+        }
     };
     const onKey = (node: string) => (event: KeyboardEvent) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -298,7 +311,17 @@ export function DiagramCanvas(props: GraphProps) {
                 {layout.frames.map((each) => (
                     <g key={each.id}>
                         <rect x={each.x} y={each.y} width={each.width} height={each.height} rx="8" className="fill-(--diagram-group) stroke-(--diagram-box-edge)" strokeDasharray="4 3" />
-                        <text x={each.x + 12} y={each.y + layout.lineHeight} className="fill-(--diagram-box-text) text-(length:--diagram-text-small) font-semibold" data-written-by="app">
+                        <text
+                            x={each.x + 12}
+                            y={each.y + layout.lineHeight}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={each.words}
+                            className="cursor-pointer fill-(--diagram-box-text) text-(length:--diagram-text-small) font-semibold outline-none"
+                            onClick={() => toggle(each.id.slice("group:".length))}
+                            onKeyDown={onKey(each.id.slice("group:".length))}
+                            data-written-by="agent"
+                        >
                             {each.words}
                         </text>
                     </g>
@@ -307,7 +330,12 @@ export function DiagramCanvas(props: GraphProps) {
                     const state = lineState(line);
                     return (
                         <g key={line.key} data-state={state}>
-                            <path d={line.path} fill="none" strokeWidth={state === "uses" || state === "usedby" ? 2 : 1.25} strokeDasharray={dashes[line.style] ?? ""} className={stroke[state]} markerEnd={`url(#${id}-${state})`} />
+                            <path d={line.path} fill="none" strokeWidth={state === "uses" || state === "usedby" ? 2 : 1.25} className={stroke[state]} markerEnd={`url(#${id}-${state})`} />
+                            {line.label === null ? null : (
+                                <text x={line.labelAt.x} y={line.labelAt.y - 4} textAnchor="middle" className={state === "dim" ? "fill-(--diagram-dimmed)" : "fill-(--diagram-box-text)"} style={{ paintOrder: "stroke", stroke: "var(--background)", strokeWidth: 3 }} data-written-by="agent">
+                                    {line.label}
+                                </text>
+                            )}
                         </g>
                     );
                 })}
@@ -333,7 +361,7 @@ export function DiagramCanvas(props: GraphProps) {
                                 height={box.height}
                                 rx="6"
                                 strokeWidth={on ? 2.5 : 1}
-                                className={`${toneClass[node?.tone ?? "box"]} ${on ? "stroke-(--diagram-selected)" : dim ? "stroke-(--diagram-dimmed)" : "stroke-(--diagram-box-edge)"}`}
+                                className={`fill-(--diagram-box) ${on ? "stroke-(--diagram-selected)" : dim ? "stroke-(--diagram-dimmed)" : "stroke-(--diagram-box-edge)"}`}
                             />
                             <text className={dim ? "fill-(--diagram-dimmed)" : "fill-(--diagram-box-text)"} data-written-by="agent">
                                 {box.lines.map((line, at) => (

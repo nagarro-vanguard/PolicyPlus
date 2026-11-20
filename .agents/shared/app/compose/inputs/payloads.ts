@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
+import { AuthoredView } from "./view";
 import { ComposeError } from "../errors";
 import { compareText, readJson, readText, sha1, sha256 } from "../io";
 
@@ -129,7 +130,7 @@ const Knowledge = z.looseObject({
             reads: z.boolean(),
         }),
     ),
-    figures: z.array(z.looseObject({ kind: Text, question: Text, caption: Text, records: Ids.optional() })).optional(),
+    views: z.array(AuthoredView.extend({ id: Text })).optional(),
     entities: z.array(z.looseObject({ id: Text, name: Text, purpose: Text, capabilities: Ids.optional() })),
     terms: z.array(z.looseObject({ term: Text, means: Text, from: Text.optional() })).optional(),
     risks: z.array(

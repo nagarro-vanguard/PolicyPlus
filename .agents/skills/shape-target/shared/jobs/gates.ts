@@ -1,5 +1,6 @@
 import { Schema } from "effect";
-import { componentJobGaps, journeyGaps, shapeGaps, type ComponentContext, type DesignContext } from "../derive/checks";
+import { componentJobGaps, componentViewGaps, journeyGaps, shapeGaps, type ComponentContext, type DesignContext } from "../derive/checks";
+import { ViewBody } from "../model/view";
 import type { LegacySheet } from "../derive/legacy";
 import { Architecture, Component, Journey, type Task } from "../model/records";
 
@@ -22,6 +23,7 @@ export type Output = {
     journeys?: unknown;
     architectures?: unknown;
     components?: unknown;
+    view?: unknown;
 };
 
 export const recordCount = (output: Output) =>
@@ -59,9 +61,10 @@ export const gateShape = (output: Output, context: DesignContext): string[] => {
 
 export const gateComponents = (output: Output, context: ComponentContext): string[] => {
     const parsed = decodeWith(Schema.Array(Component), output.components);
-    return parsed.ok
-        ? componentJobGaps(parsed.value, context)
-        : [`components do not match their shape: ${parsed.problem}`];
+    if (!parsed.ok) return [`components do not match their shape: ${parsed.problem}`];
+    const view = output.view === undefined ? undefined : decodeWith(ViewBody, output.view);
+    if (view !== undefined && !view.ok) return [`the view does not match its shape: ${view.problem}`];
+    return [...componentJobGaps(parsed.value, context), ...componentViewGaps(view?.value, parsed.value, context)];
 };
 
 /** The review's own shape: it must have read every record. */

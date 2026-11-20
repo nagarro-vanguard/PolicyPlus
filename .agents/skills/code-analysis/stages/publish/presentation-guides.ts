@@ -17,9 +17,8 @@ const guidesFolder = join(skillRoot, "guides", "presentation");
  * @param partKinds the kinds of the system's parts
  * @param kinds the kinds of place its entry points are
  * @returns the guides' paths, in a fixed order
- * @internal exported for the tests, which check it on its own
  */
-export const guidesFor = (partKinds: readonly string[], kinds: readonly SurfaceKind[]) => {
+const guidesFor = (partKinds: readonly string[], kinds: readonly SurfaceKind[]) => {
     const has = (kind: SurfaceKind) => kinds.includes(kind);
     const part = (kind: string) => partKinds.includes(kind);
     return [

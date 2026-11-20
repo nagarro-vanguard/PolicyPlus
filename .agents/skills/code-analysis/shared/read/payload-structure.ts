@@ -1,6 +1,7 @@
 import { Effect, Schema } from "effect";
 import { compareText } from "../run/collections";
 import type { RecordStore } from "../store/database";
+import { ViewBody } from "../views/view";
 import { read } from "./payload-queries";
 
 const Text = Schema.String;
@@ -27,12 +28,9 @@ const DataUseRow = Schema.Struct({
     entityName: Text,
     kind: Text,
 });
-const FigureRow = Schema.Struct({
+const ViewRow = Schema.Struct({
     id: Text,
-    kind: Schema.Literals(["parts", "integration", "states", "data", "layers"]),
-    question: Text,
-    caption: Text,
-    records: Schema.fromJsonString(Schema.Array(Text)),
+    body: Schema.fromJsonString(ViewBody),
 });
 
 /**
@@ -139,25 +137,22 @@ const dataUseOf = Effect.fnUntraced(function* (store: RecordStore["Service"]) {
 });
 
 /**
- * The figures the briefing chose, in the order it chose them.
+ * The views the briefing wrote, in the order it wrote them.
  * @param store the record store, read only
- * @returns the figures
+ * @returns the views
  */
-const figuresOf = Effect.fnUntraced(function* (store: RecordStore["Service"]) {
+const viewsOf = Effect.fnUntraced(function* (store: RecordStore["Service"]) {
     const rows = yield* read(
         store,
-        FigureRow,
-        (sql) => sql`SELECT id, json_extract(body, '$.kind') AS kind, json_extract(body, '$.question') AS question,
-                json_extract(body, '$.caption') AS caption,
-                json_extract(body, '$.records') AS records
-            FROM record WHERE type = 'Figure' ORDER BY recordNumber`,
+        ViewRow,
+        (sql) => sql`SELECT id, body FROM record WHERE type = 'View' ORDER BY recordNumber`,
     );
-    return rows.map((row) => ({ ...row, records: [...row.records] }));
+    return rows.map((row) => ({ id: row.id, ...row.body }));
 });
 
 /**
  * The structure the pictures are drawn from: the lives of kinds of data, the links between parts and to outside
- * systems, which capability keeps which kind of data, and the figures the briefing chose.
+ * systems, which capability keeps which kind of data, and the views the briefing wrote.
  * @param store the record store, read only
  * @returns the four lists
  */
@@ -166,6 +161,6 @@ export const structureOf = Effect.fnUntraced(function* (store: RecordStore["Serv
         lifecycles: yield* lifecyclesOf(store),
         partLinks: yield* partLinksOf(store),
         dataUse: yield* dataUseOf(store),
-        figures: yield* figuresOf(store),
+        views: yield* viewsOf(store),
     };
 });

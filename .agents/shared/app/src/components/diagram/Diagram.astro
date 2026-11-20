@@ -1,7 +1,7 @@
 ---
 import type { DiagramView } from "../../case/diagram-view";
 import { copy } from "../../lib/copy";
-import { DiagramCanvas, dashes } from "./DiagramCanvas";
+import { DiagramCanvas } from "./DiagramCanvas";
 import { DiagramMatrix } from "./DiagramMatrix";
 import { Fold } from "../Fold";
 // One view, the same anatomy for every one: its title (the question it answers), the case's caption, the drawing in a
@@ -20,7 +20,7 @@ const Heading = level;
 ---
 <figure class="flex min-w-0 flex-col gap-spacing-md" data-diagram={diagram.key}>
     <div class="flex flex-col gap-spacing-2xs">
-        <Heading class="text-sm font-medium" data-written-by="agent" data-contents-entry>{diagram.title}</Heading>
+        <Heading class="text-sm font-medium" data-written-by="agent" data-contents-entry={level === "h3" ? "" : undefined}>{diagram.title}</Heading>
         {diagram.caption === null ? null : <p class="text-muted-foreground" data-written-by="agent">{diagram.caption}</p>}
     </div>
     {diagram.matrix === null ? (
@@ -34,18 +34,6 @@ const Heading = level;
     )}
     <figcaption class="flex flex-col gap-spacing-xs text-sm">
         <span class="font-medium" data-written-by="app">{copy.diagram.legend}</span>
-        {diagram.matrix !== null ? null : (
-            <ul class="flex flex-wrap gap-x-spacing-xl gap-y-spacing-2xs">
-                {diagram.legend.map((each) => (
-                    <li class="flex items-center gap-spacing-xs">
-                        <svg width="32" height="10" aria-hidden="true" class="shrink-0">
-                            <line x1="1" y1="5" x2="31" y2="5" class="stroke-(--diagram-edge)" stroke-width="1.5" stroke-dasharray={each.style === null ? "" : (dashes[each.style] ?? "")} />
-                        </svg>
-                        <span data-written-by="agent">{each.words}</span>
-                    </li>
-                ))}
-            </ul>
-        )}
         <ul class="flex flex-col gap-spacing-2xs text-muted-foreground">
             {diagram.notes.map((note) => <li data-written-by="app">{note}</li>)}
         </ul>

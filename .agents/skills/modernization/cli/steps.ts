@@ -44,7 +44,7 @@ export const hashFiles = (paths: readonly string[], without: Record<string, read
 
 export type Paths = ReturnType<typeof pathsOf>;
 const here = dirname(fileURLToPath(import.meta.url));
-/** What builds the app: compose, its source and styles, the shared design system's stylesheet and the build command. A change in any reaches a rerun. */
+/** What builds the app: compose, its source and styles and the build command. A change in any reaches a rerun. */
 const appSource = [
     join(here, "../../../shared/app/compose"),
     join(here, "../../../shared/app/src"),
@@ -52,7 +52,6 @@ const appSource = [
     join(here, "../../../shared/app/scripts"),
     join(here, "../../../shared/app/package.json"),
     join(here, "../../../shared/app/bun.lock"),
-    join(here, "../../../shared/page-components/assets"),
     join(here, "../../code-analysis/shared/source"),
     join(here, "../../code-analysis/cli/build-app.ts"),
 ];

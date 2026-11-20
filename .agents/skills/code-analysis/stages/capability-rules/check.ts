@@ -88,9 +88,8 @@ const innermostHolding = (blocks: ReadonlyArray<{ readonly block: string; readon
  * refused.
  * @param records the job's records
  * @returns one line per rule to split
- * @internal exported for the tests, which check this gate on real rules
  */
-export function oneDecisionGaps(records: readonly Finding[]): string[] {
+function oneDecisionGaps(records: readonly Finding[]): string[] {
     return ofType(records, RecordIdPrefix.BusinessRule, BusinessRule).flatMap((rule) => {
         const reasons = splitReasons(rule.says);
         return reasons.length === 0 ? [] : [gap("rule-of-several-decisions", `${rule.id} ${reasons.join(" and ")}`)];

@@ -23,9 +23,8 @@ const letter = (char: string | undefined) => char !== undefined && char.toLowerC
  * possessive's apostrophe is never taken for a quote).
  * @param text the rule
  * @returns the text outside quotes
- * @internal exported for the tests, which check it on its own
  */
-export const outsideQuotes = (text: string) => {
+const outsideQuotes = (text: string) => {
     const chars = [...text];
     let out = "";
     let at = 0;

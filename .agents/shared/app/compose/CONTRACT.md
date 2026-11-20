@@ -70,7 +70,7 @@ Every count the app shows is here once: `{ key, value, noun, scope, source, part
 | `journeys/trace.json` | per chosen step: the stories that name the step (never a story that only builds one of its rules), the distinct components that serve it, their domains, its primary domain (most components, ties by domain order), rules kept (honoured, not changed and not dropped), changed and dropped, and the other journeys the same components serve |
 | `journeys/dropped.json` | what each chosen journey leaves out by design, with the reason |
 | `journeys/changed.json` | each target decision: `confirmed`, `changed` (the file differs from the hash the decision kept), `confirmed, no hash kept`, or `not made`; and what was added, removed and changed since confirmation (shape-target's `changedSince`; null when no confirmed copy is kept), with `names`: the title or name of each key, from the confirmed copy for a removed item and the file now for the rest (a key with no name is not in `names`) |
-| `architecture.json` | the chosen architecture: domains with their rules and distinct component count, containers with `does`, `runsOn` and its words from shape-target's catalogue (null when the target has none), components, integrations, risks (structured as written; a plain risk's `cites` are the domain, container and component names its text says exactly, else empty), how containers talk (component uses between the containers that run their domains) and the uses that cross domains, the chosen option's `score` and the alternatives with their scores and their own containers, domains and integrations (empty when the option's record keeps none); `landing`: today's rules by today's layer (a row `layer: null` for rules in no layer) and by the domain that holds them (column `""`: no domain), each row and cell with its number key; `unplaced`: each rule no domain holds with the reason a chosen journey's drop gives, or null |
+| `architecture.json` | the chosen architecture: domains with their rules, dependencies and distinct component count, containers (name, kind, technology, what they hold), components, integrations, risks as plain sentences, the other options (idea, trade-off, risks, score), the score, where today's rules land and the rules no domain holds. |
 | `plan/stories.json` | each story: kind of work from its tags (shape-and-deliver's `workflowOf`: profile, reference, and `label`/`words` from compose's closed catalogue `build/work.ts`; null when the tags name none), blockers and the stories it unblocks, rules built and relied on, steps, components, domains (from components, else from the domains of the rules it builds), layers it is built in, `criteria` (`says`, and `given`/`when`/`then` when the sentence is in that form, else null; `from` as `{kind, id}` with `kind` rule, transition, decision, layer or step), `open` (the plan's questions for the story), `challenges` (the plan's unresolved conflicts whose `variant` is the story's key), status from the ledger |
 | `plan/epics.json`, `plan/phases.json`, `plan/layers.json`, `plan/decisions.json` | epics with a label (the chosen journey's name for a journey epic); phases as the plan names them with their epics (keys, in story order) and the names of the layers they are built in (empty when the plan's stories name none); layers with the request's stack lines they carry and their stories |
 | `plan/unplanned.json` | the plan's `coverage.unplanned`: code nothing the analysis followed reaches, each with its name in the code, file and lines (empty for a plan that keeps none) |
@@ -85,19 +85,18 @@ The system's name and purpose; the person's Goals verbatim from `request.json`, 
 
 ### `views.json`
 
-An ordered list of views, each a picture a reader can ask for: `{ key, section, viewpoint, title, caption, nodes, groups, edges, legend, text, shown }`. `section` is where it sits (`today.<viewpoint>`, `target.<viewpoint>`, `variant.<n>.<viewpoint>`) and `viewpoint` one of functional, information, system, integration, deployment, decisions, layers. `title` is the question the view answers: the briefing's own question for a picture it asked for, a default otherwise. A node is a record of the case: `{ id, label, kind (a drawing style), kindWords, group, sentence }`; `groups` are the frames, named by the record or place that frames them; an `edge` is `{ from, to, relation }` with a `legend` of the relations in plain words and a `text` line for each. The producer owns every word (`build/vocabulary.ts`); a stored value it has no words for fails the build. Today's views come from the analysis (what the system does, what it is made of, how the code is layered, what it reaches, which data it keeps and how that changes); the new system's from the chosen architecture and, for each option not chosen, from its own record. `shown` is at least two boxes and one line (or two frames).
+An ordered list of the pictures of the case, as the model wrote them: `{ key, section, viewpoint, title, caption, boxes, arrows, text }`. `section` is where it sits (`today`, `target` or `variant.<name>`) and `viewpoint` one of functional, technical, deployment. `title` is the question the view answers. A box is `{ id, label, note, group, cites }`: a box another names as its `group` is drawn as a frame around its members, and each cite is `{ id, text, node }`, the record's name and, when the record is a place of the hierarchy, that place. An arrow is `{ from, to, label }`. `text` is the text version, one line per arrow and one per box no arrow touches, made by script from the boxes and arrows. Compose derives nothing else: no box, arrow, label or word of a view is written by a script.
 
 #### Principles of a view
 
 1. A view answers one question a reader asks; its title is that question. A catalogue is a table, not a view.
-2. Boxes are records of the case; a missing fact is said, never drawn.
-3. A frame is a boundary (a layer group, a domain, a kind of outside system, the place a part runs); lines say a relation in plain words.
-4. A line is worked out here from facts that hold between the boxes; an agent never writes one.
-5. No number is on a line, in a text line or in a table cell; counts live in `numbers.json`.
-6. A picture is as large as its facts; what does not fit is a matrix, not a tangle.
-7. Every view has a text version saying every line.
-8. An option not chosen is drawn the way the chosen one is.
-9. The same facts give the same view.
+2. The model decides the boxes, the frames, the labels and the arrows; the guard (`code-analysis/shared/views/guard.ts`) refuses only what is not well formed, and nothing in a script names a technology, a medium or a place something runs.
+3. A box may cite the records it rests on; a cite shows the record's name and, when it has a page, links to it.
+4. No count in a title or a caption; an arrow is never labelled with only a number.
+5. A view holds at most 24 boxes and 48 arrows; an arrow count above twice the boxes is shown as a table.
+6. Every view has a text version, made by script from its boxes and arrows.
+7. A target variant draws every domain as a box of a functional view and every container as a box of a deployment view.
+8. The same input gives the same case.
 
 ### `evidence.json`, `search.json`, `assistant/`
 

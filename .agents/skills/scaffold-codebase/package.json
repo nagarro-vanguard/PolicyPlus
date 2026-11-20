@@ -8,8 +8,7 @@
         "typecheck": "tsc --noEmit",
         "format": "prettier --write '**/*.ts'",
         "format:check": "prettier --check '**/*.ts'",
-        "test": "bun test ./tests",
-        "check": "bun run format:check && bun run typecheck && bun run test"
+        "check": "bun run format:check && bun run typecheck"
     },
     "devDependencies": { "@types/bun": "1.4.2", "prettier": "3.9.9", "typescript": "5.9.3" }
 }

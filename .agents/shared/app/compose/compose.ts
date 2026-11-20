@@ -1,5 +1,4 @@
 import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { z } from "zod";
 import { assistantOf, parentOf } from "./build/assistant";
 import { briefOf } from "./build/brief";
@@ -71,16 +70,7 @@ export const buildCase = (options: ComposeOptions) => {
     const proposed = target === undefined ? [] : proposedOf(target, today);
     const built = target === undefined ? undefined : architectureOf(target, facts, slugs, proposed);
     const architecture =
-        built === undefined
-            ? undefined
-            : {
-                  ...built,
-                  risks: built.risks.map((risk) => ({
-                      ...risk,
-                      statement: plain(risk.statement),
-                      summary: plain(risk.summary),
-                  })),
-              };
+        built === undefined ? undefined : { ...built, risks: built.risks.map((risk) => plain(risk)) };
     const storiesOfStep = new Map<string, string[]>();
     for (const story of plan?.plan.stories ?? [])
         for (const step of story.steps ?? []) storiesOfStep.set(step, [...(storiesOfStep.get(step) ?? []), story.key]);
@@ -92,7 +82,7 @@ export const buildCase = (options: ComposeOptions) => {
     const brief = briefOf(facts, request, architecture, views, numbers);
     journeyNumbers(numbers, today, proposed, architecture);
     if (views !== undefined) planNumbers(numbers, views);
-    const pictures = viewsOf(facts, payloads, architecture);
+    const pictures = viewsOf(facts, hierarchy.nodeOf, target);
     const sourceRoot = options.source ?? payloads.sourceRoot;
     const evidence = evidenceOf(facts, sourceRoot);
     // One base for every path a copy text holds: the folder the run sits in (the repository the commands run from),

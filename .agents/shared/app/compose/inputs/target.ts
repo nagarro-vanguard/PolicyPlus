@@ -6,6 +6,7 @@ import { gates, gateState, proposalOf, snapshotOf, subjectOf, type Gate } from "
 import { layoutOf } from "../../../../skills/shape-target/shared/model/layout";
 import { changedSince, itemsOf, type Since } from "../../../../skills/shape-target/shared/since";
 import { ComposeError } from "../errors";
+import { AuthoredView } from "./view";
 import { readJson, readText, sha256 } from "../io";
 
 /*
@@ -47,22 +48,20 @@ const Journey = z.looseObject({
     drops: z.array(z.looseObject({ actions: Ids, rules: Ids, reason: Text })),
 });
 
-const Risk = z.union([Text, z.looseObject({ statement: Text, kind: Text, cites: Ids, containedBy: Text.optional() })]);
-
 const Architecture = z.looseObject({
     name: Text,
     idea: Text,
     tradeoff: Text,
     recommended: Text.optional(),
-    risks: z.array(Risk),
+    risks: z.array(Text),
     integrations: z.array(z.looseObject({ need: Text, domain: Text, how: Text })),
+    views: z.array(AuthoredView),
     domains: z.array(
         z.looseObject({
             name: Text,
             concept: Text,
             rules: Ids,
             dependsOn: Ids,
-            why: Text,
             facts: z.array(z.looseObject({ name: Text })),
         }),
     ),
@@ -72,8 +71,6 @@ const Architecture = z.looseObject({
             kind: Text,
             tech: Text,
             holds: Ids,
-            does: Text.optional(),
-            runsOn: Text.optional(),
         }),
     ),
     components: z
@@ -126,24 +123,11 @@ const ArchitectureVariants = z.array(
         score: z
             .looseObject({ steps: z.number(), stepsServed: z.number(), rules: z.number(), rulesAssigned: z.number() })
             .optional(),
-        domains: z.array(z.looseObject({ name: Text, concept: Text.optional() })).optional(),
-        containers: z
-            .array(
-                z.looseObject({
-                    name: Text,
-                    kind: Text,
-                    tech: Text.optional(),
-                    holds: Ids.optional(),
-                    does: Text.optional(),
-                    runsOn: Text.optional(),
-                }),
-            )
-            .optional(),
-        integrations: z.array(z.looseObject({ need: Text, domain: Text, how: Text })).optional(),
+        risks: z.array(Text).optional(),
+        views: z.array(AuthoredView).optional(),
     }),
 );
 const TargetManifest = z.looseObject({ contractVersion: z.number(), files: z.record(Text, Text) });
-const RunsOnCatalogue = z.looseObject({ runsOn: z.array(z.looseObject({ id: Text, words: Text })) });
 
 /**
  * What a target holds, in the order it is made: today's tasks only, with the journeys proposed and not confirmed; the
@@ -182,7 +166,6 @@ export type Target = {
     readonly alternatives: z.output<typeof ArchitectureVariants>;
     readonly gates: readonly GateRecord[];
     readonly disputes: readonly { stage: string; variant: string; says: string }[];
-    readonly runsOn: ReadonlyMap<string, string>;
 };
 
 /** The name of each item of a decision, from the confirmed copy first and the file now after it. */
@@ -204,18 +187,6 @@ const namesOf = (layout: ReturnType<typeof layoutOf>, gate: Gate): Map<string, s
     }
     return names;
 };
-
-const runsOnCatalogue = join(
-    import.meta.dir,
-    "..",
-    "..",
-    "..",
-    "..",
-    "skills",
-    "shape-target",
-    "catalogue",
-    "runs-on.json",
-);
 
 /**
  * Read the target of a modernization.
@@ -301,7 +272,6 @@ export const readTarget = (root: string): Target => {
             says: each.says,
         })),
     );
-    const runsOn = new Map(readJson(runsOnCatalogue, RunsOnCatalogue).runsOn.map((each) => [each.id, each.words]));
     return {
         root,
         contractVersion,
@@ -316,6 +286,5 @@ export const readTarget = (root: string): Target => {
         alternatives,
         gates: gateRecords,
         disputes,
-        runsOn,
     };
 };

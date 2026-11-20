@@ -86,9 +86,8 @@ const webFiles = [
  * @param entry the entry point: its file, starter, part kind and layer
  * @param tooling the layers whose entry points are build or install scripts
  * @returns the kind
- * @internal exported for the tests, which check it on its own
  */
-export const entryKindOf = (entry: Entry, tooling: ReadonlySet<string>): SurfaceKind => {
+const entryKindOf = (entry: Entry, tooling: ReadonlySet<string>): SurfaceKind => {
     if (entry.partKind === "tests") {
         return "test";
     }
@@ -143,9 +142,8 @@ const asSurfaceKind = (text: string | null) => surfaceKinds.find((kind) => kind 
  * @param entries every entry point
  * @param tooling the layers whose entry points are build or install scripts
  * @returns each code kind's kind, by record id, and whether the Map stated it
- * @internal exported for the tests, which check it on its own
  */
-export const codeKindKindsOf = (entries: readonly Entry[], tooling: ReadonlySet<string>) => {
+const codeKindKindsOf = (entries: readonly Entry[], tooling: ReadonlySet<string>) => {
     const byKind = new Map<string, Entry[]>();
     entries.forEach((entry) => {
         if (entry.codeKind !== null) {
@@ -192,9 +190,8 @@ const baseNameOf = (path: string) => {
  * @param entries every entry point
  * @param kindOf the kind of each entry point
  * @returns the candidates, by key
- * @internal exported for the tests, which check it on its own
  */
-export const candidatesOf = (entries: readonly EntryRow[], kindOf: (entry: EntryRow) => SurfaceKind): Candidate[] => {
+const candidatesOf = (entries: readonly EntryRow[], kindOf: (entry: EntryRow) => SurfaceKind): Candidate[] => {
     const pages = unique(
         entries.flatMap((entry) => {
             const page = pagePathOf(entry.file);
@@ -238,9 +235,8 @@ type Surface = {
  * @param candidates the candidates
  * @param records the places the briefing named
  * @returns the places, by key, and the entry points no place holds
- * @internal exported for the tests, which check it on its own
  */
-export const surfacesOf = (candidates: readonly Candidate[], records: readonly ScreenRecord[]) => {
+const surfacesOf = (candidates: readonly Candidate[], records: readonly ScreenRecord[]) => {
     const recordOf = new Map(records.flatMap((record) => record.places.map((place) => [place, record] as const)));
     const named = new Map<string, Candidate[]>();
     const surfaces: Surface[] = [];

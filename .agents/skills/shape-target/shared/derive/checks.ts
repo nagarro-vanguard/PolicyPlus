@@ -1,7 +1,8 @@
 import { slug } from "../model/ids";
+import { setGaps, viewGaps } from "../../../code-analysis/shared/views/guard";
+import type { ViewBody } from "../model/view";
 import type {
     Architecture,
-    ArchitectureRecord,
     Component,
     CurrentStep,
     Domain,
@@ -9,10 +10,8 @@ import type {
     StoredJourney,
     Task,
 } from "../model/records";
-import { runsOnIds } from "../model/runs-on";
 import { cycleIn, missing } from "./graph";
 import { leaksIn, type LegacySheet } from "./legacy";
-import { risksOf } from "./views";
 import { voiceGaps } from "./voice";
 import { wordsIn } from "./words";
 
@@ -208,7 +207,7 @@ const dependsGraph = (domains: readonly Domain[]) =>
     new Map(domains.map((domain) => [domain.name, [...domain.dependsOn]]));
 
 /** The kinds of data a domain may use: its own facts and those of the domains it depends on directly. */
-const reachOf = (domains: readonly Domain[]) => {
+export const reachOf = (domains: readonly Domain[]) => {
     const byName = new Map(domains.map((domain) => [domain.name, domain]));
     const factsOf = (name: string) => new Set<string>(byName.get(name)?.facts.flatMap((fact) => fact.from) ?? []);
     return (name: string): Set<string> => {
@@ -222,11 +221,86 @@ const reachOf = (domains: readonly Domain[]) => {
  * The domains that decide a step: those owning a rule it honours; when it honours none, those owning data it touches.
  * Known from the domains alone, so it holds before any component is written.
  */
-const decidingDomains = (domains: readonly Domain[], step: StoredJourney["steps"][number]) => {
+export const decidingDomains = (domains: readonly Domain[], step: StoredJourney["steps"][number]) => {
     const byRules = domains.filter((domain) => step.honours.some((id) => domain.rules.includes(id)));
     return byRules.length > 0
         ? byRules
         : domains.filter((domain) => step.touches.some((id) => domain.facts.some((fact) => fact.from.includes(id))));
+};
+
+/** The checks of a text a person reads in a view: no count in a title or caption, the voice, no name of the old system. */
+const viewTextGaps = (context: DesignContext) => (where: string, text: string, kind: "caption" | "note" | "label" | "title") => [
+    ...(kind === "caption" || kind === "title") && [...text].some((char) => char >= "0" && char <= "9")
+        ? [`${where} states a count or a number; the page counts, so say it in words`]
+        : [],
+    ...(kind === "caption" || kind === "note" ? voiceGaps(where, text) : []),
+    ...leaksIn(text, context.legacy.identifiers).map((leak) => `${where} carries the old system's name "${leak}"`),
+];
+
+/** Whether a view has a box that is, or cites, the name. */
+const drawsName = (view: ViewBody, name: string) =>
+    view.boxes.some((box) => box.label.toLowerCase() === name.toLowerCase() || (box.cites ?? []).includes(name));
+
+/**
+ * The checks of a variant's views: each view holds together, the set has a functional, a technical and a deployment
+ * view, every domain is a box of a functional view and every container a box of a deployment view.
+ * @param variant the variant
+ * @param context what the chosen journeys and the request say
+ * @returns the gaps
+ */
+const variantViewGaps = (variant: Architecture, context: DesignContext): string[] => {
+    const label = `variant "${variant.name}"`;
+    const steps = new Set(context.journeys.flatMap((journey) => journey.steps.map((step) => step.id as string)));
+    const names = new Set<string>([
+        ...variant.domains.map((domain) => domain.name),
+        ...variant.containers.map((container) => container.name),
+        ...(variant.components ?? []).map((component) => component.name),
+        ...context.needs,
+    ]);
+    const gaps = setGaps(variant.views, {
+        where: label,
+        knows: (id) => steps.has(id) || names.has(id),
+        textGaps: viewTextGaps(context),
+    });
+    if (!variant.views.some((view) => view.viewpoint === "deployment")) gaps.push(`${label}: write a deployment view`);
+    for (const domain of variant.domains)
+        if (!variant.views.some((view) => view.viewpoint === "functional" && drawsName(view, domain.name)))
+            gaps.push(`${label}: no functional view has a box for the domain ${domain.name}`);
+    for (const container of variant.containers)
+        if (!variant.views.some((view) => view.viewpoint === "deployment" && drawsName(view, container.name)))
+            gaps.push(`${label}: no deployment view has a box for the container ${container.name}`);
+    return gaps;
+};
+
+/**
+ * The checks of the technical view a components job writes of its domain's components.
+ * @param view what the job wrote
+ * @param components the components of the job
+ * @param context the architecture, the domain and what earlier jobs wrote
+ * @returns the gaps
+ */
+export const componentViewGaps = (
+    view: ViewBody | undefined,
+    components: readonly Component[],
+    context: ComponentContext,
+): string[] => {
+    if (view === undefined) return [`write one technical view of the components of ${context.domain}`];
+    const steps = new Set(context.journeys.flatMap((journey) => journey.steps.map((step) => step.id as string)));
+    const names = new Set<string>([
+        ...components.map((component) => component.name),
+        ...context.available,
+        ...context.architecture.domains.map((domain) => domain.name),
+        ...context.architecture.containers.map((container) => container.name),
+        ...context.needs,
+    ]);
+    return [
+        ...(view.viewpoint === "technical" ? [] : [`the view of ${context.domain} is ${view.viewpoint}; write a technical view`]),
+        ...viewGaps(view, {
+            where: `domain ${context.domain}`,
+            knows: (id) => steps.has(id) || names.has(id),
+            textGaps: viewTextGaps(context),
+        }),
+    ];
 };
 
 /**
@@ -236,7 +310,7 @@ const decidingDomains = (domains: readonly Domain[], step: StoredJourney["steps"
  * @param context what the chosen journeys and the request say
  * @returns the gaps
  */
-export const variantGaps = (variant: ArchitectureRecord, context: DesignContext): string[] => {
+export const variantGaps = (variant: Architecture, context: DesignContext): string[] => {
     const gaps: string[] = [];
     const kept = keptRules(context.journeys);
     const data = touched(context.journeys);
@@ -273,11 +347,6 @@ export const variantGaps = (variant: ArchitectureRecord, context: DesignContext)
     const lostData = missing(data, carried);
     if (lostData.count > 0)
         gaps.push(`${label}: ${lostData.count} kinds of data touched by steps are in no fact: ${lostData.text}`);
-    for (const domain of variant.domains)
-        for (const fact of domain.facts)
-            for (const relation of fact.relates)
-                if (!factNames.includes(relation.to))
-                    gaps.push(`${label}: fact ${fact.name} relates to ${relation.to}, which is not a fact`);
     const holds = new Map<string, number>();
     for (const container of variant.containers) {
         if (!techInStack(container.tech, context.stack))
@@ -309,22 +378,7 @@ export const variantGaps = (variant: ArchitectureRecord, context: DesignContext)
             gaps.push(`${label}: outside system ${need} has ${needs.get(need) ?? 0} integrations, not one`);
     for (const need of needs.keys())
         if (!context.needs.includes(need)) gaps.push(`${label}: integration for ${need}, which no chosen task reaches`);
-    const parts = new Set(variant.containers.map((container) => container.name));
-    const components = new Set((variant.components ?? []).map((component) => component.name));
-    for (const container of variant.containers)
-        if (container.runsOn !== undefined && !runsOnIds.includes(container.runsOn))
-            gaps.push(
-                `${label}: container ${container.name} runs on "${container.runsOn}", which is none of ${runsOnIds.join(", ")}`,
-            );
-    risksOf(variant).forEach((risk, at) => {
-        for (const name of risk.cites)
-            if (!known.has(name) && !parts.has(name) && !components.has(name))
-                gaps.push(`${label}: risk ${at + 1} cites ${name}, which is no domain, container or component`);
-        if (risk.containedBy !== undefined && !parts.has(risk.containedBy) && !components.has(risk.containedBy))
-            gaps.push(
-                `${label}: risk ${at + 1} is contained by ${risk.containedBy}, which is no container or component`,
-            );
-    });
+    gaps.push(...variantViewGaps(variant, context));
     // A step's data must be within reach of the domains that decide it: their own facts or those of a domain they depend on.
     const reachOfDomain = reachOf(variant.domains);
     for (const journey of context.journeys)
@@ -361,16 +415,14 @@ export const shapeGaps = (variants: readonly Architecture[], context: DesignCont
         gaps.push(...voiceGaps(`${label}: the tradeoff`, variant.tradeoff, true));
         if (variant.recommended !== undefined)
             gaps.push(...voiceGaps(`${label}: the recommendation`, variant.recommended));
-        variant.risks.forEach((risk, at) => gaps.push(...voiceGaps(`${label}: risk ${at + 1}`, risk.statement, true)));
-        for (const container of variant.containers)
-            gaps.push(...voiceGaps(`${label}: what container ${container.name} does`, container.does, true));
+        variant.risks.forEach((risk, at) => gaps.push(...voiceGaps(`${label}: risk ${at + 1}`, risk, true)));
     }
     return gaps;
 };
 
 /** What a domain's components job needs besides the architecture. */
 export type ComponentContext = DesignContext & {
-    architecture: ArchitectureRecord;
+    architecture: Architecture;
     domain: string;
     /** Names of components already written by the domains this one depends on. */
     available: readonly string[];
@@ -449,7 +501,7 @@ export const componentJobGaps = (components: readonly Component[], context: Comp
  * @param context what the chosen journeys and the request say
  * @returns the gaps
  */
-export const finalGaps = (architecture: ArchitectureRecord, context: DesignContext): string[] => {
+export const finalGaps = (architecture: Architecture, context: DesignContext): string[] => {
     const gaps = variantGaps({ ...architecture, components: undefined }, context);
     const components = architecture.components ?? [];
     const byName = new Map(components.map((component) => [component.name, component]));
@@ -529,7 +581,7 @@ export const finalGaps = (architecture: ArchitectureRecord, context: DesignConte
  * @param journeys the chosen journeys
  * @returns steps served, rules assigned and the domains that serve no step
  */
-export const scoreOf = (architecture: ArchitectureRecord, journeys: readonly StoredJourney[]) => {
+export const scoreOf = (architecture: Architecture, journeys: readonly StoredJourney[]) => {
     const steps = journeys.flatMap((journey) => journey.steps);
     const serves = (domain: Domain, step: (typeof steps)[number]) =>
         step.honours.some((id) => domain.rules.includes(id)) ||

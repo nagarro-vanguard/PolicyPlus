@@ -64,7 +64,7 @@ export const RecordIdPrefix = {
     CapabilityGroup: "capabilitygroup",
     CrossCuttingConcern: "crosscutting",
     Screen: "screen",
-    Figure: "figure",
+    View: "view",
     SystemWords: "systemwords",
     Missed: "missed",
     Receipt: "receipt",
@@ -227,7 +227,7 @@ export const CrossCuttingConcernId = recordIdOf(RecordIdPrefix.CrossCuttingConce
 
 export const ScreenId = recordIdOf(RecordIdPrefix.Screen).pipe(Schema.brand("ScreenId"));
 
-export const FigureId = recordIdOf(RecordIdPrefix.Figure).pipe(Schema.brand("FigureId"));
+export const ViewId = recordIdOf(RecordIdPrefix.View).pipe(Schema.brand("ViewId"));
 
 export const SystemWordsId = recordIdOf(RecordIdPrefix.SystemWords).pipe(Schema.brand("SystemWordsId"));
 
@@ -264,7 +264,7 @@ export const FindingId = Schema.Union([
     CapabilityGroupId,
     CrossCuttingConcernId,
     ScreenId,
-    FigureId,
+    ViewId,
     SystemWordsId,
     LifecycleId,
     TransitionId,

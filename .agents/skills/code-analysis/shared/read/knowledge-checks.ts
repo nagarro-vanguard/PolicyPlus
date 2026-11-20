@@ -26,11 +26,6 @@ export const knowledgeGaps = (knowledge: KnowledgePayload, known: ReadonlySet<st
                 (link) =>
                     `a ${link.kind} link names ${link.from} or ${link.to}, which is neither a part nor an outside system`,
             ),
-        ...knowledge.figures.flatMap((figure) =>
-            figure.records
-                .filter((id) => !named.has(id))
-                .map((id) => `a ${figure.kind} figure names ${id}, which is not in the payload`),
-        ),
         ...knowledge.risks
             .filter((risk) => risk.findings.length === 0)
             .map((risk) => `a risk rests on no observation: ${risk.statement}`),

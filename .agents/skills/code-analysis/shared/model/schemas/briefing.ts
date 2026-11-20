@@ -6,19 +6,20 @@ import {
     CrossCuttingConcernId,
     EntityId,
     ExternalSystemId,
-    FigureId,
     LayerId,
     LifecycleId,
     Lines,
     ScreenId,
     SystemPartId,
     SystemWordsId,
+    ViewId,
     Text,
     about,
     eachOnce,
     forPerson,
     ownRecordId,
 } from "../shared-fields";
+import { viewFields } from "../../views/view";
 import { SurfaceKind } from "./surface-kind";
 
 export const CapabilityGroup = Schema.Struct({
@@ -101,31 +102,12 @@ export const Screen = Schema.Struct({
     ),
 );
 
-const FigureSubject = Schema.Union([SystemPartId, ExternalSystemId, LifecycleId, EntityId, LayerId]);
-
-export const Figure = Schema.Struct({
-    id: FigureId.annotate(ownRecordId),
-    kind: Schema.Literals(["parts", "integration", "states", "data", "layers"]).annotate(
-        about(
-            "The family of facts the picture draws, from the brief's `menu` lines: `parts` (what the system is made of), `integration` (what it reaches outside itself), `states` (how kinds of data change over time), `data` (which capabilities keep which kinds of data), `layers` (how the code is layered).",
-        ),
-    ),
-    question: Text.annotate(
-        forPerson("The question a reader has that this picture answers, in their words, in one sentence."),
-    ),
-    caption: Text.annotate(
-        forPerson(
-            "What to take from the picture, in one or two sentences, in plain words. It states no count: the page counts.",
-        ),
-    ),
-    records: Schema.Array(FigureSubject).annotate(
-        about(
-            "What to draw, by record id, from the menu line of its kind: parts, external systems, lifecycles, kinds of data or layers. Empty draws everything the menu line offers.",
-        ),
-    ),
+export const View = Schema.Struct({
+    id: ViewId.annotate(ownRecordId),
+    ...viewFields,
 }).annotate(
     about(
-        "A picture the system needs to be understood: the question it answers, the family of facts it draws, the records it shows and what to take from it. There may be several of one family, each over other records. The script draws it from the records named; the agent never draws an edge or writes a count.",
+        "A picture of the system as it is that a reader needs to understand it: the question it answers, what to take from it, its boxes and the arrows between them, written as the reader should see it. A box may cite the records it rests on (parts, layers, outside systems, kinds of data, capabilities, screens, lifecycles).",
     ),
 );
 
