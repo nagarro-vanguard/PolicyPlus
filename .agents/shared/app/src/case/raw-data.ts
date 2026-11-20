@@ -1,6 +1,6 @@
 import type { Case } from "./read";
 import { sourcesOf } from "./sources";
-import type { CaseData, Diagram, NodeRecord } from "./view";
+import type { CaseData, NodeRecord } from "./view";
 import type { Noun, NumberRecord } from "./format";
 import { assistantFileOf } from "./routes";
 
@@ -14,21 +14,6 @@ const byKey = <T>(records: readonly T[], keyOf: (record: T) => string) => {
     const map = new Map<string, T>();
     for (const record of records) map.set(keyOf(record), record);
     return map;
-};
-
-/**
- * The diagrams by the subject they show.
- * @param diagrams every diagram
- * @returns a lookup by subject
- */
-export const diagramsBySubject = (diagrams: readonly Diagram[]) => {
-    const map = new Map<string, Diagram[]>();
-    for (const diagram of diagrams) {
-        const list = map.get(diagram.subject);
-        if (list === undefined) map.set(diagram.subject, [diagram]);
-        else list.push(diagram);
-    }
-    return (subject: string): readonly Diagram[] => map.get(subject) ?? [];
 };
 
 /**
@@ -76,7 +61,6 @@ export const caseDataOf = (kase: Case, bundleCommand?: string): CaseData => {
         fact: (collection, id) => facts.get(collection)?.get(id),
         kindNoun: (kind) => kinds.get(kind)?.noun,
         assistantBytes: assistantSizes(kase),
-        diagrams: diagramsBySubject(read<Diagram>("diagrams.json")),
         bundleCommand,
     };
 };

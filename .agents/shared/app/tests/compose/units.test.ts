@@ -240,18 +240,13 @@ describe("brief", () => {
     });
 });
 
-describe("diagrams", () => {
-    test("each kind with facts has its text version and legend", () => {
+describe("views", () => {
+    test("each view with facts has its text version, legend and no count", () => {
         const { built } = full();
-        const byKey = new Map(built.input.diagrams.map((diagram) => [diagram.key, diagram]));
-        expect([...byKey.keys()]).toContain("navigation/system");
-        expect(byKey.get("navigation/system")?.text).toEqual(["Record page leads to Record service"]);
-        expect(byKey.get("context/system")?.caption).toBe("It sends mail.");
-        expect(byKey.get("organisation/target")?.edges).toEqual([
-            { from: "Records", to: "Sending", kind: "uses", count: 1 },
-        ]);
-        expect(byKey.get("compare/keep-a-record")?.edges.length).toBe(2);
-        for (const diagram of byKey.values()) expect(diagram.text.length).toBe(diagram.edges.length);
+        const byKey = new Map(built.input.pictures.map((view) => [view.key, view]));
+        expect(byKey.get("today/integration")?.caption).toBe("It sends mail.");
+        expect(byKey.get("target/functional")?.edges).toContainEqual({ from: "Records", to: "Sending", relation: "uses" });
+        for (const view of byKey.values()) expect(view.text.length).toBe(view.edges.length);
     });
 });
 

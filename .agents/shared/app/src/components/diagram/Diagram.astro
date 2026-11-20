@@ -4,9 +4,9 @@ import { copy } from "../../lib/copy";
 import { DiagramCanvas, dashes } from "./DiagramCanvas";
 import { DiagramMatrix } from "./DiagramMatrix";
 import { Fold } from "../Fold";
-// One diagram, the same anatomy for every kind: its title, the case's caption and question, the drawing in a frame of
-// its own that scrolls when the drawing is larger (never scaled down), a block saying how to read it (each kind of line
-// with its style and its words, the frames, the numbers), and the case's text version, always on the page beside it.
+// One view, the same anatomy for every one: its title (the question it answers), the case's caption, the drawing in a
+// frame of its own that scrolls when the drawing is larger (never scaled down), a block saying how to read it (each
+// relation with its style and its words, the frames), and the case's text version, always on the page beside it.
 // The drawing is the app's one diagram island (`client:visible`): the page ships no script for it until it is in view,
 // and the text version is there with no script at all. A diagram whose lines outnumber twice its boxes would draw as a
 // tangle, so it is a table of who reaches whom instead, rendered at build time with no script.
@@ -20,9 +20,8 @@ const Heading = level;
 ---
 <figure class="flex min-w-0 flex-col gap-spacing-md" data-diagram={diagram.key}>
     <div class="flex flex-col gap-spacing-2xs">
-        <Heading class="text-sm font-medium" data-written-by="app" data-contents-entry>{diagram.title}</Heading>
+        <Heading class="text-sm font-medium" data-written-by="agent" data-contents-entry>{diagram.title}</Heading>
         {diagram.caption === null ? null : <p class="text-muted-foreground" data-written-by="agent">{diagram.caption}</p>}
-        {diagram.question === null ? null : <p class="text-sm text-muted-foreground" data-written-by="agent">{diagram.question}</p>}
     </div>
     {diagram.matrix === null ? (
         <div class="max-h-[75svh] overflow-auto rounded-surface border border-border bg-background" role="region" aria-label={diagram.graph.words.drawing} tabindex="0" data-diagram-region>

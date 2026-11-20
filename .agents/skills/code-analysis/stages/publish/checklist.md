@@ -29,6 +29,5 @@ The system page lists what the system offers under these areas, read by people d
 ## Pictures
 
 - A `Figure` whose question no reader would ask, or whose caption says what its records do not show, or that restates its title.
-- A shape the menu offers that would answer a plain question about the system (what it is made of, what it reaches outside itself, how a kind of data changes, who keeps what) with no figure, or a figure for a shape that answers nothing.
+- A plain question about the system (what it is made of, what it reaches outside itself, how a kind of data changes, who keeps what) answered by no figure, or a figure that answers nothing.
 - Records named so the picture hides what matters (one lifecycle of many, the parts of one kind only) where the question needs them all.
-- An `other` figure that asks for what the menu already offers.

@@ -128,7 +128,16 @@ const ArchitectureVariants = z.array(
             .optional(),
         domains: z.array(z.looseObject({ name: Text, concept: Text.optional() })).optional(),
         containers: z
-            .array(z.looseObject({ name: Text, kind: Text, tech: Text.optional(), holds: Ids.optional() }))
+            .array(
+                z.looseObject({
+                    name: Text,
+                    kind: Text,
+                    tech: Text.optional(),
+                    holds: Ids.optional(),
+                    does: Text.optional(),
+                    runsOn: Text.optional(),
+                }),
+            )
             .optional(),
         integrations: z.array(z.looseObject({ need: Text, domain: Text, how: Text })).optional(),
     }),

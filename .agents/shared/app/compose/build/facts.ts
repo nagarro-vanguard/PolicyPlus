@@ -144,7 +144,7 @@ export type Facts = {
     terms: Term[];
     lifecycles: Lifecycle[];
     dataUse: { capability: string; entity: string; reads: boolean; saves: boolean }[];
-    figures: { kind: string; question: string; caption: string }[];
+    figures: { kind: string; question: string; caption: string; records: string[] }[];
     unplacedWhy: string;
     /** Every rule id the analysis indexed, owned by a capability or not. */
     ruleIndex: string[];
@@ -580,6 +580,7 @@ export const factsOf = (payloads: Payloads): Facts => {
             kind: each.kind,
             question: each.question,
             caption: each.caption,
+            records: [...(each.records ?? [])],
         })),
         unplacedWhy: system.unplaced.why,
         ruleIndex: distinct([...index.rules.map((each) => each.id), ...ruleRecords.keys()]),

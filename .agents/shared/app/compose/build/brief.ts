@@ -20,7 +20,7 @@ export type Brief = {
     changes: {
         stack: { line: string; layers: string[] }[];
         containers: { name: string; does: string | null; runsOn: string | null; tech: string; holds: string[] }[];
-        talks: { from: string; to: string; uses: number }[];
+        talks: { from: string; to: string }[];
     } | null;
     risks: { rule: string; top: string[]; ranked: string[] };
     plan: { phases: string; epics: string; stories: string; readyFirst: string; phaseNames: string[] } | null;

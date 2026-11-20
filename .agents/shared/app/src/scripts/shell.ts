@@ -450,6 +450,27 @@ const bindDrawer = () => {
         back?.focus();
     });
 };
+// A box of a view says what it is and what its record says in the same drawer, when the page has one.
+window.addEventListener("view:note", (event) => {
+    const dialog = drawer();
+    if (dialog === null) return;
+    const note = (event as CustomEvent<{ noun: string; title: string; body: string | null }>).detail;
+    bindDrawer();
+    const first = !dialog.open;
+    if (first) {
+        returnTo ??= document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        showDrawer(dialog);
+    }
+    shownKey = null;
+    drawing += 1;
+    const title = dialog.querySelector<HTMLElement>("#detail-title");
+    if (title !== null) title.textContent = note.title;
+    const noun = dialog.querySelector<HTMLElement>("[data-detail-noun]");
+    if (noun !== null) noun.textContent = note.noun;
+    dialog.querySelector<HTMLElement>("[data-detail-code]")?.replaceChildren();
+    const body = dialog.querySelector<HTMLElement>("[data-detail-body]");
+    body?.replaceChildren(...(note.body === null ? [] : [el("p", "text-sm", note.body, "agent")]));
+});
 // The drawer beside the page has no Escape of its own (it is not modal): Escape closes it, unless a modal is over it.
 document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;

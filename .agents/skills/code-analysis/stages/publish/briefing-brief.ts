@@ -65,12 +65,12 @@ const BriefCandidate = Schema.Struct({
 const BriefMenu = Schema.Struct({
     line: Schema.Literal("menu"),
     kind: Schema.Literals(["parts", "integration", "states", "data", "layers"]).annotate(
-        about("A shape of picture the records can draw."),
+        about("A family of facts the records can draw."),
     ),
     records: Schema.Array(Text).annotate(about("The record ids the picture can draw, each by its id.")),
     names: Words.annotate(about("What each of those is, in the same order.")),
 }).annotate(
-    about("One shape of picture the records can support, with what it could show; the briefing picks which to draw."),
+    about("One family of facts the records can draw, with what it could show; a picture is drawn from one of these."),
 );
 
 const BriefLine = Schema.Union([BriefSystem, BriefCapability, BriefCandidate, BriefScreen, BriefKind, BriefMenu]);

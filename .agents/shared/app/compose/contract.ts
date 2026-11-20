@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { diagramKinds } from "./build/diagrams";
+import { viewpoints } from "./build/views";
 import { foldKinds, levels } from "./build/hierarchy";
 import { workLabels, type WorkLabel } from "./build/work";
 
@@ -184,15 +184,25 @@ const facts = {
     ),
 };
 
-const Diagram = z.strictObject({
+const View = z.strictObject({
     key: S,
-    kind: z.enum(diagramKinds),
-    subject: S,
+    section: S,
+    viewpoint: z.enum(viewpoints),
+    title: S,
     caption: S.nullable(),
-    question: S.nullable(),
-    nodes: z.array(z.strictObject({ id: S, label: S, group: S.nullable(), count: N.nullable() })),
-    edges: z.array(z.strictObject({ from: S, to: S, kind: S, count: N })),
-    legend: z.array(z.strictObject({ kind: S, words: S })),
+    nodes: z.array(
+        z.strictObject({
+            id: S,
+            label: S,
+            kind: z.enum(["system", "store", "outside", "plain"]),
+            kindWords: S,
+            group: S.nullable(),
+            sentence: S.nullable(),
+        }),
+    ),
+    groups: z.array(z.strictObject({ id: S, words: S })),
+    edges: z.array(z.strictObject({ from: S, to: S, relation: S })),
+    legend: z.array(z.strictObject({ relation: S, words: S })),
     text: Ids,
     shown: z.boolean(),
 });
@@ -238,13 +248,15 @@ const ProposedJourney = z.strictObject({
     ),
     drops: z.array(z.strictObject({ actions: Ids, rules: Ids, reason: S })),
     dropped: Ids,
+    /** Each step of today and the steps of this way that do its work. */
+    pairs: z.array(z.strictObject({ today: N, proposed: N })),
     hasChanges: z.boolean(),
     alternatives: z.array(z.strictObject({ name: S, strategy: S, idea: S, tradeoff: S })),
 });
 
 const Since = z.strictObject({ added: Ids, removed: Ids, changed: Ids, names: z.record(S, S) });
 const Score = z.strictObject({ steps: N, stepsServed: N, rules: N, rulesAssigned: N });
-const Pair = z.strictObject({ from: S, to: S, uses: N });
+const Pair = z.strictObject({ from: S, to: S });
 
 const Architecture = z.strictObject({
     name: S,
@@ -290,7 +302,17 @@ const Architecture = z.strictObject({
             idea: S,
             tradeoff: S,
             score: Score.nullable(),
-            containers: z.array(z.strictObject({ name: S, kind: S, tech: S.nullable(), holds: Ids })),
+            containers: z.array(
+                z.strictObject({
+                    name: S,
+                    kind: S,
+                    tech: S.nullable(),
+                    holds: Ids,
+                    does: S.nullable(),
+                    runsOn: S.nullable(),
+                    runsOnWords: S.nullable(),
+                }),
+            ),
             domains: z.array(z.strictObject({ name: S, concept: S.nullable() })),
             integrations: z.array(z.strictObject({ outside: S, name: S, domain: S, how: S })),
         }),
@@ -400,7 +422,7 @@ export const caseFiles = {
     "facts/lifecycles.json": facts.lifecycles,
     ...Object.fromEntries(levels.map((level) => [`nodes/${level}.json`, z.array(Node)])),
     "numbers.json": z.array(NumberEntry),
-    "diagrams.json": z.array(Diagram),
+    "views.json": z.array(View),
     "evidence.json": z.record(S, Excerpt),
     "search.json": z.array(
         z.strictObject({

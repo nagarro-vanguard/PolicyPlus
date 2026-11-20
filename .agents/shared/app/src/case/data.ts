@@ -2,9 +2,9 @@ import { getCollection } from "astro:content";
 import { buildConfig } from "./build-config";
 import type { Noun, NumberRecord } from "./format";
 import { theCase } from "./loader";
-import { assistantSizes, diagramsBySubject } from "./raw-data";
+import { assistantSizes } from "./raw-data";
 import { sourcesOf } from "./sources";
-import type { CaseData, Diagram, NodeRecord } from "./view";
+import type { CaseData, NodeRecord } from "./view";
 
 // The case's records by key, read from the content collections the loader filled. Astro turns a `reference()` into
 // `{ collection, id }`; the views read keys, so those fields are given back as keys here.
@@ -37,14 +37,12 @@ const load = async (): Promise<CaseData> => {
         facts.set(source.name, records);
     }
     const kinds = facts.get("kinds") ?? new Map();
-    const diagrams = (await getCollection("diagrams")).map((entry) => entry.data as unknown as Diagram);
     return {
         node: (key) => nodes.get(key),
         number: (key) => numbers.get(key),
         fact: (collection, id) => facts.get(collection)?.get(id),
         kindNoun: (kind) => (kinds.get(kind) as { noun: Noun } | undefined)?.noun,
         assistantBytes: assistantSizes(theCase()),
-        diagrams: diagramsBySubject(diagrams),
         bundleCommand: buildConfig().bundleCommand,
     };
 };

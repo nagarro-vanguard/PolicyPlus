@@ -8,7 +8,7 @@ import type { CaseData, Link, NodeRecord } from "./view";
 // What the Journeys section shows, read from the case's `journeys/` files and followed by key into the facts, the
 // nodes, the architecture and the plan. Nothing is counted, joined or inferred here: a journey's area and capability
 // are the hierarchy's own grouping (the overview's areas, each area's capabilities, in the case's order); the rows
-// that put a step of today beside a step of the new way are the edges of the case's own `compare` diagram; a step's
+// that put a step of today beside a step of the new way are the pairs the case gives each chosen journey; a step's
 // rules, domains and stories are its trace record. Every count shown is a key of numbers.json.
 
 type Today = { id: string; slug: string; title: string; capability: string | null; outcome: string; steps: TodayStep[] };
@@ -22,6 +22,7 @@ type Proposed = {
     tradeoff: string;
     recommended: string | null;
     steps: ProposedStep[];
+    pairs: { today: number; proposed: number }[];
     hasChanges: boolean;
     alternatives: { name: string; idea: string; tradeoff: string }[];
 };
@@ -39,7 +40,6 @@ type ProposedStep = {
 type Trace = { journey: string; step: string; stories: string[]; domains: string[]; kept: string[]; changed: { rule: string; to: string }[]; dropped: string[] };
 type Dropped = { journey: string; actions: string[]; rules: string[]; reason: string };
 type Conflict = { stage: string; variant: string; says: string; resolved: boolean | null };
-type CompareDiagram = { kind: string; subject: string; edges: { from: string; to: string; kind: string }[] };
 
 export type MaybeLink = { name: string; href?: string; line?: string };
 
@@ -136,7 +136,7 @@ const groupOrder: readonly ChangeGroup[] = ["kept", "merged", "reworked", "new",
 
 /**
  * The rows of a journey: each step of today beside the steps of the new way that do its work, from the `replacedBy`
- * edges of the case's compare diagram. Steps an edge links share a row; a step of today no edge reaches has a row of
+ * pairs the case gives. Steps a pair links share a row; a step of today no edge reaches has a row of
  * its own after the row that holds the step before it.
  */
 const rowsOf = (today: readonly TodayStepView[], proposed: readonly StepView[], edges: readonly { from: string; to: string }[]): PairRow[] => {
@@ -194,7 +194,6 @@ export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], section
     const conflicts = read<Conflict[]>("plan/conflicts.json", []);
     const stories = read<{ key: string; title: string; sequence: number }[]>("plan/stories.json", []);
     const architecture = read<{ domains: { name: string }[] } | null>("architecture.json", null);
-    const diagrams = read<CompareDiagram[]>("diagrams.json", []);
     const assistantIndex = read<Record<string, Record<string, number>>>("assistant/index.json", {});
     const hasWays = proposed.length > 0;
     const built = (id: string) => sections.some((section) => section.id === id && section.built);
@@ -240,7 +239,6 @@ export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], section
     const entityName = (id: string) => (data.fact("entities", id)?.name as string | undefined) ?? "";
     const traceOf = new Map(traces.map((trace) => [trace.step, trace]));
     const wayOf = new Map(proposed.map((way) => [way.task, way]));
-    const compareOf = new Map(diagrams.filter((diagram) => diagram.kind === "compare").map((diagram) => [diagram.subject, diagram]));
     const dropsOf = new Map<string, Dropped[]>();
     for (const drop of dropped) dropsOf.set(drop.journey, [...(dropsOf.get(drop.journey) ?? []), drop]);
 
@@ -354,7 +352,7 @@ export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], section
         const capability = journey.capability === null ? undefined : capabilityNode.get(journey.capability);
         const todaySteps = journey.steps.map((step) => ({ number: step.number, intent: step.intent, system: step.system }));
         const steps = (way?.steps ?? []).map((step) => stepView(step, journey.slug));
-        const edges = (compareOf.get(`journey:${journey.id}`)?.edges ?? []).filter((edge) => edge.kind === "replacedBy");
+        const edges = (way?.pairs ?? []).map((pair) => ({ from: `today-${pair.today}`, to: `proposed-${pair.proposed}` }));
         const prev = ordered[index - 1];
         const next = ordered[index + 1];
         const bytes = assistantIndex.journey?.[journey.slug];

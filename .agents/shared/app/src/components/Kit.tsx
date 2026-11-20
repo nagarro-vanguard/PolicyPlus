@@ -52,7 +52,6 @@ const sample: NodeView = {
     next: { href: "#", name: "Reporting" },
     lateral: [{ relation: "alsoUsedBy", label: "Also used by", links: [{ href: "#", name: "Reporting", count: { text: "2 actions", scope: "actions of this page that this capability uses", value: 2 } }] }],
     assistant: { file: "#", kilobytes: 12, fuller: null },
-    diagrams: [{ key: "flow/keeping-records", title: "How the work passes through it", question: null, legend: ["calls"], text: ["Record list calls Records service"] }],
 };
 const roles = ["background", "card", "popover", "primary", "secondary", "muted", "accent", "border", "input", "ring", "destructive", "foreground", "muted-foreground"];
 const scales = [

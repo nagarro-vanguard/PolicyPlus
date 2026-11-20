@@ -1,21 +1,22 @@
-import type { GraphNode, GraphProps } from "../components/diagram/DiagramCanvas";
-import { copy, diagramTitles } from "../lib/copy";
+import type { GraphProps } from "../components/diagram/DiagramCanvas";
+import { copy } from "../lib/copy";
 import { theCase } from "./loader";
 
-// What a diagram shows, from its record in `diagrams.json`: the boxes with their full names, the groups drawn as
-// frames (each named in the app's words for the closed list of groups), one line per pair of boxes in the style of its
-// kind, the legend in the case's words for each kind, and the case's own text version. The app lays it out (ELK, in
-// the island) and adds nothing the text version does not say.
+// What a view shows, from its record in `views.json`: the boxes with their full names, what each is and says, the
+// frames the case names, one line per pair of boxes in the style of its relation, the legend in the case's words and
+// the case's own text version. The app lays it out (ELK, in the island) and holds no word about a view of its own: the
+// title, the frames, the kinds and the relations are the case's, and the reading notes follow from what the view uses.
 
-type DiagramRecord = {
+export type ViewRecord = {
     key: string;
-    kind: keyof typeof diagramTitles;
-    subject: string;
+    section: string;
+    viewpoint: string;
+    title: string;
     caption: string | null;
-    question: string | null;
-    nodes: { id: string; label: string; group: string | null; count: number | null }[];
-    edges: { from: string; to: string; kind: string; count: number }[];
-    legend: { kind: string; words: string }[];
+    nodes: { id: string; label: string; kind: "system" | "store" | "outside" | "plain"; kindWords: string; group: string | null; sentence: string | null }[];
+    groups: { id: string; words: string }[];
+    edges: { from: string; to: string; relation: string }[];
+    legend: { relation: string; words: string }[];
     text: string[];
     shown: boolean;
 };
@@ -24,78 +25,43 @@ export type DiagramView = {
     key: string;
     title: string;
     caption: string | null;
-    question: string | null;
     legend: { words: string; style: number | null }[];
     notes: string[];
     text: string[];
     graph: GraphProps;
-    /** When the lines outnumber twice the boxes, the drawing would be a tangle: the diagram is a table instead. */
+    /** When the lines outnumber twice the boxes, the drawing would be a tangle: the view is a table instead. */
     matrix: { columns: string[]; rows: { label: string; cells: string[] }[] } | null;
 };
 
-const tones: Readonly<Record<string, GraphNode["tone"]>> = {
-    dataStore: "store",
-    store: "store",
-    data: "store",
-    outsideService: "outside",
-    messaging: "outside",
-    library: "outside",
-    system: "system",
-};
-
-/**
- * Every diagram of the case, by key.
- * @returns the lookup
- */
-export const diagramsOfCase = (): ReadonlyMap<string, DiagramRecord> => {
+/** Every view of the case, in the order the case gives them. */
+export const viewsOfCase = (): readonly ViewRecord[] => {
     const kase = theCase();
-    if (!kase.has("diagrams.json")) return new Map();
-    return new Map((kase.json("diagrams.json") as DiagramRecord[]).map((each) => [each.key, each]));
+    return kase.has("views.json") ? (kase.json("views.json") as ViewRecord[]) : [];
 };
 
-/**
- * The view of one diagram, or nothing when the case does not hold it or it has too little to draw.
- * @param key the diagram's key, such as `context/system`
- * @param options the title when the page names the diagram itself, and the words of a group the closed list lacks
- * @returns the view
- */
-export const diagramView = (
-    key: string,
-    options: { title?: string; groupWords?: (group: string) => string | undefined } = {},
-): DiagramView | null => {
-    const record = diagramsOfCase().get(key);
-    if (record === undefined || !record.shown) return null;
-    const groupsUsed = [...new Set(record.nodes.map((node) => node.group).filter((group): group is string => group !== null))];
-    const wordsOf = (group: string) => {
-        const words =
-            options.groupWords?.(group) ?? (record.kind === "data" ? copy.diagram.dataGroupWords[group] : undefined) ?? copy.diagram.groupWords[group];
-        if (words === undefined) throw new Error(`the diagram ${key} has a group "${group}" the app has no words for`);
-        return words;
-    };
-    // A group of the system itself is the subject, not a kind of box; a single group tells nothing apart.
-    const framed = groupsUsed.filter((group) => group !== "system");
-    const groups = framed.length < 2 ? [] : framed.map((group) => ({ id: group, words: wordsOf(group) }));
-    const kinds = record.legend.map((each) => each.kind);
-    const mixed = kinds.length;
-    const pairs = new Map<string, { from: string; to: string; kinds: Set<string>; count: number }>();
+/** The views of a section (`today`, `target`, `variant.2`, or one viewpoint of it), those with something to draw. */
+export const viewsOfSection = (section: string): readonly ViewRecord[] =>
+    viewsOfCase().filter((view) => view.shown && (view.section === section || view.section.startsWith(`${section}.`)));
+
+/** A record as what the page draws. */
+export const viewOf = (record: ViewRecord): DiagramView => {
+    const relations = record.legend.map((each) => each.relation);
+    const mixed = relations.length;
+    const pairs = new Map<string, { from: string; to: string; relations: Set<string> }>();
     for (const edge of record.edges) {
         const pair = `${edge.from}\u0000${edge.to}`;
         const known = pairs.get(pair);
-        if (known === undefined) pairs.set(pair, { from: edge.from, to: edge.to, kinds: new Set([edge.kind]), count: edge.count });
-        else {
-            known.kinds.add(edge.kind);
-            known.count += edge.count;
-        }
+        if (known === undefined) pairs.set(pair, { from: edge.from, to: edge.to, relations: new Set([edge.relation]) });
+        else known.relations.add(edge.relation);
     }
     const edges = [...pairs.values()].map((pair) => ({
         from: pair.from,
         to: pair.to,
-        style: pair.kinds.size === 1 ? kinds.indexOf([...pair.kinds][0] ?? "") : mixed,
-        count: pair.count,
+        style: pair.relations.size === 1 ? relations.indexOf([...pair.relations][0] ?? "") : mixed,
     }));
-    const counts = edges.some((edge) => edge.count > 1);
+    const framed = new Set(record.groups.map((group) => group.id));
     const label = new Map(record.nodes.map((node) => [node.id, node.label]));
-    const kindWords = new Map(record.legend.map((each) => [each.kind, each.words]));
+    const wordsOf = new Map(record.legend.map((each) => [each.relation, each.words]));
     const sources = record.nodes.filter((node) => edges.some((edge) => edge.from === node.id)).map((node) => node.id);
     const targets = record.nodes.filter((node) => edges.some((edge) => edge.to === node.id)).map((node) => node.id);
     const matrix =
@@ -107,42 +73,39 @@ export const diagramView = (
                       label: label.get(from) ?? "",
                       cells: targets.map((to) => {
                           const pair = pairs.get(`${from}\u0000${to}`);
-                          if (pair === undefined) return "";
-                          const said = [...pair.kinds].map((kind) => kindWords.get(kind) ?? kind).join(", ");
-                          return pair.count > 1 ? `${said} (${pair.count})` : said;
+                          return pair === undefined ? "" : [...pair.relations].map((relation) => wordsOf.get(relation) ?? "").join(", ");
                       }),
                   })),
               };
     const usesMixed = edges.some((edge) => edge.style === mixed);
-    const title = options.title ?? diagramTitles[record.kind];
     return {
         key: record.key,
-        title,
+        title: record.title,
         caption: record.caption,
-        question: record.question,
         legend: [
-            ...record.legend.map((each, at) => ({ words: each.words, style: kinds.length > 1 ? at : null })),
+            ...record.legend.map((each, at) => ({ words: each.words, style: relations.length > 1 ? at : null })),
             ...(usesMixed ? [{ words: copy.diagram.mixed, style: mixed }] : []),
         ],
         notes:
             matrix !== null
-                ? [copy.diagram.matrix, ...(counts ? [copy.diagram.matrixCounts] : [])]
-                : [copy.diagram.lines, ...(groups.length > 0 ? [copy.diagram.groups] : []), ...(counts ? [copy.diagram.counts] : [])],
+                ? [copy.diagram.matrix]
+                : [...(edges.length > 0 ? [copy.diagram.lines] : []), ...(framed.size > 0 ? [copy.diagram.groups] : [])],
         matrix,
         text: record.text,
         graph: {
-            label: copy.diagram.label(title),
+            label: copy.diagram.label(record.title),
             nodes: record.nodes.map((node) => ({
                 id: node.id,
                 label: node.label,
-                group: groups.length === 0 ? null : node.group,
-                tone: tones[node.group ?? ""] ?? "box",
+                group: node.group !== null && framed.has(node.group) ? node.group : null,
+                tone: node.kind === "plain" ? "box" : node.kind,
+                kindWords: node.kindWords,
+                sentence: node.sentence,
             })),
-            groups,
+            groups: record.groups,
             edges,
-            counts,
             words: {
-                drawing: copy.diagram.drawing(title),
+                drawing: copy.diagram.drawing(record.title),
                 loading: copy.diagram.loading,
                 failed: copy.diagram.failed,
                 scroll: copy.diagram.scroll,

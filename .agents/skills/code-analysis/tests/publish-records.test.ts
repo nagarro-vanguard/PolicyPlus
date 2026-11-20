@@ -42,21 +42,16 @@ describe("the briefing's figure gate", () => {
         expect(figureGaps([figure("11111111111111111111", {})], menu)).toEqual([]);
     });
 
-    test("refuses a shape the menu does not offer and a record its line does not hold", () => {
-        expect(figureGaps([figure("11111111111111111111", { kind: "states" })], menu).join(" ")).toContain(
-            "the menu does not offer",
-        );
+    test("refuses a record its line does not hold", () => {
         expect(figureGaps([figure("11111111111111111111", { records: ["part-999999"] })], menu).join(" ")).toContain(
             "part-999999",
         );
     });
 
-    test("refuses a caption that states a count, and an `other` figure with no wanted text or with records", () => {
+    test("refuses a caption that states a count", () => {
         expect(figureGaps([figure("11111111111111111111", { caption: "Eight parts make it up." })], menu)).toEqual([]);
         expect(
             figureGaps([figure("11111111111111111111", { caption: "8 parts make it up." })], menu).join(" "),
         ).toContain("states a count");
-        const other = figureGaps([figure("11111111111111111111", { kind: "other", records: ["part-111111"] })], menu);
-        expect(other.length).toBe(2);
     });
 });

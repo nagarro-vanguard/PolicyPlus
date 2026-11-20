@@ -7,7 +7,7 @@ import { copy } from "../lib/copy";
 import { Fold } from "./Fold";
 import { Rows } from "./Rows";
 
-// One node of the hierarchy, the same anatomy at every level: its diagrams as text, the next level as rows, folds for
+// One node of the hierarchy, the same anatomy at every level: the next level as rows, folds for
 // the rest, links to the same thing elsewhere, and the way up, back and on. What kind of thing it is, its few facts and
 // the text a reader can hand to an assistant are in the page's header (src/components/shell/PageHeader.tsx). Every count comes from the case's numbers table with its
 // scope as the explanation; every name and sentence is the analysis's own. Built from the design system's primitives;
@@ -85,40 +85,6 @@ export function Explorer({ view, root }: { readonly view: NodeView; readonly roo
     return (
         <div className="flex flex-col gap-spacing-5xl" data-node-view>
             <Sections>
-                {view.diagrams.map((diagram) => (
-                    <div key={diagram.key} data-diagram={diagram.key}>
-                        <Section title={diagram.title} writtenBy="agent">
-                            {diagram.question === null ? null : (
-                                <p className="text-sm text-muted-foreground" data-written-by="agent">
-                                    {diagram.question}
-                                </p>
-                            )}
-                            <Fold summary={copy.explorer.diagramText}>
-                                <ul className="flex list-disc flex-col gap-spacing-2xs ps-spacing-4xl">
-                                    {diagram.text.map((line) => (
-                                        <li key={line} data-written-by="agent">
-                                            {line}
-                                        </li>
-                                    ))}
-                                </ul>
-                                {diagram.legend.length === 0 ? null : (
-                                    <>
-                                        <h3 className="mt-spacing-lg mb-spacing-2xs text-sm font-medium" data-written-by="app">
-                                            {copy.explorer.diagramLegend}
-                                        </h3>
-                                        <ul className="flex list-disc flex-col gap-spacing-2xs ps-spacing-4xl">
-                                            {diagram.legend.map((words) => (
-                                                <li key={words} data-written-by="agent">
-                                                    {words}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </>
-                                )}
-                            </Fold>
-                        </Section>
-                    </div>
-                ))}
                 {view.children.rows.length === 0 ? null : (
                     <Section title={view.children.heading} writtenBy="agent">
                         <Rows rows={view.children.rows} root={root} />

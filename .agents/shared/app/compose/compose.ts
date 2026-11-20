@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { z } from "zod";
 import { assistantOf, parentOf } from "./build/assistant";
 import { briefOf } from "./build/brief";
-import { diagramsOf } from "./build/diagrams";
+import { viewsOf } from "./build/views";
 import { evidenceOf } from "./build/evidence";
 import { factsOf, type Facts } from "./build/facts";
 import { hierarchyOf, levels } from "./build/hierarchy";
@@ -23,7 +23,7 @@ import { readTarget } from "./inputs/target";
 /*
  * compose: the one place that joins. It reads the analysis's payloads, and the target and plan when given, and writes
  * `case/`: the facts with every record once, the hierarchy with counts scoped to each path, one numbers table, the
- * journey trace and the plan's views, diagrams with their text, evidence, search and the texts for an assistant, each
+ * journey trace and the plan's views, the views (pictures) with their text, evidence, search and the texts for an assistant, each
  * file checked against its schema, with a manifest of digests and input fingerprints. Nothing in it reads a database,
  * the conductor's state or a clock.
  */
@@ -92,7 +92,7 @@ export const buildCase = (options: ComposeOptions) => {
     const brief = briefOf(facts, request, architecture, views, numbers);
     journeyNumbers(numbers, today, proposed, architecture);
     if (views !== undefined) planNumbers(numbers, views);
-    const diagrams = diagramsOf(facts, payloads, hierarchy.nodeOf, today, proposed, architecture);
+    const pictures = viewsOf(facts, payloads, architecture);
     const sourceRoot = options.source ?? payloads.sourceRoot;
     const evidence = evidenceOf(facts, sourceRoot);
     // One base for every path a copy text holds: the folder the run sits in (the repository the commands run from),
@@ -110,7 +110,7 @@ export const buildCase = (options: ComposeOptions) => {
         facts,
         hierarchy,
         numbers,
-        diagrams,
+        pictures,
         today,
         target,
         proposed,
@@ -131,7 +131,7 @@ export const buildCase = (options: ComposeOptions) => {
 export const compose = (options: ComposeOptions): Composed => {
     const built = buildCase(options);
     const { input, target, plan, request, brief, evidence, sourceRoot } = built;
-    const { payloads, facts, hierarchy, numbers, diagrams, today, proposed, architecture, trace, views, assistant } =
+    const { payloads, facts, hierarchy, numbers, pictures, today, proposed, architecture, trace, views, assistant } =
         input;
 
     const values: Record<string, unknown> = {
@@ -145,7 +145,7 @@ export const compose = (options: ComposeOptions): Composed => {
             ]),
         ),
         "numbers.json": numbers.all(),
-        "diagrams.json": diagrams,
+        "views.json": pictures,
         "evidence.json": evidence,
         "search.json": searchOf(hierarchy.nodes, {
             journeys: today.map((journey) => ({
@@ -270,7 +270,7 @@ export const compose = (options: ComposeOptions): Composed => {
             risks: facts.risks.length,
             nodes: hierarchy.nodes.size,
             numbers: numbers.all().length,
-            diagrams: diagrams.length,
+            views: pictures.length,
             excerpts: Object.keys(evidence).length,
             journeysToday: today.length,
             journeysProposed: proposed.length,

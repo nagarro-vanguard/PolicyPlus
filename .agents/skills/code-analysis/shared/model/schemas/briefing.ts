@@ -105,9 +105,9 @@ const FigureSubject = Schema.Union([SystemPartId, ExternalSystemId, LifecycleId,
 
 export const Figure = Schema.Struct({
     id: FigureId.annotate(ownRecordId),
-    kind: Schema.Literals(["parts", "integration", "states", "data", "layers", "other"]).annotate(
+    kind: Schema.Literals(["parts", "integration", "states", "data", "layers"]).annotate(
         about(
-            "The shape of picture, from the brief's menu of what the records can draw: `parts` (what the system is made of), `integration` (what it reaches outside itself), `states` (how one kind of data changes over time), `data` (which capabilities keep which kinds of data), `layers` (how the code is layered), or `other` for a picture the menu lacks, which is listed as wanted and not drawn.",
+            "The family of facts the picture draws, from the brief's `menu` lines: `parts` (what the system is made of), `integration` (what it reaches outside itself), `states` (how kinds of data change over time), `data` (which capabilities keep which kinds of data), `layers` (how the code is layered).",
         ),
     ),
     question: Text.annotate(
@@ -120,15 +120,12 @@ export const Figure = Schema.Struct({
     ),
     records: Schema.Array(FigureSubject).annotate(
         about(
-            "What to draw, by record id, from the menu line of its kind: parts, external systems, lifecycles, kinds of data or layers. Empty draws everything the menu line offers; for `other` it is empty.",
+            "What to draw, by record id, from the menu line of its kind: parts, external systems, lifecycles, kinds of data or layers. Empty draws everything the menu line offers.",
         ),
-    ),
-    wanted: Schema.optionalKey(
-        Text.annotate(forPerson("For `other`: the picture wanted and what it would show; no other kind has it.")),
     ),
 }).annotate(
     about(
-        "A picture the system needs to be understood: the question it answers, the shape it takes, what it shows and what to take from it. The script draws it from the records named; the agent never draws an edge or writes a count.",
+        "A picture the system needs to be understood: the question it answers, the family of facts it draws, the records it shows and what to take from it. There may be several of one family, each over other records. The script draws it from the records named; the agent never draws an edge or writes a count.",
     ),
 );
 

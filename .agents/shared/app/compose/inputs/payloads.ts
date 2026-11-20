@@ -129,7 +129,7 @@ const Knowledge = z.looseObject({
             reads: z.boolean(),
         }),
     ),
-    figures: z.array(z.looseObject({ kind: Text, question: Text, caption: Text })).optional(),
+    figures: z.array(z.looseObject({ kind: Text, question: Text, caption: Text, records: Ids.optional() })).optional(),
     entities: z.array(z.looseObject({ id: Text, name: Text, purpose: Text, capabilities: Ids.optional() })),
     terms: z.array(z.looseObject({ term: Text, means: Text, from: Text.optional() })).optional(),
     risks: z.array(

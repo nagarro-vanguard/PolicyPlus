@@ -1,8 +1,7 @@
 import type { z } from "zod";
-import type { DiagramKind } from "../../compose/build/diagrams";
 import type { FoldKind, Level } from "../../compose/build/hierarchy";
 import type { Node } from "../../compose/contract";
-import { diagramTitles, foldTitles, levelWords, relationLabels, severityWords } from "../lib/copy";
+import { foldTitles, levelWords, relationLabels, severityWords } from "../lib/copy";
 import { type CountView, countOf, heading, isCodeName, type Noun, type NumberRecord } from "./format";
 import { addressOf, assistantFileOf } from "./routes";
 
@@ -13,17 +12,6 @@ import { addressOf, assistantFileOf } from "./routes";
 export type NodeRecord = z.output<typeof Node>;
 type Relation = NodeRecord["lateral"][number]["relation"];
 
-export type Diagram = {
-    key: string;
-    kind: DiagramKind;
-    subject: string;
-    caption: string | null;
-    question: string | null;
-    legend: { kind: string; words: string }[];
-    text: string[];
-    shown: boolean;
-};
-
 /** What the view reads: the case's records by key. */
 export type CaseData = {
     node: (key: string) => NodeRecord | undefined;
@@ -32,8 +20,6 @@ export type CaseData = {
     kindNoun: (kind: string) => Noun | undefined;
     /** The size in bytes of a node's text for an assistant, when the case has one. */
     assistantBytes: (key: string) => number | undefined;
-    /** The diagrams about a subject. */
-    diagrams: (subject: string) => readonly Diagram[];
     bundleCommand: string | undefined;
 };
 
@@ -68,7 +54,6 @@ export type NodeView = {
     next: Link | null;
     lateral: { relation: Relation; label: string; links: (Link & { count?: CountView })[] }[];
     assistant: { file: string; kilobytes: number; fuller: string | null } | null;
-    diagrams: { key: string; title: string; question: string | null; legend: string[]; text: string[] }[];
 };
 
 const textOf = (record: Record<string, unknown>, fields: readonly string[]) => {
@@ -217,15 +202,5 @@ export const viewOf = (key: string, data: CaseData): NodeView => {
                               ? null
                               : `${data.bundleCommand} capability "${node.name}"`,
                   },
-        diagrams: data
-            .diagrams(node.level === "overview" ? "system" : node.key)
-            .filter((diagram) => diagram.shown)
-            .map((diagram) => ({
-                key: diagram.key,
-                title: diagram.caption ?? diagramTitles[diagram.kind],
-                question: diagram.question,
-                legend: diagram.legend.map((each) => each.words),
-                text: diagram.text,
-            })),
     };
 };

@@ -1,11 +1,12 @@
 import { copy } from "../lib/copy";
 import { caseData } from "./data";
-import { type DiagramView, diagramView } from "./diagram-view";
+import { type DiagramView, viewOf, viewsOfCase, viewsOfSection } from "./diagram-view";
 import { type CountView, countOf, heading } from "./format";
 import { theCase } from "./loader";
 
-// What the Architecture and Choices pages show, read from the case: today's diagrams and data, the chosen architecture,
-// its alternatives, the request's stack lines, the open challenges and what changed since the person confirmed. The
+// What the Architecture and Choices pages show, read from the case: its views of today, of the chosen architecture and
+// of each option, the data of today, the request's stack lines, the open challenges and what changed since the person
+// confirmed. A page asks the case for the views of a section and draws whatever it finds; the
 // view follows the keys the case gives (an outside system's id, a journey's task, a domain's name) and never counts:
 // every number is a key of numbers.json.
 
@@ -16,11 +17,9 @@ type Architecture = {
     recommended: string | null;
     domains: { name: string; slug: string; concept: string; why: string }[];
     containers: { name: string; kind: string; tech: string; holds: string[]; does: string | null; runsOn: string | null; runsOnWords: string | null }[];
-    components: { name: string; domain: string; responsibility: string; adapts: string | null }[];
     integrations: { outside: string; name: string; domain: string; how: string }[];
     risks: { statement: string; summary: string; kind: string | null; cites: string[]; containedBy: string | null }[];
-    talks: { from: string; to: string; uses: number }[];
-    domainEdges: { from: string; to: string; uses: number }[];
+    domainEdges: { from: string; to: string }[];
     alternatives: {
         name: string;
         idea: string;
@@ -39,7 +38,6 @@ type Architecture = {
 type Brief = { changes: { stack: { line: string; layers: string[] }[] } | null };
 type Changed = { gate: string; state: string; since: { added: string[]; removed: string[]; changed: string[]; names?: Record<string, string> } | null };
 type Conflict = { stage: string; variant: string; says: string; resolved: boolean | null };
-type Outside = { id: string; kind: string; name: string };
 type Entity = { name: string; purpose: string };
 type TodayJourney = { id: string; title: string };
 type ProposedJourney = { task: string; name: string; strategy: string; idea: string; tradeoff: string; recommended: string | null; alternatives: { name: string; strategy: string; idea: string; tradeoff: string }[] };
@@ -79,10 +77,9 @@ export type Option = {
     cost: string;
     chosen: boolean;
     why: string | null;
-    /** The parts that run, the domains and where data lives, when the option's record keeps them. */
+    /** The parts that run and the domains, when the option's record keeps them. */
     parts: string[];
     domains: string[];
-    data: string[];
 };
 
 export type LandingView = {
@@ -93,11 +90,8 @@ export type LandingView = {
 };
 
 export type TodayView = {
-    organisation: DiagramView | null;
-    context: DiagramView | null;
-    data: DiagramView | null;
+    views: DiagramView[];
     entities: { name: string; line: string }[];
-    stores: string[];
 };
 
 export type ProposedView = {
@@ -105,13 +99,13 @@ export type ProposedView = {
     idea: string;
     why: string | null;
     facts: CountView[];
-    containers: { name: string; kind: string; does: string | null; runsOn: string | null; tech: string; holds: string[] }[];
-    domainsDiagram: DiagramView | null;
-    talksDiagram: DiagramView | null;
+    containers: { name: string; kind: string | null; does: string | null; runsOn: string | null; holds: string[] }[];
+    /** The views of the chosen architecture, in the case's order. */
+    views: DiagramView[];
+    /** Each option not chosen, drawn the way the chosen one is. */
+    variants: { name: string; views: DiagramView[] }[];
     domains: { name: string; concept: string; why: string; uses: string[]; usedBy: string[]; counts: string[] }[];
-    components: { name: string; domain: string; does: string }[];
     stack: { label: string; line: string; carriedBy: string[] }[];
-    outside: { name: string; kind: string | null; owner: string; how: string; through: string[] }[];
     risks: RiskItem[];
     questions: RiskItem[];
     landing: LandingView | null;
@@ -121,17 +115,11 @@ export type ProposedView = {
     since: Since | null;
 };
 
-/** Today: the organisation, the context and where data lives. */
-export const todayView = (): TodayView => {
-    const outside = read<Outside[]>("facts/outside.json") ?? [];
-    return {
-        organisation: diagramView("organisation/system", { title: copy.architecture.organisation }),
-        context: diagramView("context/system", { title: copy.architecture.context }),
-        data: diagramView("data/system", { title: copy.architecture.data }),
-        entities: (read<Entity[]>("facts/entities.json") ?? []).map((each) => ({ name: each.name, line: each.purpose })),
-        stores: outside.filter((each) => each.kind === "dataStore").map((each) => each.name),
-    };
-};
+/** Today: the views of the case for it, and the kinds of data it keeps. */
+export const todayView = (): TodayView => ({
+    views: viewsOfSection("today").map(viewOf),
+    entities: (read<Entity[]>("facts/entities.json") ?? []).map((each) => ({ name: each.name, line: each.purpose })),
+});
 
 const riskOf = (risk: Architecture["risks"][number]): RiskItem => ({
     title: risk.summary,
@@ -154,16 +142,17 @@ export const proposedView = async (): Promise<ProposedView | null> => {
     const architecture = read<Architecture>("architecture.json");
     if (architecture === null) return null;
     const brief = read<Brief>("brief.json");
-    const outside = new Map((read<Outside[]>("facts/outside.json") ?? []).map((each) => [each.id, each]));
     const facts = (await Promise.all(["architecture/domains", "architecture/containers", "architecture/components"].map(numberOf))).filter(
         (each): each is CountView => each !== null,
     );
-    const containerWords = (kind: string) => {
-        const words = copy.diagram.groupWords[kind];
-        if (words === undefined) throw new Error(`a part of the architecture is of a kind "${kind}" the app has no words for`);
-        return words;
-    };
-    const conflicts = (read<Conflict[]>("plan/conflicts.json") ?? []).filter((each) => each.stage === "architecture" && each.resolved !== true);
+    // What each part is, in the case's words: the kind of its box in the view that draws it.
+    const kindOf = new Map(
+        (viewsOfCase().find((view) => view.section === "target.deployment")?.nodes ?? []).map((node) => [node.label, node.kindWords]),
+    );
+    // A challenge about an option the person did not choose says nothing about the design they did.
+    const conflicts = (read<Conflict[]>("plan/conflicts.json") ?? []).filter(
+        (each) => each.stage === "architecture" && each.resolved !== true && each.variant === architecture.name,
+    );
     const data = await caseData();
     const valueOf = (key: string) => data.number(key);
     const served = valueOf("architecture/score/steps-served");
@@ -201,10 +190,6 @@ export const proposedView = async (): Promise<ProposedView | null> => {
     })();
     const unplacedNumber = valueOf("architecture/unplaced");
     const ruleSays = (id: string) => (data.fact("rules", id)?.says as string | undefined) ?? "";
-    const storeNames = (containers: readonly { name: string; kind: string }[], integrations: readonly { outside: string; name: string }[]) => [
-        ...containers.filter((each) => each.kind === "store").map((each) => each.name),
-        ...integrations.filter((each) => outside.get(each.outside)?.kind === "dataStore").map((each) => each.name),
-    ];
     return {
         name: architecture.name,
         idea: architecture.idea,
@@ -212,14 +197,16 @@ export const proposedView = async (): Promise<ProposedView | null> => {
         facts: [...facts, ...score],
         containers: architecture.containers.map((each) => ({
             name: each.name,
-            kind: containerWords(each.kind),
+            kind: kindOf.get(each.name) ?? null,
             does: each.does,
             runsOn: each.runsOnWords ?? each.runsOn,
-            tech: stackLineOf(each.tech).line,
             holds: each.holds,
         })),
-        domainsDiagram: diagramView("organisation/target", { title: copy.architecture.domains }),
-        talksDiagram: diagramView("context/target", { title: copy.architecture.parts }),
+        views: viewsOfSection("target").map(viewOf),
+        variants: architecture.alternatives.map((each, at) => ({
+            name: each.name,
+            views: viewsOfSection(`variant.${at + 1}`).map(viewOf),
+        })),
         domains: architecture.domains.map((domain) => ({
             name: domain.name,
             concept: domain.concept,
@@ -231,18 +218,7 @@ export const proposedView = async (): Promise<ProposedView | null> => {
             uses: architecture.domainEdges.filter((edge) => edge.from === domain.name).map((edge) => edge.to),
             usedBy: architecture.domainEdges.filter((edge) => edge.to === domain.name).map((edge) => edge.from),
         })),
-        components: architecture.components.map((each) => ({ name: each.name, domain: each.domain, does: each.responsibility })),
         stack: (brief?.changes?.stack ?? []).map((each) => ({ ...stackLineOf(each.line), carriedBy: each.layers })),
-        outside: architecture.integrations.map((each) => {
-            const kind = outside.get(each.outside)?.kind;
-            return {
-                name: each.name,
-                kind: kind === undefined ? null : (copy.architecture.outsideKinds[kind] ?? null),
-                owner: each.domain,
-                how: each.how,
-                through: architecture.components.filter((component) => component.adapts === each.outside).map((component) => component.name),
-            };
-        }),
         risks: architecture.risks.filter((risk) => risk.kind !== "question").map(riskOf),
         questions: architecture.risks.filter((risk) => risk.kind === "question").map(riskOf),
         landing,
@@ -254,17 +230,14 @@ export const proposedView = async (): Promise<ProposedView | null> => {
                       scope: unplacedNumber.scope,
                       rules: architecture.unplaced.map((each) => ({ says: ruleSays(each.rule), reason: each.reason })).filter((each) => each.says !== ""),
                   },
-        options: optionsOf(architecture, storeNames),
+        options: optionsOf(architecture),
         challenges: conflicts.map((each) => ({ says: each.says, other: each.variant === architecture.name ? null : each.variant })),
         since: joined(sinceOf("architecture", (key) => key), sinceOf("components", (key) => key)),
     };
 };
 
 /** The chosen architecture first, then each option not chosen, with what each record keeps of its parts. */
-const optionsOf = (
-    architecture: Architecture,
-    stores: (containers: readonly { name: string; kind: string }[], integrations: readonly { outside: string; name: string }[]) => string[],
-): Option[] => [
+const optionsOf = (architecture: Architecture): Option[] => [
     {
         name: architecture.name,
         idea: architecture.idea,
@@ -273,7 +246,6 @@ const optionsOf = (
         why: architecture.recommended,
         parts: architecture.containers.map((each) => each.name),
         domains: architecture.domains.map((each) => each.name),
-        data: stores(architecture.containers, architecture.integrations),
     },
     ...architecture.alternatives.map((each) => ({
         name: each.name,
@@ -283,7 +255,6 @@ const optionsOf = (
         why: null,
         parts: each.containers.map((container) => container.name),
         domains: each.domains.map((domain) => domain.name),
-        data: stores(each.containers, each.integrations),
     })),
 ];
 
@@ -331,7 +302,7 @@ export const choicesView = async (): Promise<ChoicesView | null> => {
             }),
         },
         architecture: {
-            options: architecture === null ? [] : optionsOf(architecture, () => []),
+            options: architecture === null ? [] : optionsOf(architecture),
             since: sinceOf("architecture", (key) => key),
         },
         components: {

@@ -2,32 +2,31 @@
 import Page from "../layouts/Page.astro";
 import Diagram from "../components/diagram/Diagram.astro";
 import { Section } from "../components/Explorer";
-import { Challenges, Components, Containers, Domains, Landing, Options, OutsideTable, ProposedHead, Risks, SinceFold, Stack, Sub, TodayData, Unplaced } from "../components/Architecture";
+import { Challenges, Containers, Domains, Landing, Options, ProposedHead, Risks, SinceFold, Stack, Sub, TodayData, Unplaced } from "../components/Architecture";
 import { proposedView, todayView } from "../case/architecture-view";
 import { siteOf } from "../case/site";
 import { copy } from "../lib/copy";
-// The Architecture page: today (how the code is organised, what it connects to, where its data lives) and, when the
-// case holds a target, the proposal (the parts that run, the domains and what they use, what it is built with, the
-// outside systems, the risks it accepts and its open questions), the options considered side by side, the challenges
-// still open and what changed since the person confirmed. A system with no target shows today only. The page exists
-// only when the Architecture section does (src/case/sections.ts), as a dynamic route with no path otherwise.
+// The Architecture page: the case's views of today (what the system does, what it is made of, how its code is layered,
+// what it reaches, which data it keeps) and, when the case holds a target, the proposal (its views, the parts that run,
+// the domains, what it is built with, the risks it accepts and its open questions), the options considered side by
+// side and each drawn the same way, the challenges still open and what changed since the person confirmed. The page
+// asks the case for the views of a section and draws whatever it finds. A system with no target shows today only. The
+// page exists only when the Architecture section does (src/case/sections.ts), as a dynamic route with no path otherwise.
 export const getStaticPaths = async () =>
     (await siteOf()).nav.some((section) => section.id === "architecture") ? [{ params: { architecture: "architecture" } }] : [];
 const words = copy.architecture;
 const today = todayView();
 const proposed = await proposedView();
-const hasToday = today.organisation !== null || today.context !== null || today.data !== null || today.entities.length > 0 || today.stores.length > 0;
+const hasToday = today.views.length > 0 || today.entities.length > 0;
 ---
-<Page wide title={words.title} lead={proposed === null ? words.leadToday : words.lead} page="architecture.html">
+<Page wide drawer title={words.title} lead={proposed === null ? words.leadToday : words.lead} page="architecture.html">
     <div class="flex flex-col gap-spacing-5xl">
         {hasToday ? (
             <div id="today">
                 <Section title={words.today} writtenBy="app">
                     <p class="text-muted-foreground" data-written-by="app">{words.todayLead}</p>
                     <div class="flex flex-col gap-spacing-4xl">
-                        {today.organisation === null ? null : <Diagram diagram={today.organisation} />}
-                        {today.context === null ? null : <Diagram diagram={today.context} />}
-                        {today.data === null ? null : <Diagram diagram={today.data} />}
+                        {today.views.map((view) => <Diagram diagram={view} />)}
                         <TodayData today={today} />
                     </div>
                 </Section>
@@ -44,13 +43,11 @@ const hasToday = today.organisation !== null || today.context !== null || today.
                                 <Containers view={proposed} />
                             </Sub>
                         )}
-                        {proposed.talksDiagram === null ? null : <Diagram diagram={proposed.talksDiagram} />}
-                        {proposed.domainsDiagram === null ? null : <Diagram diagram={proposed.domainsDiagram} />}
+                        {proposed.views.map((view) => <Diagram diagram={view} />)}
                         {proposed.domains.length === 0 ? null : (
-                            <div class="flex flex-col gap-spacing-md">
-                                {proposed.domainsDiagram === null ? <Sub listed title={words.domains} lead={words.domainsLead}><Domains view={proposed} /></Sub> : <><p class="text-muted-foreground" data-written-by="app">{words.domainsLead}</p><Domains view={proposed} /></>}
-                                <Components view={proposed} />
-                            </div>
+                            <Sub listed title={words.domains} lead={words.domainsLead}>
+                                <Domains view={proposed} />
+                            </Sub>
                         )}
                         {proposed.landing === null ? null : (
                             <Sub listed title={words.landing} lead={words.landingLead}>
@@ -61,11 +58,6 @@ const hasToday = today.organisation !== null || today.context !== null || today.
                         {proposed.stack.length === 0 ? null : (
                             <Sub listed title={words.stack} lead={words.stackLead}>
                                 <Stack view={proposed} />
-                            </Sub>
-                        )}
-                        {proposed.outside.length === 0 ? null : (
-                            <Sub listed title={words.outside} lead={words.outsideLead}>
-                                <OutsideTable view={proposed} />
                             </Sub>
                         )}
                         {proposed.risks.length === 0 ? null : (
@@ -87,6 +79,17 @@ const hasToday = today.organisation !== null || today.context !== null || today.
                 <Section title={words.options} writtenBy="app">
                     <p class="text-muted-foreground" data-written-by="app">{words.optionsLead}</p>
                     <Options options={proposed.options} />
+                    {proposed.variants.every((each) => each.views.length === 0) ? null : (
+                        <div class="mt-spacing-4xl flex flex-col gap-spacing-4xl">
+                            <p class="text-muted-foreground" data-written-by="app">{words.variantsLead}</p>
+                            {proposed.variants.filter((each) => each.views.length > 0).map((variant) => (
+                                <div class="flex flex-col gap-spacing-xl">
+                                    <h3 class="text-sm font-semibold" data-written-by="agent">{variant.name}</h3>
+                                    {variant.views.map((view) => <Diagram diagram={view} level="h4" />)}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </Section>
             </div>
         )}

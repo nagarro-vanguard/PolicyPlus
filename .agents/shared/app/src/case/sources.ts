@@ -8,7 +8,7 @@ import { caseFiles, Node } from "../../compose/contract";
 // collections from this list; the loader's checks read the same list.
 
 /** The case's files outside `facts/` and `nodes/` that the pages read, by collection name. */
-const pageFiles = { numbers: "numbers.json", diagrams: "diagrams.json", search: "search.json", brief: "brief.json" };
+const pageFiles = { numbers: "numbers.json", views: "views.json", search: "search.json", brief: "brief.json" };
 
 /** The fields that key a record, in the order they are tried. */
 const keyFields = ["key", "id", "node", "term", "entity"];

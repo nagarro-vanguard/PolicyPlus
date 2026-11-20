@@ -29,10 +29,9 @@ const DataUseRow = Schema.Struct({
 });
 const FigureRow = Schema.Struct({
     id: Text,
-    kind: Schema.Literals(["parts", "integration", "states", "data", "layers", "other"]),
+    kind: Schema.Literals(["parts", "integration", "states", "data", "layers"]),
     question: Text,
     caption: Text,
-    wanted: Text,
     records: Schema.fromJsonString(Schema.Array(Text)),
 });
 
@@ -149,7 +148,7 @@ const figuresOf = Effect.fnUntraced(function* (store: RecordStore["Service"]) {
         store,
         FigureRow,
         (sql) => sql`SELECT id, json_extract(body, '$.kind') AS kind, json_extract(body, '$.question') AS question,
-                json_extract(body, '$.caption') AS caption, coalesce(json_extract(body, '$.wanted'), '') AS wanted,
+                json_extract(body, '$.caption') AS caption,
                 json_extract(body, '$.records') AS records
             FROM record WHERE type = 'Figure' ORDER BY recordNumber`,
     );

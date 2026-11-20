@@ -136,12 +136,11 @@ export const KnowledgePayload = Schema.Struct({
     figures: Schema.Array(
         Schema.Struct({
             id: Schema.String.annotate(about("The figure's record id.")),
-            kind: Schema.Literals(["parts", "integration", "states", "data", "layers", "other"]).annotate(
-                about("The shape of the picture; `other` is wanted and not drawn."),
+            kind: Schema.Literals(["parts", "integration", "states", "data", "layers"]).annotate(
+                about("The family of facts the picture draws."),
             ),
             question: Text.annotate(about("The question the picture answers.")),
             caption: Text.annotate(about("What to take from it.")),
-            wanted: Schema.String.annotate(about("For `other`: what picture is wanted; empty for the rest.")),
             records: Schema.Array(Schema.String).annotate(
                 about("The record ids to draw; empty draws everything of that shape."),
             ),

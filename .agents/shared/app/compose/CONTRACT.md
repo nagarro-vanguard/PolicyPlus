@@ -83,9 +83,21 @@ Every count the app shows is here once: `{ key, value, noun, scope, source, part
 
 The system's name and purpose; the person's Goals verbatim from `request.json`, or `provided: false` (the app says "Not provided"); what changes: each stack line of the request with the layers that carry it, the containers in plain words, and how they talk; the risks ranked by a stated rule (severity, then how many capabilities and parts a risk names, then its words) with the top five; the plan's structure as number keys and the phases' names.
 
-### `diagrams.json`
+### `views.json`
 
-One record per diagram whose facts exist: `organisation` (layers, or the target's domains), `context` (the system and what it reaches, or the target's containers), `navigation` (the analysis's leads-to links between places), `data` (capabilities and the data they read or save; one per lifecycle for states), `flow` (per capability, the layers its work passes through), `compare` (per chosen journey, today's steps against the new ones). Each has nodes, edges with a kind and a count, a `legend` of the edge kinds in plain words, a `text` version with one line per edge, `shown` (at least two nodes and one edge), and a `caption` and `question` taken from the analysis's Figure choice for that kind when one exists, null otherwise.
+An ordered list of views, each a picture a reader can ask for: `{ key, section, viewpoint, title, caption, nodes, groups, edges, legend, text, shown }`. `section` is where it sits (`today.<viewpoint>`, `target.<viewpoint>`, `variant.<n>.<viewpoint>`) and `viewpoint` one of functional, information, system, integration, deployment, decisions, layers. `title` is the question the view answers: the briefing's own question for a picture it asked for, a default otherwise. A node is a record of the case: `{ id, label, kind (a drawing style), kindWords, group, sentence }`; `groups` are the frames, named by the record or place that frames them; an `edge` is `{ from, to, relation }` with a `legend` of the relations in plain words and a `text` line for each. The producer owns every word (`build/vocabulary.ts`); a stored value it has no words for fails the build. Today's views come from the analysis (what the system does, what it is made of, how the code is layered, what it reaches, which data it keeps and how that changes); the new system's from the chosen architecture and, for each option not chosen, from its own record. `shown` is at least two boxes and one line (or two frames).
+
+#### Principles of a view
+
+1. A view answers one question a reader asks; its title is that question. A catalogue is a table, not a view.
+2. Boxes are records of the case; a missing fact is said, never drawn.
+3. A frame is a boundary (a layer group, a domain, a kind of outside system, the place a part runs); lines say a relation in plain words.
+4. A line is worked out here from facts that hold between the boxes; an agent never writes one.
+5. No number is on a line, in a text line or in a table cell; counts live in `numbers.json`.
+6. A picture is as large as its facts; what does not fit is a matrix, not a tangle.
+7. Every view has a text version saying every line.
+8. An option not chosen is drawn the way the chosen one is.
+9. The same facts give the same view.
 
 ### `evidence.json`, `search.json`, `assistant/`
 

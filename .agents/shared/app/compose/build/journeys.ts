@@ -53,6 +53,8 @@ export type ProposedJourney = {
     steps: ProposedStep[];
     drops: { actions: string[]; rules: string[]; reason: string }[];
     dropped: string[];
+    /** Each step of today beside the steps of this way that do its work (they share an action). */
+    pairs: { today: number; proposed: number }[];
     /** True when a step is anything but kept as it is today, or the journey leaves something out. */
     hasChanges: boolean;
     alternatives: { name: string; strategy: string; idea: string; tradeoff: string }[];
@@ -114,6 +116,7 @@ export const todayOf = (payloads: Payloads, target: Target | undefined, facts: F
  */
 export const proposedOf = (target: Target, today: readonly TodayJourney[]): ProposedJourney[] => {
     const slugOf = new Map(today.map((journey) => [journey.id, journey.slug]));
+    const todayOf = new Map(today.map((journey) => [journey.id, journey]));
     const chosen = (pick: Target["picks"][number]): TargetJourney | undefined =>
         target.journeys.find((journey) =>
             pick.id !== undefined ? journey.id === pick.id : journey.task === pick.of && journey.name === pick.variant,
@@ -157,6 +160,11 @@ export const proposedOf = (target: Target, today: readonly TodayJourney[]): Prop
                     reason: drop.reason,
                 })),
                 dropped,
+                pairs: journey.steps.flatMap((step, number) =>
+                    (todayOf.get(journey.task)?.steps ?? [])
+                        .filter((old) => old.from.some((action) => step.link._tag === "legacy" && step.link.from.includes(action)))
+                        .map((old) => ({ today: old.number, proposed: number + 1 })),
+                ),
                 hasChanges:
                     journey.drops.length > 0 ||
                     journey.steps.some((step) => step.link._tag !== "legacy" || step.link.change !== "kept"),
@@ -213,17 +221,25 @@ export type ArchitectureView = {
     components: Component[];
     integrations: { outside: string; name: string; domain: string; how: string }[];
     risks: { statement: string; summary: string; kind: string | null; cites: string[]; containedBy: string | null }[];
-    /** How the containers talk: for each pair, how many component uses cross it. */
-    talks: { from: string; to: string; uses: number }[];
-    /** Uses between components of two domains, each pair counted once per use. */
-    domainEdges: { from: string; to: string; uses: number }[];
+    /** How the containers talk: each pair of parts some component use crosses. */
+    talks: { from: string; to: string }[];
+    /** Each pair of domains one of whose components uses a component of the other. */
+    domainEdges: { from: string; to: string }[];
     alternatives: {
         name: string;
         idea: string;
         tradeoff: string;
         score: Score | null;
         /** The option's own parts that run, domains and outside systems, when its record keeps them. */
-        containers: { name: string; kind: string; tech: string | null; holds: string[] }[];
+        containers: {
+            name: string;
+            kind: string;
+            tech: string | null;
+            holds: string[];
+            does: string | null;
+            runsOn: string | null;
+            runsOnWords: string | null;
+        }[];
         domains: { name: string; concept: string | null }[];
         integrations: { outside: string; name: string; domain: string; how: string }[];
     }[];
@@ -310,8 +326,8 @@ export const architectureOf = (
             (each) => each.name,
         )[0]?.name ??
         "";
-    const talks = new Map<string, number>();
-    const domainEdges = new Map<string, number>();
+    const talks = new Set<string>();
+    const domainEdges = new Set<string>();
     for (const component of components) {
         for (const used of component.uses) {
             const other = byName.get(used);
@@ -322,20 +338,20 @@ export const architectureOf = (
                 );
             if (other.domain !== component.domain) {
                 const key = `${component.domain}\u0000${other.domain}`;
-                domainEdges.set(key, (domainEdges.get(key) ?? 0) + 1);
+                domainEdges.add(key);
             }
             const from = runner(component.domain);
             const to = runner(other.domain);
             if (from !== to && from !== "" && to !== "")
-                talks.set(`${from}\u0000${to}`, (talks.get(`${from}\u0000${to}`) ?? 0) + 1);
+                talks.add(`${from}\u0000${to}`);
         }
     }
-    const pairs = (map: Map<string, number>) =>
-        [...map]
-            .sort(([one], [other]) => compareText(one, other))
-            .map(([key, uses]) => {
+    const pairs = (set: Set<string>) =>
+        [...set]
+            .sort((one, other) => compareText(one, other))
+            .map((key) => {
                 const [from = "", to = ""] = key.split("\u0000");
-                return { from, to, uses };
+                return { from, to };
             });
     const outsideName = new Map(facts.outside.map((each) => [each.id, each.name]));
     return {
@@ -406,6 +422,9 @@ export const architectureOf = (
                 kind: container.kind,
                 tech: container.tech ?? null,
                 holds: [...(container.holds ?? [])],
+                does: container.does ?? null,
+                runsOn: container.runsOn ?? null,
+                runsOnWords: container.runsOn === undefined ? null : (target.runsOn.get(container.runsOn) ?? null),
             })),
             domains: (each.domains ?? []).map((domain) => ({ name: domain.name, concept: domain.concept ?? null })),
             integrations: (each.integrations ?? []).map((integration) => ({

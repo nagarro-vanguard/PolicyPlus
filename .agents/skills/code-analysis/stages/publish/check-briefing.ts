@@ -217,8 +217,7 @@ export function systemWordsGaps(records: readonly Finding[], brief: string): str
 const hasDigit = (text: string) => [...text].some((char) => char >= "0" && char <= "9");
 
 /**
- * The figures gate: a figure's shape is on the brief's menu (or is `other`, which draws nothing and says what is wanted),
- * it names only records its menu line offers, and its caption states no count.
+ * The figures gate: a figure names only records the menu line of its family offers, and its caption states no count.
  * @param records the briefing's records
  * @param menu the record ids each shape of picture can draw
  * @returns one line per gap
@@ -226,29 +225,11 @@ const hasDigit = (text: string) => [...text].some((char) => char >= "0" && char 
  */
 export function figureGaps(records: readonly Finding[], menu: ReadonlyMap<string, readonly string[]>): string[] {
     return ofType(records, RecordIdPrefix.Figure, Figure).flatMap((figure) => {
-        const offered = menu.get(figure.kind);
+        const offered = menu.get(figure.kind) ?? [];
         return [
-            ...(figure.kind === "other"
-                ? [
-                      ...(figure.records.length > 0 ? [`${figure.id} is \`other\`: it names no records`] : []),
-                      ...(figure.wanted === undefined
-                          ? [`${figure.id} is \`other\`: say what picture is wanted in \`wanted\``]
-                          : []),
-                  ]
-                : [
-                      ...(offered === undefined
-                          ? [
-                                `${figure.id} is a ${figure.kind} picture the menu does not offer: the records cannot draw it`,
-                            ]
-                          : []),
-                      ...(figure.wanted === undefined ? [] : [`${figure.id} has \`wanted\`, which only \`other\` has`]),
-                      ...figure.records
-                          .filter((id) => offered !== undefined && !offered.includes(id))
-                          .map(
-                              (id) =>
-                                  `${figure.id} names ${id}, which the ${figure.kind} line of the menu does not offer`,
-                          ),
-                  ]),
+            ...figure.records
+                .filter((id) => !offered.includes(id))
+                .map((id) => `${figure.id} names ${id}, which the ${figure.kind} line of the menu does not offer`),
             ...(hasDigit(figure.caption)
                 ? [`${figure.id}: the caption states a count or a number; the page counts, so say it in words`]
                 : []),

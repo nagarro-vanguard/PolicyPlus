@@ -6,13 +6,22 @@ import { loadScript } from "../../scripts/load";
 // comes into view. The layout engine (ELK, about 1.5 MB) runs in a worker made from a `blob:` address, off the page's
 // thread; its source is the classic script `_astro/elk-layout.js` the offline packager writes (scripts/package/), read
 // once per page, so it works from `file://` too. One grammar for every kind: boxes with their full names (wrapped, never cut), lines
-// with arrowheads from one box to another, a line's style for its kind, groups drawn as labelled boundaries, a number on
-// a line when it stands for more than one link. Text keeps the diagram tokens' size; a drawing larger than its frame
+// with arrowheads from one box to another, a line's style for its kind, groups drawn as labelled boundaries, no number on a line. Text keeps the diagram tokens' size; a drawing larger than its frame
 // scrolls inside it and is never scaled down. Selecting a box (click, Enter or Space) brightens what it reaches and what
-// reaches it, and says so in words below the drawing. Escape clears the selection.
+// reaches it, says so in words below the drawing and opens what the box is and says in the page's detail drawer (when the
+// page has one). Escape clears the selection.
 
-export type GraphNode = { id: string; label: string; group: string | null; tone: "box" | "store" | "outside" | "system" };
-export type GraphEdge = { from: string; to: string; style: number; count: number };
+export type GraphNode = {
+    id: string;
+    label: string;
+    group: string | null;
+    tone: "box" | "store" | "outside" | "system";
+    /** What the box is, in the case's words. */
+    kindWords: string;
+    /** What the record behind the box says about itself. */
+    sentence: string | null;
+};
+export type GraphEdge = { from: string; to: string; style: number };
 export type GraphWords = {
     drawing: string;
     loading: string;
@@ -28,7 +37,6 @@ export type GraphProps = {
     nodes: readonly GraphNode[];
     groups: readonly { id: string; words: string }[];
     edges: readonly GraphEdge[];
-    counts: boolean;
     words: GraphWords;
 };
 
@@ -37,7 +45,7 @@ export const dashes = ["", "7 4", "2 3", "10 3 2 3", "1 4", "12 5", "4 2 1 2 1 2
 
 type Box = { id: string; x: number; y: number; width: number; height: number; lines: string[] };
 type Frame = { id: string; words: string; x: number; y: number; width: number; height: number };
-type Line = { key: string; from: string; to: string; style: number; count: number; path: string; labelAt: { x: number; y: number } | null };
+type Line = { key: string; from: string; to: string; style: number; path: string };
 type Layout = { width: number; height: number; boxes: Box[]; frames: Frame[]; lines: Line[]; lineHeight: number; padX: number; padY: number };
 
 type ElkPoint = { x: number; y: number };
@@ -48,7 +56,7 @@ type ElkNode = {
     width?: number;
     height?: number;
     children?: ElkNode[];
-    edges?: { id: string; sections?: { startPoint: ElkPoint; endPoint: ElkPoint; bendPoints?: ElkPoint[] }[]; labels?: { x?: number; y?: number; width: number; height: number }[] }[];
+    edges?: { id: string; sections?: { startPoint: ElkPoint; endPoint: ElkPoint; bendPoints?: ElkPoint[] }[] }[];
 };
 
 const maxText = 208;
@@ -129,9 +137,6 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
             id: `edge:${at}`,
             sources: [edge.from],
             targets: [edge.to],
-            ...(props.counts && edge.count > 1
-                ? { labels: [{ text: String(edge.count), width: Math.ceil(measure(String(edge.count))) + 8, height: lineHeight }] }
-                : {}),
         }));
     const outs = new Map<string, number>();
     for (const edge of edges) outs.set(edge.sources[0] ?? "", (outs.get(edge.sources[0] ?? "") ?? 0) + 1);
@@ -148,8 +153,6 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
             "elk.spacing.nodeNode": "20",
             "elk.spacing.edgeNode": "14",
             "elk.spacing.edgeEdge": "8",
-            "elk.spacing.edgeLabel": "4",
-            "elk.edgeLabels.placement": "CENTER",
             "elk.layered.considerModelOrder.strategy": "NODES_AND_EDGES",
             "elk.padding": "[top=16,left=16,bottom=16,right=16]",
             "elk.json.shapeCoords": "ROOT",
@@ -178,16 +181,13 @@ const layoutOf = async (props: GraphProps, font: { size: number; family: string 
         const section = edge.sections?.[0];
         if (source === undefined || section === undefined) return [];
         const points = [section.startPoint, ...(section.bendPoints ?? []), section.endPoint];
-        const label = edge.labels?.[0];
         return [
             {
                 key: edge.id,
                 from: source.from,
                 to: source.to,
                 style: source.style,
-                count: source.count,
                 path: points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" "),
-                labelAt: label === undefined ? null : { x: (label.x ?? 0) + label.width / 2, y: (label.y ?? 0) + label.height / 2 },
             },
         ];
     });
@@ -244,7 +244,13 @@ export function DiagramCanvas(props: GraphProps) {
         const reachedFrom = props.edges.filter((edge) => edge.to === selected).map((edge) => edge.from);
         return { reaches, reachedFrom, all: new Set([selected, ...reaches, ...reachedFrom]) };
     }, [selected, props.edges]);
-    const toggle = (node: string) => setSelected((was) => (was === node ? null : node));
+    const toggle = (node: string) => {
+        const now = selected === node ? null : node;
+        setSelected(now);
+        const box = now === null ? undefined : props.nodes.find((each) => each.id === now);
+        // The page's drawer, when it has one, says what the box is and what its record says (when the record says anything).
+        if (box !== undefined && box.sentence !== null) window.dispatchEvent(new CustomEvent("view:note", { detail: { noun: box.kindWords, title: box.label, body: box.sentence } }));
+    };
     const onKey = (node: string) => (event: KeyboardEvent) => {
         if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
@@ -302,14 +308,6 @@ export function DiagramCanvas(props: GraphProps) {
                     return (
                         <g key={line.key} data-state={state}>
                             <path d={line.path} fill="none" strokeWidth={state === "uses" || state === "usedby" ? 2 : 1.25} strokeDasharray={dashes[line.style] ?? ""} className={stroke[state]} markerEnd={`url(#${id}-${state})`} />
-                            {line.labelAt === null ? null : (
-                                <g>
-                                    <rect x={line.labelAt.x - (String(line.count).length * 4 + 5)} y={line.labelAt.y - layout.lineHeight / 2} width={String(line.count).length * 8 + 10} height={layout.lineHeight} rx="4" className="fill-(--diagram-halo)" />
-                                    <text x={line.labelAt.x} y={line.labelAt.y} textAnchor="middle" dominantBaseline="central" className={`text-(length:--diagram-text-small) tabular-nums ${state === "dim" ? "fill-(--diagram-dimmed)" : "fill-(--diagram-box-text)"}`}>
-                                        {line.count}
-                                    </text>
-                                </g>
-                            )}
                         </g>
                     );
                 })}

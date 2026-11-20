@@ -66,7 +66,7 @@ export function NoMatch() {
     );
 }
 
-/** Today's data: what the system keeps, and where. */
+/** Today's data: what the system keeps. */
 export function TodayData({ today }: { readonly today: TodayView }) {
     return (
         <>
@@ -88,17 +88,6 @@ export function TodayData({ today }: { readonly today: TodayView }) {
                         ))}
                         <NoMatch />
                     </div>
-                </Sub>
-            )}
-            {today.stores.length === 0 ? null : (
-                <Sub title={words.stores} listed>
-                    <ul className="flex list-disc flex-col gap-spacing-2xs ps-spacing-4xl">
-                        {today.stores.map((each) => (
-                            <li key={each} data-written-by="agent">
-                                {each}
-                            </li>
-                        ))}
-                    </ul>
                 </Sub>
             )}
         </>
@@ -127,7 +116,7 @@ export function ProposedHead({ view }: { readonly view: ProposedView }) {
     );
 }
 
-/** The parts that run: each with its kind, what it does and where it runs when the case says, and what it is built with. */
+/** The parts that run: each with its kind, what it does and where it runs when the case says, and the domains it holds. */
 export function Containers({ view }: { readonly view: ProposedView }) {
     return (
         <div className="flex flex-col gap-spacing-md">
@@ -135,16 +124,20 @@ export function Containers({ view }: { readonly view: ProposedView }) {
                 <Item key={each.name} variant="outline" size="sm" className="items-start">
                     <ItemContent className="min-w-0 gap-spacing-xs">
                         <ItemTitle className="line-clamp-none" data-written-by="agent">
-                            {each.name}{" "}
-                            <Badge variant="secondary" data-written-by="app">
-                                {each.kind}
-                            </Badge>
+                            {each.name}
+                            {each.kind === null ? null : (
+                                <>
+                                    {" "}
+                                    <Badge variant="secondary" data-written-by="agent">
+                                        {each.kind}
+                                    </Badge>
+                                </>
+                            )}
                         </ItemTitle>
                         <div className="flex flex-col gap-spacing-2xs text-sm">
                             {each.does === null ? null : <Pair label={words.does}>{each.does}</Pair>}
                             {each.runsOn === null ? null : <Pair label={words.runsOn}>{each.runsOn}</Pair>}
                             <Pair label={words.holds}>{each.holds.join(", ")}</Pair>
-                            <Pair label={words.builtWith}>{each.tech}</Pair>
                         </div>
                     </ItemContent>
                 </Item>
@@ -176,45 +169,6 @@ export function Domains({ view }: { readonly view: ProposedView }) {
     );
 }
 
-/** Every component, one table with a filter, under one fold. */
-export function Components({ view }: { readonly view: ProposedView }) {
-    if (view.components.length === 0) return null;
-    return (
-        <Fold summary={words.components}>
-            <div className="flex flex-col gap-spacing-md">
-                {view.components.length > 15 ? <Filter label={words.componentsFilter} target="components" /> : null}
-                <div id="components">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead data-written-by="app">{words.component}</TableHead>
-                                <TableHead data-written-by="app">{words.domain}</TableHead>
-                                <TableHead data-written-by="app">{words.componentDoes}</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {view.components.map((each) => (
-                                <TableRow key={each.name} data-filter-row>
-                                    <TableCell className="align-top font-medium whitespace-normal" data-written-by="agent">
-                                        {each.name}
-                                    </TableCell>
-                                    <TableCell className="align-top whitespace-normal" data-written-by="agent">
-                                        {each.domain}
-                                    </TableCell>
-                                    <TableCell className="min-w-64 align-top whitespace-normal" data-written-by="agent">
-                                        {each.does}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                    <NoMatch />
-                </div>
-            </div>
-        </Fold>
-    );
-}
-
 /** The target stack: each line of the request, what it is for and the parts of the new code that carry it. */
 export function Stack({ view }: { readonly view: ProposedView }) {
     return (
@@ -239,50 +193,6 @@ export function Stack({ view }: { readonly view: ProposedView }) {
                 </Item>
             ))}
         </div>
-    );
-}
-
-/** The outside systems the new system reaches: what each is, which domain owns the contact, how and through what. */
-export function OutsideTable({ view }: { readonly view: ProposedView }) {
-    const through = view.outside.some((each) => each.through.length > 0);
-    return (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead data-written-by="app">{words.outsideName}</TableHead>
-                    <TableHead data-written-by="app">{words.owner}</TableHead>
-                    <TableHead data-written-by="app">{words.how}</TableHead>
-                    {through ? <TableHead data-written-by="app">{words.through}</TableHead> : null}
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {view.outside.map((each) => (
-                    <TableRow key={each.name}>
-                        <TableCell className="min-w-40 align-top whitespace-normal">
-                            <span className="font-medium" data-written-by="agent">
-                                {each.name}
-                            </span>
-                            {each.kind === null ? null : (
-                                <span className="block text-muted-foreground" data-written-by="app">
-                                    {each.kind}
-                                </span>
-                            )}
-                        </TableCell>
-                        <TableCell className="align-top whitespace-normal" data-written-by="agent">
-                            {each.owner}
-                        </TableCell>
-                        <TableCell className="min-w-64 align-top whitespace-normal" data-written-by="agent">
-                            {each.how}
-                        </TableCell>
-                        {through ? (
-                            <TableCell className="align-top whitespace-normal" data-written-by="agent">
-                                {each.through.join(", ")}
-                            </TableCell>
-                        ) : null}
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
     );
 }
 
@@ -414,7 +324,6 @@ export function Options({ options }: { readonly options: readonly Option[] }) {
         { label: words.cost, cell: (option) => <span data-written-by="agent">{option.cost}</span> },
         { label: words.partsRow, cell: (option) => <Listed names={option.parts} /> },
         { label: words.domainsRow, cell: (option) => <Listed names={option.domains} /> },
-        { label: words.dataRow, cell: (option) => <Listed names={option.data} /> },
         {
             label: words.whyChosen,
             cell: (option) =>
