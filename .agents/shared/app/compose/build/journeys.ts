@@ -195,6 +195,8 @@ export type Component = {
 };
 
 export type ArchitectureView = {
+    /** Whether the person confirmed it with its components; otherwise it is the recommended variant, proposed. */
+    confirmed: boolean;
     name: string;
     idea: string;
     tradeoff: string;
@@ -293,15 +295,16 @@ const namedIn = (text: string, names: readonly string[]) =>
  * @param target the target
  * @param facts the facts, for the outside systems' names
  * @param slugs the address parts
- * @returns the architecture
+ * @returns the architecture, or nothing when the target has none yet
  */
 export const architectureOf = (
     target: Target,
     facts: Facts,
     slugs: Slugs,
     journeys: readonly ProposedJourney[] = [],
-): ArchitectureView => {
+): ArchitectureView | undefined => {
     const architecture = target.architecture;
+    if (architecture === undefined) return undefined;
     const components: Component[] = sortByText(architecture.components ?? [], (each) => each.name).map((each) => ({
         name: each.name,
         domain: each.domain,
@@ -355,6 +358,7 @@ export const architectureOf = (
             });
     const outsideName = new Map(facts.outside.map((each) => [each.id, each.name]));
     return {
+        confirmed: target.architectureConfirmed,
         name: architecture.name,
         idea: architecture.idea,
         tradeoff: architecture.tradeoff,

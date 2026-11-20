@@ -28,13 +28,13 @@ Driving a stage: `S next --limit 4` prints one action as JSON.
 - `done`: the stage's jobs are all decided; run `finish`.
 - `stop`: a job was refused; show its message to the person and stop.
 
-A job runs write, gate, review (for those that have one) and at most one fix; a challenge that survives stays disputed. `finish` writes the disputes of a stage to `.shape-target/work/records/disputes-<stage>.json`, a list of `{ job, record, variant, says }` where `variant` is the journey's id or the architecture's name (schema `dispute.schema.json`; `shared/disputes.ts loadDisputes` reads older files too). `choose.ts` refuses a pick that a dispute is about and prints the disputes: show them to the person, and confirm with `--accept-disputes` once they accept them, which records them in the decision. Nothing waits for the person except the four decisions.
+A job runs write, gate, review (for those that have one) and at most one fix; a challenge that survives stays disputed. `finish` writes the disputes of a stage to `.shape-target/work/records/disputes-<stage>.json`, a list of `{ job, record, variant, says }` where `variant` is the journey's id or the architecture's name (schema `dispute.schema.json`; `shared/disputes.ts loadDisputes` reads older files too). `choose.ts` refuses a pick that a dispute is about and prints the disputes: show them to the person, and confirm with `--accept-disputes` and a `--reason` of at least eight words in their own words once they accept them, which records them in the decision. Nothing waits for the person except the four decisions.
 
 ## Stages
 
 - As-is (`as-is`): no jobs; the tasks are the analysis's journeys, read by `derive.ts current`.
 - Journeys (`journeys`): `propose-journeys` writes variants per task; `challenge-target` reads each.
-- Architecture (`architecture`): `propose-architecture` writes variants; `challenge-target` reads them.
+- Architecture (`architecture`): `propose-architecture` writes variants; `challenge-target` reads them. The check refuses a variant in which a step's data is out of reach of the domains that decide it (their own data and that of the domains they depend on directly), and the final check counts only components that carry a step, never one that only keeps data. `prepare` puts a stage's earlier job outputs in `work/archive/` so a writer never starts from an old draft.
 - Components (`components`): `propose-architecture` writes the components of each domain of the chosen variant, in dependency order.
 
 ## Output

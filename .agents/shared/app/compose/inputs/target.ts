@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
 import { loadDisputes } from "../../../../skills/shape-target/shared/disputes";
-import { gates, proposalOf, snapshotOf, subjectOf, type Gate } from "../../../../skills/shape-target/shared/gates";
+import { gates, gateState, proposalOf, snapshotOf, subjectOf, type Gate } from "../../../../skills/shape-target/shared/gates";
 import { layoutOf } from "../../../../skills/shape-target/shared/model/layout";
 import { changedSince, itemsOf, type Since } from "../../../../skills/shape-target/shared/since";
 import { ComposeError } from "../errors";
@@ -145,6 +145,12 @@ const ArchitectureVariants = z.array(
 const TargetManifest = z.looseObject({ contractVersion: z.number(), files: z.record(Text, Text) });
 const RunsOnCatalogue = z.looseObject({ runsOn: z.array(z.looseObject({ id: Text, words: Text })) });
 
+/**
+ * What a target holds, in the order it is made: today's tasks only, with the journeys proposed and not confirmed; the
+ * journeys confirmed, with the architecture proposed and not confirmed; the architecture confirmed with its components.
+ */
+export type TargetState = "journeys-proposed" | "architecture-proposed" | "architecture-confirmed";
+
 export type TargetJourney = z.output<typeof Journey>;
 export type TargetStep = z.output<typeof Step>;
 export type TargetArchitecture = z.output<typeof Architecture>;
@@ -167,7 +173,12 @@ export type Target = {
     readonly journeys: readonly TargetJourney[];
     readonly variants: z.output<typeof Variants>;
     readonly picks: z.output<typeof Choice>["picks"];
-    readonly architecture: TargetArchitecture;
+    /** Where the target stands: the case states the app renders what exists of. */
+    readonly state: TargetState;
+    /** The architecture the target stands on: the confirmed one, or, until one is confirmed, the recommended variant as a proposal. */
+    readonly architecture: TargetArchitecture | undefined;
+    /** Whether `architecture` is confirmed with its components, or only proposed. */
+    readonly architectureConfirmed: boolean;
     readonly alternatives: z.output<typeof ArchitectureVariants>;
     readonly gates: readonly GateRecord[];
     readonly disputes: readonly { stage: string; variant: string; says: string }[];
@@ -237,9 +248,27 @@ export const readTarget = (root: string): Target => {
         return path;
     };
     const tasks = readJson(need(layout.current), Tasks).tasks;
-    const journeys = readJson(need(layout.journeys), z.array(Journey));
-    const choice = readJson(need(layout.choiceJourneys), Choice);
-    const architecture = readJson(need(layout.architecture), Architecture);
+    // Until the journeys are confirmed there are none to read; the variants file holds what is proposed.
+    const journeysChosen = existsSync(layout.journeys) && existsSync(layout.choiceJourneys);
+    const journeys = journeysChosen ? readJson(need(layout.journeys), z.array(Journey)) : [];
+    const choice = journeysChosen ? readJson(need(layout.choiceJourneys), Choice) : undefined;
+    // The architecture is the confirmed one while its decision holds; otherwise the recommended variant, as a proposal.
+    const architectureHolds = existsSync(layout.architecture) && gateState(layout, "architecture") === "confirmed";
+    const proposedVariants = existsSync(layout.architectureVariants)
+        ? readJson(layout.architectureVariants, z.array(Architecture))
+        : [];
+    const proposal = journeysChosen ? (proposedVariants.find((each) => each.recommended !== undefined) ?? proposedVariants[0]) : undefined;
+    if (proposal !== undefined && !architectureHolds) need(layout.architectureVariants);
+    const architecture = architectureHolds
+        ? readJson(need(layout.architecture), Architecture)
+        : proposal === undefined
+          ? undefined
+          : { ...proposal, components: [] };
+    const state: TargetState = !journeysChosen
+        ? "journeys-proposed"
+        : architectureHolds
+          ? "architecture-confirmed"
+          : "architecture-proposed";
     const variants = existsSync(layout.journeyVariants) ? readJson(layout.journeyVariants, Variants) : [];
     const alternatives = existsSync(layout.architectureVariants)
         ? readJson(layout.architectureVariants, ArchitectureVariants)
@@ -280,8 +309,10 @@ export const readTarget = (root: string): Target => {
         tasks,
         journeys,
         variants,
-        picks: choice.picks,
+        picks: choice?.picks ?? [],
+        state,
         architecture,
+        architectureConfirmed: architectureHolds,
         alternatives,
         gates: gateRecords,
         disputes,

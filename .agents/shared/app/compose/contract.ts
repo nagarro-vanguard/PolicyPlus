@@ -259,6 +259,8 @@ const Score = z.strictObject({ steps: N, stepsServed: N, rules: N, rulesAssigned
 const Pair = z.strictObject({ from: S, to: S });
 
 const Architecture = z.strictObject({
+    /** Whether the person confirmed it with its components; otherwise it is the recommended variant, proposed. */
+    confirmed: z.boolean(),
     name: S,
     idea: S,
     tradeoff: S,
@@ -389,6 +391,8 @@ const Inputs = z.strictObject({
     target: z
         .strictObject({
             contractVersion: N.nullable(),
+            /** Where the target stands: `journeys-proposed`, `architecture-proposed` or `architecture-confirmed`. */
+            state: S,
             fingerprint: S,
             gates: z.array(z.strictObject({ gate: S, state: S })),
         })

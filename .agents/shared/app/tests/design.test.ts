@@ -76,9 +76,12 @@ describe("every design value comes from the theme", () => {
         expect(layout).toContain("<MobileNav client:media=");
     });
 
-    test("the shell is one sidebar of one level, a top bar and the page: no rail, no tree, no outline", () => {
+    test("the shell is one sidebar of one level, a top bar and the page, whose only rail is its list of contents: no tree, no twisty", () => {
         const layout = read(join(root, "src", "layouts", "Page.astro"));
-        for (const gone of ["About this page", "On this page", "Related", "data-rail", "data-tree", "data-toc", "outline", "twisty"]) expect([gone, layout.includes(gone)]).toEqual([gone, false]);
+        for (const gone of ["About this page", "Related", "data-rail", "data-tree", "data-toc", "twisty"]) expect([gone, layout.includes(gone)]).toEqual([gone, false]);
+        // The page lists its own headings in one component (a rail beside it, a fold above it), and nowhere else.
+        expect(layout).toContain("ContentsRail");
+        expect(layout).toContain("ContentsFold");
         // Three headed groups at most, and no count of anything in the sidebar.
         const menu = read(join(root, "src", "components", "shell", "NavMenu.tsx"));
         expect(menu.match(/<SidebarGroupLabel render=\{<h2 \/>\}/g)?.length ?? 0).toBeLessThanOrEqual(3);

@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { hashFiles as sharedHash } from "../../plan-modernization-backlog/shared/read/fingerprint";
+import { analysisStoreOf, journeysGuard, payloadProblems } from "./analysis";
 import { gateProblems, type Gate } from "./gates";
 import { changedSinceBuilt } from "../../plan-modernization-backlog/shared/derive/built-from";
 import { layoutOf as planLayoutOf } from "../../plan-modernization-backlog/shared/model/layout";
@@ -138,7 +139,10 @@ const gate = (input: {
     stage: string;
     /** A command that makes the proposal, for a decision whose proposal is a read of the analysis and has no jobs. */
     derive?: (skills: string, p: Paths) => { command: string; why: string };
+    /** Why the proposal cannot be made yet, when the analysis lacks what it reads; the step then stops with it. */
+    guard?: (p: Paths) => string | undefined;
     inputs: Step["inputs"];
+    without?: Step["without"];
     proposal: (p: Paths) => string;
     record: (p: Paths) => string[];
     pages: string;
@@ -156,9 +160,12 @@ const gate = (input: {
         {
             name,
             inputs: input.inputs,
+            without: input.without,
             makes: (p) => [input.proposal(p)],
             action: ({ paths, skills }) =>
-                input.derive === undefined
+                input.guard?.(paths) !== undefined
+                    ? { action: "stop", step: name, message: input.guard(paths) ?? "" }
+                    : input.derive === undefined
                     ? {
                           action: "invoke",
                           step: name,
@@ -175,7 +182,8 @@ const gate = (input: {
                 action: "run",
                 step: `${name}-pages`,
                 // compose reads a target only once it is finished, so the pages of a decision are built from the analysis.
-                command: `mkdir -p ${join(paths.root, ".shape-target/pages")} && CODE_ANALYSIS_ROOT=${paths.analysis} ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --out ${paths.app} --case ${paths.case}`)}; test -f ${paths.app}/language-report.json && touch ${paths.pages(input.gate)}`,
+                // The old report goes first and the chain stops at the first failure, so a build that failed can never pass for the report of an earlier one.
+                command: `rm -f ${paths.app}/language-report.json && mkdir -p ${join(paths.root, ".shape-target/pages")} && CODE_ANALYSIS_ROOT=${paths.analysis} ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --out ${paths.app} --case ${paths.case}`)} && test -f ${paths.app}/language-report.json && touch ${paths.pages(input.gate)}`,
                 why: `build the pages that show the ${input.gate} proposal, before the person is asked`,
             }),
         },
@@ -255,6 +263,33 @@ export const steps: Step[] = [
         }),
     },
     {
+        name: "payloads",
+        inputs: (p) => [p.payloads],
+        makes: (p) => [join(p.payloads, "manifest.json")],
+        // The payloads hold while their manifest says the contract these scripts read; otherwise they are written again, by script.
+        valid: (p) => payloadProblems(p),
+        action: ({ paths, skills }) => {
+            const store = analysisStoreOf(paths);
+            if (store === undefined)
+                return {
+                    action: "stop",
+                    step: "payloads",
+                    message: `${payloadProblems(paths).join("; ")}, and no analysis store is found: run the analysis here, or if it was made elsewhere name that folder with \`bun ${join(skills, "modernization/cli/locate-analysis.ts")} ${paths.root} <the folder that holds analysis.sqlite>\`, then call next`,
+                };
+            const write = bun(skills, "code-analysis", "write-payloads.ts", "");
+            // A store beside the Output Root is its own; one elsewhere has its payloads copied in, keeping today's journeys the store does not hold.
+            return {
+                action: "run",
+                step: "payloads",
+                command:
+                    store === paths.analysis
+                        ? `CODE_ANALYSIS_ROOT=${store} ${write}`
+                        : `CODE_ANALYSIS_ROOT=${store} ${write} && mkdir -p ${paths.payloads} && rsync -a --delete --exclude journeys.json ${store}/payloads/ ${paths.payloads}/`,
+                why: "write the payloads again from the analysis's store, for the contract these scripts read",
+            };
+        },
+    },
+    {
         name: "bundles",
         inputs: (p) => [p.payloads],
         makes: (p) =>
@@ -283,6 +318,7 @@ export const steps: Step[] = [
     ...gate({
         gate: "as-is",
         stage: "as-is",
+        guard: journeysGuard,
         derive: (skills, p) => ({
             command: bun(skills, "shape-target", "derive.ts", `current ${p.root}`),
             why: "read today's tasks from the analysis's journeys (payloads/journeys.json); a run made before the analysis wrote them keeps its target/current.json",
@@ -290,7 +326,7 @@ export const steps: Step[] = [
         inputs: (p) => [p.legacy, p.bundles, p.journeysToday],
         proposal: (p) => p.current,
         record: (p) => [p.choiceAsIs],
-        pages: "gate/as-is.html",
+        pages: "journeys.html",
         ask: (skills, p) => `${chooseCommand(skills)} as-is ${p.root} --reason "<why>" [--marks <file>]`,
         jobs: "the analysis's journeys jobs (`journeys-of-<capability>`, `journeys-merge`), handed back there",
     }),
@@ -300,7 +336,7 @@ export const steps: Step[] = [
         inputs: (p) => [p.current, p.choiceAsIs],
         proposal: (p) => p.journeyVariants,
         record: (p) => [p.choiceJourneys, p.journeys],
-        pages: "gate/journeys.html",
+        pages: "journeys.html",
         ask: (skills, p) =>
             `${chooseCommand(skills)} journeys ${p.root} --reason "<why>" [--all-recommended] [--pick <task>=<variant>]`,
         jobs: "the variants-* jobs",
@@ -308,10 +344,12 @@ export const steps: Step[] = [
     ...gate({
         gate: "architecture",
         stage: "architecture",
-        inputs: (p) => [p.journeys],
+        // The architecture is designed against the target stack, so the request is read again when its stack changes.
+        inputs: (p) => [p.journeys, p.requestJson],
+        without: goalsUnread,
         proposal: (p) => p.architectureVariants,
         record: (p) => [p.choiceArchitecture],
-        pages: "gate/architecture.html",
+        pages: "architecture.html",
         ask: (skills, p) => `${chooseCommand(skills)} architecture ${p.root} --pick "<variant>" --reason "<why>"`,
         jobs: "the shape job",
     }),
@@ -321,7 +359,7 @@ export const steps: Step[] = [
         inputs: (p) => [p.choiceArchitecture, p.journeys],
         proposal: (p) => p.architecture,
         record: (p) => [p.choiceComponents],
-        pages: "gate/components.html",
+        pages: "architecture.html",
         ask: (skills, p) => `${chooseCommand(skills)} components ${p.root} --reason "<why>"`,
         jobs: "the components-<domain> jobs of the domains to change and of every domain that depends on them",
     }),

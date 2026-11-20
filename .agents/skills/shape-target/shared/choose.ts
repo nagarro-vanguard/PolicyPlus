@@ -28,16 +28,26 @@ const record = (layout: Layout, gate: Gate, choice: Omit<Choice, "subject">) => 
     writeManifest(layout);
 };
 
+/** The fewest words of a reason that can stand for accepting open challenges: a word of assent is not a reason. */
+const MIN_REASON_WORDS = 8;
+
 /**
- * The challenges still open on what is picked, which the person must have seen and accepted before it is confirmed.
+ * The challenges still open on what is picked, which the person must have read and accepted, with a reason in their
+ * own words, before it is confirmed.
  * @param open the disputes about the picked variants
  * @param accepted whether the person accepted them
+ * @param reason the reason they gave
  * @returns why it is refused, or nothing when it may go ahead
  */
-const disputed = (open: readonly Dispute[], accepted: boolean): string | undefined =>
-    open.length === 0 || accepted
-        ? undefined
-        : `${open.length} challenges of the reviewer are still open on what is picked. Show them to the person; confirm again with --accept-disputes once they accept them, or pick another variant:\n${open.map((each) => `- ${each.variant}: ${each.says}`).join("\n")}`;
+const disputed = (open: readonly Dispute[], accepted: boolean, reason: string): string | undefined => {
+    if (open.length === 0) return undefined;
+    const list = open.map((each) => `- ${each.variant}: ${each.says}`).join("\n");
+    if (!accepted)
+        return `${open.length} challenges of the reviewer are still open on what is picked. Show them to the person; confirm again with --accept-disputes and a --reason of the person's own words that says why they accept them, or pick another variant:\n${list}`;
+    if (reason.trim().split(/\s+/).length < MIN_REASON_WORDS)
+        return `accepting ${open.length} open challenges needs a --reason of at least ${MIN_REASON_WORDS} words that says why the person accepts them:\n${list}`;
+    return undefined;
+};
 
 /** Why a decision cannot be recorded now, or nothing when it can. */
 const refusal = (layout: Layout, gate: Gate): string | undefined => {
@@ -129,7 +139,7 @@ export const chooseJourneys = (
     if (gaps.length > 0) return { ok: false, text: gaps.join("\n") };
     const ids = new Set(chosen.map((variant) => variant.id));
     const open = loadDisputes(layout, "journeys").filter((each) => ids.has(each.variant));
-    const refusedForDisputes = disputed(open, acceptDisputes);
+    const refusedForDisputes = disputed(open, acceptDisputes, reason);
     if (refusedForDisputes !== undefined) return { ok: false, text: refusedForDisputes };
     writeJson(layout.journeys, chosen);
     record(layout, "journeys", {
@@ -160,7 +170,7 @@ export const chooseArchitecture = (layout: Layout, name: string, reason: string,
             text: `no architecture "${name}"; the variants are ${variants.map((variant) => `"${variant.name}"`).join(", ")}`,
         };
     const open = loadDisputes(layout, "architecture").filter((each) => each.variant === name);
-    const refusedForDisputes = disputed(open, acceptDisputes);
+    const refusedForDisputes = disputed(open, acceptDisputes, reason);
     if (refusedForDisputes !== undefined) return { ok: false, text: refusedForDisputes };
     record(layout, "architecture", {
         decision: "architecture",

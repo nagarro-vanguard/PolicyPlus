@@ -11,6 +11,7 @@ import { theCase } from "./loader";
 // every number is a key of numbers.json.
 
 type Architecture = {
+    confirmed: boolean;
     name: string;
     idea: string;
     tradeoff: string;
@@ -95,6 +96,8 @@ export type TodayView = {
 };
 
 export type ProposedView = {
+    /** Whether the person confirmed it with its components; otherwise it is the recommended option, proposed. */
+    confirmed: boolean;
     name: string;
     idea: string;
     why: string | null;
@@ -191,6 +194,7 @@ export const proposedView = async (): Promise<ProposedView | null> => {
     const unplacedNumber = valueOf("architecture/unplaced");
     const ruleSays = (id: string) => (data.fact("rules", id)?.says as string | undefined) ?? "";
     return {
+        confirmed: architecture.confirmed,
         name: architecture.name,
         idea: architecture.idea,
         why: architecture.recommended,

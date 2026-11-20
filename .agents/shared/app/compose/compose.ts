@@ -246,6 +246,7 @@ export const compose = (options: ComposeOptions): Composed => {
                     ? null
                     : {
                           contractVersion: target.contractVersion ?? null,
+                          state: target.state,
                           fingerprint: target.fingerprint,
                           gates: target.gates.map((gate) => ({ gate: gate.gate, state: gate.state })),
                       },

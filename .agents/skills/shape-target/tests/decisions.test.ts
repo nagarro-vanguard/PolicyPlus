@@ -76,7 +76,7 @@ describe("a confirmed decision keeps the hash and a copy of what it was made abo
         expect(refused.text).toContain("--accept-disputes");
         expect(existsSync(layout.choiceJourneys)).toBe(false);
         expect(chooseJourneys(layout, { "browsing.t1": "guided" }, true, "the other way").ok).toBe(true);
-        const accepted = chooseJourneys(layout, {}, true, "take the recommendations", true);
+        const accepted = chooseJourneys(layout, {}, true, "take the recommendations as they are because the open challenge is a known cost", true);
         expect(accepted.ok).toBe(true);
         const choice = loadChoice(layout.choiceJourneys);
         expect(choice?.acceptedDisputes).toEqual(disputes);
@@ -103,7 +103,7 @@ describe("a confirmed decision keeps the hash and a copy of what it was made abo
         expect(loadDisputes(layout, "architecture")[0]?.variant).toBe("modular");
         expect(chooseArchitecture(layout, "modular", "a small team").ok).toBe(false);
         expect(chooseArchitecture(layout, "split", "no open challenge").ok).toBe(true);
-        expect(chooseArchitecture(layout, "modular", "a small team", true).ok).toBe(true);
+        expect(chooseArchitecture(layout, "modular", "a small team is why the open challenge is accepted as it is", true).ok).toBe(true);
     });
 
     test("a disputes file written before disputes named their variant is read with the variant found", () => {

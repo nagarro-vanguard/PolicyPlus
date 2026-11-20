@@ -207,6 +207,28 @@ const touched = (journeys: readonly StoredJourney[]) =>
 const dependsGraph = (domains: readonly Domain[]) =>
     new Map(domains.map((domain) => [domain.name, [...domain.dependsOn]]));
 
+/** The kinds of data a domain may use: its own facts and those of the domains it depends on directly. */
+const reachOf = (domains: readonly Domain[]) => {
+    const byName = new Map(domains.map((domain) => [domain.name, domain]));
+    const factsOf = (name: string) => new Set<string>(byName.get(name)?.facts.flatMap((fact) => fact.from) ?? []);
+    return (name: string): Set<string> => {
+        const all = new Set<string>(factsOf(name));
+        for (const dep of byName.get(name)?.dependsOn ?? []) for (const id of factsOf(dep)) all.add(id);
+        return all;
+    };
+};
+
+/**
+ * The domains that decide a step: those owning a rule it honours; when it honours none, those owning data it touches.
+ * Known from the domains alone, so it holds before any component is written.
+ */
+const decidingDomains = (domains: readonly Domain[], step: StoredJourney["steps"][number]) => {
+    const byRules = domains.filter((domain) => step.honours.some((id) => domain.rules.includes(id)));
+    return byRules.length > 0
+        ? byRules
+        : domains.filter((domain) => step.touches.some((id) => domain.facts.some((fact) => fact.from.includes(id))));
+};
+
 /**
  * The checks of one architecture variant at domain level: C4 (rules partitioned), C5 (boundaries) and the stack
  * and names part of C6.
@@ -303,6 +325,19 @@ export const variantGaps = (variant: ArchitectureRecord, context: DesignContext)
                 `${label}: risk ${at + 1} is contained by ${risk.containedBy}, which is no container or component`,
             );
     });
+    // A step's data must be within reach of the domains that decide it: their own facts or those of a domain they depend on.
+    const reachOfDomain = reachOf(variant.domains);
+    for (const journey of context.journeys)
+        for (const step of journey.steps) {
+            const deciding = decidingDomains(variant.domains, step);
+            if (deciding.length === 0) continue;
+            const reachable = new Set(deciding.flatMap((domain) => [...reachOfDomain(domain.name)]));
+            const lost = missing(step.touches, reachable);
+            if (lost.count > 0)
+                gaps.push(
+                    `${label}: step ${step.id} is decided in ${deciding.map((domain) => domain.name).join(", ")}, which cannot reach the data ${lost.text}: let one of them depend on the domain that owns it, or move the rule or the data`,
+                );
+        }
     return gaps;
 };
 
@@ -420,12 +455,7 @@ export const finalGaps = (architecture: ArchitectureRecord, context: DesignConte
     const byName = new Map(components.map((component) => [component.name, component]));
     if (byName.size !== components.length) gaps.push("two components share a name");
     const domains = new Map(architecture.domains.map((domain) => [domain.name, domain]));
-    const factsOf = (name: string) => new Set<string>(domains.get(name)?.facts.flatMap((fact) => fact.from) ?? []);
-    const reach = (name: string): Set<string> => {
-        const all = new Set<string>(factsOf(name));
-        for (const dep of domains.get(name)?.dependsOn ?? []) for (const id of factsOf(dep)) all.add(id);
-        return all;
-    };
+    const reach = reachOf(architecture.domains);
     for (const journey of context.journeys)
         journey.steps.forEach((step) => {
             const serving = components.filter((component) => component.serves.includes(step.id));
@@ -433,11 +463,13 @@ export const finalGaps = (architecture: ArchitectureRecord, context: DesignConte
                 gaps.push(`step ${step.id} is served by no component`);
                 return;
             }
-            const reachable = new Set(serving.flatMap((component) => [...reach(component.domain)]));
+            // A component that only keeps data carries nothing: the data must be within reach of the components that carry the step.
+            const carrying = serving.filter((component) => component.kind !== "data");
+            const reachable = new Set((carrying.length > 0 ? carrying : serving).flatMap((component) => [...reach(component.domain)]));
             const lost = missing(step.touches, reachable);
             if (lost.count > 0)
                 gaps.push(
-                    `step ${step.id}: the data ${lost.text} is not owned by the serving components' domains or those they depend on`,
+                    `step ${step.id}: the data ${lost.text} is not within reach of the components that carry it (their domains' own data and that of the domains they depend on)`,
                 );
         });
     const stepIds = new Set(context.journeys.flatMap((journey) => journey.steps.map((step) => step.id)));

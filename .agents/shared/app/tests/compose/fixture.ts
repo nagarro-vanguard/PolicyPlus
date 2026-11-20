@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -683,8 +683,23 @@ export const writeFixture = (change: (inputs: Inputs) => void = () => {}) => {
     const run = join(root, "run");
     put(join(run, "target", "current.json"), json(given.target.current));
     put(join(run, "target", "journeys.json"), json(given.target.journeys));
-    put(join(run, "target", "choice-journeys.json"), json(given.target.choiceJourneys));
     put(join(run, "target", "architecture.json"), json(given.target.architecture));
+    // The decisions are confirmed, each after the proposal it decides and each proposal after the decision before it.
+    const clock = Date.UTC(2026, 0, 1);
+    const at = (step: number) => new Date(clock + step * 60_000);
+    const dated = (path: string, step: number) => utimesSync(path, at(step), at(step));
+    put(join(run, ".shape-target", "work", "records", "journey-variants.json"), json([]));
+    put(join(run, ".shape-target", "work", "records", "architecture-variants.json"), json([given.target.architecture]));
+    const decision = (name: string, extra: object = {}) =>
+        put(join(run, "target", `choice-${name}.json`), json({ decision: name, picks: [], reason: "x", ...extra }));
+    decision("as-is", { confirmedAt: at(2).toISOString() });
+    decision("journeys", { ...given.target.choiceJourneys, confirmedAt: at(4).toISOString() });
+    decision("architecture", { confirmedAt: at(6).toISOString() });
+    decision("components", { confirmedAt: at(8).toISOString() });
+    dated(join(run, "target", "current.json"), 1);
+    dated(join(run, ".shape-target", "work", "records", "journey-variants.json"), 3);
+    dated(join(run, ".shape-target", "work", "records", "architecture-variants.json"), 5);
+    dated(join(run, "target", "architecture.json"), 7);
     put(join(run, ".modernization-backlog", "payloads", "plan.json"), json(given.plan));
     put(join(run, ".modernization-backlog", "payloads", "prompts.json"), json(given.prompts));
     put(join(run, "request.json"), json(given.request));

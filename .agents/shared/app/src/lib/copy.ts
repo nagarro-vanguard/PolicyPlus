@@ -353,6 +353,15 @@ export const copy = {
         chosenYes: "Chosen",
         chosenNo: "Not chosen",
         whyChosen: "Why it was chosen",
+        /** The words of a design the person has not confirmed: the recommended option is shown first, as a proposal. */
+        unconfirmed: {
+            notice: "Not confirmed yet. The recommended option is shown first, with the others drawn the same way beside it.",
+            badge: "Recommended, not confirmed",
+            why: "Why it is recommended",
+            other: "Another option",
+            optionsLead: "Each column is one option, the recommended one first. The table scrolls sideways on a narrow screen.",
+            variantsLead: "Each other option, drawn the way the recommended one is, so they can be read side by side.",
+        },
         challenges: "Open challenges",
         challengesLead: "Points a reviewer raised about the design that are not settled.",
         aboutOther: (name: string) => `About an option not chosen: ${name}`,

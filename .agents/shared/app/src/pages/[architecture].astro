@@ -77,11 +77,11 @@ const hasToday = today.views.length > 0 || today.entities.length > 0;
         {proposed === null || proposed.options.length < 2 ? null : (
             <div id="options">
                 <Section title={words.options} writtenBy="app">
-                    <p class="text-muted-foreground" data-written-by="app">{words.optionsLead}</p>
-                    <Options options={proposed.options} />
+                    <p class="text-muted-foreground" data-written-by="app">{proposed.confirmed ? words.optionsLead : words.unconfirmed.optionsLead}</p>
+                    <Options options={proposed.options} confirmed={proposed.confirmed} />
                     {proposed.variants.every((each) => each.views.length === 0) ? null : (
                         <div class="mt-spacing-4xl flex flex-col gap-spacing-4xl">
-                            <p class="text-muted-foreground" data-written-by="app">{words.variantsLead}</p>
+                            <p class="text-muted-foreground" data-written-by="app">{proposed.confirmed ? words.variantsLead : words.unconfirmed.variantsLead}</p>
                             {proposed.variants.filter((each) => each.views.length > 0).map((variant) => (
                                 <div class="flex flex-col gap-spacing-xl">
                                     <h3 class="text-sm font-semibold" data-written-by="agent">{variant.name}</h3>

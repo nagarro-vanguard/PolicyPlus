@@ -98,6 +98,11 @@ export function TodayData({ today }: { readonly today: TodayView }) {
 export function ProposedHead({ view }: { readonly view: ProposedView }) {
     return (
         <div className="flex flex-col gap-spacing-md">
+            {view.confirmed ? null : (
+                <p className="text-sm text-muted-foreground" data-written-by="app">
+                    {words.unconfirmed.notice}
+                </p>
+            )}
             <p className="text-base font-medium" data-written-by="agent">
                 {view.name}
             </p>
@@ -318,20 +323,20 @@ export function Unplaced({ view }: { readonly view: NonNullable<ProposedView["un
 }
 
 /** The options considered, compared one aspect per row and one option per column, the chosen one first. */
-export function Options({ options }: { readonly options: readonly Option[] }) {
+export function Options({ options, confirmed = true }: { readonly options: readonly Option[]; readonly confirmed?: boolean }) {
     const rows: { label: string; cell: (option: Option) => ReactNode }[] = [
         { label: words.idea, cell: (option) => <span data-written-by="agent">{option.idea}</span> },
         { label: words.cost, cell: (option) => <span data-written-by="agent">{option.cost}</span> },
         { label: words.partsRow, cell: (option) => <Listed names={option.parts} /> },
         { label: words.domainsRow, cell: (option) => <Listed names={option.domains} /> },
         {
-            label: words.whyChosen,
+            label: confirmed ? words.whyChosen : words.unconfirmed.why,
             cell: (option) =>
                 option.chosen && option.why !== null ? (
                     <span data-written-by="agent">{option.why}</span>
                 ) : (
                     <span className="text-muted-foreground" data-written-by="app">
-                        {option.chosen ? words.chosenYes : words.chosenNo}
+                        {option.chosen ? words.chosenYes : confirmed ? words.chosenNo : words.unconfirmed.other}
                     </span>
                 ),
         },
@@ -350,7 +355,7 @@ export function Options({ options }: { readonly options: readonly Option[] }) {
                                 {option.chosen ? (
                                     <Badge variant="outline" data-written-by="app">
                                         <CircleCheck aria-hidden="true" />
-                                        {words.chosen}
+                                        {confirmed ? words.chosen : words.unconfirmed.badge}
                                     </Badge>
                                 ) : null}
                             </span>

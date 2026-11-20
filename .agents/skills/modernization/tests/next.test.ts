@@ -5,10 +5,14 @@ import { dirname, join } from "node:path";
 import { markDone, next } from "../cli/next";
 import { existsSync } from "node:fs";
 import { hashFiles, pathsOf, steps } from "../cli/steps";
+import { payloadContractVersion } from "../../code-analysis/shared/model/schemas/payload-manifest";
 
 const put = (path: string, text = "{}") => {
     mkdirSync(dirname(path), { recursive: true });
     writeFileSync(path, text);
+    // Payloads as written by the current scripts carry a manifest of their contract version.
+    if (path.endsWith("/payloads/system.json"))
+        writeFileSync(join(dirname(path), "manifest.json"), JSON.stringify({ contractVersion: payloadContractVersion }));
 };
 const fresh = () => {
     const root = mkdtempSync(`${tmpdir()}/conductor-`);
@@ -294,7 +298,8 @@ describe("today's tasks are the analysis's journeys", () => {
         return made;
     };
     test("`target-as-is` runs shape-target's `derive.ts current`, which reads the analysis's journeys, and invokes no agent", () => {
-        const { root, request } = upToAsIs();
+        const { root, request, paths } = upToAsIs();
+        put(paths.journeysToday);
         const action = next(root, request);
         expect(stepOf(action)).toBe("target-as-is");
         expect(action.action).toBe("run");

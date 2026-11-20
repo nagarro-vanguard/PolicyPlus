@@ -1,4 +1,5 @@
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync, renameSync } from "node:fs";
+import { join } from "node:path";
 import { relevantSteps, type ComponentContext, type DesignContext } from "../derive/checks";
 import { deriveEssence } from "../derive/essence";
 import { confirmed } from "../gates";
@@ -203,8 +204,15 @@ export const prepare = (layout: Layout, stage: Stage): string => {
     jobs.batch = undefined;
     const made = drafts(layout, stage, jobs);
     if (typeof made === "string") return made;
+    // What an earlier run left for these jobs is put aside, so a writer starts from the context and never from an old draft.
+    const archive = join(layout.work, "archive", new Date().toISOString().replaceAll(":", "-"));
     for (const draft of made) {
         const paths = jobPaths(layout, draft.id);
+        for (const old of [paths.output, paths.review])
+            if (existsSync(old)) {
+                mkdirSync(archive, { recursive: true });
+                renameSync(old, join(archive, old.slice(old.lastIndexOf("/") + 1)));
+            }
         writeJson(paths.job, draft.file);
         writeJson(paths.context, draft.context);
     }
