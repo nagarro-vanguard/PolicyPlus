@@ -73,7 +73,7 @@ export const journeyGaps = (task: Task, variants: readonly Journey[], legacy?: L
         const changedAt = new Map<string, number>();
         variant.steps.forEach((step, at) => {
             const where = `${label}, step ${at + 1}`;
-            if (step.touches.length + step.honours.length === 0)
+            if (step.touches.length + step.honours.length === 0 && rules.size + facts.size > 0)
                 gaps.push(`${where}: touches no data and honours no rule`);
             for (const id of step.touches)
                 if (!facts.has(id)) gaps.push(`${where}: touches data ${id}, which is not the task's`);
@@ -517,7 +517,8 @@ export const finalGaps = (architecture: Architecture, context: DesignContext): s
         journey.steps.forEach((step) => {
             const serving = components.filter((component) => component.serves.includes(step.id));
             if (serving.length === 0) {
-                gaps.push(`step ${step.id} is served by no component`);
+                // A step that touches no data and honours no rule belongs to no domain's rules or data, so no job can serve it.
+                if (step.touches.length + step.honours.length > 0) gaps.push(`step ${step.id} is served by no component`);
                 return;
             }
             // A component that only keeps data carries nothing: the data must be within reach of the components that carry the step.

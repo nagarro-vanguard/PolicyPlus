@@ -54,13 +54,24 @@ export const componentLayer = (name: string, stack: Stack): TargetLayer | undefi
         if (layer !== undefined) return layer;
     }
     const kind = component.kind ?? (component.adapts !== undefined ? "adapter" : undefined);
+    // An interface (a screen, an endpoint, a command) is built in the layer of the part that holds its domain.
+    if (kind === "interface") {
+        const holder = stack.target.architecture.containers.find(
+            (container) => container.kind !== "store" && container.holds.includes(component.domain),
+        )?.name;
+        const inside = stack.layers.filter((layer) => holder !== undefined && layer.container === holder);
+        return inside.length === 1 ? inside[0] : undefined;
+    }
     const role = kind === undefined ? undefined : roleOfKind[kind];
     if (role === undefined) return undefined;
     const candidates = stack.layers.filter((layer) => roleOf(layer) === role);
     if (candidates.length <= 1) return candidates[0];
     const container = containerOf(component, kind, stack.target);
     const inside = candidates.filter((layer) => layer.container !== undefined && layer.container === container);
-    return inside.length === 1 ? inside[0] : undefined;
+    if (inside.length === 1) return inside[0];
+    // A part with no layer of the needed role (a flow in the website) is built in the one layer of that part.
+    const own = stack.layers.filter((layer) => container !== undefined && layer.container === container);
+    return inside.length === 0 && own.length === 1 ? own[0] : undefined;
 };
 
 /**

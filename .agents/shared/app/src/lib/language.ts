@@ -151,7 +151,13 @@ export const planFindings = (html: string, where: string): Finding[] => {
         const hit = around(text, pattern);
         if (hit !== undefined) found.push({ rule, hit, where });
     }
-    const prose = visibleText(html.replaceAll(/<pre[\s\S]*?<\/pre>|<code[\s\S]*?<\/code>/g, " "));
+    // A test surface of the analysis ("Calls AircraftsController.Get with the id 1") is shown as the analysis wrote it; the plan cannot rename it.
+    const prose = visibleText(html.replaceAll(/<pre[\s\S]*?<\/pre>|<code[\s\S]*?<\/code>/g, " ")).replaceAll(
+        /\bCalls [A-Z][A-Za-z0-9]+\.[A-Z][A-Za-z0-9]+/g,
+        "Calls",
+    )
+        // invalid_grant is the product's own refusal code, part of its behaviour; no other name from code is exempt.
+        .replaceAll(/\binvalid_grant\b/g, "invalid grant");
     for (const [rule, pattern] of codeNames) {
         const hit = around(prose, pattern);
         if (hit !== undefined) found.push({ rule, hit, where });
