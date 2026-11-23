@@ -8,7 +8,7 @@ import { factsOf, type Facts } from "./build/facts";
 import { hierarchyOf, levels } from "./build/hierarchy";
 import { architectureOf, proposedOf, todayOf, traceOf } from "./build/journeys";
 import { Numbers } from "./build/numbers";
-import { planViewsOf, workLabels, type PlanViews } from "./build/plan-views";
+import { planViewsOf, type PlanViews } from "./build/plan-views";
 import { plainTextOf } from "./build/plain";
 import { searchOf } from "./build/search";
 import { slugify, Slugs } from "./build/text";
@@ -195,7 +195,6 @@ export const compose = (options: ComposeOptions): Composed => {
             "plan/phases.json": views.phases,
             "plan/layers.json": views.layers,
             "plan/decisions.json": views.decisions,
-            "plan/ready.json": views.ready,
             "plan/matrix.json": views.matrix,
             "plan/conflicts.json": views.conflicts,
             "plan/unplanned.json": views.unplanned,
@@ -517,15 +516,4 @@ const planNumbers = (numbers: Numbers, views: PlanViews) => {
         scope: "places in the code nothing the analysis followed reaches, so no story builds them",
         source: "the plan's coverage",
     });
-    numbers.combined(
-        "plan/stories/work",
-        { one: "story", many: "stories" },
-        (Object.keys(workLabels) as (keyof typeof workLabels)[]).map((label) => ({
-            kind: label,
-            value: views.stories.filter((story) => story.work?.label === label).length,
-            noun: { one: workLabels[label], many: workLabels[label] },
-        })),
-        "stories of the plan, by the kind of work",
-        "the plan's tags",
-    );
 };

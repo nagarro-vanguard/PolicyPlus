@@ -13,7 +13,8 @@ export const evidenceOf = (variants: readonly Architecture[], journeys: readonly
     const steps = journeys.flatMap((journey) => journey.steps);
     return variants.flatMap((variant) => {
         const total = variant.domains.reduce((sum, domain) => sum + domain.rules.length, 0);
-        const owner = (id: string) => variant.domains.find((domain) => domain.facts.some((fact) => fact.from.some((from) => from === id)));
+        const owner = (id: string) =>
+            variant.domains.find((domain) => domain.facts.some((fact) => fact.from.some((from) => from === id)));
         return [
             `Variant "${variant.name}": ${variant.domains.length} domains, ${total} rules placed.`,
             ...variant.domains.map((domain) => {

@@ -1,7 +1,5 @@
 import { resolve } from "node:path";
-import { applyChanges } from "../shared/changes";
 import { deriveCurrent } from "../shared/derive/current";
-import type { Gate } from "../shared/gates";
 import { layoutOf } from "../shared/model/layout";
 import { abandon, accept, checkJob, done, next, redo, status } from "../shared/jobs/driver";
 import { finish } from "../shared/jobs/finish";
@@ -23,7 +21,6 @@ next --limit <n>               print one action as JSON: dispatch (agents to run
 done <job>                     the agent of a job of the open batch has finished: gate its output, or read its review
 abandon <job>                  the agent crashed; the job is handed out again
 redo <job> --instructions <text>   hand a decided job back to its writer, for a gap the stage's final checks found
-apply-changes <${stages.join("|")}>   hand the jobs of a request for changes (from choose.ts --changes) back with its text
 accept <job>                   decide a job waiting for a fix or a review as it stands, keeping its challenges as disputed
 check <job>                    run the job's gate on its output; prints "no gap" or each gap
 status                         where every job stands
@@ -53,14 +50,6 @@ else if (command === "abandon") console.log(abandon(layout, rest[0] ?? ""));
 else if (command === "redo") {
     const at = rest.indexOf("--instructions");
     console.log(redo(layout, rest[0] ?? "", at >= 0 ? (rest[at + 1] ?? "") : ""));
-} else if (command === "apply-changes") {
-    if (!stages.includes(stage)) {
-        console.log(help);
-        process.exit(2);
-    }
-    const result = applyChanges(layout, stage as Gate);
-    console.log(result.text);
-    process.exit(result.ok ? 0 : 1);
 } else if (command === "accept") console.log(accept(layout, rest[0] ?? ""));
 else if (command === "check") {
     const gaps = checkJob(layout, rest[0] ?? "");

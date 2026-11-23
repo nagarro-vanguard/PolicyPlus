@@ -1,5 +1,12 @@
 import { Schema } from "effect";
-import { componentJobGaps, componentViewGaps, journeyGaps, shapeGaps, type ComponentContext, type DesignContext } from "../derive/checks";
+import {
+    componentJobGaps,
+    componentViewGaps,
+    journeyGaps,
+    shapeGaps,
+    type ComponentContext,
+    type DesignContext,
+} from "../derive/checks";
 import { ViewBody } from "../model/view";
 import type { LegacySheet } from "../derive/legacy";
 import { Architecture, Component, Journey, type Task } from "../model/records";

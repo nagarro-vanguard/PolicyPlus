@@ -2,8 +2,6 @@ import { Schema } from "effect";
 import { about, ActionId, Count, LayerId, RuleId, StoryKey, Text } from "./fields";
 import { Decision, Story, TargetLayer } from "./records";
 
-export const Tag = Schema.Literals(["epic", "story", "functional", "technical", "modernize"]);
-
 export const StoryView = Schema.Struct({
     ...Story.fields,
     key: StoryKey.annotate(about("The story's stable key: a signature of what it builds.")),
@@ -13,8 +11,6 @@ export const StoryView = Schema.Struct({
     ),
     epic: Text.annotate(about("The key of its epic.")),
     kind: Schema.Literals(["functional", "technical"]).annotate(about("Functional when it ports legacy actions.")),
-    builder: Schema.Literals(["shape-and-deliver", "scaffold-codebase"]).annotate(about("The skill that delivers it.")),
-    tags: Schema.Array(Tag).annotate(about("The tags the work item carries.")),
     blockedBy: Schema.Array(StoryKey).annotate(about("The stories that must be merged first.")),
     builds: Schema.Array(RuleId).annotate(about("The legacy rules it builds, each exactly once across the plan.")),
     reliesOn: Schema.Array(Schema.Struct({ rule: RuleId, builtBy: StoryKey })).annotate(

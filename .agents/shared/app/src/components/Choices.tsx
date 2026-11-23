@@ -1,7 +1,6 @@
 import { Badge } from "@continuum/ui/components/badge";
-import { Button } from "@continuum/ui/components/button";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@continuum/ui/components/item";
-import { CircleCheck, Copy } from "lucide-react";
+import { CircleCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import type { ChoicesView, Option } from "../case/architecture-view";
 import { copy } from "../lib/copy";
@@ -10,8 +9,8 @@ import { Section } from "./Explorer";
 import { Fold } from "./Fold";
 
 // The Choices page: the four choices that shape the new system, read as a review. Each says what is decided, the options
-// with what each costs, the one recommended, what follows if it is confirmed and whether it can be undone, then one
-// sentence a reader copies for their assistant. No step of the process, no date and no name of who decides: the app's
+// with what each costs, the one taken, what follows and whether it can be changed, then how to ask for a change.
+// No step of the process, no date and no name of who decides: the app's
 // words for each choice are in copy.ts, the options and reasons are the case's.
 
 const words = copy.choices;
@@ -50,7 +49,7 @@ function OptionRow({ name, cost, recommended, writtenBy }: { readonly name: stri
     );
 }
 
-/** What every choice ends with: its consequences, whether it can be undone, and the sentence to copy. */
+/** What every choice ends with: what follows from it, whether it can be changed, and how to ask. */
 function Close({ gate }: { readonly gate: string }) {
     const said = words.gates[gate];
     if (said === undefined) return null;
@@ -68,21 +67,9 @@ function Close({ gate }: { readonly gate: string }) {
             <Sub title={words.undo}>
                 <p data-written-by="app">{said.undo}</p>
             </Sub>
-            <div className="flex flex-col items-start gap-spacing-md border-t border-border pt-spacing-lg" data-for-assistant>
-                <p data-written-by="app">{words.act}</p>
-                <blockquote className="border-s-2 border-border ps-spacing-lg" data-written-by="app">
-                    {said.confirm}
-                </blockquote>
-                <Button variant="outline" data-copy-text={said.confirm} data-copied={copy.site.copied}>
-                    <Copy aria-hidden="true" />
-                    <span data-label data-written-by="app">
-                        {words.copy}
-                    </span>
-                </Button>
-                <p className="text-sm text-muted-foreground" data-written-by="app">
-                    {words.change}
-                </p>
-            </div>
+            <p className="border-t border-border pt-spacing-lg text-sm text-muted-foreground" data-written-by="app">
+                {words.change}
+            </p>
         </>
     );
 }
@@ -98,7 +85,7 @@ function Question({ gate }: { readonly gate: string }) {
     );
 }
 
-/** The options a choice gives in the app's words: confirm, or ask for a change first. */
+/** The option a choice took, in the app's words. */
 function PlainOptions({ gate, recommended }: { readonly gate: string; readonly recommended: ReactNode }) {
     const said = words.gates[gate];
     if (said === undefined || said.options.length === 0) return null;

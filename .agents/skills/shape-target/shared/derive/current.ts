@@ -5,7 +5,7 @@ import { Schema } from "effect";
 import type { Layout } from "../model/layout";
 import { Task } from "../model/records";
 import { writeManifest } from "../manifest";
-import { loadChoice, loadLegacy, loadRequest } from "../run";
+import { loadLegacy, loadRequest } from "../run";
 import { deriveEssence } from "./essence";
 import { missing } from "./graph";
 import type { LegacySheet } from "./legacy";
@@ -132,8 +132,7 @@ export const deriveCurrent = (layout: Layout): Derived => {
         };
     const wrote = writeIfChanged(layout.current, { tasks });
     writeIfChanged(layout.tasksRecord, tasks);
-    const marks = loadChoice(layout.choiceAsIs)?.marks ?? [];
-    writeIfChanged(layout.essence, deriveEssence(legacy, tasks, loadRequest(layout), marks));
+    writeIfChanged(layout.essence, deriveEssence(legacy, tasks, loadRequest(layout)));
     writeManifest(layout);
     return {
         ok: true,

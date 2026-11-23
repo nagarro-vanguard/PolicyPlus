@@ -95,7 +95,7 @@ export const journeyEpic = (journey: TargetJourney) => `journey:${journey.task}`
 /**
  * Who builds each component: the journey it serves alone, or a shared story when it serves several journeys, is
  * platform, or adapts an outside system.
- * @param target the confirmed target
+ * @param target the decided target
  * @returns the journey id or `shared`, by component name
  */
 export const componentOwners = (target: Target): Map<string, string> => {
@@ -114,7 +114,7 @@ export const componentOwners = (target: Target): Map<string, string> => {
 /**
  * The components built in the shared tier: those no journey serves alone, and every component a shared one calls, since
  * a component is built before what calls it and a shared story comes before every journey.
- * @param target the confirmed target
+ * @param target the decided target
  * @returns the names
  */
 export const sharedTier = (target: Target): Set<string> => {
@@ -170,7 +170,7 @@ const citedDecisions = (story: Story) =>
     );
 
 /**
- * Derives the strictly ordered, phase-wise plan of a confirmed target: epics are the chosen journeys, a story is a slice
+ * Derives the strictly ordered, phase-wise plan of a decided target: epics are the chosen journeys, a story is a slice
  * of a journey with the components that carry it, phases are the levels of the component graph and blockers are the
  * calls between components. The legacy supplies coverage only. Pure.
  * @param input the records, the facts and the target
@@ -264,7 +264,7 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                 ? [...stepIds].sort()
                 : built.length > 0
                   ? [...built].sort()
-                  : [...story.criteria.flatMap((c) => c.from.map((r) => `${r._tag}:${r.id}`))].sort();
+                  : [story.title, ...story.criteria.flatMap((c) => c.from.map((r) => `${r._tag}:${r.id}`))].sort();
         const layerIds = storyLayers(story, { scaffold, acceptance: test !== undefined }, stack);
         return {
             story,
@@ -400,12 +400,6 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                 phase: view.klass === 3 ? 3 + (level.get(view.key) ?? 0) : view.klass,
                 epic: view.epic,
                 kind: view.functional ? "functional" : "technical",
-                builder: view.scaffold ? "scaffold-codebase" : "shape-and-deliver",
-                tags: [
-                    "story",
-                    view.functional ? "functional" : "technical",
-                    ...(view.builds.length > 0 ? (["modernize"] as const) : []),
-                ],
                 blockedBy: view.blockedBy as unknown as StoryView["blockedBy"],
                 builds: view.builds as unknown as StoryView["builds"],
                 reliesOn: view.reliesOn as unknown as StoryView["reliesOn"],

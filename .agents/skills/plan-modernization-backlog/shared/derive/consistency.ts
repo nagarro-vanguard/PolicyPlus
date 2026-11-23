@@ -13,7 +13,7 @@ export type RuleChanges = ReadonlyMap<string, readonly { readonly step: string; 
 
 /**
  * Every rule a chosen journey's step changes, with the step and what the rule does now.
- * @param target the confirmed target
+ * @param target the decided target
  * @returns the changes by rule id; empty for journeys written before steps could change a rule
  */
 export const ruleChangesOf = (target: Target): RuleChanges => {

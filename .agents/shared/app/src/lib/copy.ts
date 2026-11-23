@@ -201,7 +201,6 @@ export const copy = {
         structure: (phases: string, epics: string, stories: string) =>
             `The plan builds the new system in ${phases}. Together they hold ${epics} and ${stories}.`,
         phaseMeans: "A phase is one stage of the build. Its stories rest on what the earlier phases built.",
-        readyNow: (stories: string) => `Ready to start now: ${stories}.`,
         phasesTitle: "Phases in build order",
         phase: (number: number) => `Phase ${number}`,
         builtIn: "Built in",
@@ -235,7 +234,6 @@ export const copy = {
         unblocks: (stories: string) => `Unblocks ${stories}`,
         waitsFor: (stories: string) => `Waits for ${stories}`,
         nothingBlocks: "Nothing blocks it",
-        ready: "Ready to start",
         what: "What",
         why: "Why",
         rules: "Legacy rules it carries",
@@ -338,10 +336,10 @@ export const copy = {
         idea: "The idea",
         cost: "What it costs",
         chosen: "Chosen",
-        /** The words of a design the person has not confirmed: the recommended option is shown first, as a proposal. */
+        /** The words of a design not decided yet: the recommended option is shown first, as a proposal. */
         unconfirmed: {
-            notice: "Not confirmed yet. The recommended option is shown first, with the others drawn the same way beside it.",
-            badge: "Recommended, not confirmed",
+            notice: "Not decided yet. The recommended option is shown first, with the others drawn the same way beside it.",
+            badge: "Recommended, not decided",
             why: "Why it is recommended",
             other: "Another option",
             optionsLead: "Each column is one option, the recommended one first. The table scrolls sideways on a narrow screen.",
@@ -350,7 +348,7 @@ export const copy = {
         challenges: "Open challenges",
         challengesLead: "Points a reviewer raised about the design that are not settled.",
         aboutOther: (name: string) => `About an option not chosen: ${name}`,
-        changed: "What changed since you confirmed",
+        changed: "What changed since it was decided",
         added: "Added",
         removed: "Removed",
         changedItems: "Changed",
@@ -370,17 +368,15 @@ export const copy = {
     },
     choices: {
         title: "Choices",
-        lead: "Four choices shape the new system. Each shows its options, the one recommended and what follows from it.",
-        question: "What is decided",
+        lead: "Four decisions shape the new system. Each shows its options, the one taken and what follows from it.",
+        question: "What was decided",
         options: "Options",
         recommended: "Recommended",
-        consequences: "If you confirm",
-        undo: "Can it be undone?",
-        act: "To confirm, copy this sentence for your assistant.",
-        change: "To ask for a change instead, tell your assistant what should be different.",
-        copy: "Copy for your assistant",
-        recommendedAsIs: (journeys: string, steps: string) => `Confirm the ${journeys} as read from the code, with ${steps}.`,
-        recommendedComponents: (components: string, domains: string) => `Confirm ${components} across ${domains}.`,
+        consequences: "What follows",
+        undo: "Can it be changed?",
+        change: "To change it, tell your assistant what should be different.",
+        recommendedAsIs: (journeys: string, steps: string) => `${journeys} as read from the code, with ${steps}.`,
+        recommendedComponents: (components: string, domains: string) => `${components} across ${domains}.`,
         seeArchitecture: "The options are compared side by side on the Architecture page.",
         seeJourneys: "Each journey is shown step by step on the Journeys page.",
         journeyFilter: "Filter the journeys",
@@ -391,13 +387,9 @@ export const copy = {
             "as-is": {
                 title: "Today's journeys",
                 question: "Is this the right list of tasks people do with the system today?",
-                options: [
-                    { name: "Confirm the list as read from the code", tradeoff: "Every later choice can start from it at once." },
-                    { name: "Ask for a change first", tradeoff: "A missing or wrong task is fixed before any new way is designed." },
-                ],
+                options: [{ name: "The list as read from the code", tradeoff: "Every later decision starts from it at once." }],
                 consequences: ["Every later choice starts from this list.", "A task left off the list gets no new way and no work in the plan."],
-                undo: "Yes. The choices after it are then made again.",
-                confirm: "I confirm today's journeys as shown.",
+                undo: "Yes. The decisions after it are then made again.",
             },
             journeys: {
                 title: "How each journey will work",
@@ -405,7 +397,6 @@ export const copy = {
                 options: [],
                 consequences: ["Each journey keeps the way recommended for it.", "The architecture is chosen to serve these ways."],
                 undo: "Yes. The architecture and the components are then made again.",
-                confirm: "I confirm the recommended way for each journey as shown.",
             },
             architecture: {
                 title: "How the system is built",
@@ -413,18 +404,13 @@ export const copy = {
                 options: [],
                 consequences: ["Its domains and the parts that run are fixed.", "The components of each domain are designed next."],
                 undo: "Yes, but it costs more once components are designed, since they are made again.",
-                confirm: "I confirm the architecture as shown.",
             },
             components: {
                 title: "What each domain is made of",
                 question: "Are these the right components for each domain?",
-                options: [
-                    { name: "Confirm the components as designed", tradeoff: "The plan can be written from them at once." },
-                    { name: "Ask for a change first", tradeoff: "A missing or misplaced component is fixed before any story names it." },
-                ],
+                options: [{ name: "The components as designed", tradeoff: "The plan can be written from them at once." }],
                 consequences: ["The plan is written from these components.", "A later change to them rewrites the stories that name them."],
                 undo: "Yes, until the plan is written. After that each change touches stories.",
-                confirm: "I confirm the components as shown.",
             },
         } as Readonly<
             Record<
@@ -435,7 +421,6 @@ export const copy = {
                     options: readonly { name: string; tradeoff: string }[];
                     consequences: readonly string[];
                     undo: string;
-                    confirm: string;
                 }
             >
         >,

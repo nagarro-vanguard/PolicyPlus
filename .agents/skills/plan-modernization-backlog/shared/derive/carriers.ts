@@ -2,7 +2,7 @@ import type { Criterion, Decision, Story } from "../model/records";
 import type { Target } from "../read/target";
 
 /*
- * Each outside system is built once. With a confirmed target, a component that adapts an outside system is built by its
+ * Each outside system is built once. With a decided target, a component that adapts an outside system is built by its
  * own story; a foundation story about how the same system is reached would build it again. Its criteria that rest on
  * that system's integration decision move to the adapter's story, and a foundation story left with nothing is dropped.
  */
@@ -20,7 +20,7 @@ const isFoundation = (story: Story) =>
  * then hold more than 12 criteria, or into one that ports entry points.
  * @param stories the stories, foundation and components alike
  * @param decisions the decisions
- * @param target the confirmed target
+ * @param target the decided target
  * @param externals the outside systems by id
  * @returns the stories without duplicates, and one line per move for the build's report
  */

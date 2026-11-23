@@ -7,6 +7,7 @@ import { confirmed } from "../gates";
 import { slug } from "../model/ids";
 import type { Layout } from "../model/layout";
 import type { Architecture, StoredArchitecture } from "../model/records";
+import { clearRounds } from "./rounds";
 import {
     loadArchitectureVariants,
     loadChoice,
@@ -50,7 +51,7 @@ export const designContext = (layout: Layout): DesignContext => ({
     stack: loadRequest(layout).stack,
 });
 
-/** The variant of the architecture the person chose, or nothing when none is chosen. */
+/** The variant of the architecture that was decided, or nothing when none is. */
 export const chosenArchitecture = (layout: Layout): StoredArchitecture | undefined => {
     const choice = loadChoice(layout.choiceArchitecture);
     const picked = choice?.picks[0]?.variant;
@@ -77,13 +78,8 @@ const drafts = (layout: Layout, stage: Stage, jobs: Jobs): Draft[] | string => {
     const request = loadRequest(layout);
     if (stage === "journeys") {
         if (!confirmed(layout, "as-is"))
-            return "the as-is is not confirmed (or changed since): run `choose.ts as-is` first";
-        const essence = deriveEssence(
-            loadLegacy(layout),
-            loadTasks(layout),
-            request,
-            loadChoice(layout.choiceAsIs)?.marks ?? [],
-        );
+            return "the as-is is not decided (or changed since): run `decide.ts as-is` first";
+        const essence = deriveEssence(loadLegacy(layout), loadTasks(layout), request);
         writeJson(layout.essence, essence);
         const packs: (typeof essence.tasks)[] = [];
         let weight = 0;
@@ -107,13 +103,8 @@ const drafts = (layout: Layout, stage: Stage, jobs: Jobs): Draft[] | string => {
         }));
     }
     if (stage === "architecture") {
-        if (!existsSync(layout.journeys)) return "the journeys are not confirmed: run `choose.ts journeys` first";
-        const essence = deriveEssence(
-            loadLegacy(layout),
-            loadTasks(layout),
-            request,
-            loadChoice(layout.choiceAsIs)?.marks ?? [],
-        );
+        if (!existsSync(layout.journeys)) return "the journeys are not decided: run `decide.ts journeys` first";
+        const essence = deriveEssence(loadLegacy(layout), loadTasks(layout), request);
         writeJson(layout.essence, essence);
         return [
             {
@@ -152,7 +143,7 @@ const drafts = (layout: Layout, stage: Stage, jobs: Jobs): Draft[] | string => {
     }
     const architecture = chosenArchitecture(layout);
     if (architecture === undefined || !confirmed(layout, "architecture"))
-        return "no architecture is chosen (or it changed since): run `choose.ts architecture` first";
+        return "no architecture is decided (or it changed since): run `decide.ts architecture` first";
     const base = designContext(layout);
     const legacyRules = base.legacy.rules;
     return architecture.domains.map((domain) => ({
@@ -205,6 +196,7 @@ export const prepare = (layout: Layout, stage: Stage): string => {
     jobs.batch = undefined;
     const made = drafts(layout, stage, jobs);
     if (typeof made === "string") return made;
+    clearRounds(layout, stage);
     // What an earlier run left for these jobs is put aside, so a writer starts from the context and never from an old draft.
     const archive = join(layout.work, "archive", new Date().toISOString().replaceAll(":", "-"));
     for (const draft of made) {

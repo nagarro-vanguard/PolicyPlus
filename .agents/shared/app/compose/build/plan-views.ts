@@ -1,17 +1,12 @@
-import { workflowOf, type Tag } from "../../../../skills/shape-and-deliver/scripts/core/workflows";
 import { compareText, distinct } from "../io";
 import type { PlanInput } from "../inputs/plan";
 import type { RequestInput } from "../inputs/plan";
 import type { ArchitectureView, ProposedJourney, StepTrace } from "./journeys";
 import { sortByText } from "./text";
-import { workLabels, type WorkLabel } from "./work";
-
-export { workLabels, type WorkLabel } from "./work";
 
 /*
- * The plan's views, every join made here: who each story unblocks, which stories are ready to start under the
- * conductor's rule, the layers each story and phase is built in, the journey by domain matrix with the stories of each
- * cell, and the challenges that survived review.
+ * The plan's views, every join made here: who each story unblocks, the layers each story and phase is built in, the
+ * journey by domain matrix with the stories of each cell, and the challenges that survived review.
  */
 
 export type StoryView = {
@@ -20,12 +15,6 @@ export type StoryView = {
     what: string;
     why: string;
     kind: string;
-    tags: string[];
-    /**
-     * What the tags run: the workflow's profile, and the kind of work in plain words from compose's closed catalogue
-     * (`workLabels`); null when the tag set names no workflow.
-     */
-    work: { profile: string; reference: boolean; label: WorkLabel; words: string } | null;
     phase: number;
     epic: string;
     sequence: number;
@@ -46,7 +35,6 @@ export type StoryView = {
     open: string[];
     /** The reviewers' challenges about this story that are not settled. */
     challenges: string[];
-    status: string;
     split: { part: string; from: string } | null;
 };
 
@@ -77,7 +65,6 @@ export type PlanViews = {
         stories: string[];
     }[];
     decisions: { id: string; layer: string; chose: string; reason: string }[];
-    ready: string[];
     matrix: {
         journeys: string[];
         domains: string[];
@@ -103,19 +90,6 @@ export type Criterion = {
     from: { kind: string; id: string }[];
 };
 
-
-const workLabelOf = (kind: string, reference: boolean): WorkLabel =>
-    kind === "design" || kind === "wait"
-        ? "designed"
-        : kind === "bug"
-          ? "fix"
-          : kind === "technical"
-            ? reference
-                ? "technical-rebuilt"
-                : "technical"
-            : reference
-              ? "rebuilt"
-              : "feature";
 
 const givenWhenThen = /^\s*given\s+([\s\S]+?),\s+when\s+([\s\S]+?),\s+then\s+([\s\S]+?)\s*$/iu;
 
@@ -159,7 +133,6 @@ export const planViewsOf = (
     for (const each of plan.conflicts ?? [])
         if (!each.resolved && storyKeys.has(each.variant))
             challengesOf.set(each.variant, [...(challengesOf.get(each.variant) ?? []), plain(each.says)]);
-    const status = (key: string) => input.status.get(key) ?? "planned";
     const domainOf = new Map((architecture?.components ?? []).map((component) => [component.name, component.domain]));
     const domainOfRule = new Map(
         (architecture?.domains ?? []).flatMap((domain) => domain.rules.map((rule) => [rule, domain.name] as const)),
@@ -173,22 +146,12 @@ export const planViewsOf = (
             const fromComponents = distinct(
                 components.map((name) => domainOf.get(name) ?? "").filter((name) => name !== ""),
             );
-            const workflow = workflowOf(story.tags as Tag[]);
             return {
                 key: story.key,
                 title: story.title,
                 what: story.what,
                 why: story.why,
                 kind: story.kind,
-                tags: [...story.tags],
-                work:
-                    workflow === undefined
-                        ? null
-                        : (() => {
-                              const reference = "reference" in workflow && workflow.reference === true;
-                              const label = workLabelOf(workflow.kind, reference);
-                              return { profile: workflow.profile, reference, label, words: workLabels[label] };
-                          })(),
                 phase: story.phase,
                 epic: story.epic,
                 sequence: story.sequence,
@@ -211,7 +174,6 @@ export const planViewsOf = (
                 criteria: story.criteria.map((each) => criterionOf(plain(each.says), each.from ?? [])),
                 open: (story.open ?? []).map(plain),
                 challenges: distinct(challengesOf.get(story.key) ?? []),
-                status: status(story.key),
                 split:
                     story.part === undefined || story.splitFrom === undefined
                         ? null
@@ -219,20 +181,6 @@ export const planViewsOf = (
             };
         },
     );
-
-    // Ready to start: the conductor's rule. Not merged, every blocker merged, and every story of the epics its epic
-    // comes after merged.
-    const merged = (key: string) => status(key) === "merged";
-    const epicStories = new Map(plan.epics.map((epic) => [epic.key, epic.stories]));
-    const epicOf = new Map(plan.epics.map((epic) => [epic.key, epic]));
-    const ready = stories
-        .filter(
-            (story) =>
-                !merged(story.key) &&
-                story.blockedBy.every(merged) &&
-                (epicOf.get(story.epic)?.comesAfter ?? []).every((key) => (epicStories.get(key) ?? []).every(merged)),
-        )
-        .map((story) => story.key);
 
     const journeyName = new Map(journeys.map((journey) => [journey.task, journey.name]));
     const layerName = new Map(plan.layers.map((layer) => [layer.id, layer.name]));
@@ -310,7 +258,6 @@ export const planViewsOf = (
             chose: each.chose,
             reason: each.reason,
         })),
-        ready,
         matrix,
         conflicts: [
             ...(plan.conflicts ?? []).map((each) => ({

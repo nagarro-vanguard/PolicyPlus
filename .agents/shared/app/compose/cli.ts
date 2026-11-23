@@ -9,7 +9,7 @@ import { writeFolder } from "./io";
  *
  * --payloads  the analysis's payloads folder (it holds manifest.json)
  * --target    the run's output root that holds target/ (shape-target's output), when the target is designed
- * --plan      the run's output root that holds .modernization-backlog/ and work-items/, when the plan is written
+ * --plan      the run's output root that holds .modernization-backlog/ and work-items/attachments/, when the plan is written
  * --source    the analysed code's folder, for evidence excerpts; the analysis's own record of it when left out
  * --out       the case folder to write; what was in it is replaced
  *

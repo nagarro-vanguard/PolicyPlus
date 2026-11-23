@@ -29,12 +29,15 @@ export const analysisStoreOf = (paths: Paths): string | undefined => {
  */
 export const payloadProblems = (paths: Paths): string[] => {
     const manifest = join(paths.payloads, "manifest.json");
-    if (!existsSync(manifest)) return ["the payloads have no manifest: they were written before payloads were versioned"];
+    if (!existsSync(manifest))
+        return ["the payloads have no manifest: they were written before payloads were versioned"];
     try {
         const version = (JSON.parse(readFileSync(manifest, "utf8")) as { contractVersion?: number }).contractVersion;
         return version === payloadContractVersion
             ? []
-            : [`the payloads follow contract version ${version}, and these scripts read version ${payloadContractVersion}`];
+            : [
+                  `the payloads follow contract version ${version}, and these scripts read version ${payloadContractVersion}`,
+              ];
     } catch {
         return ["the payloads' manifest cannot be read"];
     }

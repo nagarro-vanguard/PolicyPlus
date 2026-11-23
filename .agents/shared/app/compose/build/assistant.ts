@@ -1,6 +1,5 @@
 import { dirname } from "node:path";
 import { bundleText, capabilityBundle, surfaceBundle } from "../../../../skills/code-analysis/shared/read/bundle";
-import { distinct } from "../io";
 import type { Payloads } from "../inputs/payloads";
 import type { PlanInput } from "../inputs/plan";
 import type { Excerpt } from "./evidence";
@@ -256,7 +255,6 @@ export const assistantOf = (
     if (plan !== undefined) {
         for (const story of plan.plan.stories) {
             const attachment = plan.attachments.get(story.key);
-            const deliver = plan.prompts.deliver[story.key];
             put(
                 "story",
                 story.key,
@@ -265,12 +263,10 @@ export const assistantOf = (
                     "",
                     `What: ${story.what}`,
                     `Why: ${story.why}`,
-                    `Tags: ${distinct(story.tags).join(", ")}`,
                     ...(story.blockedBy.length === 0 ? [] : [`Blocked by: ${story.blockedBy.join(", ")}`]),
                     "",
                     "Acceptance criteria:",
                     ...story.criteria.map((criterion, number) => `${number + 1}. ${criterion.says}`),
-                    ...(deliver === undefined ? [] : ["", "## How to deliver it", deliver]),
                     ...(attachment === undefined ? [] : ["", attachment]),
                 ].join("\n"),
             );

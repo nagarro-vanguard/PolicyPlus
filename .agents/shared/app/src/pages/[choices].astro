@@ -5,7 +5,7 @@ import { choicesView } from "../case/architecture-view";
 import { siteOf } from "../case/site";
 import { copy } from "../lib/copy";
 // The Choices page: the four choices that shape the new system, each as a review of its options with the one
-// recommended, and one sentence the reader copies for their assistant to confirm it. The page exists only when the
+// taken, and how to ask for a change. The page exists only when the
 // Choices section does (src/case/sections.ts), as a dynamic route with no path otherwise.
 export const getStaticPaths = async () =>
     (await siteOf()).nav.some((section) => section.id === "choices") ? [{ params: { choices: "choices" } }] : [];

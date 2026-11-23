@@ -21,12 +21,14 @@ export const layerAgentsMd = (layer: TargetLayer, request: ModernizationRequest,
     ].join("\n");
 };
 
-/** The target root's AGENTS.md: the layers table, the person's Work tracking text, and the workspace conventions. */
+/** What the root AGENTS.md says under `## Work tracking` until the scaffold writes the workspace's own text there. */
+const WORK_TRACKING_PLACEHOLDER = "(Written from the workspace's Work tracking section when scaffold runs.)";
+
+/** The target root's AGENTS.md: the layers table, the Work tracking heading the scaffold fills in, and the workspace conventions. */
 export const rootAgentsMd = (
     request: ModernizationRequest,
     layers: readonly TargetLayer[],
     decisions: readonly Decision[],
-    workTracking: string,
 ) => {
     const name = (id: string) => layers.find((layer) => layer.id === id)?.name ?? id;
     const rows = layers.map(
@@ -50,23 +52,10 @@ export const rootAgentsMd = (
         "",
         "## Work tracking",
         "",
-        workTracking.trim(),
+        WORK_TRACKING_PLACEHOLDER,
         ...(rules.length > 0 ? ["", "## Rules", "", ...rules] : []),
         "",
     ].join("\n");
-};
-
-/** The text of a `## <heading>` section of a markdown file, or undefined when it has none. */
-export const sectionOf = (markdown: string, heading: string) => {
-    const lines = markdown.split("\n");
-    const start = lines.findIndex((line) => line.trim().toLowerCase() === `## ${heading}`.toLowerCase());
-    if (start < 0) return undefined;
-    const rest = lines.slice(start + 1);
-    const end = rest.findIndex((line) => line.startsWith("## "));
-    return rest
-        .slice(0, end < 0 ? rest.length : end)
-        .join("\n")
-        .trim();
 };
 
 /** Non-table, non-blank lines: what the cap on an AGENTS.md counts. */

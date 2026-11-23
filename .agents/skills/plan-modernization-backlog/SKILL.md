@@ -1,12 +1,14 @@
 ---
 name: plan-modernization-backlog
-description: Turns a finished code analysis and a short typed request into a strictly ordered, phase-wise modernization backlog: the layers and decisions of the target codebase, then epics and stories that cover every action and rule of the existing system exactly once, written for the product owner and the developer. Nothing is planned beyond what the analysis shows.
+description: Turns a finished code analysis, the decided target and a short typed request into a strictly ordered, phase-wise modernization plan: the layers and decisions of the target codebase, then epics and stories that cover every action and rule of the existing system exactly once, written for the product owner and the developer. Nothing is planned beyond what the analysis shows.
 argument-hint: <modernization request file>
 ---
 
 # Plan Modernization Backlog
 
-Goal: a plan people review step by step and later skills build from, complete (every capability, surface, action and rule is in a story or an explicit decision) and true (every criterion rests on rules, state changes or decisions). Read the analysis and plan; never run the legacy, change code or create work items.
+Goal: a plan people read phase by phase, complete (every capability, surface, action and rule is in a story or an explicit decision) and true (every criterion rests on rules, state changes or decisions). Read the analysis and plan; never run the legacy or change code.
+
+Words: an *epic* is one chosen journey of the target (or an area without one); a *story* is a slice of an epic with the components that carry it, its criteria and the legacy rules it builds; a *phase* is a level of the component graph. The plan is a set of files, written for the reader; it is tied to no tracker.
 
 ## How to run
 
@@ -19,13 +21,13 @@ Goal: a plan people review step by step and later skills build from, complete (e
     - `wait`: a batch is open; wait for its agents, report them, call `next`.
     - `done`: the stage's jobs are all decided; run `finish`.
     - `stop`: a job was refused; show its message to the person and stop.
-    A job runs write, gate, review and at most one fix; a challenge that survives the fix stays as disputed and is shown to the person. Nothing waits for the person: assumptions are in each decision's `reason`.
-4. `bun ${SKILL_ROOT}/cli/plan.ts build ${ROOT} --work-tracking <the workspace AGENTS.md>` derives the plan from the accepted records and checks every gate. On exit 1 it prints each failing gate; run the stage that owns the gap again with `prepare`. On success it writes `plan.json`, `prompts.json`, the manifest, the bodies, the attachments and the AGENTS.md previews.
+    A job runs write, gate, review and at most one fix; a challenge that survives the fix stays as disputed and is carried into the plan's `conflicts`. Nothing waits for anyone: assumptions are in each decision's `reason`.
+4. `bun ${SKILL_ROOT}/cli/plan.ts build ${ROOT}` derives the plan from the accepted records and checks every gate. On exit 1 it prints each failing gate; run the stage that owns the gap again with `prepare`. On success it writes `plan.json`, the manifest, the bodies, the attachments and the AGENTS.md previews.
 5. Tell the person what was written and where the plan's pages are (the app builds them). How the plan reads, and what the agents' titles and criteria must look like, is `${SKILL_ROOT}/rules/presentation.md`.
 
-## With a confirmed target
+## With a decided target
 
-The target is confirmed when the person's four decisions hold (`target/choice-as-is.json`, `choice-journeys.json`, `choice-architecture.json`, `choice-components.json`), by shape-target's own rule read from its `shared/gates.ts`: the file a decision is about still has the hash its record kept, or, for a record made before hashes were kept, the record is not older than that file. When `target/` exists and one does not hold, `prepare` and `plan.ts build` stop and name it; a run with no `target/` is planned from the analysis alone.
+The target is decided when its four decisions hold (`target/choice-as-is.json`, `choice-journeys.json`, `choice-architecture.json`, `choice-components.json`, written by shape-target's `decide.ts`), by shape-target's own rule read from its `shared/gates.ts`: the file a decision is about still has the hash its record kept, or, for a record made before hashes were kept, the record is not older than that file. When `target/` exists and one does not hold, `prepare` and `plan.ts build` stop and name it; a run with no `target/` is planned from the analysis alone.
 
 When `${ROOT}/target/architecture.json` and `target/journeys.json` exist (the `shape-target` skill wrote them), the plan is made from them and the analysis supplies coverage only. Epics are the chosen journeys; a story is a slice of one journey with the components that carry it; a component is built by the journey that alone serves it, otherwise by a shared story in an earlier phase; each journey ends with an acceptance story the plan writes itself; phases are the levels of the component graph and blockers are the calls between components. The foundation stage then has no `scope` job (what is not carried was dropped, step by step, in the journeys), its layers must carry what the architecture is built with, and the stories stage has `shared` and one `journey` job per journey in place of the capability jobs. Without them the plan is made as described below.
 
@@ -36,4 +38,4 @@ When `${ROOT}/target/architecture.json` and `target/journeys.json` exist (the `s
 
 ## Output
 
-`${ROOT}/.modernization-backlog/payloads/plan.json` and `prompts.json`; `${ROOT}/work-items/` with `manifest.json`, `bodies/`, `attachments/`, `ledger.json` and `agents-md/`. Every build makes the ledger's keys those of the plan (a story that left the plan after its work item was created stops the build) and removes the bodies and attachments of stories that left it. `plan.json` keeps what it was built from (`builtFrom`: the analysis's fingerprint and the hash of each decision's subject); `plan.ts status ${ROOT}` says whether that still holds. It also carries the reviewers' challenges that survived (`conflicts`), the target's and its own, and each story's layers. `cli/stage.ts status` says where every job stands; `cli/ledger.ts` records what is done with a work item; `cli/prompts.ts` prints the prompts.
+`${ROOT}/.modernization-backlog/payloads/plan.json`; `${ROOT}/work-items/` with `manifest.json`, `bodies/`, `attachments/` and `agents-md/` (the notes of each layer). Every build removes the bodies and attachments of stories that left the plan. `plan.json` keeps what it was built from (`builtFrom`: the analysis's fingerprint and the hash of each decision's subject); `plan.ts status ${ROOT}` says whether that still holds. It also carries the reviewers' challenges that survived (`conflicts`), the target's and its own, and each story's layers. `cli/stage.ts status` says where every job stands.

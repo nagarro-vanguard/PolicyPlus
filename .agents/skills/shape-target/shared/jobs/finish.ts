@@ -7,6 +7,7 @@ import type { Layout } from "../model/layout";
 import { Architecture, Component, Journey, type StoredJourney } from "../model/records";
 import { ViewBody } from "../model/view";
 import { loadJourneys, loadTasks } from "../run";
+import { clearRounds, failRound } from "./rounds";
 import { chosenArchitecture, designContext } from "./stages";
 import { loadJobs, outputOf, writeJson, type Stage } from "./state";
 
@@ -14,12 +15,13 @@ export type Finished = { ok: boolean; text: string };
 
 /**
  * Merges the accepted outputs of a stage into the run's records, and lists what stayed disputed. The components stage
- * also runs the checks across the whole chosen architecture and writes it only when they pass.
+ * also runs the checks across the whole chosen architecture and writes it only when they pass. A finish that fails is
+ * counted, and the conductor stops after `MAX_ROUNDS` of them.
  * @param layout the run's folders
  * @param stage the stage
  * @returns whether it finished, and what it did
  */
-export const finish = (layout: Layout, stage: Stage): Finished => {
+const finishOnce = (layout: Layout, stage: Stage): Finished => {
     const jobs = loadJobs(layout);
     const mine = jobs.jobs.filter((job) => job.stage === stage);
     if (mine.length === 0 || mine.some((job) => job.state !== "decided"))
@@ -94,4 +96,12 @@ export const finish = (layout: Layout, stage: Stage): Finished => {
         ok: true,
         text: `${components.length} components in ${whole.domains.length} domains accepted, every check passes; ${note}`,
     };
+};
+
+/** Merges a stage's accepted outputs (see `finishOnce`), counting a failure so the conductor can stop after a few. */
+export const finish = (layout: Layout, stage: Stage): Finished => {
+    const result = finishOnce(layout, stage);
+    if (result.ok) clearRounds(layout, stage);
+    else failRound(layout, stage, result.text);
+    return result;
 };

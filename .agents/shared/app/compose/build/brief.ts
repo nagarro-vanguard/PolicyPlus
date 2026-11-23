@@ -22,7 +22,7 @@ export type Brief = {
         containers: { name: string; tech: string; holds: string[] }[];
     } | null;
     risks: { rule: string; top: string[]; ranked: string[] };
-    plan: { phases: string; epics: string; stories: string; readyFirst: string; phaseNames: string[] } | null;
+    plan: { phases: string; epics: string; stories: string; phaseNames: string[] } | null;
     numbers: string[];
 };
 
@@ -78,13 +78,6 @@ export const briefOf = (
                       "stories of the plan",
                       "the plan",
                   ),
-                  readyFirst: numbers.add({
-                      key: "plan/ready",
-                      value: plan.ready.length,
-                      noun: { one: "story", many: "stories" },
-                      scope: "stories that can start now: not merged, every blocker merged and every earlier epic done",
-                      source: "the plan and what has been delivered so far",
-                  }),
                   phaseNames: plan.phases.map((phase) => phase.name),
               };
     const layersOf = (number: number) =>

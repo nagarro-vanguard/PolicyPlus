@@ -205,12 +205,6 @@ export const buildPlan = (input: PlanInput): Built => {
             phase: view.klass === 3 ? 3 + (level.get(view.key) ?? 0) : view.klass,
             epic: view.epic,
             kind: view.functional ? "functional" : "technical",
-            builder: view.scaffold ? "scaffold-codebase" : "shape-and-deliver",
-            tags: [
-                "story",
-                view.functional ? "functional" : "technical",
-                ...(view.builds.length > 0 ? (["modernize"] as const) : []),
-            ],
             blockedBy: view.blockedBy as unknown as StoryView["blockedBy"],
             builds: view.builds as unknown as StoryView["builds"],
             reliesOn: view.reliesOn as unknown as StoryView["reliesOn"],

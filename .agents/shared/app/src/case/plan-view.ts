@@ -27,7 +27,6 @@ type Story = {
     components: string[];
     domains: string[];
     layers: string[];
-    work: { label: string; words: string } | null;
     criteria: { says: string; given: string | null; when: string | null; then: string | null; from: { kind: string; id: string }[] }[];
     open: string[];
     challenges: string[];
@@ -57,8 +56,6 @@ export type StoryView = {
     why: string;
     kind: string;
     kindLabel: string;
-    /** The kind of work in plain words, from the case's catalogue, and its key for the filter. */
-    work: { key: string; words: string } | null;
     criteria: { says: string; given: string | null; when: string | null; then: string | null; rules: PlainLink[] }[];
     open: string[];
     phase: number;
@@ -68,7 +65,6 @@ export type StoryView = {
     domainNames: string[];
     components: string[];
     layers: string[];
-    ready: boolean;
     blockedBy: { n: number; title: string }[];
     unblocks: { n: number; title: string }[];
     unblocksText: string | null;
@@ -92,7 +88,6 @@ export type PlanView = {
     /** True when the plan says it was built before the latest decisions or analysis. */
     stale: boolean;
     structure: string;
-    ready: string | null;
     phases: { number: number; why: string; builtIn: string[]; epics: string[]; stories: number }[];
     matrix: MatrixView | null;
     stories: StoryView[];
@@ -127,7 +122,6 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
     const epics = read<Epic[]>("plan/epics.json", []);
     const phases = read<Phase[]>("plan/phases.json", []);
     const layers = read<Layer[]>("plan/layers.json", []);
-    const ready = new Set(read<string[]>("plan/ready.json", []));
     const matrix = read<Matrix | null>("plan/matrix.json", null);
     const proposed = read<ProposedJourney[]>("journeys/proposed.json", []);
     const today = read<TodayJourney[]>("journeys/today.json", []);
@@ -203,8 +197,7 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
                 what: story.what,
                 why: story.why,
                 kind: story.kind,
-                kindLabel: story.work?.words ?? kindLabel(story.kind),
-                work: story.work === null ? null : { key: story.work.label, words: story.work.words },
+                kindLabel: kindLabel(story.kind),
                 criteria: story.criteria.map((criterion) => ({
                     says: criterion.says,
                     given: criterion.given,
@@ -229,7 +222,6 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
                 domainNames: story.domains,
                 components: story.components,
                 layers: story.layers.map((id) => layerName.get(id) ?? "").filter((name) => name !== ""),
-                ready: ready.has(story.key),
                 blockedBy,
                 unblocks,
                 unblocksText: unblocks.length === 0 ? null : copy.plan.unblocks(counted(unblocks.length, storyNoun)),
@@ -285,7 +277,6 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
     };
     const phasesNumber = number("plan/phases");
     const epicsNumber = number("plan/epics");
-    const readyNumber = number("plan/ready");
     const structure =
         phasesNumber !== undefined && epicsNumber !== undefined && storiesNumber !== undefined
             ? copy.plan.structure(phasesNumber.text, epicsNumber.text, countOf(storiesNumber).text)
@@ -314,7 +305,6 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
     return {
         stale,
         structure,
-        ready: readyNumber === undefined || readyNumber.value === 0 ? null : copy.plan.readyNow(readyNumber.text),
         phases: phaseViews,
         matrix: matrixView,
         stories: storyViews,
@@ -322,7 +312,7 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
             phases: phaseViews.map((phase) => ({ value: String(phase.number), label: copy.plan.phase(phase.number) })),
             epics: [...epics].sort((a, b) => a.sequence - b.sequence).map((epic) => ({ value: String(epic.sequence), label: epic.label })),
             domains: domainOrder.map((name, at) => ({ value: String(at), label: name })),
-            kinds: (data.number("plan/stories/work")?.parts ?? []).map((part) => ({ value: part.kind, label: part.noun.one })),
+            kinds: (data.number("plan/stories")?.parts ?? []).map((part) => ({ value: part.kind, label: part.noun.one })),
         },
         notCovered: {
             dropped: dropped.map((drop) => {

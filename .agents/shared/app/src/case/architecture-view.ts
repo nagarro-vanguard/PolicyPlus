@@ -45,7 +45,7 @@ export const numberOf = async (key: string): Promise<CountView | null> => {
 
 export type Since = { added: string[]; removed: string[]; changed: string[] };
 
-/** What changed in a decision since it was confirmed, with names in place of keys; nothing when nothing did. */
+/** What changed in a decision since it was decided, with names in place of keys; nothing when nothing did. */
 const sinceOf = (gate: string, nameOf: (key: string) => string | undefined): Since | null => {
     const changed = read<Changed[]>("journeys/changed.json")?.find((each) => each.gate === gate);
     const since = changed?.since ?? null;
@@ -81,7 +81,7 @@ export type TodayView = {
 };
 
 export type ProposedView = {
-    /** Whether the person confirmed it with its components; otherwise it is the recommended option, proposed. */
+    /** Whether it is decided with its components; otherwise it is the recommended option, proposed. */
     confirmed: boolean;
     name: string;
     idea: string;

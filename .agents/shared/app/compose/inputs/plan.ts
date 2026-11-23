@@ -7,8 +7,8 @@ import { ComposeError } from "../errors";
 import { namesIn, readJson, readText, sha256 } from "../io";
 
 /*
- * What the plan skill wrote under the run's output root: the plan and its prompts, the ledger of work items, the legacy
- * attachments, and the person's request. Only `plan.json` and `prompts.json` are required once a plan is given.
+ * What the plan skill wrote under the run's output root: the plan, the legacy
+ * attachments, and the person's request. Only `plan.json` is required once a plan is given.
  */
 
 /** Plan contract versions compose reads; plans written so far carry none and are read as they are. */
@@ -23,7 +23,6 @@ const Story = z.looseObject({
     what: Text,
     why: Text,
     kind: Text,
-    tags: Ids,
     phase: z.number(),
     epic: Text,
     sequence: z.number(),
@@ -87,14 +86,6 @@ const Plan = z.looseObject({
         .optional(),
 });
 
-const Prompts = z.looseObject({
-    epics: z.record(Text, Text),
-    scaffold: Text.optional(),
-    deliver: z.record(Text, Text),
-});
-
-const Ledger = z.looseObject({ items: z.record(Text, z.looseObject({ status: Text })) });
-
 const Request = z.looseObject({ goals: Text.optional(), stack: Ids.optional() });
 
 export type PlanFile = z.output<typeof Plan>;
@@ -109,8 +100,6 @@ export type PlanInput = {
     readonly stale: boolean | null;
     readonly fingerprint: string;
     readonly plan: PlanFile;
-    readonly prompts: z.output<typeof Prompts>;
-    readonly status: ReadonlyMap<string, string>;
     /** Each story's legacy attachment text, by story key. */
     readonly attachments: ReadonlyMap<string, string>;
 };
@@ -120,15 +109,12 @@ export type RequestInput = { readonly goals: string | undefined; readonly stack:
 /**
  * Read the plan of a modernization.
  * @param root the run's output root
- * @returns the plan, its prompts, the ledger's statuses and the attachments
+ * @returns the plan and the attachments
  */
 export const readPlan = (root: string): PlanInput => {
     const payloads = join(root, ".modernization-backlog", "payloads");
     const planPath = join(payloads, "plan.json");
-    const promptsPath = join(payloads, "prompts.json");
-    for (const path of [planPath, promptsPath]) {
-        if (!existsSync(path)) throw new ComposeError("missing", `missing fact: ${path} (the plan is not written)`);
-    }
+    if (!existsSync(planPath)) throw new ComposeError("missing", `missing fact: ${planPath} (the plan is not written)`);
     const planText = readText(planPath);
     const plan = readJson(planPath, Plan, planText);
     if (
@@ -140,9 +126,6 @@ export const readPlan = (root: string): PlanInput => {
             `${planPath} follows plan contract version ${plan.contractVersion}; compose reads version ${knownPlanVersions.join(", ")}`,
         );
     }
-    const promptsText = readText(promptsPath);
-    const ledgerPath = join(root, "work-items", "ledger.json");
-    const ledger = existsSync(ledgerPath) ? readJson(ledgerPath, Ledger) : { items: {} };
     const folder = join(root, "work-items", "attachments");
     const attachments = new Map(
         namesIn(folder)
@@ -159,10 +142,8 @@ export const readPlan = (root: string): PlanInput => {
     return {
         root,
         stale,
-        fingerprint: sha256(`${sha256(planText)}\n${sha256(promptsText)}`),
+        fingerprint: sha256(planText),
         plan,
-        prompts: readJson(promptsPath, Prompts, promptsText),
-        status: new Map(Object.entries(ledger.items).map(([key, item]) => [key, item.status])),
         attachments,
     };
 };

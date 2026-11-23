@@ -9,12 +9,12 @@ import { standin } from "../shared/derive/standin";
 import { readAnalysis } from "../shared/read/analysis";
 import { targetGaps } from "../shared/read/confirmed";
 
-const [command, root, ...rest] = process.argv.slice(2);
-const help = `Usage: plan.ts <facts|standin|build|status> <Output Root> [--work-tracking <AGENTS.md>]
+const [command, root] = process.argv.slice(2);
+const help = `Usage: plan.ts <facts|standin|build|status> <Output Root>
 
 facts     prints what the plan derives from the analysis: surfaces, rules, who builds them.
 standin   writes stand-in records (no agents) so the rest of the pipeline can be run and tested.
-build     derives the plan from the accepted records, checks every gate, and writes plan.json, the work items,
+build     derives the plan from the accepted records, checks every gate, and writes plan.json, the story bodies,
           their attachments and the AGENTS.md previews; exits 1 and prints every failing gate when one fails.
 status    says whether plan.json is the plan of the analysis and the decisions that hold now, by the hashes it was built
           from (\`builtFrom\`); exits 1 when something changed since, 0 when it is current or too old to say.`;
@@ -44,14 +44,13 @@ if (command === "facts") {
         `stand-in records written: ${records.layers.length} layers, ${records.decisions.length} decisions, ${records.stories.length} stories`,
     );
 } else if (command === "build") {
-    const at = rest.indexOf("--work-tracking");
-    const unconfirmed = targetGaps(layout);
-    if (unconfirmed.length > 0) {
-        for (const gap of unconfirmed) console.error(`failing: ${gap}`);
-        console.error("the target is not confirmed, so the plan cannot be built");
+    const undecided = targetGaps(layout);
+    if (undecided.length > 0) {
+        for (const gap of undecided) console.error(`failing: ${gap}`);
+        console.error("the target is not decided, so the plan cannot be built");
         process.exit(1);
     }
-    const result = runBuild(layout, at >= 0 ? rest[at + 1] : undefined);
+    const result = runBuild(layout);
     for (const gap of result.gaps.advisory) console.log(`advisory: ${gap}`);
     if (!result.written) {
         for (const gap of result.gaps.failing) console.error(`failing: ${gap}`);

@@ -4,10 +4,10 @@ import { layoutOf } from "../../../shape-target/shared/model/layout";
 import type { Layout } from "../model/layout";
 
 /*
- * Whether the person confirmed the target the plan is made from, and what each decision was made about. The rule is
+ * Whether the target the plan is made from is decided, and what each decision was made about. The rule is
  * shape-target's own (`shared/gates.ts`), read from there so the plan, the conductor and that skill cannot disagree: a
  * decision holds while the file it decides on still has the hash it recorded (`subject`), and the decision before it
- * holds and was confirmed no later; a decision recorded before hashes were kept is judged by time until it is confirmed
+ * holds and was decided no later; a decision recorded before hashes were kept is judged by time until it is decided
  * again.
  */
 export type { Gate };
@@ -15,16 +15,16 @@ export const decisionGates = gates;
 
 const problemOf = {
     "not made": "has nothing proposed yet",
-    waiting: "is not confirmed",
-    blocked: "rests on a decision that is not confirmed",
-    changed: "changed after it was confirmed",
+    waiting: "is not decided",
+    blocked: "rests on a decision that is not decided",
+    changed: "changed after it was decided",
 } as const;
 
 /**
  * What stops the plan from being made on the target: each decision that is missing or no longer holds. A run with no
  * `target/` folder was never shaped and is planned from the analysis alone, so it has no gaps.
  * @param layout the run's folders
- * @returns one line per decision that is not confirmed, empty when the plan may start
+ * @returns one line per decision that is not decided, empty when the plan may start
  */
 export const targetGaps = (layout: Layout): string[] => {
     if (!existsSync(layout.target)) return [];

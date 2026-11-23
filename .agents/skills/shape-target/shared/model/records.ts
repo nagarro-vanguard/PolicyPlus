@@ -207,12 +207,6 @@ export const Score = Schema.Struct({
 
 export const StoredArchitecture = Schema.Struct({ ...Architecture.fields, score: Score });
 
-export const Mark = Schema.Struct({
-    of: Text.annotate(about("A step of a task's current journey, as `<task id>#<number>`.")),
-    verdict: Schema.Literals(["hurts", "unused", "correct", "wrong"]),
-    note: Schema.optionalKey(Text),
-});
-
 export const Dispute = Schema.Struct({
     job: Text.annotate(about("The job whose review raised it.")),
     record: Schema.Int.annotate(about("The position of the challenged record in the job's output, from 0.")),
@@ -222,7 +216,11 @@ export const Dispute = Schema.Struct({
         ),
     ),
     says: Text.annotate(about("What the reviewer says is wrong, in one sentence.")),
-}).annotate(about("A challenge that survived the one fix a job gets, kept for the person to see before choosing."));
+}).annotate(
+    about(
+        "A challenge that survived the one fix a job gets, kept with the decision that took the variant it is about.",
+    ),
+);
 
 export const Choice = Schema.Struct({
     decision: Schema.Literals(["as-is", "journeys", "architecture", "components"]),
@@ -235,7 +233,6 @@ export const Choice = Schema.Struct({
     ),
     reason: Text,
     confirmedAt: Text,
-    marks: Schema.optionalKey(Schema.Array(Mark)),
     subject: Schema.optionalKey(
         Schema.String.check(Schema.isPattern(/^[0-9a-f]{64}$/)).annotate(
             about(
@@ -245,12 +242,14 @@ export const Choice = Schema.Struct({
     ),
     acceptedDisputes: Schema.optionalKey(
         Schema.Array(Dispute).annotate(
-            about("The challenges still open on the chosen variants that the person saw and accepted when confirming."),
+            about(
+                "The challenges still open on the chosen variants when they were decided; they are kept, not resolved.",
+            ),
         ),
     ),
 }).annotate(
     about(
-        "What the person decided, with the reason; the decision is confirmed while the file it decides on still has the hash it recorded (one recorded without a hash: while it is not older than that file), and the decision before it is confirmed and was confirmed no later than this one.",
+        "What was decided, with the reason; the decision holds while the file it decides on still has the hash it recorded (one recorded without a hash: while it is not older than that file), and the decision before it is confirmed and was confirmed no later than this one.",
     ),
 );
 
@@ -267,4 +266,3 @@ export type Architecture = typeof Architecture.Type;
 export type Dispute = typeof Dispute.Type;
 export type StoredArchitecture = typeof StoredArchitecture.Type;
 export type Choice = typeof Choice.Type;
-export type Mark = typeof Mark.Type;

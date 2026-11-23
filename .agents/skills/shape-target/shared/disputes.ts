@@ -9,8 +9,8 @@ import { outputOf, readJson, type JobDispute, type Stage } from "./jobs/state";
 /*
  * The challenges a reviewer raised that survived the one fix a job gets. `stage.ts finish <stage>` writes them to
  * `.shape-target/work/records/disputes-<stage>.json` as a list of `Dispute` (`{ job, record, variant, says }`, the
- * schema is `dispute.schema.json`); `choose.ts` refuses a pick they are about until the person has seen and accepted
- * them. Other skills and the app read the file; `loadDisputes` reads it here, older files included.
+ * schema is `dispute.schema.json`); `decide.ts` prefers a variant they are not about and records the ones that stay open
+ * on what it took. Other skills and the app read the file; `loadDisputes` reads it here, older files included.
  */
 export const disputesPath = (layout: Layout, stage: Stage) => join(layout.records, `disputes-${stage}.json`);
 

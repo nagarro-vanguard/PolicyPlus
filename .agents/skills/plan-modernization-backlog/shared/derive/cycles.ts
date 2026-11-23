@@ -130,7 +130,7 @@ const splitOf = (story: Story, target: Target): Piece[] => {
  * would wait on itself; the component graph has no such loop, so a story caught in one is split by component, and each
  * piece waits only on what its own component calls.
  * @param stories the written stories
- * @param target the confirmed target
+ * @param target the decided target
  * @returns the stories, and the titles of those that were split
  */
 export const splitCycles = (stories: readonly Story[], target: Target): { stories: Piece[]; split: string[] } => {

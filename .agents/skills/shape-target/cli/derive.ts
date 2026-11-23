@@ -5,7 +5,7 @@ import { deriveEssence, essenceLeaks } from "../shared/derive/essence";
 import { deriveLegacy } from "../shared/derive/legacy";
 import { writeManifest } from "../shared/manifest";
 import { layoutOf } from "../shared/model/layout";
-import { loadChoice, loadLegacy, loadRequest, loadTasks } from "../shared/run";
+import { loadLegacy, loadRequest, loadTasks } from "../shared/run";
 
 const [what, rootArg] = process.argv.slice(2);
 if ((what !== "legacy" && what !== "current" && what !== "essence") || rootArg === undefined) {
@@ -13,7 +13,7 @@ if ((what !== "legacy" && what !== "current" && what !== "essence") || rootArg =
 
 legacy   reads the analysis's payloads and writes target/legacy.json, the old system's own words, kept apart
 current  reads the analysis's payloads/journeys.json (today's tasks, written by the code analysis) and writes target/current.json and target/essence.json, which the as-is decision is made about; a run whose target/current.json exists and whose analysis has no journeys.json keeps that file as it is; exits 1 when the journeys do not cover every entry point and rule once
-essence  writes target/essence.json from the confirmed tasks and the person's marks; exits 1 when it carries a name of the old system`);
+essence  writes target/essence.json from the decided tasks; exits 1 when it carries a name of the old system`);
     process.exit(what === undefined ? 2 : 1);
 }
 const layout = layoutOf(resolve(rootArg));
@@ -34,12 +34,7 @@ if (what === "legacy") {
     process.exit(result.ok ? 0 : 1);
 } else {
     const legacy = loadLegacy(layout);
-    const essence = deriveEssence(
-        legacy,
-        loadTasks(layout),
-        loadRequest(layout),
-        loadChoice(layout.choiceAsIs)?.marks ?? [],
-    );
+    const essence = deriveEssence(legacy, loadTasks(layout), loadRequest(layout));
     write(layout.essence, essence);
     writeManifest(layout);
     const leaks = essenceLeaks(essence, legacy);

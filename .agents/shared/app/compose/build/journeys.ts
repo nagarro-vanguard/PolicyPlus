@@ -195,7 +195,7 @@ export type Component = {
 };
 
 export type ArchitectureView = {
-    /** Whether the person confirmed it with its components; otherwise it is the recommended variant, proposed. */
+    /** Whether it is decided with its components; otherwise it is the recommended variant, proposed. */
     confirmed: boolean;
     name: string;
     idea: string;

@@ -9,17 +9,14 @@ import type { Story } from "../model/records";
 import { jobPaths, loadJobs } from "../jobs/state";
 
 /*
- * The challenges a reviewer raised that survived the one fix a job gets, carried into the plan so the person sees them:
+ * The challenges a reviewer raised that survived the one fix a job gets, carried into the plan so its reader sees them:
  * those of the target's decisions (shape-target writes `.shape-target/work/records/disputes-<stage>.json`, read with its
  * `loadDisputes`) and those of this plan's own stages (`stage.ts finish` writes `work/records/disputes.json` as
  * `{ job, says: "Record <n>: ..." }`). The challenges on today's tasks (`disputes-as-is.json`) belong to the code
  * analysis and are not carried.
  */
 
-type Picks = {
-    picks?: { of?: string; variant?: string; id?: string }[];
-    acceptedDisputes?: { job: string; record: number; says: string }[];
-};
+type Picks = { picks?: { of?: string; variant?: string; id?: string }[] };
 const readPicks = (path: string): Picks => {
     try {
         return JSON.parse(readFileSync(path, "utf8")) as Picks;
@@ -29,8 +26,8 @@ const readPicks = (path: string): Picks => {
 };
 
 /**
- * The surviving challenges of the target's journeys, architecture and components, each settled when the person accepted
- * it when confirming or chose another variant than the one it is about.
+ * The surviving challenges of the target's journeys, architecture and components, each settled only when another
+ * variant than the one it is about was taken; a challenge on a variant that was taken stays open.
  * @param layout the run's folders
  * @param componentNames the components of the chosen architecture
  * @returns the conflicts
@@ -57,17 +54,13 @@ export const targetConflicts = (layout: Layout, componentNames: readonly string[
                   ? (picked.picks ?? []).flatMap((pick) => (pick.variant === undefined ? [] : [pick.variant]))
                   : componentNames,
         );
-        const accepted = (dispute: { job: string; record: number; says: string }) =>
-            (picked.acceptedDisputes ?? []).some(
-                (each) => each.job === dispute.job && each.record === dispute.record && each.says === dispute.says,
-            );
         return loadDisputes(shaped, stage).map((dispute) => ({
             stage,
             job: dispute.job,
             record: dispute.record,
             variant: dispute.variant,
             says: dispute.says,
-            resolved: accepted(dispute) || (dispute.variant !== "" && !chosen.has(dispute.variant)),
+            resolved: dispute.variant !== "" && !chosen.has(dispute.variant),
         }));
     });
 };

@@ -8,7 +8,7 @@ const help = `Usage: revise.ts <Output Root> <apply '<json>' [--note <text>] | u
 
 A change is one of: {"_tag":"rename","story":<key>,"title":<text>}, {"_tag":"edit","story":<key>,"field":"what"|"why"|"criterion","index":<n>,"text":<text>},
 {"_tag":"split","story":<key>,"criteria":[<n>...],"title":<text>}, {"_tag":"moveAction","action":<id>,"to":<story key>}.
-It is refused if a work item for the story is already created, or if it would break any gate. Order is never edited: it follows what the stories build.`;
+It is refused if it would break any gate. Order is never edited: it follows what the stories build.`;
 if (root === undefined || command === undefined || command === "--help") {
     console.log(help);
     process.exit(command === "--help" ? 0 : 2);

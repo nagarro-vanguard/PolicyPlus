@@ -15,7 +15,7 @@ Tools: `<scriptsCommand> check <jobId>`, `bun <this skill's folder>/cli/describe
 
 ## Work
 
-Read both files. Each task in the context has an outcome, an actor, entry points as opaque ids with a plain statement, the rules, the kinds of data, the outside systems, and what the person said hurts. The stack and notes constrain what is sensible.
+Read both files. Each task in the context has an outcome, an actor, entry points as opaque ids with a plain statement, the rules, the kinds of data, the outside systems. The stack and notes constrain what is sensible.
 
 For each task write two or three variants, each a different approach (`task first`: built around the outcome; `automate first`: the system finds out, fills in or decides what it can; `guided`: one prompted path for people who do this rarely; or your own). Each step says what the person is after and what the system does, in the business's words, never a control, page, window, command, click or medium: the same steps must make sense in any kind of interface. For each step cite what it touches and which rules the system applies.
 

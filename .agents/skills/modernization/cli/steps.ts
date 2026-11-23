@@ -4,31 +4,19 @@ import { fileURLToPath } from "node:url";
 import { hashFiles as sharedHash } from "../../plan-modernization-backlog/shared/read/fingerprint";
 import { analysisStoreOf, journeysGuard, payloadProblems } from "./analysis";
 import { gateProblems, type Gate } from "./gates";
+import { MAX_ROUNDS, roundsOf } from "../../shape-target/shared/jobs/rounds";
+import { layoutOf as shapeLayoutOf } from "../../shape-target/shared/model/layout";
 import { changedSinceBuilt } from "../../plan-modernization-backlog/shared/derive/built-from";
 import { layoutOf as planLayoutOf } from "../../plan-modernization-backlog/shared/model/layout";
-
-export const changesFile = (records: string, gate: Gate) => join(records, `changes-${gate}.json`);
-const unapplied = (records: string, gate: Gate) => {
-    try {
-        return (JSON.parse(readFileSync(changesFile(records, gate), "utf8")) as { applied?: boolean }[]).some(
-            (each) => each.applied !== true,
-        );
-    } catch {
-        return false;
-    }
-};
 
 /** What the conductor asks of whoever drives it: one action at a time. It never does the work itself. */
 export type Action =
     | { action: "run"; step: string; command: string; why: string }
     | { action: "invoke"; step: string; skill: string; instruction: string }
-    | { action: "prompt"; step: string; text: string; why: string }
-    | { action: "wait"; step: string; message: string }
     | { action: "stop"; step: string; message: string }
     | { action: "done"; message: string };
 
-export type Settings = { worktrees: string; base: string; parallel: number };
-export type State = { request: string; settings: Settings; steps: Record<string, { inputs: string; at: string }> };
+export type State = { request: string; steps: Record<string, { inputs: string; at: string }> };
 
 export const skillsOf = (conductorRoot: string) => resolve(conductorRoot, "..");
 
@@ -71,7 +59,6 @@ export const pathsOf = (root: string) => ({
     architectureVariants: join(root, ".shape-target/work/records/architecture-variants.json"),
     choiceArchitecture: join(root, "target/choice-architecture.json"),
     choiceComponents: join(root, "target/choice-components.json"),
-    pages: (gate: string) => join(root, ".shape-target/pages", gate),
     architecture: join(root, "target/architecture.json"),
     analysis: join(root, ".code-analysis"),
     payloads: join(root, ".code-analysis/payloads"),
@@ -81,7 +68,6 @@ export const pathsOf = (root: string) => ({
     plan: join(root, ".modernization-backlog/payloads/plan.json"),
     backlog: join(root, ".modernization-backlog"),
     manifest: join(root, "work-items/manifest.json"),
-    ledger: join(root, "work-items/ledger.json"),
     app: join(root, "app"),
     case: join(root, "case"),
     appSource,
@@ -99,7 +85,7 @@ export type Step = {
     valid?: (paths: Paths) => string[];
     /** What changed since the step's output was made, by what that output records it was made from; due again when any. */
     outdated?: (paths: Paths) => string[];
-    action: (ctx: { paths: Paths; skills: string; settings: Settings; request: string }) => Action;
+    action: (ctx: { paths: Paths; skills: string; request: string }) => Action;
 };
 
 /** What changed since the plan was built, by its `builtFrom`; nothing for a missing or older plan. */
@@ -122,16 +108,22 @@ const buildBundle = (skills: string, p: Paths) =>
 const bun = (skills: string, skill: string, script: string, args: string) =>
     `bun ${join(skills, skill, "cli", script)} ${args}`;
 
-const chooseCommand = (skills: string) => `bun ${join(skills, "shape-target/cli/choose.ts")}`;
+const decideCommand = (skills: string, gate: Gate, root: string) =>
+    `bun "${join(skills, "shape-target/cli/decide.ts")}" ${gate} "${root}"`;
 
-/** What the person gives to change a decision: the jobs that wrote it, handed back with their words. */
-const changes = (jobs: string, gate: Gate, skills: string, root: string) =>
-    `To change something instead, record their words with \`${chooseCommand(skills)} ${gate} ${root} --changes "<their words>" [--task <id> | --domain <name>]\`, then call next. (The jobs behind this decision: ${jobs}.)`;
+/** Why a stage that failed its final checks too many times stops the run, or nothing while it may still be run again. */
+const roundsGuard = (p: Paths, gate: Gate): string | undefined => {
+    if (gate === "as-is") return undefined;
+    const rounds = roundsOf(shapeLayoutOf(p.root), gate);
+    return rounds !== undefined && rounds.count >= MAX_ROUNDS
+        ? `the ${gate} stage failed its final checks ${rounds.count} times and is not run again; the last failure was:\n${rounds.text}`
+        : undefined;
+};
 
 /**
- * One decision of the target, the same three steps each time: the stage proposes, the pages show the proposal, the
- * person confirms. The pages step comes first so the question cannot be reached before the person can read the proposal;
- * its inputs include this decision's record and those before it, because the pages show what is confirmed and are rebuilt once it is.
+ * One decision of the target, in two steps: the stage proposes, then the decision is made from the proposal, the same
+ * way every time (shape-target's `decide.ts`). Nobody is asked. A decision that no longer holds (what it decides on
+ * changed) is made again without running the stage's jobs; a stage whose inputs changed runs again.
  */
 const gate = (input: {
     gate: Gate;
@@ -144,66 +136,39 @@ const gate = (input: {
     without?: Step["without"];
     proposal: (p: Paths) => string;
     record: (p: Paths) => string[];
-    pages: string;
-    ask: (skills: string, p: Paths) => string;
-    jobs: string;
 }): Step[] => {
     const name = `target-${input.gate}`;
-    const order: Gate[] = ["as-is", "journeys", "architecture", "components"];
-    const decided = (p: Paths) =>
-        [p.choiceAsIs, p.choiceJourneys, p.choiceArchitecture, p.choiceComponents].slice(
-            0,
-            order.indexOf(input.gate) + 1,
-        );
     return [
         {
             name,
             inputs: input.inputs,
             without: input.without,
             makes: (p) => [input.proposal(p)],
-            action: ({ paths, skills }) =>
-                input.guard?.(paths) !== undefined
-                    ? { action: "stop", step: name, message: input.guard(paths) ?? "" }
+            action: ({ paths, skills }) => {
+                const stop = input.guard?.(paths) ?? roundsGuard(paths, input.gate);
+                return stop !== undefined
+                    ? { action: "stop", step: name, message: stop }
                     : input.derive === undefined
-                    ? {
-                          action: "invoke",
-                          step: name,
-                          skill: "shape-target",
-                          instruction: `Run the shape-target skill's ${input.stage} stage for ${paths.root}: prepare it, drive its jobs, then finish it (see its SKILL.md; its scripts are in ${join(skills, "shape-target/cli")}).`,
-                      }
-                    : { action: "run", step: name, ...input.derive(skills, paths) },
+                      ? {
+                            action: "invoke",
+                            step: name,
+                            skill: "shape-target",
+                            instruction: `Run the shape-target skill's ${input.stage} stage for ${paths.root}: prepare it, drive its jobs, then finish it (see its SKILL.md; its scripts are in ${join(skills, "shape-target/cli")}). When a final check fails, finish names the gap: hand the job that should fix it back with \`redo\` and the gap as its instructions, then finish again.`,
+                        }
+                      : { action: "run", step: name, ...input.derive(skills, paths) };
+            },
         },
         {
-            name: `${name}-pages`,
-            inputs: (p) => [input.proposal(p), ...decided(p), ...p.appSource],
-            makes: (p) => [p.pages(input.gate)],
-            action: ({ paths, skills }) => ({
-                action: "run",
-                step: `${name}-pages`,
-                // compose reads a target only once it is finished, so the pages of a decision are built from the analysis.
-                // The old report goes first, so a build that failed before writing its report cannot pass for the report of an earlier one; a report that says places need a look is the person's to read and does not stop the step.
-                command: `rm -f ${paths.app}/language-report.json && mkdir -p ${join(paths.root, ".shape-target/pages")} && CODE_ANALYSIS_ROOT=${paths.analysis} ${buildBundle(skills, paths)} ${bun(skills, "code-analysis", "build-app.ts", `--analysis ${paths.payloads} --out ${paths.app} --case ${paths.case}`)}; test -f ${paths.app}/language-report.json && touch ${paths.pages(input.gate)}`,
-                why: `build the pages that show the ${input.gate} proposal, before the person is asked`,
-            }),
-        },
-        {
-            name: `${name}-choose`,
+            name: `${name}-decide`,
             inputs: (p) => [input.proposal(p)],
             makes: (p) => input.record(p),
             valid: (p) => gateProblems(p, input.gate),
-            action: ({ paths, skills }) =>
-                unapplied(paths.records, input.gate)
-                    ? {
-                          action: "invoke",
-                          step: `${name}-choose`,
-                          skill: "shape-target",
-                          instruction: `The person asked for changes to the ${input.gate} decision (${changesFile(paths.records, input.gate)}). Run \`MODERNIZATION_ROOT=${paths.root} bun ${join(skills, "shape-target/cli/stage.ts")} apply-changes ${input.gate}\`, drive the jobs it hands back, finish the ${input.gate} stage, then call next: the pages are built again and the question returns.`,
-                      }
-                    : {
-                          action: "wait",
-                          step: `${name}-choose`,
-                          message: `Open ${join(paths.app, input.pages)} and show the person the proposal (${input.gate}); say what you recommend. They confirm with: ${input.ask(skills, paths)}. ${changes(input.jobs, input.gate, skills, paths.root)} Call next when it is recorded.`,
-                      },
+            action: ({ paths, skills }) => ({
+                action: "run",
+                step: `${name}-decide`,
+                command: decideCommand(skills, input.gate, paths.root),
+                why: `decide the ${input.gate} of the target from what its stage proposed`,
+            }),
         },
     ];
 };
@@ -325,9 +290,6 @@ export const steps: Step[] = [
         inputs: (p) => [p.legacy, p.bundles, p.journeysToday],
         proposal: (p) => p.current,
         record: (p) => [p.choiceAsIs],
-        pages: "journeys.html",
-        ask: (skills, p) => `${chooseCommand(skills)} as-is ${p.root} --reason "<why>" [--marks <file>]`,
-        jobs: "the analysis's journeys jobs (`journeys-of-<capability>`, `journeys-merge`), handed back there",
     }),
     ...gate({
         gate: "journeys",
@@ -335,10 +297,6 @@ export const steps: Step[] = [
         inputs: (p) => [p.current, p.choiceAsIs],
         proposal: (p) => p.journeyVariants,
         record: (p) => [p.choiceJourneys, p.journeys],
-        pages: "journeys.html",
-        ask: (skills, p) =>
-            `${chooseCommand(skills)} journeys ${p.root} --reason "<why>" [--all-recommended] [--pick <task>=<variant>]`,
-        jobs: "the variants-* jobs",
     }),
     ...gate({
         gate: "architecture",
@@ -348,9 +306,6 @@ export const steps: Step[] = [
         without: goalsUnread,
         proposal: (p) => p.architectureVariants,
         record: (p) => [p.choiceArchitecture],
-        pages: "architecture.html",
-        ask: (skills, p) => `${chooseCommand(skills)} architecture ${p.root} --pick "<variant>" --reason "<why>"`,
-        jobs: "the shape job",
     }),
     ...gate({
         gate: "components",
@@ -358,9 +313,6 @@ export const steps: Step[] = [
         inputs: (p) => [p.choiceArchitecture, p.journeys],
         proposal: (p) => p.architecture,
         record: (p) => [p.choiceComponents],
-        pages: "architecture.html",
-        ask: (skills, p) => `${chooseCommand(skills)} components ${p.root} --reason "<why>"`,
-        jobs: "the components-<domain> jobs of the domains to change and of every domain that depends on them",
     }),
     {
         name: "foundation",
@@ -395,12 +347,7 @@ export const steps: Step[] = [
         action: ({ paths, skills }) => ({
             action: "run",
             step: "plan",
-            command: bun(
-                skills,
-                "plan-modernization-backlog",
-                "plan.ts",
-                `build ${paths.root} --work-tracking <the workspace AGENTS.md>`,
-            ),
+            command: bun(skills, "plan-modernization-backlog", "plan.ts", `build ${paths.root}`),
             why: "derive the plan and check every gate; on exit 1 the failing gates name what to re-run",
         }),
     },

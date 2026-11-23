@@ -25,7 +25,6 @@ export const layoutOf = (outputRoot: string) => {
         manifest: join(items, "manifest.json"),
         bodies: join(items, "bodies"),
         attachments: join(items, "attachments"),
-        ledger: join(items, "ledger.json"),
         results: join(items, "results"),
         agentsFiles: join(items, "agents-md"),
         target: join(outputRoot, "target"),

@@ -102,17 +102,3 @@ export const applyRevision = (stories: readonly Story[], revision: Revision): St
 /** Applies every revision in order to the stories the agents wrote. */
 export const applyAll = (stories: readonly Story[], entries: readonly Entry[]): Story[] =>
     entries.reduce((current, entry) => applyRevision(current, entry.revision), [...stories]);
-
-/**
- * The keys of the stories a revision touches, so created work items can be protected.
- * @param stories the stories before the revision
- * @param revision the change
- * @returns the keys that must not already be created
- */
-export const touchedKeys = (stories: readonly Story[], revision: Revision): string[] => {
-    if (revision._tag === "moveAction") {
-        const from = stories.find((story) => story.actions.includes(revision.action));
-        return [...(from ? [storyKeyOf(from)] : []), revision.to];
-    }
-    return [revision.story];
-};

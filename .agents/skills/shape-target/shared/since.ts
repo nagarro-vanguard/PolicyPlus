@@ -4,8 +4,8 @@ import { proposalOf, snapshotOf, type Gate } from "./gates";
 import type { Layout } from "./model/layout";
 
 /*
- * What changed in a decision's file since the person confirmed it, found by comparing the file with the copy kept when
- * they confirmed (`target/confirmed/<decision>.json`). Counts at confirmation are the same counts taken of that copy.
+ * What changed in a decision's file since it was decided, found by comparing the file with the copy kept when it was
+ * decided (`target/confirmed/<decision>.json`). Counts at the decision are the same counts taken of that copy.
  */
 type Keyed = { key: string; value: unknown };
 
@@ -36,7 +36,7 @@ export const itemsOf = (gate: Gate, value: unknown): Keyed[] => {
 export type Since = { added: string[]; removed: string[]; changed: string[] };
 
 /**
- * What was added, removed and changed in a decision's file since it was confirmed.
+ * What was added, removed and changed in a decision's file since it was decided.
  * @param layout the run's folders
  * @param gate the decision
  * @returns the keys of each, or nothing when there is no confirmed copy or no file to compare

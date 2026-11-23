@@ -79,11 +79,6 @@ export function StoryBody({ story, root }: { readonly story: StoryView; readonly
                         {story.epicLabel}
                     </Badge>
                 )}
-                {story.ready ? (
-                    <Badge variant="default" data-written-by="app">
-                        {words.ready}
-                    </Badge>
-                ) : null}
             </p>
             <Block title={words.what}>
                 <p data-written-by="agent">{story.what}</p>
@@ -268,7 +263,7 @@ export function StoryBody({ story, root }: { readonly story: StoryView; readonly
  */
 function StoryRow({ story }: { readonly story: StoryView }) {
     return (
-        <div data-story-row data-n={story.n} data-phase={story.phase} data-epic={story.epic} data-kind={story.work?.key ?? ""} data-domains={` ${story.domains.join(" ")} `} data-text={story.text}>
+        <div data-story-row data-n={story.n} data-phase={story.phase} data-epic={story.epic} data-kind={story.kind} data-domains={` ${story.domains.join(" ")} `} data-text={story.text}>
             <Item size="xs" render={<a href={`#story=${story.n}`} data-story-open={story.n} />}>
                 <ItemContent className="min-w-0 basis-80">
                     <ItemTitle className="line-clamp-none" data-written-by="agent">
@@ -288,11 +283,6 @@ function StoryRow({ story }: { readonly story: StoryView }) {
                     <Badge variant="secondary" data-written-by="agent">
                         {story.kindLabel}
                     </Badge>
-                    {story.ready ? (
-                        <Badge variant="default" data-written-by="app">
-                            {words.ready}
-                        </Badge>
-                    ) : null}
                     <span className="tabular-nums" data-written-by="app">
                         {story.waitsText ?? words.nothingBlocks}
                     </span>
@@ -344,11 +334,6 @@ export function Plan({ view, root }: { readonly view: PlanView; readonly root: s
                 <p data-written-by="app">
                     {view.structure} {words.phaseMeans}
                 </p>
-                {view.ready === null ? null : (
-                    <p className="text-muted-foreground" data-written-by="app">
-                        {view.ready}
-                    </p>
-                )}
             </div>
             <Sections>
                 <Section title={words.phasesTitle} writtenBy="app">

@@ -276,7 +276,7 @@ export function Challenges({ items }: { readonly items: ProposedView["challenges
     );
 }
 
-/** What changed since the person confirmed, folded, each kind of change with its names. */
+/** What changed since it was decided, folded, each kind of change with its names. */
 export function SinceFold({ since }: { readonly since: Since | null }) {
     if (since === null) return null;
     const groups = [

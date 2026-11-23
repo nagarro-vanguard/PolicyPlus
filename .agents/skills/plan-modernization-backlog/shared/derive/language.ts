@@ -1,4 +1,4 @@
-/** Words of the code, and the analysis's own bookkeeping, that a reader of a work item should never meet. */
+/** Words of the code, and the analysis's own bookkeeping, that a reader of a story should never meet. */
 const recordId = /\b[a-z]+-\d{8,}\b/;
 const camel = /\b[a-z]+(?:[A-Z][a-z0-9]+)+\b/g;
 const pascal = /\b(?:[A-Z][a-z0-9]+){2,}\b/g;
@@ -69,7 +69,7 @@ export const cutTitleProblems = (title: string) => {
 };
 
 /**
- * The templates' mechanical rules for a work item: a title of at most 72 characters that is not cut, no type prefix, no
+ * The templates' mechanical rules for a story: a title of at most 72 characters that is not cut, no type prefix, no
  * emoji, no line crediting the tool, no empty section.
  * @param title the title
  * @param body the body, when it is known

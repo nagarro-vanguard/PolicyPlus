@@ -95,7 +95,7 @@ const siteBuilderOps: SiteBuilderOps = {
      * then build the static pages from the case into the output folder. Without a plan the pages are the analysis's alone.
      * @param input the folders
      * @param input.analysis the folder write-payloads wrote
-     * @param input.plan the folder that holds the plan's files (`.modernization-backlog/` and `work-items/`), when there is one
+     * @param input.plan the folder that holds the plan's files (`.modernization-backlog/` and `work-items/attachments/`), when there is one
      * @param input.target the Output Root that holds the target's files (`target/` and `.shape-target/`), when there is one
      * @param input.bundleCommand the command the pages offer to build a bundle with (`BUILD_BUNDLE`), when the caller names one
      * @param input.out the folder the pages are written to

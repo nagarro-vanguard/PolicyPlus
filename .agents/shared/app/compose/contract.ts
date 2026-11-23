@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { foldKinds, levels } from "./build/hierarchy";
-import { workLabels, type WorkLabel } from "./build/work";
 
 /*
  * The contract of `case/`: one schema per file. `compose` checks every file against its schema before writing it, and
@@ -8,7 +7,7 @@ import { workLabels, type WorkLabel } from "./build/work";
  * The version goes up when a file changes in a way an older reader would misread.
  */
 
-export const caseContractVersion = 1;
+export const caseContractVersion = 2;
 
 const S = z.string();
 const N = z.number();
@@ -253,7 +252,7 @@ const Since = z.strictObject({ added: Ids, removed: Ids, changed: Ids, names: z.
 const Score = z.strictObject({ steps: N, stepsServed: N, rules: N, rulesAssigned: N });
 
 const Architecture = z.strictObject({
-    /** Whether the person confirmed it with its components; otherwise it is the recommended variant, proposed. */
+    /** Whether it is decided with its components; otherwise it is the recommended variant, proposed. */
     confirmed: z.boolean(),
     name: S,
     idea: S,
@@ -294,10 +293,6 @@ const Story = z.strictObject({
     what: S,
     why: S,
     kind: S,
-    tags: Ids,
-    work: z
-        .strictObject({ profile: S, reference: z.boolean(), label: z.enum(Object.keys(workLabels) as [WorkLabel]), words: S })
-        .nullable(),
     phase: N,
     epic: S,
     sequence: N,
@@ -323,7 +318,6 @@ const Story = z.strictObject({
     ),
     open: Ids,
     challenges: Ids,
-    status: S,
     split: z.strictObject({ part: S, from: S }).nullable(),
 });
 
@@ -337,7 +331,7 @@ const Brief = z.strictObject({
         })
         .nullable(),
     risks: z.strictObject({ rule: S, top: Ids, ranked: Ids }),
-    plan: z.strictObject({ phases: S, epics: S, stories: S, readyFirst: S, phaseNames: Ids }).nullable(),
+    plan: z.strictObject({ phases: S, epics: S, stories: S, phaseNames: Ids }).nullable(),
     numbers: Ids,
 });
 
@@ -447,7 +441,6 @@ export const caseFiles = {
         }),
     ),
     "plan/decisions.json": z.array(z.strictObject({ id: S, layer: S, chose: S, reason: S })),
-    "plan/ready.json": Ids,
     "plan/matrix.json": z
         .strictObject({
             journeys: Ids,

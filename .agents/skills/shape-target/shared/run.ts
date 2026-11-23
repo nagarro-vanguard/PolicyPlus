@@ -24,9 +24,7 @@ export const loadArchitectureVariants = (layout: Layout) =>
         ? Schema.decodeUnknownSync(Schema.Array(StoredArchitecture))(readJson(layout.architectureVariants))
         : [];
 export const loadArchitecture = (layout: Layout) =>
-    existsSync(layout.architecture)
-        ? Schema.decodeUnknownSync(Architecture)(readJson(layout.architecture))
-        : undefined;
+    existsSync(layout.architecture) ? Schema.decodeUnknownSync(Architecture)(readJson(layout.architecture)) : undefined;
 export const loadChoice = (path: string) =>
     existsSync(path) ? Schema.decodeUnknownSync(Choice)(readJson(path)) : undefined;
 

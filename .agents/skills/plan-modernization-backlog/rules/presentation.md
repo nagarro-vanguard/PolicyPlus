@@ -1,13 +1,13 @@
 # Presentation: rules
 
-How the plan reads in the app, for the product owner who grooms it and the developer who builds a story. The plan skill's agents write to these rules, the build of the plan and the app apply them, for any stack and any medium. The look (tokens, shell, components) is the app's: `.agents/shared/app/docs/design-language.md`, after Continuum's design language.
+How the plan reads in the app, for the product owner and the developer who read it. The plan skill's agents write to these rules, the build of the plan and the app apply them, for any stack and any medium. The look (tokens, shell, components) is the app's: `.agents/shared/app/docs/design-language.md`, after Continuum's design language.
 
 ## What each level answers
 
-- The plan: in what order is the system rebuilt, and what is done? Phases are cards in dependency order; the order strip is as wide as the stories, never a made-up duration.
+- The plan: in what order is the system rebuilt, and what does each phase build? Phases are cards in dependency order; the order strip is as wide as the stories, never a made-up duration.
 - A phase: what does it unlock, and which epics are in it? An epic row shows its title and its stories for that phase, once.
-- An epic: what outcome does it deliver, and which stories build it, in order? Stories are cards in build order, each with its status and what it waits for.
-- A story: what does it deliver and why, and how do we know it is done? It opens with the story, then the numbered criteria; evidence, terms, origin and the prompt are folded.
+- An epic: what outcome does it deliver, and which stories build it, in order? Stories are cards in build order, each with what it waits for.
+- A story: what does it deliver and why, and how do we know it is done? It opens with the story, then the numbered criteria; evidence, terms and origin are folded; the copy for an assistant sits beside them.
 
 ## Wording the agents write
 
@@ -18,9 +18,9 @@ How the plan reads in the app, for the product owner who grooms it and the devel
 
 ## Shape of the pages
 
-- A fact is said once: a number appears once on a page, a story's title once, a rule's full text on one page (its story's criterion; the layer page keeps the original). Counts are derived by the build, never typed by an agent. Status colour is the only colour in the plan and always has a word. A phase or epic list longer than 4 rows folds the rest behind "and N more"; a filter appears only above 15 rows.
+- A fact is said once: a number appears once on a page, a story's title once, a rule's full text on one page (its story's criterion; the layer page keeps the original). Counts are derived by the build, never typed by an agent. Colour marks only what the plan states (the kind of a story, a challenge) and always comes with a word. A phase or epic list longer than 4 rows folds the rest behind "and N more"; a filter appears only above 15 rows.
 - Blockers are shown as chips that link to the story or epic they wait for, merged with the stories whose rules it relies on, in one list.
-- Everything that can be empty says so in a word (a story with no components, an epic with no journey) and is not shown as an empty section. Copy-ready prompts are folded under one disclosure per page.
+- Everything that can be empty says so in a word (a story with no components, an epic with no journey) and is not shown as an empty section. The copy for an assistant is one button per page.
 
 ## Voice: what we never write
 

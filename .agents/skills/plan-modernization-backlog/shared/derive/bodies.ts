@@ -89,7 +89,7 @@ export const storyBody = (view: StoryView, plan: Plan, facts: Facts) => {
             .join("\n")
             .trim();
     }
-    const layerPaths = (builtIn.length > 0 && view.builder !== "scaffold-codebase" ? builtIn : plan.layers).map(
+    const layerPaths = (builtIn.length > 0 && view.phase !== 0 ? builtIn : plan.layers).map(
         (layer) => `${layer.path} (the ${layer.name} layer)`,
     );
     return [
@@ -99,7 +99,7 @@ export const storyBody = (view: StoryView, plan: Plan, facts: Facts) => {
         ...section(
             "Scope",
             bullets(
-                view.builder === "scaffold-codebase"
+                view.phase === 0
                     ? ["the workspace root", ...layerPaths]
                     : layerPaths.length > 0
                       ? layerPaths

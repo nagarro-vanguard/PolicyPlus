@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join } from "node:path";
 import { Schema } from "effect";
 import type { Layout } from "../model/layout";
 import { Decision, Story, TargetLayer } from "../model/records";
@@ -12,12 +12,11 @@ import { buildTargetPlan } from "./target-plan";
 import { splitCycles } from "./cycles";
 import { carriedFrom } from "./scope";
 import { deriveFacts } from "./facts";
-import { publishPlan, syncLedger } from "./publish";
+import { publishPlan } from "./publish";
 import { builtFromNow } from "./built-from";
 import { dedupeCarriers } from "./carriers";
 import { planConflicts, targetConflicts } from "./conflicts";
 import type { Plan } from "../model/plan";
-import { sectionOf } from "./agents-md";
 import { applyAll, type Entry } from "./revisions";
 
 const readJson = (path: string) => JSON.parse(readFileSync(path, "utf8")) as unknown;
@@ -73,7 +72,7 @@ export const evaluatePlan = (layout: Layout, entries: readonly Entry[] = loadRev
         target === undefined
             ? { stories: split, moved: [] as string[] }
             : dedupeCarriers(split, decisions, target, analysis.system.externals);
-    // With a confirmed target every capability is planned: what is not carried was dropped there, step by step.
+    // With a decided target every capability is planned: what is not carried was dropped there, step by step.
     const { ids } = carriedFrom(analysis, decisions);
     const facts = deriveFacts(analysis, target === undefined ? ids : undefined);
     const stamp = { root: analysis.root, fingerprint: analysis.fingerprint };
@@ -97,37 +96,21 @@ export const evaluatePlan = (layout: Layout, entries: readonly Entry[] = loadRev
     };
     const checked = checkPlan({ analysis, facts, request, layers, decisions, stories, plan, problems, target });
     const gaps: Gaps = {
-        failing: [...checked.failing, ...syncLedger(layout, plan).failing],
+        failing: checked.failing,
         advisory: [...checked.advisory, ...moved],
     };
     return { plan, facts, request, gaps, stories, target };
 };
 
 /**
- * Derives everything from the accepted records, checks it, and writes the plan and the work items when the failing gates
+ * Derives everything from the accepted records, checks it, and writes the plan and its story bodies when the failing gates
  * pass. Safe to run again: it replaces what it wrote.
  * @param layout the run's folders
- * @param workTrackingFrom a markdown file whose `## Work tracking` section is copied into the root AGENTS.md preview
  * @returns the gaps, and whether the plan was written
  */
-export const runBuild = (
-    layout: Layout,
-    workTrackingFrom?: string,
-): { gaps: Gaps; written: boolean; stories: number } => {
+export const runBuild = (layout: Layout): { gaps: Gaps; written: boolean; stories: number } => {
     const { plan, facts, request, gaps, target } = evaluatePlan(layout);
     if (gaps.failing.length > 0) return { gaps, written: false, stories: plan.stories.length };
-    const workTracking =
-        workTrackingFrom && existsSync(workTrackingFrom)
-            ? (sectionOf(readFileSync(workTrackingFrom, "utf8"), "Work tracking") ?? "")
-            : "";
-    publishPlan(
-        layout,
-        plan,
-        facts,
-        request,
-        workTracking === "" ? "(Written from the workspace's Work tracking section when scaffold runs.)" : workTracking,
-        resolve(import.meta.dir, "../.."),
-        target,
-    );
+    publishPlan(layout, plan, facts, request, target);
     return { gaps, written: true, stories: plan.stories.length };
 };

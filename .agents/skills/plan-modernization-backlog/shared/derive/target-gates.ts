@@ -12,7 +12,7 @@ const some = (items: readonly string[], limit = 3) =>
 const short = (text: string) => (text.length > 70 ? `${text.slice(0, 67)}...` : text);
 
 /**
- * The invariants of a plan made from a confirmed target: every component is built by exactly one story, every step is in
+ * The invariants of a plan made from a decided target: every component is built by exactly one story, every step is in
  * exactly one story, a story cites the rules of the components it builds and no others, every kept rule is built once, and
  * every container is carried by a layer. Pure.
  * @returns what is wrong, and what is only worth a look
@@ -70,7 +70,7 @@ export const targetGaps = (input: {
         const cited = new Set<string>(story.builds);
         const lost = [...enforced].filter((id) => !cited.has(id)).length;
         const extra = [...cited].filter((id) => !enforced.has(id)).length;
-        if (story.tags.includes("story") && story.builder !== "scaffold-codebase" && (lost > 0 || extra > 0))
+        if (story.phase !== 0 && (lost > 0 || extra > 0))
             failing.push(
                 `${label}: the rules it cites are not those of the components it builds (${lost} missing, ${extra} extra)`,
             );
@@ -146,7 +146,7 @@ export const targetGaps = (input: {
         (story) =>
             (story.components ?? []).length === 0 &&
             story.actions.length === 0 &&
-            story.builder !== "scaffold-codebase" &&
+            story.phase !== 0 &&
             story.criteria.some((criterion) =>
                 criterion.from.some((ref) => ref._tag === "decision" && adaptedDecisions.has(ref.id)),
             ),

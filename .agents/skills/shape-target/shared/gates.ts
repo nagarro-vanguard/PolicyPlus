@@ -16,7 +16,7 @@ export const recordOf = (layout: Layout, gate: Gate) =>
         architecture: layout.choiceArchitecture,
         components: layout.choiceComponents,
     })[gate];
-/** What each decision is made about: the file a stage wrote for the person to read. */
+/** What each decision is made about: the file a stage wrote. */
 export const proposalOf = (layout: Layout, gate: Gate) =>
     ({
         "as-is": layout.current,
@@ -47,9 +47,9 @@ const recordAt = (path: string): { confirmedAt: number; subject: string | undefi
 
 /**
  * Where a decision stands. It is confirmed when the decision before it is confirmed and was confirmed no later than
- * it, and what it decides on still is what the person confirmed: the file has the hash the decision recorded. A
+ * it, and what it decides on still is what was decided: the file has the hash the decision recorded. A
  * decision recorded before hashes were kept has none; it is judged by time, as before (its record is not older than
- * what it decides on, which was made after the decision before it), until it is confirmed again. The conductor
+ * what it decides on, which was made after the decision before it), until it is decided again. The conductor
  * (`cli/gates.ts`) and the plan (`read/confirmed.ts`) import this rule rather than copy it; the app keeps its own copy.
  * @param layout the run's folders
  * @param gate the decision
@@ -71,5 +71,5 @@ export const gateState = (layout: Layout, gate: Gate): GateState => {
     return record.confirmedAt >= proposal && (earlier === undefined || proposal >= earlier) ? "confirmed" : "changed";
 };
 
-/** Whether the person has confirmed a decision and nothing it rests on changed since. */
+/** Whether a decision was made and nothing it rests on changed since. */
 export const confirmed = (layout: Layout, gate: Gate) => gateState(layout, gate) === "confirmed";
