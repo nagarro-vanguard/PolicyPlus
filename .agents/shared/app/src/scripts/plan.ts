@@ -1,8 +1,8 @@
 // The Plan page's own script: the filters of the story list and the sheet a story opens in. What the reader picks is
 // kept in the address (`?q=&phase=&epic=&domain=&kind=&cell=`), so a link shows what its sender saw; a story is opened
-// at `#story=<n>`, so a link opens it and closing it takes the story out of the address. A link in the page (a phase's "List its stories",
-// a matrix cell or column) sets a filter through the hash (`#phase=3`, `#cell=2.4`, `#domain=1`), which this script
-// moves into the query. No framework: the sheet is a native modal dialog, and each story's body is read when it is
+// at `#story=<n>`, so a link opens it and closing it takes the story out of the address. A link in the page (a matrix cell or
+// column) sets a filter through the hash (`#cell=2.4`, `#domain=1`), which this script moves into the query; `#phase=3`
+// opens that phase. No framework: the sheet is a native modal dialog, and each story's body is read when it is
 // opened from `plan/story/<n>.html`, written at build time and read as a classic script (load.ts).
 
 import { loadFile } from "./load";
@@ -10,6 +10,8 @@ import { loadFile } from "./load";
 const filters = ["q", "phase", "epic", "domain", "kind"] as const;
 let cell = "";
 let returnTo: HTMLElement | null = null;
+/** The phases that were open before a filter opened others. */
+let kept: Set<string> | null = null;
 
 const strings = (): Record<string, string> => {
     const node = document.getElementById("copy-strings");
@@ -47,13 +49,28 @@ const apply = () => {
         row.hidden = !visible;
         if (visible) shown += 1;
     }
-    for (const group of document.querySelectorAll<HTMLElement>("[data-phase-group]"))
+    const count = document.querySelector<HTMLElement>("[data-story-count]");
+    for (const group of document.querySelectorAll<HTMLElement>("[data-epic-group]"))
         group.hidden = group.querySelector("[data-story-row]:not([hidden])") === null;
+    const filtered = words.length > 0 || phase !== "" || epic !== "" || domain !== "" || kind !== "" || inCell !== null;
+    // A filter opens the phases that hold a match and shuts the others away; clearing it puts the phases back as the reader had them.
+    const cards = [...document.querySelectorAll<HTMLDetailsElement>("[data-phase-card]")];
+    if (filtered && kept === null) kept = new Set(cards.filter((card) => card.open).map((card) => card.dataset.phase ?? ""));
+    for (const card of cards) {
+        const matches = card.querySelectorAll("[data-story-row]:not([hidden])").length;
+        const total = card.querySelectorAll("[data-story-row]").length;
+        const holder = card.closest<HTMLElement>("[data-phase-group]");
+        if (holder !== null) holder.hidden = filtered && matches === 0;
+        if (filtered) card.open = matches > 0;
+        else if (kept !== null) card.open = kept.has(card.dataset.phase ?? "");
+        const label = card.querySelector<HTMLElement>("[data-phase-count]");
+        if (label !== null)
+            label.textContent = filtered ? `${matches} ${count?.dataset.of ?? ""} ${total} ${label.dataset.noun ?? ""}` : `${total} ${label.dataset.noun ?? ""}`;
+    }
+    if (!filtered) kept = null;
     const empty = document.querySelector<HTMLElement>("[data-story-empty]");
     if (empty !== null) empty.hidden = shown > 0;
-    const count = document.querySelector<HTMLElement>("[data-story-count]");
     // The whole count is said in the page's opening; the line says how many are left only while a filter is set.
-    const filtered = words.length > 0 || phase !== "" || epic !== "" || domain !== "" || kind !== "" || inCell !== null;
     if (count !== null) count.textContent = filtered ? `${count.dataset.shown ?? ""} ${shown} ${count.dataset.of ?? ""} ${rows.length} ${count.dataset.noun ?? ""}` : "";
     const chip = document.querySelector<HTMLElement>("[data-cell-chip]");
     if (chip !== null) {
@@ -80,6 +97,8 @@ const apply = () => {
     if (cell !== "") params.set("cell", cell);
     const query = params.toString();
     history.replaceState(history.state, "", `${location.pathname}${query === "" ? "" : `?${query}`}${location.hash}`);
+    // The Selects drawn for the filters read the values again.
+    dispatchEvent(new Event("plan:filters"));
 };
 
 const sheet = () => document.querySelector<HTMLDialogElement>("[data-story-sheet]");
@@ -104,6 +123,9 @@ const openStory = async (n: string) => {
     const dialog = sheet();
     const row = document.querySelector<HTMLElement>(`[data-story-open="${n}"]`);
     if (dialog === null || row === null) return;
+    // The story may stand in a phase that is shut.
+    const card = row.closest<HTMLDetailsElement>("[data-phase-card]");
+    if (card !== null) card.open = true;
     const body = dialog.querySelector<HTMLElement>("[data-story-sheet-body]");
     const title = dialog.querySelector<HTMLElement>("#story-sheet-title");
     if (title !== null) title.textContent = row.querySelector('[data-slot="item-title"]')?.textContent ?? "";
@@ -144,6 +166,16 @@ const onHash = () => {
     const asked = ["cell", "domain", "phase"].find((name) => params.has(name));
     if (asked === undefined) return;
     const value = params.get(asked) ?? "";
+    if (asked === "phase") {
+        // A link to a phase opens it where it stands; it filters nothing.
+        const card = document.querySelector<HTMLDetailsElement>(`[data-phase-card][data-phase="${value}"]`);
+        history.replaceState(history.state, "", `${location.pathname}${location.search}`);
+        if (card !== null) {
+            card.open = true;
+            card.scrollIntoView({ block: "start" });
+        }
+        return;
+    }
     if (asked === "cell") {
         for (const name of filters) setField(name, "");
         cell = value;
@@ -153,7 +185,7 @@ const onHash = () => {
     }
     history.replaceState(history.state, "", `${location.pathname}${location.search}`);
     apply();
-    document.getElementById("stories")?.scrollIntoView({ block: "start" });
+    document.getElementById("phases")?.scrollIntoView({ block: "start" });
 };
 
 const start = () => {

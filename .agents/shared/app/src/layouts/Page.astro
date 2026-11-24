@@ -85,7 +85,7 @@ const nav = {
                 <SearchButton label={copy.site.searchOpen} />
                 <div class="ms-auto shrink-0"><ThemeControl /></div>
             </header>
-            <div class="flex w-full min-w-0 justify-center gap-spacing-xl min-[1280px]:in-data-[drawer=open]:pe-[27rem]">
+            <div class="flex w-full min-w-0 justify-center gap-spacing-xl">
                 <main id="main" tabindex="-1" class:list={["flex w-full min-w-0 flex-col gap-spacing-4xl px-spacing-xxl pt-spacing-4xl pb-spacing-5xl md:px-spacing-5xl", wide ? "max-w-wide" : "max-w-column"]} data-wide={wide ? "true" : undefined}>
                     <div id="page-error" hidden data-written-by="app">
                         <ErrorState compact title={copy.site.pageErrorTitle} message={copy.site.pageError} />

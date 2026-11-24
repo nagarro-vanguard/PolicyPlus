@@ -6,7 +6,7 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@con
 import { Label } from "@continuum/ui/components/label";
 import { NoDataState } from "@continuum/ui/components/no-data-state";
 import { Textarea } from "@continuum/ui/components/textarea";
-import { Copy, XIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronRightIcon, Copy, XIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import type { PlainLink, PlanView, StoryView } from "../../case/plan-view";
 import { copy } from "../../lib/copy";
@@ -22,7 +22,7 @@ import { Matrix } from "./Matrix";
 
 const words = copy.plan;
 const selectClass =
-    "h-8 w-full rounded-control border border-input bg-background px-spacing-md text-sm focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none";
+    "h-8 w-full appearance-none rounded-control border border-input bg-background ps-spacing-md pe-8 text-sm focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none";
 
 const LinkOrText = ({ link, root, writtenBy = "agent" }: { readonly link: PlainLink; readonly root: string; readonly writtenBy?: "agent" | "app" }) =>
     link.href === undefined ? (
@@ -303,7 +303,8 @@ const Filter = ({ id, label, options }: { readonly id: string; readonly label: s
             <Label htmlFor={`plan-${id}`} data-written-by="app">
                 {label}
             </Label>
-            <select id={`plan-${id}`} name={id} className={selectClass}>
+            <div className="relative" data-plan-select-wrap>
+            <select id={`plan-${id}`} name={id} className={selectClass} data-plan-select>
                 <option value="" data-written-by="app">
                     {words.any}
                 </option>
@@ -313,6 +314,8 @@ const Filter = ({ id, label, options }: { readonly id: string; readonly label: s
                     </option>
                 ))}
             </select>
+            <ChevronDownIcon aria-hidden="true" className="pointer-events-none absolute end-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            </div>
         </div>
     );
 
@@ -336,57 +339,13 @@ export function Plan({ view, root }: { readonly view: PlanView; readonly root: s
                 </p>
             </div>
             <Sections>
-                <Section title={words.phasesTitle} writtenBy="app">
-                    <ol className="flex flex-col">
-                        {view.phases.map((phase) => (
-                            <li key={phase.number} className="flex flex-col gap-spacing-xs border-b border-border py-spacing-lg last:border-0">
-                                <div className="flex flex-wrap items-baseline gap-x-spacing-md">
-                                    <h3 className="text-sm font-medium" data-written-by="app">
-                                        {words.phase(phase.number)}
-                                    </h3>
-                                    <a href={`#phase=${phase.number}`} className="text-xs text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground" data-written-by="app">
-                                        {words.showStories}
-                                    </a>
-                                </div>
-                                <p data-written-by="agent">{phase.why}</p>
-                                {phase.epics.length === 0 ? null : phase.epics.length <= 3 ? (
-                                    <p className="text-muted-foreground">
-                                        <span data-written-by="app">{words.epics}: </span>
-                                        <span data-written-by="agent">{phase.epics.join("; ")}</span>
-                                    </p>
-                                ) : (
-                                    <Fold summary={words.epics}>
-                                        <ul className="flex list-disc flex-col gap-spacing-2xs ps-spacing-4xl text-sm">
-                                            {phase.epics.map((epic) => (
-                                                <li key={epic} data-written-by="agent">
-                                                    {epic}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </Fold>
-                                )}
-                                {phase.builtIn.length === 0 ? null : (
-                                    <p className="text-muted-foreground">
-                                        <span data-written-by="app">{words.builtIn}: </span>
-                                        <span data-written-by="agent">{phase.builtIn.join(", ")}</span>
-                                    </p>
-                                )}
-                            </li>
-                        ))}
-                    </ol>
-                </Section>
-                {view.matrix === null ? null : (
-                    <Section title={words.matrixTitle} writtenBy="app">
-                        <Matrix view={view.matrix} />
-                    </Section>
-                )}
-                <div id="stories">
-                    <Section title={words.storiesTitle} writtenBy="app">
+                <div id="phases">
+                    <Section title={words.phasesTitle} writtenBy="app">
                         <p className="text-sm text-muted-foreground" data-written-by="app">
-                            {words.storiesLede}
+                            {words.phasesLede}
                         </p>
                         <form role="search" aria-label={words.search} className="flex flex-wrap items-end gap-spacing-xl" data-plan-filter data-needs-js hidden>
-                            <div className="flex min-w-48 flex-[2] flex-col gap-spacing-xs">
+                            <div className="flex min-w-48 basis-full flex-col gap-spacing-xs">
                                 <Label htmlFor="plan-q" data-written-by="app">
                                     {words.search}
                                 </Label>
@@ -404,31 +363,73 @@ export function Plan({ view, root }: { readonly view: PlanView; readonly root: s
                                     {words.cellFilter}
                                 </Badge>
                             </p>
-                            <Button variant="ghost" size="sm" data-plan-clear data-written-by="app">
+                            <Button variant="ghost" size="sm" className="-ms-spacing-md" data-plan-clear data-written-by="app">
                                 {words.clear}
                             </Button>
                         </div>
                         <div data-story-empty hidden>
                             <NoDataState compact title={words.noMatch} message={words.noMatchHint} />
                         </div>
-                        <div className="flex flex-col gap-spacing-xl">
-                            {byPhase.map(({ phase, stories }) =>
-                                stories.length === 0 ? null : (
-                                    <section key={phase.number} className="flex flex-col gap-spacing-xs" data-phase-group={phase.number} aria-label={words.phase(phase.number)}>
-                                        <h3 className="text-sm font-medium text-muted-foreground" data-written-by="app">
-                                            {words.phase(phase.number)}
-                                        </h3>
-                                        <div className="flex flex-col">
-                                            {stories.map((story) => (
-                                                <StoryRow key={story.n} story={story} />
-                                            ))}
-                                        </div>
-                                    </section>
-                                ),
-                            )}
-                        </div>
+                        <ol className="flex flex-col">
+                            {byPhase.map(({ phase, stories }) => {
+                                const noun = stories.length === 1 ? view.storyNoun.one : view.storyNoun.many;
+                                const groups: { label: string; stories: StoryView[] }[] = [];
+                                for (const story of stories) {
+                                    const last = groups[groups.length - 1];
+                                    if (last !== undefined && last.label === story.epicLabel) last.stories.push(story);
+                                    else groups.push({ label: story.epicLabel, stories: [story] });
+                                }
+                                return (
+                                    <li key={phase.number} className="border-b border-border last:border-0" data-phase-group={phase.number}>
+                                        <details className="group/phase" data-phase-card data-phase={phase.number}>
+                                            <summary className="flex cursor-pointer list-none flex-col gap-spacing-2xs py-spacing-lg ps-10 pe-spacing-md hover:bg-accent/40 [&::-webkit-details-marker]:hidden relative rounded-control">
+                                                <ChevronRightIcon aria-hidden="true" className="absolute start-spacing-md top-spacing-lg mt-0.5 size-4 text-muted-foreground transition-transform duration-(--motion-duration-quick) group-open/phase:rotate-90" />
+                                                <span className="flex flex-wrap items-baseline justify-between gap-x-spacing-md">
+                                                    <h3 className="text-sm font-medium" data-written-by="app">
+                                                        {words.phase(phase.number)}
+                                                    </h3>
+                                                    <span className="text-xs tabular-nums text-muted-foreground" data-phase-count data-total={stories.length} data-noun={noun} data-written-by="app">
+                                                        {stories.length} {noun}
+                                                    </span>
+                                                </span>
+                                                <span className="text-sm text-muted-foreground" data-written-by="agent">
+                                                    {phase.why}
+                                                </span>
+                                            </summary>
+                                            <div className="flex flex-col gap-spacing-lg pb-spacing-xl ps-10">
+                                                {phase.builtIn.length === 0 ? null : (
+                                                    <p className="text-xs text-muted-foreground">
+                                                        <span data-written-by="app">{words.builtIn}: </span>
+                                                        <span data-written-by="agent">{phase.builtIn.join(", ")}</span>
+                                                    </p>
+                                                )}
+                                                {groups.map((group, at) => (
+                                                    <section key={`${group.label}${String(at)}`} className="flex flex-col gap-spacing-2xs" data-epic-group aria-label={group.label === "" ? words.phase(phase.number) : group.label}>
+                                                        {group.label === "" || groups.length === 1 ? null : (
+                                                            <h4 className="text-xs font-medium text-muted-foreground" data-written-by="agent">
+                                                                {group.label}
+                                                            </h4>
+                                                        )}
+                                                        <div className="flex flex-col">
+                                                            {group.stories.map((story) => (
+                                                                <StoryRow key={story.n} story={story} />
+                                                            ))}
+                                                        </div>
+                                                    </section>
+                                                ))}
+                                            </div>
+                                        </details>
+                                    </li>
+                                );
+                            })}
+                        </ol>
                     </Section>
                 </div>
+                {view.matrix === null ? null : (
+                    <Section title={words.matrixTitle} writtenBy="app">
+                        <Matrix view={view.matrix} />
+                    </Section>
+                )}
                 <Section title={words.notCovered} writtenBy="app">
                     <p className="text-sm text-muted-foreground" data-written-by="app">
                         {words.notCoveredLede}
