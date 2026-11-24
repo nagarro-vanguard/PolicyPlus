@@ -79,6 +79,18 @@
         opacity: 0;
     }
 
+    /* The row the open sheet or drawer shows, in every list that opens one: a soft fill and a thin ring, no bar at the edge. */
+    main a[data-slot="item"][aria-current="true"] {
+        /* The design system's item draws its own bar for the current one; this replaces it, so the rule must win. */
+        background: color-mix(in oklab, var(--primary) 8%, transparent) !important;
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent) !important;
+        border-radius: var(--radius-control, 0.5rem);
+    }
+
+    main a[data-slot="item"][aria-current="true"] [data-slot="item-title"] {
+        color: var(--primary);
+    }
+
     @starting-style {
         dialog[data-story-sheet][open] {
             translate: 2.5rem 0;

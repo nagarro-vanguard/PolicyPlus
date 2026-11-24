@@ -83,6 +83,21 @@ const apply = () => {
 };
 
 const sheet = () => document.querySelector<HTMLDialogElement>("[data-story-sheet]");
+const wideSheet = matchMedia("(min-width: 900px)");
+
+/** Opens the sheet the way the detail drawer of the other pages opens: beside the page on a wide screen, over it on a narrow one. */
+const showSheet = (dialog: HTMLDialogElement) => {
+    if (wideSheet.matches) dialog.show();
+    else dialog.showModal();
+    document.body.dataset.drawer = "open";
+    for (const rail of document.querySelectorAll<HTMLElement>("aside[data-contents]")) rail.hidden = true;
+};
+
+/** Marks the story the sheet shows, so the list says which one was chosen. */
+const markStory = (n: string | null) => {
+    for (const link of document.querySelectorAll<HTMLElement>("[data-story-open][aria-current='true']")) link.removeAttribute("aria-current");
+    if (n !== null) document.querySelector<HTMLElement>(`[data-story-open="${n}"]`)?.setAttribute("aria-current", "true");
+};
 
 let reading = 0;
 const openStory = async (n: string) => {
@@ -96,8 +111,9 @@ const openStory = async (n: string) => {
     body?.replaceChildren(Object.assign(document.createElement("p"), { className: "text-sm text-muted-foreground", textContent: said.loading ?? "" }));
     if (!dialog.open) {
         returnTo = row;
-        dialog.showModal();
+        showSheet(dialog);
     }
+    markStory(n);
     dialog.querySelector<HTMLElement>("[data-story-close]")?.focus();
     const mine = ++reading;
     try {
@@ -164,6 +180,9 @@ const start = () => {
         if (event.target === dialog) closeStory();
     });
     dialog?.addEventListener("close", () => {
+        delete document.body.dataset.drawer;
+        for (const rail of document.querySelectorAll<HTMLElement>("aside[data-contents]")) rail.hidden = false;
+        markStory(null);
         if (location.hash.startsWith("#story=")) history.replaceState(history.state, "", `${location.pathname}${location.search}`);
         returnTo?.focus();
         returnTo = null;

@@ -503,7 +503,7 @@ export function Plan({ view, root }: { readonly view: PlanView; readonly root: s
             <dialog
                 id="story-sheet"
                 aria-labelledby="story-sheet-title"
-                className="ms-auto me-0 my-0 h-dvh max-h-none w-full max-w-none border-s border-border bg-popover p-0 text-popover-foreground shadow-(--shadow-elevation-2) backdrop:bg-background/70 backdrop:backdrop-blur-xs sm:max-w-xl"
+                className="fixed inset-y-0 start-auto end-0 z-30 m-0 h-dvh max-h-none w-full max-w-none border-s border-border bg-popover p-0 text-popover-foreground shadow-(--shadow-elevation-2) backdrop:bg-background/70 backdrop:backdrop-blur-xs sm:max-w-xl min-[900px]:top-12 min-[900px]:h-[calc(100dvh-3rem)] min-[900px]:w-[26rem] print:hidden"
                 data-story-sheet
             >
                 <div className="flex h-full flex-col">
