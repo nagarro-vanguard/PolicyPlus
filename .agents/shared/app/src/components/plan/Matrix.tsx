@@ -11,7 +11,7 @@ import { Fold } from "../Fold";
 // text version below it lists every cell.
 
 const cellLink =
-    "inline-flex min-w-8 items-center justify-center rounded-control px-spacing-xs py-spacing-2xs tabular-nums underline decoration-border underline-offset-4 outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 aria-[current=true]:bg-foreground aria-[current=true]:text-background aria-[current=true]:no-underline";
+    "inline-flex min-w-8 items-center justify-center rounded-control px-spacing-xs py-spacing-2xs tabular-nums underline decoration-border underline-offset-4 outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring aria-[current=true]:bg-foreground aria-[current=true]:text-background aria-[current=true]:no-underline";
 
 /**
  * The matrix.

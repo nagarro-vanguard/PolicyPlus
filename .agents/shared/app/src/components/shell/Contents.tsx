@@ -1,9 +1,12 @@
 import { copy } from "../../lib/copy";
 import { Fold } from "../Fold";
+import { navItem } from "./navItem";
 
 // The list of a page's own headings, as the layout finds them in the page it rendered: a rail beside the page on a wide
 // screen, a fold at the top of the page below that. The page's script (src/scripts/contents.ts) marks the heading the
-// reader is at (`aria-current`) and moves to a heading smoothly, unless the reader asked for less motion.
+// reader is at (`aria-current`) and moves to a heading smoothly, unless the reader asked for less motion. Each entry
+// takes its look (hover, pressed, focus, current) from navItem.ts, the language it shares with the sidebar. A row is
+// never under 24 pixels high (WCAG 2.5.8) and sits clear of the rail's edge, so its focus outline is not clipped.
 
 export type ContentsEntry = { id: string; text: string; depth: 2 | 3; writtenBy: "agent" | "app" };
 
@@ -16,7 +19,7 @@ const Links = ({ entries }: { readonly entries: readonly ContentsEntry[] }) => (
             <li key={entry.id} className={entry.depth === 3 ? "ps-spacing-lg" : undefined}>
                 <a
                     href={`#${entry.id}`}
-                    className="block border-s-2 border-transparent py-spacing-3xs ps-spacing-md text-muted-foreground no-underline transition-colors duration-(--motion-duration-quick) hover:text-foreground aria-[current=location]:border-foreground aria-[current=location]:font-medium aria-[current=location]:text-foreground"
+                    className={`block py-spacing-3xs ps-spacing-md pe-spacing-md ${navItem}`}
                     data-contents-link={entry.id}
                     data-written-by={entry.writtenBy}
                 >
@@ -36,7 +39,7 @@ export function ContentsRail({ entries }: { readonly entries: readonly ContentsE
     return (
         <aside
             aria-label={copy.site.onThisPage}
-            className="sticky top-12 hidden max-h-[calc(100dvh-3rem)] w-56 shrink-0 self-start overflow-y-auto pt-spacing-4xl pe-spacing-xl pb-spacing-xl min-[1280px]:block print:hidden"
+            className="sticky top-12 hidden max-h-[calc(100dvh-3rem)] w-56 shrink-0 self-start overflow-y-auto pt-spacing-4xl ps-spacing-md pe-spacing-xl pb-spacing-xl min-[1280px]:block print:hidden"
             data-contents
         >
             <p className="mb-spacing-xs ps-spacing-md text-xs font-medium text-muted-foreground" data-written-by="app">

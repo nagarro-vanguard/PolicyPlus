@@ -64,7 +64,7 @@ const render = () => {
         return;
     }
     rows.forEach((row, at) => {
-        const li = el("li", "flex cursor-pointer flex-col gap-spacing-3xs rounded-control px-spacing-md py-spacing-xs hover:bg-accent/60 aria-selected:bg-accent aria-selected:text-accent-foreground");
+        const li = el("li", "flex cursor-pointer flex-col gap-spacing-3xs rounded-s-none rounded-e-control border-s-2 border-transparent px-spacing-md py-spacing-xs transition-[color,background-color,border-color] duration-(--motion-duration-quick) hover:bg-accent/50 aria-selected:border-foreground aria-selected:bg-accent aria-selected:text-accent-foreground");
         li.id = `palette-row-${at}`;
         li.setAttribute("role", "option");
         li.setAttribute("aria-selected", String(at === active));

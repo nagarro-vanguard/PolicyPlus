@@ -7,9 +7,11 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@continuum/ui/components/sidebar";
+import { navItem, navItemFill } from "./navItem";
 
 // The sections of the site as the design system's sidebar menu: the system's name, then one level of sections, the
-// current one marked. The same menu fills the sidebar beside the page and the sheet on a narrow screen.
+// current one marked. The same menu fills the sidebar beside the page and the sheet on a narrow screen. Each item takes
+// its look (hover, pressed, focus, current) from navItem.ts, the language it shares with the "On this page" rail.
 
 export type NavProps = {
     /** The system's name, written by the analysis. */
@@ -46,6 +48,7 @@ export function NavMenu({ name, root, sections, words }: NavProps) {
                             {sections.map((section) => (
                                 <SidebarMenuItem key={section.id}>
                                     <SidebarMenuButton
+                                        className={`${navItem} ${navItemFill}`}
                                         isActive={section.current !== undefined}
                                         render={<a href={`${root}${section.href}`} data-section={section.id} data-astro-prefetch="hover" aria-current={section.current} />}
                                     >
