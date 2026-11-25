@@ -45,6 +45,13 @@ const appSource = [
 ];
 /** What derives the plan, its bodies and its contexts: the plan skill's code. A change in it reaches a rerun. */
 const planSource = [join(here, "../../plan-modernization-backlog/shared")];
+/** What writes the reader's texts of the analysis and of the target: their generators. A change in one reaches a rerun. */
+const analysisContextsSource = [
+    join(here, "../../code-analysis/cli/write-contexts.ts"),
+    join(here, "../../code-analysis/shared/read/context-files.ts"),
+    join(here, "../../code-analysis/shared/read/context-labels.ts"),
+];
+const targetContextsSource = [join(here, "../../shape-target/cli/contexts.ts"), join(here, "../../shape-target/shared/derive/context.ts")];
 /** The folders of a run: the same fixed layout every skill uses under the Output Root. */
 export const pathsOf = (root: string) => ({
     root,
@@ -66,6 +73,11 @@ export const pathsOf = (root: string) => ({
     payloads: join(root, ".code-analysis/payloads"),
     journeysToday: join(root, ".code-analysis/payloads/journeys.json"),
     bundles: join(root, ".code-analysis/bundles"),
+    contexts: join(root, ".code-analysis/contexts"),
+    targetContexts: join(root, "target/contexts"),
+    planContexts: join(root, "work-items/contexts"),
+    analysisContextsSource,
+    targetContextsSource,
     records: join(root, ".modernization-backlog/work/records"),
     plan: join(root, ".modernization-backlog/payloads/plan.json"),
     backlog: join(root, ".modernization-backlog"),
@@ -274,6 +286,17 @@ export const steps: Step[] = [
         }),
     },
     {
+        name: "contexts",
+        inputs: (p) => [p.payloads, join(p.analysis, "personas.json"), ...p.analysisContextsSource],
+        makes: (p) => [join(p.contexts, "index.json")],
+        action: ({ paths, skills }) => ({
+            action: "run",
+            step: "contexts",
+            command: bun(skills, "code-analysis", "write-contexts.ts", `--payloads ${paths.payloads} --out ${paths.contexts}`),
+            why: "write the text a reader copies for each place of the old system, from the payloads",
+        }),
+    },
+    {
         name: "derive-legacy",
         inputs: (p) => [p.payloads],
         makes: (p) => [p.legacy],
@@ -320,6 +343,17 @@ export const steps: Step[] = [
         record: (p) => [p.choiceComponents],
     }),
     {
+        name: "target-contexts",
+        inputs: (p) => [p.architecture, p.journeys, p.choiceComponents, p.payloads, ...p.targetContextsSource],
+        makes: (p) => [join(p.targetContexts, "index.json")],
+        action: ({ paths, skills }) => ({
+            action: "run",
+            step: "target-contexts",
+            command: bun(skills, "shape-target", "contexts.ts", paths.root),
+            why: "write the text a reader copies for each journey and part of the target, from its records",
+        }),
+    },
+    {
         name: "foundation",
         inputs: (p) => [p.payloads, p.requestJson, p.journeys, p.architecture, p.current],
         without: goalsUnread,
@@ -358,7 +392,7 @@ export const steps: Step[] = [
     },
     {
         name: "app",
-        inputs: (p) => [p.plan, p.bodies, p.attachments, p.payloads, p.journeysToday, p.target, ...p.appSource],
+        inputs: (p) => [p.plan, p.bodies, p.attachments, p.planContexts, p.contexts, p.targetContexts, p.payloads, p.journeysToday, p.target, ...p.appSource],
         makes: (p) => [join(p.app, "index.html")],
         action: ({ paths, skills }) => ({
             action: "run",

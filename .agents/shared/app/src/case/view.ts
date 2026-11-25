@@ -60,7 +60,7 @@ export type NodeView = {
     prev: Link | null;
     next: Link | null;
     lateral: { relation: Relation; label: string; links: (Link & { count?: CountView })[] }[];
-    context: { file: string; kilobytes: number; fuller: string | null } | null;
+    context: { file: string; kilobytes: number } | null;
     /** Where this rule stands in the plan, when the node is a rule and the case holds a plan. */
     status: RuleStatus | null;
     /** On the page of what is not placed: every rule no story builds, each with where it stands and why. */
@@ -212,10 +212,6 @@ export const viewOf = (key: string, data: CaseData): NodeView => {
                 : {
                       file: contextFileOf(node.key),
                       kilobytes: Math.max(1, Math.round(bytes / 1024)),
-                      fuller:
-                          data.bundleCommand === undefined || node.level !== "capability"
-                              ? null
-                              : `${data.bundleCommand} capability "${node.name}"`,
                   },
         status: (ownId === undefined ? undefined : data.ruleStatus(ownId)) ?? null,
         noStory:

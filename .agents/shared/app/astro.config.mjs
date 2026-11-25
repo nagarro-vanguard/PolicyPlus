@@ -1,5 +1,5 @@
-import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
@@ -22,7 +22,13 @@ const contextFiles = () => ({
     hooks: {
         "astro:build:done": ({ dir }) => {
             const out = fileURLToPath(dir);
-            for (const [path, text] of contextTexts(openCase(buildConfig().caseDir))) writeDataFile(out, path, text);
+            for (const [path, text] of contextTexts(openCase(buildConfig().caseDir))) {
+                writeDataFile(out, path, text);
+                // The real file, beside its script: what "Copy file path" and "Download" name, and what an editor or a coding agent reads.
+                const real = join(out, path.replace(/\.txt$/, ".md"));
+                mkdirSync(dirname(real), { recursive: true });
+                writeFileSync(real, text);
+            }
         },
     },
 });

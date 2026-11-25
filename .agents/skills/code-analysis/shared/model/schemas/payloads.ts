@@ -9,17 +9,15 @@ export const ContextShape = Schema.Struct({
     scope: Text.annotate(about("What the place is, in one sentence: its kind, its name and what it is for.")),
     inside: Schema.Array(Schema.String).annotate(
         about(
-            "For a place that is a map (the system, an area, a capability, a screen): what lies inside it, one line each. Capped, with the count left out in `insideNotShown`; empty for a place with nothing inside it.",
+            "For a place that is a map (the system, an area, a capability, a screen): what lies inside it, one line each. Empty for a place with nothing inside it.",
         ),
     ),
-    insideNotShown: Count.annotate(about("How many lines were left out of `inside`.")),
     insideLabel: Schema.String.annotate(about("What `inside` lists, as a heading; empty when `inside` is empty.")),
     lookFirst: Schema.Array(Schema.String).annotate(
         about(
-            "Where to look first, as pointers and never a dump: the place the work starts as `file:line`, then the files the code is in with its own first and the shared ones after, the most widely shared first. Capped, with the count left out in `lookFirstNotShown`.",
+            "Where to look first, as pointers and never a dump: the place the work starts as `file:line`, then the files the code is in with its own first and the shared ones after, the most widely shared first.",
         ),
     ),
-    lookFirstNotShown: Count.annotate(about("How many pointers were left out of `lookFirst`.")),
     layers: Schema.Array(Schema.String).annotate(
         about(
             "For a screen: the layers it uses, one line each with what the layer does, `file:line` and how many of the screen's rules it decides, after where to look first; empty for any other place.",
@@ -29,32 +27,26 @@ export const ContextShape = Schema.Struct({
     reads: Schema.Array(Schema.String).annotate(about("The kinds of data the place's code reads, by name.")),
     rules: Schema.Array(Schema.String).annotate(
         about(
-            "The first rules decided there, each as its sentence with `file:line`; the rest are counted in `rulesNotShown`.",
+            "The rules decided there, each as its sentence with `file:line`.",
         ),
     ),
-    rulesNotShown: Count.annotate(about("How many rules were left out of `rules`.")),
     rulesTotal: Count.annotate(about("How many rules are decided in the place's code, all told.")),
     unconfirmed: Schema.Array(Schema.String).annotate(
         about(
-            "What the code does not settle, as the capability's open points: what is assumed, and what would change if it is wrong. Capped.",
+            "What the code does not settle, as the capability's open points: what is assumed, and what would change if it is wrong.",
         ),
     ),
     notFollowed: Schema.Array(Schema.String).annotate(
         about(
-            "The links in the place's code that reach nothing the code shows, each with what the code does show of where it goes. Capped.",
+            "The links in the place's code that reach nothing the code shows, each with what the code does show of where it goes.",
         ),
     ),
     commit: Schema.String.annotate(
         about("The commit the analysis describes, or a statement that it was not recorded."),
     ),
-    text: Text.annotate(
-        about(
-            "The same context as plain text, compiled once by the analysis so every medium copies the same words. It has the lines in a fixed order, an `Ask:` line left for the reader to fill, and contains no record ids.",
-        ),
-    ),
 }).annotate(
     about(
-        "What a tool that reads code needs to continue from one place and no other: a map with pointers, capped, with a count of what was left out, in a fixed order. Every place has one, from the whole system down to a single rule.",
+        "What a tool that reads code needs to continue from one place and no other: a map with pointers, in a fixed order. Every place has one, from the whole system down to a single rule.",
     ),
 );
 

@@ -1,8 +1,8 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@continuum/ui/components/select";
 
-// One of the story list's filters, drawn as the design system's Select. The native select the page ships stays in the
+// A page's filter, drawn as the design system's Select. The native select the page ships stays in the
 // page, hidden: it is what the filter script reads and what the address fills, and this one only shows its value and sets it
-// (src/scripts/plan-selects.tsx).
+// (src/scripts/filter-selects.tsx).
 
 /** The sentinel for "any": a Select has no empty value, a filter does. */
 const ANY = "__any__";
@@ -12,7 +12,7 @@ const ANY = "__any__";
  * @param props the native select's id and name, its options (the first is "any", with an empty value), the value it holds and what to do on a change
  * @returns the Select
  */
-export function PlanSelect({
+export function FilterSelect({
     id,
     options,
     value,

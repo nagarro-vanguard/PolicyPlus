@@ -13,8 +13,6 @@ export type PageContext = {
     /** The text's file, from the page. */
     file: string;
     kilobytes: number;
-    /** The command that writes a fuller text, when there is one. */
-    fuller?: string | null;
 };
 
 /**
@@ -52,11 +50,6 @@ export function PageHeader({
             {facts === undefined ? null : <Facts facts={facts.facts.slice(0, facts.tests === null ? 3 : 2)} tests={facts.tests} />}
             {context === null || context === undefined ? null : (
                 <div className="flex flex-col gap-spacing-xs" data-for-context>
-                    {context.fuller === null || context.fuller === undefined ? null : (
-                        <p className="text-xs text-muted-foreground" data-written-by="app">
-                            {copy.explorer.fullerText} <code className="wrap-anywhere">{context.fuller}</code>
-                        </p>
-                    )}
                     <Textarea className="font-mono text-xs" readOnly hidden aria-label={copy.explorer.forContext} data-context-fallback rows={8} />
                 </div>
             )}

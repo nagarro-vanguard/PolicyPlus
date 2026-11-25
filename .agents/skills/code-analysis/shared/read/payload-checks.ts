@@ -95,23 +95,23 @@ export const withoutRecordIds = (text: string) => {
 };
 
 /**
- * The checks of a context's shape: it opens with the ask and the scope, its rules count is the place's, and it
- * names no record id.
+ * The checks of a context's shape: it names its scope, its rules count is the place's, it names no record id in any
+ * line, and it names the commit.
  * @param payload the payload
  * @returns one line per difference
  */
 const contextGaps = (payload: CapabilityPayload): string[] =>
     contextsOf(payload).flatMap(({ place, context, rules }) => [
-        ...(context.text.startsWith("Ask: ") && context.text.includes("\nScope: ")
-            ? []
-            : [`${place}: the context lacks its ask or scope lines`]),
+        ...(context.scope === "" ? [`${place}: the context lacks its scope`] : []),
         ...(context.rulesTotal === rules
             ? []
             : [`${place}: the context counts ${context.rulesTotal} rules, the place has ${rules}`]),
-        ...(namesRecordId(context.text) ? [`${place}: the context names a record id`] : []),
-        ...(context.text.includes(`Commit: ${context.commit}`)
-            ? []
-            : [`${place}: the context does not name the commit`]),
+        ...(namesRecordId(
+            [context.scope, ...context.inside, ...context.lookFirst, ...context.layers, ...context.rules].join("\n"),
+        )
+            ? [`${place}: the context names a record id`]
+            : []),
+        ...(context.commit === "" ? [`${place}: the context does not name the commit`] : []),
     ]);
 
 /**

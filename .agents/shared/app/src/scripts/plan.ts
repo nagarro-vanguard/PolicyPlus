@@ -98,7 +98,7 @@ const apply = () => {
     const query = params.toString();
     history.replaceState(history.state, "", `${location.pathname}${query === "" ? "" : `?${query}`}${location.hash}`);
     // The Selects drawn for the filters read the values again.
-    dispatchEvent(new Event("plan:filters"));
+    dispatchEvent(new Event("filters"));
 };
 
 const sheet = () => document.querySelector<HTMLDialogElement>("[data-story-sheet]");

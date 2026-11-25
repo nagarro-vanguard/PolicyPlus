@@ -4,7 +4,8 @@ import { Label } from "@continuum/ui/components/label";
 import { NoDataState } from "@continuum/ui/components/no-data-state";
 import { riskAnchorOf, type RisksView } from "../../case/risks-view";
 import { copy } from "../../lib/copy";
-import { Facts } from "../Explorer";
+import { Facts, Section } from "../Explorer";
+import { Sections } from "@continuum/ui/components/details";
 import { KindBadge } from "../KindBadge";
 
 // The Risks section's body: the rule of the ranking in one sentence, a filter by severity and by capability, and every
@@ -13,8 +14,7 @@ import { KindBadge } from "../KindBadge";
 // address (`?severity=&capability=`) by the page's script (src/scripts/risks.ts).
 
 const words = copy.risks;
-const selectClass =
-    "h-8 w-full rounded-control border border-input bg-background px-spacing-md text-sm focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none";
+const selectClass = "h-8 w-full rounded-control border border-input bg-background px-spacing-md text-sm";
 
 /**
  * The Risks section's body.
@@ -37,7 +37,8 @@ export function Risks({ view, root }: { readonly view: RisksView; readonly root:
                         <Label htmlFor="risk-severity" data-written-by="app">
                             {words.severity}
                         </Label>
-                        <select id="risk-severity" name="severity" className={selectClass}>
+                        <div className="relative" data-filter-select-wrap>
+                        <select id="risk-severity" name="severity" className={selectClass} data-filter-select>
                             <option value="" data-written-by="app">
                                 {words.any}
                             </option>
@@ -47,6 +48,7 @@ export function Risks({ view, root }: { readonly view: RisksView; readonly root:
                                 </option>
                             ))}
                         </select>
+                        </div>
                     </div>
                 )}
                 {view.capabilities.length < 2 ? null : (
@@ -54,7 +56,8 @@ export function Risks({ view, root }: { readonly view: RisksView; readonly root:
                         <Label htmlFor="risk-capability" data-written-by="app">
                             {words.capability}
                         </Label>
-                        <select id="risk-capability" name="capability" className={selectClass}>
+                        <div className="relative" data-filter-select-wrap>
+                        <select id="risk-capability" name="capability" className={selectClass} data-filter-select>
                             <option value="" data-written-by="app">
                                 {words.any}
                             </option>
@@ -64,6 +67,7 @@ export function Risks({ view, root }: { readonly view: RisksView; readonly root:
                                 </option>
                             ))}
                         </select>
+                        </div>
                     </div>
                 )}
                 <Button type="reset" variant="ghost" size="sm" data-written-by="app">
@@ -74,53 +78,57 @@ export function Risks({ view, root }: { readonly view: RisksView; readonly root:
             <div data-risk-empty hidden>
                 <NoDataState compact title={words.noMatch} message={words.noMatchHint} />
             </div>
-            <ol className="flex flex-col gap-spacing-xs">
-                {view.risks.map((risk) => (
-                    <li
-                        key={risk.rank}
-                        id={riskAnchorOf(risk.rank)}
-                        className="scroll-mt-spacing-5xl rounded-control target:bg-muted"
-                        data-risk-row
-                        data-severity={risk.severity}
-                        data-capabilities={` ${risk.touches.flatMap((touch) => (touch.capability === undefined ? [] : [touch.capability])).join(" ")} `}
-                    >
-                        <Item size="xs" render={<article />}>
-                            <ItemContent className="min-w-0 basis-80">
-                                <ItemTitle className="line-clamp-none font-normal" data-written-by="agent">
-                                    <span className="sr-only">{risk.rank}. </span>
-                                    {risk.statement}
-                                </ItemTitle>
-                                <ItemDescription className="line-clamp-none" data-written-by="agent">
-                                    {risk.category}
-                                </ItemDescription>
-                            </ItemContent>
-                            <div className="shrink-0">
-                                <KindBadge kind={risk.badge} label={risk.word} writtenBy="app" />
-                            </div>
-                            <ItemFooter className="flex-wrap justify-start gap-x-spacing-md gap-y-spacing-2xs text-xs">
-                                <span className="text-muted-foreground" data-written-by="app">
-                                    {words.touches}:
-                                </span>
-                                {risk.touches.length === 0 ? (
-                                    <span data-written-by="app">{words.noCapability}</span>
-                                ) : (
-                                    risk.touches.map((touch) =>
-                                        touch.href === undefined ? (
-                                            <span key={touch.name} data-written-by="agent">
-                                                {touch.name}
-                                            </span>
+            <Sections>
+                <Section title={words.listTitle} writtenBy="app">
+                    <ol className="flex flex-col">
+                        {view.risks.map((risk) => (
+                            <li
+                                key={risk.rank}
+                                id={riskAnchorOf(risk.rank)}
+                                className="scroll-mt-spacing-5xl rounded-control target:bg-muted"
+                                data-risk-row
+                                data-severity={risk.severity}
+                                data-capabilities={` ${risk.touches.flatMap((touch) => (touch.capability === undefined ? [] : [touch.capability])).join(" ")} `}
+                            >
+                                <Item size="xs" render={<article />} className="flex-wrap">
+                                    <div className="shrink-0 md:w-32">
+                                        <KindBadge kind={risk.badge} label={risk.word} writtenBy="app" />
+                                    </div>
+                                    <ItemContent className="min-w-0 flex-1 basis-80">
+                                        <ItemTitle className="line-clamp-none font-normal" data-written-by="agent">
+                                            <span className="sr-only">{risk.rank}. </span>
+                                            {risk.statement}
+                                        </ItemTitle>
+                                        <ItemDescription className="line-clamp-none" data-written-by="agent">
+                                            {risk.category}
+                                        </ItemDescription>
+                                    </ItemContent>
+                                    <ItemFooter className="w-full basis-full flex-wrap justify-start gap-x-spacing-md gap-y-spacing-2xs text-xs md:ps-34">
+                                        <span className="text-muted-foreground" data-written-by="app">
+                                            {words.touches}:
+                                        </span>
+                                        {risk.touches.length === 0 ? (
+                                            <span data-written-by="app">{words.noCapability}</span>
                                         ) : (
-                                            <a key={touch.name} href={`${root}${touch.href}`} className="underline decoration-border underline-offset-4 hover:decoration-foreground" data-written-by="agent">
-                                                {touch.name}
-                                            </a>
-                                        ),
-                                    )
-                                )}
-                            </ItemFooter>
-                        </Item>
-                    </li>
-                ))}
-            </ol>
+                                            risk.touches.map((touch) =>
+                                                touch.href === undefined ? (
+                                                    <span key={touch.name} data-written-by="agent">
+                                                        {touch.name}
+                                                    </span>
+                                                ) : (
+                                                    <a key={touch.name} href={`${root}${touch.href}`} className="underline decoration-border underline-offset-4 hover:decoration-foreground" data-written-by="agent">
+                                                        {touch.name}
+                                                    </a>
+                                                ),
+                                            )
+                                        )}
+                                    </ItemFooter>
+                                </Item>
+                            </li>
+                        ))}
+                    </ol>
+                </Section>
+            </Sections>
         </div>
     );
 }

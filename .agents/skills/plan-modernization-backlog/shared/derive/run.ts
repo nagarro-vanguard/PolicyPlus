@@ -10,7 +10,7 @@ import { loadTarget } from "../read/target";
 import { buildTargetPlan } from "./target-plan";
 import { ruleCoverage } from "./target-gates";
 import { deriveFacts } from "./facts";
-import { contextsOf, publishPlan } from "./publish";
+import { contextsOf, publishPlan, writeChoices } from "./publish";
 import { builtFromNow } from "./built-from";
 import { dedupeCarriers } from "./carriers";
 import { planConflicts, targetConflicts } from "./conflicts";
@@ -115,5 +115,6 @@ export const runBuild = (layout: Layout): { gaps: Gaps; written: boolean; storie
     const checked = { failing: contexts.problems, advisory: [...gaps.advisory, ...contexts.advisory] };
     if (checked.failing.length > 0) return { gaps: checked, written: false, stories: plan.stories.length };
     publishPlan(layout, plan, contexts.texts, request);
+    writeChoices(layout, plan);
     return { gaps: checked, written: true, stories: plan.stories.length };
 };

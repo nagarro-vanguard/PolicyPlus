@@ -6,6 +6,7 @@ import { NoDataState } from "@continuum/ui/components/no-data-state";
 import type { DropView, JourneysView, ListRow } from "../../case/journeys";
 import { copy } from "../../lib/copy";
 import { Section } from "../Explorer";
+import { ContextCopy } from "../ContextCopy";
 import { ChangeChips, LinkRows } from "./Parts";
 
 // The list of journeys: what today and the new way mean in one sentence, the numbers, a plain filter, the journeys
@@ -111,14 +112,16 @@ export function JourneyList({ view, root }: { readonly view: JourneysView; reado
                     <Input id="journey-words" name="q" type="search" placeholder={words.wordsHint} autoComplete="off" />
                 </div>
                 {view.areas.length < 2 ? null : (
-                    <div className="flex flex-col gap-spacing-xs">
+                    <div className="flex min-w-48 flex-col gap-spacing-xs">
                         <Label htmlFor="journey-area" data-written-by="app">
                             {words.area}
                         </Label>
+                        <div className="relative" data-filter-select-wrap>
                         <select
                             id="journey-area"
                             name="area"
-                            className="h-8 rounded-control border border-input bg-background px-spacing-md text-sm focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                            className="h-8 w-full rounded-control border border-input bg-background px-spacing-md text-sm"
+                            data-filter-select
                         >
                             <option value="" data-written-by="app">
                                 {words.allAreas}
@@ -129,16 +132,17 @@ export function JourneyList({ view, root }: { readonly view: JourneysView; reado
                                 </option>
                             ))}
                         </select>
+                        </div>
                     </div>
                 )}
                 {!view.hasWays ? null : (
                     <div className="flex flex-wrap gap-spacing-xl pb-spacing-xs">
-                        <Label className="font-normal" data-written-by="app">
-                            <input type="checkbox" name="changes" value="1" className="size-4 accent-foreground" />
+                        <Label className="font-normal" data-written-by="app" data-filter-toggle-wrap>
+                            <input type="checkbox" name="changes" value="1" className="size-4 accent-foreground" data-filter-toggle />
                             {words.hasChanges}
                         </Label>
-                        <Label className="font-normal" data-written-by="app">
-                            <input type="checkbox" name="dropped" value="1" className="size-4 accent-foreground" />
+                        <Label className="font-normal" data-written-by="app" data-filter-toggle-wrap>
+                            <input type="checkbox" name="dropped" value="1" className="size-4 accent-foreground" data-filter-toggle />
                             {words.hasDropped}
                         </Label>
                     </div>
@@ -146,29 +150,57 @@ export function JourneyList({ view, root }: { readonly view: JourneysView; reado
             </form>
             <p className="text-sm text-muted-foreground" aria-live="polite" data-journey-status data-written-by="app" data-showing={words.showing} data-none={words.noMatch}></p>
             <Sections>
-                {view.actors.length === 0 ? null : (
-                    <div id="actors" data-journey-actors>
-                        <Section title={words.actors} writtenBy="app">
-                            <div className="flex flex-col gap-spacing-md">
-                                {view.actors.map((actor) => (
-                                    <div key={actor.name} className="flex flex-col gap-spacing-2xs">
-                                        <h3 className="text-sm font-medium" data-written-by="agent">
-                                            {actor.name}
-                                        </h3>
-                                        <p className="text-sm text-muted-foreground" data-written-by="agent">
-                                            {actor.journeys.map((journey, at) => (
+                <div id="actors" data-journey-actors>
+                    <Section title={words.actors} writtenBy="app">
+                        <p className="text-muted-foreground" data-written-by="app">
+                            {view.personas.length === 0 ? words.actorsNone : words.actorsLead}
+                        </p>
+                        <div className="flex flex-col">
+                            {view.personas.map((persona) => (
+                                <Item key={persona.name} size="xs" className="flex-wrap md:flex-nowrap" data-persona>
+                                    <ItemContent className="min-w-0">
+                                        <ItemTitle className="line-clamp-none" data-written-by="agent">
+                                            {persona.name}
+                                        </ItemTitle>
+                                        <ItemDescription className="line-clamp-none" data-written-by="agent">
+                                            {persona.means}
+                                        </ItemDescription>
+                                        <ItemDescription className="line-clamp-none text-xs" data-written-by="agent">
+                                            <span className="text-muted-foreground" data-written-by="app">
+                                                {words.takesPartIn(persona.journeys.length)}{persona.journeys.length === 0 ? "" : ": "}
+                                            </span>
+                                            {persona.journeys.map((journey, at) => (
                                                 <span key={journey.page}>
                                                     {at === 0 ? "" : ", "}
-                                                    <a href={`${root}${journey.page}`}>{journey.title}</a>
+                                                    <a href={`${root}${journey.page}`} className="underline decoration-border underline-offset-4 hover:decoration-foreground">
+                                                        {journey.title}
+                                                    </a>
                                                 </span>
                                             ))}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        </Section>
-                    </div>
-                )}
+                                        </ItemDescription>
+                                    </ItemContent>
+                                    {persona.context === null ? null : (
+                                        <ItemActions className="w-full justify-start md:w-auto md:justify-end">
+                                            <ContextCopy file={`${root}${persona.context.file}`} kilobytes={persona.context.kilobytes} />
+                                        </ItemActions>
+                                    )}
+                                </Item>
+                            ))}
+                            {view.generic === 0 ? null : (
+                                <Item size="xs" data-persona-generic>
+                                    <ItemContent className="min-w-0">
+                                        <ItemTitle className="line-clamp-none" data-written-by="app">
+                                            {words.genericName}
+                                        </ItemTitle>
+                                        <ItemDescription className="line-clamp-none" data-written-by="app">
+                                            {words.genericMeans(view.generic)}
+                                        </ItemDescription>
+                                    </ItemContent>
+                                </Item>
+                            )}
+                        </div>
+                    </Section>
+                </div>
                 {view.groups.map((group) => (
                     <div key={group.area?.slug ?? "other"} data-journey-group={group.area?.slug ?? "other"}>
                         <Section title={group.area?.name ?? words.otherJourneys} writtenBy={group.area === null ? "app" : "agent"}>

@@ -9,7 +9,7 @@ import { contextFileOf } from "./routes";
 // context texts) use. Pages read the same records through the content collections (data.ts).
 
 /** The kinds of context text the Explorer offers, by the level of the node. */
-export const contextKinds = ["system", "capability", "surface", "action", "rule"] as const;
+export const contextKinds = ["system", "area", "capability", "surface", "action", "rule"] as const;
 
 const byKey = <T>(records: readonly T[], keyOf: (record: T) => string) => {
     const map = new Map<string, T>();
@@ -27,6 +27,8 @@ export const contextSizes = (kase: Case) => {
     if (kase.has("context/index.json")) {
         const index = kase.json("context/index.json") as Record<string, Record<string, number>>;
         for (const kind of contextKinds) for (const [key, bytes] of Object.entries(index[kind] ?? {})) sizes.set(key, bytes);
+        for (const [key, bytes] of Object.entries(index.section ?? {})) sizes.set(`section/${key}`, bytes);
+        for (const [key, bytes] of Object.entries(index.persona ?? {})) sizes.set(`persona/${key}`, bytes);
     }
     return (key: string) => sizes.get(key);
 };
@@ -87,6 +89,14 @@ export const contextTexts = (kase: Case): Map<string, string> => {
         if (!kase.has(path)) continue;
         for (const [key, text] of Object.entries(kase.json(path) as Record<string, string>)) files.set(contextFileOf(key), text);
     }
+    // A persona's text, by the key of the persona, in a folder of its own.
+    if (kase.has("context/persona.json"))
+        for (const [key, text] of Object.entries(kase.json("context/persona.json") as Record<string, string>))
+            files.set(`context/persona/${key}.txt`, text);
+    // The text of a section's page (risks, architecture, choices), in a folder of its own.
+    if (kase.has("context/section.json"))
+        for (const [name, text] of Object.entries(kase.json("context/section.json") as Record<string, string>))
+            files.set(`context/section/${name}.txt`, text);
     // A journey's text, by its slug, in a folder of its own so a slug can never take a node's file.
     if (kase.has("context/journey.json"))
         for (const [slug, text] of Object.entries(kase.json("context/journey.json") as Record<string, string>))

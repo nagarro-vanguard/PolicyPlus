@@ -121,7 +121,22 @@ Every `overlaps` is 0 for a drawing that holds.
 
 - `evidence.json`: per rule id, at most 15 lines of the analysed code from the place the rule cites, with the file relative to the code's root; absent when the code cannot be read.
 - `search.json`: one record per node: name, the word for its level, the parent's name, a short text; no record id. Records of the sections' own pages carry `section` and a key that says where on that page: `journey/<slug>` (journeys), `story/<place in the plan's order>` (plan), `risk/<rank>` (risks), `domain/<slug>` (architecture). Such a key is not a node.
-- `context/<kind>.json` (`system`, `capability`, `surface`, `action`, `rule`, `story`, `journey`): the texts a reader copies as context, by scope key; `context/index.json` gives each text's exact size in bytes. A capability's and a place's text is the analysis's own bundle, built by code-analysis's `capabilityBundle`/`surfaceBundle` and `bundleText` (without source). A rule's text holds that rule only. A story's text is the plan skill's file for it (`work-items/attachments/<key>.md`), read and kept as it is: readable markdown with no JSON, made once by the plan skill, which checks it. Compose assembles nothing of it. The texts were in another folder before contract version 3. Every absolute path under the folder the run sits in (the parent of the `--plan` or `--target` root) or under the analysed code's root is made relative to it, so commands read from the repository and no home folder is copied.
+- `context/<kind>.json`: the texts a reader copies, by node key, and `context/index.json` with each text's size in bytes. Compose assembles none of them (see Context below); it collects the files the producers wrote, checks them, and writes each text twice for the app: a real `context/<kind>/<key>.md` (what "Copy file path" and "Download" point at) and the embedded script a page reads for "Copy" from `file://`.
+
+### Context: one catalogue, written by the owner of the node
+
+A context is one text per node: what it is, what it holds, the rules and evidence it rests on, what it relies on and what uses it, what is unsure, where to look. The skill that produces a node writes its text (files keyed by record id; compose maps ids to node keys); the app transports it. No number bounds a text.
+
+| Kind | Producer | Source |
+|---|---|---|
+| overview, area, capability, screen, layer, entry point, rule | code-analysis | the payloads' typed `context` of each place |
+| risk, outside system, data entity, persona | code-analysis | the knowledge and system payloads, the persona registry |
+| journey, domain, container, component | shape-target | `target/` records |
+| choice, story | plan | the target's choices, the plan's decisions and stories |
+
+Section order and labels, the same for every kind (a kind uses the sections it has): `What it is` (one sentence) · `What it does or holds` · `Rules and decisions` · `Relies on` · `Used by` · `Evidence` · `Unsure` · `Where to look`. A story keeps its tracker sections. The data form of this table is `compose/context-kinds.ts`.
+
+Forbidden in any text: a record id, a stored enum word as a label, a review, dispute or provenance word, JSON, a diagram source, an absolute path. Compose refuses a text that names any id of any record of the case (an exact match, so no stack's id format is assumed) or a state word taken from the schemas' own literal sets, and refuses a node of a catalogue kind with no text or a text with no node.
 
 ## Corrections over the mockup's generators
 

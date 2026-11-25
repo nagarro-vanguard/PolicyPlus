@@ -1,4 +1,5 @@
 import { Badge } from "@continuum/ui/components/badge";
+import { ContextCopy } from "../ContextCopy";
 import { Button } from "@continuum/ui/components/button";
 import { Sections } from "@continuum/ui/components/details";
 import { Input } from "@continuum/ui/components/input";
@@ -6,7 +7,7 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@con
 import { Label } from "@continuum/ui/components/label";
 import { NoDataState } from "@continuum/ui/components/no-data-state";
 import { Textarea } from "@continuum/ui/components/textarea";
-import { ChevronDownIcon, ChevronRightIcon, Copy, XIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronRightIcon, XIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import type { PlainLink, PlanView, StoryView } from "../../case/plan-view";
 import { copy } from "../../lib/copy";
@@ -213,15 +214,7 @@ export function StoryBody({ story, root }: { readonly story: StoryView; readonly
             </Block>
             {story.brief === null ? null : (
                 <div className="flex flex-col items-start gap-spacing-md" data-for-context>
-                    <Button variant="outline" data-context-file={`${root}${story.brief.file}`} data-copied={copy.site.copied}>
-                        <Copy aria-hidden="true" />
-                        <span data-label data-written-by="app">
-                            {copy.explorer.copyContext}
-                        </span>
-                        <span className="text-muted-foreground" data-written-by="app">
-                            {copy.explorer.size(story.brief.kilobytes)}
-                        </span>
-                    </Button>
+                    <ContextCopy file={`${root}${story.brief.file}`} kilobytes={story.brief.kilobytes} />
                     <Textarea className="font-mono text-xs" readOnly hidden aria-label={copy.explorer.forContext} data-context-fallback rows={8} />
                 </div>
             )}
@@ -277,8 +270,8 @@ const Filter = ({ id, label, options }: { readonly id: string; readonly label: s
             <Label htmlFor={`plan-${id}`} data-written-by="app">
                 {label}
             </Label>
-            <div className="relative" data-plan-select-wrap>
-            <select id={`plan-${id}`} name={id} className={selectClass} data-plan-select>
+            <div className="relative" data-filter-select-wrap>
+            <select id={`plan-${id}`} name={id} className={selectClass} data-filter-select>
                 <option value="" data-written-by="app">
                     {words.any}
                 </option>

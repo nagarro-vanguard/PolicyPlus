@@ -7,6 +7,7 @@ import type { ModernizationRequest } from "../model/request";
 import { layerAgentsMd, rootAgentsMd } from "./agents-md";
 import { contextOf, sourceReaderOf } from "./attachment";
 import { epicBody, storyBody } from "./bodies";
+import { choicesText } from "./choices-text";
 import type { Facts } from "./facts";
 import type { Target } from "../read/target";
 
@@ -30,6 +31,26 @@ const slug = (text: string) =>
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
 /** The name a bundle file has for one surface of one capability: the contract with code-analysis's batch mode. */
+/**
+ * The texts the analysis wrote for the places of one kind, by the capability and the place they belong to.
+ * @param layout the run's folders
+ * @param kind the kind of place (a screen is `surface`)
+ * @returns each text by `<capability id>|<place key>`; empty when the analysis wrote none
+ */
+export const analysisContexts = (layout: Layout, kind: string) => {
+    const folder = join(layout.analysis, "contexts");
+    const out = new Map<string, string>();
+    if (!existsSync(join(folder, "index.json"))) return out;
+    const index = JSON.parse(readFileSync(join(folder, "index.json"), "utf8")) as {
+        kind: string;
+        keys: Record<string, string>;
+        file: string;
+    }[];
+    for (const entry of index)
+        if (entry.kind === kind) out.set(`${entry.keys.capability}|${entry.keys.surface}`, readFileSync(join(folder, entry.file), "utf8"));
+    return out;
+};
+
 export const bundleName = (surface: string, capability: string) => `screen-${slug(surface)}--${slug(capability)}.md`;
 const write = (path: string, text: string) => {
     mkdirSync(dirname(path), { recursive: true });
@@ -56,10 +77,11 @@ export const contextsOf = (
     target?: Target,
 ) => {
     const source = sourceReaderOf(request.sourceRoots);
+    const surfaceContexts = analysisContexts(layout, "surface");
     const surfaceOf = new Map(
         facts.capabilities.flatMap((c) =>
             c.surfaces.flatMap((s) =>
-                s.actions.map((a) => [a.id, { name: s.name, file: bundleName(s.name, c.name) }] as const),
+                s.actions.map((a) => [a.id, { name: s.name, key: `${c.id}|${s.key}` }] as const),
             ),
         ),
     );
@@ -68,14 +90,13 @@ export const contextsOf = (
     for (const story of plan.stories) {
         const surfaces = [
             ...new Map(
-                story.actions.flatMap((id) => surfaceOf.get(id as string) ?? []).map((each) => [each.file, each]),
+                story.actions.flatMap((id) => surfaceOf.get(id as string) ?? []).map((each) => [each.key, each]),
             ).values(),
         ];
-        const readings = surfaces.flatMap(({ name, file }) =>
-            existsSync(join(layout.analysisBundles, file))
-                ? [{ title: name, text: readFileSync(join(layout.analysisBundles, file), "utf8") }]
-                : [],
-        );
+        const readings = surfaces.flatMap(({ name, key }) => {
+            const text = surfaceContexts.get(key);
+            return text === undefined ? [] : [{ title: name, text }];
+        });
         const made = contextOf(story, { plan, facts, request, target, source, readings });
         texts.set(story.key, made.text);
         problems.push(...made.problems);
@@ -153,4 +174,19 @@ export const publishPlan = (
     prune(layout.bodies, bodies);
     prune(layout.attachments, attachments);
     return items;
+};
+
+/**
+ * Writes the choices text and its index beside the stories' contexts, where the app collects it.
+ * @param layout the run's folders
+ * @param plan the plan
+ */
+export const writeChoices = (layout: Layout, plan: Plan) => {
+    const folder = join(layout.outputRoot, "work-items", "contexts");
+    mkdirSync(join(folder, "choices"), { recursive: true });
+    writeFileSync(join(folder, "choices", "00001.md"), choicesText(layout, plan));
+    writeFileSync(
+        join(folder, "index.json"),
+        `${JSON.stringify([{ kind: "choices", keys: { id: "choices" }, file: "choices/00001.md" }], null, 2)}\n`,
+    );
 };

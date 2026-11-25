@@ -1,3 +1,4 @@
+import { CONTEXT_KINDS } from "./context-kinds";
 import { z } from "zod";
 import { foldKinds, levels } from "./build/hierarchy";
 
@@ -453,9 +454,12 @@ export const caseFiles = {
     "plan/unplanned.json": z.array(z.strictObject({ name: S, file: S, firstLine: N, lastLine: N })),
     "plan/stale.json": z.boolean().nullable(),
     "plan/conflicts.json": z.array(z.strictObject({ stage: S, variant: S, says: S, resolved: z.boolean().nullable() })),
+    "journeys/personas.json": z.array(
+        z.strictObject({ name: S, key: S, means: S, journeys: z.array(z.strictObject({ slug: S, title: S })) }),
+    ),
     "context/index.json": z.record(S, z.record(S, N)),
     ...Object.fromEntries(
-        ["system", "capability", "surface", "action", "rule", "story", "journey"].map((kind) => [
+        CONTEXT_KINDS.map(({ kind }) => [
             `context/${kind}.json`,
             z.record(S, S),
         ]),

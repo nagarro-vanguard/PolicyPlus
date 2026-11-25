@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { z } from "zod";
-import { contextOf, parentOf } from "./build/context";
+import { contextOf, idsOf, parentOf } from "./build/context";
 import { briefOf } from "./build/brief";
 import { viewsOf } from "./build/views";
 import { evidenceOf } from "./build/evidence";
@@ -10,6 +11,7 @@ import { architectureOf, proposedOf, todayOf, traceOf } from "./build/journeys";
 import { Numbers } from "./build/numbers";
 import { planViewsOf, type PlanViews } from "./build/plan-views";
 import { plainTextOf } from "./build/plain";
+import { personasOf } from "./build/personas";
 import { searchOf } from "./build/search";
 import { slugify, Slugs } from "./build/text";
 import { caseContractVersion, caseFiles, Manifest, schemaPathOf } from "./contract";
@@ -93,7 +95,15 @@ export const buildCase = (options: ComposeOptions) => {
             (folder): folder is string => folder !== undefined,
         ),
     );
-    const context = contextOf(facts, payloads, hierarchy, evidence, plan, proposed, roots);
+    const folders = {
+        analysis: join(options.payloads, "..", "contexts"),
+        target: options.target === undefined ? undefined : join(options.target, "target", "contexts"),
+        plan: options.plan === undefined ? undefined : join(options.plan, "work-items", "contexts"),
+    };
+    const ids = idsOf(raw, proposed, plan?.plan.decisions, plan?.plan.stories.map((story) => ({ id: story.key })));
+    const context = contextOf(facts, hierarchy, plan, proposed, folders, roots, ids);
+    if (context.problems.length > 0)
+        throw new ComposeError("missing", `the copy contexts are not whole: ${context.problems.slice(0, 5).join("; ")}`);
 
     const input = {
         payloads,
@@ -155,6 +165,7 @@ export const compose = (options: ComposeOptions): Composed => {
         }),
         "brief.json": brief,
         "journeys/today.json": today,
+        "journeys/personas.json": personasOf(join(options.payloads, "..", "personas.json"), facts, proposed),
         "context/index.json": context.sizes,
         ...Object.fromEntries(
             Object.entries(context.texts).map(([kind, texts]) => [`context/${kind}.json`, texts]),

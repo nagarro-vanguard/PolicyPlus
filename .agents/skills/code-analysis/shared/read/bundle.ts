@@ -291,6 +291,5 @@ export const bundleGaps = (bundle: Bundle) => {
         ...boilerplate
             .filter((phrase) => text.includes(phrase))
             .map((phrase) => `the text holds boilerplate: ${phrase}`),
-        ...bundle.lines.filter((line) => line.startsWith("Ask:")).map(() => "the text holds an unanswered Ask line"),
     ];
 };

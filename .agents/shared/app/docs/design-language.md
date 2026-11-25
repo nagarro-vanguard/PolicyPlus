@@ -42,3 +42,11 @@ The sidebar and the "On this page" rail are one language, held in `src/component
 - Text is never smaller than the diagram tokens give, at full size; a drawing is never scaled down to fit.
 - One level at a time, with a limit on the boxes in view; the rest folds into a count and a table. A dense relation is a matrix. Selecting a box brightens what it uses and what uses it.
 - Colour carries meaning only and is joined by a word or a shape. Every drawing has a text version.
+
+## Context
+
+- One control on every page that shows a node: the outline "Copy" button with the size of the text ("about 91 KB"), and beside it an icon-only menu with "Copy file path" and "Download". One Copy copies the whole text; nothing is cut, and nothing offers a shorter version.
+- The path is relative to the site root (`context/<kind>/<key>.md`, a real file of the app folder) so it holds wherever the folder sits; Download is a link to the same file; Copy reads the embedded script, so all three work from `file://`.
+- The control uses the design system's `Button` and `DropdownMenu`: the theme's focus ring and fills, a target of at least 24 pixels, the app's words (`src/lib/copy.ts`) marked as the app's, no card and no accent colour.
+- A text states what the thing is and does in the reader's words, with the rules and evidence it rests on and what is unsure. It never holds a record id, a stored word of the data, a review or provenance label, JSON or a diagram source.
+

@@ -1,4 +1,5 @@
 ---
+import { sectionContextOf } from "../case/section-context";
 import Page from "../layouts/Page.astro";
 import { Risks } from "../components/risks/Risks";
 import { caseData } from "../case/data";
@@ -12,7 +13,7 @@ export const getStaticPaths = async () =>
     (await siteOf()).nav.some((section) => section.id === "risks") ? [{ params: { risks: "risks" } }] : [];
 const view = risksViewOf(theCase(), await caseData());
 ---
-<Page title={copy.risks.title} lead={copy.risks.lead} page="risks.html">
+<Page title={copy.risks.title} lead={copy.risks.lead} page="risks.html" context={sectionContextOf(await caseData(), "risks")}>
     <Risks view={view} root="./" />
-    <script>import "../scripts/risks.ts";</script>
+    <script>import "../scripts/risks.ts"; import "../scripts/filter-selects.tsx";</script>
 </Page>

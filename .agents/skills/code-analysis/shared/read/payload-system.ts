@@ -227,7 +227,8 @@ const areasOfSystem = (
                 files: [],
                 saves: [],
                 reads: [],
-                rules: rulesOf(payloads, ids),
+                rules: [],
+                rulesTotal: rulesOf(payloads, ids).length,
                 unconfirmed: [],
                 notFollowed: [],
                 commit,
@@ -366,10 +367,11 @@ export const systemPayload = Effect.fnUntraced(function* (
             files: [],
             saves: [],
             reads: [],
-            rules: rulesOf(
+            rules: [],
+            rulesTotal: rulesOf(
                 payloads,
                 capabilities.map((entry) => entry.id),
-            ),
+            ).length,
             unconfirmed: [],
             notFollowed: [
                 `${plural(unresolved, "call", "calls")} go somewhere the code does not show`,

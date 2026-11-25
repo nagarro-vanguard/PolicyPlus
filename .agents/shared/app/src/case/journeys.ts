@@ -112,8 +112,10 @@ export type JourneysView = {
     areas: { slug: string; name: string }[];
     drops: DropView[];
     journeys: JourneyView[];
-    /** Who takes part: each role the journeys name, with the journeys it does. */
-    actors: { name: string; journeys: { title: string; page: string }[] }[];
+    /** Who takes part: each kind of person the analysis found, what they do and the journeys they are in. */
+    personas: { name: string; means: string; journeys: { title: string; page: string }[]; context: { file: string; kilobytes: number } | null }[];
+    /** How many journeys name no kind of person: a person at the keyboard, and nothing more is known. */
+    generic: number;
 };
 
 /** The page of a journey, below the site's root. */
@@ -191,6 +193,8 @@ const rowsOf = (today: readonly TodayStepView[], proposed: readonly StepView[], 
  */
 export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], sections: readonly Section[]): JourneysView => {
     const today = read<Today[]>("journeys/today.json", []);
+    const personas = read<{ name: string; key: string; means: string; journeys: { slug: string; title: string }[] }[]>("journeys/personas.json", []);
+    const contextBytes = data.contextBytes;
     const proposed = read<Proposed[]>("journeys/proposed.json", []);
     const traces = read<Trace[]>("journeys/trace.json", []);
     const dropped = read<Dropped[]>("journeys/dropped.json", []);
@@ -412,15 +416,16 @@ export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], section
         areas: groups.flatMap((group) => (group.area === null ? [] : [group.area])),
         drops,
         journeys,
-        actors: (() => {
-            const actorOf = new Map([...today.map((each) => [each.slug, each.actor] as const), ...proposed.map((each) => [each.slug, each.actor] as const)]);
-            const byActor = new Map<string, { title: string; page: string }[]>();
-            for (const journey of journeys) {
-                const name = actorOf.get(journey.slug) ?? "";
-                if (name !== "") byActor.set(name, [...(byActor.get(name) ?? []), { title: journey.title, page: journey.page }]);
-            }
-            return [...byActor.entries()].map(([name, list]) => ({ name, journeys: list }));
-        })(),
+        personas: personas.map((persona) => ({
+            name: persona.name,
+            means: persona.means,
+            journeys: persona.journeys.map((each) => ({ title: each.title, page: journeyPageOf(each.slug) })),
+            context:
+                contextBytes(`persona/${persona.key}`) === undefined
+                    ? null
+                    : { file: `context/persona/${persona.key}.txt`, kilobytes: Math.max(1, Math.round((contextBytes(`persona/${persona.key}`) ?? 0) / 1024)) },
+        })),
+        generic: journeys.filter((journey) => !personas.some((persona) => persona.journeys.some((each) => journeyPageOf(each.slug) === journey.page))).length,
     };
 };
 

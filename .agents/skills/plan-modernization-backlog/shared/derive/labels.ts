@@ -24,10 +24,8 @@ export const LABELS = {
     restsOn: "What each criterion rests on",
     reading: "Reading of the existing code",
     builtBy: "Built by",
-    codeLeftOut: "code not included here to keep this document short",
     codeUnread: "The code could not be read when this was written, so it is not included.",
     unreadPlace: "This place could not be read.",
-    readingLeft: "Not included here to keep this document short",
     sameCode: "same code as",
     outside: (system: string) => `Outside system ${system}`,
     scope: (capability: string) => `Scope of ${capability}`,
@@ -38,6 +36,15 @@ export const LABELS = {
     ruleAt: (place: string) => `The rule at ${place}`,
     noSurface: "Entry points without a window",
     agentsNote: "Each layer's AGENTS.md governs every line in its folder; this file also governs the workspace layer.",
-    /** The section titles of the analysis's reading, least useful first; they are the analysis's own words. */
-    cutOrder: ["Relied on: decided elsewhere", "Data and states", "Boundary", "Contract: what it must do", "Trust: what to doubt"],
+} as const;
+
+/** The structure labels of the choices text. */
+export const CHOICE_LABELS = {
+    whatItIs: "What it is",
+    holds: "What it does or holds",
+    target: "Choices about the target's design",
+    codebase: "Choices about the target codebase",
+    chose: "Chose",
+    why: "Why",
+    picked: "Picked",
 } as const;

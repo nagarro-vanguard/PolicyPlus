@@ -1,4 +1,6 @@
 ---
+import { sectionContextOf } from "../case/section-context";
+import { caseData } from "../case/data";
 import Page from "../layouts/Page.astro";
 import Diagram from "../components/diagram/Diagram.astro";
 import { Section } from "../components/Explorer";
@@ -19,7 +21,7 @@ const today = todayView();
 const proposed = await proposedView();
 const hasToday = today.views.length > 0 || today.entities.length > 0;
 ---
-<Page wide drawer title={words.title} lead={proposed === null ? words.leadToday : words.lead} page="architecture.html">
+<Page wide drawer title={words.title} lead={proposed === null ? words.leadToday : words.lead} page="architecture.html" context={sectionContextOf(await caseData(), "architecture")}>
     <div class="flex flex-col gap-spacing-5xl">
         {hasToday ? (
             <div id="today">

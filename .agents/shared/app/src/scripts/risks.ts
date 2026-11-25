@@ -26,6 +26,7 @@ const apply = () => {
     for (const name of names) if (value(name) !== "") params.set(name, value(name));
     const query = params.toString();
     history.replaceState(history.state, "", `${location.pathname}${query === "" ? "" : `?${query}`}${location.hash}`);
+    dispatchEvent(new Event("filters"));
 };
 
 const start = () => {

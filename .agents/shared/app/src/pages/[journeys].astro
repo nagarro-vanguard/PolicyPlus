@@ -13,5 +13,5 @@ const view = await journeysView();
 ---
 <Page title={copy.journeys.title} lead={view.hasWays ? copy.journeys.lead : copy.journeys.leadToday} page="journeys.html" facts={{ facts: view.facts, tests: null }}>
     <JourneyList view={view} root="./" />
-    <script>import "../scripts/journeys.ts";</script>
+    <script>import "../scripts/journeys.ts"; import "../scripts/filter-selects.tsx";</script>
 </Page>

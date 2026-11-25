@@ -1,4 +1,6 @@
 ---
+import { sectionContextOf } from "../case/section-context";
+import { caseData } from "../case/data";
 import Page from "../layouts/Page.astro";
 import { Choices } from "../components/Choices";
 import { choicesView } from "../case/architecture-view";
@@ -17,7 +19,7 @@ const hrefOf = (id: string) => {
     return section === undefined ? null : `./${section.href}`;
 };
 ---
-<Page title={copy.choices.title} lead={copy.choices.lead} page="choices.html">
+<Page title={copy.choices.title} lead={copy.choices.lead} page="choices.html" context={sectionContextOf(await caseData(), "choices")}>
     <Choices view={view} journeysHref={hrefOf("journeys")} architectureHref={hrefOf("architecture")} />
 </Page>
 <script>

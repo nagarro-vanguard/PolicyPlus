@@ -8,12 +8,6 @@ import { LABELS } from "./labels";
 import type { Facts, Place } from "./facts";
 import { componentLayer } from "./layers";
 
-/** The most bytes a story's context holds: what must be kept comes first, then as much of the reading as fits. */
-export const CEILING = 40_000;
-
-/** The reading's sections in the order they are cut when the document is too long; what to doubt goes last. */
-const CUT = LABELS.cutOrder;
-
 /** A reader of the legacy code the request names: its lines by file, or nothing for a file that is not there. */
 export const sourceReaderOf = (roots: readonly string[]) => {
     const files = new Map<string, string[] | null>();
@@ -49,7 +43,6 @@ export type ContextInputs = {
 };
 
 const at = (place: Place) => `${place.file}:${place.firstLine}-${place.lastLine}`;
-const bytes = (text: string) => Buffer.byteLength(text);
 const ID = /\b[a-z]+(?:-[a-z]+)*-\d{8,}\b/g;
 
 /** A fence longer than any run of backticks the code holds. */
@@ -57,60 +50,6 @@ const fenced = (lines: readonly string[]) => {
     const longest = Math.max(0, ...lines.flatMap((line) => [...line.matchAll(/`+/g)].map((run) => run[0].length)));
     const fence = "`".repeat(Math.max(3, longest + 1));
     return [fence, ...lines, fence].join("\n");
-};
-
-/** The ids and cross-references the reading carries for the analysis's own use; nothing a person reads. */
-const WORDS = /\*{0,2}\b(?:BR|ACT|TR|RK)-\d+\b\*{0,2}\s?|\s*\(bundle: [^)]*\)/g;
-/** Sections of the reading that repeat what this context holds: the code and the table of files. */
-const REPEATED = new Set(["Source", "Read order"]);
-const cellsOf = (line: string) =>
-    line
-        .replace(/^\s*\||\|\s*$/g, "")
-        .split("|")
-        .map((cell) => cell.trim());
-
-/**
- * Splits a reading at its `##` headings outside fenced code and lowers each heading one level. What repeats this
- * context is left out, a diagram is left out, and a table is said as labelled lines.
- */
-const readingSections = (text: string, plain: (text: string) => string) => {
-    const sections: { title: string; body: string[] }[] = [];
-    let open: string | undefined;
-    let diagram = false;
-    let head: string[] = [];
-    for (const raw of text.split(/\r?\n/)) {
-        const fence = /^\s*(```|~~~)(\w*)/.exec(raw);
-        if (open === undefined && fence !== null) ((open = fence[1]), (diagram = fence[2] === "mermaid"));
-        else if (open !== undefined && raw.trim().startsWith(open)) {
-            open = undefined;
-            if (diagram) {
-                diagram = false;
-                continue;
-            }
-        }
-        if (diagram) continue;
-        const heading = open === undefined ? /^(#{1,6})(\s.*)$/.exec(raw) : null;
-        const line = open === undefined ? plain(raw.replace(WORDS, "")) : raw;
-        const row = open === undefined && /^\s*\|/.test(raw);
-        const inner = sections.at(-1)?.body;
-        if (heading?.[1] === "##") sections.push({ title: (heading[2] ?? "").trim(), body: [] });
-        else if (heading?.[1] === "#") continue;
-        else if (row && /^[\s:|-]+$/.test(raw)) continue;
-        else if (row && head.length === 0) head = cellsOf(line);
-        else if (row)
-            inner?.push(
-                `- ${cellsOf(line)
-                    .flatMap((cell, at) => (cell === "" ? [] : [`${head[at]}: ${cell}`]))
-                    .join("; ")}`,
-            );
-        else {
-            head = [];
-            inner?.push(heading === null ? line : `${"#".repeat(Math.min(6, heading[1]!.length + 1))}${heading[2]}`);
-        }
-    }
-    return sections
-        .filter((each) => !REPEATED.has(each.title))
-        .map((each) => ({ title: each.title, body: each.body.join("\n").trim() }));
 };
 
 /**
@@ -314,21 +253,12 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
         ...section(LABELS.layers, layers),
         ...section(LABELS.targetParts, [...steps, ...components]),
     ];
-    // A section several surfaces share is said once; two that differ carry the name of their surface.
-    const all = readings.flatMap((reading) =>
-        readingSections(reading.text, plain).map((each) => ({ ...each, surface: reading.title })),
-    );
-    const sections = all
-        .filter((each, at) => all.findIndex((other) => other.body === each.body) === at)
-        .map((each, _, kept) => {
-            const title =
-                kept.filter((other) => other.title === each.title).length > 1
-                    ? `${each.title}: ${each.surface}`
-                    : each.title;
-            return { title, text: `### ${title}\n\n${each.body}` };
-        });
+    // The analysis's own text of each old screen the story ports, its headings lowered under the story's.
+    const sections = readings.map((reading) => ({
+        text: `### ${reading.title}\n\n${reading.text.replace(/^## /gm, "#### ").trimEnd()}`,
+    }));
     // What each criterion rests on; the code of the places after the first `n` is left out, their places stay.
-    const restsOn = (n: number) =>
+    const restsOn =
         section(
             LABELS.restsOn,
             criteria.flatMap((parts, order) =>
@@ -340,66 +270,24 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
                               ...parts.map((part) =>
                                   typeof part === "string"
                                       ? part
-                                      : part.span < n || !source.readable
-                                        ? blocks[part.span]!
-                                        : `${at(spans[part.span]!)} (${LABELS.codeLeftOut})`,
+                                      : blocks[part.span]!,
                               ),
                           ].join("\n\n"),
                       ],
             ),
             ...(source.readable || spans.length === 0 ? [] : [LABELS.codeUnread]),
         );
-    const render = (n: number, kept: readonly string[], left: readonly string[]) =>
-        `${[
-            ...before,
-            ...restsOn(n),
-            ...after,
-            ...(sections.length === 0
-                ? []
-                : [
-                      `## ${LABELS.reading}`,
-                      ...(left.length === 0
-                          ? []
-                          : [`${LABELS.readingLeft}: ${left.join("; ")}.`]),
-                      ...kept,
-                  ]),
-        ].join("\n\n")}\n`;
-    // What must be kept comes first: the evidence, then the code, then the reading, least useful sections cut first.
-    let n = spans.length;
-    while (
-        source.readable &&
-        n > 0 &&
-        bytes(
-            render(
-                n,
-                [],
-                sections.map((each) => each.title),
-            ),
-        ) > CEILING
-    )
-        n--;
-    const rank = (title: string) => {
-        const at = CUT.findIndex((name) => title === name || title.startsWith(`${name}: `));
-        return at < 0 ? CUT.length - 1.5 : at;
-    };
-    const order = sections
-        .map((_, at) => at)
-        .sort((a, b) => rank(sections[a]!.title) - rank(sections[b]!.title) || b - a);
-    const cut = new Set<number>(n === spans.length ? [] : order);
-    const draw = () =>
-        render(
-            n,
-            sections.filter((_, at) => !cut.has(at)).map((each) => each.text),
-            sections.filter((_, at) => cut.has(at)).map((each) => each.title),
-        );
-    for (const at of order) if (bytes(draw()) > CEILING) cut.add(at);
-    const left = sections.filter((_, at) => cut.has(at)).map((each) => each.title);
-    const text = draw();
+    const text = `${[
+        ...before,
+        ...restsOn,
+        ...after,
+        ...(sections.length === 0 ? [] : [`## ${LABELS.reading}`, ...sections.map((each) => each.text)]),
+    ].join("\n\n")}\n`;
     for (const id of ruleIds) {
         const fact = facts.rules.get(id);
         const found =
             fact === undefined || text.includes(view.builds.includes(id as never) ? at(fact.place) : fact.says);
         if (!found) fail("a rule it builds or relies on is not in its context");
     }
-    return { text, problems, cutSource: spans.length - n, left };
+    return { text, problems };
 };

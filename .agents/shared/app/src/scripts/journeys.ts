@@ -34,6 +34,7 @@ const apply = () => {
     if (dropped) params.set("dropped", "1");
     const query = params.toString();
     history.replaceState(history.state, "", `${location.pathname}${query === "" ? "" : `?${query}`}${location.hash}`);
+    dispatchEvent(new Event("filters"));
 };
 
 const start = () => {

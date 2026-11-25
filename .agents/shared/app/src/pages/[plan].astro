@@ -16,5 +16,5 @@ const view = planViewOf(theCase(), await caseData(), site.sections);
 ---
 <Page title={copy.plan.title} lead={copy.plan.lead} page="plan.html" wide>
     {view === null ? null : <Plan view={view} root="./" />}
-    <script>import "../scripts/plan.ts"; import "../scripts/plan-selects.tsx";</script>
+    <script>import "../scripts/plan.ts"; import "../scripts/filter-selects.tsx";</script>
 </Page>
