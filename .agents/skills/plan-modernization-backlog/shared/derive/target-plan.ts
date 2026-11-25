@@ -20,7 +20,6 @@ export type TargetPlanInput = {
 
 const hashOf = (value: unknown) => createHash("sha1").update(JSON.stringify(value)).digest("hex").slice(0, 12);
 const keyOf = (value: unknown) => Schema.decodeUnknownSync(StoryKey)(`story-${hashOf(value)}`);
-const lowerFirst = (text: string) => (text.length === 0 ? text : text[0]!.toLowerCase() + text.slice(1));
 
 export const SCAFFOLD_EPIC = "area:codebase";
 export const SHARED_COMPONENTS_EPIC = "area:shared components";
@@ -75,28 +74,6 @@ export const keptRules = (target: Target) =>
         ),
     );
 
-/** The acceptance story of a journey, written by the plan, not by an agent: one criterion per step. */
-export const journeyTestStory = (journey: TargetJourney): Story => {
-    const steps = journey.steps;
-    const groups: (typeof steps)[] = [];
-    const per = Math.max(1, Math.ceil(steps.length / 11));
-    for (let at = 0; at < steps.length; at += per) groups.push(steps.slice(at, at + per));
-    const named = `Prove the journey: ${journey.name}`;
-    return {
-        title: named.length <= 72 || journey.name.length > 72 ? named : journey.name,
-        what: "An acceptance test does the journey from its first step to its last, as people will do it.",
-        why: "The journey keeps working as the product changes, in the interface the team ships.",
-        actions: [],
-        terms: [],
-        criteria: [
-            ...groups.map((group, at) => ({
-                says: `Given the product is ready, when the test does ${group.map((step) => `"${step.intent}"`).join(" and then ")}${per > 1 ? ` (steps ${at * per + 1} to ${at * per + group.length})` : ""}, then ${group.map((step) => lowerFirst(step.system).replace(/[.\s]+$/, "")).join(" and then ")}.`,
-                from: [],
-            })),
-        ] as unknown as Story["criteria"],
-    };
-};
-
 const citedRules = (story: Story) =>
     story.criteria.flatMap((criterion) =>
         criterion.from.flatMap((ref) => (ref._tag === "rule" ? [ref.id as string] : [])),
@@ -144,19 +121,8 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                 }
             }
     const all = [
-        { story: scaffoldStory(layers), scaffold: true, test: undefined as TargetJourney | undefined, index: -1 },
-        ...input.stories.map((story, index) => ({
-            story,
-            scaffold: false,
-            test: undefined as TargetJourney | undefined,
-            index,
-        })),
-        ...target.journeys.map((journey, at) => ({
-            story: journeyTestStory(journey),
-            scaffold: false,
-            test: journey,
-            index: 100000 + at,
-        })),
+        { story: scaffoldStory(layers), scaffold: true, index: -1 },
+        ...input.stories.map((story, index) => ({ story, scaffold: false, index })),
     ];
     // Two journeys can have the same headline: the later ones take a number, so titles stay unique.
     const titles = new Set<string>();
@@ -166,16 +132,14 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
         titles.add(title);
         if (title !== entry.story.title) entry.story = { ...entry.story, title };
     }
-    const views = all.map(({ story, scaffold, test, index }) => {
+    const views = all.map(({ story, scaffold, index }) => {
         const stepIds = story.steps ?? [];
         const functional = story.actions.length > 0;
         const built = story.components ?? [];
         // A piece that carries no step of its own still belongs to the journey its component serves.
-        const journey =
-            test ??
-            [...stepIds, ...built.flatMap((name) => components.get(name)?.serves ?? [])]
-                .map((id) => journeyOfStep.get(id))
-                .find((each) => each !== undefined);
+        const journey = [...stepIds, ...built.flatMap((name) => components.get(name)?.serves ?? [])]
+            .map((id) => journeyOfStep.get(id))
+            .find((each) => each !== undefined);
         const builds = [...new Set(citedRules(story))];
         const area = scaffold
             ? "codebase"
@@ -186,7 +150,7 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                   return topic?._tag === "area" ? topic.name : built.length > 0 ? "shared components" : "platform";
               })();
         // A story that builds a component of the shared tier is delivered with the shared tier, whatever journey it serves.
-        const inTier = test === undefined && !scaffold && index >= 0 && tierStories.has(index);
+        const inTier = !scaffold && index >= 0 && tierStories.has(index);
         const klass = scaffold ? 0 : inTier ? 2 : journey !== undefined ? 3 : built.length > 0 ? 2 : 1;
         const epic = inTier
             ? SHARED_COMPONENTS_EPIC
@@ -195,18 +159,15 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
               : `area:${area}`;
         const signature = scaffold
             ? "scaffold"
-            : test !== undefined
-              ? ["journey-test", test.id]
-              : functional
-                ? [...stepIds].sort()
-                : built.length > 0
-                  ? [...built].sort()
-                  : [story.title, ...story.criteria.flatMap((c) => c.from.map((r) => `${r._tag}:${r.id}`))].sort();
-        const layerIds = storyLayers(story, { scaffold, acceptance: test !== undefined }, stack);
+            : functional
+              ? [...stepIds].sort()
+              : built.length > 0
+                ? [...built].sort()
+                : [story.title, ...story.criteria.flatMap((c) => c.from.map((r) => `${r._tag}:${r.id}`))].sort();
+        const layerIds = storyLayers(story, { scaffold }, stack);
         return {
             story,
             scaffold,
-            test,
             index,
             functional,
             journey,
@@ -261,17 +222,7 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
         const reliesOn = usedBuilders.flatMap(({ name, builder }) =>
             (components.get(name)?.enforces ?? []).map((rule) => ({ rule, builtBy: builder })),
         );
-        const proves =
-            view.test === undefined
-                ? []
-                : views
-                      .filter(
-                          (each) => each.test === undefined && each.journey?.id === view.test?.id && each.functional,
-                      )
-                      .map((each) => each.key as string);
-        const blockedBy = [
-            ...new Set([...usedBuilders.map((each) => each.builder), ...proves, ...platformBefore(view)]),
-        ];
+        const blockedBy = [...new Set([...usedBuilders.map((each) => each.builder), ...platformBefore(view)])];
         return { ...view, reliesOn, blockedBy };
     });
 
@@ -351,7 +302,7 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
         const journey = target.journeys.find((each) => journeyEpic(each) === key);
         const area = key.startsWith("area:") ? key.slice(5) : undefined;
         const outcome = journey
-            ? journey.idea
+            ? `${journey.idea} Done when "${journey.name}" passes an acceptance test from its first step to its last.`
             : key === SCAFFOLD_EPIC
               ? "The target codebase exists with every planned layer, each with a working check, ready for stories to be built in."
               : key === SHARED_COMPONENTS_EPIC
@@ -386,8 +337,38 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
         const names = layers.filter((layer) => ids.has(layer.id)).map((layer) => layer.name);
         return names.length <= 1 ? (names[0] ?? "") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
     };
+    const ones = [
+        "no",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten",
+        "eleven",
+        "twelve",
+        "thirteen",
+        "fourteen",
+        "fifteen",
+        "sixteen",
+        "seventeen",
+        "eighteen",
+        "nineteen",
+    ];
+    const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+    const inWords = (n: number): string =>
+        n < 20
+            ? (ones[n] as string)
+            : n < 100
+              ? `${tens[Math.floor(n / 10)] as string}${n % 10 === 0 ? "" : `-${ones[n % 10] as string}`}`
+              : String(n);
     const phases: Phase[] = phaseNumbers.map((number) => {
         const where = builtIn(number);
+        const keysOf = new Set(stories.filter((story) => story.phase === number).map((story) => story.key));
         return {
             number,
             name:
@@ -407,7 +388,11 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                       ? "The decisions about libraries, data, outside systems and conventions are made real before any journey, lower layers first."
                       : number === 2
                         ? "Components several journeys call are built once, ahead of the journeys that rely on them."
-                        : `Journey stories whose blockers are all in earlier phases${number > 3 ? `, the earlier rounds among them` : ""}; the components a story calls are built before it.`,
+                        : (() => {
+                              const count = epics.filter((epic) => epic.stories.some((key) => keysOf.has(key))).length;
+                              const words = inWords(count);
+                              return `${words.charAt(0).toUpperCase()}${words.slice(1)} ${count === 1 ? "journey whose steps build" : "journeys whose steps build"} on the earlier phases.`;
+                          })(),
                 ...(where === "" || number <= 1 ? [] : [`Built in ${where}.`]),
             ].join(" "),
             stories: stories.filter((story) => story.phase === number).map((story) => story.key),

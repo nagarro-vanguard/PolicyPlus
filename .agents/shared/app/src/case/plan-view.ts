@@ -32,9 +32,10 @@ type Story = {
     open: string[];
     challenges: string[];
 };
-type Epic = { key: string; label: string; sequence: number; stories: string[] };
+type Epic = { key: string; kind: string; label: string; outcome: string; sequence: number; stories: string[] };
 type Phase = { number: number; name: string; why: string; stories: string[]; epics: string[]; builtIn: string[] };
-type Layer = { id: string; name: string };
+type Layer = { id: string; name: string; kind: string };
+type Decision = { chose: string; layer: string };
 type Matrix = {
     journeys: string[];
     domains: string[];
@@ -45,10 +46,12 @@ type Matrix = {
 };
 type ProposedJourney = { id: string; task: string; name: string; steps: { id: string; number: number; intent: string }[] };
 type TodayJourney = { id: string; slug: string; title: string };
-type Trace = { step: string; changed: { rule: string; to: string }[] };
 type Dropped = { journey: string; actions: string[]; rules: string[]; reason: string };
 
 export type PlainLink = { name: string; href?: string };
+
+type Place = { file: string; firstLine: number; lastLine: number };
+const placeText = (place: Place) => `${place.file}:${place.firstLine === place.lastLine ? `${place.firstLine}` : `${place.firstLine}-${place.lastLine}`}`;
 
 export type StoryView = {
     n: number;
@@ -62,6 +65,7 @@ export type StoryView = {
     phase: number;
     epic: number;
     epicLabel: string;
+    epicOutcome: string;
     domains: number[];
     domainNames: string[];
     components: string[];
@@ -70,7 +74,6 @@ export type StoryView = {
     unblocks: { n: number; title: string }[];
     unblocksText: string | null;
     waitsText: string | null;
-    rules: { name: string; href?: string; place: string; changedTo: string | null }[];
     reliesOn: (PlainLink & { builtBy: PlainLink | null })[];
     steps: { journey: PlainLink; number: number; of: number; intent: string }[];
     brief: { file: string; kilobytes: number } | null;
@@ -89,6 +92,8 @@ export type PlanView = {
     /** True when the plan says it was built before the latest decisions or analysis. */
     stale: boolean;
     structure: string;
+    /** How done is proven: what the decisions on the test layers chose, and that a journey's epic says when it is done. */
+    proof: { chose: string[]; journeys: string | null } | null;
     phases: { number: number; why: string; builtIn: string[]; epics: string[]; stories: number }[];
     matrix: MatrixView | null;
     stories: StoryView[];
@@ -128,13 +133,13 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
     const matrix = read<Matrix | null>("plan/matrix.json", null);
     const proposed = read<ProposedJourney[]>("journeys/proposed.json", []);
     const today = read<TodayJourney[]>("journeys/today.json", []);
-    const traces = read<Trace[]>("journeys/trace.json", []);
     const dropped = read<Dropped[]>("journeys/dropped.json", []);
     const architecture = read<{ domains: { name: string }[] } | null>("architecture.json", null);
     const sizes = read<Record<string, Record<string, number>>>("context/index.json", {}).story ?? {};
     const stale = read<boolean | null>("plan/stale.json", null) === true;
     const unplanned = read<{ name: string; file: string; firstLine: number; lastLine: number }[]>("plan/unplanned.json", []);
 
+    const decisions = read<Decision[]>("plan/decisions.json", []);
     const levelOf = (key: string) => data.node(key)?.level;
     const nodeLink = (key: string, name?: string): PlainLink => {
         const node = data.node(key);
@@ -160,7 +165,6 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
         return journeysBuilt && page !== undefined ? { name: journey.name, href: `journey/${page.slug}.html` } : { name: journey.name };
     };
     const stepOf = new Map(proposed.flatMap((journey) => journey.steps.map((step) => [step.id, { journey, step }] as const)));
-    const traceOf = new Map(traces.map((trace) => [trace.step, trace]));
 
     const storiesNumber = data.number("plan/stories");
     const storyNoun = storiesNumber?.noun ?? { one: "story", many: "stories" };
@@ -178,14 +182,6 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
         .sort((a, b) => a.phase - b.phase || a.sequence - b.sequence)
         .map((story): StoryView => {
             const epic = epicByKey.get(story.epic);
-            const changes = new Map(story.steps.flatMap((step) => (traceOf.get(step)?.changed ?? []).map((change) => [change.rule, change.to] as const)));
-            const rules = story.builds.map((id) => {
-                const rule = data.fact("rules", id) as { slug: string; says: string; place: { file: string; firstLine: number; lastLine: number } } | undefined;
-                if (rule === undefined) return { name: "", place: "", changedTo: null };
-                const link = nodeLink(`rule/${rule.slug}`, rule.says);
-                const lines = rule.place.firstLine === rule.place.lastLine ? `${rule.place.firstLine}` : `${rule.place.firstLine}-${rule.place.lastLine}`;
-                return { ...link, place: `${rule.place.file}:${lines}`, changedTo: changes.get(id) ?? null };
-            });
             const steps = story.steps.flatMap((id) => {
                 const found = stepOf.get(id);
                 return found === undefined
@@ -202,6 +198,7 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
                 why: story.why,
                 kind: story.kind,
                 kindLabel: kindLabel(story.kind),
+                // Each criterion names the place of the code it rests on, linked to that rule's page.
                 criteria: story.criteria.map((criterion) => ({
                     says: criterion.says,
                     given: criterion.given,
@@ -210,8 +207,8 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
                     rules: criterion.from
                         .filter((each) => each.kind === "rule")
                         .map((each) => {
-                            const rule = data.fact("rules", each.id) as { slug: string; says: string } | undefined;
-                            return rule === undefined ? { name: "" } : nodeLink(`rule/${rule.slug}`, rule.says);
+                            const rule = data.fact("rules", each.id) as { slug: string; place: Place } | undefined;
+                            return rule === undefined ? { name: "" } : nodeLink(`rule/${rule.slug}`, placeText(rule.place));
                         })
                         .filter((link) => link.name !== ""),
                 })),
@@ -219,6 +216,7 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
                 phase: story.phase,
                 epic: epic?.sequence ?? 0,
                 epicLabel: epic?.label ?? "",
+                epicOutcome: epic?.outcome ?? "",
                 domains: story.domains.flatMap((name) => {
                     const at = domainIndex.get(name);
                     return at === undefined ? [] : [at];
@@ -230,7 +228,6 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
                 unblocks,
                 unblocksText: unblocks.length === 0 ? null : copy.plan.unblocks(counted(unblocks.length, storyNoun)),
                 waitsText: blockedBy.length === 0 ? null : copy.plan.waitsFor(counted(blockedBy.length, storyNoun)),
-                rules: rules.filter((rule) => rule.name !== ""),
                 reliesOn: story.reliesOn
                     .map((id) => {
                         const rule = data.fact("rules", id) as { slug: string; says: string } | undefined;
@@ -309,10 +306,16 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
     });
     const proposedById = new Map(proposed.map((journey) => [journey.id, journey]));
 
+    // How done is proven: what the decisions on the layers of tests chose; omitted when none sits on such a layer.
+    const testLayers = new Set(layers.filter((layer) => layer.kind === "test").map((layer) => layer.id));
+    const chose = decisions.filter((decision) => testLayers.has(decision.layer)).map((decision) => decision.chose);
+    const proof = chose.length === 0 ? null : { chose, journeys: epics.some((epic) => epic.kind === "functional") ? copy.plan.proofJourneys : null };
+
     const unplannedNumber = data.number("plan/unplanned");
     return {
         stale,
         structure,
+        proof,
         phases: phaseViews,
         matrix: matrixView,
         stories: storyViews,
@@ -349,7 +352,7 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
                           title: copy.plan.unplannedTitle(countOf(unplannedNumber).text),
                           items: unplanned.map((each) => ({
                               name: each.name,
-                              place: `${each.file}:${each.firstLine === each.lastLine ? `${each.firstLine}` : `${each.firstLine}-${each.lastLine}`}`,
+                              place: placeText(each),
                           })),
                       },
         },

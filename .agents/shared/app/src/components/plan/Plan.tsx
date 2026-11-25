@@ -161,37 +161,6 @@ export function StoryBody({ story, root }: { readonly story: StoryView; readonly
                     </ul>
                 )}
             </Block>
-            {story.rules.length === 0 ? null : (
-                <Block title={words.rules}>
-                    <ul className="flex flex-col gap-spacing-md">
-                        {story.rules.map((rule, at) => (
-                            <li key={`${rule.place}${String(at)}`} className="flex flex-col gap-spacing-2xs">
-                                <LinkOrText link={rule} root={root} />
-                                <span className="flex flex-wrap items-center gap-spacing-xs">
-                                    <Button variant="outline" size="xs" data-copy-text={rule.place} data-copied={copy.site.copied} title={words.copyPlace}>
-                                        <code data-label className="font-mono text-xs">
-                                            {rule.place}
-                                        </code>
-                                    </Button>
-                                    {rule.changedTo === null ? null : (
-                                        <Badge variant="outline" data-written-by="app">
-                                            {words.changed}
-                                        </Badge>
-                                    )}
-                                </span>
-                                {rule.changedTo === null ? null : (
-                                    <p>
-                                        <span className="font-medium" data-written-by="app">
-                                            {words.changedTo}:
-                                        </span>{" "}
-                                        <span data-written-by="agent">{rule.changedTo}</span>
-                                    </p>
-                                )}
-                            </li>
-                        ))}
-                    </ul>
-                </Block>
-            )}
             {story.reliesOn.length === 0 ? null : (
                 <Fold summary={words.relies}>
                     <ul className="flex flex-col gap-spacing-xs">
@@ -342,6 +311,13 @@ export function Plan({ view, root }: { readonly view: PlanView; readonly root: s
                 <p data-written-by="app">
                     {view.structure} {words.phaseMeans}
                 </p>
+                {view.proof === null ? null : (
+                    <p>
+                        <span data-written-by="app">{words.proofTitle}: </span>
+                        <span data-written-by="agent">{view.proof.chose.join(" ")}</span>
+                        {view.proof.journeys === null ? null : <span data-written-by="app"> {view.proof.journeys}</span>}
+                    </p>
+                )}
             </div>
             <Sections>
                 <div id="phases">
@@ -378,11 +354,11 @@ export function Plan({ view, root }: { readonly view: PlanView; readonly root: s
                         <ol className="flex flex-col">
                             {byPhase.map(({ phase, stories }) => {
                                 const noun = stories.length === 1 ? view.storyNoun.one : view.storyNoun.many;
-                                const groups: { label: string; stories: StoryView[] }[] = [];
+                                const groups: { label: string; outcome: string; stories: StoryView[] }[] = [];
                                 for (const story of stories) {
                                     const last = groups[groups.length - 1];
                                     if (last !== undefined && last.label === story.epicLabel) last.stories.push(story);
-                                    else groups.push({ label: story.epicLabel, stories: [story] });
+                                    else groups.push({ label: story.epicLabel, outcome: story.epicOutcome, stories: [story] });
                                 }
                                 return (
                                     <li key={phase.number} className="border-b border-border last:border-0" data-phase-group={phase.number}>
@@ -410,10 +386,17 @@ export function Plan({ view, root }: { readonly view: PlanView; readonly root: s
                                                 )}
                                                 {groups.map((group, at) => (
                                                     <section key={`${group.label}${String(at)}`} className="flex flex-col gap-spacing-2xs" data-epic-group aria-label={group.label === "" ? words.phase(phase.number) : group.label}>
-                                                        {group.label === "" || groups.length === 1 ? null : (
-                                                            <h4 className="text-xs font-medium text-muted-foreground" data-written-by="agent">
-                                                                {group.label}
-                                                            </h4>
+                                                        {group.label === "" ? null : (
+                                                            <>
+                                                                <h4 className="text-xs font-medium text-muted-foreground" data-written-by="agent">
+                                                                    {group.label}
+                                                                </h4>
+                                                                {group.outcome === "" ? null : (
+                                                                    <p className="text-xs text-muted-foreground" data-written-by="agent">
+                                                                        {group.outcome}
+                                                                    </p>
+                                                                )}
+                                                            </>
                                                         )}
                                                         <div className="flex flex-col">
                                                             {group.stories.map((story) => (

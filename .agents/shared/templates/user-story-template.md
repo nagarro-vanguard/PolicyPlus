@@ -17,7 +17,7 @@
 
 <!-- One paragraph per criterion, each Given, when, then, with no blank line inside it, no title, no number and no list
      item anywhere in this section: a blank line splits a criterion in two, and a list item joins every paragraph to the
-     item above it. Each says what a person or a system sees, never how it is built, and is worth a test. Few: past 12,
+     item above it. Each says what a person or a system sees, never how it is built, and is worth a test. Few: past 7,
      split the story. shape-and-deliver numbers them. -->
 
 Given <the state>, when <a person or system acts>, then <what they see>.
@@ -38,7 +38,7 @@ Given <the state>, when <a person or system acts>, then <what they see>.
 ## Journey
 
 <!-- The one journey this story adds to or changes, named as the epic names it: that name is its `@user-journey`.
-     Before is today's journey in full, or "New journey" when there is none. After is the whole journey once this
+     Before is today's journey in full; leave the block out when there is none. After is the whole journey once this
      story ships, not a diff, each step naming who acts and what they see: shape-and-deliver writes it as the journey's
      description and in its spec. -->
 

@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 import { Decision, Story, TargetLayer } from "../model/records";
-import { storyProblems } from "../derive/gates";
+import { sameWhat, storyProblems } from "../derive/gates";
 import { changedRuleProblems } from "../derive/consistency";
 import { AGENTS_MD_MAX_LINES, countedLines, layerAgentsMd } from "../derive/agents-md";
 import type { Kind } from "./state";
@@ -157,7 +157,19 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
     const parsed = decodeWith(Schema.Array(Story), output.stories);
     if (!parsed.ok) return [`stories do not match their shape: ${parsed.problem}`];
     const stories = parsed.value;
-    if (job.kind === "journey" || job.kind === "components") return targetStoryGaps(job, stories);
+    // The ids this job knows, which no reader's text may hold.
+    const known = new Set<string>([
+        ...(job.actions ?? []),
+        ...(job.owned ?? []),
+        ...(job.shared ?? []),
+        ...(job.cite ?? []),
+        ...(job.transitions ?? []),
+        ...(job.steps ?? []),
+        ...(job.layerIds ?? []),
+        ...(job.decisionIds ?? []),
+        ...Object.keys(job.stepActions ?? {}),
+    ]);
+    if (job.kind === "journey" || job.kind === "components") return targetStoryGaps(job, stories, known);
     const actions = new Set(job.actions ?? []);
     const owned = new Set(job.owned ?? []);
     const shared = new Set(job.shared ?? []);
@@ -166,8 +178,6 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
     const cited = new Set<string>();
     const citedDecisions = new Set<string>();
     for (const story of stories) {
-        if (story.criteria.length > 12)
-            gaps.push(`story "${short(story.title)}" has ${story.criteria.length} criteria, over 12`);
         for (const id of story.actions) {
             seen.set(id, (seen.get(id) ?? 0) + 1);
             if (!actions.has(id)) gaps.push(`story "${short(story.title)}" names an action this job does not own`);
@@ -202,7 +212,7 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
                 }
             }
         }
-        for (const problem of storyProblems(story)) gaps.push(`story "${short(story.title)}": ${problem}`);
+        for (const problem of storyProblems(story, known)) gaps.push(`story "${short(story.title)}": ${problem}`);
         const functional = story.actions.length > 0;
         if (job.kind === "surfaces" && !functional)
             gaps.push(`story "${short(story.title)}" has no actions; a surface story ports actions`);
@@ -229,7 +239,7 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
     void AGENTS_MD_MAX_LINES;
     void countedLines;
     void layerAgentsMd;
-    return [...new Set(gaps)];
+    return [...new Set([...gaps, ...sameWhat(stories)])];
 };
 
 const exactly = (label: string, wanted: readonly string[], lists: readonly (readonly string[])[], gaps: string[]) => {
@@ -248,7 +258,7 @@ const exactly = (label: string, wanted: readonly string[], lists: readonly (read
  * The gate of a job that writes the stories of a confirmed target: its steps and components are split exactly among the
  * stories, a story's entry points are those of its steps, and it cites the rules of the components it builds, each once.
  */
-const targetStoryGaps = (job: JobFile, stories: readonly Story[]): string[] => {
+const targetStoryGaps = (job: JobFile, stories: readonly Story[], known: ReadonlySet<string>): string[] => {
     const gaps: string[] = [];
     const journey = job.kind === "journey";
     exactly(
@@ -267,7 +277,6 @@ const targetStoryGaps = (job: JobFile, stories: readonly Story[]): string[] => {
     const decisions = new Set(job.decisionIds ?? []);
     for (const story of stories) {
         const label = `story "${short(story.title)}"`;
-        if (story.criteria.length > 12) gaps.push(`${label} has ${story.criteria.length} criteria, over 12`);
         const wanted = new Set((story.steps ?? []).flatMap((id) => job.stepActions?.[id] ?? []));
         const have = new Set<string>(story.actions);
         if ([...wanted].some((id) => !have.has(id)) || [...have].some((id) => !wanted.has(id)))
@@ -294,7 +303,7 @@ const targetStoryGaps = (job: JobFile, stories: readonly Story[]): string[] => {
         const missing = [...enforced].filter((id) => !rules.includes(id));
         if (missing.length > 0)
             gaps.push(`${label} builds components whose ${missing.length} rules no criterion cites`);
-        for (const problem of storyProblems(story)) gaps.push(`${label}: ${problem}`);
+        for (const problem of storyProblems(story, known)) gaps.push(`${label}: ${problem}`);
         const changes = new Map(Object.entries(job.ruleChanges ?? {}));
         for (const problem of changedRuleProblems(story.criteria, changes)) gaps.push(`${label}: ${problem}`);
         const knownSteps = new Set([...(job.steps ?? []), ...[...changes.values()].flat().map((each) => each.step)]);
@@ -304,7 +313,7 @@ const targetStoryGaps = (job: JobFile, stories: readonly Story[]): string[] => {
                     gaps.push(`${label} cites a step that is not this job's and changes none of its rules`);
     }
     exactly("rules", job.cite ?? [], [[...cited]], gaps);
-    return [...new Set(gaps)];
+    return [...new Set([...gaps, ...sameWhat(stories)])];
 };
 
 /** The reviewer's file: its challenges, and how many records it read. */

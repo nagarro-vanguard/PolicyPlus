@@ -11,10 +11,10 @@ How the plan reads in the app, for the product owner and the developer who read 
 
 ## Wording the agents write
 
-- A title is a short phrase a person would say: at most 8 words for an epic or story, verb first for work ("Let a person leave without choosing a user"), full words, never cut and never ending in an ellipsis. The sentence that says more goes in `what`. A story split by the components it builds keeps the whole title of the story it came from (`splitFrom`), and each piece is titled by what its component does, with the component as `part`.
-- `what` is one or two sentences, `why` one; a criterion is one `Given, when, then` of at most 60 words, and one over 40 is split by its conditions when no exact message is lost. A criterion that rests on a rule a journey step changes states what the rule does now and cites the step. A criterion that states behaviour no rule or decision states is a question in `open`, never a claim.
+- A title is a short phrase a person would say: at most 72 characters for an epic or story, verb first for work ("Let a person leave without choosing a user"), full words, never cut and never ending in an ellipsis. The sentence that says more goes in `what`. A story split by the components it builds keeps the whole title of the story it came from (`splitFrom`), and each piece is titled by what its component does, with the component as `part`.
+- `what` is one or two sentences, `why` one; a criterion is one `Given, when, then` of at most 60 words, or 90 when it cites several rules; rules of one shape are merged into one criterion that cites them all. A criterion that rests on a rule a journey step changes states what the rule does now and cites the step. A criterion that states behaviour no rule or decision states is a question in `open`, never a claim.
 - Words are the reader's: no code word, no id, no file name in a title, a criterion or a question; evidence is shown by the build as `file:line` chips.
-- At most 12 criteria to a story; more means two stories.
+- At most 7 criteria to a story; more means merging criteria of one shape, or two stories.
 
 ## Shape of the pages
 
@@ -27,4 +27,4 @@ How the plan reads in the app, for the product owner and the developer who read 
 - Write like one careful colleague to another: a concrete subject and verb, one idea said once, a number or a name where an adjective would go ("fewest steps" and "plainly" need the count or the fact). State a doubt once.
 - No punch line or reveal, no contrast ("not X but Y", ", not Y", "instead of" only to praise), no short line set apart for effect, no rhetorical question, no "let's" or "here's".
 - No stock word that sells (robust, seamless, leverage, streamline, ensure, key as an adjective), no dash as punctuation, no list of three for rhythm, no run of sentences or items that open alike; a glossary line defines the term and stops, with no "it is not".
-- Whether a title is a good one is a reader's call; the build refuses a title over 72 characters, a repeated one and one that ends in an ellipsis, the stage refuses a criterion over 60 words, and `src/lib/voice.ts` lists the tells in `language-report.json`; the 8-word limit is for the writer and reviewer.
+- Whether a title is a good one is a reader's call; the build refuses a title over 72 characters, a repeated one and one that ends in an ellipsis, the stage refuses a criterion over its word limit and a story over 7 criteria, and `src/lib/voice.ts` lists the tells in `language-report.json`.

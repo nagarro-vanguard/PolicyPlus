@@ -27,18 +27,35 @@ const some = (items: readonly string[], limit = 3) =>
 const words = (text: string) => text.split(/\s+/).filter(Boolean).length;
 const short = (text: string) => (text.length > 70 ? `${text.slice(0, 67)}...` : text);
 
+/** The most criteria one story holds; shape-target's `componentJobGaps` holds the same number for the rules of one component. */
+export const MAX_CRITERIA = 7;
+
+// The sentence pattern of an acceptance criterion; the story sheet of the app splits `says` with the same pattern.
+const givenWhenThen = /^\s*given\s+[\s\S]+?,\s+when\s+[\s\S]+?,\s+then\s+[\s\S]+?\s*$/iu;
+
+type Reader = Pick<Story, "title" | "what" | "why" | "open"> & {
+    terms?: readonly { name: string; means: string }[];
+    journey?: { name: string; steps: readonly string[] } | undefined;
+    criteria: readonly { says: string; from: readonly { _tag: string }[] }[];
+};
+
 /**
- * What is wrong with a story's text: a title over 72 characters or ending in an ellipsis, doubled punctuation, a
- * criterion over 60 words.
+ * What is wrong with a story's text: a title over 72 characters or ending in an ellipsis, doubled punctuation, more
+ * than 7 criteria, a criterion without a given, a when or a then, one over 60 words (90 when it cites several rules) or
+ * with nothing it rests on, and any text that holds an id the plan knows.
  * @param story the story
+ * @param known the ids the plan or the job knows: rules, steps, decisions, layers, changes of state, stories
  * @returns each problem, saying where
  */
-export const storyProblems = (
-    story: Pick<Story, "title" | "what" | "why" | "open"> & { criteria: readonly { says: string }[] },
-) => {
+export const storyProblems = (story: Reader, known: ReadonlySet<string> = new Set()) => {
     const found: string[] = [];
     if (story.title.length > 72) found.push(`the title is ${story.title.length} characters, over 72`);
     if (/(\.\.\.|\u2026)\s*$/.test(story.title)) found.push("the title ends in an ellipsis");
+    if (story.criteria.length === 0) found.push("it has no criterion");
+    if (story.criteria.length > MAX_CRITERIA)
+        found.push(
+            `it has ${story.criteria.length} criteria, over ${MAX_CRITERIA}: merge criteria of one shape into one that cites all their rules, or split by component`,
+        );
     const texts = [
         ["title", story.title],
         ["what", story.what],
@@ -46,13 +63,35 @@ export const storyProblems = (
     ] as [string, string][];
     story.criteria.forEach((c, at) => texts.push([`criterion ${at + 1}`, c.says]));
     (story.open ?? []).forEach((text, at) => texts.push([`open point ${at + 1}`, text]));
-    for (const [where, text] of texts)
+    (story.terms ?? []).forEach((term, at) => texts.push([`term ${at + 1}`, `${term.name} ${term.means}`]));
+    (story.journey?.steps ?? []).forEach((step, at) => texts.push([`journey step ${at + 1}`, step]));
+    for (const [where, text] of texts) {
         if (/(?<!\.)\.\.(?!\.)|,\.|,,/.test(text)) found.push(`the ${where} has doubled punctuation`);
+        const id = [...known].find((each) => each !== "" && text.includes(each));
+        if (id !== undefined) found.push(`the ${where} holds the id ${id}: say it in words`);
+    }
     story.criteria.forEach((c, at) => {
         const n = words(c.says);
-        if (n > 60) found.push(`criterion ${at + 1} is ${n} words, over 60`);
+        const limit = c.from.filter((ref) => ref._tag === "rule").length > 1 ? 90 : 60;
+        if (n > limit) found.push(`criterion ${at + 1} is ${n} words, over ${limit}`);
+        if (!givenWhenThen.test(c.says)) found.push(`criterion ${at + 1} lacks a given, a when or a then`);
+        if (c.from.length === 0)
+            found.push(`criterion ${at + 1} rests on nothing: cite a rule, decision, step or layer`);
     });
     return found;
+};
+
+/**
+ * The stories that say the same thing in `what`, which a reader cannot tell apart.
+ * @param stories the stories of a job, or of the plan
+ * @returns one problem per shared sentence
+ */
+export const sameWhat = (stories: readonly { title: string; what: string }[]) => {
+    const by = new Map<string, string[]>();
+    for (const story of stories) by.set(story.what.trim(), [...(by.get(story.what.trim()) ?? []), story.title]);
+    return [...by.values()]
+        .filter((titles) => titles.length > 1)
+        .map((titles) => `${titles.length} stories say the same in what: ${some(titles)}`);
 };
 
 /**
@@ -138,8 +177,6 @@ export const checkPlan = (input: Input): Gaps => {
                 failing.push(`story "${short(story.title)}" names ${unknown.length} actions the plan does not carry`);
             if (new Set(story.actions.map((id) => surfaceOfAction.get(id))).size > 1)
                 failing.push(`story "${short(story.title)}" spans more than one surface`);
-            if (story.criteria.length > 12)
-                failing.push(`story "${short(story.title)}" has ${story.criteria.length} criteria, over 12`);
         }
         const unplannedActions = [...surfaceOfAction.keys()].filter((id) => (actionStories.get(id) ?? 0) === 0);
         if (unplannedActions.length > 0) failing.push(`${unplannedActions.length} actions are in no story`);
@@ -187,11 +224,19 @@ export const checkPlan = (input: Input): Gaps => {
             );
     }
 
+    // The ids the plan knows, which no reader's text may hold.
+    const known = new Set<string>([
+        ...facts.rules.keys(),
+        ...facts.capabilities.flatMap((c) => c.surfaces.flatMap((s) => s.actions.map((a) => a.id))),
+        ...facts.transitions.map((t) => t.id),
+        ...layers.map((layer) => layer.id),
+        ...decisions.map((decision) => decision.id),
+        ...(input.target?.journeys.flatMap((journey) => journey.steps.map((step) => step.id)) ?? []),
+        ...plan.stories.map((view) => view.key),
+    ]);
     for (const view of plan.stories)
-        for (const problem of storyProblems(view)) failing.push(`story "${short(view.title)}": ${problem}`);
-    const long = plan.stories.flatMap((view) => view.criteria).filter((c) => words(c.says) > 40).length;
-    if (long > 0)
-        advisory.push(`${long} criteria are over 40 words: split their conditions and keep their exact messages`);
+        for (const problem of storyProblems(view, known)) failing.push(`story "${short(view.title)}": ${problem}`);
+    failing.push(...sameWhat(plan.stories));
 
     // Advisory: every kind of data a carried capability touches has a term, once.
     const termOwners = new Map<string, number>();

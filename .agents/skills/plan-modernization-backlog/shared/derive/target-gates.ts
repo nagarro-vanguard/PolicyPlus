@@ -111,7 +111,6 @@ export const targetGaps = (input: {
         }
         if (new Set((story.steps ?? []).map((id) => stepJourney.get(id))).size > 1)
             failing.push(`${label} spans more than one journey`);
-        if (story.criteria.length > 12) failing.push(`${label} has ${story.criteria.length} criteria, over 12`);
         // A rule a journey step changes is built as the step says, not as the legacy did.
         for (const problem of changedRuleProblems(story.criteria, changes)) failing.push(`${label}: ${problem}`);
         if (story.kind === "functional") {
@@ -215,8 +214,6 @@ export const targetGaps = (input: {
     for (const journey of target.journeys) {
         const epic = plan.epics.find((each) => each.task === journey.task);
         if (epic === undefined) failing.push(`journey ${journey.name} has no epic`);
-        else if (!plan.stories.some((story) => story.epic === epic.key && story.title.startsWith("Prove the journey")))
-            failing.push(`journey ${journey.name} has no acceptance story`);
     }
     const citedTransitions = new Set(
         plan.stories.flatMap((story) =>

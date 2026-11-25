@@ -41,10 +41,6 @@ export const storyBody = (view: StoryView, plan: Plan) => {
             ? section("Journey", [
                   `**Journey:** ${journey.name}`,
                   "",
-                  "**Before:**",
-                  "",
-                  "New journey",
-                  "",
                   "**After:**",
                   "",
                   ...journey.steps.map((step, at) => `${at + 1}. ${step}`),
@@ -75,9 +71,6 @@ export const epicBody = (epic: Epic, plan: Plan) => {
         const surfaces = [
             ...new Set(stories.map((story) => story.surface).filter((s): s is string => s !== undefined)),
         ];
-        const journeys = stories.flatMap((story) =>
-            story.journey ? [`${story.journey.name}: a new journey in this codebase.`] : [],
-        );
         return [
             ...section("Outcome", [epic.outcome]),
             ...section("Scope", [
@@ -90,7 +83,6 @@ export const epicBody = (epic: Epic, plan: Plan) => {
                     (epic.comesAfter.map((key) => titleOf.get(key) ?? key).join("; ") || "nothing") +
                     ".",
             ]),
-            ...section("Journeys", bullets(journeys)),
             ...(terms.length > 0 ? section("Terminologies", table) : []),
         ]
             .join("\n")

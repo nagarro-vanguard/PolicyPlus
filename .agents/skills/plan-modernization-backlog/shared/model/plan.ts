@@ -21,7 +21,7 @@ export const StoryView = Schema.Struct({
     layers: Schema.optionalKey(
         Schema.Array(LayerId).annotate(
             about(
-                "The layers of the target codebase the story is built in, derived: the scaffold in every layer, an acceptance story in the test layer, a foundation story in the layers it and its decisions name, a component in the layer whose role its kind needs; empty when nothing says.",
+                "The layers of the target codebase the story is built in, derived: the scaffold in every layer, a foundation story in the layers it and its decisions name, a component in the layer whose role its kind needs; empty when nothing says.",
             ),
         ),
     ),

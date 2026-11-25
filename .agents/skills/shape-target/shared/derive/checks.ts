@@ -1,15 +1,7 @@
 import { slug } from "../model/ids";
 import { setGaps, viewGaps } from "../../../code-analysis/shared/views/guard";
 import type { ViewBody } from "../model/view";
-import type {
-    Architecture,
-    Component,
-    CurrentStep,
-    Domain,
-    Journey,
-    StoredJourney,
-    Task,
-} from "../model/records";
+import type { Architecture, Component, CurrentStep, Domain, Journey, StoredJourney, Task } from "../model/records";
 import { cycleIn, missing } from "./graph";
 import { leaksIn, type LegacySheet } from "./legacy";
 import { voiceGaps } from "./voice";
@@ -229,13 +221,14 @@ export const decidingDomains = (domains: readonly Domain[], step: StoredJourney[
 };
 
 /** The checks of a text a person reads in a view: no count in a title or caption, the voice, no name of the old system. */
-const viewTextGaps = (context: DesignContext) => (where: string, text: string, kind: "caption" | "note" | "label" | "title") => [
-    ...(kind === "caption" || kind === "title") && [...text].some((char) => char >= "0" && char <= "9")
-        ? [`${where} states a count or a number; the page counts, so say it in words`]
-        : [],
-    ...(kind === "caption" || kind === "note" ? voiceGaps(where, text) : []),
-    ...leaksIn(text, context.legacy.identifiers).map((leak) => `${where} carries the old system's name "${leak}"`),
-];
+const viewTextGaps =
+    (context: DesignContext) => (where: string, text: string, kind: "caption" | "note" | "label" | "title") => [
+        ...((kind === "caption" || kind === "title") && [...text].some((char) => char >= "0" && char <= "9")
+            ? [`${where} states a count or a number; the page counts, so say it in words`]
+            : []),
+        ...(kind === "caption" || kind === "note" ? voiceGaps(where, text) : []),
+        ...leaksIn(text, context.legacy.identifiers).map((leak) => `${where} carries the old system's name "${leak}"`),
+    ];
 
 /** Whether a view has a box that is, or cites, the name. */
 const drawsName = (view: ViewBody, name: string) =>
@@ -295,7 +288,9 @@ export const componentViewGaps = (
         ...context.needs,
     ]);
     return [
-        ...(view.viewpoint === "technical" ? [] : [`the view of ${context.domain} is ${view.viewpoint}; write a technical view`]),
+        ...(view.viewpoint === "technical"
+            ? []
+            : [`the view of ${context.domain} is ${view.viewpoint}; write a technical view`]),
         ...viewGaps(view, {
             where: `domain ${context.domain}`,
             knows: (id) => steps.has(id) || names.has(id),
@@ -311,7 +306,11 @@ export const componentViewGaps = (
  * @param context what the chosen journeys and the request say
  * @returns the gaps
  */
-export const variantGaps = (variant: Architecture, context: DesignContext, componentNames: readonly string[] = []): string[] => {
+export const variantGaps = (
+    variant: Architecture,
+    context: DesignContext,
+    componentNames: readonly string[] = [],
+): string[] => {
     const gaps: string[] = [];
     const kept = keptRules(context.journeys);
     const data = touched(context.journeys);
@@ -475,6 +474,12 @@ export const componentJobGaps = (components: readonly Component[], context: Comp
             );
         if (component.kind === "interface" && component.serves.length === 0)
             gaps.push(`${label}: is of kind interface but serves no step`);
+        // One component is built by one story, which holds at most 7 criteria: plan-modernization-backlog's
+        // MAX_CRITERIA. The skills never import each other, so the number is written in both.
+        if (component.enforces.length > 7)
+            gaps.push(
+                `${label} enforces ${component.enforces.length} rules, over 7: split it into components of one purpose each`,
+            );
         for (const leak of leaksIn(component.name, context.legacy.identifiers))
             gaps.push(`${label}: carries the old system's name "${leak}"`);
     }
@@ -518,12 +523,15 @@ export const finalGaps = (architecture: Architecture, context: DesignContext): s
             const serving = components.filter((component) => component.serves.includes(step.id));
             if (serving.length === 0) {
                 // A step that touches no data and honours no rule belongs to no domain's rules or data, so no job can serve it.
-                if (step.touches.length + step.honours.length > 0) gaps.push(`step ${step.id} is served by no component`);
+                if (step.touches.length + step.honours.length > 0)
+                    gaps.push(`step ${step.id} is served by no component`);
                 return;
             }
             // A component that only keeps data carries nothing: the data must be within reach of the components that carry the step.
             const carrying = serving.filter((component) => component.kind !== "data");
-            const reachable = new Set((carrying.length > 0 ? carrying : serving).flatMap((component) => [...reach(component.domain)]));
+            const reachable = new Set(
+                (carrying.length > 0 ? carrying : serving).flatMap((component) => [...reach(component.domain)]),
+            );
             const lost = missing(step.touches, reachable);
             if (lost.count > 0)
                 gaps.push(

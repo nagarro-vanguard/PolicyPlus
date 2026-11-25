@@ -90,6 +90,7 @@ const splitOf = (story: Story, target: Target): Piece[] => {
             return {
                 ...rest,
                 title: names.length > 1 ? `Build ${name}` : story.title,
+                what: names.length > 1 ? (component?.responsibility ?? story.what) : story.what,
                 ...(names.length > 1 ? { part: name, splitFrom: story.title } : {}),
                 actions: [
                     ...new Set(
@@ -101,14 +102,8 @@ const splitOf = (story: Story, target: Target): Piece[] => {
                 ] as unknown as Story["actions"],
                 steps: own,
                 components: [name],
-                criteria: (criteria.length > 0
-                    ? criteria
-                    : [
-                          {
-                              says: `Given the parts it relies on are in place, when what depends on ${name} uses it, then it does its job: ${component?.responsibility ?? "its part of the work"}.`,
-                              from: [],
-                          },
-                      ]) as unknown as Story["criteria"],
+                // A piece no criterion cites a rule of stays empty: the plan's gate reports it, nothing is written for it.
+                criteria: criteria as unknown as Story["criteria"],
                 terms: at === 0 ? story.terms : [],
                 ...(journey !== undefined && lived.length > 0
                     ? {

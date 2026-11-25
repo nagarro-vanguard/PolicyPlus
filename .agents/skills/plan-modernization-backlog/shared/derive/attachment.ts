@@ -11,7 +11,13 @@ import { componentLayer } from "./layers";
 export const CEILING = 40_000;
 
 /** The reading's sections in the order they are cut when the document is too long; what to doubt goes last. */
-const CUT = ["Relied on: decided elsewhere", "Data and states", "Boundary", "Contract: what it must do", "Trust: what to doubt"];
+const CUT = [
+    "Relied on: decided elsewhere",
+    "Data and states",
+    "Boundary",
+    "Contract: what it must do",
+    "Trust: what to doubt",
+];
 
 /** A reader of the legacy code the request names: its lines by file, or nothing for a file that is not there. */
 export const sourceReaderOf = (roots: readonly string[]) => {
@@ -50,20 +56,6 @@ export type ContextInputs = {
 const at = (place: Place) => `${place.file}:${place.firstLine}-${place.lastLine}`;
 const bytes = (text: string) => Buffer.byteLength(text);
 const ID = /\b[a-z]+(?:-[a-z]+)*-\d{8,}\b/g;
-
-/** Merges the places that overlap or touch, per file, in file and line order. */
-const merged = (places: readonly Place[]): Place[] => {
-    const out: Place[] = [];
-    for (const place of [...places].sort(
-        (a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : 0) || a.firstLine - b.firstLine,
-    )) {
-        const last = out.at(-1);
-        if (last?.file === place.file && place.firstLine <= last.lastLine + 1)
-            out[out.length - 1] = { ...last, lastLine: Math.max(last.lastLine, place.lastLine) };
-        else out.push(place);
-    }
-    return out;
-};
 
 /** A fence longer than any run of backticks the code holds. */
 const fenced = (lines: readonly string[]) => {
@@ -148,10 +140,10 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
             .replace(/\s*\([^()]*\b[a-z]+(?:-[a-z]+)*-\d{8,}\b[^()]*\)/g, "")
             .replace(ID, (id) => facts.rules.get(id)?.says.split(/(?<=\.)\s/)[0] ?? "another finding");
 
-    // The rules, numbered: those it builds, then those it only relies on.
+    // The rules it builds, then those it only relies on.
     const relied = view.reliesOn.filter((each) => !view.builds.includes(each.rule));
     const ruleIds = [...view.builds, ...relied.map((each) => each.rule)] as string[];
-    const number = new Map(ruleIds.map((id, at) => [id, at + 1]));
+    const known = new Set(ruleIds);
     for (const id of ruleIds) if (!facts.rules.has(id)) fail("a rule it builds or relies on is not in the analysis");
     const topic = (decision: Plan["decisions"][number]) =>
         decision.topic._tag === "integration"
@@ -164,72 +156,51 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
                   ? decision.topic.name
                   : `Convention for ${decision.layer === "workspace" ? "every layer" : (layerBy.get(decision.layer)?.name ?? decision.layer)}`;
 
-    // The criteria, in the order of the body: what each rests on, in words.
+    // The criteria, in the order of the body, and the legacy code each rests on. A place shown under one criterion is
+    // named by a later one that rests on the same place; a doubt is said once, under the first criterion that cites it.
     const citedDecisions: string[] = [];
     const citedLayers: string[] = [];
-    const criteria = view.criteria.flatMap((criterion, order) => {
-        const found: Record<string, string[]> = {
-            Rules: [],
-            Decisions: [],
-            Layers: [],
-            Steps: [],
-            "Changes of state": [],
-        };
+    const spans: Place[] = [];
+    const shownAt = new Map<string, number>();
+    const doubted = new Set<string>();
+    type Part = string | { readonly span: number };
+    const criteria = view.criteria.map((criterion, order): Part[] => {
+        const parts: Part[] = [];
         for (const ref of criterion.from) {
             const miss = () => fail(`criterion ${order + 1} rests on a ${ref._tag} that does not exist`);
-            if (ref._tag === "rule")
-                number.has(ref.id)
-                    ? found.Rules?.push(String(number.get(ref.id)))
-                    : fail(`criterion ${order + 1} cites a rule it neither builds nor relies on`);
-            else if (ref._tag === "decision") {
+            if (ref._tag === "rule") {
+                const fact = facts.rules.get(ref.id);
+                if (!known.has(ref.id)) fail(`criterion ${order + 1} cites a rule it neither builds nor relies on`);
+                else if (fact !== undefined && view.builds.includes(ref.id)) {
+                    for (const place of [fact.place, ...fact.alsoRestsOn]) {
+                        const earlier = shownAt.get(at(place));
+                        if (earlier !== undefined) parts.push(`${at(place)} (same code as AC-${earlier})`);
+                        else {
+                            shownAt.set(at(place), order + 1);
+                            parts.push({ span: spans.push(place) - 1 });
+                        }
+                    }
+                    if (fact.doubt !== "" && !doubted.has(ref.id)) parts.push(`Doubt: ${plain(fact.doubt)}`);
+                    doubted.add(ref.id);
+                }
+            } else if (ref._tag === "decision") {
                 const decision = decisionBy.get(ref.id);
                 if (decision === undefined) miss();
-                else (found.Decisions?.push(topic(decision)), citedDecisions.push(ref.id));
+                else citedDecisions.push(ref.id);
             } else if (ref._tag === "layer") {
-                const layer = layerBy.get(ref.id);
-                if (layer === undefined) miss();
-                else (found.Layers?.push(layer.name), citedLayers.push(ref.id));
+                if (layerBy.get(ref.id) === undefined) miss();
+                else citedLayers.push(ref.id);
             } else if (ref._tag === "step") {
-                const known = stepBy.get(ref.id);
-                known === undefined ? miss() : found.Steps?.push(known.step.intent);
+                if (stepBy.get(ref.id) === undefined) miss();
             } else {
                 const change = facts.transitions.find((each) => each.id === ref.id);
-                change === undefined
-                    ? miss()
-                    : found["Changes of state"]?.push(`${change.entityName}: ${change.from} to ${change.to}`);
+                if (change === undefined) miss();
+                else parts.push(`Change of state: ${change.entityName}: ${change.from} to ${change.to}`);
             }
         }
-        const said = Object.entries(found).flatMap(([label, list]) =>
-            list.length === 0 ? [] : [`${label}: ${list.join("; ")}.`],
-        );
-        return said.length === 0 ? [] : [`- AC-${order + 1}. ${said.join(" ")}`];
+        return parts;
     });
-    const cited = new Set(
-        view.criteria.flatMap((criterion) =>
-            criterion.from.flatMap((ref) => (ref._tag === "rule" ? [ref.id as string] : [])),
-        ),
-    );
 
-    // The rules it builds, and the doubt the analysis holds about them.
-    const built = view.builds.flatMap((id) => {
-        const fact = facts.rules.get(id);
-        if (fact === undefined) return [];
-        const gated = facts.transitions.find((each) => each.id === fact.gates);
-        return [
-            [
-                `### Rule ${number.get(id)}`,
-                "",
-                `Says: ${fact.says}`,
-                `Where: ${at(fact.place)}`,
-                ...(fact.alsoRestsOn.length === 0 ? [] : [`Also rests on: ${fact.alsoRestsOn.map(at).join("; ")}`]),
-                ...(fact.doubt === "" ? [] : [`Doubt: ${plain(fact.doubt)}`]),
-                ...(gated === undefined
-                    ? []
-                    : [`Gates the change of state: ${gated.entityName}: ${gated.from} to ${gated.to}`]),
-                ...(cited.has(id) ? [] : ["No criterion cites it."]),
-            ].join("\n"),
-        ];
-    });
     // Rules built by another story are named under that story, once.
     const reliedBlocks = [...new Set(relied.map((each) => each.builtBy))].map((key) =>
         [
@@ -237,9 +208,7 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
             "",
             ...relied.flatMap((each) => {
                 const fact = facts.rules.get(each.rule);
-                return each.builtBy !== key || fact === undefined
-                    ? []
-                    : [`- Rule ${number.get(each.rule)}: ${fact.says} (${at(fact.place)})`];
+                return each.builtBy !== key || fact === undefined ? [] : [`- ${fact.says} (${at(fact.place)})`];
             }),
         ].join("\n"),
     );
@@ -280,10 +249,10 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
         const known = stepBy.get(id);
         if (known === undefined) return [];
         const { step, j } = known;
-        const kept = (step.changes ?? []).map(
-            (change) =>
-                `${number.has(change.rule) ? `Rule ${number.get(change.rule)}` : (facts.rules.get(change.rule)?.says ?? "A rule of today")}: ${change.to}`,
-        );
+        const kept = (step.changes ?? []).map((change) => {
+            const place = facts.rules.get(change.rule)?.place;
+            return `${place === undefined ? "A rule of today" : `The rule at ${at(place)}`}: ${change.to}`;
+        });
         return [
             [
                 `### Step: ${step.intent}`,
@@ -327,22 +296,16 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
             )
                 fail(`${at(place)} is not in the analysed code`);
 
-    const ranges = merged(mine);
-    const blocks = ranges.map((range) => {
-        const lines = source.lines(range.file)?.slice(range.firstLine - 1, range.lastLine);
-        return `${at(range)}\n\n${lines === undefined ? "This place could not be read." : fenced(lines)}`;
+    const blocks = spans.map((span) => {
+        const lines = source.readable ? source.lines(span.file)?.slice(span.firstLine - 1, span.lastLine) : undefined;
+        return !source.readable
+            ? at(span)
+            : `${at(span)}\n\n${lines === undefined ? "This place could not be read." : fenced(lines)}`;
     });
     const section = (title: string, parts: readonly string[], intro?: string) =>
         parts.length === 0 ? [] : [`## ${title}`, ...(intro === undefined ? [] : [intro]), ...parts];
-    const before = [
-        `# ${view.title}`,
-        storyBody(view, plan),
-        ...section(
-            "Criteria and their rules",
-            criteria.length === 0 ? [] : [criteria.join("\n")],
-            "AC-1 is the first acceptance criterion above, AC-2 the second, and so on. A number names a rule below.",
-        ),
-        ...section("Rules built", built),
+    const before = [`# ${view.title}`, storyBody(view, plan)];
+    const after = [
         ...section("Rules relied on", reliedBlocks),
         ...section("Decisions", decisions),
         ...section("Layers", layers),
@@ -361,50 +324,65 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
                     : each.title;
             return { title, text: `### ${title}\n\n${each.body}` };
         });
-    const sourcePart = (n: number) =>
-        ranges.length === 0
-            ? []
-            : !source.readable
-              ? [
-                    "## Source",
-                    "The analysed code could not be read when this was written, so its code is not included. The places the rules cite:",
-                    ranges.map((range) => `- ${at(range)}`).join("\n"),
-                ]
-              : [
-                    "## Source",
-                    ...(n === 0
-                        ? []
-                        : [
-                              "The code of the rules this story builds, verbatim, one block per place; overlapping places are merged.",
-                              ...blocks.slice(0, n),
-                          ]),
-                    ...(n === blocks.length
-                        ? []
-                        : [
-                              `Not included here to keep this document short, at a place boundary: ${ranges.slice(n).map(at).join("; ")}.`,
-                          ]),
-                ];
+    // What each criterion rests on; the code of the places after the first `n` is left out, their places stay.
+    const restsOn = (n: number) =>
+        section(
+            "What each criterion rests on",
+            criteria.flatMap((parts, order) =>
+                parts.length === 0
+                    ? []
+                    : [
+                          [
+                              `### AC-${order + 1}`,
+                              ...parts.map((part) =>
+                                  typeof part === "string"
+                                      ? part
+                                      : part.span < n || !source.readable
+                                        ? blocks[part.span]!
+                                        : `${at(spans[part.span]!)} (code not included here to keep this document short)`,
+                              ),
+                          ].join("\n\n"),
+                      ],
+            ),
+            `AC-1 is the first acceptance criterion above, AC-2 the second, and so on. Each place is legacy code the criterion rests on.${source.readable || spans.length === 0 ? "" : " The code could not be read when this was written, so it is not included."}`,
+        );
     const render = (n: number, kept: readonly string[], left: readonly string[]) =>
         `${[
             ...before,
-            ...sourcePart(n),
+            ...restsOn(n),
+            ...after,
             ...(sections.length === 0
                 ? []
                 : [
                       "## Reading of the existing code",
-                      ...(left.length === 0 ? [] : [`Not included here to keep this document short: ${left.join("; ")}.`]),
+                      ...(left.length === 0
+                          ? []
+                          : [`Not included here to keep this document short: ${left.join("; ")}.`]),
                       ...kept,
                   ]),
         ].join("\n\n")}\n\nMade from analysis ${plan.analysis.fingerprint}.\n`;
     // What must be kept comes first: the evidence, then the code, then the reading, least useful sections cut first.
-    let n = blocks.length;
-    while (source.readable && n > 0 && bytes(render(n, [], sections.map((each) => each.title))) > CEILING) n--;
+    let n = spans.length;
+    while (
+        source.readable &&
+        n > 0 &&
+        bytes(
+            render(
+                n,
+                [],
+                sections.map((each) => each.title),
+            ),
+        ) > CEILING
+    )
+        n--;
     const rank = (title: string) => {
         const at = CUT.findIndex((name) => title === name || title.startsWith(`${name}: `));
         return at < 0 ? CUT.length - 1.5 : at;
     };
-    const order = sections.map((_, at) => at).sort((a, b) => rank(sections[a]!.title) - rank(sections[b]!.title) || b - a);
-    const cut = new Set<number>(n === blocks.length ? [] : order);
+    const order = sections
+        .map((_, at) => at)
+        .sort((a, b) => rank(sections[a]!.title) - rank(sections[b]!.title) || b - a);
+    const cut = new Set<number>(n === spans.length ? [] : order);
     const draw = () =>
         render(
             n,
@@ -415,8 +393,10 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
     const left = sections.filter((_, at) => cut.has(at)).map((each) => each.title);
     const text = draw();
     for (const id of ruleIds) {
-        const says = facts.rules.get(id)?.says;
-        if (says !== undefined && !text.includes(says)) fail("a rule it builds or relies on is not in its context");
+        const fact = facts.rules.get(id);
+        const found =
+            fact === undefined || text.includes(view.builds.includes(id as never) ? at(fact.place) : fact.says);
+        if (!found) fail("a rule it builds or relies on is not in its context");
     }
-    return { text, problems, cutSource: blocks.length - n, left };
+    return { text, problems, cutSource: spans.length - n, left };
 };

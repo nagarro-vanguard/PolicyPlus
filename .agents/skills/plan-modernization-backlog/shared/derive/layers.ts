@@ -75,21 +75,15 @@ export const componentLayer = (name: string, stack: Stack): TargetLayer | undefi
 };
 
 /**
- * The layers a story is built in, in the layers' own order: every layer for the scaffold, the test layer for an
- * acceptance story, the layers its criteria and their decisions name, and the layer of each component it builds.
+ * The layers a story is built in, in the layers' own order: every layer for the scaffold, the layers its criteria and their decisions name, and the layer of each component it builds.
  * @param story the story
- * @param how whether it is the scaffold or an acceptance story
+ * @param how whether it is the scaffold
  * @param stack the layers, decisions and the target
  * @returns the layer ids; empty when no fact places it
  */
-export const storyLayers = (
-    story: Story,
-    how: { readonly scaffold: boolean; readonly acceptance: boolean },
-    stack: Stack,
-): TargetLayer["id"][] => {
+export const storyLayers = (story: Story, how: { readonly scaffold: boolean }, stack: Stack): TargetLayer["id"][] => {
     if (how.scaffold) return stack.layers.map((layer) => layer.id);
     const ids = new Set<string>();
-    if (how.acceptance) for (const layer of stack.layers) if (roleOf(layer) === "e2e") ids.add(layer.id);
     for (const criterion of story.criteria)
         for (const ref of criterion.from) {
             if (ref._tag === "layer") ids.add(ref.id);
