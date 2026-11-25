@@ -1,4 +1,5 @@
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@continuum/ui/components/input-group";
+import { Badge } from "@continuum/ui/components/badge";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@continuum/ui/components/item";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@continuum/ui/components/table";
 import { Search } from "lucide-react";
@@ -99,7 +100,15 @@ export function TodayBuiltWith({ today }: { readonly today: TodayView }) {
         <Sub title={words.builtWith} lead={words.builtWithToday} listed>
             <div className="border-t border-border">
                 <Fold summary={words.namedByAnalysis} writtenBy="app">
-                    <p data-written-by="agent">{today.technologies.join(", ")}</p>
+                    <ul className="flex flex-wrap gap-spacing-xs pb-spacing-md">
+                        {today.technologies.map((name) => (
+                            <li key={name}>
+                                <Badge variant="outline" className="h-auto whitespace-normal font-normal" data-written-by="agent">
+                                    {name}
+                                </Badge>
+                            </li>
+                        ))}
+                    </ul>
                 </Fold>
             </div>
         </Sub>
