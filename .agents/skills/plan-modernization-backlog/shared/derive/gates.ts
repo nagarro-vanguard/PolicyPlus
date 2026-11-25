@@ -94,7 +94,15 @@ export const checkPlan = (input: Input): Gaps => {
     }
 
     if (input.target !== undefined) {
-        const found = targetGaps({ plan, facts, target: input.target, layers, request, decisions });
+        const found = targetGaps({
+            plan,
+            facts,
+            target: input.target,
+            layers,
+            request,
+            decisions,
+            bundle: analysis.bundle,
+        });
         failing.push(...found.failing);
         advisory.push(...found.advisory);
     } else {

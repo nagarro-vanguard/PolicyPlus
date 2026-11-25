@@ -3,6 +3,7 @@ import { buildConfig } from "./build-config";
 import type { Noun, NumberRecord } from "./format";
 import { theCase } from "./loader";
 import { assistantSizes } from "./raw-data";
+import { ruleStatusesOf } from "./rule-status";
 import { sourcesOf } from "./sources";
 import type { CaseData, NodeRecord } from "./view";
 
@@ -37,6 +38,7 @@ const load = async (): Promise<CaseData> => {
         facts.set(source.name, records);
     }
     const kinds = facts.get("kinds") ?? new Map();
+    const statuses = ruleStatusesOf(theCase());
     return {
         node: (key) => nodes.get(key),
         number: (key) => numbers.get(key),
@@ -44,6 +46,8 @@ const load = async (): Promise<CaseData> => {
         kindNoun: (kind) => (kinds.get(kind) as { noun: Noun } | undefined)?.noun,
         assistantBytes: assistantSizes(theCase()),
         bundleCommand: buildConfig().bundleCommand,
+        ruleStatus: statuses.of,
+        rulesInNoStory: statuses.inNoStory,
     };
 };
 

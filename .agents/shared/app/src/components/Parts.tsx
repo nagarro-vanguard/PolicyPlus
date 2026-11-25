@@ -9,6 +9,7 @@ import { AssistantCopy } from "./AssistantCopy";
 import { Facts, Section } from "./Explorer";
 import { Fold } from "./Fold";
 import { KindBadge } from "./KindBadge";
+import { RuleStatusLine } from "./RuleStatus";
 import { CodeTag, Row } from "./Rows";
 
 // One of each piece the page's script needs to draw the detail of an action or a rule it reads on demand, rendered from
@@ -38,6 +39,21 @@ export function Parts() {
             <div data-part="rows" className="flex flex-col" />
             <Row row={{ href: "#", name: "", code: "", line: "", kind: "", count }} root="" part="row-link" />
             <Row row={{ name: "", code: "", line: "", kind: "", count }} root="" part="row-plain" />
+            {(["built", "dropped", "none"] as const).map((state) => (
+                <RuleStatusLine
+                    key={state}
+                    part={`status-${state}`}
+                    root=""
+                    detail
+                    status={{
+                        state,
+                        label: "",
+                        reason: state === "built" ? "" : " ",
+                        builtBy: state === "built" ? { n: 0, title: " ", href: "#" } : null,
+                        reliedOnBy: [{ n: 0, title: " ", href: "#" }],
+                    }}
+                />
+            ))}
             <KindBadge kind="high" label="" writtenBy="app" part="risk-high" />
             <KindBadge kind="medium" label="" writtenBy="app" part="risk-medium" />
             <KindBadge kind="low" label="" writtenBy="app" part="risk-low" />

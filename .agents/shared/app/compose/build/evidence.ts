@@ -51,3 +51,31 @@ export const evidenceOf = (facts: Facts, sourceRoot: string | undefined): Record
     }
     return out;
 };
+
+/**
+ * Whether a cited place lies in the analysed code: its file is there and its lines are inside the file.
+ * @param sourceRoot the analysed code's folder, when known
+ * @returns a check that says true or false, or null for every place when the code cannot be read
+ */
+export const placeCheck = (sourceRoot: string | undefined) => {
+    const readable = sourceRoot !== undefined && existsSync(sourceRoot);
+    const counts = new Map<string, number | null>();
+    const countOf = (file: string) => {
+        if (counts.has(file)) return counts.get(file) ?? null;
+        let count: number | null = null;
+        try {
+            const full = normalize(join(sourceRoot as string, file));
+            if (full.startsWith(normalize(sourceRoot as string) + sep) && statSync(full).isFile())
+                count = readFileSync(full, "utf8").split(/\r?\n/).length;
+        } catch {
+            count = null;
+        }
+        counts.set(file, count);
+        return count;
+    };
+    return (place: { file: string; firstLine: number; lastLine: number }): boolean | null => {
+        if (!readable) return null;
+        const count = countOf(place.file);
+        return count !== null && place.firstLine >= 1 && place.lastLine >= place.firstLine && place.lastLine <= count;
+    };
+};

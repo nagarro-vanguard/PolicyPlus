@@ -100,7 +100,7 @@ const nav = {
         </div>
     </div>
     <Palette words={{ search: copy.site.search, searchHint: copy.site.searchHint, results: copy.site.results, searchHelp: copy.site.searchHelp }} />
-    <script type="application/json" id="copy-strings" set:html={JSON.stringify({ copied: copy.site.copiedAnnounce, noMatch: copy.site.noMatch, copyFailed: copy.site.copyFailed, loading: copy.explorer.loading, failed: copy.explorer.failed, checkedBy: copy.explorer.checkedBy("").trim(), trail: copy.site.trail, previous: copy.explorer.previous, next: copy.explorer.next, detailPager: copy.explorer.detailPager, livesIn: relationLabels.livesIn })}></script>
+    <script type="application/json" id="copy-strings" set:html={JSON.stringify({ copied: copy.site.copiedAnnounce, noMatch: copy.site.noMatch, copyFailed: copy.site.copyFailed, loading: copy.explorer.loading, failed: copy.explorer.failed, checkedBy: copy.explorer.checkedBy("").trim(), trail: copy.site.trail, previous: copy.explorer.previous, next: copy.explorer.next, detailPager: copy.explorer.detailPager, livesIn: relationLabels.livesIn, reliedOn: copy.rules.reliedOn, ruleStatus: copy.rules.status })}></script>
     {drawer ? <DetailDrawer /> : null}
     <div id="announce" class="sr-only" aria-live="polite"></div>
     <script is:inline data-astro-rerun src={`${root}site.js`}></script>

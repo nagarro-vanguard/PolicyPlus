@@ -196,8 +196,13 @@ export function StoryBody({ story, root }: { readonly story: StoryView; readonly
                 <Fold summary={words.relies}>
                     <ul className="flex flex-col gap-spacing-xs">
                         {story.reliesOn.map((rule, at) => (
-                            <li key={`${rule.name}${String(at)}`}>
+                            <li key={`${rule.name}${String(at)}`} className="flex flex-col gap-spacing-2xs">
                                 <LinkOrText link={rule} root={root} />
+                                {rule.builtBy === null ? null : (
+                                    <span className="text-xs text-muted-foreground">
+                                        <span data-written-by="app">{copy.rules.builtBy}</span> <LinkOrText link={rule.builtBy} root={root} />
+                                    </span>
+                                )}
                             </li>
                         ))}
                     </ul>
@@ -434,9 +439,19 @@ export function Plan({ view, root }: { readonly view: PlanView; readonly root: s
                     <p className="text-sm text-muted-foreground" data-written-by="app">
                         {words.notCoveredLede}
                     </p>
-                    {view.notCovered.dropped.length === 0 && view.notCovered.unplaced === null && view.notCovered.unplanned === null ? (
+                    {view.notCovered.dropped.length === 0 && view.notCovered.noStory === null && view.notCovered.unplaced === null && view.notCovered.unplanned === null ? (
                         <NoDataState compact title={words.nothingLeftOut} message={words.notCoveredLede} />
                     ) : null}
+                    {view.notCovered.noStory === null ? null : (
+                        <Fold summary={`${copy.rules.listTitle} (${view.notCovered.noStory.count})`}>
+                            <p className="text-sm" data-written-by="app">
+                                <a href={`${root}${view.notCovered.noStory.href}`} className="underline decoration-border underline-offset-4 hover:decoration-foreground">
+                                    {copy.rules.listLink}
+                                </a>{" "}
+                                <span className="text-muted-foreground">{copy.rules.listNote}</span>
+                            </p>
+                        </Fold>
+                    )}
                     {view.notCovered.dropped.length === 0 ? null : (
                         <Fold summary={words.droppedTitle}>
                             <ul className="flex flex-col gap-spacing-lg text-sm">

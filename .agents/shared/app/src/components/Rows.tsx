@@ -2,6 +2,7 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@con
 import { ChevronRight } from "lucide-react";
 import type { RowView } from "../case/view";
 import { KindBadge } from "./KindBadge";
+import { RuleStatusLine } from "./RuleStatus";
 
 // Rows of the next level or of a fold, each the design system's list row: the name, one line, the kind of place, a risk
 // word with its icon and the count in that level's noun. A row that opens something is a link, with a chevron at its end
@@ -29,7 +30,7 @@ export function CodeTag({ code }: { readonly code: string }) {
  * @returns the row
  */
 export function Row({ row, root, part }: { readonly row: RowView; readonly root: string; readonly part?: string }) {
-    return (
+    const item = (
         <Item size="xs" render={row.href === undefined ? <div /> : <a href={`${root}${row.href}`} />} data-part={part}>
             <ItemContent className="min-w-0">
                 <ItemTitle className="line-clamp-none" data-written-by="agent">
@@ -55,6 +56,15 @@ export function Row({ row, root, part }: { readonly row: RowView; readonly root:
                 )}
             </ItemActions>
         </Item>
+    );
+    // The status holds a link of its own, so it sits beside the row's link, never inside it.
+    return row.status === undefined ? (
+        item
+    ) : (
+        <div className="flex flex-col" data-row-with-status>
+            {item}
+            <RuleStatusLine status={row.status} root={root} />
+        </div>
     );
 }
 

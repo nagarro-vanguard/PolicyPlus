@@ -6,10 +6,65 @@ import type { Target } from "../read/target";
 import type { ModernizationRequest } from "../model/request";
 import { keptRules } from "./target-plan";
 import type { Facts } from "./facts";
+import type { Analysis } from "../read/analysis";
 
 const some = (items: readonly string[], limit = 3) =>
     items.length <= limit ? items.join("; ") : `${items.slice(0, limit).join("; ")}; and ${items.length - limit} more`;
 const short = (text: string) => (text.length > 70 ? `${text.slice(0, 67)}...` : text);
+
+/**
+ * Every rule of the analysis is built by a story, named in a journey's drop, or said to be outside what the plan can
+ * carry. A rule in a capability that no story builds and no drop names fails; a rule in no capability cannot be seen by
+ * the plan, so it is a challenge for the person; a story or criterion that cites a rule the analysis does not have fails.
+ * Pure, by ids.
+ * @param input.plan the plan
+ * @param input.facts the facts (the wording and place of the rules the capabilities hold)
+ * @param input.target the confirmed target (its drops)
+ * @param input.bundle the analysis's bundle, whose rules are the universe
+ * @returns what fails, and the challenges for the rules in no capability
+ */
+export const ruleCoverage = (input: {
+    readonly plan: Plan;
+    readonly facts: Facts;
+    readonly target: Target;
+    readonly bundle: Analysis["bundle"];
+}) => {
+    const { plan, facts, target, bundle } = input;
+    const universe = new Set(bundle.rules.map((rule) => rule.id));
+    const built = new Set<string>();
+    const unknown = new Set<string>();
+    for (const story of plan.stories) {
+        for (const id of story.builds) (universe.has(id) ? built : unknown).add(id);
+        for (const criterion of story.criteria)
+            for (const ref of criterion.from) if (ref._tag === "rule" && !universe.has(ref.id)) unknown.add(ref.id);
+    }
+    const dropped = new Set(target.journeys.flatMap((journey) => journey.drops.flatMap((drop) => drop.rules)));
+    const failing: string[] = [];
+    const challenges: string[] = [];
+    const lost: string[] = [];
+    for (const rule of bundle.rules) {
+        if (built.has(rule.id) || dropped.has(rule.id)) continue;
+        if (rule.capabilities.length === 0) {
+            challenges.push(
+                `A rule is in no capability, so the plan cannot carry it (${rule.id}): place it in the analysis, or leave its code out in the request.`,
+            );
+            continue;
+        }
+        const fact = facts.rules.get(rule.id);
+        lost.push(
+            `"${short(fact?.says ?? rule.id)}" (${fact === undefined ? rule.id : `${fact.place.file}:${fact.place.firstLine}`})`,
+        );
+    }
+    if (lost.length > 0)
+        failing.push(
+            `${lost.length} rules of the analysis are built by no story: no journey step keeps it and no drop names it: ${lost.join("; ")}`,
+        );
+    if (unknown.size > 0)
+        failing.push(
+            `${unknown.size} rules cited by a story or criterion are not in the analysis: ${some([...unknown])}`,
+        );
+    return { failing, challenges };
+};
 
 /**
  * The invariants of a plan made from a decided target: every component is built by exactly one story, every step is in
@@ -24,6 +79,7 @@ export const targetGaps = (input: {
     readonly layers: readonly TargetLayer[];
     readonly request: ModernizationRequest;
     readonly decisions?: readonly Decision[];
+    readonly bundle: Analysis["bundle"];
 }) => {
     const { plan, facts, target, layers, request } = input;
     const decisions = input.decisions ?? plan.decisions;
@@ -93,6 +149,7 @@ export const targetGaps = (input: {
         failing.push(
             `${lostRules.length} rules the journeys keep are built by no story, for example "${short(facts.rules.get(lostRules[0] ?? "")?.says ?? "")}"`,
         );
+    failing.push(...ruleCoverage({ plan, facts, target, bundle: input.bundle }).failing);
     const carried = new Set(layers.flatMap((layer) => layer.carries));
     for (const container of target.architecture.containers) {
         const tech = container.tech.trim().toLowerCase();

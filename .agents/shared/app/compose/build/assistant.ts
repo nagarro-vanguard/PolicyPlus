@@ -1,8 +1,10 @@
 import { dirname } from "node:path";
 import { bundleText, capabilityBundle, surfaceBundle } from "../../../../skills/code-analysis/shared/read/bundle";
 import type { Payloads } from "../inputs/payloads";
+import { ComposeError } from "../errors";
 import type { PlanInput } from "../inputs/plan";
 import type { Excerpt } from "./evidence";
+import { contextOf, storyRuleText } from "./story-context";
 import type { Facts } from "./facts";
 import type { Hierarchy } from "./hierarchy";
 import type { ProposedJourney } from "./journeys";
@@ -132,6 +134,8 @@ const actionText = ({ rules }: Lookups, action: Facts["actions"][number], shared
  * @param plan the plan, when there is one
  * @param journeys the chosen journeys
  * @param roots the folders whose absolute paths must become relative
+ * @param placeResolves says whether a cited place lies in the analysed code; null for every place when the code cannot
+ *   be read, and then no place is checked
  * @returns the texts and their sizes
  */
 export const assistantOf = (
@@ -142,6 +146,7 @@ export const assistantOf = (
     plan: PlanInput | undefined,
     journeys: readonly ProposedJourney[],
     roots: readonly string[],
+    placeResolves: (place: { file: string; firstLine: number; lastLine: number }) => boolean | null = () => null,
 ): AssistantTexts => {
     const texts: Record<string, Record<string, string>> = {
         system: {},
@@ -253,8 +258,11 @@ export const assistantOf = (
     }
 
     if (plan !== undefined) {
+        const context = contextOf(facts, payloads, plan.plan);
         for (const story of plan.plan.stories) {
+            // The attachment is the plan's own file, as the tracker holds it; the rule by rule part follows it.
             const attachment = plan.attachments.get(story.key);
+            const rules = storyRuleText(context, story);
             put(
                 "story",
                 story.key,
@@ -268,8 +276,25 @@ export const assistantOf = (
                     "Acceptance criteria:",
                     ...story.criteria.map((criterion, number) => `${number + 1}. ${criterion.says}`),
                     ...(attachment === undefined ? [] : ["", attachment]),
+                    ...(rules.text === "" ? [] : ["", rules.text]),
                 ].join("\n"),
             );
+            // The check: every rule the story builds or relies on is in its text, and every place it cites is in the code.
+            const text = texts.story?.[story.key] ?? "";
+            for (const need of rules.required) {
+                if (!text.includes(relativize(need.says, roots)) || !text.includes(relativize(need.at, roots)))
+                    throw new ComposeError(
+                        "build",
+                        `story ${story.key} (${story.title}): rule ${need.id} is not in the story's text for an assistant`,
+                    );
+            }
+            for (const { id, place } of rules.spans) {
+                if (placeResolves(place) === false)
+                    throw new ComposeError(
+                        "build",
+                        `story ${story.key} (${story.title}): rule ${id} cites ${place.file}:${place.firstLine}-${place.lastLine}, which is not in the analysed code`,
+                    );
+            }
         }
     }
 

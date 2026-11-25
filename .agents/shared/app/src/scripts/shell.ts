@@ -201,6 +201,46 @@ const words = (host: HTMLElement, text: string) => {
     host.append(text);
 };
 const slot = (host: HTMLElement, name: string) => host.querySelector<HTMLElement>(`[data-slot="${name}"]`);
+type Status = NonNullable<RowView["status"]>;
+/**
+ * Where a rule stands in the plan, drawn from the piece the server rendered. A row's line names the story that builds
+ * the rule or the reason it has none; the drawer's line also names the stories that only rely on the rule.
+ */
+const statusOf = (status: Status, detail: boolean): HTMLElement => {
+    const line = part(`status-${status.state}`);
+    const badge = line.querySelector<HTMLElement>(":scope > [data-slot='badge']");
+    if (badge !== null) words(badge, status.label);
+    const link = line.querySelector<HTMLAnchorElement>("[data-status-link]");
+    if (status.builtBy === null) link?.parentElement?.remove();
+    else if (link !== null) {
+        link.textContent = status.builtBy.title;
+        link.setAttribute("href", `${root}${status.builtBy.href}`);
+        link.removeAttribute("data-status-link");
+    }
+    const reason = line.querySelector<HTMLElement>("[data-status-reason]");
+    if (status.reason === "") reason?.remove();
+    else if (reason !== null) reason.textContent = status.reason;
+    const also = line.querySelector<HTMLElement>("[data-status-also]");
+    if (also !== null) {
+        if (!detail || status.reliedOnBy.length === 0) also.remove();
+        else {
+            const sample = also.querySelector<HTMLElement>("span");
+            const label = also.firstChild;
+            if (label !== null) label.textContent = `${strings().reliedOn ?? ""} `;
+            const links = status.reliedOnBy.map((story, at) => {
+                const one = sample?.cloneNode(true) as HTMLElement;
+                const anchor = one.querySelector("a") as HTMLAnchorElement;
+                anchor.textContent = story.title;
+                anchor.setAttribute("href", `${root}${story.href}`);
+                if (at > 0) one.prepend("; ");
+                return one;
+            });
+            sample?.remove();
+            also.append(...links);
+        }
+    }
+    return line;
+};
 const rowsOf = (items: readonly RowView[]) => {
     const host = part("rows");
     for (const row of items) {
@@ -236,7 +276,13 @@ const rowsOf = (items: readonly RowView[]) => {
             words(risk, row.risk.word);
             count === null || count === undefined ? actions?.append(risk) : count.before(risk);
         }
-        host.append(item);
+        if (row.status === undefined) host.append(item);
+        else {
+            // The status holds a link of its own, so it sits beside the row's link, never inside it.
+            const box = el("div", "flex flex-col");
+            box.append(item, statusOf(row.status, false));
+            host.append(box);
+        }
     }
     return host;
 };
@@ -303,6 +349,11 @@ const draw = (view: NodeView, said: Record<string, string>) => {
         for (const each of facts) fact(each.text, each.scope);
         if (view.tests !== null) fact(`${said.checkedBy ?? ""} ${view.tests.text}`, view.tests.scope);
         host.append(list);
+    }
+    if (view.status !== null) {
+        const box = el("div", "flex flex-col gap-spacing-2xs");
+        box.append(el("p", "text-sm font-medium", said.ruleStatus ?? "", "app"), statusOf(view.status, true));
+        host.append(box);
     }
     if (view.assistant !== null) {
         const block = part("assistant-block");

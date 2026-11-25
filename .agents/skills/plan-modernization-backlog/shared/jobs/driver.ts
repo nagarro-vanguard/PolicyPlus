@@ -3,6 +3,7 @@ import { join } from "node:path";
 import type { Layout } from "../model/layout";
 import type { ModernizationRequest } from "../model/request";
 import { recordFiles } from "../derive/run";
+import { readAnalysis } from "../read/analysis";
 import { targetGaps } from "../read/confirmed";
 import { gateJob, gateReview, type JobFile, type Output } from "./gates";
 import { acceptedSoFar, prepareStage, refreshInputs } from "./stages";
@@ -261,4 +262,36 @@ export const accept = (layout: Layout, id: string): string => {
     job.running = undefined;
     saveJobs(layout, jobs);
     return `${id}: decided, ${job.disputes.length} challenges kept as disputed, no further fix`;
+};
+
+/**
+ * What the reviewer reads beside each criterion: the criterion's text and, for each rule it cites, the rule's wording
+ * from the analysis. Ids and wording only; it judges nothing.
+ * @param layout the run's folders
+ * @param id the job
+ * @returns one block for each record of the job's output, each criterion with the rules it cites
+ */
+export const cited = (layout: Layout, id: string): string => {
+    const p = jobPaths(layout, id);
+    if (!existsSync(p.output)) return `no output file at ${p.output}`;
+    const stories = readJson<Output>(p.output).stories;
+    if (!Array.isArray(stories)) return `${id} has no stories`;
+    const says = new Map(
+        readAnalysis(layout.analysis).capabilities.flatMap((payload) =>
+            payload.layers.flatMap((layer) => layer.rules.map((rule) => [rule.id, rule.says] as const)),
+        ),
+    );
+    return stories
+        .flatMap(
+            (story: { title?: string; criteria?: { says: string; from: { _tag: string; id: string }[] }[] }, at) => [
+                `Record ${at}: ${story.title ?? ""}`,
+                ...(story.criteria ?? []).flatMap((criterion, number) => [
+                    `  Criterion ${number + 1}: ${criterion.says}`,
+                    ...criterion.from
+                        .filter((ref) => ref._tag === "rule")
+                        .map((ref) => `    cites ${ref.id}: ${says.get(ref.id) ?? "(not in the analysis)"}`),
+                ]),
+            ],
+        )
+        .join("\n");
 };

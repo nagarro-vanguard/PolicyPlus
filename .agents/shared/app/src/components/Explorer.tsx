@@ -99,6 +99,14 @@ export function Explorer({ view, root }: { readonly view: NodeView; readonly roo
                         ))}
                     </div>
                 )}
+                {view.noStory === null ? null : (
+                    <Section title={view.noStory.title} writtenBy="app">
+                        <p className="text-sm text-muted-foreground" data-written-by="app">
+                            {view.noStory.note}
+                        </p>
+                        <Rows rows={view.noStory.rows} root={root} />
+                    </Section>
+                )}
                 {view.lateral.map((group) => (
                     <Section key={group.label} title={group.label} writtenBy="app">
                         <Rows rows={group.links.map(rowOfLink)} root={root} />

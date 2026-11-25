@@ -1,6 +1,7 @@
 import { copy } from "../lib/copy";
 import { counted, countOf, type CountView, heading, kilobytes } from "./format";
 import type { Case } from "./read";
+import { ruleStatusesOf } from "./rule-status";
 import { addressOf } from "./routes";
 import type { Section } from "./sections";
 import type { CaseData } from "./view";
@@ -70,7 +71,7 @@ export type StoryView = {
     unblocksText: string | null;
     waitsText: string | null;
     rules: { name: string; href?: string; place: string; changedTo: string | null }[];
-    reliesOn: PlainLink[];
+    reliesOn: (PlainLink & { builtBy: PlainLink | null })[];
     steps: { journey: PlainLink; number: number; of: number; intent: string }[];
     brief: { file: string; kilobytes: number } | null;
     text: string;
@@ -99,6 +100,8 @@ export type PlanView = {
     };
     notCovered: {
         dropped: { journey: PlainLink; reason: string; items: PlainLink[] }[];
+        /** The rules no story builds: how many, and the page that lists them with why. */
+        noStory: { href: string; count: number } | null;
         unplaced: { href: string; counts: CountView[] } | null;
         unplanned: { title: string; items: { name: string; place: string }[] } | null;
     };
@@ -144,6 +147,7 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
         return nodeLink(`${level}/${String(fact.slug)}`, String(fact[field]));
     };
 
+    const statuses = ruleStatusesOf(kase);
     const storyByKey = new Map(stories.map((story) => [story.key, story]));
     const epicByKey = new Map(epics.map((epic) => [epic.key, epic]));
     const layerName = new Map(layers.map((layer) => [layer.id, layer.name]));
@@ -230,7 +234,11 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
                 reliesOn: story.reliesOn
                     .map((id) => {
                         const rule = data.fact("rules", id) as { slug: string; says: string } | undefined;
-                        return rule === undefined ? { name: "" } : nodeLink(`rule/${rule.slug}`, rule.says);
+                        const owner = data.ruleStatus(id)?.builtBy;
+                        return {
+                            ...(rule === undefined ? { name: "" } : nodeLink(`rule/${rule.slug}`, rule.says)),
+                            builtBy: owner === undefined || owner === null ? null : { name: owner.title, href: owner.href },
+                        };
                     })
                     .filter((link) => link.name !== ""),
                 steps,
@@ -326,6 +334,10 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
                     ].filter((link) => link.name !== ""),
                 };
             }),
+            noStory:
+                unplacedNode === undefined || statuses.inNoStory.length === 0
+                    ? null
+                    : { href: addressOf(unplacedNode, levelOf), count: statuses.inNoStory.length },
             unplaced:
                 unplacedNode === undefined || unplacedCounts.length === 0
                     ? null

@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { layoutOf } from "../shared/model/layout";
-import { abandon, accept, checkJob, done, finish, next, redo, startStage, status } from "../shared/jobs/driver";
+import { abandon, accept, checkJob, cited, done, finish, next, redo, startStage, status } from "../shared/jobs/driver";
 import { loadRequest } from "../shared/derive/run";
 
 const skillRoot = resolve(import.meta.dir, "..");
@@ -17,6 +17,7 @@ abandon <job>                  the agent crashed; the job is handed out again
 redo <job> --instructions <text>   hand a decided job back to its writer, for a gap found after it was decided
 accept <job>                   decide a job waiting for a fix or a review as it stands, keeping its challenges as disputed
 check <job>                    run the job's gate on its output; prints "no gap" or each gap
+cited <job>                    each criterion of the job's output with the wording of the rules it cites
 status                         where every job stands
 finish <stage>                 merge the accepted outputs into the run's records`;
 if (command === undefined || command === "--help" || root === undefined) {
@@ -40,7 +41,8 @@ else if (command === "check") {
     const gaps = checkJob(layout, request(), rest[0] ?? "");
     console.log(gaps.length === 0 ? "no gap" : gaps.map((gap) => `- ${gap}`).join("\n"));
     process.exit(gaps.length === 0 ? 0 : 1);
-} else if (command === "status") console.log(status(layout).join("\n"));
+} else if (command === "cited") console.log(cited(layout, rest[0] ?? ""));
+else if (command === "status") console.log(status(layout).join("\n"));
 else if (command === "finish") console.log(finish(layout, rest[0] ?? ""));
 else {
     console.log(help);

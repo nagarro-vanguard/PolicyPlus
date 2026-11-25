@@ -9,6 +9,7 @@ import { checkPlan, type Gaps } from "./gates";
 import { buildPlan } from "./plan";
 import { loadTarget } from "../read/target";
 import { buildTargetPlan } from "./target-plan";
+import { ruleCoverage } from "./target-gates";
 import { splitCycles } from "./cycles";
 import { carriedFrom } from "./scope";
 import { deriveFacts } from "./facts";
@@ -92,6 +93,16 @@ export const evaluatePlan = (layout: Layout, entries: readonly Entry[] = loadRev
                       target.architecture.components.map((component) => component.name),
                   )),
             ...planConflicts(layout, bare),
+            ...(target === undefined
+                ? []
+                : ruleCoverage({ plan: bare, facts, target, bundle: analysis.bundle }).challenges.map((says) => ({
+                      stage: "stories",
+                      job: "rule coverage",
+                      record: -1,
+                      variant: "",
+                      says,
+                      resolved: false,
+                  }))),
         ],
     };
     const checked = checkPlan({ analysis, facts, request, layers, decisions, stories, plan, problems, target });

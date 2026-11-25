@@ -3,7 +3,7 @@ import { z } from "zod";
 import { assistantOf, parentOf } from "./build/assistant";
 import { briefOf } from "./build/brief";
 import { viewsOf } from "./build/views";
-import { evidenceOf } from "./build/evidence";
+import { evidenceOf, placeCheck } from "./build/evidence";
 import { factsOf, type Facts } from "./build/facts";
 import { hierarchyOf, levels } from "./build/hierarchy";
 import { architectureOf, proposedOf, todayOf, traceOf } from "./build/journeys";
@@ -93,7 +93,7 @@ export const buildCase = (options: ComposeOptions) => {
             (folder): folder is string => folder !== undefined,
         ),
     );
-    const assistant = assistantOf(facts, payloads, hierarchy, evidence, plan, proposed, roots);
+    const assistant = assistantOf(facts, payloads, hierarchy, evidence, plan, proposed, roots, placeCheck(sourceRoot));
 
     const input = {
         payloads,

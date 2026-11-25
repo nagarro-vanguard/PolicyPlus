@@ -91,6 +91,7 @@ const Rule = z.looseObject({
     reading: Text.optional(),
     why: Text.optional(),
     reachedByTests: Ids.optional(),
+    screens: Ids.optional(), // payload field name, allowed by the neutrality scan
 });
 
 const Capability = z.looseObject({
@@ -152,9 +153,43 @@ const Knowledge = z.looseObject({
 });
 
 const Bundle = z.looseObject({
-    blocks: z.array(z.looseObject({ id: Text, name: Text, file: Text, layer: Text.optional() })),
+    blocks: z.array(
+        z.looseObject({
+            id: Text,
+            name: Text,
+            file: Text,
+            layer: Text.optional(),
+            container: Text.optional(),
+            firstLine: z.number().optional(),
+            lastLine: z.number().optional(),
+        }),
+    ),
     links: z.array(z.looseObject({ from: Text, to: Text, kind: Text })),
-    rules: z.array(z.looseObject({ id: Text })),
+    /** `block`: where the rule is decided; `gates`: the id of the change of state it gates, empty when none. */
+    rules: z.array(z.looseObject({ id: Text, block: Text.optional(), gates: Text.optional() })),
+    /** The data each block reads or saves. */
+    access: z
+        .array(z.looseObject({ block: Text, entity: z.looseObject({ id: Text, name: Text }), kind: Text }))
+        .optional(),
+    lifecycles: z
+        .array(
+            z.looseObject({
+                id: Text,
+                entity: z.looseObject({ id: Text, name: Text }),
+                states: Ids,
+                transitions: z.array(
+                    z.looseObject({
+                        id: Text,
+                        from: z.array(z.number()),
+                        to: z.number(),
+                        file: Text,
+                        firstLine: z.number(),
+                        lastLine: z.number(),
+                    }),
+                ),
+            }),
+        )
+        .optional(),
 });
 
 const Journeys = z.looseObject({

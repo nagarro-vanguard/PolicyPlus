@@ -1,8 +1,9 @@
 import type { z } from "zod";
 import type { FoldKind, Level } from "../../compose/build/hierarchy";
 import type { Node } from "../../compose/contract";
-import { foldTitles, levelWords, relationLabels, severityWords } from "../lib/copy";
+import { copy, foldTitles, levelWords, relationLabels, severityWords } from "../lib/copy";
 import { type CountView, countOf, heading, isCodeName, type Noun, type NumberRecord } from "./format";
+import type { RuleStatus } from "./rule-status";
 import { addressOf, assistantFileOf } from "./routes";
 
 // What one node shows, resolved from the case: names, addresses and numbers in words, everything a page or the
@@ -21,6 +22,10 @@ export type CaseData = {
     /** The size in bytes of a node's text for an assistant, when the case has one. */
     assistantBytes: (key: string) => number | undefined;
     bundleCommand: string | undefined;
+    /** Where a rule stands in the plan (built, left out, in no story); nothing when the case holds no plan. */
+    ruleStatus: (ruleId: string) => RuleStatus | undefined;
+    /** The rules no story builds, in the facts' order; empty when the case holds no plan. */
+    rulesInNoStory: readonly string[];
 };
 
 /** A link to a node: its name, and the name from code when the name shown is the node's summary instead. */
@@ -34,6 +39,8 @@ export type RowView = {
     count?: CountView;
     risk?: { word: string; badge: "high" | "medium" | "low" };
     kind?: string;
+    /** Where the rule this row names stands in the plan, when the row names a rule and the case holds a plan. */
+    status?: RuleStatus;
 };
 export type NodeView = {
     key: string;
@@ -54,6 +61,10 @@ export type NodeView = {
     next: Link | null;
     lateral: { relation: Relation; label: string; links: (Link & { count?: CountView })[] }[];
     assistant: { file: string; kilobytes: number; fuller: string | null } | null;
+    /** Where this rule stands in the plan, when the node is a rule and the case holds a plan. */
+    status: RuleStatus | null;
+    /** On the page of what is not placed: every rule no story builds, each with where it stands and why. */
+    noStory: { title: string; note: string; rows: RowView[] } | null;
 };
 
 const textOf = (record: Record<string, unknown>, fields: readonly string[]) => {
@@ -117,6 +128,8 @@ export const viewOf = (key: string, data: CaseData): NodeView => {
         const kind = each.kind === undefined ? undefined : data.kindNoun(each.kind)?.one;
         const risk = each.risk === undefined ? undefined : severityWords[each.risk];
         const shown = count(each.count);
+        const ruleId = each.fact?.collection === "rules" ? each.fact.id : target?.level === "rule" && target.ref?.collection === "rules" ? target.ref.id : undefined;
+        const status = ruleId === undefined ? undefined : data.ruleStatus(ruleId);
         return {
             ...(each.node === undefined ? {} : { href: hrefOf(each.node) }),
             name,
@@ -125,6 +138,7 @@ export const viewOf = (key: string, data: CaseData): NodeView => {
             ...(shown === undefined || shown.value === 0 ? {} : { count: shown }),
             ...(risk === undefined ? {} : { risk }),
             ...(kind === undefined ? {} : { kind }),
+            ...(status === undefined ? {} : { status }),
         };
     };
     const childNouns = new Set(
@@ -166,6 +180,7 @@ export const viewOf = (key: string, data: CaseData): NodeView => {
         facts.push(shown);
     }
     const label = labelOf(node);
+    const ownId = node.level === "rule" && node.ref?.collection === "rules" ? node.ref.id : undefined;
     return {
         key: node.key,
         level: node.level,
@@ -201,6 +216,22 @@ export const viewOf = (key: string, data: CaseData): NodeView => {
                           data.bundleCommand === undefined || node.level !== "capability"
                               ? null
                               : `${data.bundleCommand} capability "${node.name}"`,
+                  },
+        status: (ownId === undefined ? undefined : data.ruleStatus(ownId)) ?? null,
+        noStory:
+            node.level !== "unplaced" || data.rulesInNoStory.length === 0
+                ? null
+                : {
+                      title: `${copy.rules.listTitle} (${data.rulesInNoStory.length})`,
+                      note: copy.rules.listNote,
+                      rows: data.rulesInNoStory.flatMap((id): RowView[] => {
+                          const rule = data.fact("rules", id) as { slug: string; says: string; place: { file: string; firstLine: number; lastLine: number } } | undefined;
+                          const home = rule === undefined ? undefined : data.node(`rule/${rule.slug}`);
+                          const status = data.ruleStatus(id);
+                          if (rule === undefined || home === undefined || status === undefined) return [];
+                          const lines = rule.place.firstLine === rule.place.lastLine ? `${rule.place.firstLine}` : `${rule.place.firstLine}-${rule.place.lastLine}`;
+                          return [{ href: hrefOf(home.key), name: rule.says, line: `${rule.place.file}:${lines}`, status }];
+                      }),
                   },
     };
 };

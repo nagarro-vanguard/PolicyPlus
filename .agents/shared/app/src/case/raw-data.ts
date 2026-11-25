@@ -2,6 +2,7 @@ import type { Case } from "./read";
 import { sourcesOf } from "./sources";
 import type { CaseData, NodeRecord } from "./view";
 import type { Noun, NumberRecord } from "./format";
+import { ruleStatusesOf } from "./rule-status";
 import { assistantFileOf } from "./routes";
 
 // The case's records by key, read straight from an opened case folder: what the tests and the build's last step (the
@@ -55,6 +56,7 @@ export const caseDataOf = (kase: Case, bundleCommand?: string): CaseData => {
         );
     }
     const kinds = byKey(read<{ id: string; noun: Noun }>("facts/kinds.json"), (kind) => kind.id);
+    const statuses = ruleStatusesOf(kase);
     return {
         node: (key) => nodes.get(key),
         number: (key) => numbers.get(key),
@@ -62,6 +64,8 @@ export const caseDataOf = (kase: Case, bundleCommand?: string): CaseData => {
         kindNoun: (kind) => kinds.get(kind)?.noun,
         assistantBytes: assistantSizes(kase),
         bundleCommand,
+        ruleStatus: statuses.of,
+        rulesInNoStory: statuses.inNoStory,
     };
 };
 
