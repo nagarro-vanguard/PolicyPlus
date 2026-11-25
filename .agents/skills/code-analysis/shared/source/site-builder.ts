@@ -78,7 +78,7 @@ const composeArgs = (input: Parameters<SiteBuilderOps["build"]>[0]): string[] =>
 
 /**
  * What the app reads from its environment: the case folder and, when the caller names one, the bundle command (the
- * assistant copy). Neither is ever inherited from this process, so a build shows only what it was given.
+ * copied context). Neither is ever inherited from this process, so a build shows only what it was given.
  * @param input what the build was given
  * @returns the environment variables
  */

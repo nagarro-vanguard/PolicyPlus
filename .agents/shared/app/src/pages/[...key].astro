@@ -15,9 +15,9 @@ const key = keyOfPath((Astro.params as { key: string }).key);
 const page = pageOf(key);
 const root = rootOf(page);
 const view = viewOf(key, await caseData());
-const assistant = view.assistant === null ? null : { file: `${root}${view.assistant.file}`, kilobytes: view.assistant.kilobytes, fuller: view.assistant.fuller };
+const context = view.context === null ? null : { file: `${root}${view.context.file}`, kilobytes: view.context.kilobytes, fuller: view.context.fuller };
 ---
-<Page title={view.name} lead={view.summary} page={page} writtenBy="agent" label={heading(view.noun.one)} facts={{ facts: view.facts, tests: view.tests }} assistant={assistant} drawer>
+<Page title={view.name} lead={view.summary} page={page} writtenBy="agent" label={heading(view.noun.one)} facts={{ facts: view.facts, tests: view.tests }} context={context} drawer>
     <Crumbs slot="trail" crumbs={view.crumbs} current={view.name} root={root} />
     <Explorer view={view} root={root} />
 </Page>

@@ -1,23 +1,21 @@
 import { dirname } from "node:path";
 import { bundleText, capabilityBundle, surfaceBundle } from "../../../../skills/code-analysis/shared/read/bundle";
 import type { Payloads } from "../inputs/payloads";
-import { ComposeError } from "../errors";
 import type { PlanInput } from "../inputs/plan";
 import type { Excerpt } from "./evidence";
-import { contextOf, storyRuleText } from "./story-context";
 import type { Facts } from "./facts";
 import type { Hierarchy } from "./hierarchy";
 import type { ProposedJourney } from "./journeys";
 import { sortByText } from "./text";
 
 /*
- * The texts a reader copies for their assistant. These files are the only place that holds record ids, paths and
+ * The texts a reader copies as context. These files are the only place that holds record ids, paths and
  * commands. A capability's and a surface's text is the analysis's own bundle, built by its functions; a rule's text
- * holds that rule's context only; a story's text holds the story, its legacy attachment and how to deliver it. Every
+ * holds that rule's context only; a story's text is the plan skill's file, as it wrote it. Every
  * absolute path is made relative to the folder the run sits in, so no home folder is copied.
  */
 
-export type AssistantTexts = {
+export type ContextTexts = {
     /** Each text by its scope (a node key, a story key or a journey address), grouped by kind of scope. */
     texts: Record<string, Record<string, string>>;
     /** The exact size in bytes of each text, by kind and scope. */
@@ -126,7 +124,7 @@ const actionText = ({ rules }: Lookups, action: Facts["actions"][number], shared
 };
 
 /**
- * Build every assistant text.
+ * Build every context text.
  * @param facts the facts
  * @param payloads the payloads, for the analysis's bundle functions
  * @param hierarchy the hierarchy, for the scope keys
@@ -134,11 +132,9 @@ const actionText = ({ rules }: Lookups, action: Facts["actions"][number], shared
  * @param plan the plan, when there is one
  * @param journeys the chosen journeys
  * @param roots the folders whose absolute paths must become relative
- * @param placeResolves says whether a cited place lies in the analysed code; null for every place when the code cannot
- *   be read, and then no place is checked
  * @returns the texts and their sizes
  */
-export const assistantOf = (
+export const contextOf = (
     facts: Facts,
     payloads: Payloads,
     hierarchy: Hierarchy,
@@ -146,8 +142,7 @@ export const assistantOf = (
     plan: PlanInput | undefined,
     journeys: readonly ProposedJourney[],
     roots: readonly string[],
-    placeResolves: (place: { file: string; firstLine: number; lastLine: number }) => boolean | null = () => null,
-): AssistantTexts => {
+): ContextTexts => {
     const texts: Record<string, Record<string, string>> = {
         system: {},
         capability: {},
@@ -257,46 +252,8 @@ export const assistantOf = (
         );
     }
 
-    if (plan !== undefined) {
-        const context = contextOf(facts, payloads, plan.plan);
-        for (const story of plan.plan.stories) {
-            // The attachment is the plan's own file, as the tracker holds it; the rule by rule part follows it.
-            const attachment = plan.attachments.get(story.key);
-            const rules = storyRuleText(context, story);
-            put(
-                "story",
-                story.key,
-                [
-                    `# Story ${story.key}: ${story.title}`,
-                    "",
-                    `What: ${story.what}`,
-                    `Why: ${story.why}`,
-                    ...(story.blockedBy.length === 0 ? [] : [`Blocked by: ${story.blockedBy.join(", ")}`]),
-                    "",
-                    "Acceptance criteria:",
-                    ...story.criteria.map((criterion, number) => `${number + 1}. ${criterion.says}`),
-                    ...(attachment === undefined ? [] : ["", attachment]),
-                    ...(rules.text === "" ? [] : ["", rules.text]),
-                ].join("\n"),
-            );
-            // The check: every rule the story builds or relies on is in its text, and every place it cites is in the code.
-            const text = texts.story?.[story.key] ?? "";
-            for (const need of rules.required) {
-                if (!text.includes(relativize(need.says, roots)) || !text.includes(relativize(need.at, roots)))
-                    throw new ComposeError(
-                        "build",
-                        `story ${story.key} (${story.title}): rule ${need.id} is not in the story's text for an assistant`,
-                    );
-            }
-            for (const { id, place } of rules.spans) {
-                if (placeResolves(place) === false)
-                    throw new ComposeError(
-                        "build",
-                        `story ${story.key} (${story.title}): rule ${id} cites ${place.file}:${place.firstLine}-${place.lastLine}, which is not in the analysed code`,
-                    );
-            }
-        }
-    }
+    // A story's text is the plan skill's own file, taken as it is.
+    for (const [key, text] of plan?.attachments ?? []) put("story", key, text);
 
     const sizes = Object.fromEntries(
         Object.entries(texts).map(([kind, byKey]) => [

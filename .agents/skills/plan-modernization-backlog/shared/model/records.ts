@@ -73,9 +73,15 @@ export const Criterion = Schema.Struct({
 
 export const Story = Schema.Struct({
     title: Text.annotate(about("A plain imperative of 72 characters or fewer, no type prefix.")),
-    what: Text.annotate(about("What the story delivers: the capability wanted, or the goal of a technical story.")),
+    what: Text.annotate(
+        about(
+            "One complete sentence: what the story delivers, the capability wanted or the goal of a technical story.",
+        ),
+    ),
     why: Text.annotate(
-        about("The outcome it serves: the reason for the capability, or the problem a technical story solves."),
+        about(
+            "One complete sentence: the outcome it serves, the reason for the capability or the problem a technical story solves.",
+        ),
     ),
     actions: Schema.Array(ActionId).annotate(
         about("The legacy entry points this story ports; empty for a technical story."),

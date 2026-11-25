@@ -27,8 +27,8 @@ export const pageOf = (key: string) => `${pathOf(key)}.html`;
 /** The detail of an action or rule node, below the site's root. */
 export const detailOf = (key: string) => `data/node/${pathOf(key)}.json`;
 
-/** The text for a reader's assistant of a node, below the site's root. */
-export const assistantFileOf = (key: string) => `assistant/${key}.txt`;
+/** The context text of a node, below the site's root. */
+export const contextFileOf = (key: string) => `context/${key}.txt`;
 
 /**
  * The address of a node below the site's root: its page, or the page of its nearest page-level crumb with the node's key

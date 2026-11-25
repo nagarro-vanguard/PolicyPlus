@@ -101,7 +101,7 @@ export type JourneyView = {
     challenges: string[];
     prev: Link | null;
     next: Link | null;
-    assistant: { file: string; kilobytes: number } | null;
+    context: { file: string; kilobytes: number } | null;
 };
 
 export type JourneysView = {
@@ -116,8 +116,8 @@ export type JourneysView = {
 /** The page of a journey, below the site's root. */
 export const journeyPageOf = (slug: string) => `journey/${slug}.html`;
 
-/** The text for a reader's assistant of a journey, below the site's root. */
-export const journeyAssistantFileOf = (slug: string) => `assistant/journey/${slug}.txt`;
+/** The context text of a journey, below the site's root. */
+export const journeyContextFileOf = (slug: string) => `context/journey/${slug}.txt`;
 
 const read = <T>(path: string, fallback: T): T => {
     const kase = theCase();
@@ -194,7 +194,7 @@ export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], section
     const conflicts = read<Conflict[]>("plan/conflicts.json", []);
     const stories = read<{ key: string; title: string; sequence: number }[]>("plan/stories.json", []);
     const architecture = read<{ domains: { name: string }[] } | null>("architecture.json", null);
-    const assistantIndex = read<Record<string, Record<string, number>>>("assistant/index.json", {});
+    const contextIndex = read<Record<string, Record<string, number>>>("context/index.json", {});
     const hasWays = proposed.length > 0;
     const built = (id: string) => sections.some((section) => section.id === id && section.built);
 
@@ -355,7 +355,7 @@ export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], section
         const edges = (way?.pairs ?? []).map((pair) => ({ from: `today-${pair.today}`, to: `proposed-${pair.proposed}` }));
         const prev = ordered[index - 1];
         const next = ordered[index + 1];
-        const bytes = assistantIndex.journey?.[journey.slug];
+        const bytes = contextIndex.journey?.[journey.slug];
         return {
             slug: journey.slug,
             page: journeyPageOf(journey.slug),
@@ -376,7 +376,7 @@ export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], section
                           .map((each) => each.says),
             prev: prev === undefined ? null : { name: prev.title, href: journeyPageOf(prev.slug) },
             next: next === undefined ? null : { name: next.title, href: journeyPageOf(next.slug) },
-            assistant: bytes === undefined ? null : { file: journeyAssistantFileOf(journey.slug), kilobytes: Math.max(1, Math.round(bytes / 1024)) },
+            context: bytes === undefined ? null : { file: journeyContextFileOf(journey.slug), kilobytes: Math.max(1, Math.round(bytes / 1024)) },
         };
     });
 

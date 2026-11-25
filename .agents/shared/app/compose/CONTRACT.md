@@ -27,13 +27,13 @@ Determinism: every list is sorted by a stated key, every object's keys are sorte
 | Payloads | `manifest.json` `contractVersion` 1 | no manifest; another version; a file whose SHA-1 differs from the manifest |
 | Target | `target/manifest.json` `contractVersion` 2; a target written before manifests existed is read as written and the case says so | another version; a file whose SHA-256 differs from the manifest |
 | Plan | an optional `contractVersion` 1; plans written so far carry none and are read as written | another version |
-| Case | `manifest.json` `contractVersion` 2 (`caseContractVersion` in `contract.ts`) | the app refuses any other version |
+| Case | `manifest.json` `contractVersion` 3 (`caseContractVersion` in `contract.ts`) | the app refuses any other version |
 
 ## Files
 
 Every file is checked against its zod schema in `contract.ts` before it is written; the JSON Schema of each is written beside it under `schema/` (`facts/rules.json` has `schema/facts.rules.schema.json`). `manifest.json` lists every file with its schema, SHA-256 and size in bytes, the input fingerprints and the state of each target decision.
 
-Record ids appear in `facts/`, `journeys/`, `plan/` and `assistant/` as keys, so the app can follow them. They never appear inside a sentence a reader meets: compose replaces a record id in agent text (a rule's `why`, `plan/conflicts.json` `says`, a story's `open` questions and criteria, the architecture's risks) with the record's own words in quotes (a rule's first sentence, an action's summary, the name of a kind of data, capability, part, area or outside system, a risk's summary), and takes out an id it holds no record for (a state change, a finding) with the brackets or list around it (`build/plain.ts`). Nodes are addressed by keys made of names (`capability/keeping-records`), never by record ids, and `search.json` holds no record id. Paths, ids and commands meant for a reader's assistant are only in `assistant/`.
+Record ids appear in `facts/`, `journeys/`, `plan/` and `context/` as keys, so the app can follow them. They never appear inside a sentence a reader meets: compose replaces a record id in agent text (a rule's `why`, `plan/conflicts.json` `says`, a story's `open` questions and criteria, the architecture's risks) with the record's own words in quotes (a rule's first sentence, an action's summary, the name of a kind of data, capability, part, area or outside system, a risk's summary), and takes out an id it holds no record for (a state change, a finding) with the brackets or list around it (`build/plain.ts`). Nodes are addressed by keys made of names (`capability/keeping-records`), never by record ids, and `search.json` holds no record id. Paths, ids and commands meant for the context a reader copies are only in `context/`.
 
 ### Facts: every record once
 
@@ -117,11 +117,11 @@ const box = (el) => { const r = el.getBBox(); return { x: r.x, y: r.y, width: r.
 
 Every `overlaps` is 0 for a drawing that holds.
 
-### `evidence.json`, `search.json`, `assistant/`
+### `evidence.json`, `search.json`, `context/`
 
 - `evidence.json`: per rule id, at most 15 lines of the analysed code from the place the rule cites, with the file relative to the code's root; absent when the code cannot be read.
 - `search.json`: one record per node: name, the word for its level, the parent's name, a short text; no record id. Records of the sections' own pages carry `section` and a key that says where on that page: `journey/<slug>` (journeys), `story/<place in the plan's order>` (plan), `risk/<rank>` (risks), `domain/<slug>` (architecture). Such a key is not a node.
-- `assistant/<kind>.json` (`system`, `capability`, `surface`, `action`, `rule`, `story`, `journey`): the texts a reader copies for an assistant, by scope key; `assistant/index.json` gives each text's exact size in bytes. A capability's and a place's text is the analysis's own bundle, built by code-analysis's `capabilityBundle`/`surfaceBundle` and `bundleText` (without source). A rule's text holds that rule only. A story's text holds the story, how to deliver it and its legacy attachment. Every absolute path under the folder the run sits in (the parent of the `--plan` or `--target` root) or under the analysed code's root is made relative to it, so commands read from the repository and no home folder is copied.
+- `context/<kind>.json` (`system`, `capability`, `surface`, `action`, `rule`, `story`, `journey`): the texts a reader copies as context, by scope key; `context/index.json` gives each text's exact size in bytes. A capability's and a place's text is the analysis's own bundle, built by code-analysis's `capabilityBundle`/`surfaceBundle` and `bundleText` (without source). A rule's text holds that rule only. A story's text is the plan skill's file for it (`work-items/attachments/<key>.md`), read and kept as it is: readable markdown with no JSON, made once by the plan skill, which checks it. Compose assembles nothing of it. The texts were in another folder before contract version 3. Every absolute path under the folder the run sits in (the parent of the `--plan` or `--target` root) or under the analysed code's root is made relative to it, so commands read from the repository and no home folder is copied.
 
 ## Corrections over the mockup's generators
 
@@ -136,7 +136,7 @@ Rules kept exclude rules a step changes and rules its journey drops; components 
 | Balkan Air | 150 | 829 | 909 | 0.5 s | 11.1 MB | 0.34 GB |
 | Roller | 339 | 1,167 | 3,551 | 1.9 s | 63.9 MB | 1.1 GB |
 
-The neutrality test fails when any real system takes 30 s or more. Most of a large case is `assistant/` (Roller: 37 MB, rules and actions); the app should load it per kind, on demand.
+The neutrality test fails when any real system takes 30 s or more. Most of a large case is `context/` (Roller: 37 MB, rules and actions); the app should load it per kind, on demand.
 
 ## Tests
 

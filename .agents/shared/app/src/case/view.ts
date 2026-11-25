@@ -4,7 +4,7 @@ import type { Node } from "../../compose/contract";
 import { copy, foldTitles, levelWords, relationLabels, severityWords } from "../lib/copy";
 import { type CountView, countOf, heading, isCodeName, type Noun, type NumberRecord } from "./format";
 import type { RuleStatus } from "./rule-status";
-import { addressOf, assistantFileOf } from "./routes";
+import { addressOf, contextFileOf } from "./routes";
 
 // What one node shows, resolved from the case: names, addresses and numbers in words, everything a page or the
 // detail of an action or rule prints. It only follows keys the case gives (a row's node, a number's key, a fact's id);
@@ -19,8 +19,8 @@ export type CaseData = {
     number: (key: string) => NumberRecord | undefined;
     fact: (collection: string, id: string) => Record<string, unknown> | undefined;
     kindNoun: (kind: string) => Noun | undefined;
-    /** The size in bytes of a node's text for an assistant, when the case has one. */
-    assistantBytes: (key: string) => number | undefined;
+    /** The size in bytes of a node context text, when the case has one. */
+    contextBytes: (key: string) => number | undefined;
     bundleCommand: string | undefined;
     /** Where a rule stands in the plan (built, left out, in no story); nothing when the case holds no plan. */
     ruleStatus: (ruleId: string) => RuleStatus | undefined;
@@ -60,7 +60,7 @@ export type NodeView = {
     prev: Link | null;
     next: Link | null;
     lateral: { relation: Relation; label: string; links: (Link & { count?: CountView })[] }[];
-    assistant: { file: string; kilobytes: number; fuller: string | null } | null;
+    context: { file: string; kilobytes: number; fuller: string | null } | null;
     /** Where this rule stands in the plan, when the node is a rule and the case holds a plan. */
     status: RuleStatus | null;
     /** On the page of what is not placed: every rule no story builds, each with where it stands and why. */
@@ -164,7 +164,7 @@ export const viewOf = (key: string, data: CaseData): NodeView => {
         if (group === undefined) lateral.push({ relation: each.relation, label, links: [target] });
         else group.links.push(target);
     }
-    const bytes = data.assistantBytes(node.key);
+    const bytes = data.contextBytes(node.key);
     // A count of nothing says nothing, and a number is said once: the tests go in their own line, a second count in the
     // same noun is left out (it reads as the same fact), and the line holds three facts at most.
     const testsEntry = data.number(`${node.key}/tests`);
@@ -206,11 +206,11 @@ export const viewOf = (key: string, data: CaseData): NodeView => {
         prev: link(node.prev),
         next: link(node.next),
         lateral,
-        assistant:
+        context:
             bytes === undefined
                 ? null
                 : {
-                      file: assistantFileOf(node.key),
+                      file: contextFileOf(node.key),
                       kilobytes: Math.max(1, Math.round(bytes / 1024)),
                       fuller:
                           data.bundleCommand === undefined || node.level !== "capability"

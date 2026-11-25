@@ -43,6 +43,8 @@ const appSource = [
     join(here, "../../code-analysis/shared/source"),
     join(here, "../../code-analysis/cli/build-app.ts"),
 ];
+/** What derives the plan, its bodies and its contexts: the plan skill's code. A change in it reaches a rerun. */
+const planSource = [join(here, "../../plan-modernization-backlog/shared")];
 /** The folders of a run: the same fixed layout every skill uses under the Output Root. */
 export const pathsOf = (root: string) => ({
     root,
@@ -68,9 +70,12 @@ export const pathsOf = (root: string) => ({
     plan: join(root, ".modernization-backlog/payloads/plan.json"),
     backlog: join(root, ".modernization-backlog"),
     manifest: join(root, "work-items/manifest.json"),
+    bodies: join(root, "work-items/bodies"),
+    attachments: join(root, "work-items/attachments"),
     app: join(root, "app"),
     case: join(root, "case"),
     appSource,
+    planSource,
 });
 
 export type Step = {
@@ -99,7 +104,7 @@ const planOutdated = (root: string, plan: string): string[] => {
 };
 
 /**
- * The command that writes a bundle of the analysis, for the app's copy menu (the assistant copy): the app prints it as
+ * The command that writes a bundle of the analysis, for the app's copy menu (the copied context): the app prints it as
  * it is given, with a capability or screen after it.
  */
 const buildBundle = (skills: string, p: Paths) =>
@@ -339,7 +344,7 @@ export const steps: Step[] = [
     },
     {
         name: "plan",
-        inputs: (p) => [p.records],
+        inputs: (p) => [p.records, p.bundles, ...p.planSource],
         makes: (p) => [p.plan, p.manifest],
         // The plan records what it was built from (`builtFrom`); a target confirmed again reaches it even when the
         // stories' records came out the same. A plan made before it kept that is left as it is.
@@ -353,7 +358,7 @@ export const steps: Step[] = [
     },
     {
         name: "app",
-        inputs: (p) => [p.plan, p.payloads, p.journeysToday, p.target, ...p.appSource],
+        inputs: (p) => [p.plan, p.bodies, p.attachments, p.payloads, p.journeysToday, p.target, ...p.appSource],
         makes: (p) => [join(p.app, "index.html")],
         action: ({ paths, skills }) => ({
             action: "run",

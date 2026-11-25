@@ -1,9 +1,9 @@
 import { existsSync } from "node:fs";
 import { z } from "zod";
-import { assistantOf, parentOf } from "./build/assistant";
+import { contextOf, parentOf } from "./build/context";
 import { briefOf } from "./build/brief";
 import { viewsOf } from "./build/views";
-import { evidenceOf, placeCheck } from "./build/evidence";
+import { evidenceOf } from "./build/evidence";
 import { factsOf, type Facts } from "./build/facts";
 import { hierarchyOf, levels } from "./build/hierarchy";
 import { architectureOf, proposedOf, todayOf, traceOf } from "./build/journeys";
@@ -22,7 +22,7 @@ import { readTarget } from "./inputs/target";
 /*
  * compose: the one place that joins. It reads the analysis's payloads, and the target and plan when given, and writes
  * `case/`: the facts with every record once, the hierarchy with counts scoped to each path, one numbers table, the
- * journey trace and the plan's views, the views (pictures) with their text, evidence, search and the texts for an assistant, each
+ * journey trace and the plan's views, the views (pictures) with their text, evidence, search and the context texts, each
  * file checked against its schema, with a manifest of digests and input fingerprints. Nothing in it reads a database,
  * the conductor's state or a clock.
  */
@@ -93,7 +93,7 @@ export const buildCase = (options: ComposeOptions) => {
             (folder): folder is string => folder !== undefined,
         ),
     );
-    const assistant = assistantOf(facts, payloads, hierarchy, evidence, plan, proposed, roots, placeCheck(sourceRoot));
+    const context = contextOf(facts, payloads, hierarchy, evidence, plan, proposed, roots);
 
     const input = {
         payloads,
@@ -108,7 +108,7 @@ export const buildCase = (options: ComposeOptions) => {
         trace,
         plan,
         views,
-        assistant,
+        context,
     };
     return { input, target, plan, request, brief, evidence, sourceRoot };
 };
@@ -121,7 +121,7 @@ export const buildCase = (options: ComposeOptions) => {
 export const compose = (options: ComposeOptions): Composed => {
     const built = buildCase(options);
     const { input, target, plan, request, brief, evidence, sourceRoot } = built;
-    const { payloads, facts, hierarchy, numbers, pictures, today, proposed, architecture, trace, views, assistant } =
+    const { payloads, facts, hierarchy, numbers, pictures, today, proposed, architecture, trace, views, context } =
         input;
 
     const values: Record<string, unknown> = {
@@ -155,9 +155,9 @@ export const compose = (options: ComposeOptions): Composed => {
         }),
         "brief.json": brief,
         "journeys/today.json": today,
-        "assistant/index.json": assistant.sizes,
+        "context/index.json": context.sizes,
         ...Object.fromEntries(
-            Object.entries(assistant.texts).map(([kind, texts]) => [`assistant/${kind}.json`, texts]),
+            Object.entries(context.texts).map(([kind, texts]) => [`context/${kind}.json`, texts]),
         ),
     };
     if (target !== undefined && architecture !== undefined) {

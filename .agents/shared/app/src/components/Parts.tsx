@@ -5,7 +5,7 @@ import { Textarea } from "@continuum/ui/components/textarea";
 import { Trail, TrailStep } from "@continuum/ui/components/trail";
 import { Search } from "lucide-react";
 import { copy } from "../lib/copy";
-import { AssistantCopy } from "./AssistantCopy";
+import { ContextCopy } from "./ContextCopy";
 import { Facts, Section } from "./Explorer";
 import { Fold } from "./Fold";
 import { KindBadge } from "./KindBadge";
@@ -73,9 +73,9 @@ export function Parts() {
                     <ItemTitle className="line-clamp-none" data-written-by="agent" />
                 </ItemContent>
             </Item>
-            <div className="flex flex-col items-start gap-spacing-md" data-for-assistant data-part="assistant-block">
-                <AssistantCopy file="" kilobytes={1} />
-                <Textarea className="font-mono text-xs" readOnly hidden aria-label={copy.explorer.forAssistant} data-assistant-fallback rows={8} />
+            <div className="flex flex-col items-start gap-spacing-md" data-for-context data-part="context-block">
+                <ContextCopy file="" kilobytes={1} />
+                <Textarea className="font-mono text-xs" readOnly hidden aria-label={copy.explorer.forContext} data-context-fallback rows={8} />
             </div>
         </>
     );

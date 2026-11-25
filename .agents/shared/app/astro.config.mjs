@@ -7,22 +7,22 @@ import { defineConfig } from "astro/config";
 import { addressesIn, isPlanPage, languageFindings, pathNamesRecordId, planFindings, visibleText } from "./src/lib/language.ts";
 import { buildConfig } from "./src/case/build-config.ts";
 import { openCase } from "./src/case/read.ts";
-import { assistantTexts } from "./src/case/raw-data.ts";
+import { contextTexts } from "./src/case/raw-data.ts";
 import { offlinePackage } from "./scripts/package/index.ts";
 import { writeDataFile } from "./scripts/package/data.ts";
 
 /**
- * After the build, the texts a reader copies for an assistant are written beside the pages, one file per node, read from
+ * After the build, the texts a reader copies as context are written beside the pages, one file per node, read from
  * the case on demand by the copy button: a large system holds tens of megabytes of them, so no page carries them. Each is a
  * classic script (scripts/package/data.ts), so a page opened from `file://` can read it.
  * @returns the integration
  */
-const assistantFiles = () => ({
-    name: "assistant-files",
+const contextFiles = () => ({
+    name: "context-files",
     hooks: {
         "astro:build:done": ({ dir }) => {
             const out = fileURLToPath(dir);
-            for (const [path, text] of assistantTexts(openCase(buildConfig().caseDir))) writeDataFile(out, path, text);
+            for (const [path, text] of contextTexts(openCase(buildConfig().caseDir))) writeDataFile(out, path, text);
         },
     },
 });
@@ -93,7 +93,7 @@ const readerCheck = () => ({
 // compose wrote, named by src/case/build-config.ts (checked once; the build fails without it).
 buildConfig();
 export default defineConfig({
-    integrations: [react(), assistantFiles(), readerCheck(), offlinePackage(fileURLToPath(new URL("./src/styles/app.css", import.meta.url)))],
+    integrations: [react(), contextFiles(), readerCheck(), offlinePackage(fileURLToPath(new URL("./src/styles/app.css", import.meta.url)))],
     vite: {
         plugins: [tailwindcss()],
         resolve: { alias: [{ find: /^@continuum\/ui\//, replacement: `${fileURLToPath(new URL("./vendor/ui/", import.meta.url))}` }] },

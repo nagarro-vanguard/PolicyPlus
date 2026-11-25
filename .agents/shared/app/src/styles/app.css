@@ -146,7 +146,7 @@
     header,
     dialog,
     [data-palette],
-    [data-for-assistant],
+    [data-for-context],
     [data-copy-text],
     [data-needs-js],
     #page-error,

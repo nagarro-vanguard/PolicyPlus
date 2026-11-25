@@ -1,6 +1,6 @@
-// The shell of every page: the shortcut hint, the search, the copy for a reader's assistant and the drawer of an action
+// The shell of every page: the shortcut hint, the search, the copy of the context and the drawer of an action
 // or a rule, opened beside the page that holds it at `#<key>`. The search reads `data/search.json`, the detail
-// `data/node/<key>.json` and the pieces it is drawn from `data/parts.html`, the assistant's text `assistant/<key>.txt`;
+// `data/node/<key>.json` and the pieces it is drawn from `data/parts.html`, the context text `context/<key>.txt`;
 // all are written at build time and read as classic scripts (load.ts), so they work from `file://` too, and the shell
 // never grows with the system shown. An error in a page's script shows a plain message at the top of the page instead
 // of failing in silence. No framework: the detail is drawn from the pieces rendered with the design system's
@@ -128,14 +128,14 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
-/* ---------- the copy for a reader's assistant: fetched when asked for, and the result of the copy is checked ---------- */
+/* ---------- the copy of the context: fetched when asked for, and the result of the copy is checked ---------- */
 document.addEventListener("click", (event) => {
-    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-assistant-file]");
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-context-file]");
     if (button === null) return;
     const label = button.querySelector("[data-label]");
-    const fallback = (button.closest("[data-assistant-scope]") ?? button.closest("[data-for-assistant]"))?.querySelector<HTMLTextAreaElement>("[data-assistant-fallback]") ?? null;
+    const fallback = (button.closest("[data-context-scope]") ?? button.closest("[data-for-context]"))?.querySelector<HTMLTextAreaElement>("[data-context-fallback]") ?? null;
     void (async () => {
-        const text = await loadFile<string>(button.dataset.assistantFile ?? "", false);
+        const text = await loadFile<string>(button.dataset.contextFile ?? "", false);
         const done = () => {
             const was = label?.textContent ?? "";
             if (label !== null) label.textContent = button.dataset.copied ?? "";
@@ -331,7 +331,7 @@ const rowOfLink = (link: NodeView["lateral"][number]["links"][number]): RowView 
     ...(link.line === undefined ? {} : { line: link.line }),
     ...(link.count === undefined ? {} : { count: link.count }),
 });
-/** The body of the drawer: what it does, its facts, its rules, where its code lives (once), its other links, the copy for an assistant and the way to the ones beside it. */
+/** The body of the drawer: what it does, its facts, its rules, where its code lives (once), its other links, the copy of the context and the way to the ones beside it. */
 const draw = (view: NodeView, said: Record<string, string>) => {
     const host = document.createDocumentFragment();
     if (view.summary !== "") host.append(el("p", "text-base text-muted-foreground", view.summary, "agent"));
@@ -355,12 +355,12 @@ const draw = (view: NodeView, said: Record<string, string>) => {
         box.append(el("p", "text-sm font-medium", said.ruleStatus ?? "", "app"), statusOf(view.status, true));
         host.append(box);
     }
-    if (view.assistant !== null) {
-        const block = part("assistant-block");
-        const button = block.querySelector<HTMLElement>("[data-assistant-file]");
-        button?.setAttribute("data-assistant-file", `${root}${view.assistant.file}`);
-        const size = button?.querySelector<HTMLElement>('[data-part="assistant-size"]');
-        if (size !== null && size !== undefined) size.textContent = (size.textContent ?? "").replace(/\d+/, String(view.assistant.kilobytes));
+    if (view.context !== null) {
+        const block = part("context-block");
+        const button = block.querySelector<HTMLElement>("[data-context-file]");
+        button?.setAttribute("data-context-file", `${root}${view.context.file}`);
+        const size = button?.querySelector<HTMLElement>('[data-part="context-size"]');
+        if (size !== null && size !== undefined) size.textContent = (size.textContent ?? "").replace(/\d+/, String(view.context.kilobytes));
         host.append(block);
     }
     if (view.children.rows.length > 0) host.append(sectionOf(view.children.heading, "agent", filteredRows(view.children.rows)));

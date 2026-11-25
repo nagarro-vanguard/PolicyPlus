@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 import { Decision, Story, TargetLayer } from "../model/records";
-import { criterionLengthProblems, mechanicalProblems, readerProblems, recordIdProblems } from "../derive/language";
+import { storyProblems } from "../derive/gates";
 import { changedRuleProblems } from "../derive/consistency";
 import { AGENTS_MD_MAX_LINES, countedLines, layerAgentsMd } from "../derive/agents-md";
 import type { Kind } from "./state";
@@ -18,7 +18,6 @@ export type JobFile = {
     shared?: string[];
     transitions?: string[];
     surfaces?: { key: string; name: string; actions: string[]; owned: readonly string[] }[];
-    allow?: string[];
     techs?: string[];
     steps?: string[];
     stepActions?: Record<string, string[]>;
@@ -203,29 +202,12 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
                 }
             }
         }
-        const mech = mechanicalProblems(story.title);
-        if (mech.length > 0) gaps.push(`story "${short(story.title)}": ${mech.join(", ")}`);
-        for (const problem of criterionLengthProblems(story.criteria.map((c) => c.says)))
-            gaps.push(`story "${short(story.title)}": ${problem}`);
+        for (const problem of storyProblems(story)) gaps.push(`story "${short(story.title)}": ${problem}`);
         const functional = story.actions.length > 0;
         if (job.kind === "surfaces" && !functional)
             gaps.push(`story "${short(story.title)}" has no actions; a surface story ports actions`);
         if (job.kind !== "surfaces" && functional)
             gaps.push(`story "${short(story.title)}" has actions; this job writes technical stories`);
-        const texts = [
-            story.title,
-            story.what,
-            story.why,
-            ...story.criteria.map((c) => c.says),
-            ...story.terms.flatMap((t) => [t.name, t.means]),
-            ...(story.journey ? [story.journey.name, ...story.journey.steps] : []),
-            ...(story.open ?? []),
-        ];
-        const found = texts.flatMap((text) => (functional ? readerProblems(text, job.allow) : recordIdProblems(text)));
-        if (found.length > 0)
-            gaps.push(
-                `story "${short(story.title)}" shows the code or the analysis: ${[...new Set(found)].slice(0, 3).join("; ")}`,
-            );
     }
     if (job.kind === "surfaces") {
         const missing = [...actions].filter((id) => !seen.has(id));
@@ -312,10 +294,7 @@ const targetStoryGaps = (job: JobFile, stories: readonly Story[]): string[] => {
         const missing = [...enforced].filter((id) => !rules.includes(id));
         if (missing.length > 0)
             gaps.push(`${label} builds components whose ${missing.length} rules no criterion cites`);
-        const mech = mechanicalProblems(story.title);
-        if (mech.length > 0) gaps.push(`${label}: ${mech.join(", ")}`);
-        for (const problem of criterionLengthProblems(story.criteria.map((c) => c.says)))
-            gaps.push(`${label}: ${problem}`);
+        for (const problem of storyProblems(story)) gaps.push(`${label}: ${problem}`);
         const changes = new Map(Object.entries(job.ruleChanges ?? {}));
         for (const problem of changedRuleProblems(story.criteria, changes)) gaps.push(`${label}: ${problem}`);
         const knownSteps = new Set([...(job.steps ?? []), ...[...changes.values()].flat().map((each) => each.step)]);
@@ -323,20 +302,6 @@ const targetStoryGaps = (job: JobFile, stories: readonly Story[]): string[] => {
             for (const ref of criterion.from)
                 if (ref._tag === "step" && !knownSteps.has(ref.id))
                     gaps.push(`${label} cites a step that is not this job's and changes none of its rules`);
-        const texts = [
-            story.title,
-            story.what,
-            story.why,
-            ...story.criteria.map((c) => c.says),
-            ...story.terms.flatMap((t) => [t.name, t.means]),
-            ...(story.journey ? [story.journey.name, ...story.journey.steps] : []),
-            ...(story.open ?? []),
-        ];
-        const found = texts.flatMap((text) =>
-            story.actions.length > 0 ? readerProblems(text, job.allow) : recordIdProblems(text),
-        );
-        if (found.length > 0)
-            gaps.push(`${label} shows the code or the analysis: ${[...new Set(found)].slice(0, 3).join("; ")}`);
     }
     exactly("rules", job.cite ?? [], [[...cited]], gaps);
     return [...new Set(gaps)];

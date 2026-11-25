@@ -22,7 +22,7 @@ Words: an *epic* is one chosen journey of the target (or an area without one); a
     - `done`: the stage's jobs are all decided; run `finish`.
     - `stop`: a job was refused; show its message to the person and stop.
     A job runs write, gate, review and at most one fix; a challenge that survives the fix stays as disputed and is carried into the plan's `conflicts`. Nothing waits for anyone: assumptions are in each decision's `reason`.
-4. `bun ${SKILL_ROOT}/cli/plan.ts build ${ROOT}` derives the plan from the accepted records and checks every gate. On exit 1 it prints each failing gate; run the stage that owns the gap again with `prepare`. On success it writes `plan.json`, the manifest, the bodies, the attachments and the AGENTS.md previews.
+4. `bun ${SKILL_ROOT}/cli/plan.ts build ${ROOT}` derives the plan from the accepted records and checks every gate. On exit 1 it prints each failing gate; run the stage that owns the gap again with `prepare`. On success it writes `plan.json`, the manifest, the bodies, one readable context for every story (its attachment) and the AGENTS.md previews.
 5. Tell the person what was written and where the plan's pages are (the app builds them). How the plan reads, and what the agents' titles and criteria must look like, is `${SKILL_ROOT}/rules/presentation.md`.
 
 ## With a decided target
@@ -38,4 +38,4 @@ When `${ROOT}/target/architecture.json` and `target/journeys.json` exist (the `s
 
 ## Output
 
-`${ROOT}/.modernization-backlog/payloads/plan.json`; `${ROOT}/work-items/` with `manifest.json`, `bodies/`, `attachments/` and `agents-md/` (the notes of each layer). Every build removes the bodies and attachments of stories that left the plan. `plan.json` keeps what it was built from (`builtFrom`: the analysis's fingerprint and the hash of each decision's subject); `plan.ts status ${ROOT}` says whether that still holds. It also carries the reviewers' challenges that survived (`conflicts`), the target's and its own, and each story's layers. `cli/stage.ts status` says where every job stands.
+`${ROOT}/.modernization-backlog/payloads/plan.json`; `${ROOT}/work-items/` with `manifest.json`, `bodies/`, `attachments/` (a story's context: the story, then the evidence to build it) and `agents-md/` (the notes of each layer). Every build removes the bodies and attachments of stories that left the plan. `plan.json` keeps what it was built from (`builtFrom`: the analysis's fingerprint and the hash of each decision's subject); `plan.ts status ${ROOT}` says whether that still holds. It also carries the reviewers' challenges that survived (`conflicts`), the target's and its own, and each story's layers. `cli/stage.ts status` says where every job stands.

@@ -12,9 +12,9 @@ const slug = (Astro.params as { slug: string }).slug;
 const view = (await journeysView()).journeys.find((journey) => journey.slug === slug);
 if (view === undefined) throw new Error(`the case holds no journey ${slug}`);
 const root = rootOf(view.page);
-const assistant = view.assistant === null ? null : { file: `${root}${view.assistant.file}`, kilobytes: view.assistant.kilobytes };
+const context = view.context === null ? null : { file: `${root}${view.context.file}`, kilobytes: view.context.kilobytes };
 ---
-<Page title={view.title} lead={view.outcome} page={view.page} writtenBy="agent" wide label={copy.journeys.journey} assistant={assistant}>
+<Page title={view.title} lead={view.outcome} page={view.page} writtenBy="agent" wide label={copy.journeys.journey} context={context}>
     <Crumbs slot="trail" crumbs={[{ href: journeysPage, name: copy.journeys.title }]} current={view.title} root={root} />
     <JourneyPage view={view} root={root} />
 </Page>

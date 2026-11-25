@@ -108,7 +108,7 @@ export type PlanView = {
     storyNoun: { one: string; many: string };
 };
 
-/** The file a story's text for an assistant is written to, below the site's root. */
+/** The file a story context text is written to, below the site's root. */
 export const storyBriefFileOf = (n: number) => `plan/brief/${n}.txt`;
 
 /**
@@ -131,7 +131,7 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
     const traces = read<Trace[]>("journeys/trace.json", []);
     const dropped = read<Dropped[]>("journeys/dropped.json", []);
     const architecture = read<{ domains: { name: string }[] } | null>("architecture.json", null);
-    const sizes = read<Record<string, Record<string, number>>>("assistant/index.json", {}).story ?? {};
+    const sizes = read<Record<string, Record<string, number>>>("context/index.json", {}).story ?? {};
     const stale = read<boolean | null>("plan/stale.json", null) === true;
     const unplanned = read<{ name: string; file: string; firstLine: number; lastLine: number }[]>("plan/unplanned.json", []);
 

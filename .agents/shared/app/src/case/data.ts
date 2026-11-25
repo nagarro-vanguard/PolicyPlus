@@ -2,7 +2,7 @@ import { getCollection } from "astro:content";
 import { buildConfig } from "./build-config";
 import type { Noun, NumberRecord } from "./format";
 import { theCase } from "./loader";
-import { assistantSizes } from "./raw-data";
+import { contextSizes } from "./raw-data";
 import { ruleStatusesOf } from "./rule-status";
 import { sourcesOf } from "./sources";
 import type { CaseData, NodeRecord } from "./view";
@@ -44,7 +44,7 @@ const load = async (): Promise<CaseData> => {
         number: (key) => numbers.get(key),
         fact: (collection, id) => facts.get(collection)?.get(id),
         kindNoun: (kind) => (kinds.get(kind) as { noun: Noun } | undefined)?.noun,
-        assistantBytes: assistantSizes(theCase()),
+        contextBytes: contextSizes(theCase()),
         bundleCommand: buildConfig().bundleCommand,
         ruleStatus: statuses.of,
         rulesInNoStory: statuses.inNoStory,

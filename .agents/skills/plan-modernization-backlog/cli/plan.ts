@@ -4,18 +4,16 @@ import { changedSinceBuilt } from "../shared/derive/built-from";
 import type { Plan } from "../shared/model/plan";
 import { layoutOf } from "../shared/model/layout";
 import { deriveFacts } from "../shared/derive/facts";
-import { loadRequest, recordFiles, runBuild, writeJson } from "../shared/derive/run";
-import { standin } from "../shared/derive/standin";
+import { runBuild } from "../shared/derive/run";
 import { readAnalysis } from "../shared/read/analysis";
 import { targetGaps } from "../shared/read/confirmed";
 
 const [command, root] = process.argv.slice(2);
-const help = `Usage: plan.ts <facts|standin|build|status> <Output Root>
+const help = `Usage: plan.ts <facts|build|status> <Output Root>
 
 facts     prints what the plan derives from the analysis: surfaces, rules, who builds them.
-standin   writes stand-in records (no agents) so the rest of the pipeline can be run and tested.
 build     derives the plan from the accepted records, checks every gate, and writes plan.json, the story bodies,
-          their attachments and the AGENTS.md previews; exits 1 and prints every failing gate when one fails.
+          their contexts and the AGENTS.md previews; exits 1 and prints every failing gate when one fails.
 status    says whether plan.json is the plan of the analysis and the decisions that hold now, by the hashes it was built
           from (\`builtFrom\`); exits 1 when something changed since, 0 when it is current or too old to say.`;
 if (command === undefined || root === undefined || command === "--help") {
@@ -33,16 +31,6 @@ if (command === "facts") {
         console.log(
             `  ${c.name}: ${c.size} actions, ${c.surfaces.length} surfaces, owns ${c.surfaces.reduce((n, s) => n + s.owned.length, 0)} rules`,
         );
-} else if (command === "standin") {
-    const analysis = readAnalysis(layout.analysis);
-    const records = standin(analysis, deriveFacts(analysis), loadRequest(layout));
-    const files = recordFiles(layout);
-    writeJson(files.layers, records.layers);
-    writeJson(files.decisions, records.decisions);
-    writeJson(files.stories, records.stories);
-    console.log(
-        `stand-in records written: ${records.layers.length} layers, ${records.decisions.length} decisions, ${records.stories.length} stories`,
-    );
 } else if (command === "build") {
     const undecided = targetGaps(layout);
     if (undecided.length > 0) {

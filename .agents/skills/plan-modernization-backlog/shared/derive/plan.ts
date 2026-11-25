@@ -32,8 +32,8 @@ export const scaffoldStory = (layers: readonly TargetLayer[]): Story => {
     for (let i = 0; i < layers.length; i += per) groups.push(layers.slice(i, i + per));
     return {
         title: "Set up the codebase and its layers",
-        what: "a codebase that has every planned layer, each with a check that runs and passes",
-        why: "every later story can be built, checked and proven in a layer of its own",
+        what: "The codebase has every planned layer, each with a check that runs and passes.",
+        why: "Every later story can be built, checked and proven in a layer of its own.",
         actions: [],
         terms: [],
         criteria: [

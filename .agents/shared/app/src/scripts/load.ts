@@ -1,5 +1,5 @@
 // How a page reads a file written beside it at build time (the search, the detail of an action or a rule, a story's
-// sheet, the text for an assistant, the diagram's layout engine). A page opened from `file://` may not `fetch`, so each
+// sheet, the context text, the diagram's layout engine). A page opened from `file://` may not `fetch`, so each
 // such file is shipped as a classic script (`<name>.js`, written by the offline packager, scripts/package/) that hands
 // its content to `self.__caseFiles` under its path below the site's root, without the extension. The same script works
 // over http, so there is one path for both.

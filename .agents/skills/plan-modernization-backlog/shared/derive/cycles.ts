@@ -1,6 +1,5 @@
 import type { Story } from "../model/records";
 import type { Target } from "../read/target";
-import { pieceTitle } from "./target-plan";
 
 /** Strongly connected groups of stories: stories that, through the components they build, wait on each other. */
 const groupsOf = (stories: readonly Story[], target: Target): number[][] => {
@@ -90,7 +89,7 @@ const splitOf = (story: Story, target: Target): Piece[] => {
             const { journey, open, ...rest } = story;
             return {
                 ...rest,
-                title: names.length > 1 ? pieceTitle(name, component?.responsibility ?? "") : story.title,
+                title: names.length > 1 ? `Build ${name}` : story.title,
                 ...(names.length > 1 ? { part: name, splitFrom: story.title } : {}),
                 actions: [
                     ...new Set(

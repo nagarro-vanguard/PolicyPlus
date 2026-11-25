@@ -94,7 +94,7 @@ export const pathNamesRecordId = (path: string) => recordId.test(path);
 
 /**
  * The text a reader reads from a page of HTML: what is on the page, without scripts, styles, tags, the text a button
- * copies to the clipboard (a brief written for a coding assistant, not for the reader) or a ready-made prompt shown in
+ * copies to the clipboard (a text written for building, not for the reader) or a ready-made prompt shown in
  * a `<pre data-prompt>` box, which is shown as the plan skill wrote it, keys and folders included.
  * @param html the page
  * @returns the text

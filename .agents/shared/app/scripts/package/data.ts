@@ -13,7 +13,7 @@ export const dataFiles: readonly { folder: string; extension: string }[] = [
     { folder: "data/", extension: ".html" },
     { folder: "plan/story/", extension: ".html" },
     { folder: "plan/brief/", extension: ".txt" },
-    { folder: "assistant/", extension: ".txt" },
+    { folder: "context/", extension: ".txt" },
 ];
 
 /**

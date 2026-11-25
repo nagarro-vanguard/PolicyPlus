@@ -93,7 +93,7 @@ export type Criterion = {
 
 const givenWhenThen = /^\s*given\s+([\s\S]+?),\s+when\s+([\s\S]+?),\s+then\s+([\s\S]+?)\s*$/iu;
 
-const criterionOf = (says: string, from: readonly { _tag: string; id: string }[]): Criterion => {
+export const criterionOf = (says: string, from: readonly { _tag: string; id: string }[]): Criterion => {
     const match = givenWhenThen.exec(says);
     const part = (text: string | undefined) => (text === undefined ? null : text.replace(/\.$/u, "").trim());
     return {

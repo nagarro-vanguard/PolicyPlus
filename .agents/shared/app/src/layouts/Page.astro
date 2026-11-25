@@ -10,14 +10,14 @@ import { MobileNav } from "../components/shell/MobileNav";
 import { SearchButton, ThemeControl } from "../components/shell/TopBar";
 import { Palette } from "../components/shell/Palette";
 import { ErrorState } from "@continuum/ui/components/error-state";
-import { PageHeader, type PageAssistant } from "../components/shell/PageHeader";
+import { PageHeader, type PageContext } from "../components/shell/PageHeader";
 import { ContentsFold, ContentsRail, contentsFrom } from "../components/shell/Contents";
 import { DetailDrawer } from "../components/DetailDrawer";
 import type { CountView } from "../case/format";
 import { pageHeadings } from "../lib/headings";// The frame of every page, built from the design system's components (vendor/ui) and rendered to HTML at build time.
 // The islands, the only components that ship a script, are listed here and nowhere else:
 //   MobileNav, `client:media` below Finch's `md`: the sheet that holds the menu on a narrow screen.
-// Everything else that moves (search, copy for an assistant, the drawer of an action or rule at `#<key>`, the list of the
+// Everything else that moves (search, copy of the context, the drawer of an action or rule at `#<key>`, the list of the
 // page's headings, the theme) is the page's own small script, src/scripts/shell.ts, src/scripts/contents.ts and
 // public/site.js, with no framework.
 // Every page opens the same way (PageHeader): its kind, title, one sentence and its actions at the top right, then its
@@ -37,12 +37,12 @@ export interface Props {
     label?: string;
     /** The page's few facts, said under its title. */
     facts?: { facts: readonly CountView[]; tests: CountView | null };
-    /** The page's text for a reader's assistant, when it has one. */
-    assistant?: PageAssistant | null;
+    /** The page's context text, when it has one. */
+    context?: PageContext | null;
     /** The page opens actions and rules in the drawer beside it. */
     drawer?: boolean;
 }
-const { title, lead = "", page, writtenBy = "app", wide = false, label, facts, assistant = null, drawer = false } = Astro.props;
+const { title, lead = "", page, writtenBy = "app", wide = false, label, facts, context = null, drawer = false } = Astro.props;
 const content = pageHeadings(await Astro.slots.render("default"));
 const listed = content.entries.length >= contentsFrom ? content.entries : [];
 const root = rootOf(page);
@@ -91,7 +91,7 @@ const nav = {
                         <ErrorState compact title={copy.site.pageErrorTitle} message={copy.site.pageError} />
                     </div>
                     <slot name="trail" />
-                    <PageHeader label={label} title={title} summary={lead === "" ? undefined : lead} writtenBy={writtenBy} assistant={assistant} facts={facts} />
+                    <PageHeader label={label} title={title} summary={lead === "" ? undefined : lead} writtenBy={writtenBy} context={context} facts={facts} />
                     {listed.length === 0 ? null : <ContentsFold entries={listed} />}
                     <Fragment set:html={content.html} />
                 </main>

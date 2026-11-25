@@ -18,7 +18,7 @@ import { Matrix } from "./Matrix";
 // built in, the journey by domain matrix, every story grouped by phase with its filters, and what the plan leaves out.
 // A story opens in a sheet on the same page (`#story=<n>`): the page's script (src/scripts/plan.ts) reads the story's
 // body from `plan/story/<n>.html`, written at build time from StoryBody below, into the sheet, a native modal dialog
-// painted as the design system's sheet, so the page ships no framework and does not grow with the plan's rules. The copy of a story brief for an assistant is read from `plan/brief/<n>.txt` when asked for.
+// painted as the design system's sheet, so the page ships no framework and does not grow with the plan's rules. The copy of a story context is read from `plan/brief/<n>.txt` when asked for.
 
 const words = copy.plan;
 const selectClass =
@@ -243,17 +243,17 @@ export function StoryBody({ story, root }: { readonly story: StoryView; readonly
                 <StoryLinks stories={story.unblocks} />
             </Block>
             {story.brief === null ? null : (
-                <div className="flex flex-col items-start gap-spacing-md" data-for-assistant>
-                    <Button variant="outline" data-assistant-file={`${root}${story.brief.file}`} data-copied={copy.site.copied}>
+                <div className="flex flex-col items-start gap-spacing-md" data-for-context>
+                    <Button variant="outline" data-context-file={`${root}${story.brief.file}`} data-copied={copy.site.copied}>
                         <Copy aria-hidden="true" />
                         <span data-label data-written-by="app">
-                            {words.copyBrief}
+                            {copy.explorer.copyContext}
                         </span>
                         <span className="text-muted-foreground" data-written-by="app">
                             {copy.explorer.size(story.brief.kilobytes)}
                         </span>
                     </Button>
-                    <Textarea className="font-mono text-xs" readOnly hidden aria-label={copy.explorer.forAssistant} data-assistant-fallback rows={8} />
+                    <Textarea className="font-mono text-xs" readOnly hidden aria-label={copy.explorer.forContext} data-context-fallback rows={8} />
                 </div>
             )}
         </div>

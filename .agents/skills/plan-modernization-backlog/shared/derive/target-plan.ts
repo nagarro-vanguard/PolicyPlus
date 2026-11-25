@@ -7,7 +7,6 @@ import type { Target, TargetComponent, TargetJourney } from "../read/target";
 import type { Built } from "./plan";
 import { scaffoldStory } from "./plan";
 import type { Facts } from "./facts";
-import { DANGLING, OPEN_ENDED } from "./language";
 import { layerDepths, reachedFrom, storyLayers, type Stack } from "./layers";
 
 export type TargetPlanInput = {
@@ -22,69 +21,6 @@ export type TargetPlanInput = {
 const hashOf = (value: unknown) => createHash("sha1").update(JSON.stringify(value)).digest("hex").slice(0, 12);
 const keyOf = (value: unknown) => Schema.decodeUnknownSync(StoryKey)(`story-${hashOf(value)}`);
 const lowerFirst = (text: string) => (text.length === 0 ? text : text[0]!.toLowerCase() + text.slice(1));
-/**
- * A short headline of a sentence: its first clause, at most `words` words, ending on a word that closes it.
- * @param text the sentence
- * @param words the most words to keep
- * @param chars the most characters to keep, dropping whole words
- * @returns the headline, without a trailing mark or a dangling word
- */
-export const headline = (text: string, words = 8, chars = Infinity, commas = false): string => {
-    const clause =
-        text.split(commas ? /\s*(?:[;:()\u2014]|\s-\s|\.\s)\s*/ : /\s*(?:[,;:()\u2014]|\s-\s|\.\s)\s*/)[0] ?? text;
-    const all = clause.trim().split(/\s+/).filter(Boolean);
-    const kept = all.slice(0, words);
-    while (kept.length > 1 && kept.join(" ").length > chars) kept.pop();
-    // A clause kept whole may end on a particle ("brought in"); a cut one never ends on a word that waits for more.
-    const open = kept.length < all.length ? DANGLING : OPEN_ENDED;
-    while (kept.length > 1 && open.has((kept[kept.length - 1] ?? "").toLowerCase().replace(/\W/g, ""))) kept.pop();
-    return kept.join(" ").replace(/[\s.,;:!?-]+$/, "");
-};
-
-const irregular: Readonly<Record<string, string>> = { does: "do", goes: "go", has: "have", is: "be" };
-
-/**
- * The imperative of a sentence that opens on a verb in the third person ("Finds the files" gives "Find the files").
- * @param sentence the sentence, such as a component's responsibility
- * @returns the imperative, or nothing when the sentence does not open on such a verb
- */
-export const imperativeOf = (sentence: string): string | undefined => {
-    const [first = "", ...rest] = sentence.trim().split(/\s+/);
-    const word = first.replace(/[^A-Za-z]/g, "");
-    const lower = word.toLowerCase();
-    if (word !== first.replace(/[,;:]$/, "") || !/^[A-Z][a-z]+$/.test(word) || !lower.endsWith("s")) return undefined;
-    if (irregular[lower] === undefined && /(ss|us|is)$/.test(lower)) return undefined;
-    const base =
-        irregular[lower] ??
-        (lower.endsWith("ies") && lower.length > 4
-            ? `${lower.slice(0, -3)}y`
-            : /(ches|shes|sses|xes|zes)$/.test(lower)
-              ? lower.slice(0, -2)
-              : lower.slice(0, -1));
-    return [base.charAt(0).toUpperCase() + base.slice(1), ...rest].join(" ");
-};
-
-/**
- * The title of a piece of a story split by component: what the component does, as an imperative headline, or "Build the
- * <component>" when its responsibility does not open on a verb.
- * @param name the component's name
- * @param responsibility what it does
- * @returns a title of at most 72 characters, never cut mid-phrase
- */
-export const pieceTitle = (name: string, responsibility: string) => {
-    const imperative = imperativeOf(responsibility) ?? "";
-    // A first clause of one or two words ("Build categories") says too little: the list it opens is kept.
-    const short = headline(imperative, 8, 72);
-    const whole = short.split(/\s+/).length >= 3 ? short : headline(imperative, 8, 72, true);
-    // A second verb joined by "and" stays in the third person ("Read a file and refuses ..."): the title ends before it
-    // when what comes before says enough on its own.
-    const [first = "", ...joined] = whole.split(/\s+and\s+/);
-    const title =
-        joined.length > 0 && first.split(/\s+/).length >= 4 && /s$/.test(joined[0]?.split(/\s+/)[0] ?? "")
-            ? first
-            : whole;
-    return title.split(/\s+/).length >= 2 ? title : headline(`Build the ${lowerFirst(name)}`, 12, 72);
-};
 
 export const SCAFFOLD_EPIC = "area:codebase";
 export const SHARED_COMPONENTS_EPIC = "area:shared components";
@@ -140,20 +76,21 @@ export const keptRules = (target: Target) =>
     );
 
 /** The acceptance story of a journey, written by the plan, not by an agent: one criterion per step. */
-export const journeyTestStory = (journey: TargetJourney, outcome: string): Story => {
+export const journeyTestStory = (journey: TargetJourney): Story => {
     const steps = journey.steps;
     const groups: (typeof steps)[] = [];
     const per = Math.max(1, Math.ceil(steps.length / 11));
     for (let at = 0; at < steps.length; at += per) groups.push(steps.slice(at, at + per));
+    const named = `Prove the journey: ${journey.name}`;
     return {
-        title: `Prove the journey: ${headline(outcome, 8, 46)}`,
-        what: "an acceptance test that does the journey from its first step to its last, as people will do it",
-        why: "the journey keeps working as the product changes, in the interface the team ships",
+        title: named.length <= 72 || journey.name.length > 72 ? named : journey.name,
+        what: "An acceptance test does the journey from its first step to its last, as people will do it.",
+        why: "The journey keeps working as the product changes, in the interface the team ships.",
         actions: [],
         terms: [],
         criteria: [
             ...groups.map((group, at) => ({
-                says: `Given the product is ready, when the test does ${group.map((step) => `"${step.intent}"`).join(" and then ")}${per > 1 ? ` (steps ${at * per + 1} to ${at * per + group.length})` : ""}, then ${group.map((step) => lowerFirst(step.system)).join(" and then ")}.`,
+                says: `Given the product is ready, when the test does ${group.map((step) => `"${step.intent}"`).join(" and then ")}${per > 1 ? ` (steps ${at * per + 1} to ${at * per + group.length})` : ""}, then ${group.map((step) => lowerFirst(step.system).replace(/[.\s]+$/, "")).join(" and then ")}.`,
                 from: [],
             })),
         ] as unknown as Story["criteria"],
@@ -215,7 +152,7 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
             index,
         })),
         ...target.journeys.map((journey, at) => ({
-            story: journeyTestStory(journey, target.outcomes.get(journey.task) ?? journey.name),
+            story: journeyTestStory(journey),
             scaffold: false,
             test: journey,
             index: 100000 + at,

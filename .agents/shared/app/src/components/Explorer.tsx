@@ -9,7 +9,7 @@ import { Rows } from "./Rows";
 
 // One node of the hierarchy, the same anatomy at every level: the next level as rows, folds for
 // the rest, links to the same thing elsewhere, and the way up, back and on. What kind of thing it is, its few facts and
-// the text a reader can hand to an assistant are in the page's header (src/components/shell/PageHeader.tsx). Every count comes from the case's numbers table with its
+// the context a reader can copy are in the page's header (src/components/shell/PageHeader.tsx). Every count comes from the case's numbers table with its
 // scope as the explanation; every name and sentence is the analysis's own. Built from the design system's primitives;
 // a section's heading is marked with who wrote it on the section's wrapper, since the design system's section takes
 // its heading as words only.

@@ -4,14 +4,6 @@ import type { Decision, Story, TargetLayer } from "../model/records";
 import type { Plan } from "../model/plan";
 import { AGENTS_MD_MAX_LINES, countedLines, layerAgentsMd } from "./agents-md";
 import { SHARED, type Facts } from "./facts";
-import {
-    CRITERION_LONG_WORDS,
-    CRITERION_MAX_WORDS,
-    mechanicalProblems,
-    readerProblems,
-    recordIdProblems,
-    wordCount,
-} from "./language";
 import type { Target } from "../read/target";
 import { targetGaps } from "./target-gates";
 
@@ -26,14 +18,42 @@ type Input = {
     readonly stories: readonly Story[];
     readonly plan: Plan;
     readonly problems: readonly string[];
-    readonly allow?: readonly string[];
     /** The confirmed target, when the plan is made from one. */
     readonly target?: Target | undefined;
 };
 
 const some = (items: readonly string[], limit = 3) =>
     items.length <= limit ? items.join("; ") : `${items.slice(0, limit).join("; ")}; and ${items.length - limit} more`;
+const words = (text: string) => text.split(/\s+/).filter(Boolean).length;
 const short = (text: string) => (text.length > 70 ? `${text.slice(0, 67)}...` : text);
+
+/**
+ * What is wrong with a story's text: a title over 72 characters or ending in an ellipsis, doubled punctuation, a
+ * criterion over 60 words.
+ * @param story the story
+ * @returns each problem, saying where
+ */
+export const storyProblems = (
+    story: Pick<Story, "title" | "what" | "why" | "open"> & { criteria: readonly { says: string }[] },
+) => {
+    const found: string[] = [];
+    if (story.title.length > 72) found.push(`the title is ${story.title.length} characters, over 72`);
+    if (/(\.\.\.|\u2026)\s*$/.test(story.title)) found.push("the title ends in an ellipsis");
+    const texts = [
+        ["title", story.title],
+        ["what", story.what],
+        ["why", story.why],
+    ] as [string, string][];
+    story.criteria.forEach((c, at) => texts.push([`criterion ${at + 1}`, c.says]));
+    (story.open ?? []).forEach((text, at) => texts.push([`open point ${at + 1}`, text]));
+    for (const [where, text] of texts)
+        if (/(?<!\.)\.\.(?!\.)|,\.|,,/.test(text)) found.push(`the ${where} has doubled punctuation`);
+    story.criteria.forEach((c, at) => {
+        const n = words(c.says);
+        if (n > 60) found.push(`criterion ${at + 1} is ${n} words, over 60`);
+    });
+    return found;
+};
 
 /**
  * Every invariant the plan must hold, as pure checks. Failing gaps stop the plan; advisory ones are reported only.
@@ -167,34 +187,11 @@ export const checkPlan = (input: Input): Gaps => {
             );
     }
 
-    // Reader text: functional stories for the product owner, technical stories for a developer.
-    for (const view of plan.stories) {
-        const texts = [
-            view.title,
-            view.what,
-            view.why,
-            ...view.criteria.map((c) => c.says),
-            ...view.terms.flatMap((t) => [t.name, t.means]),
-            ...(view.journey ? [view.journey.name, ...view.journey.steps] : []),
-            ...(view.open ?? []),
-        ];
-        const found = texts.flatMap((text) =>
-            view.kind === "functional" ? readerProblems(text, input.allow) : recordIdProblems(text),
-        );
-        if (found.length > 0)
-            failing.push(`story "${short(view.title)}" shows the code or the analysis: ${some([...new Set(found)])}`);
-        const mechanical = mechanicalProblems(view.title);
-        if (mechanical.length > 0) failing.push(`story "${short(view.title)}": ${some(mechanical)}`);
-    }
-
-    // Criteria: refused over the cap where they are written; here the long ones are named for a second look.
-    const lengths = plan.stories.flatMap((view) => view.criteria.map((criterion) => wordCount(criterion.says)));
-    const overCap = lengths.filter((n) => n > CRITERION_MAX_WORDS).length;
-    const long = lengths.filter((n) => n > CRITERION_LONG_WORDS).length;
+    for (const view of plan.stories)
+        for (const problem of storyProblems(view)) failing.push(`story "${short(view.title)}": ${problem}`);
+    const long = plan.stories.flatMap((view) => view.criteria).filter((c) => words(c.says) > 40).length;
     if (long > 0)
-        advisory.push(
-            `${long} criteria are over ${CRITERION_LONG_WORDS} words${overCap > 0 ? `, ${overCap} of them over ${CRITERION_MAX_WORDS}` : ""}: split their conditions and keep their exact messages`,
-        );
+        advisory.push(`${long} criteria are over 40 words: split their conditions and keep their exact messages`);
 
     // Advisory: every kind of data a carried capability touches has a term, once.
     const termOwners = new Map<string, number>();

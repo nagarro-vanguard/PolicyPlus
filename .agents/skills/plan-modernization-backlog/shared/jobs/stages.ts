@@ -96,7 +96,7 @@ const chunk = <T>(items: readonly T[], size: number) =>
 type Draft = { id: string; kind: Kind; title: string; after: string[]; file: JobFile; extra?: Record<string, unknown> };
 
 /** The jobs that write the stories of a confirmed target: shared components first, then one job for each journey. */
-const targetStories = (layout: Layout, facts: Facts, target: Target, allow: string[]): Draft[] => {
+const targetStories = (layout: Layout, facts: Facts, target: Target): Draft[] => {
     const owners = componentOwners(target);
     const says = (id: string) => facts.rules.get(id)?.says ?? "";
     const detail = (name: string) => {
@@ -187,7 +187,6 @@ const targetStories = (layout: Layout, facts: Facts, target: Target, allow: stri
                 cite: rulesOf(own),
                 componentRules,
                 ruleChanges: ruleChanges(rulesOf(own)),
-                allow,
             },
             extra: {
                 journey: { name: journey.name, idea: journey.idea, outcome: target.outcomes.get(journey.task) ?? "" },
@@ -246,7 +245,6 @@ export const prepareStage = (
     const facts = deriveFacts(analysis, stage === "foundation" || target !== undefined ? undefined : ids);
     const drafts: Draft[] = [];
     const layerIds = accepted.layers.map((l) => l.id as string);
-    const allow = request.target.split("/").filter(Boolean).slice(-1);
     if (stage === "foundation") {
         drafts.push({
             id: "layers",
@@ -317,7 +315,7 @@ export const prepareStage = (
             },
         });
     } else if (target !== undefined) {
-        drafts.push(...targetStories(layout, facts, target, allow));
+        drafts.push(...targetStories(layout, facts, target));
     } else {
         const shared = chunk(facts.shared, 60);
         shared.forEach((rules, at) =>
@@ -372,7 +370,6 @@ export const prepareStage = (
                             actions: s.actions.map((a) => a.id),
                             owned: s.owned,
                         })),
-                        allow,
                     },
                     extra: {
                         capability: {

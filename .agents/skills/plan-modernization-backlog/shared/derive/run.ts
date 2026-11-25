@@ -13,7 +13,7 @@ import { ruleCoverage } from "./target-gates";
 import { splitCycles } from "./cycles";
 import { carriedFrom } from "./scope";
 import { deriveFacts } from "./facts";
-import { publishPlan } from "./publish";
+import { contextsOf, publishPlan } from "./publish";
 import { builtFromNow } from "./built-from";
 import { dedupeCarriers } from "./carriers";
 import { planConflicts, targetConflicts } from "./conflicts";
@@ -114,7 +114,7 @@ export const evaluatePlan = (layout: Layout, entries: readonly Entry[] = loadRev
 };
 
 /**
- * Derives everything from the accepted records, checks it, and writes the plan and its story bodies when the failing gates
+ * Derives everything from the accepted records, checks it, and writes the plan, its story bodies and contexts when the failing gates
  * pass. Safe to run again: it replaces what it wrote.
  * @param layout the run's folders
  * @returns the gaps, and whether the plan was written
@@ -122,6 +122,9 @@ export const evaluatePlan = (layout: Layout, entries: readonly Entry[] = loadRev
 export const runBuild = (layout: Layout): { gaps: Gaps; written: boolean; stories: number } => {
     const { plan, facts, request, gaps, target } = evaluatePlan(layout);
     if (gaps.failing.length > 0) return { gaps, written: false, stories: plan.stories.length };
-    publishPlan(layout, plan, facts, request, target);
-    return { gaps, written: true, stories: plan.stories.length };
+    const contexts = contextsOf(layout, plan, facts, request, target);
+    const checked = { failing: contexts.problems, advisory: [...gaps.advisory, ...contexts.advisory] };
+    if (checked.failing.length > 0) return { gaps: checked, written: false, stories: plan.stories.length };
+    publishPlan(layout, plan, contexts.texts, request);
+    return { gaps: checked, written: true, stories: plan.stories.length };
 };

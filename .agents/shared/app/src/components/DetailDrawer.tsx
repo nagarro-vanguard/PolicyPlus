@@ -18,7 +18,7 @@ export function DetailDrawer() {
             aria-labelledby="detail-title"
             className="fixed inset-y-0 start-auto end-0 z-30 m-0 h-dvh max-h-none w-full max-w-none border-s border-border bg-popover p-0 text-popover-foreground shadow-(--shadow-elevation-2) backdrop:bg-background/70 backdrop:backdrop-blur-xs sm:max-w-xl min-[900px]:top-12 min-[900px]:h-[calc(100dvh-3rem)] min-[900px]:w-[26rem] print:hidden"
             data-detail-drawer
-            data-assistant-scope
+            data-context-scope
         >
             <div className="flex h-full flex-col">
                 <div className="flex items-start gap-spacing-md border-b border-border p-spacing-xxl">

@@ -3,7 +3,7 @@ import { isAbsolute, join, resolve } from "node:path";
 import { z } from "zod";
 
 // The app's only inputs, read from the environment once and checked here: the case folder `compose` wrote and, when the
-// caller names one, the command that writes a fuller text for a reader's assistant. Nothing else in the app reads the
+// caller names one, the command that writes a fuller context text. Nothing else in the app reads the
 // environment (a test scans for it), and the app never reads `astro:env`, which does not check values in the content config.
 
 const Environment = z.object({
@@ -21,7 +21,7 @@ const Environment = z.object({
 export type BuildConfig = Readonly<{
     /** The case folder: `manifest.json` and the files it lists. */
     caseDir: string;
-    /** The command that writes a fuller text of a capability for an assistant, when the caller named one. */
+    /** The command that writes a fuller text of a capability as context, when the caller named one. */
     bundleCommand: string | undefined;
 }>;
 

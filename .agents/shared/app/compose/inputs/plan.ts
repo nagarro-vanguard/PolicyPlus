@@ -52,6 +52,7 @@ const Plan = z.looseObject({
             path: Text,
             kind: Text,
             purpose: Text,
+            check: Text.optional(),
             carries: z.array(z.number()),
             dependsOn: Ids,
             role: Text.optional(),
@@ -100,7 +101,7 @@ export type PlanInput = {
     readonly stale: boolean | null;
     readonly fingerprint: string;
     readonly plan: PlanFile;
-    /** Each story's legacy attachment text, by story key. */
+    /** Each story's context text, as the plan skill wrote it, by story key. */
     readonly attachments: ReadonlyMap<string, string>;
 };
 

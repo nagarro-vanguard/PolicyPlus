@@ -7,7 +7,7 @@ import { foldKinds, levels } from "./build/hierarchy";
  * The version goes up when a file changes in a way an older reader would misread.
  */
 
-export const caseContractVersion = 2;
+export const caseContractVersion = 3;
 
 const S = z.string();
 const N = z.number();
@@ -454,10 +454,10 @@ export const caseFiles = {
     "plan/unplanned.json": z.array(z.strictObject({ name: S, file: S, firstLine: N, lastLine: N })),
     "plan/stale.json": z.boolean().nullable(),
     "plan/conflicts.json": z.array(z.strictObject({ stage: S, variant: S, says: S, resolved: z.boolean().nullable() })),
-    "assistant/index.json": z.record(S, z.record(S, N)),
+    "context/index.json": z.record(S, z.record(S, N)),
     ...Object.fromEntries(
         ["system", "capability", "surface", "action", "rule", "story", "journey"].map((kind) => [
-            `assistant/${kind}.json`,
+            `context/${kind}.json`,
             z.record(S, S),
         ]),
     ),
