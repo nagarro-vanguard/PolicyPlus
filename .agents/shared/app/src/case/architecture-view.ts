@@ -75,9 +75,14 @@ export type LandingView = {
     lines: string[];
 };
 
+/** One line of the request's stack: the area before the first colon, the rest as the person wrote it, and the layers that use it. */
+export type StackLine = { label: string; line: string; layers: string[] };
+
 export type TodayView = {
     views: DiagramView[];
     entities: { name: string; line: string }[];
+    /** The technologies the analysis names in the code, by name. */
+    technologies: string[];
 };
 
 export type ProposedView = {
@@ -93,6 +98,8 @@ export type ProposedView = {
     /** Each option not chosen: what it is, what it costs, what it risks and its own views. */
     variants: { name: string; idea: string; cost: string; risks: string[]; views: DiagramView[] }[];
     domains: { name: string; concept: string; uses: string[]; usedBy: string[]; counts: string[] }[];
+    /** The request's stack lines, when the case holds them. */
+    stack: StackLine[];
     landing: LandingView | null;
     unplaced: { title: string; scope: string; rules: { says: string; reason: string | null }[] } | null;
     challenges: { says: string; other: string | null }[];
@@ -103,7 +110,20 @@ export type ProposedView = {
 export const todayView = (): TodayView => ({
     views: viewsOfSection("today").map(viewOf),
     entities: (read<Entity[]>("facts/entities.json") ?? []).map((each) => ({ name: each.name, line: each.purpose })),
+    technologies: [...(read<{ technologies?: string[] }>("facts/system.json")?.technologies ?? [])].sort((a, b) => a.localeCompare(b)),
 });
+
+/** The request's stack lines as the case carries them (`brief.json`), each split once at its first colon. */
+const stackOf = (): StackLine[] =>
+    (read<{ changes: { stack: { line: string; layers: string[] }[] } | null }>("brief.json")?.changes?.stack ?? []).map((each) => {
+        const colon = each.line.indexOf(":");
+        const label = colon > 0 ? each.line.slice(0, colon).trim() : "";
+        return {
+            label: label === "" ? "" : `${label.charAt(0).toUpperCase()}${label.slice(1)}`,
+            line: (colon > 0 ? each.line.slice(colon + 1) : each.line).trim(),
+            layers: each.layers,
+        };
+    });
 
 /** The proposal, when the case holds an architecture. */
 export const proposedView = async (): Promise<ProposedView | null> => {
@@ -177,6 +197,7 @@ export const proposedView = async (): Promise<ProposedView | null> => {
             uses: domain.dependsOn,
             usedBy: architecture.domains.filter((other) => other.dependsOn.includes(domain.name)).map((other) => other.name),
         })),
+        stack: stackOf(),
         landing,
         unplaced:
             unplacedNumber === undefined || architecture.unplaced.length === 0

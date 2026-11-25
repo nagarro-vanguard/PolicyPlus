@@ -2,7 +2,7 @@
 import Page from "../layouts/Page.astro";
 import Diagram from "../components/diagram/Diagram.astro";
 import { Section } from "../components/Explorer";
-import { Challenges, Domains, Landing, ProposedHead, Risks, SinceFold, Sub, TodayData, Unplaced, Variant } from "../components/Architecture";
+import { Challenges, Domains, Landing, ProposedBuiltWith, ProposedHead, Risks, SinceFold, Sub, TodayBuiltWith, TodayData, Unplaced, Variant } from "../components/Architecture";
 import { proposedView, todayView } from "../case/architecture-view";
 import { siteOf } from "../case/site";
 import { copy } from "../lib/copy";
@@ -28,6 +28,7 @@ const hasToday = today.views.length > 0 || today.entities.length > 0;
                     <div class="flex flex-col gap-spacing-4xl">
                         {today.views.map((view) => <Diagram diagram={view} />)}
                         <TodayData today={today} />
+                        <TodayBuiltWith today={today} />
                     </div>
                 </Section>
             </div>
@@ -38,6 +39,7 @@ const hasToday = today.views.length > 0 || today.entities.length > 0;
                     <div class="flex flex-col gap-spacing-4xl">
                         <ProposedHead view={proposed} />
                         <SinceFold since={proposed.since} />
+                        <ProposedBuiltWith stack={proposed.stack} />
                         {proposed.views.map((view) => <Diagram diagram={view} />)}
                         {proposed.domains.length === 0 ? null : (
                             <Sub listed title={words.domains} lead={words.domainsLead}>

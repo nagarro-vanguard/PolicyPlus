@@ -3,7 +3,7 @@ import { Item, ItemContent, ItemDescription, ItemTitle } from "@continuum/ui/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@continuum/ui/components/table";
 import { Search } from "lucide-react";
 import type { ReactNode } from "react";
-import type { ProposedView, Since, TodayView } from "../case/architecture-view";
+import type { ProposedView, Since, StackLine, TodayView } from "../case/architecture-view";
 import { copy } from "../lib/copy";
 import { Fold } from "./Fold";
 
@@ -90,6 +90,47 @@ export function TodayData({ today }: { readonly today: TodayView }) {
                 </Sub>
             )}
         </>
+    );
+}
+
+/** What today's code is built with, as the analysis names it: one closed fold, since the list is long and the analysis's own. */
+export function TodayBuiltWith({ today }: { readonly today: TodayView }) {
+    return today.technologies.length === 0 ? null : (
+        <Sub title={words.builtWith} lead={words.builtWithToday} listed>
+            <div className="border-t border-border">
+                <Fold summary={words.namedByAnalysis} writtenBy="app">
+                    <p data-written-by="agent">{today.technologies.join(", ")}</p>
+                </Fold>
+            </div>
+        </Sub>
+    );
+}
+
+/** What the new system is built with: the request's stack lines as written, each with the layers that use it. */
+export function ProposedBuiltWith({ stack }: { readonly stack: readonly StackLine[] }) {
+    return stack.length === 0 ? null : (
+        <Sub title={words.builtWith} lead={words.builtWithProposed} listed>
+            <div className="flex flex-col">
+                {stack.map((each) => (
+                    <Item key={`${each.label}${each.line}`} size="xs">
+                        <ItemContent className="min-w-0">
+                            {each.label === "" ? null : (
+                                <ItemTitle className="line-clamp-none" data-written-by="agent">
+                                    {each.label}
+                                </ItemTitle>
+                            )}
+                            <ItemDescription className="line-clamp-none" data-written-by="agent">
+                                {each.line}
+                            </ItemDescription>
+                            <ItemDescription className="line-clamp-none text-xs">
+                                <span data-written-by="app">{words.usedIn}: </span>
+                                <span data-written-by="agent">{each.layers.length === 0 ? words.noLayerYet : each.layers.join(", ")}</span>
+                            </ItemDescription>
+                        </ItemContent>
+                    </Item>
+                ))}
+            </div>
+        </Sub>
     );
 }
 
