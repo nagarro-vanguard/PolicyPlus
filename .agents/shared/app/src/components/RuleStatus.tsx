@@ -7,7 +7,7 @@ import { copy } from "../lib/copy";
 // the risks use, with its derived reason). The status is derived in src/case/rule-status.ts from files the case holds.
 // The page's script draws the same line in the drawer from the pieces `Parts` renders, so the classes have one source.
 
-const linkClass = "underline decoration-border underline-offset-4 hover:decoration-foreground";
+const linkClass = "text-foreground underline decoration-muted-foreground underline-offset-4 hover:decoration-foreground";
 const lineClass = "flex flex-wrap items-center gap-x-spacing-md gap-y-spacing-2xs px-spacing-md pb-spacing-xs text-xs";
 
 /**
@@ -28,9 +28,11 @@ export function RuleStatusLine({ status, root, detail = false, part }: { readonl
             {status.state === "built" ? null : <KindBadge kind={none ? "medium" : "neutral"} label={status.label} />}
             {status.builtBy === null ? null : (
                 <span>
-                    <span data-status-label>{copy.rules.builtBy}</span>{" "}
+                    <span className="font-medium text-foreground" data-status-label>
+                        {copy.rules.builtBy}
+                    </span>{" "}
                     <a href={`${root}${status.builtBy.href}`} className={linkClass} data-status-link data-written-by="agent">
-                        {status.builtBy.title}
+                        {status.builtBy.n} · {status.builtBy.title}
                     </a>
                 </span>
             )}
@@ -46,7 +48,7 @@ export function RuleStatusLine({ status, root, detail = false, part }: { readonl
                         <span key={story.n}>
                             {at === 0 ? null : "; "}
                             <a href={`${root}${story.href}`} className={linkClass} data-written-by="agent">
-                                {story.title}
+                                {story.n} · {story.title}
                             </a>
                         </span>
                     ))}

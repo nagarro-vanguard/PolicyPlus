@@ -213,7 +213,7 @@ const statusOf = (status: Status, detail: boolean): HTMLElement => {
     const link = line.querySelector<HTMLAnchorElement>("[data-status-link]");
     if (status.builtBy === null) link?.parentElement?.remove();
     else if (link !== null) {
-        link.textContent = status.builtBy.title;
+        link.textContent = `${status.builtBy.n} · ${status.builtBy.title}`;
         link.setAttribute("href", `${root}${status.builtBy.href}`);
         link.removeAttribute("data-status-link");
     }
@@ -230,7 +230,7 @@ const statusOf = (status: Status, detail: boolean): HTMLElement => {
             const links = status.reliedOnBy.map((story, at) => {
                 const one = sample?.cloneNode(true) as HTMLElement;
                 const anchor = one.querySelector("a") as HTMLAnchorElement;
-                anchor.textContent = story.title;
+                anchor.textContent = `${story.n} · ${story.title}`;
                 anchor.setAttribute("href", `${root}${story.href}`);
                 if (at > 0) one.prepend("; ");
                 return one;
