@@ -1,14 +1,14 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, mkdirSync, renameSync } from "node:fs";
+import { basename, join } from "node:path";
 import type { Layout } from "../model/layout";
 import type { ModernizationRequest } from "../model/request";
 import { Decision, TargetLayer } from "../model/records";
 import { Schema } from "effect";
 import { bundleName } from "../derive/publish";
-import { deriveFacts, type Facts, type Surface } from "../derive/facts";
+import { deriveFacts, type Facts } from "../derive/facts";
 import { carriedFrom } from "../derive/scope";
 import { loadTarget, type Target } from "../read/target";
-import { componentOwners } from "../derive/target-plan";
+import { componentOwners, unitsOf } from "../derive/target-plan";
 import { ruleChangesOf } from "../derive/consistency";
 import { readAnalysis } from "../read/analysis";
 import type { JobFile } from "./gates";
@@ -71,6 +71,7 @@ const contextOf = (request: ModernizationRequest, facts: Facts, accepted: Accept
         name: l.name,
         path: l.path,
         purpose: l.purpose,
+        check: l.check,
         carries: l.carries,
         ...(l.role === undefined ? {} : { role: l.role }),
         ...(l.container === undefined ? {} : { container: l.container }),
@@ -89,9 +90,6 @@ export const adaptedSystems = (target: Target, facts: Facts) => {
         ),
     ];
 };
-
-const chunk = <T>(items: readonly T[], size: number) =>
-    Array.from({ length: Math.ceil(items.length / size) }, (_, at) => items.slice(at * size, at * size + size));
 
 type Draft = { id: string; kind: Kind; title: string; after: string[]; file: JobFile; extra?: Record<string, unknown> };
 
@@ -129,15 +127,19 @@ const targetStories = (layout: Layout, facts: Facts, target: Target): Draft[] =>
     const sharedNames = target.architecture.components
         .filter((c) => owners.get(c.name) === "shared")
         .map((c) => c.name);
+    // Whole units go to a job, in the order of their key, so a unit is never split between two writers.
+    const units = unitsOf(target);
+    const byUnit = new Map<string, string[]>();
+    for (const name of sharedNames) byUnit.set(units.get(name) ?? "", [...(byUnit.get(units.get(name) ?? "") ?? []), name]);
     const packs: string[][] = [];
     let weight = 0;
-    for (const name of sharedNames) {
-        const cost = 1 + (componentRules[name]?.length ?? 0);
+    for (const [, names] of [...byUnit.entries()].sort(([a], [b]) => a.localeCompare(b))) {
+        const cost = names.reduce((sum, name) => sum + 1 + (componentRules[name]?.length ?? 0), 0);
         if (packs.length === 0 || weight + cost > 60) {
             packs.push([]);
             weight = 0;
         }
-        packs.at(-1)?.push(name);
+        packs.at(-1)?.push(...names);
         weight += cost;
     }
     const shared: Draft[] = packs.map((names, at) => ({
@@ -150,6 +152,7 @@ const targetStories = (layout: Layout, facts: Facts, target: Target): Draft[] =>
             components: names,
             cite: rulesOf(names),
             componentRules,
+            units: Object.fromEntries(names.map((name) => [name, units.get(name) ?? ""])),
             ruleChanges: ruleChanges(rulesOf(names)),
         },
         extra: { componentDetails: names.map(detail) },
@@ -317,106 +320,18 @@ export const prepareStage = (
     } else if (target !== undefined) {
         drafts.push(...targetStories(layout, facts, target));
     } else {
-        const shared = chunk(facts.shared, 60);
-        shared.forEach((rules, at) =>
-            drafts.push({
-                id: `shared-${at + 1}`,
-                kind: "shared",
-                title: `Write the stories of the shared rules, part ${at + 1}`,
-                after: [],
-                file: {
-                    kind: "shared",
-                    shared: rules,
-                    transitions: at === 0 ? facts.transitions.filter((t) => t.owner === "shared").map((t) => t.id) : [],
-                },
-                extra: {
-                    rules: rules.map((id) => ({
-                        id,
-                        says: facts.rules.get(id)?.says,
-                        place: facts.rules.get(id)?.place,
-                    })),
-                },
-            }),
-        );
-        // A change of state is cited by the story that builds the rule gating it; one no rule gates goes to the first
-        // capability that touches its kind of data.
-        const unowned = new Map(facts.transitions.filter((t) => t.owner === "").map((t) => [t.id, t]));
-        for (const capability of facts.capabilities) {
-            const entities = new Set(capability.data.map((d) => d.id));
-            const fallback = [...unowned.values()].filter((t) => entities.has(t.entity));
-            for (const t of fallback) unowned.delete(t.id);
-            let group: Surface[] = [];
-            let weight = 0;
-            const flush = () => {
-                if (group.length === 0) return;
-                const number = drafts.filter((d) => d.id.startsWith(`surfaces-${slug(capability.name)}-`)).length + 1;
-                const first = number === 1;
-                const keys = new Set(group.map((s) => s.key));
-                const mine = [...facts.transitions.filter((t) => keys.has(t.owner)), ...(first ? fallback : [])];
-                const bundles = group.map((s) => join(layout.analysisBundles, bundleName(s.name, capability.name)));
-                drafts.push({
-                    id: `surfaces-${slug(capability.name)}-${number}`,
-                    kind: "surfaces",
-                    title: `Write the stories of ${capability.name}, part ${number}`,
-                    after: shared.map((_, at) => `shared-${at + 1}`),
-                    file: {
-                        kind: "surfaces",
-                        actions: group.flatMap((s) => s.actions.map((a) => a.id)),
-                        owned: group.flatMap((s) => s.owned),
-                        transitions: mine.map((t) => t.id),
-                        surfaces: group.map((s) => ({
-                            key: s.key,
-                            name: s.name,
-                            actions: s.actions.map((a) => a.id),
-                            owned: s.owned,
-                        })),
-                    },
-                    extra: {
-                        capability: {
-                            name: capability.name,
-                            purpose: capability.purpose,
-                            dataKinds: capability.data.map((d) => ({ id: d.id, name: d.name, access: d.access })),
-                        },
-                        surfaceDetails: group.map((s) => ({
-                            name: s.name,
-                            actions: s.actions.map((a) => ({
-                                id: a.id,
-                                name: a.name,
-                                purpose: a.purpose,
-                                startedBy: a.startedBy,
-                                place: a.place,
-                            })),
-                            owned: s.owned.map((id) => ({
-                                id,
-                                says: facts.rules.get(id)?.says,
-                                place: facts.rules.get(id)?.place,
-                            })),
-                            reliesOn: s.relies.map((r) => ({
-                                says: facts.rules.get(r.rule)?.says,
-                                builtBy: r.owner === "shared" ? "a shared story" : "an earlier part of this capability",
-                            })),
-                        })),
-                        transitionDetails: mine.map((t) => ({
-                            id: t.id,
-                            entity: t.entityName,
-                            from: t.from,
-                            to: t.to,
-                            place: t.place,
-                        })),
-                        bundles: bundles.filter((path) => existsSync(path)),
-                    },
-                });
-                group = [];
-                weight = 0;
-            };
-            for (const surface of capability.surfaces) {
-                const cost = surface.actions.length + surface.owned.length;
-                if (group.length > 0 && weight + cost > SURFACE_JOB_BUDGET) flush();
-                group.push(surface);
-                weight += cost;
-            }
-            flush();
-        }
+        throw new Error("the stories stage plans a decided target: run shape-target first");
+    }
+    // What an earlier run of this stage wrote is put aside, so a new run never mixes with it.
+    const earlier = jobs.jobs.filter((job) => job.stage === stage);
+    if (earlier.length > 0) {
+        const aside = join(layout.work, "archive", `${stage}-${new Date().toISOString().replace(/[:.]/g, "-")}`);
+        for (const job of earlier)
+            for (const path of Object.values(jobPaths(layout, job.id)))
+                if (existsSync(path)) {
+                    mkdirSync(aside, { recursive: true });
+                    renameSync(path, join(aside, basename(path)));
+                }
     }
     const made: Job[] = drafts.map((draft) => ({
         id: draft.id,
@@ -482,6 +397,7 @@ export const refreshInputs = (layout: Layout, jobs: Jobs, id: string) => {
             name: l.name,
             path: l.path,
             purpose: l.purpose,
+            check: l.check,
             carries: l.carries,
             ...(l.role === undefined ? {} : { role: l.role }),
             ...(l.container === undefined ? {} : { container: l.container }),

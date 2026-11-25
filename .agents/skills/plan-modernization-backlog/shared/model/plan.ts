@@ -25,12 +25,6 @@ export const StoryView = Schema.Struct({
             ),
         ),
     ),
-    part: Schema.optionalKey(
-        Text.annotate(about("For a piece of a story split by component: the component the piece builds.")),
-    ),
-    splitFrom: Schema.optionalKey(
-        Text.annotate(about("For a piece of a story split by component: the title of the story it was split from.")),
-    ),
 }).annotate(about("A story as the plan carries it, with everything derived from the records."));
 
 export const Epic = Schema.Struct({
@@ -48,8 +42,6 @@ export const Epic = Schema.Struct({
 
 export const Phase = Schema.Struct({
     number: Count,
-    name: Text,
-    why: Text,
     stories: Schema.Array(StoryKey).annotate(about("In sequence order; unordered among themselves by dependency.")),
 }).annotate(about("A band of stories that need only earlier phases."));
 

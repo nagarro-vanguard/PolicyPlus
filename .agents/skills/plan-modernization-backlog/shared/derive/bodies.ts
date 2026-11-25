@@ -1,4 +1,5 @@
 import type { Epic, Plan, StoryView } from "../model/plan";
+import { LABELS } from "./labels";
 
 const section = (heading: string, lines: readonly string[]) =>
     lines.length === 0 ? [] : [`## ${heading}`, "", ...lines, ""];
@@ -28,32 +29,27 @@ export const storyBody = (view: StoryView, plan: Plan) => {
             : [];
     const journey = view.journey;
     return [
-        ...section("Goal", [view.what]),
-        ...section("Why", [view.why]),
+        ...section(LABELS.goal, [view.what]),
+        ...section(LABELS.why, [view.why]),
         ...section(
-            "Acceptance criteria",
+            LABELS.criteria,
             view.criteria.flatMap((c, at) => (at === 0 ? [c.says] : ["", c.says])),
         ),
-        ...section("Open questions", bullets(view.open ?? [])),
-        ...section("Depends on", bullets(before)),
-        ...section("Terminologies", bullets(view.terms.map((term) => `${term.name}: ${term.means}`))),
+        ...section(LABELS.open, bullets(view.open ?? [])),
+        ...section(LABELS.dependsOn, bullets(before)),
+        ...section(LABELS.terms, bullets(view.terms.map((term) => `${term.name}: ${term.means}`))),
         ...(view.kind === "functional" && journey
-            ? section("Journey", [
-                  `**Journey:** ${journey.name}`,
-                  "",
-                  "**After:**",
-                  "",
-                  ...journey.steps.map((step, at) => `${at + 1}. ${step}`),
-              ])
+            ? section(LABELS.journey, [journey.name, "", ...journey.steps.map((step, at) => `${at + 1}. ${step}`)])
             : []),
-        ...section("Out of scope", bullets(others.map((story) => story.title))),
+        ...section(LABELS.outOfScope, bullets(others.map((story) => story.title))),
     ]
         .join("\n")
         .trim();
 };
 
 /**
- * An epic's body in the shape of its template, from the plan's data alone.
+ * An epic's body, from the plan's data alone: its outcome, its stories, what it comes after, and for an area the
+ * decisions' own reasons and choices.
  * @param epic the epic
  * @param plan the plan
  * @returns the markdown from the first `##`
@@ -61,49 +57,15 @@ export const storyBody = (view: StoryView, plan: Plan) => {
 export const epicBody = (epic: Epic, plan: Plan) => {
     const stories = plan.stories.filter((story) => story.epic === epic.key);
     const terms = stories.flatMap((story) => story.terms);
-    const table = [
-        "| Term | Change | Today | Proposed |",
-        "| --- | --- | --- | --- |",
-        ...terms.map((term) => `| ${term.name} | new | none: new in this codebase | ${term.means} |`),
-    ];
     const titleOf = new Map(plan.epics.map((each) => [each.key, each.title]));
-    if (epic.kind === "functional") {
-        const surfaces = [
-            ...new Set(stories.map((story) => story.surface).filter((s): s is string => s !== undefined)),
-        ];
-        return [
-            ...section("Outcome", [epic.outcome]),
-            ...section("Scope", [
-                `This epic covers: ${surfaces.join("; ")}.`,
-                "",
-                "Out of scope: anything outside this capability of the existing product.",
-            ]),
-            ...section("Where it meets what exists", [
-                "The codebase starts empty. It reuses what the earlier epics build: " +
-                    (epic.comesAfter.map((key) => titleOf.get(key) ?? key).join("; ") || "nothing") +
-                    ".",
-            ]),
-            ...(terms.length > 0 ? section("Terminologies", table) : []),
-        ]
-            .join("\n")
-            .trim();
-    }
     const decisions = plan.decisions.filter((d) => d.topic._tag === "area" && d.topic.name === epic.area);
-    const none = "No finding: decided at build.";
     return [
-        ...section("Outcome", [epic.outcome]),
-        ...section("Scope", [
-            "The layers and paths named in its stories.",
-            "",
-            "Out of scope: the product's own behaviour.",
-        ]),
-        ...section("Comes after", bullets(epic.comesAfter.map((key) => titleOf.get(key) ?? key))),
-        ...section("What we found", bullets(decisions.map((d) => d.reason))),
-        ...section("Design", bullets(decisions.map((d) => d.chose))),
-        ...["Data modelling", "Scale", "Security", "Isolation", "Performance", "Durability"].flatMap((heading) =>
-            section(heading, [none]),
-        ),
-        ...(terms.length > 0 ? section("Terminologies", table) : []),
+        ...section(LABELS.outcome, [epic.outcome]),
+        ...section(LABELS.stories, bullets(stories.map((story) => story.title))),
+        ...section(LABELS.comesAfter, bullets(epic.comesAfter.map((key) => titleOf.get(key) ?? key))),
+        ...section(LABELS.reasons, bullets(decisions.map((d) => d.reason))),
+        ...section(LABELS.design, bullets(decisions.map((d) => d.chose))),
+        ...section(LABELS.terms, bullets(terms.map((term) => `${term.name}: ${term.means}`))),
     ]
         .join("\n")
         .trim();

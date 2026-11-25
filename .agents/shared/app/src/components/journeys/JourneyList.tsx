@@ -146,6 +146,29 @@ export function JourneyList({ view, root }: { readonly view: JourneysView; reado
             </form>
             <p className="text-sm text-muted-foreground" aria-live="polite" data-journey-status data-written-by="app" data-showing={words.showing} data-none={words.noMatch}></p>
             <Sections>
+                {view.actors.length === 0 ? null : (
+                    <div id="actors" data-journey-actors>
+                        <Section title={words.actors} writtenBy="app">
+                            <div className="flex flex-col gap-spacing-md">
+                                {view.actors.map((actor) => (
+                                    <div key={actor.name} className="flex flex-col gap-spacing-2xs">
+                                        <h3 className="text-sm font-medium" data-written-by="agent">
+                                            {actor.name}
+                                        </h3>
+                                        <p className="text-sm text-muted-foreground" data-written-by="agent">
+                                            {actor.journeys.map((journey, at) => (
+                                                <span key={journey.page}>
+                                                    {at === 0 ? "" : ", "}
+                                                    <a href={`${root}${journey.page}`}>{journey.title}</a>
+                                                </span>
+                                            ))}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </Section>
+                    </div>
+                )}
                 {view.groups.map((group) => (
                     <div key={group.area?.slug ?? "other"} data-journey-group={group.area?.slug ?? "other"}>
                         <Section title={group.area?.name ?? words.otherJourneys} writtenBy={group.area === null ? "app" : "agent"}>

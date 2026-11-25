@@ -22,7 +22,7 @@ export type Brief = {
         containers: { name: string; tech: string; holds: string[] }[];
     } | null;
     risks: { rule: string; top: string[]; ranked: string[] };
-    plan: { phases: string; epics: string; stories: string; phaseNames: string[] } | null;
+    plan: { phases: string; epics: string; stories: string } | null;
     numbers: string[];
 };
 
@@ -78,7 +78,6 @@ export const briefOf = (
                       "stories of the plan",
                       "the plan",
                   ),
-                  phaseNames: plan.phases.map((phase) => phase.name),
               };
     const layersOf = (number: number) =>
         plan?.layers

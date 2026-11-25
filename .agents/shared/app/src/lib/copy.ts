@@ -150,6 +150,7 @@ export const copy = {
     },
     journeys: {
         title: "Journeys",
+        actors: "Who takes part",
         lead: "The tasks people get done with the system, as they work today and in the new way.",
         leadToday: "The tasks people get done with the system, as they work today.",
         meaning: "Today is how a task runs in the code now; the new way is the one chosen to replace it.",

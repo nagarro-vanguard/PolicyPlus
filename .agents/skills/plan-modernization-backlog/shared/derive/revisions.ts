@@ -2,7 +2,7 @@ import { Schema } from "effect";
 import { ActionId, Count, StoryKey, Text } from "../model/fields";
 import { about } from "../model/fields";
 import type { Story } from "../model/records";
-import { storyKeyOf } from "./plan";
+import { storyKeyOf } from "./target-plan";
 
 /**
  * What a person may change in the plan after it is written. The records stay as the agents wrote them; revisions are

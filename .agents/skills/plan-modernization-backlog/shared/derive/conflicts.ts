@@ -88,7 +88,7 @@ const variantOf = (layout: Layout, job: string, record: number, plan: Plan): str
             ? overlap(story.components, view.components)
             : (story.steps ?? []).length > 0
               ? overlap(story.steps, view.steps)
-              : view.title === story.title || view.splitFrom === story.title,
+              : view.title === story.title,
     );
     return found?.key ?? "";
 };

@@ -11,12 +11,13 @@ import type { CaseData, Link, NodeRecord } from "./view";
 // that put a step of today beside a step of the new way are the pairs the case gives each chosen journey; a step's
 // rules, domains and stories are its trace record. Every count shown is a key of numbers.json.
 
-type Today = { id: string; slug: string; title: string; capability: string | null; outcome: string; steps: TodayStep[] };
+type Today = { id: string; slug: string; actor: string; title: string; capability: string | null; outcome: string; steps: TodayStep[] };
 type TodayStep = { number: number; intent: string; system: string; from: string[] };
 type Proposed = {
     id: string;
     task: string;
     slug: string;
+    actor: string;
     name: string;
     idea: string;
     tradeoff: string;
@@ -111,6 +112,8 @@ export type JourneysView = {
     areas: { slug: string; name: string }[];
     drops: DropView[];
     journeys: JourneyView[];
+    /** Who takes part: each role the journeys name, with the journeys it does. */
+    actors: { name: string; journeys: { title: string; page: string }[] }[];
 };
 
 /** The page of a journey, below the site's root. */
@@ -409,6 +412,15 @@ export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], section
         areas: groups.flatMap((group) => (group.area === null ? [] : [group.area])),
         drops,
         journeys,
+        actors: (() => {
+            const actorOf = new Map([...today.map((each) => [each.slug, each.actor] as const), ...proposed.map((each) => [each.slug, each.actor] as const)]);
+            const byActor = new Map<string, { title: string; page: string }[]>();
+            for (const journey of journeys) {
+                const name = actorOf.get(journey.slug) ?? "";
+                if (name !== "") byActor.set(name, [...(byActor.get(name) ?? []), { title: journey.title, page: journey.page }]);
+            }
+            return [...byActor.entries()].map(([name, list]) => ({ name, journeys: list }));
+        })(),
     };
 };
 

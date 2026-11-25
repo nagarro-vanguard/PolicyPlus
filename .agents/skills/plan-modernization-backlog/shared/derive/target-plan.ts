@@ -4,8 +4,6 @@ import { StoryKey } from "../model/fields";
 import type { Coverage, Epic, Phase, Plan, StoryView } from "../model/plan";
 import type { Decision, Story, TargetLayer } from "../model/records";
 import type { Target, TargetComponent, TargetJourney } from "../read/target";
-import type { Built } from "./plan";
-import { scaffoldStory } from "./plan";
 import type { Facts } from "./facts";
 import { layerDepths, reachedFrom, storyLayers, type Stack } from "./layers";
 
@@ -18,11 +16,21 @@ export type TargetPlanInput = {
     readonly target: Target;
 };
 
+export type Built = { readonly plan: Plan; readonly problems: readonly string[] };
+
+const upper = (text: string) => (text.length === 0 ? text : text[0]!.toUpperCase() + text.slice(1));
 const hashOf = (value: unknown) => createHash("sha1").update(JSON.stringify(value)).digest("hex").slice(0, 12);
 const keyOf = (value: unknown) => Schema.decodeUnknownSync(StoryKey)(`story-${hashOf(value)}`);
 
+/** A story's stable key: a signature of what it builds, so it survives a re-plan. */
+export const storyKeyOf = (story: Story) =>
+    keyOf(
+        story.actions.length > 0
+            ? [...story.actions].sort()
+            : [...story.criteria.flatMap((c) => c.from.map((r) => `${r._tag}:${r.id}`))].sort(),
+    );
+
 export const SCAFFOLD_EPIC = "area:codebase";
-export const SHARED_COMPONENTS_EPIC = "area:shared components";
 
 /** The epic of a journey: one per task, since one journey is chosen for each. */
 export const journeyEpic = (journey: TargetJourney) => `journey:${journey.task}`;
@@ -47,23 +55,21 @@ export const componentOwners = (target: Target): Map<string, string> => {
 };
 
 /**
- * The components built in the shared tier: those no journey serves alone, and every component a shared one calls, since
- * a component is built before what calls it and a shared story comes before every journey.
+ * The unit of a component: the parts of one kind that the same journeys rely on. A unit is built by one story, or cut
+ * into several; a story never joins parts of different kinds, so a rules story never waits on a flow story.
  * @param target the decided target
- * @returns the names
+ * @returns the unit key by component name
  */
-export const sharedTier = (target: Target): Set<string> => {
-    const owners = componentOwners(target);
-    const uses = new Map(target.architecture.components.map((component) => [component.name, component.uses] as const));
-    const shared = new Set([...owners.entries()].filter(([, owner]) => owner === "shared").map(([name]) => name));
-    const queue = [...shared];
-    for (let name = queue.pop(); name !== undefined; name = queue.pop())
-        for (const used of uses.get(name) ?? [])
-            if (!shared.has(used)) {
-                shared.add(used);
-                queue.push(used);
-            }
-    return shared;
+export const unitsOf = (target: Target): Map<string, string> => {
+    const journeyOfStep = new Map(
+        target.journeys.flatMap((journey) => journey.steps.map((step) => [step.id, journey.id] as const)),
+    );
+    return new Map(
+        target.architecture.components.map((component) => {
+            const served = [...new Set(component.serves.flatMap((id) => journeyOfStep.get(id) ?? []))].sort();
+            return [component.name, `${component.kind}:${served.join("+")}`] as const;
+        }),
+    );
 };
 
 /** Every rule a journey's steps keep, which the components built for it enforce. */
@@ -99,31 +105,12 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
         target.journeys.flatMap((journey) => journey.steps.map((step) => [step.id, journey] as const)),
     );
     const decisionById = new Map(decisions.map((decision) => [decision.id as string, decision]));
-    const tier = sharedTier(target);
-    // The tier at story level: a story that builds a tier component is delivered with the tier, and so is every story
-    // that builds a component such a story calls, since a shared story comes before every journey.
-    const usesOf = new Map(
-        target.architecture.components.map((component) => [component.name, component.uses] as const),
-    );
-    const builderOf = new Map<string, number>();
-    input.stories.forEach((story, at) => (story.components ?? []).forEach((name) => builderOf.set(name, at)));
-    const tierStories = new Set<number>(
-        input.stories.flatMap((story, at) => ((story.components ?? []).some((name) => tier.has(name)) ? [at] : [])),
-    );
-    const pending = [...tierStories];
-    for (let at = pending.pop(); at !== undefined; at = pending.pop())
-        for (const name of input.stories[at]?.components ?? [])
-            for (const used of usesOf.get(name) ?? []) {
-                const other = builderOf.get(used);
-                if (other !== undefined && !tierStories.has(other)) {
-                    tierStories.add(other);
-                    pending.push(other);
-                }
-            }
-    const all = [
-        { story: scaffoldStory(layers), scaffold: true, index: -1 },
-        ...input.stories.map((story, index) => ({ story, scaffold: false, index })),
-    ];
+    // The story that sets up the layers is written by the foundation writer; it is the one citing layers.
+    const all = input.stories.map((story, index) => ({
+        story,
+        scaffold: story.criteria.some((criterion) => criterion.from.some((ref) => ref._tag === "layer")),
+        index,
+    }));
     // Two journeys can have the same headline: the later ones take a number, so titles stay unique.
     const titles = new Set<string>();
     for (const entry of all) {
@@ -136,10 +123,15 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
         const stepIds = story.steps ?? [];
         const functional = story.actions.length > 0;
         const built = story.components ?? [];
-        // A piece that carries no step of its own still belongs to the journey its component serves.
-        const journey = [...stepIds, ...built.flatMap((name) => components.get(name)?.serves ?? [])]
-            .map((id) => journeyOfStep.get(id))
-            .find((each) => each !== undefined);
+        // A story with steps belongs to the journey of its first step; a technical one to the journey that alone
+        // serves its components, and to none when several do.
+        const served = new Set(
+            [...stepIds, ...built.flatMap((name) => components.get(name)?.serves ?? [])].flatMap((id) => {
+                const each = journeyOfStep.get(id);
+                return each === undefined ? [] : [each];
+            }),
+        );
+        const journey = functional ? journeyOfStep.get(stepIds[0] ?? "") : served.size === 1 ? [...served][0] : undefined;
         const builds = [...new Set(citedRules(story))];
         const area = scaffold
             ? "codebase"
@@ -147,16 +139,10 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                   const topic = citedDecisions(story)
                       .map((id) => decisionById.get(id)?.topic)
                       .find((each) => each?._tag === "area");
-                  return topic?._tag === "area" ? topic.name : built.length > 0 ? "shared components" : "platform";
+                  return topic?._tag === "area" ? topic.name : (components.get(built[0] ?? "")?.domain ?? "platform");
               })();
-        // A story that builds a component of the shared tier is delivered with the shared tier, whatever journey it serves.
-        const inTier = !scaffold && index >= 0 && tierStories.has(index);
-        const klass = scaffold ? 0 : inTier ? 2 : journey !== undefined ? 3 : built.length > 0 ? 2 : 1;
-        const epic = inTier
-            ? SHARED_COMPONENTS_EPIC
-            : journey !== undefined && !scaffold
-              ? journeyEpic(journey)
-              : `area:${area}`;
+        const klass = scaffold ? 0 : journey !== undefined || built.length > 0 ? 2 : 1;
+        const epic = journey !== undefined && !scaffold ? journeyEpic(journey) : `area:${area}`;
         const signature = scaffold
             ? "scaffold"
             : functional
@@ -213,6 +199,53 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
             )
             .map((other) => other.key as string);
     };
+    // The groups of stories that wait on each other, through the parts they build (strongly connected stories).
+    const positionOf = new Map(views.map((view) => [view.key as string, view.index]));
+    const waitsOf = new Map<string, string[]>(
+        views.map((view) => [
+            view.key as string,
+            [
+                ...new Set(
+                    view.built.flatMap((name) =>
+                        (components.get(name)?.uses ?? []).flatMap((used) => {
+                            const other = componentBuilder.get(used);
+                            return other === undefined || other === view.key ? [] : [other as string];
+                        }),
+                    ),
+                ),
+            ],
+        ]),
+    );
+    const groupOf = new Map<string, number>();
+    {
+        let counter = 0;
+        let groups = 0;
+        const order = new Map<string, number>();
+        const low = new Map<string, number>();
+        const open: string[] = [];
+        const onOpen = new Set<string>();
+        const visit = (key: string) => {
+            order.set(key, counter);
+            low.set(key, counter++);
+            open.push(key);
+            onOpen.add(key);
+            for (const next of waitsOf.get(key) ?? []) {
+                if (!order.has(next)) {
+                    visit(next);
+                    low.set(key, Math.min(low.get(key)!, low.get(next)!));
+                } else if (onOpen.has(next)) low.set(key, Math.min(low.get(key)!, order.get(next)!));
+            }
+            if (low.get(key) === order.get(key)) {
+                for (let top = open.pop(); top !== undefined; top = open.pop()) {
+                    onOpen.delete(top);
+                    groupOf.set(top, groups);
+                    if (top === key) break;
+                }
+                groups++;
+            }
+        };
+        for (const key of waitsOf.keys()) if (!order.has(key)) visit(key);
+    }
     const derived = views.map((view) => {
         const used = [...new Set(view.built.flatMap((name) => components.get(name)?.uses ?? []))];
         const usedBuilders = used.flatMap((name) => {
@@ -222,16 +255,25 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
         const reliesOn = usedBuilders.flatMap(({ name, builder }) =>
             (components.get(name)?.enforces ?? []).map((rule) => ({ rule, builtBy: builder })),
         );
-        const blockedBy = [...new Set([...usedBuilders.map((each) => each.builder), ...platformBefore(view)])];
+        // Stories that build parts calling each other's parts in both directions wait on each other; among them a story
+        // waits only on one written earlier, and what it uses from a later one stays in `reliesOn`.
+        const blockedBy = [
+            ...new Set([
+                ...usedBuilders
+                    .map((each) => each.builder)
+                    .filter((key) => groupOf.get(key) !== groupOf.get(view.key) || (positionOf.get(key) ?? 0) < view.index),
+                ...platformBefore(view),
+            ]),
+        ];
         return { ...view, reliesOn, blockedBy };
     });
 
     // Epics and their barriers: everything comes after the codebase; journeys after the foundation and shared components.
     const epicKeys: string[] = [SCAFFOLD_EPIC];
-    for (const klass of [1, 2, 3])
+    for (const klass of [1, 2])
         for (const view of derived.filter((each) => each.klass === klass))
             if (!epicKeys.includes(view.epic)) epicKeys.push(view.epic);
-    const classOfEpic = (epic: string) => derived.find((view) => view.epic === epic)?.klass ?? 3;
+    const classOfEpic = (epic: string) => derived.find((view) => view.epic === epic)?.klass ?? 2;
     const comesAfter = (epic: string) => {
         const rank = classOfEpic(epic);
         return epicKeys.filter((other) => other !== epic && classOfEpic(other) < rank);
@@ -285,7 +327,7 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                 ...view.story,
                 key: view.key,
                 sequence: sequence.get(view.key) ?? 0,
-                phase: view.klass === 3 ? 3 + (level.get(view.key) ?? 0) : view.klass,
+                phase: view.klass === 2 ? 2 + (level.get(view.key) ?? 0) : view.klass,
                 epic: view.epic,
                 kind: view.functional ? "functional" : "technical",
                 blockedBy: view.blockedBy as unknown as StoryView["blockedBy"],
@@ -301,24 +343,12 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
         const mine = stories.filter((story) => story.epic === key);
         const journey = target.journeys.find((each) => journeyEpic(each) === key);
         const area = key.startsWith("area:") ? key.slice(5) : undefined;
-        const outcome = journey
-            ? `${journey.idea} Done when "${journey.name}" passes an acceptance test from its first step to its last.`
-            : key === SCAFFOLD_EPIC
-              ? "The target codebase exists with every planned layer, each with a working check, ready for stories to be built in."
-              : key === SHARED_COMPONENTS_EPIC
-                ? "The components several journeys rest on are built once, so every journey can rely on them."
-                : `Developers have ${area} in place, as decided, before any journey is built on it.`;
+        // Every word of an epic is an agent's: the journey's idea, or the first story's reason; the area's own name.
         return {
             key,
             kind: journey ? "functional" : "technical",
-            title: journey
-                ? (target.outcomes.get(journey.task) ?? journey.name)
-                : key === SCAFFOLD_EPIC
-                  ? "Set up the codebase"
-                  : key === SHARED_COMPONENTS_EPIC
-                    ? "Build the shared components"
-                    : `Set up ${area}`,
-            outcome,
+            title: journey ? (target.outcomes.get(journey.task) ?? journey.name) : upper(area ?? key),
+            outcome: journey ? journey.idea : (mine[0]?.why ?? ""),
             ...(area !== undefined ? { area } : {}),
             ...(journey ? { task: journey.task } : {}),
             comesAfter: comesAfter(key),
@@ -327,77 +357,12 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
         };
     });
 
-    const phaseNumbers = [...new Set(stories.map((story) => story.phase))].sort((a, b) => a - b);
-    const layerName = new Map(layers.map((layer) => [layer.id as string, layer.name]));
-    /** The layers a phase's stories are built in, in the layers' order, as words; empty unless every story's are known. */
-    const builtIn = (number: number) => {
-        const mine = stories.filter((story) => story.phase === number);
-        if (mine.some((story) => (story.layers ?? []).length === 0)) return "";
-        const ids = new Set(mine.flatMap((story) => story.layers ?? []));
-        const names = layers.filter((layer) => ids.has(layer.id)).map((layer) => layer.name);
-        return names.length <= 1 ? (names[0] ?? "") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
-    };
-    const ones = [
-        "no",
-        "one",
-        "two",
-        "three",
-        "four",
-        "five",
-        "six",
-        "seven",
-        "eight",
-        "nine",
-        "ten",
-        "eleven",
-        "twelve",
-        "thirteen",
-        "fourteen",
-        "fifteen",
-        "sixteen",
-        "seventeen",
-        "eighteen",
-        "nineteen",
-    ];
-    const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
-    const inWords = (n: number): string =>
-        n < 20
-            ? (ones[n] as string)
-            : n < 100
-              ? `${tens[Math.floor(n / 10)] as string}${n % 10 === 0 ? "" : `-${ones[n % 10] as string}`}`
-              : String(n);
-    const phases: Phase[] = phaseNumbers.map((number) => {
-        const where = builtIn(number);
-        const keysOf = new Set(stories.filter((story) => story.phase === number).map((story) => story.key));
-        return {
+    const phases: Phase[] = [...new Set(stories.map((story) => story.phase))]
+        .sort((a, b) => a - b)
+        .map((number) => ({
             number,
-            name:
-                number === 0
-                    ? "Set up the codebase and its checks"
-                    : number === 1
-                      ? where === ""
-                          ? "Platform"
-                          : `Platform: ${where}`
-                      : number === 2
-                        ? "Shared components"
-                        : `Journeys, round ${number - 2}`,
-            why: [
-                number === 0
-                    ? "Nothing can be built until the codebase has its layers and each layer's check runs."
-                    : number === 1
-                      ? "The decisions about libraries, data, outside systems and conventions are made real before any journey, lower layers first."
-                      : number === 2
-                        ? "Components several journeys call are built once, ahead of the journeys that rely on them."
-                        : (() => {
-                              const count = epics.filter((epic) => epic.stories.some((key) => keysOf.has(key))).length;
-                              const words = inWords(count);
-                              return `${words.charAt(0).toUpperCase()}${words.slice(1)} ${count === 1 ? "journey whose steps build" : "journeys whose steps build"} on the earlier phases.`;
-                          })(),
-                ...(where === "" || number <= 1 ? [] : [`Built in ${where}.`]),
-            ].join(" "),
             stories: stories.filter((story) => story.phase === number).map((story) => story.key),
-        };
-    });
+        }));
 
     const storyOfAction = new Map<string, string>();
     for (const story of stories) for (const id of story.actions) storyOfAction.set(id as string, story.key);

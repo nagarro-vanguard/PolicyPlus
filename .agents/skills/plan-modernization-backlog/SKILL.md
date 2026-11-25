@@ -23,18 +23,16 @@ Words: an *epic* is one chosen journey of the target (or an area without one); a
     - `stop`: a job was refused; show its message to the person and stop.
     A job runs write, gate, review and at most one fix; a challenge that survives the fix stays as disputed and is carried into the plan's `conflicts`. Nothing waits for anyone: assumptions are in each decision's `reason`.
 4. `bun ${SKILL_ROOT}/cli/plan.ts build ${ROOT}` derives the plan from the accepted records and checks every gate. On exit 1 it prints each failing gate; run the stage that owns the gap again with `prepare`. On success it writes `plan.json`, the manifest, the bodies, one readable context for every story (its attachment) and the AGENTS.md previews.
-5. Tell the person what was written and where the plan's pages are (the app builds them). How the plan reads, and what the agents' titles and criteria must look like, is `${SKILL_ROOT}/rules/presentation.md`.
+5. Tell the person what was written and where the plan's pages are (the app builds them). How the plan reads is `${SKILL_ROOT}/rules/presentation.md`; what the agents write is `${SKILL_ROOT}/rules/stories.md`.
 
-## With a decided target
+## The decided target
 
-The target is decided when its four decisions hold (`target/choice-as-is.json`, `choice-journeys.json`, `choice-architecture.json`, `choice-components.json`, written by shape-target's `decide.ts`), by shape-target's own rule read from its `shared/gates.ts`: the file a decision is about still has the hash its record kept, or, for a record made before hashes were kept, the record is not older than that file. When `target/` exists and one does not hold, `prepare` and `plan.ts build` stop and name it; a run with no `target/` is planned from the analysis alone.
-
-When `${ROOT}/target/architecture.json` and `target/journeys.json` exist (the `shape-target` skill wrote them), the plan is made from them and the analysis supplies coverage only. Epics are the chosen journeys; a story is a slice of one journey with the components that carry it; a component is built by the journey that alone serves it, otherwise by a shared story in an earlier phase; phases are the levels of the component graph and blockers are the calls between components. The foundation stage then has no `scope` job (what is not carried was dropped, step by step, in the journeys), its layers must carry what the architecture is built with, and the stories stage has `shared` and one `journey` job per journey in place of the capability jobs. Without them the plan is made as described below.
+The plan is made from the decided target (`${ROOT}/target/architecture.json` and `journeys.json`, with the four choices written by shape-target's `decide.ts`, current by shape-target's own rule read from its `shared/gates.ts`); `prepare` and `plan.ts build` stop and name what does not hold, and refuse a run with no target. The analysis supplies coverage only. Epics are the chosen journeys, and areas for technical work; a story is a slice of a journey, or an enabling story for the parts several journeys rely on; phases are levels of the component graph and blockers are the calls between components. The foundation stage has no `scope` job (what is not carried was dropped, step by step, in the journeys). The stories stage has `shared` jobs, one per group of whole units of parts of the same kind, and one `journey` job per journey. What an epic and a story are is `${SKILL_ROOT}/rules/stories.md`.
 
 ## Stages
 
 - Foundation (`foundation`): `decide-foundation` for the layers, outside systems, scope, notes and base areas; `create-stories` for the technical stories of the foundation.
-- Stories (`stories`): `create-stories` for the shared rules and for each capability's surfaces; `review-planned-stories` reads every job.
+- Stories (`stories`): `create-stories` for the shared parts and for each journey; `review-planned-stories` reads every job.
 
 ## Output
 

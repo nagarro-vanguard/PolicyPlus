@@ -373,8 +373,8 @@ export function Plan({ view, root }: { readonly view: PlanView; readonly root: s
                                                         {stories.length} {noun}
                                                     </span>
                                                 </span>
-                                                <span className="text-sm text-muted-foreground" data-written-by="agent">
-                                                    {phase.why}
+                                                <span className="line-clamp-2 text-sm text-muted-foreground" data-written-by="agent">
+                                                    {phase.epics.join(", ")}
                                                 </span>
                                             </summary>
                                             <div className="flex flex-col gap-spacing-lg pb-spacing-xl ps-10">

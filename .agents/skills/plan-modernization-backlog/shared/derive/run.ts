@@ -6,12 +6,9 @@ import { Decision, Story, TargetLayer } from "../model/records";
 import { ModernizationRequest } from "../model/request";
 import { readAnalysis } from "../read/analysis";
 import { checkPlan, type Gaps } from "./gates";
-import { buildPlan } from "./plan";
 import { loadTarget } from "../read/target";
 import { buildTargetPlan } from "./target-plan";
 import { ruleCoverage } from "./target-gates";
-import { splitCycles } from "./cycles";
-import { carriedFrom } from "./scope";
 import { deriveFacts } from "./facts";
 import { contextsOf, publishPlan } from "./publish";
 import { builtFromNow } from "./built-from";
@@ -66,21 +63,13 @@ export const evaluatePlan = (layout: Layout, entries: readonly Entry[] = loadRev
     const { layers, decisions } = records;
     const revised = applyAll(records.stories, entries);
     const target = loadTarget(layout);
-    // A story caught in a cycle of waits is split by component, so every story can be ordered; an outside system a
-    // component adapts is built by that component's story alone.
-    const split = target === undefined ? revised : splitCycles(revised, target).stories;
-    const { stories, moved } =
-        target === undefined
-            ? { stories: split, moved: [] as string[] }
-            : dedupeCarriers(split, decisions, target, analysis.system.externals);
+    if (target === undefined) throw new Error("the plan is made from a decided target: run shape-target first");
+    // An outside system a component adapts is built by that component's story alone.
+    const { stories, moved } = dedupeCarriers(revised, decisions, target, analysis.system.externals);
     // With a decided target every capability is planned: what is not carried was dropped there, step by step.
-    const { ids } = carriedFrom(analysis, decisions);
-    const facts = deriveFacts(analysis, target === undefined ? ids : undefined);
+    const facts = deriveFacts(analysis);
     const stamp = { root: analysis.root, fingerprint: analysis.fingerprint };
-    const built =
-        target === undefined
-            ? buildPlan({ analysis: stamp, facts, request, layers, decisions, stories })
-            : buildTargetPlan({ analysis: stamp, facts, layers, decisions, stories, target });
+    const built = buildTargetPlan({ analysis: stamp, facts, layers, decisions, stories, target });
     const { problems } = built;
     const bare: Plan = { ...built.plan, builtFrom: builtFromNow(layout, analysis.fingerprint) };
     const plan: Plan = {

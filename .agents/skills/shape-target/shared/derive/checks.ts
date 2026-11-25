@@ -474,12 +474,6 @@ export const componentJobGaps = (components: readonly Component[], context: Comp
             );
         if (component.kind === "interface" && component.serves.length === 0)
             gaps.push(`${label}: is of kind interface but serves no step`);
-        // One component is built by one story, which holds at most 7 criteria: plan-modernization-backlog's
-        // MAX_CRITERIA. The skills never import each other, so the number is written in both.
-        if (component.enforces.length > 7)
-            gaps.push(
-                `${label} enforces ${component.enforces.length} rules, over 7: split it into components of one purpose each`,
-            );
         for (const leak of leaksIn(component.name, context.legacy.identifiers))
             gaps.push(`${label}: carries the old system's name "${leak}"`);
     }

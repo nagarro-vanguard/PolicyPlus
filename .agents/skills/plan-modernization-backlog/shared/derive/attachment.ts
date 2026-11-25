@@ -4,6 +4,7 @@ import type { Plan, StoryView } from "../model/plan";
 import type { ModernizationRequest } from "../model/request";
 import type { Target } from "../read/target";
 import { storyBody } from "./bodies";
+import { LABELS } from "./labels";
 import type { Facts, Place } from "./facts";
 import { componentLayer } from "./layers";
 
@@ -11,13 +12,7 @@ import { componentLayer } from "./layers";
 export const CEILING = 40_000;
 
 /** The reading's sections in the order they are cut when the document is too long; what to doubt goes last. */
-const CUT = [
-    "Relied on: decided elsewhere",
-    "Data and states",
-    "Boundary",
-    "Contract: what it must do",
-    "Trust: what to doubt",
-];
+const CUT = LABELS.cutOrder;
 
 /** A reader of the legacy code the request names: its lines by file, or nothing for a file that is not there. */
 export const sourceReaderOf = (roots: readonly string[]) => {
@@ -147,14 +142,14 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
     for (const id of ruleIds) if (!facts.rules.has(id)) fail("a rule it builds or relies on is not in the analysis");
     const topic = (decision: Plan["decisions"][number]) =>
         decision.topic._tag === "integration"
-            ? `Outside system ${decision.topic.system}`
+            ? LABELS.outside(decision.topic.system)
             : decision.topic._tag === "scope"
-              ? `Scope of ${decision.topic.capability}`
+              ? LABELS.scope(decision.topic.capability)
               : decision.topic._tag === "note"
-                ? `Note ${decision.topic.number} of the request`
+                ? LABELS.note(decision.topic.number)
                 : decision.topic._tag === "area"
                   ? decision.topic.name
-                  : `Convention for ${decision.layer === "workspace" ? "every layer" : (layerBy.get(decision.layer)?.name ?? decision.layer)}`;
+                  : LABELS.convention(decision.layer === "workspace" ? LABELS.everyLayer : (layerBy.get(decision.layer)?.name ?? decision.layer));
 
     // The criteria, in the order of the body, and the legacy code each rests on. A place shown under one criterion is
     // named by a later one that rests on the same place; a doubt is said once, under the first criterion that cites it.
@@ -174,7 +169,7 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
                 else if (fact !== undefined && view.builds.includes(ref.id)) {
                     for (const place of [fact.place, ...fact.alsoRestsOn]) {
                         const earlier = shownAt.get(at(place));
-                        if (earlier !== undefined) parts.push(`${at(place)} (same code as AC-${earlier})`);
+                        if (earlier !== undefined) parts.push(`${at(place)} (${LABELS.sameCode} AC-${earlier})`);
                         else {
                             shownAt.set(at(place), order + 1);
                             parts.push({ span: spans.push(place) - 1 });
@@ -204,7 +199,7 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
     // Rules built by another story are named under that story, once.
     const reliedBlocks = [...new Set(relied.map((each) => each.builtBy))].map((key) =>
         [
-            `### Built by: ${titleOf.get(key) ?? "no story of the plan"}`,
+            `### ${LABELS.builtBy}: ${titleOf.get(key) ?? "no story of the plan"}`,
             "",
             ...relied.flatMap((each) => {
                 const fact = facts.rules.get(each.rule);
@@ -212,6 +207,12 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
             }),
         ].join("\n"),
     );
+
+    // The wording of each rule it builds, where it is decided.
+    const builtLines = view.builds.flatMap((id) => {
+        const fact = facts.rules.get(id);
+        return fact === undefined ? [] : [`- ${fact.says} (${at(fact.place)})`];
+    });
 
     const decisions = [...new Set(citedDecisions)].flatMap((id) => {
         const decision = decisionBy.get(id);
@@ -224,8 +225,9 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
         ...citedLayers,
         ...citedDecisions.map((id) => decisionBy.get(id)?.layer ?? ""),
     ]);
+    // A story no layer is named for (tooling, conventions of the workspace) concerns every layer.
     const layers = plan.layers
-        .filter((layer) => layerIds.has(layer.id))
+        .filter((layer) => layerIds.has(layer.id) || [...layerIds].every((id) => !layerBy.has(id)))
         .map((layer) =>
             [
                 `### ${layer.name}`,
@@ -251,7 +253,7 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
         const { step, j } = known;
         const kept = (step.changes ?? []).map((change) => {
             const place = facts.rules.get(change.rule)?.place;
-            return `${place === undefined ? "A rule of today" : `The rule at ${at(place)}`}: ${change.to}`;
+            return `${place === undefined ? LABELS.ruleOfToday : LABELS.ruleAt(at(place))}: ${change.to}`;
         });
         return [
             [
@@ -300,16 +302,17 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
         const lines = source.readable ? source.lines(span.file)?.slice(span.firstLine - 1, span.lastLine) : undefined;
         return !source.readable
             ? at(span)
-            : `${at(span)}\n\n${lines === undefined ? "This place could not be read." : fenced(lines)}`;
+            : `${at(span)}\n\n${lines === undefined ? LABELS.unreadPlace : fenced(lines)}`;
     });
     const section = (title: string, parts: readonly string[], intro?: string) =>
         parts.length === 0 ? [] : [`## ${title}`, ...(intro === undefined ? [] : [intro]), ...parts];
     const before = [`# ${view.title}`, storyBody(view, plan)];
     const after = [
-        ...section("Rules relied on", reliedBlocks),
-        ...section("Decisions", decisions),
-        ...section("Layers", layers),
-        ...section("Target steps and components", [...steps, ...components]),
+        ...section(LABELS.rulesBuilt, builtLines),
+        ...section(LABELS.rulesRelied, reliedBlocks),
+        ...section(LABELS.decisions, decisions),
+        ...section(LABELS.layers, layers),
+        ...section(LABELS.targetParts, [...steps, ...components]),
     ];
     // A section several surfaces share is said once; two that differ carry the name of their surface.
     const all = readings.flatMap((reading) =>
@@ -327,7 +330,7 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
     // What each criterion rests on; the code of the places after the first `n` is left out, their places stay.
     const restsOn = (n: number) =>
         section(
-            "What each criterion rests on",
+            LABELS.restsOn,
             criteria.flatMap((parts, order) =>
                 parts.length === 0
                     ? []
@@ -339,12 +342,12 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
                                       ? part
                                       : part.span < n || !source.readable
                                         ? blocks[part.span]!
-                                        : `${at(spans[part.span]!)} (code not included here to keep this document short)`,
+                                        : `${at(spans[part.span]!)} (${LABELS.codeLeftOut})`,
                               ),
                           ].join("\n\n"),
                       ],
             ),
-            `AC-1 is the first acceptance criterion above, AC-2 the second, and so on. Each place is legacy code the criterion rests on.${source.readable || spans.length === 0 ? "" : " The code could not be read when this was written, so it is not included."}`,
+            ...(source.readable || spans.length === 0 ? [] : [LABELS.codeUnread]),
         );
     const render = (n: number, kept: readonly string[], left: readonly string[]) =>
         `${[
@@ -354,13 +357,13 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
             ...(sections.length === 0
                 ? []
                 : [
-                      "## Reading of the existing code",
+                      `## ${LABELS.reading}`,
                       ...(left.length === 0
                           ? []
-                          : [`Not included here to keep this document short: ${left.join("; ")}.`]),
+                          : [`${LABELS.readingLeft}: ${left.join("; ")}.`]),
                       ...kept,
                   ]),
-        ].join("\n\n")}\n\nMade from analysis ${plan.analysis.fingerprint}.\n`;
+        ].join("\n\n")}\n`;
     // What must be kept comes first: the evidence, then the code, then the reading, least useful sections cut first.
     let n = spans.length;
     while (

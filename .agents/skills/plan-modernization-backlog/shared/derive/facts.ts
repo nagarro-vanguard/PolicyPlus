@@ -1,3 +1,4 @@
+import { LABELS } from "./labels";
 import type { Analysis } from "../read/analysis";
 
 export type Place = { readonly file: string; readonly firstLine: number; readonly lastLine: number };
@@ -72,7 +73,7 @@ export type Facts = {
 export const SHARED = "shared";
 
 /** The name a surface is shown under; entry points no container holds share one. */
-export const surfaceName = (screen: string) => (screen === "" ? "Entry points without a window" : screen);
+export const surfaceName = (screen: string) => (screen === "" ? LABELS.noSurface : screen);
 
 /**
  * Derives what the plan needs of the analysis, for the capabilities that are carried: the plan's pre-order of surfaces,

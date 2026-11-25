@@ -2,7 +2,6 @@ import { Schema } from "effect";
 import { Decision, Story, TargetLayer } from "../model/records";
 import { sameWhat, storyProblems } from "../derive/gates";
 import { changedRuleProblems } from "../derive/consistency";
-import { AGENTS_MD_MAX_LINES, countedLines, layerAgentsMd } from "../derive/agents-md";
 import type { Kind } from "./state";
 
 /** What a job hands the gate: its own inputs and the records accepted before it. */
@@ -13,17 +12,15 @@ export type JobFile = {
     capabilities?: string[];
     notes?: string[];
     areas?: string[];
-    actions?: string[];
-    owned?: string[];
-    shared?: string[];
     transitions?: string[];
-    surfaces?: { key: string; name: string; actions: string[]; owned: readonly string[] }[];
     techs?: string[];
     steps?: string[];
     stepActions?: Record<string, string[]>;
     components?: string[];
     cite?: string[];
     componentRules?: Record<string, string[]>;
+    /** For shared components: the unit of each (its kind, then the journeys that rely on it). */
+    units?: Record<string, string>;
     layerIds?: string[];
     decisionIds?: string[];
     areaDecisionIds?: string[];
@@ -159,9 +156,6 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
     const stories = parsed.value;
     // The ids this job knows, which no reader's text may hold.
     const known = new Set<string>([
-        ...(job.actions ?? []),
-        ...(job.owned ?? []),
-        ...(job.shared ?? []),
         ...(job.cite ?? []),
         ...(job.transitions ?? []),
         ...(job.steps ?? []),
@@ -170,75 +164,35 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
         ...Object.keys(job.stepActions ?? {}),
     ]);
     if (job.kind === "journey" || job.kind === "components") return targetStoryGaps(job, stories, known);
-    const actions = new Set(job.actions ?? []);
-    const owned = new Set(job.owned ?? []);
-    const shared = new Set(job.shared ?? []);
+    // The foundation stories: technical stories that rest on decisions, and the one that sets up every layer.
     const decisions = new Set(job.decisionIds ?? []);
-    const seen = new Map<string, number>();
-    const cited = new Set<string>();
     const citedDecisions = new Set<string>();
+    const citedLayers = new Set<string>();
     for (const story of stories) {
-        for (const id of story.actions) {
-            seen.set(id, (seen.get(id) ?? 0) + 1);
-            if (!actions.has(id)) gaps.push(`story "${short(story.title)}" names an action this job does not own`);
-        }
-        const bySurface = new Set(story.actions.map((id) => job.surfaces?.find((s) => s.actions.includes(id))?.key));
-        if (bySurface.size > 1) gaps.push(`story "${short(story.title)}" spans more than one surface`);
+        const label = `story "${short(story.title)}"`;
         for (const criterion of story.criteria) {
             for (const ref of criterion.from) {
-                if (ref._tag === "rule") {
-                    if (job.kind === "surfaces" && !owned.has(ref.id))
-                        gaps.push(`story "${short(story.title)}" cites a rule this job does not build`);
-                    if (job.kind === "shared" && !shared.has(ref.id))
-                        gaps.push(`story "${short(story.title)}" cites a rule that is not shared`);
-                    if (job.kind === "foundation-stories")
+                if (ref._tag === "rule" || ref._tag === "transition" || ref._tag === "step")
+                    gaps.push(`${label} cites a ${ref._tag}; foundation stories rest on decisions and layers`);
+                else if (ref._tag === "layer") citedLayers.add(ref.id);
+                else if (ref._tag === "decision") {
+                    if (!decisions.has(ref.id)) gaps.push(`${label} cites a decision that does not exist`);
+                    if ((job.adaptedDecisionIds ?? []).includes(ref.id))
                         gaps.push(
-                            `story "${short(story.title)}" cites a legacy rule; foundation stories rest on decisions`,
-                        );
-                    if (cited.has(ref.id)) gaps.push(`a rule is cited twice in this job`);
-                    cited.add(ref.id);
-                } else if (ref._tag === "transition") {
-                    if (!(job.transitions ?? []).includes(ref.id))
-                        gaps.push(`story "${short(story.title)}" cites a change of state this job does not own`);
-                    cited.add(ref.id);
-                } else if (ref._tag === "decision") {
-                    if (!decisions.has(ref.id))
-                        gaps.push(`story "${short(story.title)}" cites a decision that does not exist`);
-                    if (job.kind === "foundation-stories" && (job.adaptedDecisionIds ?? []).includes(ref.id))
-                        gaps.push(
-                            `story "${short(story.title)}" builds how an outside system is reached, which the story of the component that adapts it builds`,
+                            `${label} builds how an outside system is reached, which the story of the component that adapts it builds`,
                         );
                     citedDecisions.add(ref.id);
                 }
             }
         }
-        for (const problem of storyProblems(story, known)) gaps.push(`story "${short(story.title)}": ${problem}`);
-        const functional = story.actions.length > 0;
-        if (job.kind === "surfaces" && !functional)
-            gaps.push(`story "${short(story.title)}" has no actions; a surface story ports actions`);
-        if (job.kind !== "surfaces" && functional)
-            gaps.push(`story "${short(story.title)}" has actions; this job writes technical stories`);
+        for (const problem of storyProblems(story, known)) gaps.push(`${label}: ${problem}`);
+        if (story.actions.length > 0 || (story.steps ?? []).length > 0)
+            gaps.push(`${label} has entry points or steps; this job writes technical stories`);
     }
-    if (job.kind === "surfaces") {
-        const missing = [...actions].filter((id) => !seen.has(id));
-        if (missing.length > 0) gaps.push(`${missing.length} actions are in no story`);
-        if ([...seen.values()].some((n) => n > 1)) gaps.push("an action is in more than one story");
-        const unbuilt = [...owned].filter((id) => !cited.has(id));
-        if (unbuilt.length > 0) gaps.push(`${unbuilt.length} rules this job builds are cited by no criterion`);
-        const missingT = (job.transitions ?? []).filter((id) => !cited.has(id));
-        if (missingT.length > 0) gaps.push(`${missingT.length} changes of state are cited by no criterion`);
-    } else if (job.kind === "shared") {
-        const unbuilt = [...shared].filter((id) => !cited.has(id));
-        if (unbuilt.length > 0) gaps.push(`${unbuilt.length} shared rules are cited by no criterion`);
-        const missingT = (job.transitions ?? []).filter((id) => !cited.has(id));
-        if (missingT.length > 0) gaps.push(`${missingT.length} changes of state are cited by no criterion`);
-    } else {
-        const missing = (job.areaDecisionIds ?? []).filter((id) => !citedDecisions.has(id));
-        if (missing.length > 0) gaps.push(`${missing.length} area decisions are cited by no story`);
-    }
-    void AGENTS_MD_MAX_LINES;
-    void countedLines;
-    void layerAgentsMd;
+    const unset = (job.layerIds ?? []).filter((id) => !citedLayers.has(id));
+    if (unset.length > 0) gaps.push(`${unset.length} layers are set up by no story: one story sets up every layer, a criterion each`);
+    const missing = (job.areaDecisionIds ?? []).filter((id) => !citedDecisions.has(id));
+    if (missing.length > 0) gaps.push(`${missing.length} area decisions are cited by no story`);
     return [...new Set([...gaps, ...sameWhat(stories)])];
 };
 
@@ -284,6 +238,8 @@ const targetStoryGaps = (job: JobFile, stories: readonly Story[], known: Readonl
         if (!journey && (story.actions.length > 0 || (story.steps ?? []).length > 0))
             gaps.push(`${label} is a technical story of shared components: no steps and no entry points`);
         if (journey && (story.steps ?? []).length === 0) gaps.push(`${label} names no step of the journey`);
+        if (new Set((story.components ?? []).map((name) => (job.units?.[name] ?? "").split(":")[0])).size > 1)
+            gaps.push(`${label} joins components of different kinds: a rules story, a data story and a flow story are separate`);
         const enforced = new Set((story.components ?? []).flatMap((name) => job.componentRules?.[name] ?? []));
         const rules = story.criteria.flatMap((criterion) =>
             criterion.from.flatMap((ref) => (ref._tag === "rule" ? [ref.id as string] : [])),

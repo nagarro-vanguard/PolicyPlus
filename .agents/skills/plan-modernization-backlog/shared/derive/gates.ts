@@ -27,9 +27,6 @@ const some = (items: readonly string[], limit = 3) =>
 const words = (text: string) => text.split(/\s+/).filter(Boolean).length;
 const short = (text: string) => (text.length > 70 ? `${text.slice(0, 67)}...` : text);
 
-/** The most criteria one story holds; shape-target's `componentJobGaps` holds the same number for the rules of one component. */
-export const MAX_CRITERIA = 7;
-
 // The sentence pattern of an acceptance criterion; the story sheet of the app splits `says` with the same pattern.
 const givenWhenThen = /^\s*given\s+[\s\S]+?,\s+when\s+[\s\S]+?,\s+then\s+[\s\S]+?\s*$/iu;
 
@@ -40,8 +37,8 @@ type Reader = Pick<Story, "title" | "what" | "why" | "open"> & {
 };
 
 /**
- * What is wrong with a story's text: a title over 72 characters or ending in an ellipsis, doubled punctuation, more
- * than 7 criteria, a criterion without a given, a when or a then, one over 60 words (90 when it cites several rules) or
+ * What is wrong with a story's text: a title over 72 characters or ending in an ellipsis, doubled punctuation, a
+ * criterion without a given, a when or a then, one over 60 words (90 when it cites several rules) or
  * with nothing it rests on, and any text that holds an id the plan knows.
  * @param story the story
  * @param known the ids the plan or the job knows: rules, steps, decisions, layers, changes of state, stories
@@ -52,10 +49,6 @@ export const storyProblems = (story: Reader, known: ReadonlySet<string> = new Se
     if (story.title.length > 72) found.push(`the title is ${story.title.length} characters, over 72`);
     if (/(\.\.\.|\u2026)\s*$/.test(story.title)) found.push("the title ends in an ellipsis");
     if (story.criteria.length === 0) found.push("it has no criterion");
-    if (story.criteria.length > MAX_CRITERIA)
-        found.push(
-            `it has ${story.criteria.length} criteria, over ${MAX_CRITERIA}: merge criteria of one shape into one that cites all their rules, or split by component`,
-        );
     const texts = [
         ["title", story.title],
         ["what", story.what],
@@ -189,7 +182,6 @@ export const checkPlan = (input: Input): Gaps => {
         const sharedRules = new Set(facts.shared);
         const built = new Set<string>();
         for (const view of plan.stories) {
-            const surface = view.actions.length > 0 ? surfaceOfAction.get(view.actions[0] as string) : undefined;
             for (const rule of view.builds) {
                 built.add(rule);
                 if (!facts.rules.has(rule)) {

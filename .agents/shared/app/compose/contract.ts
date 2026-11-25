@@ -318,7 +318,6 @@ const Story = z.strictObject({
     ),
     open: Ids,
     challenges: Ids,
-    split: z.strictObject({ part: S, from: S }).nullable(),
 });
 
 const Brief = z.strictObject({
@@ -331,7 +330,7 @@ const Brief = z.strictObject({
         })
         .nullable(),
     risks: z.strictObject({ rule: S, top: Ids, ranked: Ids }),
-    plan: z.strictObject({ phases: S, epics: S, stories: S, phaseNames: Ids }).nullable(),
+    plan: z.strictObject({ phases: S, epics: S, stories: S }).nullable(),
     numbers: Ids,
 });
 
@@ -424,7 +423,7 @@ export const caseFiles = {
         }),
     ),
     "plan/phases.json": z.array(
-        z.strictObject({ number: N, name: S, why: S, stories: Ids, epics: Ids, builtIn: Ids }),
+        z.strictObject({ number: N, stories: Ids, epics: Ids, builtIn: Ids }),
     ),
     "plan/layers.json": z.array(
         z.strictObject({

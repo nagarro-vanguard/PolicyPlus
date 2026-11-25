@@ -94,7 +94,7 @@ export type PlanView = {
     structure: string;
     /** How done is proven: what the decisions on the test layers chose, and that a journey's epic says when it is done. */
     proof: { chose: string[]; journeys: string | null } | null;
-    phases: { number: number; why: string; builtIn: string[]; epics: string[]; stories: number }[];
+    phases: { number: number; builtIn: string[]; epics: string[]; stories: number }[];
     matrix: MatrixView | null;
     stories: StoryView[];
     filters: {
@@ -292,7 +292,6 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
         .map((phase) => {
             return {
                 number: phase.number,
-                why: phase.why,
                 builtIn: phase.builtIn,
                 epics: phase.epics.map((key) => epicByKey.get(key)?.label ?? "").filter((label) => label !== ""),
                 stories: phase.stories.length,

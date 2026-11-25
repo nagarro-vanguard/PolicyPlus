@@ -9,8 +9,6 @@ export type Kind =
     | "notes"
     | "base"
     | "foundation-stories"
-    | "shared"
-    | "surfaces"
     | "journey"
     | "components";
 export type JobState = "toRun" | "toReview" | "toFix" | "decided" | "refused";

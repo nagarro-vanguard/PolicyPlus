@@ -1,6 +1,5 @@
 import type { Criterion, Decision, Story } from "../model/records";
 import type { Target } from "../read/target";
-import { MAX_CRITERIA } from "./gates";
 
 /*
  * Each outside system is built once. With a decided target, a component that adapts an outside system is built by its
@@ -15,8 +14,8 @@ const isFoundation = (story: Story) =>
 /**
  * Moves what foundation stories say about adapted outside systems into the stories of the components that adapt them.
  * A whole foundation story moves when everything it rests on beyond those systems is a convention and one adapter's
- * story takes it; otherwise only the criteria that name an adapted system move. Nothing moves into a story that would
- * then hold more than 7 criteria, or into one that ports entry points.
+ * story takes it; otherwise only the criteria that name an adapted system move. Nothing moves into a story that ports
+ * entry points.
  * @param stories the stories, foundation and components alike
  * @param decisions the decisions
  * @param target the decided target
@@ -52,8 +51,6 @@ export const dedupeCarriers = <S extends Story>(
     const added = new Map<number, Criterion[]>();
     const kept = new Map<number, readonly Criterion[]>();
     const moved: string[] = [];
-    const room = (at: number, more: number) =>
-        (stories[at]?.criteria.length ?? 0) + (added.get(at)?.length ?? 0) + more <= MAX_CRITERIA;
     stories.forEach((story, at) => {
         if (!isFoundation(story)) return;
         const takers = story.criteria.map(takerOfCriterion);
@@ -71,7 +68,7 @@ export const dedupeCarriers = <S extends Story>(
         const stays: Criterion[] = [];
         story.criteria.forEach((criterion, index) => {
             const to = moves[index];
-            if (to !== undefined && room(to, 1)) added.set(to, [...(added.get(to) ?? []), criterion]);
+            if (to !== undefined) added.set(to, [...(added.get(to) ?? []), criterion]);
             else stays.push(criterion);
         });
         if (stays.length === story.criteria.length) return;

@@ -35,7 +35,6 @@ export type StoryView = {
     open: string[];
     /** The reviewers' challenges about this story that are not settled. */
     challenges: string[];
-    split: { part: string; from: string } | null;
 };
 
 export type PlanViews = {
@@ -51,7 +50,7 @@ export type PlanViews = {
         stories: string[];
         sequence: number;
     }[];
-    phases: { number: number; name: string; why: string; stories: string[]; epics: string[]; builtIn: string[] }[];
+    phases: { number: number; stories: string[]; epics: string[]; builtIn: string[] }[];
     layers: {
         id: string;
         name: string;
@@ -174,10 +173,6 @@ export const planViewsOf = (
                 criteria: story.criteria.map((each) => criterionOf(plain(each.says), each.from ?? [])),
                 open: (story.open ?? []).map(plain),
                 challenges: distinct(challengesOf.get(story.key) ?? []),
-                split:
-                    story.part === undefined || story.splitFrom === undefined
-                        ? null
-                        : { part: story.part, from: story.splitFrom },
             };
         },
     );
@@ -232,8 +227,6 @@ export const planViewsOf = (
         })),
         phases: plan.phases.map((phase) => ({
             number: phase.number,
-            name: phase.name,
-            why: phase.why,
             stories: [...phase.stories],
             epics: distinct(phase.stories.map((key) => storyOf.get(key)?.epic ?? "").filter((key) => key !== "")),
             builtIn: distinct(

@@ -1,3 +1,4 @@
+import { LABELS } from "./labels";
 import type { ModernizationRequest } from "../model/request";
 import type { Decision, TargetLayer } from "../model/records";
 
@@ -41,7 +42,7 @@ export const rootAgentsMd = (
     return [
         `# ${request.target.split("/").filter(Boolean).at(-1) ?? "workspace"}: the workspace, and the index of every layer`,
         "",
-        "Each layer's AGENTS.md governs every line in its folder; this file also governs the workspace layer.",
+        LABELS.agentsNote,
         "",
         "## Layers",
         "",

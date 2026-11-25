@@ -72,7 +72,7 @@ const Plan = z.looseObject({
             sequence: z.number(),
         }),
     ),
-    phases: z.array(z.looseObject({ number: z.number(), name: Text, why: Text, stories: Ids })),
+    phases: z.array(z.looseObject({ number: z.number(), stories: Ids })),
     stories: z.array(Story),
     coverage: z.looseObject({
         rulesBuilt: z.number(),
