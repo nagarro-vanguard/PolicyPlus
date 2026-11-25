@@ -58,6 +58,18 @@ export type Piece = Story & { readonly part?: string; readonly splitFrom?: strin
  * serve and the entry points of those steps. What belongs to no component in particular stays with the first piece.
  * A piece is titled by what its component does, in full; `part` names the component and `splitFrom` the story's title.
  */
+
+/** The one criterion of a piece that decides no rule: its component's responsibility, from the steps it serves. */
+const pieceCriterion = (component: Target["architecture"]["components"][number] | undefined, steps: Map<string, { intent: string }>) => {
+    const served = (component?.serves ?? []).filter((id) => steps.has(id)).slice(0, 3);
+    const first = served[0] === undefined ? undefined : steps.get(served[0]);
+    const trim = (text: string) => text.trim().replace(/[.]+$/, "");
+    return {
+        says: `Given a person reaches "${trim(first?.intent ?? "its step")}", when this part runs, then ${trim(component?.responsibility ?? "it does its part")}.`,
+        from: served.map((id) => ({ _tag: "step", id })),
+    };
+};
+
 const splitOf = (story: Story, target: Target): Piece[] => {
     const names = story.components ?? [];
     const components = new Map(target.architecture.components.map((component) => [component.name, component] as const));
@@ -102,8 +114,9 @@ const splitOf = (story: Story, target: Target): Piece[] => {
                 ] as unknown as Story["actions"],
                 steps: own,
                 components: [name],
-                // A piece no criterion cites a rule of stays empty: the plan's gate reports it, nothing is written for it.
-                criteria: criteria as unknown as Story["criteria"],
+                // A piece no criterion cites a rule of is stated from its own component and the steps it serves: a formula
+                // over phrases the journey and the architecture already wrote, so no story is empty.
+                criteria: (criteria.length > 0 ? criteria : [pieceCriterion(component, steps)]) as unknown as Story["criteria"],
                 terms: at === 0 ? story.terms : [],
                 ...(journey !== undefined && lived.length > 0
                     ? {

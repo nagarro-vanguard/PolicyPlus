@@ -211,10 +211,16 @@ export const targetGaps = (input: {
         advisory.push(
             `${twiceBuilt.length} foundation stories still build an outside system a component adapts: ${some(twiceBuilt.map((story) => short(story.title)))}`,
         );
+    // A journey whose steps are all built by shared stories has no epic of its own; one built by nothing is a failure.
+    const served = new Set(plan.stories.flatMap((story) => story.steps ?? []));
+    const inShared: string[] = [];
     for (const journey of target.journeys) {
-        const epic = plan.epics.find((each) => each.task === journey.task);
-        if (epic === undefined) failing.push(`journey ${journey.name} has no epic`);
+        if (plan.epics.some((each) => each.task === journey.task)) continue;
+        if (journey.steps.every((step) => served.has(step.id))) inShared.push(journey.name);
+        else failing.push(`journey ${journey.name} has no epic and its steps are not all built`);
     }
+    if (inShared.length > 0)
+        advisory.push(`${inShared.length} journeys have no epic of their own, since the shared components build every step: ${some(inShared)}`);
     const citedTransitions = new Set(
         plan.stories.flatMap((story) =>
             story.criteria.flatMap((c) => c.from.flatMap((r) => (r._tag === "transition" ? [r.id as string] : []))),

@@ -27,7 +27,7 @@ export const SHARED_EPIC = "area:shared rules";
 
 /** The scaffold story is written by the plan, not by an agent: one criterion per layer. */
 export const scaffoldStory = (layers: readonly TargetLayer[]): Story => {
-    const per = Math.max(1, Math.ceil(layers.length / 11));
+    const per = Math.max(1, Math.ceil(layers.length / 6));
     const groups: TargetLayer[][] = [];
     for (let i = 0; i < layers.length; i += per) groups.push(layers.slice(i, i + per));
     return {
