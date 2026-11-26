@@ -15,7 +15,7 @@ Follows Continuum's design language: consistency over local taste, the reader's 
 - The sidebar is one level and carries no counts: one flat list of the sections (Overview, Capabilities and places, Journeys, Architecture, Choices, Plan, Risks). The capabilities are on their own page, not in the sidebar; the palette finds everything else. Below the theme's `md` the sidebar is a sheet, opened from the top bar. A script that sets a page up runs each time a page is shown.
 - One reading column. A table or a drawing may go wider and says so.
 - Density is the app's, not a page's: no page sets its own or offers a control for it.
-- Type and control sizes come from the theme; a page never invents one. A control is never taller than a line of text with its padding, and nothing is larger than the page heading.
+- Type and control sizes come from the theme; a page never invents one. A control is never taller than a line of text with its padding, and nothing is larger than the page heading. The reader's text is 13px, so its controls are compact: buttons are the `sm` size (`icon-sm` for an icon), and the input, the input group and the select are 1.75rem, set once in `reader-theme.css`; no page sets a control height.
 
 ## Navigation
 

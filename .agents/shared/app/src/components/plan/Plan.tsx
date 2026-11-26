@@ -116,7 +116,7 @@ export function StoryBody({ story, root }: { readonly story: StoryView; readonly
                                         {criterion.rules.map((rule, index) => (
                                             <span key={`${rule.name}${String(index)}`}>
                                                 {index === 0 ? null : "; "}
-                                                <LinkOrText link={rule} root={root} />
+                                                <code className="font-mono"><LinkOrText link={rule} root={root} /></code>
                                             </span>
                                         ))}
                                     </p>

@@ -56,7 +56,7 @@ export function Overview({
             </Sections>
             {reference === null ? null : (
                 <p>
-                    <Button variant="secondary" render={<a href={`./${reference}`} />} nativeButton={false} data-written-by="app">
+                    <Button variant="secondary" size="sm" render={<a href={`./${reference}`} />} nativeButton={false} data-written-by="app">
                         {copy.overview.open}
                     </Button>
                 </p>

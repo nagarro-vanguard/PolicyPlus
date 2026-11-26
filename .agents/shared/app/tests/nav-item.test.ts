@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { readFileSync } from "node:fs";
 import { navItem, navItemFill } from "../src/components/shell/navItem";
 
 // The shared look of a navigation item (src/components/shell/navItem.ts) keeps the properties the accessibility target
@@ -33,4 +34,9 @@ test("motion comes from the theme's tokens", () => {
 
 test("no raw colour or pixel font size", () => {
     expect(all).not.toMatch(/#[0-9a-f]{3,8}\b|rgb\(|hsl\(|oklch\(|text-\[\d+px\]/i);
+});
+
+test("reader controls are compact: no default-size button, one density rule for input and select", () => {
+    const css = readFileSync(new URL("../src/styles/reader-theme.css", import.meta.url), "utf8");
+    expect(css).toMatch(/main \[data-slot="select-trigger"\][^{]*\{[^}]*height:\s*1\.75rem/);
 });

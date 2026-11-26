@@ -92,3 +92,19 @@
     --diagram-text-small: 0.75rem;
     --diagram-text-title: 0.875rem;
 }
+
+/*
+ * Reader density. The page text is the theme's 13px on a 20px line, so a control is one line of text with the theme's
+ * small padding: 1.75rem, the height of the design system's small button. The input and the select have no small size
+ * of their own; this is the one place that gives them the button's. Buttons use their `sm` size where they are drawn.
+ */
+main [data-slot="input"],
+main [data-slot="select-trigger"],
+main [data-slot="input-group"] {
+    height: 1.75rem;
+    min-height: 0;
+}
+main [data-slot="input"],
+main [data-slot="select-trigger"] {
+    padding-block: 0;
+}

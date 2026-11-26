@@ -23,7 +23,7 @@ export const contextMarkdownOf = (file: string) => file.replace(/\.txt$/, ".md")
 export function ContextCopy({ file, kilobytes }: { readonly file: string; readonly kilobytes: number }) {
     return (
         <div className="flex items-center gap-spacing-xs">
-            <Button variant="outline" data-context-file={file} data-copied={copy.site.copied} data-part="context">
+            <Button variant="outline" size="sm" data-context-file={file} data-copied={copy.site.copied} data-part="context">
                 <Copy aria-hidden="true" />
                 <span data-label data-written-by="app">
                     {copy.explorer.copyContext}

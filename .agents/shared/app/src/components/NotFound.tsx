@@ -17,7 +17,7 @@ export function NotFound({ view }: { readonly view: NodeView }) {
     return (
         <div className="flex flex-col gap-spacing-5xl" data-not-found>
             <p>
-                <Button variant="outline" data-palette-open>
+                <Button variant="outline" size="sm" data-palette-open>
                     <Search aria-hidden="true" />
                     <span data-written-by="app">{copy.site.searchOpen}</span>
                 </Button>

@@ -17,7 +17,7 @@ export function ContextMenu({ href, path, onPath }: { readonly href: string; rea
         <DropdownMenu>
             <Tooltip>
                 <TooltipTrigger render={<span />}>
-                    <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label={copy.explorer.moreWays} />}>
+                    <DropdownMenuTrigger render={<Button variant="outline" size="icon-sm" aria-label={copy.explorer.moreWays} />}>
                         <EllipsisVertical aria-hidden="true" />
                     </DropdownMenuTrigger>
                 </TooltipTrigger>
