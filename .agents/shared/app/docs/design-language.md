@@ -45,6 +45,7 @@ The sidebar and the "On this page" rail are one language, held in `src/component
 
 ## Context
 
+- Drawers (the story sheet and the detail of an action or a rule) share one frame: a kind label, the title, a close button, in a panel beside the page. Their sections are a small label (`text-sm font-medium`) over the body, never the page's 16px heading with a rule; a list longer than a screen is a fold or has a filter; a status or a source every row shares is said once above the list, and a row says it only when it differs.
 - One control on every page that shows a node: the outline "Copy" button with the size of the text ("about 91 KB"), and beside it an icon-only menu with "Copy file path" and "Download". One Copy copies the whole text; nothing is cut, and nothing offers a shorter version.
 - The path is relative to the site root (`context/<kind>/<key>.md`, a real file of the app folder) so it holds wherever the folder sits; Download is a link to the same file; Copy reads the embedded script, so all three work from `file://`.
 - The control uses the design system's `Button` and `DropdownMenu`: the theme's focus ring and fills, a target of at least 24 pixels, the app's words (`src/lib/copy.ts`) marked as the app's, no card and no accent colour.

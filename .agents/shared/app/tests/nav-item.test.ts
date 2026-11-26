@@ -38,5 +38,14 @@ test("no raw colour or pixel font size", () => {
 
 test("reader controls are compact: no default-size button, one density rule for input and select", () => {
     const css = readFileSync(new URL("../src/styles/reader-theme.css", import.meta.url), "utf8");
-    expect(css).toMatch(/main \[data-slot="select-trigger"\][^{]*\{[^}]*height:\s*1\.75rem/);
+    expect(css).toMatch(/dialog\[aria-labelledby="detail-title"\]\) \[data-slot="select-trigger"\][^{]*\{[^}]*height:\s*1\.75rem/);
+});
+
+test("the detail drawer draws its sections like the story sheet: a small label, no page heading", () => {
+    const shell = readFileSync(new URL("../src/scripts/shell.ts", import.meta.url), "utf8");
+    const plan = readFileSync(new URL("../src/components/plan/Plan.tsx", import.meta.url), "utf8");
+    const label = 'h3", "text-sm font-medium"';
+    expect(shell).toContain(label);
+    expect(plan).toContain('<h3 className="text-sm font-medium"');
+    expect(shell).not.toContain('part("section")');
 });

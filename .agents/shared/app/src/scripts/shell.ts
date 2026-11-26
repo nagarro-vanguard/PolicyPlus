@@ -241,7 +241,7 @@ const statusOf = (status: Status, detail: boolean): HTMLElement => {
     }
     return line;
 };
-const rowsOf = (items: readonly RowView[]) => {
+const rowsOf = (items: readonly RowView[], statusOnce = false) => {
     const host = part("rows");
     for (const row of items) {
         const item = part(row.href === undefined ? "row-plain" : "row-link");
@@ -276,7 +276,7 @@ const rowsOf = (items: readonly RowView[]) => {
             words(risk, row.risk.word);
             count === null || count === undefined ? actions?.append(risk) : count.before(risk);
         }
-        if (row.status === undefined) host.append(item);
+        if (row.status === undefined || statusOnce) host.append(item);
         else {
             // The status holds a link of its own, so it sits beside the row's link, never inside it.
             const box = el("div", "flex flex-col");
@@ -288,10 +288,23 @@ const rowsOf = (items: readonly RowView[]) => {
 };
 /** A list longer than this gets a filter above it. */
 const filterFrom = 16;
-/** The rows, with a filter over them when they are many. */
+/** The status every row of a list shares (the same state, the same story or reason), said once above the list; null when the rows differ. */
+const sharedStatus = (items: readonly RowView[]): Status | null => {
+    const first = items[0]?.status;
+    if (first === undefined || items.length < 2) return null;
+    const same = (one: Status) => one.state === first.state && one.builtBy?.n === first.builtBy?.n && one.reason === first.reason;
+    return items.every((row) => row.status !== undefined && same(row.status)) ? first : null;
+};
+/** The rows, with a filter over them when they are many, and a status they all share said once. */
 const filteredRows = (items: readonly RowView[]) => {
-    const rows = rowsOf(items);
-    if (items.length < filterFrom) return rows;
+    const once = sharedStatus(items);
+    const rows = rowsOf(items, once !== null);
+    if (items.length < filterFrom) {
+        if (once === null) return rows;
+        const box = el("div", "flex flex-col gap-spacing-md");
+        box.append(statusOf(once, false), rows);
+        return box;
+    }
     const box = el("div", "flex flex-col gap-spacing-md");
     const filter = part("filter");
     const input = filter.querySelector("input");
@@ -307,22 +320,16 @@ const filteredRows = (items: readonly RowView[]) => {
         }
         none.hidden = shown > 0;
     });
-    box.append(filter, rows, none);
+    box.append(...(once === null ? [] : [statusOf(once, false)]), filter, rows, none);
     return box;
 };
-/** A section of the design system with its heading, a level below the drawer's own heading. */
+/** A section of the drawer: a small label over its body, as the story sheet draws its blocks. */
 const sectionOf = (title: string, writtenBy: "agent" | "app", body: HTMLElement) => {
-    const wrapper = part("section");
-    wrapper.dataset.writtenBy = writtenBy;
-    const section = wrapper.querySelector("section");
-    section?.setAttribute("aria-label", title);
-    const h2 = section?.querySelector("h2");
-    if (h2 !== null && h2 !== undefined) {
-        const h3 = el("h3", h2.className, title);
-        h2.replaceWith(h3);
-    }
-    section?.append(body);
-    return wrapper;
+    const section = el("section", "flex flex-col gap-spacing-xs");
+    section.setAttribute("aria-label", title);
+    section.dataset.writtenBy = writtenBy;
+    section.append(el("h3", "text-sm font-medium", title), body);
+    return section;
 };
 const rowOfLink = (link: NodeView["lateral"][number]["links"][number]): RowView => ({
     href: link.href,
