@@ -241,7 +241,7 @@ const statusOf = (status: Status, detail: boolean): HTMLElement => {
     }
     return line;
 };
-const rowsOf = (items: readonly RowView[], statusOnce = false) => {
+const rowsOf = (items: readonly RowView[]) => {
     const host = part("rows");
     for (const row of items) {
         const item = part(row.href === undefined ? "row-plain" : "row-link");
@@ -276,7 +276,7 @@ const rowsOf = (items: readonly RowView[], statusOnce = false) => {
             words(risk, row.risk.word);
             count === null || count === undefined ? actions?.append(risk) : count.before(risk);
         }
-        if (row.status === undefined || statusOnce) host.append(item);
+        if (row.status === undefined) host.append(item);
         else {
             // The status holds a link of its own, so it sits beside the row's link, never inside it.
             const box = el("div", "flex flex-col");
@@ -288,23 +288,10 @@ const rowsOf = (items: readonly RowView[], statusOnce = false) => {
 };
 /** A list longer than this gets a filter above it. */
 const filterFrom = 16;
-/** The status every row of a list shares (the same state, the same story or reason), said once above the list; null when the rows differ. */
-const sharedStatus = (items: readonly RowView[]): Status | null => {
-    const first = items[0]?.status;
-    if (first === undefined || items.length < 2) return null;
-    const same = (one: Status) => one.state === first.state && one.builtBy?.n === first.builtBy?.n && one.reason === first.reason;
-    return items.every((row) => row.status !== undefined && same(row.status)) ? first : null;
-};
-/** The rows, with a filter over them when they are many, and a status they all share said once. */
+/** The rows, with a filter over them when they are many. */
 const filteredRows = (items: readonly RowView[]) => {
-    const once = sharedStatus(items);
-    const rows = rowsOf(items, once !== null);
-    if (items.length < filterFrom) {
-        if (once === null) return rows;
-        const box = el("div", "flex flex-col gap-spacing-md");
-        box.append(statusOf(once, false), rows);
-        return box;
-    }
+    const rows = rowsOf(items);
+    if (items.length < filterFrom) return rows;
     const box = el("div", "flex flex-col gap-spacing-md");
     const filter = part("filter");
     const input = filter.querySelector("input");
@@ -320,7 +307,7 @@ const filteredRows = (items: readonly RowView[]) => {
         }
         none.hidden = shown > 0;
     });
-    box.append(...(once === null ? [] : [statusOf(once, false)]), filter, rows, none);
+    box.append(filter, rows, none);
     return box;
 };
 /** A section of the drawer: a small label over its body, as the story sheet draws its blocks. */
