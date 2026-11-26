@@ -5,6 +5,7 @@ import { contextOf, idsOf, parentOf } from "./build/context";
 import { briefOf } from "./build/brief";
 import { viewsOf } from "./build/views";
 import { evidenceOf } from "./build/evidence";
+import { attachGoals, goalsOf } from "./build/goals";
 import { factsOf, type Facts } from "./build/facts";
 import { hierarchyOf, levels } from "./build/hierarchy";
 import { architectureOf, proposedOf, todayOf, traceOf } from "./build/journeys";
@@ -81,7 +82,8 @@ export const buildCase = (options: ComposeOptions) => {
         plan === undefined
             ? undefined
             : planViewsOf(plan, request, proposed, architecture, trace, target?.disputes ?? [], plain);
-    const brief = briefOf(facts, request, architecture, views, numbers);
+    const goals = goalsOf({ request, target, plan, architecture, proposed, views, slugs });
+    const brief = briefOf(facts, request, architecture, views, numbers, goals);
     journeyNumbers(numbers, today, proposed, architecture);
     if (views !== undefined) planNumbers(numbers, views);
     const pictures = viewsOf(facts, hierarchy.nodeOf, target);
@@ -105,6 +107,9 @@ export const buildCase = (options: ComposeOptions) => {
     if (context.problems.length > 0)
         throw new ComposeError("missing", `the copy contexts are not whole: ${context.problems.slice(0, 5).join("; ")}`);
 
+    // The goals' nodes join the hierarchy after the copy contexts are checked: no producer writes a context for them.
+    if (goals !== undefined) attachGoals(hierarchy.nodes, goals);
+
     const input = {
         payloads,
         facts,
@@ -119,6 +124,7 @@ export const buildCase = (options: ComposeOptions) => {
         plan,
         views,
         context,
+        goals,
     };
     return { input, target, plan, request, brief, evidence, sourceRoot };
 };
@@ -131,7 +137,7 @@ export const buildCase = (options: ComposeOptions) => {
 export const compose = (options: ComposeOptions): Composed => {
     const built = buildCase(options);
     const { input, target, plan, request, brief, evidence, sourceRoot } = built;
-    const { payloads, facts, hierarchy, numbers, pictures, today, proposed, architecture, trace, views, context } =
+    const { payloads, facts, hierarchy, numbers, pictures, today, proposed, architecture, trace, views, context, goals } =
         input;
 
     const values: Record<string, unknown> = {
@@ -164,6 +170,7 @@ export const compose = (options: ComposeOptions): Composed => {
             domains: architecture?.domains ?? [],
         }),
         "brief.json": brief,
+        ...(goals === undefined ? {} : { "goals/goals.json": goals }),
         "journeys/today.json": today,
         "journeys/personas.json": personasOf(join(options.payloads, "..", "personas.json"), facts, proposed),
         "context/index.json": context.sizes,
@@ -252,7 +259,7 @@ export const compose = (options: ComposeOptions): Composed => {
                       },
             plan: plan === undefined ? null : { fingerprint: plan.fingerprint },
             request:
-                request === undefined ? null : { goals: request.goals !== undefined, stackLines: request.stack.length },
+                request === undefined ? null : { goals: request.goals.length > 0, stackLines: request.stack.length },
             source: { readable: sourceRoot !== undefined && existsSync(sourceRoot) },
         },
         files: listed,

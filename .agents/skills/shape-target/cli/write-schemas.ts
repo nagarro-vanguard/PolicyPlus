@@ -3,7 +3,7 @@ import { join, resolve } from "node:path";
 import { Schema } from "effect";
 import { layoutOf } from "../shared/model/layout";
 import { Manifest } from "../shared/manifest";
-import { Architecture, Choice, Dispute, StoredArchitecture, StoredJourney, Task } from "../shared/model/records";
+import { Choice, Dispute, FinalArchitecture, StoredArchitecture, StoredJourney, Task } from "../shared/model/records";
 
 const [rootArg] = process.argv.slice(2);
 if (rootArg === undefined || rootArg === "--help") {
@@ -17,7 +17,7 @@ mkdirSync(folder, { recursive: true });
 for (const [name, schema] of Object.entries({
     task: Task,
     journey: StoredJourney,
-    architecture: Architecture,
+    architecture: FinalArchitecture,
     "architecture-variant": StoredArchitecture,
     choice: Choice,
     dispute: Dispute,

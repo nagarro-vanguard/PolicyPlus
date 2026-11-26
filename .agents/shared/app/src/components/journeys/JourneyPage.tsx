@@ -5,6 +5,7 @@ import type { Link } from "../../case/view";
 import { copy } from "../../lib/copy";
 import { Section } from "../Explorer";
 import { Fold } from "../Fold";
+import { GoalChips } from "../goals/GoalChips";
 import { Drop } from "./JourneyList";
 import { ChangeChip, ChangeChips, LinkLine, LinkRows } from "./Parts";
 
@@ -217,6 +218,7 @@ export function JourneyPage({ view, root }: { readonly view: JourneyView; readon
                     </p>
                 )}
                 <LinkLine label={words.capability} items={view.capability === null ? [] : [view.capability]} root={root} />
+                <GoalChips chips={view.goals} root={root} />
             </div>
             <Sections>
                 {view.way === null ? (

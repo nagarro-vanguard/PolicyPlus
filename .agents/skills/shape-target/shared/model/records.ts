@@ -172,6 +172,18 @@ export const Component = Schema.Struct({ ...componentFields, kind: ComponentKind
 
 const Sentence = Text.annotate(about("One plain sentence."));
 
+export const GoalAnswer = Schema.Struct({
+    goal: Schema.Int.check(Schema.isGreaterThanOrEqualTo(1)).annotate(
+        about("The goal's number in the request, from 1, in the order the request lists them."),
+    ),
+    how: Sentence.annotate(about("How this variant honours the goal, in one plain sentence.")),
+    where: Schema.Array(Text).annotate(
+        about(
+            "The names of the domains and containers of this variant that carry the goal; empty when the goal is settled in the foundation, which `how` then says.",
+        ),
+    ),
+}).annotate(about("How one variant answers one goal of the request."));
+
 export const Architecture = Schema.Struct({
     name: Text,
     idea: Text.annotate(about("How the variant is cut and where its parts run, in a few plain sentences.")),
@@ -194,6 +206,11 @@ export const Architecture = Schema.Struct({
             "The pictures of this variant: a functional view with a box for every domain, a technical view of the parts and how they work together with a box for every container, and a deployment view of where each container runs and what it needs, with a box for every container. Name whatever the Target Stack and the request say, as they say it.",
         ),
     ),
+    goals: Schema.optionalKey(
+        Schema.Array(GoalAnswer).annotate(
+            about("One answer for every goal of the request, in its order; absent only when the request has no goals."),
+        ),
+    ),
     components: Schema.optionalKey(Schema.Array(Component)),
 }).annotate(about("One way of building the target: domains, containers, and once chosen, components."));
 
@@ -205,7 +222,17 @@ export const Score = Schema.Struct({
     idleDomains: Schema.Array(Text),
 }).annotate(about("What a variant scores at domain level against the chosen journeys; derived, never written."));
 
-export const StoredArchitecture = Schema.Struct({ ...Architecture.fields, score: Score });
+const goalsStamp = Schema.optionalKey(
+    Text.annotate(
+        about("The sha256 of the request's goals this was made for; written by the tool, never by an agent."),
+    ),
+);
+
+export const StoredArchitecture = Schema.Struct({ ...Architecture.fields, score: Score, goalsSha: goalsStamp });
+
+export const FinalArchitecture = Schema.Struct({ ...Architecture.fields, goalsSha: goalsStamp }).annotate(
+    about("The chosen architecture with its components, as `target/architecture.json` holds it."),
+);
 
 export const Dispute = Schema.Struct({
     job: Text.annotate(about("The job whose review raised it.")),
@@ -264,5 +291,6 @@ export type Container = typeof Container.Type;
 export type Component = typeof Component.Type;
 export type Architecture = typeof Architecture.Type;
 export type Dispute = typeof Dispute.Type;
+export type FinalArchitecture = typeof FinalArchitecture.Type;
 export type StoredArchitecture = typeof StoredArchitecture.Type;
 export type Choice = typeof Choice.Type;

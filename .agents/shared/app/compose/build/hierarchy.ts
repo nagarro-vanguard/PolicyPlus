@@ -20,6 +20,7 @@ export const levels = [
     "part",
     "place",
     "unplaced",
+    "goal",
 ] as const;
 export type Level = (typeof levels)[number];
 
@@ -42,6 +43,7 @@ export const foldKinds = [
     "entryPointsInNoCapability",
     "entryPointsInNoPart",
     "capabilitiesInNoArea",
+    "goals",
 ] as const;
 export type FoldKind = (typeof foldKinds)[number];
 

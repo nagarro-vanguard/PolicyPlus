@@ -176,6 +176,8 @@ export type DesignContext = {
     /** The ids of the outside systems the chosen tasks reach. */
     needs: readonly string[];
     stack: readonly string[];
+    /** The request's goals, in order; goal n is the nth. */
+    goals: readonly string[];
 };
 
 export const techInStack = (tech: string, stack: readonly string[]) =>
@@ -300,6 +302,36 @@ export const componentViewGaps = (
 };
 
 /**
+ * C9: a variant answers every goal of the request exactly once, and each answer names only domains and containers of
+ * the variant. An answer that names none says the goal is settled in the foundation.
+ * @param variant the variant
+ * @param goals the request's goals
+ * @returns the gaps
+ */
+export const goalGaps = (variant: Architecture, goals: readonly string[]): string[] => {
+    if (goals.length === 0) return [];
+    const label = `variant "${variant.name}"`;
+    const answers = variant.goals ?? [];
+    const places = new Set([...variant.domains, ...variant.containers].map((place) => place.name));
+    const gaps: string[] = [];
+    goals.forEach((_, at) => {
+        const number = at + 1;
+        const mine = answers.filter((answer) => answer.goal === number);
+        if (mine.length !== 1) gaps.push(`${label}: goal ${number} has ${mine.length} answers, not one`);
+    });
+    for (const answer of answers) {
+        if (answer.goal > goals.length)
+            gaps.push(`${label}: an answer is for goal ${answer.goal}, but the request has ${goals.length} goals`);
+        for (const place of answer.where)
+            if (!places.has(place))
+                gaps.push(
+                    `${label}: the answer to goal ${answer.goal} names ${place}, which is no domain or container`,
+                );
+    }
+    return gaps;
+};
+
+/**
  * The checks of one architecture variant at domain level: C4 (rules partitioned), C5 (boundaries) and the stack
  * and names part of C6.
  * @param variant the variant
@@ -378,6 +410,7 @@ export const variantGaps = (
             gaps.push(`${label}: outside system ${need} has ${needs.get(need) ?? 0} integrations, not one`);
     for (const need of needs.keys())
         if (!context.needs.includes(need)) gaps.push(`${label}: integration for ${need}, which no chosen task reaches`);
+    gaps.push(...goalGaps(variant, context.goals));
     gaps.push(...variantViewGaps(variant, context, componentNames));
     // A step's data must be within reach of the domains that decide it: their own facts or those of a domain they depend on.
     const reachOfDomain = reachOf(variant.domains);

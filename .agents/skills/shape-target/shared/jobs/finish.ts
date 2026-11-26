@@ -1,4 +1,5 @@
 import { Schema } from "effect";
+import { stampGoals } from "../goals-stamps";
 import { disputeOf, disputesPath } from "../disputes";
 import { writeManifest } from "../manifest";
 import { finalGaps, isCopy, scoreOf } from "../derive/checks";
@@ -58,6 +59,7 @@ const finishOnce = (layout: Layout, stage: Stage): Finished => {
                 text: `${lost.length} tasks have no journeys: ${lost.map((task) => task.id).join(", ")}`,
             };
         writeJson(layout.journeyVariants, journeys);
+        stampGoals(layout, "journeys");
         return { ok: true, text: `${journeys.length} journeys for ${tasks.length} tasks accepted; ${note}` };
     }
     if (stage === "architecture") {
@@ -65,9 +67,10 @@ const finishOnce = (layout: Layout, stage: Stage): Finished => {
             outputOf<{ architectures: unknown }>(layout, "shape")?.architectures ?? [],
         );
         const journeys = loadJourneys(layout);
+        const sha = stampGoals(layout, "architecture");
         writeJson(
             layout.architectureVariants,
-            variants.map((variant) => ({ ...variant, score: scoreOf(variant, journeys) })),
+            variants.map((variant) => ({ ...variant, score: scoreOf(variant, journeys), goalsSha: sha })),
         );
         return { ok: true, text: `${variants.length} architectures accepted; ${note}` };
     }
@@ -82,7 +85,7 @@ const finishOnce = (layout: Layout, stage: Stage): Finished => {
         const view = outputOf<{ view?: unknown }>(layout, job.id)?.view;
         return view === undefined ? [] : [Schema.decodeUnknownSync(ViewBody)(view)];
     });
-    const { score: _score, ...architecture } = chosen;
+    const { score: _score, goalsSha, ...architecture } = chosen;
     const whole = { ...architecture, views: [...architecture.views, ...componentViews], components };
     const gaps = finalGaps(whole, designContext(layout));
     if (gaps.length > 0)
@@ -90,7 +93,7 @@ const finishOnce = (layout: Layout, stage: Stage): Finished => {
             ok: false,
             text: `${gaps.map((gap) => `- ${gap}`).join("\n")}\nRun the job of the domain that should fix a gap again with \`redo <job> --instructions <the gap>\`, then finish again.`,
         };
-    writeJson(layout.architecture, whole);
+    writeJson(layout.architecture, goalsSha === undefined ? whole : { ...whole, goalsSha });
     writeManifest(layout);
     return {
         ok: true,

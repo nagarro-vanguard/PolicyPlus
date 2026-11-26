@@ -3,11 +3,13 @@ import { join } from "node:path";
 import { Schema } from "effect";
 import { subjectOf } from "./gates";
 import { writeJson } from "./jobs/state";
+import { loadGoalsStamps } from "./goals-stamps";
 import type { Layout } from "./model/layout";
 
 /*
  * `target/manifest.json` says which version of the contract the files in `target/` follow, with the sha256 of each,
- * so a reader can refuse files it cannot read. The files themselves keep their shape (two of them are bare arrays).
+ * so a reader can refuse files it cannot read. `goalsSha` holds, per stage, the stamp of the request's goals the stage was
+ * finished for (the architecture file also carries its own). The files themselves keep their shape (two of them are bare arrays).
  * The version goes up when a file changes in a way an older reader would misread.
  */
 export const CONTRACT_VERSION = 2;
@@ -15,6 +17,12 @@ export const CONTRACT_VERSION = 2;
 export const Manifest = Schema.Struct({
     contractVersion: Schema.Int,
     files: Schema.Record(Schema.String, Schema.String),
+    goalsSha: Schema.optionalKey(
+        Schema.Struct({
+            journeys: Schema.optionalKey(Schema.String),
+            architecture: Schema.optionalKey(Schema.String),
+        }),
+    ),
 });
 export type Manifest = typeof Manifest.Type;
 
@@ -30,6 +38,7 @@ export const writeManifest = (layout: Layout) => {
     const manifest: Manifest = {
         contractVersion: CONTRACT_VERSION,
         files: Object.fromEntries(names.map((name) => [name, subjectOf(join(layout.target, name))])),
+        ...(Object.keys(loadGoalsStamps(layout)).length === 0 ? {} : { goalsSha: loadGoalsStamps(layout) }),
     };
     // Written only when it changes, so deriving again leaves `target/` as it was.
     if (

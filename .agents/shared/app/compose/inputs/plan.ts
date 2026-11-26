@@ -31,7 +31,13 @@ const Story = z.looseObject({
     reliesOn: z.array(z.looseObject({ rule: Text, builtBy: Text })),
     actions: Ids,
     criteria: z.array(
-        z.looseObject({ says: Text, from: z.array(z.looseObject({ _tag: Text, id: Text })).optional() }),
+        z.looseObject({
+            says: Text,
+            // A goal reference holds the goal's `number`; every other reference holds an `id`.
+            from: z
+                .array(z.looseObject({ _tag: Text, id: Text.optional(), number: z.number().optional() }))
+                .optional(),
+        }),
     ),
     open: Ids.optional(),
     steps: Ids.optional(),
@@ -45,6 +51,8 @@ const Story = z.looseObject({
 
 const Plan = z.looseObject({
     contractVersion: z.number().optional(),
+    /** The stamp of the request's goals as the plan was finished; absent on a plan made before goals were stamped. */
+    goalsSha: Text.optional(),
     layers: z.array(
         z.looseObject({
             id: Text,
@@ -59,7 +67,15 @@ const Plan = z.looseObject({
             container: Text.optional(),
         }),
     ),
-    decisions: z.array(z.looseObject({ id: Text, layer: Text, chose: Text, reason: Text })),
+    decisions: z.array(
+        z.looseObject({
+            id: Text,
+            layer: Text,
+            chose: Text,
+            reason: Text,
+            topic: z.looseObject({ _tag: Text, number: z.number().optional() }).optional(),
+        }),
+    ),
     epics: z.array(
         z.looseObject({
             key: Text,
@@ -87,7 +103,7 @@ const Plan = z.looseObject({
         .optional(),
 });
 
-const Request = z.looseObject({ goals: Text.optional(), stack: Ids.optional() });
+const Request = z.looseObject({ goals: Ids.optional(), stack: Ids.optional() });
 
 export type PlanFile = z.output<typeof Plan>;
 export type PlanStory = PlanFile["stories"][number];
@@ -105,7 +121,8 @@ export type PlanInput = {
     readonly attachments: ReadonlyMap<string, string>;
 };
 
-export type RequestInput = { readonly goals: string | undefined; readonly stack: readonly string[] };
+/** `goals`: the person's goals, one string each, in order; empty when they wrote none. */
+export type RequestInput = { readonly goals: readonly string[]; readonly stack: readonly string[] };
 
 /**
  * Read the plan of a modernization.
@@ -150,7 +167,7 @@ export const readPlan = (root: string): PlanInput => {
 };
 
 /**
- * The person's request: the Goals they wrote, kept verbatim, and the target stack lines.
+ * The person's request: the Goals they wrote, one per item and kept verbatim, and the target stack lines.
  * @param root the run's output root
  * @returns the request, or nothing when the root holds none
  */
@@ -158,6 +175,6 @@ export const readRequest = (root: string): RequestInput | undefined => {
     const path = join(root, "request.json");
     if (!existsSync(path)) return undefined;
     const request = readJson(path, Request);
-    const goals = request.goals === undefined || request.goals.trim() === "" ? undefined : request.goals;
+    const goals = (request.goals ?? []).filter((goal) => goal.trim() !== "");
     return { goals, stack: request.stack ?? [] };
 };

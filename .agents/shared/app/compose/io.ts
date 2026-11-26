@@ -14,6 +14,14 @@ export const sha1 = (text: string) => createHash("sha1").update(text).digest("he
 export const sha256 = (text: string) => createHash("sha256").update(text).digest("hex");
 
 /**
+ * The stamp of a goals list: the sha256 of the JSON of the goal strings in order. The stages that were shaped by the goals
+ * carry the same stamp (written by their own tools); compose compares them with the request's to tell stale output.
+ * @param goals the request's goals, in order
+ * @returns the stamp
+ */
+export const goalsSha = (goals: readonly string[]) => sha256(JSON.stringify(goals));
+
+/**
  * Read a file as text, failing with the file's name when it cannot be read.
  * @param path the file
  * @returns its text

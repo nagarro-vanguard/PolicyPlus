@@ -12,19 +12,19 @@ export type EssenceTask = {
     facts: { id: string; name: string; states: string[] }[];
     needs: { id: string; name: string; kind: string }[];
 };
-export type Essence = { stack: string[]; notes: string[]; tasks: EssenceTask[] };
+export type Essence = { stack: string[]; goals: string[]; tasks: EssenceTask[] };
 
 /**
  * What a designer is given: each task as an outcome with the rules, data and outside needs it rests on, and the legacy
  * only as opaque ids with a statement. Pure.
  * @param legacy the legacy sheet
  * @param tasks the decided tasks
- * @param request the stack and notes
+ * @param request the stack and goals
  * @returns the essence
  */
 export const deriveEssence = (legacy: LegacySheet, tasks: readonly Task[], request: RequestView): Essence => ({
     stack: [...request.stack],
-    notes: [...request.notes],
+    goals: [...request.goals],
     tasks: tasks.map((task) => ({
         id: task.id,
         outcome: task.outcome,

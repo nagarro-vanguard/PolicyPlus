@@ -6,7 +6,7 @@ import type { Level } from "../../compose/build/hierarchy";
 // is read from `data/node/<key>.json` when the reader opens it.
 
 /** The levels that have a page per node. */
-export const pageLevels: readonly Level[] = ["overview", "area", "capability", "surface", "part", "place", "unplaced"];
+export const pageLevels: readonly Level[] = ["overview", "area", "capability", "surface", "part", "place", "unplaced", "goal"];
 
 /** Whether a level's nodes have pages of their own. */
 export const hasPage = (level: Level) => pageLevels.includes(level);

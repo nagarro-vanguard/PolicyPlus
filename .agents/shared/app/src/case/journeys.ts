@@ -1,5 +1,6 @@
 import { type ChangeGroup, changeGroupOf, changeWords, copy } from "../lib/copy";
 import { countOf, type CountView } from "./format";
+import { type GoalChip, goalIndexOf, goalsFileOf } from "./goals-view";
 import { theCase } from "./loader";
 import { addressOf } from "./routes";
 import type { Section } from "./sections";
@@ -100,6 +101,8 @@ export type JourneyView = {
     rows: PairRow[];
     drops: DropView[];
     challenges: string[];
+    /** The goals whose answer reaches this journey, when any does. */
+    goals: GoalChip[];
     prev: Link | null;
     next: Link | null;
     context: { file: string; kilobytes: number } | null;
@@ -375,6 +378,7 @@ export const journeysOf = (data: CaseData, nodes: readonly NodeRecord[], section
             alternatives: way?.alternatives ?? [],
             rows: way === undefined ? todaySteps.map((step) => ({ today: [step], proposed: [] })) : rowsOf(todaySteps, steps, edges),
             drops: way === undefined ? [] : (dropsOf.get(way.id) ?? []).map((drop) => dropView(drop, journey)),
+            goals: goalIndexOf(goalsFileOf(theCase())).forJourney(journey.slug),
             challenges:
                 way === undefined
                     ? []

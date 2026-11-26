@@ -13,6 +13,7 @@ import type { PlainLink, PlanView, StoryView } from "../../case/plan-view";
 import { copy } from "../../lib/copy";
 import { Section } from "../Explorer";
 import { Fold } from "../Fold";
+import { GoalChips } from "../goals/GoalChips";
 import { Matrix } from "./Matrix";
 
 // The Plan section's page: how the plan is built up, its phases in build order with their epics and the layers they are
@@ -81,6 +82,7 @@ export function StoryBody({ story, root }: { readonly story: StoryView; readonly
                     </Badge>
                 )}
             </p>
+            <GoalChips chips={story.goals} root={root} />
             <Block title={words.what}>
                 <p data-written-by="agent">{story.what}</p>
             </Block>

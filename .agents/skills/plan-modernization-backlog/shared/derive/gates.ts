@@ -88,6 +88,50 @@ export const sameWhat = (stories: readonly { title: string; what: string }[]) =>
 };
 
 /**
+ * P1 and P2 of the plan: every goal of the request has one `goal` decision, and every goal is carried by at least one
+ * story criterion, which cites the goal (`goal n`) or the decision made for it.
+ * @param goals the request's goals, numbered from 1 by their order
+ * @param decisions the decisions of the plan
+ * @param stories the stories of the plan
+ * @returns one problem per goal that lacks a decision, per goal no criterion carries, and per decision of a goal the request does not have
+ */
+export const goalGaps = (
+    goals: readonly string[],
+    decisions: readonly Decision[],
+    stories: readonly Pick<Story, "criteria">[],
+): string[] => {
+    const gaps: string[] = [];
+    const decided = new Map<number, number>();
+    for (const d of decisions)
+        if (d.topic._tag === "goal") decided.set(d.topic.number, (decided.get(d.topic.number) ?? 0) + 1);
+    goals.forEach((goal, at) => {
+        const count = decided.get(at + 1) ?? 0;
+        if (count === 0) gaps.push(`goal ${at + 1} has no decision: "${short(goal)}"`);
+        else if (count > 1) gaps.push(`goal ${at + 1} has ${count} decisions, not one: "${short(goal)}"`);
+    });
+    for (const number of decided.keys())
+        if (number < 1 || number > goals.length)
+            gaps.push(`a decision names goal ${number}, which the request does not have`);
+    const goalOfDecision = new Map(
+        decisions.flatMap((d) => (d.topic._tag === "goal" ? [[d.id as string, d.topic.number] as const] : [])),
+    );
+    const carried = new Set<number>();
+    for (const story of stories)
+        for (const criterion of story.criteria)
+            for (const ref of criterion.from) {
+                if (ref._tag === "goal") carried.add(ref.number);
+                else if (ref._tag === "decision") {
+                    const number = goalOfDecision.get(ref.id);
+                    if (number !== undefined) carried.add(number);
+                }
+            }
+    goals.forEach((goal, at) => {
+        if (!carried.has(at + 1)) gaps.push(`goal ${at + 1} is carried by no story criterion: "${short(goal)}"`);
+    });
+    return gaps;
+};
+
+/**
  * Every invariant the plan must hold, as pure checks. Failing gaps stop the plan; advisory ones are reported only.
  * @param input the records, the facts, the request and the derived plan
  * @returns what is wrong
@@ -97,7 +141,7 @@ export const checkPlan = (input: Input): Gaps => {
     const failing: string[] = [...input.problems];
     const advisory: string[] = [];
 
-    // Decisions: scope, integrations, notes, layers.
+    // Decisions: scope, integrations, goals, layers.
     const scoped = new Set(decisions.flatMap((d) => (d.topic._tag === "scope" ? [d.topic.capability] : [])));
     const unscoped = analysis.capabilities.map((c) => c.capability.name).filter((name) => !scoped.has(name));
     if (unscoped.length > 0 && input.target === undefined)
@@ -106,10 +150,7 @@ export const checkPlan = (input: Input): Gaps => {
     const missingSystems = analysis.system.externals.map((e) => e.name).filter((name) => !integrated.has(name));
     if (missingSystems.length > 0)
         failing.push(`no integration decision for the outside systems: ${some(missingSystems)}`);
-    const noted = new Set(decisions.flatMap((d) => (d.topic._tag === "note" ? [d.topic.number] : [])));
-    request.notes.forEach((note, at) => {
-        if (!noted.has(at + 1)) failing.push(`note ${at + 1} has no decision: "${short(note)}"`);
-    });
+    failing.push(...goalGaps(request.goals, decisions, stories));
     const layerIds = new Set(layers.map((layer) => layer.id as string));
     for (const decision of decisions) {
         if (decision.layer !== "workspace" && !layerIds.has(decision.layer))

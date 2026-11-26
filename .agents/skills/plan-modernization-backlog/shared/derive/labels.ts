@@ -29,7 +29,7 @@ export const LABELS = {
     sameCode: "same code as",
     outside: (system: string) => `Outside system ${system}`,
     scope: (capability: string) => `Scope of ${capability}`,
-    note: (number: number) => `Note ${number} of the request`,
+    goalOfRequest: (number: number) => `Goal ${number} of the request`,
     convention: (layer: string) => `Convention for ${layer}`,
     everyLayer: "every layer",
     ruleOfToday: "A rule of today",

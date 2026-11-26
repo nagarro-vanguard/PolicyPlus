@@ -1,3 +1,4 @@
+import type { Stage } from "../../compose/build/goals";
 import type { FoldKind, Level } from "../../compose/build/hierarchy";
 
 // Every word the app writes itself, in one place so its voice can be read and tested as a whole. The app owns the titles
@@ -31,17 +32,22 @@ export const foldTitles: Readonly<Record<FoldKind, string>> = {
     entryPointsInNoCapability: "Actions in no capability",
     entryPointsInNoPart: "Actions whose code is in no part",
     capabilitiesInNoArea: "Capabilities in no area",
+    goals: "Goals it serves",
 };
 
 /** The label of each kind of link from one node to another. */
-export const relationLabels: Readonly<Record<"alsoUsedBy" | "livesIn" | "usedBy" | "reachedFrom" | "decidedFor", string>> =
-    {
-        alsoUsedBy: "Also used by",
-        livesIn: "Where its code lives",
-        usedBy: "Used by",
-        reachedFrom: "Reached from",
-        decidedFor: "Decided for",
-    };
+export const relationLabels: Readonly<
+    Record<"alsoUsedBy" | "livesIn" | "usedBy" | "reachedFrom" | "decidedFor" | "answeredIn" | "decidedIn" | "carriedBy", string>
+> = {
+    alsoUsedBy: "Also used by",
+    livesIn: "Where its code lives",
+    usedBy: "Used by",
+    reachedFrom: "Reached from",
+    decidedFor: "Decided for",
+    answeredIn: "Answered in",
+    decidedIn: "Decided in",
+    carriedBy: "Carried by",
+};
 
 /** The plain label of each change word a step of a new journey carries; the stored word is never shown. */
 export const changeWords: Readonly<Record<string, string>> = {
@@ -67,11 +73,13 @@ export const levelWords: Readonly<Record<Level, string>> = {
     part: "Parts",
     place: "Places",
     unplaced: "Not placed",
+    goal: "Goals",
 };
 
 /** The sections a reader can open, each answering one question. */
 export const sectionWords = {
     overview: { label: "Overview", question: "What does the system do?" },
+    goals: { label: "Goals", question: "What must the new system achieve?" },
     reference: { label: "Reference", question: "Which part handles what?" },
     journeys: { label: "Journeys", question: "What happens when someone does a task?" },
     architecture: { label: "Architecture", question: "How is it built, today and next?" },
@@ -79,6 +87,32 @@ export const sectionWords = {
     plan: { label: "Plan", question: "What is built, and in what order?" },
     risks: { label: "Risks", question: "What should be checked first?" },
 } as const;
+
+/**
+ * The plain words of every state a goal's stage mark can be in and of the summary of a goal, with the badge kind each is
+ * painted in. The list is closed: a state without a word fails the build. Nothing here says a goal is built, tested or
+ * met: the work stops at the plan.
+ */
+export const goalCoverageWords: Readonly<
+    Record<
+        "considered" | "settled" | "notReached" | "missing" | "stale",
+        { word: string; summary: string; badge: "goal-considered" | "goal-settled" | "goal-not-reached" | "goal-missing" | "goal-stale" }
+    >
+> = {
+    considered: { word: "Considered", summary: "Considered in every stage", badge: "goal-considered" },
+    settled: { word: "Settled in the foundation", summary: "Settled in the foundation", badge: "goal-settled" },
+    notReached: { word: "Not reached", summary: "Not reached by any journey", badge: "goal-not-reached" },
+    missing: { word: "Missing", summary: "Missing from a stage", badge: "goal-missing" },
+    stale: { word: "Produced before this goal changed", summary: "Produced before this goal changed", badge: "goal-stale" },
+};
+
+/** The name of each stage a goal is considered in. */
+export const goalStageWords: Readonly<Record<Stage, string>> = {
+    journeys: "Journeys",
+    architecture: "Architecture",
+    foundation: "Foundation decisions",
+    stories: "Stories",
+};
 
 export const copy = {
     site: {
@@ -140,8 +174,42 @@ export const copy = {
         listLink: "Open the list",
         status: "Where it stands in the plan",
     },
+    goals: {
+        title: "Goals",
+        lead: "What the people who asked for this work want the new system to achieve, and where each goal was considered.",
+        meaning: "A goal is considered in a stage when that stage's work answers it. The page covers the plan and goes no further.",
+        listTitle: "Every goal, in the order written",
+        asked: "As the people who asked wrote it",
+        stagesTitle: "Where it was considered",
+        answer: "How the architecture answers it",
+        answerWhere: "Where in the architecture",
+        decisionTitle: "How the foundation honours it",
+        decisionLayer: "Layer it governs",
+        decisionReason: "Why this way",
+        storiesTitle: "Stories that carry it",
+        journeysTitle: "Journeys it reaches",
+        componentsTitle: "Parts it reaches",
+        components: (count: number) => (count === 1 ? "1 part of the architecture" : `${count} parts of the architecture`),
+        epics: (count: number) => (count === 1 ? "Carried in 1 epic" : `Carried in ${count} epics`),
+        settledLine: "The architecture leaves this goal to a decision in the foundation, so it names no place.",
+        notReachedLine: "The architecture names places for this goal, but no step of a chosen journey is served there.",
+        staleLine: "Produced before this goal changed",
+        staleNote: "This stage was finished with another list of goals than the request has now. Run it again to bring it up to date.",
+        nothing: "Nothing yet",
+        serves: "Goals it serves",
+        servesChoices: "Goals these choices answer",
+        servesChoicesLead: "Each goal the chosen architecture answers, from the request.",
+        servesChip: (label: string) => `Goal: ${label}`,
+        number: (number: number) => `Goal ${number}`,
+        open: "Open the goal",
+        none: "The request holds no goals.",
+        noneHint: "Goals are written in the request's Goals section.",
+        stage: "Stage",
+        checkFirst: "Goals to check first",
+    },
     overview: {
         goals: "Goals",
+        goalsOpen: "Open the goals",
         notProvided: "Not provided",
         goalsNote: "Written by the people who asked for this work, and shown as they wrote it.",
         open: "Open the reference",

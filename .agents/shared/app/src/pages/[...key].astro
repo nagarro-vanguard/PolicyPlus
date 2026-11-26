@@ -1,9 +1,11 @@
 ---
 import Page from "../layouts/Page.astro";
 import { Explorer } from "../components/Explorer";
+import { GoalPage } from "../components/goals/Goals";
 import { Crumbs } from "../components/shell/Crumbs";
 import { caseData, caseNodes } from "../case/data";
 import { heading } from "../case/format";
+import { goalsPage } from "../case/goals-page";
 import { hasPage, keyOfPath, pageOf, pathOf, rootOf } from "../case/routes";
 import { viewOf } from "../case/view";
 // One page per node of a page level, at the address its key makes (`capability/keeping-records.html`). Actions and
@@ -15,9 +17,11 @@ const key = keyOfPath((Astro.params as { key: string }).key);
 const page = pageOf(key);
 const root = rootOf(page);
 const view = viewOf(key, await caseData());
+// A goal has no children or folds to explore: its page says where each stage of the work considered it.
+const goal = key.startsWith("goal/") ? (await goalsPage())?.goals.find((each) => each.key === key) : undefined;
 const context = view.context === null ? null : { file: `${root}${view.context.file}`, kilobytes: view.context.kilobytes };
 ---
-<Page title={view.name} lead={view.summary} page={page} writtenBy="agent" label={heading(view.noun.one)} facts={{ facts: view.facts, tests: view.tests }} context={context} drawer>
+<Page title={view.name} lead={goal === undefined ? view.summary : ""} page={page} writtenBy="agent" label={heading(view.noun.one)} facts={{ facts: view.facts, tests: view.tests }} context={context} drawer={goal === undefined}>
     <Crumbs slot="trail" crumbs={view.crumbs} current={view.name} root={root} />
-    <Explorer view={view} root={root} />
+    {goal === undefined ? <Explorer view={view} root={root} /> : <GoalPage goal={goal} root={root} />}
 </Page>

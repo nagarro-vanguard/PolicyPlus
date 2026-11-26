@@ -10,7 +10,8 @@ export type JobFile = {
     stack?: string[];
     externals?: string[];
     capabilities?: string[];
-    notes?: string[];
+    /** For the goals job: the request's goals, numbered from 1 by their order. */
+    goals?: string[];
     areas?: string[];
     transitions?: string[];
     techs?: string[];
@@ -22,8 +23,12 @@ export type JobFile = {
     /** For shared components: the unit of each (its kind, then the journeys that rely on it). */
     units?: Record<string, string>;
     layerIds?: string[];
+    /** How many goals the request has, so a criterion that cites `goal n` can be checked. */
+    goalCount?: number;
     decisionIds?: string[];
     areaDecisionIds?: string[];
+    /** The decisions made for the goals of the request, each of which a foundation story must carry (a criterion cites it or its goal). */
+    goalDecisionIds?: Record<string, number>;
     /** The rules of this job that a journey step changes, with the step and what the rule does now. */
     ruleChanges?: Record<string, { step: string; to: string }[]>;
     /** For the foundation stories: the outside systems a component of the architecture adapts, built by its story. */
@@ -103,7 +108,7 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
         if (layers.some((layer) => loops(layer.id))) gaps.push("the layers depend on each other in a cycle");
         return gaps;
     }
-    if (job.kind === "integrations" || job.kind === "scope" || job.kind === "notes" || job.kind === "base") {
+    if (job.kind === "integrations" || job.kind === "scope" || job.kind === "goals" || job.kind === "base") {
         const parsed = decodeWith(Schema.Array(Decision), output.decisions);
         if (!parsed.ok) return [`decisions do not match their shape: ${parsed.problem}`];
         const decisions = parsed.value;
@@ -136,11 +141,11 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
             for (const d of decisions)
                 if (d.topic._tag === "scope" && !/^(carry|replace|drop)\b/i.test(d.chose.trim()))
                     gaps.push(`a scope decision must start with carry, replace or drop: "${short(d.chose)}"`);
-        } else if (job.kind === "notes") {
+        } else if (job.kind === "goals") {
             want(
-                "note",
-                (job.notes ?? []).map((_, at) => String(at + 1)),
-                decisions.flatMap((d) => (d.topic._tag === "note" ? [String(d.topic.number)] : [])),
+                "goal",
+                (job.goals ?? []).map((_, at) => String(at + 1)),
+                decisions.flatMap((d) => (d.topic._tag === "goal" ? [String(d.topic.number)] : [])),
             );
         } else {
             if (!decisions.some((d) => d.topic._tag === "area"))
@@ -168,13 +173,18 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
     const decisions = new Set(job.decisionIds ?? []);
     const citedDecisions = new Set<string>();
     const citedLayers = new Set<string>();
+    const citedGoals = new Set<number>();
     for (const story of stories) {
         const label = `story "${short(story.title)}"`;
         for (const criterion of story.criteria) {
             for (const ref of criterion.from) {
                 if (ref._tag === "rule" || ref._tag === "transition" || ref._tag === "step")
-                    gaps.push(`${label} cites a ${ref._tag}; foundation stories rest on decisions and layers`);
-                else if (ref._tag === "layer") citedLayers.add(ref.id);
+                    gaps.push(`${label} cites a ${ref._tag}; foundation stories rest on decisions, layers and goals`);
+                else if (ref._tag === "goal") {
+                    if (ref.number < 1 || ref.number > (job.goalCount ?? 0))
+                        gaps.push(`${label} cites a goal that does not exist`);
+                    citedGoals.add(ref.number);
+                } else if (ref._tag === "layer") citedLayers.add(ref.id);
                 else if (ref._tag === "decision") {
                     if (!decisions.has(ref.id)) gaps.push(`${label} cites a decision that does not exist`);
                     if ((job.adaptedDecisionIds ?? []).includes(ref.id))
@@ -190,9 +200,17 @@ export const gateJob = (job: JobFile, output: Output, request: { stack: readonly
             gaps.push(`${label} has entry points or steps; this job writes technical stories`);
     }
     const unset = (job.layerIds ?? []).filter((id) => !citedLayers.has(id));
-    if (unset.length > 0) gaps.push(`${unset.length} layers are set up by no story: one story sets up every layer, a criterion each`);
+    if (unset.length > 0)
+        gaps.push(`${unset.length} layers are set up by no story: one story sets up every layer, a criterion each`);
     const missing = (job.areaDecisionIds ?? []).filter((id) => !citedDecisions.has(id));
     if (missing.length > 0) gaps.push(`${missing.length} area decisions are cited by no story`);
+    const uncarried = Object.entries(job.goalDecisionIds ?? {}).filter(
+        ([id, number]) => !citedDecisions.has(id) && !citedGoals.has(number),
+    );
+    if (uncarried.length > 0)
+        gaps.push(
+            `${uncarried.length} goals are carried by no foundation story: goal ${uncarried.map(([, number]) => number).join(", goal ")}; a story that sets up how a goal is checked cites its decision or \`goal n\``,
+        );
     return [...new Set([...gaps, ...sameWhat(stories)])];
 };
 
@@ -239,7 +257,9 @@ const targetStoryGaps = (job: JobFile, stories: readonly Story[], known: Readonl
             gaps.push(`${label} is a technical story of shared components: no steps and no entry points`);
         if (journey && (story.steps ?? []).length === 0) gaps.push(`${label} names no step of the journey`);
         if (new Set((story.components ?? []).map((name) => (job.units?.[name] ?? "").split(":")[0])).size > 1)
-            gaps.push(`${label} joins components of different kinds: a rules story, a data story and a flow story are separate`);
+            gaps.push(
+                `${label} joins components of different kinds: a rules story, a data story and a flow story are separate`,
+            );
         const enforced = new Set((story.components ?? []).flatMap((name) => job.componentRules?.[name] ?? []));
         const rules = story.criteria.flatMap((criterion) =>
             criterion.from.flatMap((ref) => (ref._tag === "rule" ? [ref.id as string] : [])),
@@ -253,9 +273,12 @@ const targetStoryGaps = (job: JobFile, stories: readonly Story[], known: Readonl
             mine.add(id);
         }
         for (const criterion of story.criteria)
-            for (const ref of criterion.from)
+            for (const ref of criterion.from) {
                 if (ref._tag === "decision" && !decisions.has(ref.id))
                     gaps.push(`${label} cites a decision that does not exist`);
+                if (ref._tag === "goal" && (ref.number < 1 || ref.number > (job.goalCount ?? 0)))
+                    gaps.push(`${label} cites a goal that does not exist`);
+            }
         const missing = [...enforced].filter((id) => !rules.includes(id));
         if (missing.length > 0)
             gaps.push(`${label} builds components whose ${missing.length} rules no criterion cites`);

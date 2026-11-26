@@ -18,7 +18,7 @@ export type Action =
 const agentOf = (job: Job, role: Role) =>
     role === "reviewer"
         ? "review-planned-stories"
-        : ["layers", "integrations", "scope", "notes", "base"].includes(job.kind)
+        : ["layers", "integrations", "scope", "goals", "base"].includes(job.kind)
           ? "decide-foundation"
           : "create-stories";
 

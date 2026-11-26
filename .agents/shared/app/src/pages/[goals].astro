@@ -1,0 +1,19 @@
+---
+import { sectionContextOf } from "../case/section-context";
+import Page from "../layouts/Page.astro";
+import { Goals } from "../components/goals/Goals";
+import { caseData } from "../case/data";
+import { goalsPage } from "../case/goals-page";
+import { siteOf } from "../case/site";
+import { copy } from "../lib/copy";
+// Every goal of the request in the words of the people who asked, with whether each stage of the work (journeys,
+// architecture, foundation decisions, stories) considered it. The page exists only when the Goals section does (the
+// section registry, src/case/sections.ts), as a dynamic route with no path otherwise.
+export const getStaticPaths = async () =>
+    (await siteOf()).nav.some((section) => section.id === "goals") ? [{ params: { goals: "goals" } }] : [];
+const view = await goalsPage();
+if (view === null) throw new Error("the Goals page is built only when the case holds goals");
+---
+<Page title={copy.goals.title} lead={copy.goals.lead} page="goals.html" context={sectionContextOf(await caseData(), "goals")}>
+    <Goals view={view} root="./" />
+</Page>

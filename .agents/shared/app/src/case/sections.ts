@@ -9,7 +9,7 @@ import { pageOf } from "./routes";
 // others appear when their files exist and hold something. A section whose page is not built yet in this version of the
 // app is known to the registry but not linked (`built: false`).
 
-export const sectionIds = ["overview", "reference", "journeys", "architecture", "choices", "plan", "risks"] as const;
+export const sectionIds = ["overview", "goals", "reference", "journeys", "architecture", "choices", "plan", "risks"] as const;
 export type SectionId = (typeof sectionIds)[number];
 
 /** `folder`: the folder that holds the section's other pages (`journey/` for one page per journey), when it has one. */
@@ -18,6 +18,7 @@ type Spec = { id: SectionId; needs: readonly string[]; href: string; built: bool
 /** What each section needs from the case, and where its page is. */
 const specs: readonly Spec[] = [
     { id: "overview", needs: ["facts/system.json", "nodes/overview.json"], href: "index.html", built: true },
+    { id: "goals", needs: ["goals/goals.json"], href: "goals.html", built: true, folder: "goal/" },
     { id: "reference", needs: ["nodes/overview.json"], href: pageOf("overview"), built: true },
     { id: "journeys", needs: ["journeys/today.json"], href: "journeys.html", built: true, folder: "journey/" },
     { id: "architecture", needs: ["facts/layers.json"], href: "architecture.html", built: true },

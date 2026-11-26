@@ -63,6 +63,10 @@ const Architecture = Schema.Struct({
         }),
     ),
     components: Schema.Array(Component),
+    // Written by shape-target since the architecture answers each goal of the request; older ones have none.
+    goals: Schema.optionalKey(
+        Schema.Array(Schema.Struct({ goal: Schema.Int, how: Schema.String, where: Schema.Array(Schema.String) })),
+    ),
 });
 const Tasks = Schema.Struct({ tasks: Schema.Array(Schema.Struct({ id: Schema.String, outcome: Schema.String })) });
 

@@ -85,14 +85,17 @@ export type Criterion = {
     given: string | null;
     when: string | null;
     then: string | null;
-    /** What it rests on: a legacy rule, a state change, a decision, a layer or a journey step, by kind and key. */
+    /** What it rests on: a legacy rule, a state change, a decision, a layer, a journey step or a goal (its number), by kind and key. */
     from: { kind: string; id: string }[];
 };
 
 
 const givenWhenThen = /^\s*given\s+([\s\S]+?),\s+when\s+([\s\S]+?),\s+then\s+([\s\S]+?)\s*$/iu;
 
-export const criterionOf = (says: string, from: readonly { _tag: string; id: string }[]): Criterion => {
+export const criterionOf = (
+    says: string,
+    from: readonly { _tag: string; id?: string | undefined; number?: number | undefined }[],
+): Criterion => {
     const match = givenWhenThen.exec(says);
     const part = (text: string | undefined) => (text === undefined ? null : text.replace(/\.$/u, "").trim());
     return {
@@ -100,7 +103,7 @@ export const criterionOf = (says: string, from: readonly { _tag: string; id: str
         given: part(match?.[1]),
         when: part(match?.[2]),
         then: part(match?.[3]),
-        from: from.map((each) => ({ kind: each._tag, id: each.id })),
+        from: from.map((each) => ({ kind: each._tag, id: each.id ?? String(each.number ?? "") })),
     };
 };
 

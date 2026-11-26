@@ -103,8 +103,69 @@ export const caseProblems = (kase: Case): string[] => {
         for (const key of brief.numbers) number("the Brief", key);
         if (brief.plan !== null) for (const field of ["phases", "epics", "stories"]) number("the Brief's plan", brief.plan[field] as string);
     }
+    if (kase.has("goals/goals.json")) problems.push(...goalProblems(kase, nodes));
     // A search record of a section's own page (a journey, a story, a risk, a domain) names its section, not a node.
     if (kase.has("search.json"))
         for (const record of kase.json("search.json") as { node: string; section?: string }[]) if (record.section === undefined) node("search", record.node);
+    return problems;
+};
+
+type GoalsFile = {
+    goals: {
+        number: number;
+        key: string;
+        stories: string[];
+        epics: string[];
+        journeys: string[];
+        decision: { node: string | null } | null;
+        marks: Record<string, { targets: string[] }>;
+        answer: { where: { name: string; node: string | null }[] } | null;
+    }[];
+};
+
+/** The part of a goal's link after its kind: `story/3` is kind `story`, part `3`. */
+const partOf = (link: string) => link.slice(link.indexOf("/") + 1);
+
+/**
+ * The problems of the goals file: each goal is a node, numbered from 1 in order, and every link it holds names a story,
+ * epic, journey, domain or decision the case holds (containers and components are other sections' addresses, checked
+ * by their kind only).
+ * @param kase the opened case
+ * @param nodes the hierarchy's nodes
+ * @returns the problems
+ */
+const goalProblems = (kase: Case, nodes: ReadonlyMap<string, NodeRecord>): string[] => {
+    const problems: string[] = [];
+    const goals = (kase.json("goals/goals.json") as GoalsFile).goals;
+    const column = <T,>(file: string, pick: (record: T) => string) =>
+        new Set(kase.has(file) ? (kase.json(file) as T[]).map(pick) : []);
+    const known: Record<string, Set<string>> = {
+        story: column<{ sequence: number }>("plan/stories.json", (each) => String(each.sequence)),
+        epic: column<{ key: string }>("plan/epics.json", (each) => each.key),
+        decision: column<{ id: string }>("plan/decisions.json", (each) => each.id),
+        journey: column<{ slug: string }>("journeys/proposed.json", (each) => each.slug),
+        domain: new Set<string>(),
+    };
+    if (kase.has("architecture.json"))
+        known.domain = new Set((kase.json("architecture.json") as { domains: { slug: string }[] }).domains.map((each) => each.slug));
+    goals.forEach((goal, at) => {
+        const where = `goal ${goal.number}`;
+        if (goal.number !== at + 1) problems.push(`${where} is in place ${at + 1}: goals are numbered from 1 in order`);
+        if (goal.key !== `goal/${goal.number}` || !nodes.has(goal.key)) problems.push(`${where}: the node ${goal.key} is not held`);
+        const links = [
+            ...goal.stories,
+            ...goal.epics,
+            ...goal.journeys,
+            ...(goal.decision?.node === null || goal.decision === null ? [] : [goal.decision.node as string]),
+            ...Object.values(goal.marks).flatMap((mark) => mark.targets),
+            ...(goal.answer?.where.flatMap((place) => (place.node === null ? [] : [place.node])) ?? []),
+        ];
+        for (const link of links) {
+            const kind = link.slice(0, link.indexOf("/"));
+            const part = partOf(link);
+            if (kind in known && !(known[kind] as Set<string>).has(part)) problems.push(`${where} links ${link}, which the case does not hold`);
+            else if (!(kind in known) && kind !== "container" && kind !== "component") problems.push(`${where} links ${link}, a kind of link the app does not know`);
+        }
+    });
     return problems;
 };

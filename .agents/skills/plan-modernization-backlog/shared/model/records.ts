@@ -40,11 +40,11 @@ export const Topic = Schema.TaggedUnion({
     convention: {},
     integration: { system: Text },
     scope: { capability: Text },
-    note: { number: Count },
+    goal: { number: Count },
     area: { name: Text },
 }).annotate(
     about(
-        "What a decision is about: one line of a layer's AGENTS.md, an outside system, whether a capability is carried, replaced or dropped, one of the person's notes, or a free-named area such as libraries.",
+        "What a decision is about: one line of a layer's AGENTS.md, an outside system, whether a capability is carried, replaced or dropped, one of the person's goals, or a free-named area such as libraries.",
     ),
 );
 

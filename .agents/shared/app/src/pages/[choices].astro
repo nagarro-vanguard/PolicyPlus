@@ -3,6 +3,9 @@ import { sectionContextOf } from "../case/section-context";
 import { caseData } from "../case/data";
 import Page from "../layouts/Page.astro";
 import { Choices } from "../components/Choices";
+import { GoalChips } from "../components/goals/GoalChips";
+import { goalIndexOf, goalsFileOf } from "../case/goals-view";
+import { theCase } from "../case/loader";
 import { choicesView } from "../case/architecture-view";
 import { siteOf } from "../case/site";
 import { copy } from "../lib/copy";
@@ -14,6 +17,7 @@ export const getStaticPaths = async () =>
 const view = await choicesView();
 if (view === null) throw new Error("the Choices page is built only when the case holds the choices");
 const site = await siteOf();
+const goalChips = goalIndexOf(goalsFileOf(theCase())).answered();
 const hrefOf = (id: string) => {
     const section = site.nav.find((each) => each.id === id);
     return section === undefined ? null : `./${section.href}`;
@@ -21,6 +25,9 @@ const hrefOf = (id: string) => {
 ---
 <Page title={copy.choices.title} lead={copy.choices.lead} page="choices.html" context={sectionContextOf(await caseData(), "choices")}>
     <Choices view={view} journeysHref={hrefOf("journeys")} architectureHref={hrefOf("architecture")} />
+    <div class="mt-spacing-4xl">
+        <GoalChips chips={goalChips} root="./" label={copy.goals.servesChoices} />
+    </div>
 </Page>
 <script>
     import "../scripts/filter.ts";

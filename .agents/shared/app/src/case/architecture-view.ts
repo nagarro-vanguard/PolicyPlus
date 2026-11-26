@@ -2,6 +2,7 @@ import { copy } from "../lib/copy";
 import { caseData } from "./data";
 import { type DiagramView, viewOf, viewsOfSection } from "./diagram-view";
 import { type CountView, countOf } from "./format";
+import { type GoalChip, goalIndexOf, goalsFileOf } from "./goals-view";
 import { theCase } from "./loader";
 
 // What the Architecture and Choices pages show, read from the case: its views of today, of the chosen architecture and
@@ -97,7 +98,7 @@ export type ProposedView = {
     risks: string[];
     /** Each option not chosen: what it is, what it costs, what it risks and its own views. */
     variants: { name: string; idea: string; cost: string; risks: string[]; views: DiagramView[] }[];
-    domains: { name: string; concept: string; uses: string[]; usedBy: string[]; counts: string[] }[];
+    domains: { name: string; concept: string; uses: string[]; usedBy: string[]; counts: string[]; goals: GoalChip[] }[];
     /** The request's stack lines, when the case holds them. */
     stack: StackLine[];
     landing: LandingView | null;
@@ -194,6 +195,7 @@ export const proposedView = async (): Promise<ProposedView | null> => {
                 const entry = valueOf(key);
                 return entry === undefined ? [] : [countOf(entry).text];
             }),
+            goals: goalIndexOf(goalsFileOf(theCase())).forPlace(domain.name),
             uses: domain.dependsOn,
             usedBy: architecture.domains.filter((other) => other.dependsOn.includes(domain.name)).map((other) => other.name),
         })),

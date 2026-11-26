@@ -10,10 +10,11 @@ import { viewOf } from "../case/view";
 const data = await caseData();
 const view = viewOf("overview", data);
 const kase = theCase();
-const brief = kase.has("brief.json") ? (kase.json("brief.json") as { goals: { provided: boolean; text: string | null } }) : null;
+const brief = kase.has("brief.json") ? (kase.json("brief.json") as { goals: { provided: boolean; text: string | null; items?: { number: number; node: string; label: string; text: string; summary: "considered" | "missing" | "stale" }[] } }) : null;
 const site = await siteOf();
 const reference = site.nav.find((section) => section.id === "reference");
+const goalsSection = site.nav.find((section) => section.id === "goals");
 ---
 <Page title={view.name} lead={view.summary} page="index.html" writtenBy="agent" facts={{ facts: view.facts, tests: null }}>
-    <Overview view={view} goals={brief === null ? null : brief.goals} reference={reference === undefined ? null : reference.href} />
+    <Overview view={view} goals={brief === null ? null : brief.goals} goalsHref={goalsSection === undefined ? null : `./${goalsSection.href}`} reference={reference === undefined ? null : reference.href} />
 </Page>

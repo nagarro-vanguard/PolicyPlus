@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import type { ReactNode } from "react";
 import type { ProposedView, Since, StackLine, TodayView } from "../case/architecture-view";
 import { copy } from "../lib/copy";
+import { GoalChips } from "./goals/GoalChips";
 import { Fold } from "./Fold";
 
 // The pieces of the Architecture page (and the Choices page that shares some), server rendered from the design system's
@@ -171,7 +172,7 @@ export function ProposedHead({ view }: { readonly view: ProposedView }) {
 }
 
 /** Each domain, folded: what it is, why it stands alone, what it uses and what uses it. */
-export function Domains({ view }: { readonly view: ProposedView }) {
+export function Domains({ view, root = "./" }: { readonly view: ProposedView; readonly root?: string }) {
     return (
         <div className="flex flex-col border-t border-border">
             {view.domains.map((domain) => (
@@ -180,6 +181,7 @@ export function Domains({ view }: { readonly view: ProposedView }) {
                         <p data-written-by="agent">{domain.concept}</p>
                         <Pair label={words.uses}>{domain.uses.length === 0 ? words.nothing : domain.uses.join(", ")}</Pair>
                         <Pair label={words.usedBy}>{domain.usedBy.length === 0 ? words.nothing : domain.usedBy.join(", ")}</Pair>
+                        <GoalChips chips={domain.goals} root={root} />
                         {domain.counts.length === 0 ? null : (
                             <p className="text-sm text-muted-foreground tabular-nums" data-written-by="app">
                                 {domain.counts.join(", ")}

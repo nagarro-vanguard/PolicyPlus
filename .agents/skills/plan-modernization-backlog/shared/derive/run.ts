@@ -12,6 +12,7 @@ import { ruleCoverage } from "./target-gates";
 import { deriveFacts } from "./facts";
 import { contextsOf, publishPlan, writeChoices } from "./publish";
 import { builtFromNow } from "./built-from";
+import { goalsSha } from "../model/goals-sha";
 import { dedupeCarriers } from "./carriers";
 import { planConflicts, targetConflicts } from "./conflicts";
 import type { Plan } from "../model/plan";
@@ -71,7 +72,11 @@ export const evaluatePlan = (layout: Layout, entries: readonly Entry[] = loadRev
     const stamp = { root: analysis.root, fingerprint: analysis.fingerprint };
     const built = buildTargetPlan({ analysis: stamp, facts, layers, decisions, stories, target });
     const { problems } = built;
-    const bare: Plan = { ...built.plan, builtFrom: builtFromNow(layout, analysis.fingerprint) };
+    const bare: Plan = {
+        ...built.plan,
+        builtFrom: builtFromNow(layout, analysis.fingerprint),
+        goalsSha: goalsSha(request.goals),
+    };
     const plan: Plan = {
         ...bare,
         conflicts: [

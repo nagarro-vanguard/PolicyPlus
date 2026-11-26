@@ -84,11 +84,15 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
             ? LABELS.outside(decision.topic.system)
             : decision.topic._tag === "scope"
               ? LABELS.scope(decision.topic.capability)
-              : decision.topic._tag === "note"
-                ? LABELS.note(decision.topic.number)
+              : decision.topic._tag === "goal"
+                ? LABELS.goalOfRequest(decision.topic.number)
                 : decision.topic._tag === "area"
                   ? decision.topic.name
-                  : LABELS.convention(decision.layer === "workspace" ? LABELS.everyLayer : (layerBy.get(decision.layer)?.name ?? decision.layer));
+                  : LABELS.convention(
+                        decision.layer === "workspace"
+                            ? LABELS.everyLayer
+                            : (layerBy.get(decision.layer)?.name ?? decision.layer),
+                    );
 
     // The criteria, in the order of the body, and the legacy code each rests on. A place shown under one criterion is
     // named by a later one that rests on the same place; a doubt is said once, under the first criterion that cites it.
@@ -126,6 +130,10 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
                 else citedLayers.push(ref.id);
             } else if (ref._tag === "step") {
                 if (stepBy.get(ref.id) === undefined) miss();
+            } else if (ref._tag === "goal") {
+                const goal = request.goals[ref.number - 1];
+                if (goal === undefined) miss();
+                else parts.push(`${LABELS.goalOfRequest(ref.number)}: ${goal}`);
             } else {
                 const change = facts.transitions.find((each) => each.id === ref.id);
                 if (change === undefined) miss();
@@ -258,25 +266,20 @@ export const contextOf = (view: StoryView, input: ContextInputs) => {
         text: `### ${reading.title}\n\n${reading.text.replace(/^## /gm, "#### ").trimEnd()}`,
     }));
     // What each criterion rests on; the code of the places after the first `n` is left out, their places stay.
-    const restsOn =
-        section(
-            LABELS.restsOn,
-            criteria.flatMap((parts, order) =>
-                parts.length === 0
-                    ? []
-                    : [
-                          [
-                              `### AC-${order + 1}`,
-                              ...parts.map((part) =>
-                                  typeof part === "string"
-                                      ? part
-                                      : blocks[part.span]!,
-                              ),
-                          ].join("\n\n"),
-                      ],
-            ),
-            ...(source.readable || spans.length === 0 ? [] : [LABELS.codeUnread]),
-        );
+    const restsOn = section(
+        LABELS.restsOn,
+        criteria.flatMap((parts, order) =>
+            parts.length === 0
+                ? []
+                : [
+                      [
+                          `### AC-${order + 1}`,
+                          ...parts.map((part) => (typeof part === "string" ? part : blocks[part.span]!)),
+                      ].join("\n\n"),
+                  ],
+        ),
+        ...(source.readable || spans.length === 0 ? [] : [LABELS.codeUnread]),
+    );
     const text = `${[
         ...before,
         ...restsOn,

@@ -1,12 +1,13 @@
 import type { RequestInput } from "../inputs/plan";
 import type { Facts } from "./facts";
+import type { GoalsView } from "./goals";
 import type { ArchitectureView } from "./journeys";
 import type { Numbers } from "./numbers";
 import type { PlanViews } from "./plan-views";
 
 /*
- * The Brief's data: what the system is for, the person's Goals verbatim (or nothing, which the app shows as not
- * provided), what changes in plain words from the chosen architecture and the request's stack lines, the risks ranked
+ * The Brief's data: what the system is for, the person's Goals verbatim and numbered, each with whether every stage
+ * considered it (or nothing, which the app shows as not provided), what changes in plain words from the chosen architecture and the request's stack lines, the risks ranked
  * by a stated rule, and the plan's structure as counts. Nothing here is written by an agent.
  */
 
@@ -16,7 +17,13 @@ export const riskRankRule =
 
 export type Brief = {
     system: { name: string; purpose: string; summary: string };
-    goals: { provided: boolean; text: string | null };
+    goals: {
+        provided: boolean;
+        /** The goals verbatim, numbered, one per line; null when none. */
+        text: string | null;
+        /** Each goal with its summary mark and its node. */
+        items: { number: number; node: string; label: string; text: string; summary: "considered" | "missing" | "stale" }[];
+    };
     changes: {
         stack: { line: string; layers: string[] }[];
         containers: { name: string; tech: string; holds: string[] }[];
@@ -33,6 +40,7 @@ export type Brief = {
  * @param architecture the chosen architecture, when there is one
  * @param plan the plan's views, when there is a plan
  * @param numbers the numbers table
+ * @param goals the goals with their marks, when the request has any
  * @returns the Brief's data
  */
 export const briefOf = (
@@ -41,6 +49,7 @@ export const briefOf = (
     architecture: ArchitectureView | undefined,
     plan: PlanViews | undefined,
     numbers: Numbers,
+    goals?: GoalsView,
 ): Brief => {
     const planNumbers =
         plan === undefined
@@ -85,7 +94,20 @@ export const briefOf = (
             .map((layer) => layer.name) ?? [];
     return {
         system: { name: facts.system.name, purpose: facts.system.purpose, summary: facts.system.summary },
-        goals: request?.goals === undefined ? { provided: false, text: null } : { provided: true, text: request.goals },
+        goals:
+            goals === undefined
+                ? { provided: false, text: null, items: [] }
+                : {
+                      provided: true,
+                      text: goals.goals.map((goal) => `${goal.number}. ${goal.text}`).join("\n"),
+                      items: goals.goals.map((goal) => ({
+                          number: goal.number,
+                          node: goal.key,
+                          label: goal.label,
+                          text: goal.text,
+                          summary: goal.summary,
+                      })),
+                  },
         changes:
             architecture === undefined && (request?.stack.length ?? 0) === 0
                 ? null

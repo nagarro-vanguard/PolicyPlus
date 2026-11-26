@@ -41,6 +41,10 @@ export const acceptedSoFar = (layout: Layout, jobs: Jobs): Accepted => {
     return { layers, decisions };
 };
 
+/** The decisions made for goals, by decision id, each with the number of its goal. */
+const goalDecisionsOf = (decisions: readonly Decision[]): Record<string, number> =>
+    Object.fromEntries(decisions.flatMap((d) => (d.topic._tag === "goal" ? [[d.id as string, d.topic.number]] : [])));
+
 /** What a layers or base decision must know of the confirmed target: the parts, their technologies and their modules. */
 const architectureOf = (target: Target | undefined) =>
     target === undefined
@@ -64,7 +68,7 @@ const contextOf = (request: ModernizationRequest, facts: Facts, accepted: Accept
     capabilities: facts.capabilities.map((c) => ({ name: c.name, purpose: c.purpose, actions: c.size })),
     outsideSystems: facts.externals.map((e) => e.name),
     stack: request.stack,
-    notes: request.notes,
+    goals: request.goals,
     documents: request.documents,
     layers: accepted.layers.map((l) => ({
         id: l.id,
@@ -130,7 +134,8 @@ const targetStories = (layout: Layout, facts: Facts, target: Target): Draft[] =>
     // Whole units go to a job, in the order of their key, so a unit is never split between two writers.
     const units = unitsOf(target);
     const byUnit = new Map<string, string[]>();
-    for (const name of sharedNames) byUnit.set(units.get(name) ?? "", [...(byUnit.get(units.get(name) ?? "") ?? []), name]);
+    for (const name of sharedNames)
+        byUnit.set(units.get(name) ?? "", [...(byUnit.get(units.get(name) ?? "") ?? []), name]);
     const packs: string[][] = [];
     let weight = 0;
     for (const [, names] of [...byUnit.entries()].sort(([a], [b]) => a.localeCompare(b))) {
@@ -289,13 +294,14 @@ export const prepareStage = (
                     })),
                 },
             });
-        if (request.notes.length > 0)
+        if (request.goals.length > 0)
             drafts.push({
-                id: "notes",
-                kind: "notes",
-                title: "Decide how each note is honoured",
+                id: "goals",
+                kind: "goals",
+                title: "Decide how each goal is honoured",
                 after: ["layers"],
-                file: { kind: "notes", notes: [...request.notes] },
+                file: { kind: "goals", goals: [...request.goals] },
+                extra: { architectureAnswers: target?.architecture.goals ?? [] },
             });
         drafts.push({
             id: "base",
@@ -349,8 +355,10 @@ export const prepareStage = (
         const file: JobFile = {
             ...draft.file,
             layerIds,
+            goalCount: request.goals.length,
             decisionIds: accepted.decisions.map((d) => d.id as string),
             areaDecisionIds: accepted.decisions.filter((d) => d.topic._tag === "area").map((d) => d.id as string),
+            goalDecisionIds: goalDecisionsOf(accepted.decisions),
         };
         writeJson(paths.job, { ...file, ...draft.extra });
         writeJson(paths.context, contextOf(request, facts, accepted, target));
@@ -388,6 +396,7 @@ export const refreshInputs = (layout: Layout, jobs: Jobs, id: string) => {
         layerIds: accepted.layers.map((l) => l.id as string),
         decisionIds: accepted.decisions.map((d) => d.id as string),
         areaDecisionIds: accepted.decisions.filter((d) => d.topic._tag === "area").map((d) => d.id as string),
+        goalDecisionIds: goalDecisionsOf(accepted.decisions),
     });
     const context = readJson<Record<string, unknown>>(paths.context);
     writeJson(paths.context, {

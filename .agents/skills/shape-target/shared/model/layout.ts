@@ -21,6 +21,7 @@ export const layoutOf = (outputRoot: string) => {
         tasksRecord: join(records, "tasks.json"),
         journeyVariants: join(records, "journey-variants.json"),
         architectureVariants: join(records, "architecture-variants.json"),
+        goalsStamps: join(records, "goals-stamps.json"),
         target,
         legacy: join(target, "legacy.json"),
         current: join(target, "current.json"),

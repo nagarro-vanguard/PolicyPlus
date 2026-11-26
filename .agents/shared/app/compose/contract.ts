@@ -8,7 +8,7 @@ import { foldKinds, levels } from "./build/hierarchy";
  * The version goes up when a file changes in a way an older reader would misread.
  */
 
-export const caseContractVersion = 3;
+export const caseContractVersion = 4;
 
 const S = z.string();
 const N = z.number();
@@ -323,7 +323,19 @@ const Story = z.strictObject({
 
 const Brief = z.strictObject({
     system: z.strictObject({ name: S, purpose: S, summary: S }),
-    goals: z.strictObject({ provided: z.boolean(), text: S.nullable() }),
+    goals: z.strictObject({
+        provided: z.boolean(),
+        text: S.nullable(),
+        items: z.array(
+            z.strictObject({
+                number: N,
+                node: S,
+                label: S,
+                text: S,
+                summary: z.enum(["considered", "missing", "stale"]),
+            }),
+        ),
+    }),
     changes: z
         .strictObject({
             stack: z.array(z.strictObject({ line: S, layers: Ids })),
@@ -333,6 +345,34 @@ const Brief = z.strictObject({
     risks: z.strictObject({ rule: S, top: Ids, ranked: Ids }),
     plan: z.strictObject({ phases: S, epics: S, stories: S }).nullable(),
     numbers: Ids,
+});
+
+const GoalState = z.enum(["considered", "settled", "notReached", "missing", "stale"]);
+const GoalMark = z.strictObject({ state: GoalState, targets: Ids });
+const GoalStage = z.enum(["journeys", "architecture", "foundation", "stories"]);
+
+const Goals = z.strictObject({
+    /** The stamp of the request's goals now: the sha256 of the JSON of the goal strings in order. */
+    goalsSha: S,
+    goals: z.array(
+        z.strictObject({
+            number: N,
+            key: S,
+            text: S,
+            label: S,
+            summary: z.enum(["considered", "missing", "stale"]),
+            firstGap: GoalStage.nullable(),
+            marks: z.strictObject({ journeys: GoalMark, architecture: GoalMark, foundation: GoalMark, stories: GoalMark }),
+            answer: z
+                .strictObject({ how: S, where: z.array(z.strictObject({ name: S, node: S.nullable() })) })
+                .nullable(),
+            decision: z.strictObject({ node: S.nullable(), chose: S, layer: S, reason: S }).nullable(),
+            stories: Ids,
+            epics: Ids,
+            components: Ids,
+            journeys: Ids,
+        }),
+    ),
 });
 
 const Excerpt = z.strictObject({ file: S, firstLine: N, lastLine: N, lines: Ids, cut: z.boolean() });
@@ -390,6 +430,7 @@ export const caseFiles = {
         }),
     ),
     "brief.json": Brief,
+    "goals/goals.json": Goals,
     "journeys/today.json": z.array(TodayJourney),
     "journeys/proposed.json": z.array(ProposedJourney),
     "journeys/trace.json": z.array(

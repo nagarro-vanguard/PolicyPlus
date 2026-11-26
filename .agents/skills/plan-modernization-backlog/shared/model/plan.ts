@@ -108,6 +108,13 @@ export const Conflict = Schema.Struct({
 export const Plan = Schema.Struct({
     analysis: Schema.Struct({ root: Text, fingerprint: Text }).annotate(about("The analysis the plan was made from.")),
     builtFrom: Schema.optionalKey(BuiltFrom),
+    goalsSha: Schema.optionalKey(
+        Text.annotate(
+            about(
+                "The sha256 of the request's goals list as the plan was finished, written by the tool and never by an agent; compose compares it with the request to tell a plan made for other goals.",
+            ),
+        ),
+    ),
     layers: Schema.Array(TargetLayer),
     decisions: Schema.Array(Decision),
     epics: Schema.Array(Epic),

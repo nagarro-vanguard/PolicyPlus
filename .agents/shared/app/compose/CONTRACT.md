@@ -25,9 +25,9 @@ Determinism: every list is sorted by a stated key, every object's keys are sorte
 | Input | Version read | Refused when |
 |---|---|---|
 | Payloads | `manifest.json` `contractVersion` 1 | no manifest; another version; a file whose SHA-1 differs from the manifest |
-| Target | `target/manifest.json` `contractVersion` 2; a target written before manifests existed is read as written and the case says so | another version; a file whose SHA-256 differs from the manifest |
-| Plan | an optional `contractVersion` 1; plans written so far carry none and are read as written | another version |
-| Case | `manifest.json` `contractVersion` 3 (`caseContractVersion` in `contract.ts`) | the app refuses any other version |
+| Target | `target/manifest.json` `contractVersion` 2 (its optional `goalsSha` holds the stamp of the goals the journeys and the architecture were finished with); a target written before manifests existed is read as written and the case says so | another version; a file whose SHA-256 differs from the manifest |
+| Plan | an optional `contractVersion` 1; plans written so far carry none and are read as written; an optional top-level `goalsSha` | another version |
+| Case | `manifest.json` `contractVersion` 4 (`caseContractVersion` in `contract.ts`) | the app refuses any other version |
 
 ## Files
 
@@ -50,11 +50,12 @@ Record ids appear in `facts/`, `journeys/`, `plan/` and `context/` as keys, so t
 
 ### The hierarchy: `nodes/<level>.json`
 
-Levels: `overview`, `area`, `capability`, `surface`, `action`, `rule` (the primary path), `part`, `place` (the structure side path) and `unplaced`. Each node has a `key`, its `name` and one-sentence `summary` (the facts' own first sentence, never rewritten), its `noun`, the record it shows (`ref`), `crumbs`, `up`/`prev`/`next`, at most three `facts` (keys into `numbers.json`), `children` rows, `folds` (closed list of kinds; the app owns their titles) and `lateral` links (`alsoUsedBy`, `livesIn`, `usedBy`, `reachedFrom`, `decidedFor`).
+Levels: `overview`, `area`, `capability`, `surface`, `action`, `rule` (the primary path), `part`, `place` (the structure side path), `unplaced` and `goal`. Each node has a `key`, its `name` and one-sentence `summary` (the facts' own first sentence, never rewritten), its `noun`, the record it shows (`ref`), `crumbs`, `up`/`prev`/`next`, at most three `facts` (keys into `numbers.json`), `children` rows, `folds` (closed list of kinds; the app owns their titles) and `lateral` links (`alsoUsedBy`, `livesIn`, `usedBy`, `reachedFrom`, `decidedFor`).
 
 - **A place is shown once per capability that uses it** (`surface/<capability>--<place>`), with that capability's own counts, and `alsoUsedBy` links to the same place under the other capabilities with theirs. Actions and rules have one canonical node, with `reachedFrom` links.
 - **Product versus tooling**: a capability's children are its product places; places that build, release or run it fold under `tooling`; tests are never places on the primary path: they fold under `tests` and are counted as `…/tests` ("groups of automated tests that check this capability"). Tests and build steps are full places on the structure side path.
 - **Shared rules fold**: a rule reached from at least `max(5, ceil(10% of product places))` product places folds under `sharedRules` on each action instead of being listed.
+- **Goals are nodes** (`goal/<n>`, `n` from 1 in the order the person wrote them): their `name` is a short label (the goal's first clause, at most eight words, never ending mid-phrase), their `summary` is the goal as written, and they have no children or folds; they sit directly under the overview. Compose adds them after the analysis's nodes, and puts the goals no stage considered, or a stage considered before they changed, ahead of the risks in the overview's `checkFirst` fold. `search.json` holds them like any node.
 - **Nothing is dropped**: the `unplaced` node lists rules in no capability, actions in no place, in no capability and in no part, places in no part, and capabilities in no area.
 
 ### `numbers.json`: the one numbers table
@@ -78,9 +79,27 @@ Every count the app shows is here once: `{ key, value, noun, scope, source, part
 | `plan/matrix.json` | the journey by domain matrix: each cell's steps and stories, row and column totals; the column `""` holds steps no component serves |
 | `plan/conflicts.json` | the challenges that survived review: the plan's own `conflicts` when it carries them, otherwise the target's disputes (`resolved` null) |
 
+### `goals/goals.json`
+
+Written only when the request holds goals. The conductor's closing report and the app's Goals section read it. For each goal, whether every stage of the work considered it: the journeys, the target architecture, the foundation decisions and the plan's stories. It says nothing about whether a goal is built, tested or met: the work stops at the plan.
+
+```
+{ goalsSha, goals: [ { number, key: "goal/<n>", text, label, summary, firstGap,
+    marks: { journeys, architecture, foundation, stories },   // each { state, targets: [key] }
+    answer: { how, where: [{ name, node }] } | null,          // the chosen architecture's answer
+    decision: { node, chose, layer, reason } | null,           // the foundation decision whose topic is this goal
+    stories, epics, components, journeys: [key] } ] }
+```
+
+- `goalsSha` is the sha256 of the JSON of the request's goal strings, in order. The journeys, the architecture and the plan carry the stamp they were finished with (written by their own tools, never by an agent); a stage whose stamp differs from the request's, or that kept none, is `stale` for every goal.
+- A mark's `state`: `considered` (the stage's output holds what considers the goal); `settled` (journeys and architecture only: the answer names no place, the goal is settled in the foundation, and that counts as considered); `notReached` (journeys only: the answer names places that serve no step of a chosen journey); `missing` (the stage is not written, or its output does not hold the goal; the journeys also need a confirmed architecture); `stale`.
+- Journeys: the steps served by the components of the domains the answer names, and of the domains held by the containers it names. Foundation: the plan decision whose topic is `goal n`. Stories: a story whose criterion's `from` is `goal n` or the goal's decision.
+- `summary` is `considered` when no mark is `missing` or `stale`, otherwise the state of the first such mark (stage order journeys, architecture, foundation, stories), which is `firstGap`. `notReached` does not make a summary: it is shown, not a gap. Compose never fails for a stale or missing mark.
+- Every target is a node key of another section: `story/<place in the plan's order>`, `epic/<the epic's key>`, `decision/<the decision's id>`, `journey/<slug>`, `domain/<slug>`, `container/<slug>`, `component/<slug>`. Only `goal/<n>` is a node of the hierarchy.
+
 ### `brief.json`
 
-The system's name and purpose; the person's Goals verbatim from `request.json`, or `provided: false` (the app says "Not provided"); what changes: each stack line of the request with the layers that carry it, the containers in plain words, and how they talk; the risks ranked by a stated rule (severity, then how many capabilities and parts a risk names, then its words) with the top five; the plan's structure as number keys and the phases' names.
+The system's name and purpose; the person's Goals verbatim from `request.json` as a numbered list (`goals.text`, and `goals.items`: each goal's number, node, label, words and summary mark), or `provided: false` (the app says "Not provided"); what changes: each stack line of the request with the layers that carry it, the containers in plain words, and how they talk; the risks ranked by a stated rule (severity, then how many capabilities and parts a risk names, then its words) with the top five; the plan's structure as number keys and the phases' names.
 
 ### `views.json`
 
@@ -120,7 +139,7 @@ Every `overlaps` is 0 for a drawing that holds.
 ### `evidence.json`, `search.json`, `context/`
 
 - `evidence.json`: per rule id, at most 15 lines of the analysed code from the place the rule cites, with the file relative to the code's root; absent when the code cannot be read.
-- `search.json`: one record per node: name, the word for its level, the parent's name, a short text; no record id. Records of the sections' own pages carry `section` and a key that says where on that page: `journey/<slug>` (journeys), `story/<place in the plan's order>` (plan), `risk/<rank>` (risks), `domain/<slug>` (architecture). Such a key is not a node.
+- `search.json`: one record per node (a goal included): name, the word for its level, the parent's name, a short text; no record id. Records of the sections' own pages carry `section` and a key that says where on that page: `journey/<slug>` (journeys), `story/<place in the plan's order>` (plan), `risk/<rank>` (risks), `domain/<slug>` (architecture). Such a key is not a node.
 - `context/<kind>.json`: the texts a reader copies, by node key, and `context/index.json` with each text's size in bytes. Compose assembles none of them (see Context below); it collects the files the producers wrote, checks them, and writes each text twice for the app: a real `context/<kind>/<key>.md` (what "Copy file path" and "Download" point at) and the embedded script a page reads for "Copy" from `file://`.
 
 ### Context: one catalogue, written by the owner of the node
@@ -155,4 +174,4 @@ The neutrality test fails when any real system takes 30 s or more. Most of a lar
 
 ## Tests
 
-`tests/compose/`: unit tests per module (`units.test.ts`), two runs and a moved copy identical and the exit codes (`determinism.test.ts`), and neutrality (`neutrality.test.ts`): a scan of compose's code for stack, medium and product words, and, when `COMPOSE_REAL_PAYLOADS` names a folder of `<system>/payloads` and `COMPOSE_REAL_RUN` a run's output root, real systems composed into cases of the same files and shape.
+`compose/build/goals.test.ts` (the goals' marks, labels and nodes, from small synthetic inputs) and `tests/goals-integrity.test.ts` (the loader's check of the goals file). Older tests, under `tests/compose/`: unit tests per module (`units.test.ts`), two runs and a moved copy identical and the exit codes (`determinism.test.ts`), and neutrality (`neutrality.test.ts`): a scan of compose's code for stack, medium and product words, and, when `COMPOSE_REAL_PAYLOADS` names a folder of `<system>/payloads` and `COMPOSE_REAL_RUN` a run's output root, real systems composed into cases of the same files and shape.

@@ -22,12 +22,16 @@ const upper = (text: string) => (text.length === 0 ? text : text[0]!.toUpperCase
 const hashOf = (value: unknown) => createHash("sha1").update(JSON.stringify(value)).digest("hex").slice(0, 12);
 const keyOf = (value: unknown) => Schema.decodeUnknownSync(StoryKey)(`story-${hashOf(value)}`);
 
+/** A reference's part of a story key: its kind and the id it names, or the number of a goal. */
+const refKey = (ref: Story["criteria"][number]["from"][number]) =>
+    ref._tag === "goal" ? `goal:${ref.number}` : `${ref._tag}:${ref.id}`;
+
 /** A story's stable key: a signature of what it builds, so it survives a re-plan. */
 export const storyKeyOf = (story: Story) =>
     keyOf(
         story.actions.length > 0
             ? [...story.actions].sort()
-            : [...story.criteria.flatMap((c) => c.from.map((r) => `${r._tag}:${r.id}`))].sort(),
+            : [...story.criteria.flatMap((c) => c.from.map(refKey))].sort(),
     );
 
 export const SCAFFOLD_EPIC = "area:codebase";
@@ -131,7 +135,11 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
                 return each === undefined ? [] : [each];
             }),
         );
-        const journey = functional ? journeyOfStep.get(stepIds[0] ?? "") : served.size === 1 ? [...served][0] : undefined;
+        const journey = functional
+            ? journeyOfStep.get(stepIds[0] ?? "")
+            : served.size === 1
+              ? [...served][0]
+              : undefined;
         const builds = [...new Set(citedRules(story))];
         const area = scaffold
             ? "codebase"
@@ -149,7 +157,7 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
               ? [...stepIds].sort()
               : built.length > 0
                 ? [...built].sort()
-                : [story.title, ...story.criteria.flatMap((c) => c.from.map((r) => `${r._tag}:${r.id}`))].sort();
+                : [story.title, ...story.criteria.flatMap((c) => c.from.map(refKey))].sort();
         const layerIds = storyLayers(story, { scaffold }, stack);
         return {
             story,
@@ -261,7 +269,9 @@ export const buildTargetPlan = (input: TargetPlanInput): Built => {
             ...new Set([
                 ...usedBuilders
                     .map((each) => each.builder)
-                    .filter((key) => groupOf.get(key) !== groupOf.get(view.key) || (positionOf.get(key) ?? 0) < view.index),
+                    .filter(
+                        (key) => groupOf.get(key) !== groupOf.get(view.key) || (positionOf.get(key) ?? 0) < view.index,
+                    ),
                 ...platformBefore(view),
             ]),
         ];

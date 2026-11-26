@@ -1,5 +1,6 @@
 import { copy } from "../lib/copy";
 import { counted, countOf, type CountView, heading, kilobytes } from "./format";
+import { type GoalChip, goalIndexOf, goalsFileOf } from "./goals-view";
 import type { Case } from "./read";
 import { ruleStatusesOf } from "./rule-status";
 import { addressOf } from "./routes";
@@ -55,6 +56,8 @@ const placeText = (place: Place) => `${place.file}:${place.firstLine === place.l
 
 export type StoryView = {
     n: number;
+    /** The goals a criterion of this story carries, when any does. */
+    goals: GoalChip[];
     title: string;
     what: string;
     why: string;
@@ -193,6 +196,7 @@ export const planViewOf = (kase: Case, data: CaseData, sections: readonly Sectio
             const blockedBy = linked(story.blockedBy);
             return {
                 n: story.sequence,
+                goals: goalIndexOf(goalsFileOf(kase)).forStory(story.sequence),
                 title: story.title,
                 what: story.what,
                 why: story.why,

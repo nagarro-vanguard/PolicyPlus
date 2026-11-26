@@ -18,8 +18,8 @@ const topicOf = (decision: Plan["decisions"][number]) =>
         ? decision.topic.system
         : decision.topic._tag === "scope"
           ? decision.topic.capability
-          : decision.topic._tag === "note"
-            ? `Note ${decision.topic.number} of the request`
+          : decision.topic._tag === "goal"
+            ? `Goal ${decision.topic.number} of the request`
             : decision.topic._tag === "area"
               ? decision.topic.name
               : decision.layer;
@@ -32,7 +32,12 @@ const topicOf = (decision: Plan["decisions"][number]) =>
  */
 export const choicesText = (layout: Layout, plan: Plan): string => {
     const folder = join(layout.outputRoot, "target");
-    const choices: TargetChoice[] = ["choice-as-is.json", "choice-journeys.json", "choice-architecture.json", "choice-components.json"]
+    const choices: TargetChoice[] = [
+        "choice-as-is.json",
+        "choice-journeys.json",
+        "choice-architecture.json",
+        "choice-components.json",
+    ]
         .filter((name) => existsSync(join(folder, name)))
         .map((name) => JSON.parse(readFileSync(join(folder, name), "utf8")) as TargetChoice);
     const layerName = new Map(plan.layers.map((layer) => [layer.id as string, layer.name]));

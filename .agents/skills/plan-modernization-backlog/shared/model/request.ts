@@ -22,12 +22,9 @@ export const ModernizationRequest = Schema.Struct({
             whatItIs: Text.annotate(about("What it is, in the person's words.")),
         }),
     ).annotate(about("Documents that say what the product should be: an RFP, requirements, notes.")),
-    notes: Schema.Array(Text).annotate(about("Anything else the person wants honoured, one statement each.")),
-    goals: Schema.optionalKey(
-        Text.annotate(
-            about(
-                "Why this modernization and what the target stack must achieve, written by the person and kept word for word; absent when not given. Shown to readers as written; no agent writes or rewrites it.",
-            ),
+    goals: Schema.Array(Text).annotate(
+        about(
+            "What the modernization must achieve, one goal each, in the person's words and numbered from 1 by their order. Every goal is answered by the target architecture, decided in the foundation and carried by the plan's stories.",
         ),
     ),
 }).annotate(about("The modernization's settings, read from the person's request."));
@@ -41,8 +38,8 @@ export const requestHelp = [
     "`## Leave Out`, one `- <pattern>: <reason>` per line, or `None`.",
     "`## Target Stack`, one `- <line>` per line: required, never empty.",
     "`## Documents`, one `- <path>: <what it is>` per line, or `None`.",
-    "`## Additional Notes`, one `- <statement>` per line, or `None`.",
-    "`## Goals` (optional): why this modernization and what the target stack must achieve, in your own words; kept as written. Leave it out, empty or `None` when there are none.",
+    "`## Goals`, one `- <goal>` per line (or `1. <goal>`), numbered from 1 by their order: what the new system must achieve, in your own words, each goal saying one thing once; an indented line continues the goal above it. Leave it out or write `None` when there are none.",
+    "`## Additional Notes` is no longer read and is refused: move each line under `## Goals`.",
     "Relative paths are read from the request's folder.",
 ].join(" ");
 
@@ -82,13 +79,26 @@ const firstLine = (lines: readonly string[] = []) => {
 
 const isNone = (items: readonly string[]) => items.length === 1 && items[0]?.toLowerCase() === "none";
 
-/** A free-text section as written, without its surrounding blank lines; undefined when empty or `None`. */
-const proseOf = (lines: readonly string[] = []) => {
-    const text = lines
-        .map((line) => line.trimEnd())
-        .join("\n")
-        .trim();
-    return text === "" || text.toLowerCase() === "none" ? undefined : text;
+/**
+ * The goals of the `## Goals` list: one per `- ` or `1. ` line, in order; an indented line continues the goal above it.
+ * A line of prose that starts no goal is returned apart, so the request can say the section must be a list.
+ */
+const goalsOf = (lines: readonly string[] = []) => {
+    const goals: string[] = [];
+    const stray: string[] = [];
+    for (const raw of lines) {
+        const line = raw.trim();
+        if (line === "") continue;
+        const start = /^(?:-|\d+[.)])\s+(.*)$/.exec(line);
+        if (start !== null && !/^\s/.test(raw)) {
+            goals.push((start[1] ?? "").trim());
+        } else if (/^\s/.test(raw) && goals.length > 0) {
+            goals[goals.length - 1] = `${goals[goals.length - 1]} ${line}`;
+        } else {
+            stray.push(line);
+        }
+    }
+    return { goals: goals.filter((goal) => goal.length > 0), stray };
 };
 
 /** `- <left>: <right>` split at the first colon that is followed by a space, so a Windows path keeps its colon. */
@@ -138,8 +148,17 @@ export const parseRequest = (text: string, baseDir: string): ModernizationReques
     };
     const leaveOut = pairs("Leave Out", "pattern");
     const documents = pairs("Documents", "path");
-    const notes = itemsOf(need("Additional Notes"));
-    const goals = proseOf(sections.get("Goals"));
+    if (sections.has("Additional Notes"))
+        problems.push(
+            "`## Additional Notes` is no longer read: move each line under `## Goals`, merging lines that say the same thing",
+        );
+    const read = goalsOf(sections.get("Goals"));
+    const goals = read.goals.length === 1 && read.goals[0]?.toLowerCase() === "none" ? [] : read.goals;
+    if (
+        read.stray.length > 0 &&
+        !(read.stray.length === 1 && read.stray[0]?.toLowerCase() === "none" && goals.length === 0)
+    )
+        problems.push("`## Goals` must be a list, one `- <goal>` per line");
     if (problems.length > 0) throw new RequestInvalid(problems);
     return Schema.decodeUnknownSync(ModernizationRequest)({
         outputRoot: abs(outputRoot ?? ""),
@@ -148,8 +167,7 @@ export const parseRequest = (text: string, baseDir: string): ModernizationReques
         target: abs(target ?? ""),
         stack,
         documents: documents.map(([path, whatItIs]) => ({ path: abs(path), whatItIs })),
-        notes: isNone(notes) ? [] : notes,
-        ...(goals === undefined ? {} : { goals }),
+        goals,
     });
 };
 

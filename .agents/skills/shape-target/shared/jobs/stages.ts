@@ -49,6 +49,7 @@ export const designContext = (layout: Layout): DesignContext => ({
     journeys: loadJourneys(layout),
     needs: needsOf(loadTasks(layout)),
     stack: loadRequest(layout).stack,
+    goals: loadRequest(layout).goals,
 });
 
 /** The variant of the architecture that was decided, or nothing when none is. */
@@ -99,7 +100,7 @@ const drafts = (layout: Layout, stage: Stage, jobs: Jobs): Draft[] | string => {
             after: [],
             review: true,
             file: { kind: "variants", tasks: tasks.map((task) => task.id) },
-            context: { stack: essence.stack, notes: essence.notes, tasks },
+            context: { stack: essence.stack, goals: essence.goals, tasks },
         }));
     }
     if (stage === "architecture") {
@@ -116,7 +117,7 @@ const drafts = (layout: Layout, stage: Stage, jobs: Jobs): Draft[] | string => {
                 file: { kind: "shape" },
                 context: {
                     stack: essence.stack,
-                    notes: essence.notes,
+                    goals: essence.goals,
                     // The entry points are not needed to cut the system: the rules, data and needs are.
                     tasks: essence.tasks.map(({ actions: _actions, ...task }) => task),
                     journeys: loadJourneys(layout).map((journey) => ({

@@ -48,12 +48,18 @@ const Journey = z.looseObject({
     drops: z.array(z.looseObject({ actions: Ids, rules: Ids, reason: Text })),
 });
 
+const GoalAnswer = z.looseObject({ goal: z.number(), how: Text, where: Ids });
+
 const Architecture = z.looseObject({
     name: Text,
     idea: Text,
     tradeoff: Text,
     recommended: Text.optional(),
     risks: z.array(Text),
+    /** One answer per goal of the request, when the request has goals. */
+    goals: z.array(GoalAnswer).optional(),
+    /** The stamp of the request's goals as the architecture was finished. */
+    goalsSha: Text.optional(),
     integrations: z.array(z.looseObject({ need: Text, domain: Text, how: Text })),
     views: z.array(AuthoredView),
     domains: z.array(
@@ -127,7 +133,11 @@ const ArchitectureVariants = z.array(
         views: z.array(AuthoredView).optional(),
     }),
 );
-const TargetManifest = z.looseObject({ contractVersion: z.number(), files: z.record(Text, Text) });
+const TargetManifest = z.looseObject({
+    contractVersion: z.number(),
+    files: z.record(Text, Text),
+    goalsSha: z.looseObject({ journeys: Text.optional(), architecture: Text.optional() }).optional(),
+});
 
 /**
  * What a target holds, in the order it is made: today's tasks only, with the journeys proposed and not confirmed; the
@@ -138,6 +148,7 @@ export type TargetState = "journeys-proposed" | "architecture-proposed" | "archi
 export type TargetJourney = z.output<typeof Journey>;
 export type TargetStep = z.output<typeof Step>;
 export type TargetArchitecture = z.output<typeof Architecture>;
+export type GoalAnswer = z.output<typeof GoalAnswer>;
 export type TargetTask = z.output<typeof Tasks>["tasks"][number];
 
 export type GateRecord = {
@@ -166,6 +177,8 @@ export type Target = {
     readonly alternatives: z.output<typeof ArchitectureVariants>;
     readonly gates: readonly GateRecord[];
     readonly disputes: readonly { stage: string; variant: string; says: string }[];
+    /** The stamp of the request's goals each stage was finished with; undefined for a stage that kept none. */
+    readonly goalsStamps: { readonly journeys: string | undefined; readonly architecture: string | undefined };
 };
 
 /** The name of each item of a decision, from the confirmed copy first and the file now after it. */
@@ -197,6 +210,7 @@ export const readTarget = (root: string): Target => {
     const layout = layoutOf(root);
     if (!existsSync(layout.target)) throw new ComposeError("input", `${root} holds no target/ folder`);
     let contractVersion: number | undefined;
+    let manifestStamps: { journeys?: string | undefined; architecture?: string | undefined } = {};
     const digests: string[] = [];
     if (existsSync(layout.manifest)) {
         const manifest = readJson(layout.manifest, TargetManifest);
@@ -212,6 +226,7 @@ export const readTarget = (root: string): Target => {
             }
         }
         contractVersion = manifest.contractVersion;
+        manifestStamps = manifest.goalsSha ?? {};
     }
     const need = (path: string) => {
         if (!existsSync(path)) throw new ComposeError("missing", `missing fact: ${path} (the target is not finished)`);
@@ -286,5 +301,6 @@ export const readTarget = (root: string): Target => {
         alternatives,
         gates: gateRecords,
         disputes,
+        goalsStamps: { journeys: manifestStamps.journeys, architecture: architecture?.goalsSha ?? manifestStamps.architecture },
     };
 };

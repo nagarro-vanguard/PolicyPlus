@@ -14,7 +14,7 @@ Words: an *epic* is one chosen journey of the target (or an area without one); a
 
 `${SKILL_ROOT}` is this skill's folder; `${ROOT}` is the Output Root. The analysis must already be in `${ROOT}/.code-analysis/payloads`.
 
-1. `bun ${SKILL_ROOT}/cli/read-request.ts <request file>`; on exit 1, stop with its message (an empty Target Stack is one). It prints the Output Root. Its `--help` lists the request's sections; the optional `## Goals` (why this modernization, what the target stack must achieve) is the person's text, kept word for word in `request.json` for readers. No agent reads, writes or rewrites it.
+1. `bun ${SKILL_ROOT}/cli/read-request.ts <request file>`; on exit 1, stop with its message (an empty Target Stack is one). It prints the Output Root. Its `--help` lists the request's sections; `## Goals` (what the new system must achieve, one `- ` line each, numbered from 1 by their order) is the person's own words, kept in `request.json` and read by the target and by this plan: one `goal` decision per goal (P1), every goal carried by at least one story criterion (P2). `## Additional Notes` is refused with a message that says to move each line under `## Goals`. Editing a goal runs the target and the plan again.
 2. Run the two stages in order, each with `S=MODERNIZATION_ROOT=${ROOT} bun ${SKILL_ROOT}/cli/stage.ts`: `S prepare foundation`, then drive it, then `S finish foundation`, then `S prepare stories`, drive it, `S finish stories`.
 3. Driving a stage: `S next --limit 4` prints one action as JSON.
     - `dispatch`: run every agent in `agents` in parallel, each as a subagent sent its `prompt` word for word; report each with `S done <job>` (`S abandon <job>` if it crashed); then call `next` again.
@@ -31,9 +31,9 @@ The plan is made from the decided target (`${ROOT}/target/architecture.json` and
 
 ## Stages
 
-- Foundation (`foundation`): `decide-foundation` for the layers, outside systems, scope, notes and base areas; `create-stories` for the technical stories of the foundation.
+- Foundation (`foundation`): `decide-foundation` for the layers, outside systems, scope, goals and base areas; `create-stories` for the technical stories of the foundation.
 - Stories (`stories`): `create-stories` for the shared parts and for each journey; `review-planned-stories` reads every job.
 
 ## Output
 
-`${ROOT}/.modernization-backlog/payloads/plan.json`; `${ROOT}/work-items/` with `manifest.json`, `bodies/`, `attachments/` (a story's context: the story, then the evidence to build it) and `agents-md/` (the notes of each layer). Every build removes the bodies and attachments of stories that left the plan. `plan.json` keeps what it was built from (`builtFrom`: the analysis's fingerprint and the hash of each decision's subject); `plan.ts status ${ROOT}` says whether that still holds. It also carries the reviewers' challenges that survived (`conflicts`), the target's and its own, and each story's layers. `cli/stage.ts status` says where every job stands.
+`${ROOT}/.modernization-backlog/payloads/plan.json`; `${ROOT}/work-items/` with `manifest.json`, `bodies/`, `attachments/` (a story's context: the story, then the evidence to build it) and `agents-md/` (the guidance of each layer). Every build removes the bodies and attachments of stories that left the plan. `plan.json` keeps what it was built from (`builtFrom`: the analysis's fingerprint and the hash of each decision's subject) and `goalsSha`, the sha256 of the request's goals list as the plan was finished (written by the tool, never by an agent); `plan.ts status ${ROOT}` says whether that still holds. It also carries the reviewers' challenges that survived (`conflicts`), the target's and its own, and each story's layers. `cli/stage.ts status` says where every job stands.

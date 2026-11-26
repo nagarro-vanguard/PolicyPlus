@@ -51,7 +51,10 @@ const analysisContextsSource = [
     join(here, "../../code-analysis/shared/read/context-files.ts"),
     join(here, "../../code-analysis/shared/read/context-labels.ts"),
 ];
-const targetContextsSource = [join(here, "../../shape-target/cli/contexts.ts"), join(here, "../../shape-target/shared/derive/context.ts")];
+const targetContextsSource = [
+    join(here, "../../shape-target/cli/contexts.ts"),
+    join(here, "../../shape-target/shared/derive/context.ts"),
+];
 /** The folders of a run: the same fixed layout every skill uses under the Output Root. */
 export const pathsOf = (root: string) => ({
     root,
@@ -150,7 +153,6 @@ const gate = (input: {
     /** Why the proposal cannot be made yet, when the analysis lacks what it reads; the step then stops with it. */
     guard?: (p: Paths) => string | undefined;
     inputs: Step["inputs"];
-    without?: Step["without"];
     proposal: (p: Paths) => string;
     record: (p: Paths) => string[];
 }): Step[] => {
@@ -159,7 +161,6 @@ const gate = (input: {
         {
             name,
             inputs: input.inputs,
-            without: input.without,
             makes: (p) => [input.proposal(p)],
             action: ({ paths, skills }) => {
                 const stop = input.guard?.(paths) ?? roundsGuard(paths, input.gate);
@@ -200,12 +201,6 @@ const gate = (input: {
 export const inputsOf = (step: Step, paths: Paths, request: string) =>
     hashFiles(step.inputs(paths, request), step.without);
 
-/**
- * The person's Goals are kept in request.json for readers and given to no agent and no derived file, so a step built
- * from the request does not run again when only they change.
- */
-const goalsUnread = { "request.json": ["goals"] } as const;
-
 /** The steps in order, as data: a step is due when what it makes is missing or its inputs changed since it ran. */
 export const steps: Step[] = [
     {
@@ -223,7 +218,6 @@ export const steps: Step[] = [
     {
         name: "analysis-request",
         inputs: (p) => [p.requestJson],
-        without: goalsUnread,
         makes: (p) => [p.analysisRequest],
         action: ({ skills, paths }) => ({
             action: "run",
@@ -292,7 +286,12 @@ export const steps: Step[] = [
         action: ({ paths, skills }) => ({
             action: "run",
             step: "contexts",
-            command: bun(skills, "code-analysis", "write-contexts.ts", `--payloads ${paths.payloads} --out ${paths.contexts}`),
+            command: bun(
+                skills,
+                "code-analysis",
+                "write-contexts.ts",
+                `--payloads ${paths.payloads} --out ${paths.contexts}`,
+            ),
             why: "write the text a reader copies for each place of the old system, from the payloads",
         }),
     },
@@ -322,16 +321,16 @@ export const steps: Step[] = [
     ...gate({
         gate: "journeys",
         stage: "journeys",
-        inputs: (p) => [p.current, p.choiceAsIs],
+        // The request's goals are context of the journeys, so the journeys run again when a goal is edited.
+        inputs: (p) => [p.current, p.choiceAsIs, p.requestJson],
         proposal: (p) => p.journeyVariants,
         record: (p) => [p.choiceJourneys, p.journeys],
     }),
     ...gate({
         gate: "architecture",
         stage: "architecture",
-        // The architecture is designed against the target stack, so the request is read again when its stack changes.
+        // The architecture answers each goal and is designed against the target stack, so the request is read again when either changes.
         inputs: (p) => [p.journeys, p.requestJson],
-        without: goalsUnread,
         proposal: (p) => p.architectureVariants,
         record: (p) => [p.choiceArchitecture],
     }),
@@ -356,7 +355,6 @@ export const steps: Step[] = [
     {
         name: "foundation",
         inputs: (p) => [p.payloads, p.requestJson, p.journeys, p.architecture, p.current],
-        without: goalsUnread,
         makes: (p) => [join(p.records, "layers.json"), join(p.records, "decisions.json")],
         action: ({ paths, skills }) => ({
             action: "invoke",
@@ -392,7 +390,18 @@ export const steps: Step[] = [
     },
     {
         name: "app",
-        inputs: (p) => [p.plan, p.bodies, p.attachments, p.planContexts, p.contexts, p.targetContexts, p.payloads, p.journeysToday, p.target, ...p.appSource],
+        inputs: (p) => [
+            p.plan,
+            p.bodies,
+            p.attachments,
+            p.planContexts,
+            p.contexts,
+            p.targetContexts,
+            p.payloads,
+            p.journeysToday,
+            p.target,
+            ...p.appSource,
+        ],
         makes: (p) => [join(p.app, "index.html")],
         action: ({ paths, skills }) => ({
             action: "run",
